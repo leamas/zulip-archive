@@ -1,0 +1,446 @@
+[
+    {
+        "content": "<p><span class=\"user-mention\" data-user-id=\"399559\">@Mike Rossiter</span> : I am happy with the latest beta. Also, I have waited a day which tends to make me find more stuff. Anything you want to test before we release 3.1?</p>\n<p>Sorry for writing in wrong stream first...</p>",
+        "id": 275670667,
+        "sender_full_name": "Alec Leamas",
+        "timestamp": 1647530870
+    },
+    {
+        "content": "<p>Nothing to test here at the moment. Have some other stuff to work on.</p>",
+        "id": 275710903,
+        "sender_full_name": "Mike Rossiter",
+        "timestamp": 1647544026
+    },
+    {
+        "content": "<p>OK. I'll make a final PR. Then let's release 3.1. It's time, and it's not that bad</p>",
+        "id": 275721222,
+        "sender_full_name": "Alec Leamas",
+        "timestamp": 1647548933
+    },
+    {
+        "content": "<p><a href=\"https://github.com/Rasbats/shipdriver_pi/pull/434\">https://github.com/Rasbats/shipdriver_pi/pull/434</a></p>",
+        "id": 275722046,
+        "sender_full_name": "Alec Leamas",
+        "timestamp": 1647549267
+    },
+    {
+        "content": "<p>Thanks for merging and tagging. I have announced  the release: <a href=\"https://github.com/OpenCPN/OpenCPN/discussions/2589\">https://github.com/OpenCPN/OpenCPN/discussions/2589</a></p>",
+        "id": 275777301,
+        "sender_full_name": "Alec Leamas",
+        "timestamp": 1647595427
+    },
+    {
+        "content": "<p>We now need to fork a new  branch v3.1  which will be the one where we make point releases like 3.1.1. etc. If you create the branch I can make an initial PR  with a changelog update.</p>",
+        "id": 275794692,
+        "sender_full_name": "Alec Leamas",
+        "timestamp": 1647606231
+    },
+    {
+        "content": "<p>Done.</p>",
+        "id": 275795122,
+        "sender_full_name": "Mike Rossiter",
+        "timestamp": 1647606511
+    },
+    {
+        "content": "<p>Do I dare update the template and then try to update VDR and Logbook?  Or should I let some other plugins venture first? I am busy on other plugins and do not want to go off track right now.  ...I think I am going to wait.</p>",
+        "id": 275797051,
+        "sender_full_name": "Rick Gleason",
+        "timestamp": 1647607667
+    },
+    {
+        "content": "<p><span class=\"user-mention\" data-user-id=\"399865\">@Rick Gleason</span>   You definitely dare, the template is released.</p>",
+        "id": 275797902,
+        "sender_full_name": "Alec Leamas",
+        "timestamp": 1647608147
+    },
+    {
+        "content": "<p><span class=\"user-mention\" data-user-id=\"399865\">@Rick Gleason</span>  I did a test run on vdr. It runs out of the box: run update-templates, commit changes to update-templates, run update-templates again. All builds OK</p>\n<p>Note that you might want to replace libraries in libs with those in opencpn-libs. This must be done on a case by case-basis, checking that nothing bad happens when replacing. In most cases just checking the diff is enough.</p>",
+        "id": 275800022,
+        "sender_full_name": "Alec Leamas",
+        "timestamp": 1647609132
+    },
+    {
+        "content": "<p>Awesome. Thanks for checking. Will do tonight.</p>",
+        "id": 275800369,
+        "sender_full_name": "Rick Gleason",
+        "timestamp": 1647609337
+    },
+    {
+        "content": "<p>More checks reveals that you should be fine replacing all occurrences of libs/  with opencpn-libs/ in Plugin.cmake, the add_plugin_libraries macro. After checking builds, you could remove the local directory libs/.</p>",
+        "id": 275800978,
+        "sender_full_name": "Alec Leamas",
+        "timestamp": 1647609635
+    },
+    {
+        "content": "<p>Thanks Alec. I am going to do this now.</p>",
+        "id": 275920043,
+        "sender_full_name": "Rick Gleason",
+        "timestamp": 1647710540
+    },
+    {
+        "content": "<p>cd sources\\vdr_pi using bash prompt<br>\n ./update-templates sd3.1.0   template is updated<br>\ngit add update-templates<br>\ngit commit -am \"update-templates sd3.1.0\"<br>\n ./update-templates sd3.1.0      SD files are updated and a new commit made.<br>\nNew commit is \" cmake: Update TemplateVersion to 3213da1\"  -Done to here.<br>\nNext need to replace the all libraries with those in opencpn-libs in plugin-cmake since they are the same.<br>\nThen remove all local libs/dir.<br>\nThen increment the version and try to build locally and test</p>\n<p>Then get plugins auto ready, and eventually push.</p>",
+        "id": 275923141,
+        "sender_full_name": "Rick Gleason",
+        "timestamp": 1647714888
+    },
+    {
+        "content": "<p>Changing libs now. I see the api directory has been changed.<br>\nI copied all the <a href=\"https://github.com/Rasbats/shipdriver_pi/blob/v3.1/Plugin.cmake\">libs as shown in SD 3.1.0</a>  under \"macro\" <br>\nbut since these were all generally commented out in VDR, I left them commented out.</p>\n<p>There are several questions about svg.</p>\n<ol>\n<li>I am currently using  VDR_USE_SVG  is that a problem?</li>\n<li>I have under Macro these lines also commented out<br>\n   # The wxsvg library enables SVG overall in the plugin<br>\n   #  add_subdirectory(\"${CMAKE_SOURCE_DIR}/opencpn-libs/wxsvg\")  <br>\n   #  target_link_libraries(${PACKAGE_NAME} ocpn::wxsvg)<br>\nIs that a problem?  It worked before.</li>\n</ol>",
+        "id": 275923745,
+        "sender_full_name": "Rick Gleason",
+        "timestamp": 1647715654
+    },
+    {
+        "content": "<p>Changed to <br>\nset(PKG_VERSION  1.3.21.0)</p>",
+        "id": 275923796,
+        "sender_full_name": "Rick Gleason",
+        "timestamp": 1647715711
+    },
+    {
+        "content": "<p>This seems to build locally.</p>",
+        "id": 275924045,
+        "sender_full_name": "Rick Gleason",
+        "timestamp": 1647716054
+    },
+    {
+        "content": "<p>Have pushed  untagged 1.3.21<br>\n<a href=\"https://github.com/rgleason/vdr_pi\">https://github.com/rgleason/vdr_pi</a></p>",
+        "id": 275924624,
+        "sender_full_name": "Rick Gleason",
+        "timestamp": 1647716827
+    },
+    {
+        "content": "<p>I've checked the builds <a href=\"https://github.com/rgleason/vdr_pi\">https://github.com/rgleason/vdr_pi</a> and continuous Drone is not building<br>\nRaspian Arm1 and Arm2  <a href=\"https://cloud.drone.io/rgleason/vdr_pi/77\">https://cloud.drone.io/rgleason/vdr_pi/77</a><br>\nare failing.<br>\nI have checked the Vdr_pi  Settings &gt; Secrets and find I have entered the 3 keys needed.<br>\nI tried rebuilding but still get an error.</p>\n<p>export PATH=$HOME/.local/bin:$PATH</p>\n<ul>\n<li>/bin/bash ci<strong>/drone-build-raspbian.sh</strong></li>\n</ul>\n<p>/bin/bash: ci/<strong>drone-build-raspbian.sh</strong>: No such file or directory<br>\n/bin/sh: 42: ci/<strong>drone-build-raspbian.sh</strong>: not found</p>\n<p>I looked at ci/ and did not find those files.<br>\nAlso I looked at config.yml and did not find anything.<br>\nHave I not configured properly.</p>",
+        "id": 275936818,
+        "sender_full_name": "Rick Gleason",
+        "timestamp": 1647734323
+    },
+    {
+        "content": "<p>I've checked <a href=\"https://github.com/Rasbats/shipdriver_pi/tree/v3.1\">https://github.com/Rasbats/shipdriver_pi/tree/v3.1</a>  both the ci/ directory and the circleci/config.yml and with my  vdr corresponding directories <a href=\"https://github.com/rgleason/vdr_pi\">https://github.com/rgleason/vdr_pi</a> and have found they are very much the same and  have not found reference to the two drone errors that I am getting in the build.   It does not appear drone is involved anymore. Why is drone being activated?</p>",
+        "id": 275964624,
+        "sender_full_name": "Rick Gleason",
+        "timestamp": 1647779617
+    },
+    {
+        "content": "<p>Should I just disable VDR on my Drone account?</p>",
+        "id": 275964673,
+        "sender_full_name": "Rick Gleason",
+        "timestamp": 1647779664
+    },
+    {
+        "content": "<p>Alec, I have not pushed  VDR because the drone Raspian is failing.  see above</p>",
+        "id": 276131056,
+        "sender_full_name": "Rick Gleason",
+        "timestamp": 1647909002
+    },
+    {
+        "content": "<p>Well now I realize that all the builds are done for VDR and the drone Raspian are not needed. I will just remove VDR from the Drone account.</p>",
+        "id": 276196707,
+        "sender_full_name": "Rick Gleason",
+        "timestamp": 1647959388
+    },
+    {
+        "content": "<p><span class=\"user-mention\" data-user-id=\"399510\">@Alec Leamas</span>  Getting this for the free circleci account. Something new?<br>\n<em>This job has been blocked because resource-class:arm.medium is not available on your plan</em></p>",
+        "id": 276460170,
+        "sender_full_name": "Mike Rossiter",
+        "timestamp": 1648120307
+    },
+    {
+        "content": "<p>The circleci logs are here:<br>\n<a href=\"https://app.circleci.com/pipelines/github/Rasbats/shipdriver_pi?filter=all\">https://app.circleci.com/pipelines/github/Rasbats/shipdriver_pi?filter=all</a></p>",
+        "id": 276461090,
+        "sender_full_name": "Mike Rossiter",
+        "timestamp": 1648120894
+    },
+    {
+        "content": "<p>Seems indeed to be something new. Could you please file a bug against shipdriver? We need to make new point releases for both 3.0.x and 3.1.x</p>",
+        "id": 276463459,
+        "sender_full_name": "Alec Leamas",
+        "timestamp": 1648122459
+    },
+    {
+        "content": "<p>Fix follows: </p>\n<div class=\"codehilite\" data-code-language=\"Diff\"><pre><span></span><code><span class=\"gh\">index eaaf01a..72ce894 100644</span><span class=\"w\"></span>\n<span class=\"gd\">--- a/.circleci/config.yml</span><span class=\"w\"></span>\n<span class=\"gi\">+++ b/.circleci/config.yml</span><span class=\"w\"></span>\n<span class=\"gu\">@@ -27,7 +27,7 @@ jobs:</span><span class=\"w\"></span>\n<span class=\"w\"> </span>  build-bionic-armhf:<span class=\"w\"></span>\n<span class=\"w\"> </span>    machine:<span class=\"w\"></span>\n<span class=\"w\"> </span>      image: ubuntu-2004:202101-01<span class=\"w\"></span>\n<span class=\"gd\">-    resource_class: arm.medium</span><span class=\"w\"></span>\n<span class=\"gi\">+    resource_class: arm.small</span><span class=\"w\"></span>\n<span class=\"w\"> </span>    environment:<span class=\"w\"></span>\n<span class=\"w\"> </span>      - DOCKER_IMAGE: opencpn/ubuntu-bionic-armhf:v1<span class=\"w\"></span>\n<span class=\"w\"> </span>      - TARGET_TUPLE: ubuntu;18.04;armhf<span class=\"w\"></span>\n<span class=\"gu\">@@ -45,7 +45,7 @@ jobs:</span><span class=\"w\"></span>\n<span class=\"w\"> </span>  build-focal-armhf:<span class=\"w\"></span>\n<span class=\"w\"> </span>    machine:<span class=\"w\"></span>\n<span class=\"w\"> </span>      image: ubuntu-2004:202101-01<span class=\"w\"></span>\n<span class=\"gd\">-    resource_class: arm.medium</span><span class=\"w\"></span>\n<span class=\"gi\">+    resource_class: arm.small</span><span class=\"w\"></span>\n<span class=\"w\"> </span>    environment:<span class=\"w\"></span>\n<span class=\"w\"> </span>      - TARGET_TUPLE: ubuntu;20.04;armhf<span class=\"w\"></span>\n<span class=\"w\"> </span>      - CMAKE_BUILD_PARALLEL_LEVEL: 2<span class=\"w\"></span>\n<span class=\"gu\">@@ -62,7 +62,7 @@ jobs:</span><span class=\"w\"></span>\n<span class=\"w\"> </span>  build-bullseye-armhf:<span class=\"w\"></span>\n<span class=\"w\"> </span>    machine:<span class=\"w\"></span>\n<span class=\"w\"> </span>      image: ubuntu-2004:202101-01<span class=\"w\"></span>\n<span class=\"gd\">-    resource_class: arm.medium</span><span class=\"w\"></span>\n<span class=\"gi\">+    resource_class: arm.small</span><span class=\"w\"></span>\n<span class=\"w\"> </span>    environment:<span class=\"w\"></span>\n<span class=\"w\"> </span>      - TARGET_TUPLE: debian;11;armhf<span class=\"w\"></span>\n<span class=\"w\"> </span>      - OCPN_TARGET: bullseye<span class=\"w\"></span>\n<span class=\"gu\">@@ -76,7 +76,7 @@ jobs:</span><span class=\"w\"></span>\n<span class=\"w\"> </span>  build-buster-armhf:<span class=\"w\"></span>\n<span class=\"w\"> </span>    machine:<span class=\"w\"></span>\n<span class=\"w\"> </span>      image: ubuntu-2004:202101-01<span class=\"w\"></span>\n<span class=\"gd\">-    resource_class: arm.medium</span><span class=\"w\"></span>\n<span class=\"gi\">+    resource_class: arm.small</span><span class=\"w\"></span>\n<span class=\"w\"> </span>    environment:<span class=\"w\"></span>\n<span class=\"w\"> </span>      - TARGET_TUPLE: debian;10;armhf<span class=\"w\"></span>\n<span class=\"w\"> </span>      - OCPN_TARGET: buster<span class=\"w\"></span>\n<span class=\"gu\">@@ -90,7 +90,7 @@ jobs:</span><span class=\"w\"></span>\n<span class=\"w\"> </span>  build-flatpak-arm64:<span class=\"w\"></span>\n<span class=\"w\"> </span>    machine:<span class=\"w\"></span>\n<span class=\"w\"> </span>      image: ubuntu-2004:202101-01<span class=\"w\"></span>\n<span class=\"gd\">-    resource_class: arm.medium</span><span class=\"w\"></span>\n<span class=\"gi\">+    resource_class: arm.small</span><span class=\"w\"></span>\n<span class=\"w\"> </span>    environment:<span class=\"w\"></span>\n<span class=\"w\"> </span>      - OCPN_TARGET: flatpak-arm64<span class=\"w\"></span>\n<span class=\"w\"> </span>      - CMAKE_BUILD_PARALLEL_LEVEL: 2<span class=\"w\"></span>\n</code></pre></div>",
+        "id": 276463585,
+        "sender_full_name": "Alec Leamas",
+        "timestamp": 1648122514
+    },
+    {
+        "content": "<p>I have also filed a circleci support ticket. We need to be sure that this isn't just a bug on their side before pushing changes.</p>",
+        "id": 276476317,
+        "sender_full_name": "Alec Leamas",
+        "timestamp": 1648129111
+    },
+    {
+        "content": "<p><span class=\"user-mention\" data-user-id=\"399559\">@Mike Rossiter</span>  There are problems with the v3.1 branch: the sd3.1.1 tag is not part of the branch.  We need to coordinate better, all of us needs to be aware of the release branch. This time I wasn't , perhaps I just forgot (?) The net result is that  the sd3.1.1 tag lives in master branch. </p>\n<p>I think we could fix this by rebasing the v3.1  branch. Something like</p>\n<div class=\"codehilite\"><pre><span></span><code>    $ git branch -D v3.1\n    $ git checkout -b   v3.1 sd3.1.0\n    $ git push -f  origin v3.1:v3.1\n</code></pre></div>\n<p>That should kill the old v3.1 branch and create a new, sound one. Hopefully, it should not break any eggs, there should NOT be much work done on v3.1 until now. The exception is <a href=\"https://github.com/Rasbats/shipdriver_pi/pull/440\">https://github.com/Rasbats/shipdriver_pi/pull/440</a> which will need a rebase before merging. Don't worry about it, I'll fix it  once the v3.1 branch is ok.</p>",
+        "id": 276790537,
+        "sender_full_name": "Alec Leamas",
+        "timestamp": 1648390545
+    },
+    {
+        "content": "<p>Probably me. I don't normally work anywhere else other than in the master repo.</p>\n<blockquote>\n<p>Don't worry about it, I'll fix it once the v3.1 branch is ok.</p>\n</blockquote>\n<p>Should be ready.</p>",
+        "id": 276791790,
+        "sender_full_name": "Mike Rossiter",
+        "timestamp": 1648392207
+    },
+    {
+        "content": "<blockquote>\n<p>$ git tag sd3.1.1 40c1c08<br>\nfatal: Failed to resolve '40c1c08' as a valid ref.</p>\n</blockquote>\n<p>Got the order of commits wrong I think.</p>",
+        "id": 276800184,
+        "sender_full_name": "Mike Rossiter",
+        "timestamp": 1648404514
+    },
+    {
+        "content": "<p>In branch v3.1 should I remove the tag sd3.1.1 and then tag again.</p>",
+        "id": 276800773,
+        "sender_full_name": "Mike Rossiter",
+        "timestamp": 1648405367
+    },
+    {
+        "content": "<p>Late reply, other things to do.</p>\n<blockquote>\n<p>fatal: Failed to resolve '40c1c08' as a valid ref.</p>\n</blockquote>\n<p>my bad: the commit has got a new hash after merging my PR. If I understand this correctly the commands should be:</p>\n<div class=\"codehilite\"><pre><span></span><code>     $ git tag -d sd3.1.1\n     $ git tag sd3.1.1 a388052\n     $ git push -f origin refs/tags/sd3.1.1:refs/tags/sd3.1.1\n</code></pre></div>\n<blockquote>\n<p>In branch v3.1 should I remove the tag sd3.1.1 and then tag again.</p>\n</blockquote>\n<p>Yes, this is what command above does: remove the sd3.1.1 tag, re-create it pointing to a388052 and then overwrite the remote tag. There is no diff between a388052 and sd3.1.1 so the contents of the tag will be the same, it's just about  having it in the correct v3.1 branch instead of master.</p>",
+        "id": 276857388,
+        "sender_full_name": "Alec Leamas",
+        "timestamp": 1648466140
+    },
+    {
+        "content": "<p>Done. Looks ok.</p>",
+        "id": 276858794,
+        "sender_full_name": "Mike Rossiter",
+        "timestamp": 1648466966
+    },
+    {
+        "content": "<p>Indeed., looks fine. Lesson learned: we need  to communicate when creating release branches like v3.1 so all are onboard.</p>",
+        "id": 276868539,
+        "sender_full_name": "Alec Leamas",
+        "timestamp": 1648472176
+    },
+    {
+        "content": "<p>Watch out for  .drone.yml   REMOVE IT</p>",
+        "id": 278233897,
+        "sender_full_name": "Rick Gleason",
+        "timestamp": 1649369917
+    },
+    {
+        "content": "<p>Another way  to look at it: when updating: Check  the Changelog.md file for caveats. And check the shipdriver repository for open issues.</p>",
+        "id": 278234756,
+        "sender_full_name": "Alec Leamas",
+        "timestamp": 1649370508
+    },
+    {
+        "content": "<p>sd3.1.1 includes A32 armhf builds which work with openplotter v2.0. Thanks.</p>",
+        "id": 278708792,
+        "sender_full_name": "Mike Rossiter",
+        "timestamp": 1649776937
+    },
+    {
+        "content": "<blockquote>\n<p>$ git submodule update --init opencpn-libs<br>\nerror: pathspec 'opencpn-libs' did not match any file(s) known to git</p>\n</blockquote>\n<p>update templates did not copy opencpn-libs from ShipDriver.</p>\n<p>In the appveyor build:</p>\n<blockquote>\n<p>git submodule update --init opencpn-libs<br>\nerror: pathspec 'opencpn-libs' did not match any file(s) known to git<br>\nCommand exited with code 1</p>\n</blockquote>\n<p>Needed to seed the repo by copying opencpn-libs from ShipDriver. Update templates does not seed the repo. Should this be in the script?</p>\n<p>build log for nvc_pi is here: <a href=\"https://ci.appveyor.com/project/Rasbats/nvc-pi\">https://ci.appveyor.com/project/Rasbats/nvc-pi</a></p>\n<p>It was the same for aisMET_HYDRO.</p>",
+        "id": 287705621,
+        "sender_full_name": "Mike Rossiter",
+        "timestamp": 1656417782
+    },
+    {
+        "content": "<p>No issues apart from that.</p>",
+        "id": 287710403,
+        "sender_full_name": "Mike Rossiter",
+        "timestamp": 1656420472
+    },
+    {
+        "content": "<p>otcurrent_pi update used sd3.1.4-beta1 without any opencpn-libs problem. Maybe seeded already. The Android build works as expected. That was the main reason for choosing this pi.</p>",
+        "id": 287722333,
+        "sender_full_name": "Mike Rossiter",
+        "timestamp": 1656425958
+    },
+    {
+        "content": "<p>I did not read the README in the opencpn-libs directory. I see what is needed to add the sub-module. Did this and the build was fine for nvc_pi.</p>",
+        "id": 287723865,
+        "sender_full_name": "Mike Rossiter",
+        "timestamp": 1656426578
+    },
+    {
+        "content": "<p>Hm... opencpn-libs... are you talking about a new plugin which havn't been using the templates  before?</p>",
+        "id": 287762924,
+        "sender_full_name": "Alec Leamas",
+        "timestamp": 1656443710
+    },
+    {
+        "content": "<p>Anyway, the code to create and/or update opencpn-libs is in place in update-templates, so it \"should\" work. OTOH, just copying opencpn-libs from shipdriver creates an undefined state which basically just won't work. The way to create the submodule if it does not exist is:</p>\n<div class=\"codehilite\"><pre><span></span><code> $ git submodule add https://github.com/leamas/opencpn-libs.git opencpn-libs\n $ git submodule update --remote --merge opencpn-libs\n $ git add opencpn-libs\n $ git commit -m &quot;Adding new submodule opencpn-libs&quot;\n</code></pre></div>",
+        "id": 287763600,
+        "sender_full_name": "Alec Leamas",
+        "timestamp": 1656444031
+    },
+    {
+        "content": "<p>Which basically means that you should remove opencpn-libs completely using <code>git rm -r --cached opencpn-libs; git commit</code> and re-run update-templates. After doing so, please report back.</p>",
+        "id": 287764050,
+        "sender_full_name": "Alec Leamas",
+        "timestamp": 1656444248
+    },
+    {
+        "content": "<p>Have already removed the opencpn-libs from nvc_pi  and used this:</p>\n<hr>\n<p>$ git submodule add <a href=\"https://github.com/leamas/opencpn-libs.git\">https://github.com/leamas/opencpn-libs.git</a><br>\n$ git commit -m \"Adding opencpn-libs submodule\"</p>\n<hr>\n<p><em>opencpn-libs @ ff0c206</em> directory  appears in the nvc_pi source code and it builds fine.</p>",
+        "id": 287768139,
+        "sender_full_name": "Mike Rossiter",
+        "timestamp": 1656446327
+    },
+    {
+        "content": "<p>OK, looks good. But the question is if there is a bug in update-templates or not?</p>\n<p>Actually removing a submodule is hard work, see opencpn-libs/README.  Have  you any other plugin which could be tested?</p>",
+        "id": 287771151,
+        "sender_full_name": "Alec Leamas",
+        "timestamp": 1656447876
+    },
+    {
+        "content": "<p>I will play with another plugin tomorrow.</p>",
+        "id": 287771243,
+        "sender_full_name": "Mike Rossiter",
+        "timestamp": 1656447936
+    },
+    {
+        "content": "<p>Right.</p>\n<p>Actually, that does not look good. You must initialize the submodule, otherwise it's empty. But the important thing is that update-templates should do the job. OTOH, update-templates <strong>will</strong> be confused if there is a opencpn-libs directory which isn't correctly added...</p>",
+        "id": 287771560,
+        "sender_full_name": "Alec Leamas",
+        "timestamp": 1656448087
+    },
+    {
+        "content": "<p>With DR_pi update-templates worked fine and added the sub-module. But ...<br>\nBuild errors:<br>\n<a href=\"https://app.circleci.com/pipelines/github/Rasbats/DR_pi?filter=all\">https://app.circleci.com/pipelines/github/Rasbats/DR_pi?filter=all</a><br>\n<a href=\"https://ci.appveyor.com/project/Rasbats/dr-pi\">https://ci.appveyor.com/project/Rasbats/dr-pi</a><br>\n<em>CMake Error: Could not find cmake module file: CMakeDetermine4.0.0Compiler.cmake</em></p>",
+        "id": 287812569,
+        "sender_full_name": "Mike Rossiter",
+        "timestamp": 1656484454
+    },
+    {
+        "content": "<p>Ok ... hang on. I see a missing package name in Plugin.cmake. Let me try again.</p>",
+        "id": 287812836,
+        "sender_full_name": "Mike Rossiter",
+        "timestamp": 1656484767
+    },
+    {
+        "content": "<p>Builds ok apart from flatpak:<br>\n<a href=\"https://app.circleci.com/pipelines/github/Rasbats/DR_pi?filter=all\">https://app.circleci.com/pipelines/github/Rasbats/DR_pi?filter=all</a></p>\n<p>New subject:<br>\nWhen cloning DR_pi as part of a batch file build opencpn-libs does not appear. Looking at this now.</p>",
+        "id": 287814310,
+        "sender_full_name": "Mike Rossiter",
+        "timestamp": 1656486007
+    },
+    {
+        "content": "<p>git clone leaves an empty opencpn-libs directory.</p>",
+        "id": 287814501,
+        "sender_full_name": "Mike Rossiter",
+        "timestamp": 1656486181
+    },
+    {
+        "content": "<p>The git-clone thing is documented in INSTALL.md. You need to make a <code>git submodule update --init</code>  A shortcut is to use <code>git clone -r</code>  which fixes the submodule directly when cloning.</p>",
+        "id": 287815632,
+        "sender_full_name": "Alec Leamas",
+        "timestamp": 1656487162
+    },
+    {
+        "content": "<p>Looking at the build error...</p>",
+        "id": 287816106,
+        "sender_full_name": "Alec Leamas",
+        "timestamp": 1656487511
+    },
+    {
+        "content": "<p>I know what's happening, but not why...</p>",
+        "id": 287816635,
+        "sender_full_name": "Alec Leamas",
+        "timestamp": 1656487870
+    },
+    {
+        "content": "<p>Found the error. Really good catch by you!</p>\n<p>Pushed a new tag sd3.1.4-beta2 which should fix this.</p>",
+        "id": 287818144,
+        "sender_full_name": "Alec Leamas",
+        "timestamp": 1656488956
+    },
+    {
+        "content": "<p>oops.. I only pushed the tag to my own repo, not \"yours\". Fixed now.</p>",
+        "id": 287820011,
+        "sender_full_name": "Alec Leamas",
+        "timestamp": 1656490315
+    },
+    {
+        "content": "<p>Nope. The tag is still broken. Working on it.</p>",
+        "id": 287820322,
+        "sender_full_name": "Alec Leamas",
+        "timestamp": 1656490532
+    },
+    {
+        "content": "<p>New tag 3.1.4-beta3, this time pushed to the correct repo ;). Works for me on DR_pi</p>",
+        "id": 287821320,
+        "sender_full_name": "Alec Leamas",
+        "timestamp": 1656491231
+    },
+    {
+        "content": "<p>sd3.1.4-beta3 working here for DR_pi.</p>",
+        "id": 287825150,
+        "sender_full_name": "Mike Rossiter",
+        "timestamp": 1656493619
+    },
+    {
+        "content": "<p>Right. Anything more we should do before releasing 3.1.4?</p>",
+        "id": 287825963,
+        "sender_full_name": "Alec Leamas",
+        "timestamp": 1656494150
+    },
+    {
+        "content": "<p>Nothing I can see at the moment!</p>",
+        "id": 287826362,
+        "sender_full_name": "Mike Rossiter",
+        "timestamp": 1656494379
+    },
+    {
+        "content": "<p>Yes... e should check the metadata. Finding something conspicious, stay tuned...</p>",
+        "id": 287826368,
+        "sender_full_name": "Alec Leamas",
+        "timestamp": 1656494385
+    },
+    {
+        "content": "<p>Yes ... missed installing stuff.</p>",
+        "id": 287826552,
+        "sender_full_name": "Mike Rossiter",
+        "timestamp": 1656494496
+    },
+    {
+        "content": "<p><code>git clone -r</code> did not work for me.<br>\nUsed: <code>git clone --recurse-submodules</code></p>",
+        "id": 287826843,
+        "sender_full_name": "Mike Rossiter",
+        "timestamp": 1656494682
+    },
+    {
+        "content": "<p>DR_pi: Latest build installs on Windows.</p>",
+        "id": 287827353,
+        "sender_full_name": "Mike Rossiter",
+        "timestamp": 1656494972
+    },
+    {
+        "content": "<p>DR_pi: Android build working fine.</p>",
+        "id": 287829304,
+        "sender_full_name": "Mike Rossiter",
+        "timestamp": 1656495982
+    },
+    {
+        "content": "<p>hm... looking at the generated metadata, there is a space before /raw in the tarball url. Probably a template issue.</p>",
+        "id": 287829698,
+        "sender_full_name": "Alec Leamas",
+        "timestamp": 1656496208
+    },
+    {
+        "content": "<p>The generated metadata actually looks OK locally, but but the copy on Cloudsmith as well as the one pushed to the auto branch has this pesky space.</p>",
+        "id": 287830080,
+        "sender_full_name": "Alec Leamas",
+        "timestamp": 1656496410
+    },
+    {
+        "content": "<p>It was silly me which had a trailing space in CLOUDSMITH_UNSTABLE_REPO.  Will add a fix to master for clumsy  copy-paste, but no need to stop the release for this.</p>\n<p>So: time to release.  I'll make a final entry in the changelog and push a 3.1.4 tag. Unless you stop me, now :)</p>",
+        "id": 287831510,
+        "sender_full_name": "Alec Leamas",
+        "timestamp": 1656497276
+    },
+    {
+        "content": "<p>Released and published in <a href=\"https://github.com/OpenCPN/OpenCPN/discussions/2589\">https://github.com/OpenCPN/OpenCPN/discussions/2589</a></p>",
+        "id": 287837010,
+        "sender_full_name": "Alec Leamas",
+        "timestamp": 1656501022
+    },
+    {
+        "content": "<p>AFK for a while. Thanks for all testing!</p>",
+        "id": 287840705,
+        "sender_full_name": "Alec Leamas",
+        "timestamp": 1656503396
+    },
+    {
+        "content": "<p>This topic was moved here from <a class=\"stream-topic\" data-stream-id=\"282854\" href=\"/#narrow/stream/282854-general/topic/shipdriver.203.2E1\">#general &gt; shipdriver 3.1</a> by <span class=\"user-mention silent\" data-user-id=\"399510\">Alec Leamas</span>.</p>",
+        "id": 290759431,
+        "sender_full_name": "Notification Bot",
+        "timestamp": 1658756246
+    }
+]

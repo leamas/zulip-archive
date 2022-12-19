@@ -1,0 +1,38 @@
+[
+    {
+        "content": "<p>In Watchdog  antora manual which is one big page,   the entire document is 5.1mb  and images take up 4.8mb <br>\nAll the images are less than 100kb but there are a lot of them.  <br>\nI have identified many unused images left over from previous editing by using the linkchecker screen and manually comparing to the actual directory in antora  under  C:\\Users[user]Documents\\GitHub\\watchdog_pi\\modules\\ROOT\\images</p>\n<p>This check is tedious and will be needed quite frequently. Does anyone know of a small program/technique that would help?</p>",
+        "id": 231647006,
+        "sender_full_name": "Rick Gleason",
+        "timestamp": 1616597504
+    },
+    {
+        "content": "<p>It shouldnt  be hard to script: grep for all image: tags and their content. List all images in ROOT/images.  Take the intersection, the image files not present in the list of image tags.</p>",
+        "id": 231679335,
+        "sender_full_name": "Alec Leamas",
+        "timestamp": 1616608313
+    },
+    {
+        "content": "<p>Doesn't  look that easy</p>\n<p><a href=\"https://stackoverflow.com/questions/3183444/check-for-valid-link-url\">https://stackoverflow.com/questions/3183444/check-for-valid-link-url</a><br>\n<a href=\"https://stackoverflow.com/questions/3183444/check-for-valid-link-url\">https://stackoverflow.com/questions/3183444/check-for-valid-link-url</a></p>",
+        "id": 231684439,
+        "sender_full_name": "Rick Gleason",
+        "timestamp": 1616610240
+    },
+    {
+        "content": "<p>grep  recursive    (looking for some pattern)    (in this folder)<br>\ngrep -r   https:// ???   (in this folder) and  (if this prefix is found, then  add the filename to a LinkFoundList.)  and compare it to all files in an adjacent media folder and if they match  add the file to a  MediaFileFoundList  if they don't match add it to MediaFileNotFoundList.<br>\nThen compare the MediaDirectory to  MediaFoundList adding all files that arent listed to a MediaFilesUnusedList.    Need to run this in bash too.</p>\n<p>+Compare Source Links with Media Folder</p>\n<div class=\"codehilite\"><pre><span></span><code>  + Media file found (ok)\n  + Media file not found  (need to fix this link or find the file)\n</code></pre></div>\n\n<p>Compare MediaFileFound List with Media Folder files</p>\n<div class=\"codehilite\"><pre><span></span><code> + Unused Media file  (need to remove)  -any file that is not part of MediaFileFound\n</code></pre></div>",
+        "id": 231686723,
+        "sender_full_name": "Rick Gleason",
+        "timestamp": 1616611106
+    },
+    {
+        "content": "<p>That SO reply is irrelevant. We know that our image links look like image:file.png[caption], and this is trivial to parse.</p>",
+        "id": 231691865,
+        "sender_full_name": "Alec Leamas",
+        "timestamp": 1616613090
+    },
+    {
+        "content": "<p>5 messages were moved here from <a class=\"stream-topic\" data-stream-id=\"282916\" href=\"/#narrow/stream/282916-Image-and-Screenshot-Guidelines/topic/How.20to.20Identify.20unused.20images\">#Image and Screenshot Guidelines &gt; How to Identify unused images</a> by <span class=\"user-mention silent\" data-user-id=\"399510\">Alec Leamas</span>.</p>",
+        "id": 290757956,
+        "sender_full_name": "Notification Bot",
+        "timestamp": 1658755500
+    }
+]

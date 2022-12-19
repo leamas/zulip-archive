@@ -1,0 +1,75 @@
+<html>
+<head><meta charset="utf-8"><title>Logbook · manuals · Zulip Chat Archive</title></head>
+<h2>Stream: <a href="https://leamas.github.io/zulip-archive/stream/332172-manuals/index.html">manuals</a></h2>
+<h3>Topic: <a href="https://leamas.github.io/zulip-archive/stream/332172-manuals/topic/Logbook.html">Logbook</a></h3>
+
+<hr>
+
+<base href="https://opencpn.zulipchat.com">
+
+<head><link href="https://leamas.github.io/zulip-archive/style.css" rel="stylesheet"></head>
+
+<a name="270739815"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332172-manuals/topic/Logbook/near/270739815" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Rick Gleason <a href="https://leamas.github.io/zulip-archive/stream/332172-manuals/topic/Logbook.html#270739815">(Feb 04 2022 at 16:37)</a>:</h4>
+<p>Alec,  updated template, incremented version, built logbook locally, installed and checked it.<br>
+Then pushed a 1.4.27-beta1 tag and then a tag v1.4.27   <br>
+Then I found out that  these weren't working </p>
+<p>Android (known problem with wxtimedate)</p>
+<p>Appveyor - EXEC : CMake error : Could not open file for write in copy operation C:/project/opencpn/plugin_src/build/Logbook-v1.4.27 [C:\project\opencpn\plugin_src\build\tarball-conf.vcxproj]</p>
+<p>Drone   -  CMake Error: File /drone/src/build/Logbook-v1.4.27 does not exist.<br>
+CMakeFiles/tarball-install.dir/build.make:76: recipe for target 'tarball-install' failed<br>
+<a href="https://cloud.drone.io/rgleason/LogbookKonni_pi/49/1/2">https://cloud.drone.io/rgleason/LogbookKonni_pi/49/1/2</a>   </p>
+<p>Any ideas?</p>
+
+
+
+<a name="270740517"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332172-manuals/topic/Logbook/near/270740517" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Alec Leamas <a href="https://leamas.github.io/zulip-archive/stream/332172-manuals/topic/Logbook.html#270740517">(Feb 04 2022 at 16:43)</a>:</h4>
+<p>Seems that you want to write  into  the directory  build/Logbook-v1.4.27, which does not exist  in your build environment. On my way, not much time now.   Somehow, the target directory seems missing in your build, no idea why.</p>
+<p>Definitely impossible to say anything meaningful without links to sources and build logs.</p>
+
+
+
+<a name="270740704"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332172-manuals/topic/Logbook/near/270740704" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Rick Gleason <a href="https://leamas.github.io/zulip-archive/stream/332172-manuals/topic/Logbook.html#270740704">(Feb 04 2022 at 16:44)</a>:</h4>
+<p>This can wait.  I will look more carefully later today after work. May have something useful to ask then. Thanks.</p>
+
+
+
+<a name="270889099"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332172-manuals/topic/Logbook/near/270889099" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Rick Gleason <a href="https://leamas.github.io/zulip-archive/stream/332172-manuals/topic/Logbook.html#270889099">(Feb 06 2022 at 13:06)</a>:</h4>
+<p>What happened was I pushed  a beta tag and then pushed a tag.  That bolixed up the works I think, because<br>
+fcgle@Hesper MINGW64 ~/source/logbookkonni_pi (master)<br>
+$ git log --oneline -15<br>
+3254d9c (HEAD -&gt; master, tag: v1.4.27-beta1, tag: v1.4.27, origin/master) 1.4.27.0<br>
+cbb6b31 cmake: Update TemplateVersion to 0a42b53<br>
+82f9e9a Templates: Updating other files<br>
+c27e464 Templates: Updating buildwin<br>
+f473141 Templates: Updating cmake<br>
+e44423a Add update-templates script<br>
+bf23419 (tag: v1.4.26) 1.4.26<br>
+2e7a0ee Merge branch 'master' of github.com:rgleason/LogbookKonni_pi</p>
+<p>So I incremented the version and pushed a tag and it worked.  Now in master catalog.</p>
+
+
+
+<a name="270896966"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332172-manuals/topic/Logbook/near/270896966" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Rick Gleason <a href="https://leamas.github.io/zulip-archive/stream/332172-manuals/topic/Logbook.html#270896966">(Feb 06 2022 at 16:04)</a>:</h4>
+<p>It appears that I now have multiple versions of vdr and logbook in the master catalog. I will fix that, but what is the drill with regard to this?  Am I missing something about "auto"?</p>
+
+
+
+<a name="270904030"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332172-manuals/topic/Logbook/near/270904030" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Alec Leamas <a href="https://leamas.github.io/zulip-archive/stream/332172-manuals/topic/Logbook.html#270904030">(Feb 06 2022 at 18:30)</a>:</h4>
+<p>You are missing the last item in  "Making the Pull Request (PR) to OpenCPN/plugins: <a href="https://opencpn-manuals.github.io/main/AlternativeWorkflow/InstallConfigure/Catalog-Github-Integration.html#_cleaning_up_old_metadata">https://opencpn-manuals.github.io/main/AlternativeWorkflow/InstallConfigure/Catalog-Github-Integration.html#_cleaning_up_old_metadata</a></p>
+
+
+
+<a name="290756841"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332172-manuals/topic/Logbook/near/290756841" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Notification Bot <a href="https://leamas.github.io/zulip-archive/stream/332172-manuals/topic/Logbook.html#290756841">(Jul 25 2022 at 13:14)</a>:</h4>
+<p>This topic was moved here from <a class="stream-topic" data-stream-id="282854" href="/#narrow/stream/282854-general/topic/Logbook">#general &gt; Logbook</a> by <span class="user-mention silent" data-user-id="399510">Alec Leamas</span>.</p>
+
+
+
+<hr><p>Last updated: Dec 19 2022 at 16:41 UTC</p>
+</html>

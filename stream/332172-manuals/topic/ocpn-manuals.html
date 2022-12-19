@@ -1,0 +1,1516 @@
+<html>
+<head><meta charset="utf-8"><title>ocpn-manuals · manuals · Zulip Chat Archive</title></head>
+<h2>Stream: <a href="https://leamas.github.io/zulip-archive/stream/332172-manuals/index.html">manuals</a></h2>
+<h3>Topic: <a href="https://leamas.github.io/zulip-archive/stream/332172-manuals/topic/ocpn-manuals.html">ocpn-manuals</a></h3>
+
+<hr>
+
+<base href="https://opencpn.zulipchat.com">
+
+<head><link href="https://leamas.github.io/zulip-archive/style.css" rel="stylesheet"></head>
+
+<a name="232013983"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332172-manuals/topic/ocpn-manuals/near/232013983" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Rick Gleason <a href="https://leamas.github.io/zulip-archive/stream/332172-manuals/topic/ocpn-manuals.html#232013983">(Mar 26 2021 at 18:44)</a>:</h4>
+<p>I have "github/ocpn-manuals"  locally only.  It has regularly updated  html documentation in "github/ocpn-manuals/docs"<br>
+should I push that up to my remote repository so that Mike can access it somehow?</p>
+<p>Or is it better to have the "watchdog_doc"  repository that can be named as a unique sub-module in Mikes ocpn-user-plugin-manual?</p>
+
+
+
+<a name="232028530"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332172-manuals/topic/ocpn-manuals/near/232028530" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Rick Gleason <a href="https://leamas.github.io/zulip-archive/stream/332172-manuals/topic/ocpn-manuals.html#232028530">(Mar 26 2021 at 20:39)</a>:</h4>
+<p>Submodule is too static and not the right thing to use. points to a certain commit.</p>
+<p>A git submodule is a record within a host git repository that points to a specific commit in another external repository. Submodules are very static and only track specific commits. Submodules do not track git refs or branches and are not automatically updated when the host repository is updated. When adding a submodule to a repository a new .gitmodules file will be created.  </p>
+<p>see <a href="https://www.atlassian.com/git/tutorials/git-submodule">https://www.atlassian.com/git/tutorials/git-submodule</a></p>
+
+
+
+<a name="232029211"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332172-manuals/topic/ocpn-manuals/near/232029211" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Alec Leamas <a href="https://leamas.github.io/zulip-archive/stream/332172-manuals/topic/ocpn-manuals.html#232029211">(Mar 26 2021 at 20:45)</a>:</h4>
+<p>Don't get into submodules now.  Frankly, you know too little about git yet for that.</p>
+<p>You should (of course) push your changes on ocpn-manuals to github to make them visible. Probably not much idea to merge things yet (here, I'm upstream)</p>
+
+
+
+<a name="232029429"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332172-manuals/topic/ocpn-manuals/near/232029429" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Rick Gleason <a href="https://leamas.github.io/zulip-archive/stream/332172-manuals/topic/ocpn-manuals.html#232029429">(Mar 26 2021 at 20:47)</a>:</h4>
+<p>I think the right way to do this is to have an action script that runs in  ocpn-user-plugin-manual  that git fetches all of the plugin_doc html files into different directories.   The ocpn-user-plugin-manual should then become a &lt;username&gt;&gt;github.io   public Github Page</p>
+
+
+
+<a name="232306916"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332172-manuals/topic/ocpn-manuals/near/232306916" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Rick Gleason <a href="https://leamas.github.io/zulip-archive/stream/332172-manuals/topic/ocpn-manuals.html#232306916">(Mar 29 2021 at 17:42)</a>:</h4>
+<p>I realized later that the html is being created in build/site and is not pushed up to the remote repository, so unless that is changed, the output cannot be done in a distributed fashion.  I expect that Mike has decided to use antora/asciidoc to create a centralized version using  the oplaydo opensource repository which will be something like <a href="http://oplaydo.github.io">oplaydo.github.io</a></p>
+
+
+
+<a name="233196155"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332172-manuals/topic/ocpn-manuals/near/233196155" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Mike Rossiter <a href="https://leamas.github.io/zulip-archive/stream/332172-manuals/topic/ocpn-manuals.html#233196155">(Apr 05 2021 at 16:33)</a>:</h4>
+<p>Rick:<br>
+I am building the demo plugins site in exactly the same way as Alec. I do a local test with .gitignore docs and then push the result to Github. This automatically populates the <a href="http://github.io">github.io</a> pages.<br>
+Repo is here:<br>
+<a href="https://github.com/Rasbats/opencpn-plugins-manual">https://github.com/Rasbats/opencpn-plugins-manual</a><br>
+You can see the docs folder.<br>
+<a href="http://github.io">github.io</a> pages are here:<br>
+<a href="https://rasbats.github.io/opencpn-plugins-manual/opencpn-plugins-manual/0.1/index.html">https://rasbats.github.io/opencpn-plugins-manual/opencpn-plugins-manual/0.1/index.html</a><br>
+Watchdog is one of the plugins created by using the module in your repo.<br>
+The oplaydo account is being used for my PR to developers to avoid having their forks in my Rasbats account.</p>
+
+
+
+<a name="233350080"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332172-manuals/topic/ocpn-manuals/near/233350080" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Rick Gleason <a href="https://leamas.github.io/zulip-archive/stream/332172-manuals/topic/ocpn-manuals.html#233350080">(Apr 06 2021 at 16:30)</a>:</h4>
+<p>Thanks for the links.  As I understand it, an open source user is allowed just one  <a href="http://github.io">github.io</a> page? Is that correct?<br>
+Wow, you've done most of them!   This gets complicated doesn't it.</p>
+<p>Can a user web page support the individual plugin repositories documentation too?</p>
+
+
+
+<a name="233381525"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332172-manuals/topic/ocpn-manuals/near/233381525" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Mike Rossiter <a href="https://leamas.github.io/zulip-archive/stream/332172-manuals/topic/ocpn-manuals.html#233381525">(Apr 06 2021 at 20:16)</a>:</h4>
+<p>"Can a user web page support the individual plugin repositories documentation too?"<br>
+Of course. Just copy the docs folder for the plugin to your site (or the contents).</p>
+
+
+
+<a name="233382194"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332172-manuals/topic/ocpn-manuals/near/233382194" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Mike Rossiter <a href="https://leamas.github.io/zulip-archive/stream/332172-manuals/topic/ocpn-manuals.html#233382194">(Apr 06 2021 at 20:21)</a>:</h4>
+<p>Interesting points for the OPM here:<br>
+<a href="https://github.com/Rasbats/opencpn-plugins-manual/issues/1">https://github.com/Rasbats/opencpn-plugins-manual/issues/1</a></p>
+<p>Should a developer be able to use the plugin version as the version number shown for the manual for the plugin?<br>
+I think this is a good idea. Just needs a small change in antora.yml for the plugin, made by the developer(s).</p>
+
+
+
+<a name="233384890"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332172-manuals/topic/ocpn-manuals/near/233384890" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Alec Leamas <a href="https://leamas.github.io/zulip-archive/stream/332172-manuals/topic/ocpn-manuals.html#233384890">(Apr 06 2021 at 20:40)</a>:</h4>
+<p><em>I think this is a good idea. Just needs a small change in antora.yml for the plugin, made by the developer(s).</em></p>
+<p>It might be better to generate antora.yml from <a href="http://antora.yml.in">antora.yml.in</a> in cmake...</p>
+
+
+
+<a name="233432719"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332172-manuals/topic/ocpn-manuals/near/233432719" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Mike Rossiter <a href="https://leamas.github.io/zulip-archive/stream/332172-manuals/topic/ocpn-manuals.html#233432719">(Apr 07 2021 at 05:14)</a>:</h4>
+<p>I would prefer to keep antora.yml in the module. CMake could update antora.yml in the manual location? This makes it possible for the developer to use other tools within the module e.g. pdf creation.</p>
+
+
+
+<a name="233441337"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332172-manuals/topic/ocpn-manuals/near/233441337" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Alec Leamas <a href="https://leamas.github.io/zulip-archive/stream/332172-manuals/topic/ocpn-manuals.html#233441337">(Apr 07 2021 at 07:03)</a>:</h4>
+<p>Agreed, that's what I meant, sorry if being too short</p>
+
+
+
+<a name="233555653"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332172-manuals/topic/ocpn-manuals/near/233555653" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Mike Rossiter <a href="https://leamas.github.io/zulip-archive/stream/332172-manuals/topic/ocpn-manuals.html#233555653">(Apr 07 2021 at 20:27)</a>:</h4>
+<p>"I would prefer to keep antora.yml in the module"<br>
+I meant dev plugin component!</p>
+<p>New manual build.<br>
+Summary:<br>
+Rick is now using mast-reorg for his updated watchdog manual. Change build.yml to reflect change. <br>
+Dashboard_Tactics accepted PR for the manual and is now a component. Update plugins.adoc. Remove module from the master repo modules.<br>
+Push to origin with .gitignore docs.<br>
+Test build locally.<br>
+blank .gitignore<br>
+Push to origin</p>
+
+
+
+<a name="233555936"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332172-manuals/topic/ocpn-manuals/near/233555936" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Mike Rossiter <a href="https://leamas.github.io/zulip-archive/stream/332172-manuals/topic/ocpn-manuals.html#233555936">(Apr 07 2021 at 20:29)</a>:</h4>
+<p>Propose using beta for the version number for the beta plugins?</p>
+
+
+
+<a name="233651738"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332172-manuals/topic/ocpn-manuals/near/233651738" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Rick Gleason <a href="https://leamas.github.io/zulip-archive/stream/332172-manuals/topic/ocpn-manuals.html#233651738">(Apr 08 2021 at 13:27)</a>:</h4>
+<p>Mike, I don't know how this is going to work. I was in the middle of working on watchdog improvements, the manual came with me when I checked out mast-reorg,  I tried to make the changes in master, but was taken back to mast-reorg so I ran antora  bldloc.yml from that.   What is the right way to do this?   It should be coming from the master branch I think. When I commit I will run antora bldloc.yml again?    There is some complexity here and we need a process explanation.</p>
+
+
+
+<a name="233652538"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332172-manuals/topic/ocpn-manuals/near/233652538" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Mike Rossiter <a href="https://leamas.github.io/zulip-archive/stream/332172-manuals/topic/ocpn-manuals.html#233652538">(Apr 08 2021 at 13:33)</a>:</h4>
+<p>This was because you moved the manual to mast-reorg ;) You may want to go forward with the master branch. Move/use the manual there and I will edit my work to use that branch. To avoid confusion you need to stop using bldloc.yml. Get the result from Firefox or wait for the opencpn plugins manual build.</p>
+
+
+
+<a name="233653480"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332172-manuals/topic/ocpn-manuals/near/233653480" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Rick Gleason <a href="https://leamas.github.io/zulip-archive/stream/332172-manuals/topic/ocpn-manuals.html#233653480">(Apr 08 2021 at 13:39)</a>:</h4>
+<p>I didn't move it.  When I git checkout -b mast-reorg it all came over to that branch. I was in the middle of that work and had to make changes to Watchdog as you wanted.   I realize now that I don't generate for the Plugin Manual, that is initiated by you and done by antora from your repos for ocpn-plugins-manual  </p>
+<p>I find I have to see the results when I am editing.  What is the problem with running bldloc.yml?  Is it doing somethiing remotely too?<br>
+I don't think it should affect your antora build.yml? </p>
+<p>I think it is my pushs  of changes up to branch mast-reorg that is possibly causing something to happen there.</p>
+<p>This is getting pretty complicated, I hope this will work in real life for Plugin Devs many of whom do not understand git as much.</p>
+
+
+
+<a name="233654650"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332172-manuals/topic/ocpn-manuals/near/233654650" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Mike Rossiter <a href="https://leamas.github.io/zulip-archive/stream/332172-manuals/topic/ocpn-manuals.html#233654650">(Apr 08 2021 at 13:47)</a>:</h4>
+<p>"initiated by you and done by antora from your repos for ocpn-plugins-manual"<br>
+initiated by me but the antora.yml is the one in manual/watchdog that is used. My antora.yml is for modules not yet given to the devs.<br>
+"What is the problem with running bldloc.yml?"<br>
+No problem. It does not affect the build of the plugins manual.<br>
+"This is getting pretty complicated"<br>
+Agreed. But once you crack it you will see the advantages. Antora is well documented unlike my stuff !<br>
+Do you want to use the master branch of Watchdog?</p>
+
+
+
+<a name="233657185"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332172-manuals/topic/ocpn-manuals/near/233657185" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Rick Gleason <a href="https://leamas.github.io/zulip-archive/stream/332172-manuals/topic/ocpn-manuals.html#233657185">(Apr 08 2021 at 14:02)</a>:</h4>
+<p>Yes that is the main branch.  I make checkouts for changes then merge back.  Sean has not bothered to accept my pr's but I will try again in a little while.  It is pretty clear he does not want to be bothered with the cloud overhead process. I will just continue with his other plugins as before.</p>
+
+
+
+<a name="233657425"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332172-manuals/topic/ocpn-manuals/near/233657425" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Mike Rossiter <a href="https://leamas.github.io/zulip-archive/stream/332172-manuals/topic/ocpn-manuals.html#233657425">(Apr 08 2021 at 14:03)</a>:</h4>
+<p>Let me know when you are ready and I wil get things set up for another manual build.</p>
+
+
+
+<a name="233800238"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332172-manuals/topic/ocpn-manuals/near/233800238" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Mike Rossiter <a href="https://leamas.github.io/zulip-archive/stream/332172-manuals/topic/ocpn-manuals.html#233800238">(Apr 09 2021 at 10:43)</a>:</h4>
+<p>OPM updated to include the change to Watchdog master branch. Radar_pi also updated with Hakan changes.</p>
+
+
+
+<a name="233929545"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332172-manuals/topic/ocpn-manuals/near/233929545" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Mike Rossiter <a href="https://leamas.github.io/zulip-archive/stream/332172-manuals/topic/ocpn-manuals.html#233929545">(Apr 10 2021 at 06:00)</a>:</h4>
+<p>Does not look like I can stop the builds triggered by my PR for CircleCI.<br>
+<a href="https://circleci.com/docs/2.0/skip-build/">https://circleci.com/docs/2.0/skip-build/</a></p>
+
+
+
+<a name="233937439"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332172-manuals/topic/ocpn-manuals/near/233937439" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Alec Leamas <a href="https://leamas.github.io/zulip-archive/stream/332172-manuals/topic/ocpn-manuals.html#233937439">(Apr 10 2021 at 08:14)</a>:</h4>
+<p>indeed, for some reason (why?) But this is only about the PR, not about your forked repo which is the main usecase.  Again, just trying to read the docs.</p>
+
+
+
+<a name="233939996"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332172-manuals/topic/ocpn-manuals/near/233939996" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Mike Rossiter <a href="https://leamas.github.io/zulip-archive/stream/332172-manuals/topic/ocpn-manuals.html#233939996">(Apr 10 2021 at 09:01)</a>:</h4>
+<p>Mockup for the betas:<br>
+<a href="https://rasbats.github.io/opencpn-plugins-manual/opencpn-plugins-manual/0.1/index.html">https://rasbats.github.io/opencpn-plugins-manual/opencpn-plugins-manual/0.1/index.html</a><br>
+Use the version number to indicate a beta? (beta)<br>
+Take your point about moving the modules into components to make the left side index. At the moment it is easier for my work with devs to keep it as it is. Easier to find/move stuff. May need a new component for the betas, again with modules for each plugin, to start with.</p>
+
+
+
+<a name="233954280"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332172-manuals/topic/ocpn-manuals/near/233954280" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Alec Leamas <a href="https://leamas.github.io/zulip-archive/stream/332172-manuals/topic/ocpn-manuals.html#233954280">(Apr 10 2021 at 13:12)</a>:</h4>
+<p>looks great overall. Perhaps too early fir this kind of feedback, but I miss the short introductions: What is this User Plugins Manual, what is Beta Plugins?  A few sentences on these subjects should be good.</p>
+
+
+
+<a name="234105786"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332172-manuals/topic/ocpn-manuals/near/234105786" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Mike Rossiter <a href="https://leamas.github.io/zulip-archive/stream/332172-manuals/topic/ocpn-manuals.html#234105786">(Apr 12 2021 at 05:38)</a>:</h4>
+<p>For combining the three manuals this might be relevant:<br>
+<a href="https://gitlab.com/djencks/simple-examples/-/issues/2#note_537076523">https://gitlab.com/djencks/simple-examples/-/issues/2#note_537076523</a><br>
+It might need a conventional web page as Kathi already has for <a href="http://OpenCPN.org">OpenCPN.org</a> manuals.</p>
+
+
+
+<a name="234116282"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332172-manuals/topic/ocpn-manuals/near/234116282" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Alec Leamas <a href="https://leamas.github.io/zulip-archive/stream/332172-manuals/topic/ocpn-manuals.html#234116282">(Apr 12 2021 at 07:41)</a>:</h4>
+<p>Eventually, we need some decision-making here. One route would be to merge everything in ocpn-manuals or some other repo.  Doing so, we would need to work with the structure and the TOC, but would stick to the Antora overall ideas. The different manuals would just be items in the  overall TOC.</p>
+<p>Another would be to keep the current "different manuals" approach where each manual a separate playbook.</p>
+<p>Thoughts?</p>
+
+
+
+<a name="234125795"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332172-manuals/topic/ocpn-manuals/near/234125795" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Mike Rossiter <a href="https://leamas.github.io/zulip-archive/stream/332172-manuals/topic/ocpn-manuals.html#234125795">(Apr 12 2021 at 09:04)</a>:</h4>
+<p>" One route would be to merge everything in ocpn-manuals or some other repo"<br>
+I think this might be difficult to structure, in view of the note above.  <br>
+The plugins part would probably need a regular refresh for new material, whereas the other manuals would change less rapidly. <br>
+Keeping three separate manuals would make reporting issues and forking to allow PR easier.<br>
+Easy enough to make http links between the manuals. You already have this idea being used in Resources. The UI would be consistent across the manuals because of the common UI bundle. As well as Resources have a header item dropdown, OpenCPN Manuals.<br>
+I feel the separate approach is better.</p>
+
+
+
+<a name="234132326"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332172-manuals/topic/ocpn-manuals/near/234132326" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Alec Leamas <a href="https://leamas.github.io/zulip-archive/stream/332172-manuals/topic/ocpn-manuals.html#234132326">(Apr 12 2021 at 10:00)</a>:</h4>
+<p>The overall links are simple. What doesn't work that well is pointers to a specific part of another manual, right? Like a pointer from Developer Manual to the "Welcome to the community" part of the User's Manual etc.</p>
+
+
+
+<a name="234132690"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332172-manuals/topic/ocpn-manuals/near/234132690" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Alec Leamas <a href="https://leamas.github.io/zulip-archive/stream/332172-manuals/topic/ocpn-manuals.html#234132690">(Apr 12 2021 at 10:03)</a>:</h4>
+<p>As for the updates, I don't really see the problem. Why not rebuild the complete manual on a regular basis, each night or so? If/when there is a need to freeze a version, there manuals are versioned so we should be able to do that by freezing a given version and continue to work with next version (?)</p>
+
+
+
+<a name="234132848"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332172-manuals/topic/ocpn-manuals/near/234132848" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Alec Leamas <a href="https://leamas.github.io/zulip-archive/stream/332172-manuals/topic/ocpn-manuals.html#234132848">(Apr 12 2021 at 10:05)</a>:</h4>
+<p>Note: The manuals are still separate as seen when doing for example a PR. It's just about building all of them from the same playbook.</p>
+
+
+
+<a name="234133144"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332172-manuals/topic/ocpn-manuals/near/234133144" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Mike Rossiter <a href="https://leamas.github.io/zulip-archive/stream/332172-manuals/topic/ocpn-manuals.html#234133144">(Apr 12 2021 at 10:07)</a>:</h4>
+<p>But there are separate components in different repos, which was why I raised the issue with David Jencks.</p>
+
+
+
+<a name="234139509"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332172-manuals/topic/ocpn-manuals/near/234139509" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Mike Rossiter <a href="https://leamas.github.io/zulip-archive/stream/332172-manuals/topic/ocpn-manuals.html#234139509">(Apr 12 2021 at 11:05)</a>:</h4>
+<p>Hyperlinks are trivial, pointing to specific sections of another manual:<br>
+Added this to the plugins manual start page:<br>
+xref:betaplugins.adoc[Beta Plugins]<br>
+Test link:<br>
+<a href="https://leamas.github.io/ocpn-manuals/plugin-installer/0.0.1/Program-design.html#_catalog_and_tarballs">https://leamas.github.io/ocpn-manuals/plugin-installer/0.0.1/Program-design.html#_catalog_and_tarballs</a></p>
+
+
+
+<a name="234142743"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332172-manuals/topic/ocpn-manuals/near/234142743" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Alec Leamas <a href="https://leamas.github.io/zulip-archive/stream/332172-manuals/topic/ocpn-manuals.html#234142743">(Apr 12 2021 at 11:38)</a>:</h4>
+<p>I still don't understand. Yes, there are multiple components in different repos, agreed. But I don't see the problem building all of them in the same playbook. What am I missing?</p>
+
+
+
+<a name="234144395"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332172-manuals/topic/ocpn-manuals/near/234144395" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Mike Rossiter <a href="https://leamas.github.io/zulip-archive/stream/332172-manuals/topic/ocpn-manuals.html#234144395">(Apr 12 2021 at 11:53)</a>:</h4>
+<p>Your playbook would use antora.yml from the different manual repos as sources. The source for a manual is drawn from many components and you would not find all those components, I think. <br>
+Only the site.yml of the separate manual knows where all those components are and is able to build from them.<br>
+You can have many components in a single repo but not many repo with many components with a single playbook.yml to build them, I think. I could be wrong!</p>
+
+
+
+<a name="234171851"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332172-manuals/topic/ocpn-manuals/near/234171851" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Alec Leamas <a href="https://leamas.github.io/zulip-archive/stream/332172-manuals/topic/ocpn-manuals.html#234171851">(Apr 12 2021 at 14:47)</a>:</h4>
+<p>Problem is perhaps the notion of "my" playbook vs "yours"... What if ocpn-manuals was "our" playbook? Which we both have full access to?  What would then be the problem to replicate the info from "your "site.yml into "our" playbook?</p>
+
+
+
+<a name="234177295"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332172-manuals/topic/ocpn-manuals/near/234177295" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Mike Rossiter <a href="https://leamas.github.io/zulip-archive/stream/332172-manuals/topic/ocpn-manuals.html#234177295">(Apr 12 2021 at 15:14)</a>:</h4>
+<p>I did some basic tests and failed. But why not try replicating "my" site.yml  in <a href="https://github.com/leamas/ocpn-manuals/">https://github.com/leamas/ocpn-manuals/</a><br>
+and see what happens? Will the references (page-id?)work across repos?</p>
+
+
+
+<a name="234177596"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332172-manuals/topic/ocpn-manuals/near/234177596" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Mike Rossiter <a href="https://leamas.github.io/zulip-archive/stream/332172-manuals/topic/ocpn-manuals.html#234177596">(Apr 12 2021 at 15:16)</a>:</h4>
+<p>I may need to remove site.yml for this to be tested.</p>
+
+
+
+<a name="234179879"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332172-manuals/topic/ocpn-manuals/near/234179879" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Alec Leamas <a href="https://leamas.github.io/zulip-archive/stream/332172-manuals/topic/ocpn-manuals.html#234179879">(Apr 12 2021 at 15:29)</a>:</h4>
+<p>I will, but later. Preparing for work tomorrow for now. Stay tuned...</p>
+
+
+
+<a name="234398664"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332172-manuals/topic/ocpn-manuals/near/234398664" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Mike Rossiter <a href="https://leamas.github.io/zulip-archive/stream/332172-manuals/topic/ocpn-manuals.html#234398664">(Apr 13 2021 at 20:53)</a>:</h4>
+<p><a href="https://rasbats.github.io/opencpn-plugins-manual/opencpn-beta-plugins/0.1/beta-plugins.html">https://rasbats.github.io/opencpn-plugins-manual/opencpn-beta-plugins/0.1/beta-plugins.html</a><br>
+Used two components, one for the master plugins and the other for the betas. Propose using 'beta' for the version string for the beta to make them obvious. Both components in the same repo ;) Now to start delegating the modules.</p>
+
+
+
+<a name="234445023"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332172-manuals/topic/ocpn-manuals/near/234445023" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Mike Rossiter <a href="https://leamas.github.io/zulip-archive/stream/332172-manuals/topic/ocpn-manuals.html#234445023">(Apr 14 2021 at 05:55)</a>:</h4>
+<p>I think we have confidence that Antora/asciidoc will be able to produce the updated manual for OpenCPN. Priority for me now is having a repo under the OpenCPN github repos. Without this it looks as if 'Rasbats' is taking over the world. Having "opencpn/opencpn-plugins-manual" would promote ownership of the plugin manuals.<br>
+In the mean time intend adding pages to explain the use of Antora/asciidoc, to help developers write/update their manuals. The wiki will form the basis for this.</p>
+
+
+
+<a name="234446922"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332172-manuals/topic/ocpn-manuals/near/234446922" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Mike Rossiter <a href="https://leamas.github.io/zulip-archive/stream/332172-manuals/topic/ocpn-manuals.html#234446922">(Apr 14 2021 at 06:20)</a>:</h4>
+<p><a href="https://rasbats.github.io/opencpn-plugins-manual/opencpn-master-plugins/0.1/index.html">https://rasbats.github.io/opencpn-plugins-manual/opencpn-master-plugins/0.1/index.html</a><br>
+Seeing the result perhaps 'Authoring the manuals' would be better in the dev-manual. <br>
+Thoughts?</p>
+
+
+
+<a name="234446923"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332172-manuals/topic/ocpn-manuals/near/234446923" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Alec Leamas <a href="https://leamas.github.io/zulip-archive/stream/332172-manuals/topic/ocpn-manuals.html#234446923">(Apr 14 2021 at 06:20)</a>:</h4>
+<p>I did a preliminary run with all components included in ocpn-manuals. Just looks fine, but we need to merge nav.adoc. While basically trivial, I have a open discussion with Rick about it, so we need to sit back here a little.</p>
+
+
+
+<a name="234446931"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332172-manuals/topic/ocpn-manuals/near/234446931" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Alec Leamas <a href="https://leamas.github.io/zulip-archive/stream/332172-manuals/topic/ocpn-manuals.html#234446931">(Apr 14 2021 at 06:20)</a>:</h4>
+<p>I agree that we have faith in Antora doing the job for the Developers and the Plugin manual. I also agree that we need to have this  under the OpenCPN umbrella, but perhaps not yet. There are things to flesh out, like the structure of the DM and also the overall relationship between the manuals. So, perhaps continue in "local mode" for a while.</p>
+
+
+
+<a name="234447011"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332172-manuals/topic/ocpn-manuals/near/234447011" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Mike Rossiter <a href="https://leamas.github.io/zulip-archive/stream/332172-manuals/topic/ocpn-manuals.html#234447011">(Apr 14 2021 at 06:21)</a>:</h4>
+<p>We clashed! 'Authoring the manuals'?</p>
+
+
+
+<a name="234447151"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332172-manuals/topic/ocpn-manuals/near/234447151" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Alec Leamas <a href="https://leamas.github.io/zulip-archive/stream/332172-manuals/topic/ocpn-manuals.html#234447151">(Apr 14 2021 at 06:23)</a>:</h4>
+<p>hm... "bewildered"... could you please expand a little...</p>
+
+
+
+<a name="234447583"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332172-manuals/topic/ocpn-manuals/near/234447583" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Mike Rossiter <a href="https://leamas.github.io/zulip-archive/stream/332172-manuals/topic/ocpn-manuals.html#234447583">(Apr 14 2021 at 06:29)</a>:</h4>
+<p>In the wiki for the opencpn-plugins-manual I have some notes aimed at developers authoring plugin manuals.<br>
+<a href="https://github.com/Rasbats/opencpn-plugins-manual/wiki">https://github.com/Rasbats/opencpn-plugins-manual/wiki</a><br>
+This needs easy reference and my first thought was pages in the plugins manual.<br>
+<a href="https://rasbats.github.io/opencpn-plugins-manual/opencpn-master-plugins/0.1/index.html">https://rasbats.github.io/opencpn-plugins-manual/opencpn-master-plugins/0.1/index.html</a><br>
+But this could distract a user from searching for a plugin manual and perhaps the information needs to be in the developers manual.</p>
+
+
+
+<a name="234448272"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332172-manuals/topic/ocpn-manuals/near/234448272" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Mike Rossiter <a href="https://leamas.github.io/zulip-archive/stream/332172-manuals/topic/ocpn-manuals.html#234448272">(Apr 14 2021 at 06:36)</a>:</h4>
+<p>Off to pack the car with boat bits. BBL</p>
+
+
+
+<a name="234449147"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332172-manuals/topic/ocpn-manuals/near/234449147" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Alec Leamas <a href="https://leamas.github.io/zulip-archive/stream/332172-manuals/topic/ocpn-manuals.html#234449147">(Apr 14 2021 at 06:46)</a>:</h4>
+<p>There already is a "Maintenance of this Manual" chapter in the DM , it fits nicely there.  Ergo: we should make a common playbook which includes all the repos (DM + plugins) with a common nav.adoc.</p>
+
+
+
+<a name="234572157"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332172-manuals/topic/ocpn-manuals/near/234572157" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Alec Leamas <a href="https://leamas.github.io/zulip-archive/stream/332172-manuals/topic/ocpn-manuals.html#234572157">(Apr 14 2021 at 20:47)</a>:</h4>
+<p><span class="user-mention" data-user-id="399559">@Mike Rossiter</span>  I  have invited you as a collaborator in ocpn-manuals. Here is a branch called 'merge' which is the playground -- feel free to try whatever ideas you have. But please leave the main branch for now,  to avoid pulling the carpet under Rick</p>
+
+
+
+<a name="234572984"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332172-manuals/topic/ocpn-manuals/near/234572984" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Alec Leamas <a href="https://leamas.github.io/zulip-archive/stream/332172-manuals/topic/ocpn-manuals.html#234572984">(Apr 14 2021 at 20:53)</a>:</h4>
+<p>In the merge branch, I have a first draft of a variant which merges all three manuals into one. It's far from perfect, bit looks in my eyes promising. I have not exported it, but 'antora site.yml' builds it in docs/ for preview..</p>
+
+
+
+<a name="234573326"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332172-manuals/topic/ocpn-manuals/near/234573326" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Alec Leamas <a href="https://leamas.github.io/zulip-archive/stream/332172-manuals/topic/ocpn-manuals.html#234573326">(Apr 14 2021 at 20:55)</a>:</h4>
+<p>In particular,  see how the actual contents in each manual is delegated to "sub-nav" file in partials/.  As I understand it, this could  be part of another repo as well so for example the plugins contents could be maintained by opencpn-user-manual.</p>
+
+
+
+<a name="234621695"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332172-manuals/topic/ocpn-manuals/near/234621695" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Mike Rossiter <a href="https://leamas.github.io/zulip-archive/stream/332172-manuals/topic/ocpn-manuals.html#234621695">(Apr 15 2021 at 06:04)</a>:</h4>
+<p>Accepted the invitation but I am unable to clone a fork of ocpn-manuals that I made in Rasbats. Is this because I am collaborating in leamas/ocpn-manuals?</p>
+
+
+
+<a name="234623306"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332172-manuals/topic/ocpn-manuals/near/234623306" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Mike Rossiter <a href="https://leamas.github.io/zulip-archive/stream/332172-manuals/topic/ocpn-manuals.html#234623306">(Apr 15 2021 at 06:26)</a>:</h4>
+<p>My turn to be confused. I thought the discussion was about referencing adoc material in another component's adoc file. I don't see how we have moved forward with that. Yes, it is nice to see all the repos gathered together but this could have been done with a single web page using 2 repos? We now have 3 repos to get that result.<br>
+BUT you can build the website html in one place, which is a big step forward for maintenance.</p>
+
+
+
+<a name="234623763"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332172-manuals/topic/ocpn-manuals/near/234623763" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Mike Rossiter <a href="https://leamas.github.io/zulip-archive/stream/332172-manuals/topic/ocpn-manuals.html#234623763">(Apr 15 2021 at 06:33)</a>:</h4>
+<p>I think we are getting sources and components mixed up. You are using the repo as a source. That source has many components. In dev-manual for example Rick cannot reference the manual-beta component plugins-beta.adoc page  in plugins-manual, other than by using a hyperlink.</p>
+
+
+
+<a name="234628223"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332172-manuals/topic/ocpn-manuals/near/234628223" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Mike Rossiter <a href="https://leamas.github.io/zulip-archive/stream/332172-manuals/topic/ocpn-manuals.html#234628223">(Apr 15 2021 at 07:12)</a>:</h4>
+<p>Another thing! Does the build of ocpn-manuals result in a build of ocpn-dev-manual for instance? Or is it just gathered as a source?</p>
+
+
+
+<a name="234633636"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332172-manuals/topic/ocpn-manuals/near/234633636" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Alec Leamas <a href="https://leamas.github.io/zulip-archive/stream/332172-manuals/topic/ocpn-manuals.html#234633636">(Apr 15 2021 at 08:01)</a>:</h4>
+<p>Here the idea is that that we view all manuals as  a single "OpenCPN manual", where each manual is a subsection. Remember, just trying to explore paths here...</p>
+
+
+
+<a name="234633964"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332172-manuals/topic/ocpn-manuals/near/234633964" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Alec Leamas <a href="https://leamas.github.io/zulip-archive/stream/332172-manuals/topic/ocpn-manuals.html#234633964">(Apr 15 2021 at 08:04)</a>:</h4>
+<p>Since everything now is built in one go, for example rick is free to reference whatever he wants in the plugin manuals. Basically, everything is visible everywhere. This is IMHO a major advantage.</p>
+
+
+
+<a name="234634269"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332172-manuals/topic/ocpn-manuals/near/234634269" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Alec Leamas <a href="https://leamas.github.io/zulip-archive/stream/332172-manuals/topic/ocpn-manuals.html#234634269">(Apr 15 2021 at 08:07)</a>:</h4>
+<p>I get your message of the different roles. Have been very conservative with adding contents to ocpn-manuals, it's only a welcome page + navigation, nothing more. And, the core navigation files which lives under partials/ could and probably should be moved to plugins-manual and development manual.   That is, if we want to explore this path.</p>
+
+
+
+<a name="234635398"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332172-manuals/topic/ocpn-manuals/near/234635398" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Alec Leamas <a href="https://leamas.github.io/zulip-archive/stream/332172-manuals/topic/ocpn-manuals.html#234635398">(Apr 15 2021 at 08:16)</a>:</h4>
+<p>"Cannot clone"... have you tried cloning into an alternative directory, like <em>git clone git@github.com:leamas/ocpn-manuals.git foobar</em></p>
+
+
+
+<a name="234638685"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332172-manuals/topic/ocpn-manuals/near/234638685" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Mike Rossiter <a href="https://leamas.github.io/zulip-archive/stream/332172-manuals/topic/ocpn-manuals.html#234638685">(Apr 15 2021 at 08:44)</a>:</h4>
+<p>"rick is free to reference whatever he wants in the plugin manuals"<br>
+Can we agree that this has to be a hyperlink reference not a component link?<br>
+"everything is visible everywhere. This is IMHO a major advantage"<br>
+Agree.<br>
+"Does the build of ocpn-manuals result in a build of ocpn-dev-manual?"<br>
+Can we agree that there is no build of the dev-manual? It is acting as a source.</p>
+
+
+
+<a name="234640305"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332172-manuals/topic/ocpn-manuals/near/234640305" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Alec Leamas <a href="https://leamas.github.io/zulip-archive/stream/332172-manuals/topic/ocpn-manuals.html#234640305">(Apr 15 2021 at 08:59)</a>:</h4>
+<p>"Can we agree that this has to be a hyperlink reference not a component link?" No. Why can't he just make a component link in this setup?</p>
+
+
+
+<a name="234640348"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332172-manuals/topic/ocpn-manuals/near/234640348" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Alec Leamas <a href="https://leamas.github.io/zulip-archive/stream/332172-manuals/topic/ocpn-manuals.html#234640348">(Apr 15 2021 at 08:59)</a>:</h4>
+<p>"Can we agree that there is no build of the dev-manual? It is acting as a source." For better or worse: yes.</p>
+
+
+
+<a name="234640936"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332172-manuals/topic/ocpn-manuals/near/234640936" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Alec Leamas <a href="https://leamas.github.io/zulip-archive/stream/332172-manuals/topic/ocpn-manuals.html#234640936">(Apr 15 2021 at 09:04)</a>:</h4>
+<p>"BUT you can build the website html in one place, which is a big step forward for maintenance" <br>
+Maybe we could take it from this point. If we want this to work, the only change required in the dev and plugins manuals is about navigation. Basically, it needs to be refactored with the main part living as a list in partials/. This would work just fine also in the local build, but also makes it possible to include it as a part of the overall nav.doc.  Worth trying?</p>
+
+
+
+<a name="234641308"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332172-manuals/topic/ocpn-manuals/near/234641308" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Mike Rossiter <a href="https://leamas.github.io/zulip-archive/stream/332172-manuals/topic/ocpn-manuals.html#234641308">(Apr 15 2021 at 09:07)</a>:</h4>
+<p>I cannot make the component link work myself, as discussed above. If Rick or yourself have a way of doing this I will update David Jenks with the result.</p>
+
+
+
+<a name="234641334"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332172-manuals/topic/ocpn-manuals/near/234641334" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Alec Leamas <a href="https://leamas.github.io/zulip-archive/stream/332172-manuals/topic/ocpn-manuals.html#234641334">(Apr 15 2021 at 09:07)</a>:</h4>
+<p>But if a make a PR?</p>
+
+
+
+<a name="234641523"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332172-manuals/topic/ocpn-manuals/near/234641523" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Mike Rossiter <a href="https://leamas.github.io/zulip-archive/stream/332172-manuals/topic/ocpn-manuals.html#234641523">(Apr 15 2021 at 09:09)</a>:</h4>
+<p>Yes, that works but I wanted a clone in my github to play with.</p>
+
+
+
+<a name="234641652"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332172-manuals/topic/ocpn-manuals/near/234641652" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Mike Rossiter <a href="https://leamas.github.io/zulip-archive/stream/332172-manuals/topic/ocpn-manuals.html#234641652">(Apr 15 2021 at 09:10)</a>:</h4>
+<p>"the only change required in the dev and plugins manuals is about navigation. Basically, it needs to be refactored with the main part living as a list in partials/."<br>
+I will have a play with this. Need to do some reading.</p>
+
+
+
+<a name="234641706"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332172-manuals/topic/ocpn-manuals/near/234641706" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Alec Leamas <a href="https://leamas.github.io/zulip-archive/stream/332172-manuals/topic/ocpn-manuals.html#234641706">(Apr 15 2021 at 09:10)</a>:</h4>
+<p>You still cannot clone? What is the error message?</p>
+
+
+
+<a name="234641882"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332172-manuals/topic/ocpn-manuals/near/234641882" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Mike Rossiter <a href="https://leamas.github.io/zulip-archive/stream/332172-manuals/topic/ocpn-manuals.html#234641882">(Apr 15 2021 at 09:12)</a>:</h4>
+<p>I am using github desktop. Maybe that's the limitation. Have to make a food order. BBL</p>
+
+
+
+<a name="234641971"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332172-manuals/topic/ocpn-manuals/near/234641971" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Alec Leamas <a href="https://leamas.github.io/zulip-archive/stream/332172-manuals/topic/ocpn-manuals.html#234641971">(Apr 15 2021 at 09:13)</a>:</h4>
+<p>ON my way to the boat. Let's focus on the cloning first.... BBL</p>
+
+
+
+<a name="234649428"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332172-manuals/topic/ocpn-manuals/near/234649428" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Mike Rossiter <a href="https://leamas.github.io/zulip-archive/stream/332172-manuals/topic/ocpn-manuals.html#234649428">(Apr 15 2021 at 10:11)</a>:</h4>
+<p>" have you tried cloning into an alternative directory, like git clone git@github.com:leamas/ocpn-manuals.git foobar"<br>
+Ok. With the command line cloning my fork of ocpn-manuals worked.</p>
+
+
+
+<a name="234655359"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332172-manuals/topic/ocpn-manuals/near/234655359" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Mike Rossiter <a href="https://leamas.github.io/zulip-archive/stream/332172-manuals/topic/ocpn-manuals.html#234655359">(Apr 15 2021 at 11:05)</a>:</h4>
+<p>Various magic happened and I can now play with my fork of ocpn-manuals, without making changes to the leamas repo.</p>
+
+
+
+<a name="234658914"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332172-manuals/topic/ocpn-manuals/near/234658914" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Alec Leamas <a href="https://leamas.github.io/zulip-archive/stream/332172-manuals/topic/ocpn-manuals.html#234658914">(Apr 15 2021 at 11:37)</a>:</h4>
+<p>There has been so many attempts to create a git GUI wrapper. They all seem to fail as soon as there is something just slightly beside the standard workflow :) In  the end, the CLI interface prevails.</p>
+
+
+
+<a name="234659093"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332172-manuals/topic/ocpn-manuals/near/234659093" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Alec Leamas <a href="https://leamas.github.io/zulip-archive/stream/332172-manuals/topic/ocpn-manuals.html#234659093">(Apr 15 2021 at 11:38)</a>:</h4>
+<p>In for an hour or so. Then, bicycle to the boat -- here is really nice weather</p>
+
+
+
+<a name="234661162"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332172-manuals/topic/ocpn-manuals/near/234661162" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Mike Rossiter <a href="https://leamas.github.io/zulip-archive/stream/332172-manuals/topic/ocpn-manuals.html#234661162">(Apr 15 2021 at 11:54)</a>:</h4>
+<p>Thanks for the steer on partials. Improves the navigation considerably.</p>
+
+
+
+<a name="234661215"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332172-manuals/topic/ocpn-manuals/near/234661215" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Mike Rossiter <a href="https://leamas.github.io/zulip-archive/stream/332172-manuals/topic/ocpn-manuals.html#234661215">(Apr 15 2021 at 11:55)</a>:</h4>
+<p>Now using this in plugins-manual.</p>
+
+
+
+<a name="234663086"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332172-manuals/topic/ocpn-manuals/near/234663086" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Alec Leamas <a href="https://leamas.github.io/zulip-archive/stream/332172-manuals/topic/ocpn-manuals.html#234663086">(Apr 15 2021 at 12:07)</a>:</h4>
+<p>Out of time now, but will look into it later. Please don't forget to push what you have :)</p>
+
+
+
+<a name="234663186"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332172-manuals/topic/ocpn-manuals/near/234663186" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Alec Leamas <a href="https://leamas.github.io/zulip-archive/stream/332172-manuals/topic/ocpn-manuals.html#234663186">(Apr 15 2021 at 12:08)</a>:</h4>
+<p>BTW: <a href="https://docs.antora.org/antora/2.3/navigation/include-lists/">https://docs.antora.org/antora/2.3/navigation/include-lists/</a></p>
+
+
+
+<a name="235008815"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332172-manuals/topic/ocpn-manuals/near/235008815" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Alec Leamas <a href="https://leamas.github.io/zulip-archive/stream/332172-manuals/topic/ocpn-manuals.html#235008815">(Apr 17 2021 at 18:41)</a>:</h4>
+<p>Have updated ocpn-manuals (the merge branch) so it uses your partials instead of mine. This is IMHO a great step forward, manual can be built all at once or separately.</p>
+
+
+
+<a name="235008913"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332172-manuals/topic/ocpn-manuals/near/235008913" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Alec Leamas <a href="https://leamas.github.io/zulip-archive/stream/332172-manuals/topic/ocpn-manuals.html#235008913">(Apr 17 2021 at 18:43)</a>:</h4>
+<p>Now, going back to old issues:<br>
+"Rick is free to reference whatever he wants in the plugin manuals"<br>
+Can we agree that this has to be a hyperlink reference not a component link?</p>
+<p>What am I missing here? Why cannot Rick use a component link if we build everything in one go a là   ocpn-manuals?</p>
+
+
+
+<a name="235046699"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332172-manuals/topic/ocpn-manuals/near/235046699" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Mike Rossiter <a href="https://leamas.github.io/zulip-archive/stream/332172-manuals/topic/ocpn-manuals.html#235046699">(Apr 18 2021 at 05:52)</a>:</h4>
+<p>The plugins manual now has two components - manual, with an id of "opencpn-master-plugins" and manual-beta with an id "opencpn-beta-plugins". <br>
+In the index.adoc for the manual-beta component I can use "xref:opencpn-master-plugins::index.adoc[Pages for the Master Plugins]" to make the link to the manual component, with the master plugins. <br>
+The ids are set up in two antora.yml one in the manual component and one in the manual-beta component. How does Rick reference "xref:opencpn-master-plugins" from the ocpn-dev-manual repository? I have tried and failed and, perhaps naively, believe David Jencks, one of the main Antora people, when he says it is not possible to reference a component outside the repo you are working in. Actually this is probably a good idea because you avoid broken links in repos outside your control.<br>
+The only way this would work would be to have a unified repo containing components (directories) for user manual, dev manual and plugins manual, all in the same repository. IMHO this would be a nightmare to maintain.</p>
+
+
+
+<a name="235198502"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332172-manuals/topic/ocpn-manuals/near/235198502" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Alec Leamas <a href="https://leamas.github.io/zulip-archive/stream/332172-manuals/topic/ocpn-manuals.html#235198502">(Apr 19 2021 at 15:16)</a>:</h4>
+<p>Perhaps I was naive... Give me some time to check...</p>
+
+
+
+<a name="235198807"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332172-manuals/topic/ocpn-manuals/near/235198807" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Alec Leamas <a href="https://leamas.github.io/zulip-archive/stream/332172-manuals/topic/ocpn-manuals.html#235198807">(Apr 19 2021 at 15:17)</a>:</h4>
+<p>"The only way this would work would be to have a unified repo containing components (directories) for user manual, dev manual and plugins manual, all in the same repository. IMHO this would be a nightmare to maintain."</p>
+<p>Agreed</p>
+
+
+
+<a name="235198885"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332172-manuals/topic/ocpn-manuals/near/235198885" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Alec Leamas <a href="https://leamas.github.io/zulip-archive/stream/332172-manuals/topic/ocpn-manuals.html#235198885">(Apr 19 2021 at 15:17)</a>:</h4>
+<p>But still: give me some time...</p>
+
+
+
+<a name="235291589"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332172-manuals/topic/ocpn-manuals/near/235291589" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Alec Leamas <a href="https://leamas.github.io/zulip-archive/stream/332172-manuals/topic/ocpn-manuals.html#235291589">(Apr 20 2021 at 06:00)</a>:</h4>
+<p>I have now made a test:</p>
+<ul>
+<li>Changed site.yml so it uses   <a href="https://github.com/leamas/ocpn-dev-manual.git">https://github.com/leamas/ocpn-dev-manual.git</a> instead of  <a href="https://github.com/rgleason/ocpn-dev-manual">https://github.com/rgleason/ocpn-dev-manual</a>. </li>
+<li>In ocpn-dev-manual I have made a component link like  xref:opencpn-master-plugins:squiddio:squiddio.adoc[Squiddio] into the opencpn-plugins-manual</li>
+</ul>
+<p>The test  is pushed to the merge branch and it works just fine. So, it seems  possible to make a component link from "Rick's manual" to "your manual" as I presumed. So, still feeling a bit dumb: What am I missing? And, why doesn't it work for you?</p>
+
+
+
+<a name="235292019"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332172-manuals/topic/ocpn-manuals/near/235292019" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Mike Rossiter <a href="https://leamas.github.io/zulip-archive/stream/332172-manuals/topic/ocpn-manuals.html#235292019">(Apr 20 2021 at 06:05)</a>:</h4>
+<p>Interesting. Squiddio is not yet hosted by Mauro. Could you try, say, ShipDriver, which I am managing?</p>
+
+
+
+<a name="235292687"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332172-manuals/topic/ocpn-manuals/near/235292687" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Alec Leamas <a href="https://leamas.github.io/zulip-archive/stream/332172-manuals/topic/ocpn-manuals.html#235292687">(Apr 20 2021 at 06:15)</a>:</h4>
+<p>Other things in between... wait</p>
+
+
+
+<a name="235292730"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332172-manuals/topic/ocpn-manuals/near/235292730" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Alec Leamas <a href="https://leamas.github.io/zulip-archive/stream/332172-manuals/topic/ocpn-manuals.html#235292730">(Apr 20 2021 at 06:15)</a>:</h4>
+<p>A lińk <em>to</em> Shipdriver or <em>from</em> Shipdriver?</p>
+
+
+
+<a name="235293155"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332172-manuals/topic/ocpn-manuals/near/235293155" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Mike Rossiter <a href="https://leamas.github.io/zulip-archive/stream/332172-manuals/topic/ocpn-manuals.html#235293155">(Apr 20 2021 at 06:21)</a>:</h4>
+<p>A link to ShipDriver from ocpn-dev-manual. xref:opencpn-master-plugins may not work because ShipDriver is an independent source. You would need to include it as a source in the dev-manual, as you did before, as an example.</p>
+
+
+
+<a name="235294949"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332172-manuals/topic/ocpn-manuals/near/235294949" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Alec Leamas <a href="https://leamas.github.io/zulip-archive/stream/332172-manuals/topic/ocpn-manuals.html#235294949">(Apr 20 2021 at 06:42)</a>:</h4>
+<p>It works.  The merge branch builds the complete thing, using the linktest branch of  <a href="https://github.com/leamas/shipdriver_pi.git">https://github.com/leamas/shipdriver_pi.git</a> instead of  <a href="https://github.com/Rasbats/shipdriver_pi.git">https://github.com/Rasbats/shipdriver_pi.git</a>. See the  commits for details</p>
+
+
+
+<a name="235295062"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332172-manuals/topic/ocpn-manuals/near/235295062" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Alec Leamas <a href="https://leamas.github.io/zulip-archive/stream/332172-manuals/topic/ocpn-manuals.html#235295062">(Apr 20 2021 at 06:43)</a>:</h4>
+<p>" I have tried and failed and, perhaps naively, believe David Jencks, one of the main Antora people, when he says it is not possible to reference a component outside the repo you are working in."  </p>
+<p>Can you link to this?</p>
+
+
+
+<a name="235295194"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332172-manuals/topic/ocpn-manuals/near/235295194" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Mike Rossiter <a href="https://leamas.github.io/zulip-archive/stream/332172-manuals/topic/ocpn-manuals.html#235295194">(Apr 20 2021 at 06:45)</a>:</h4>
+<p><a href="https://gitlab.com/djencks/simple-examples/-/issues/2#note_537076523">https://gitlab.com/djencks/simple-examples/-/issues/2#note_537076523</a><br>
+Running out of time this morning. I will have a closer look tonight.</p>
+
+
+
+<a name="235295261"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332172-manuals/topic/ocpn-manuals/near/235295261" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Alec Leamas <a href="https://leamas.github.io/zulip-archive/stream/332172-manuals/topic/ocpn-manuals.html#235295261">(Apr 20 2021 at 06:45)</a>:</h4>
+<p>OK, same for me.  Thanks for the link. BBL</p>
+
+
+
+<a name="235296803"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332172-manuals/topic/ocpn-manuals/near/235296803" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Alec Leamas <a href="https://leamas.github.io/zulip-archive/stream/332172-manuals/topic/ocpn-manuals.html#235296803">(Apr 20 2021 at 07:01)</a>:</h4>
+<p>I'm  a sloppy reader , again. The test is about a link <em>from</em> shipdriver <em>to</em> ocpn-dev-manual.</p>
+
+
+
+<a name="235298191"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332172-manuals/topic/ocpn-manuals/near/235298191" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Alec Leamas <a href="https://leamas.github.io/zulip-archive/stream/332172-manuals/topic/ocpn-manuals.html#235298191">(Apr 20 2021 at 07:08)</a>:</h4>
+<p>Added link dev manual -&gt; shipdriver, in the community page. Also this one works.</p>
+
+
+
+<a name="235298582"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332172-manuals/topic/ocpn-manuals/near/235298582" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Alec Leamas <a href="https://leamas.github.io/zulip-archive/stream/332172-manuals/topic/ocpn-manuals.html#235298582">(Apr 20 2021 at 07:12)</a>:</h4>
+<p>Reading the docs, I find no limitations as to component links crossing git repositories boundaries.  The only thing I see is basically a linker, and linkers are all the same: They first scan the input files to find all symbols (here, link targets) and builds a table with those. In next step, it re-scans the input files and resolves all the references (the xref's) using the table.</p>
+<p>No, I havn't checked the code. It's just my mental picture how it works. Given that picture, I see no reason whatsoever why there should be any limitations of the kind we discuss.</p>
+
+
+
+<a name="235391506"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332172-manuals/topic/ocpn-manuals/near/235391506" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Mike Rossiter <a href="https://leamas.github.io/zulip-archive/stream/332172-manuals/topic/ocpn-manuals.html#235391506">(Apr 20 2021 at 18:26)</a>:</h4>
+<p>"Added link dev manual -&gt; shipdriver, in the community page"<br>
+Getting a 404 looking for community.adoc.<br>
+Could you give a link for this?</p>
+
+
+
+<a name="235401909"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332172-manuals/topic/ocpn-manuals/near/235401909" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Alec Leamas <a href="https://leamas.github.io/zulip-archive/stream/332172-manuals/topic/ocpn-manuals.html#235401909">(Apr 20 2021 at 19:33)</a>:</h4>
+<p>Not really a link right now. Can you</p>
+<ul>
+<li>In ocpn-manuals, pull current merge branch tip at c834eea0f</li>
+<li>Rebuild: antora site.yml</li>
+<li>Browse: firefox docs/index.html</li>
+<li>In the left navigation pane you find the community page:   OpenCPN Developer Manual | Introduction | Community</li>
+<li>The shipdriver link is in the line with a FIXME (second paragraph fir me)</li>
+</ul>
+<p>Let me know if it doesn't  work!</p>
+
+
+
+<a name="235402879"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332172-manuals/topic/ocpn-manuals/near/235402879" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Alec Leamas <a href="https://leamas.github.io/zulip-archive/stream/332172-manuals/topic/ocpn-manuals.html#235402879">(Apr 20 2021 at 19:40)</a>:</h4>
+<p>Shortcut to community page: <code>firefox  docs/ocpn-dev-manual/5.3.1/intro-Community.html</code></p>
+
+
+
+<a name="235407540"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332172-manuals/topic/ocpn-manuals/near/235407540" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Mike Rossiter <a href="https://leamas.github.io/zulip-archive/stream/332172-manuals/topic/ocpn-manuals.html#235407540">(Apr 20 2021 at 20:14)</a>:</h4>
+<p>Sorry, you are linking in the same way that I use to build the plugins-manual. You are not linking to a component in opencpn-plugins-manual. You setup the source and use the antora.yml from the source. The source is not a component. If it was a component the xref would be something like "component::shipdriver:ROOT:shipdriver.adoc". (Note the double colon).<br>
+Your test is ok for just one plugin, shipdriver. shipdriver.adoc is generating the index page. If shipdriver had a further page, say demo.adoc the xref:shipdriver:ROOT:demo.adoc reference would not work because the antora in shipdriver points to shipdriver.adoc. I stand to be corrected!</p>
+
+
+
+<a name="235407953"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332172-manuals/topic/ocpn-manuals/near/235407953" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Alec Leamas <a href="https://leamas.github.io/zulip-archive/stream/332172-manuals/topic/ocpn-manuals.html#235407953">(Apr 20 2021 at 20:17)</a>:</h4>
+<p>One example is in Shipdriver... If you follow the link to "my" shipdriver there is a link to Plugin Guidelines. This is a secondary page in the Development Manual. or?</p>
+
+
+
+<a name="235408331"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332172-manuals/topic/ocpn-manuals/near/235408331" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Alec Leamas <a href="https://leamas.github.io/zulip-archive/stream/332172-manuals/topic/ocpn-manuals.html#235408331">(Apr 20 2021 at 20:20)</a>:</h4>
+<p>BTW: Why do you think that shipdriver isn't a component? As I see it, it is.</p>
+
+
+
+<a name="235409706"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332172-manuals/topic/ocpn-manuals/near/235409706" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Alec Leamas <a href="https://leamas.github.io/zulip-archive/stream/332172-manuals/topic/ocpn-manuals.html#235409706">(Apr 20 2021 at 20:30)</a>:</h4>
+<p>Hm... perhaps you got it wrong (?)... the shipdriver's antora does not really point to shipdriver.adoc. It's core  thing is the <code>name: shipdriver</code>, which is used to resolve anything like <em>shipdriver:ROOT:foo.adoc</em>. The <code>start_page:</code> line is only used for the default page, the page used when the component is referenced <em>without</em> a page name. I. e., it can be dropped if there was an <em>index.adoc</em>, the default page name.</p>
+
+
+
+<a name="235410638"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332172-manuals/topic/ocpn-manuals/near/235410638" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Alec Leamas <a href="https://leamas.github.io/zulip-archive/stream/332172-manuals/topic/ocpn-manuals.html#235410638">(Apr 20 2021 at 20:35)</a>:</h4>
+<p>As an example, the ocpn-dev-manual's antora.yml  doesn't have any <code>start_page:</code>. Still works just fine</p>
+
+
+
+<a name="235412286"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332172-manuals/topic/ocpn-manuals/near/235412286" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Mike Rossiter <a href="https://leamas.github.io/zulip-archive/stream/332172-manuals/topic/ocpn-manuals.html#235412286">(Apr 20 2021 at 20:47)</a>:</h4>
+<p><a href="https://docs.antora.org/antora/2.3/distributed-component-version/">https://docs.antora.org/antora/2.3/distributed-component-version/</a><br>
+Ok... perhaps we can describe shipdriver as a distributed component!<br>
+Where is this leading? Does the plugin manual have to build ocpn-dev-manual as a source just to reference the page "pm-plugin-guidelines.adoc". Why not a hyperlink? This is getting overcomplicated. I will sleep on it.</p>
+
+
+
+<a name="235413145"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332172-manuals/topic/ocpn-manuals/near/235413145" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Alec Leamas <a href="https://leamas.github.io/zulip-archive/stream/332172-manuals/topic/ocpn-manuals.html#235413145">(Apr 20 2021 at 20:52)</a>:</h4>
+<p>A hyperlink will only work at a specific location -&gt; maintenance problems.</p>
+<p>The plugin manual could either include ocpn-dev-manual, and have a working link to it. Or don't,  in which case the link will be  broken. It will then still work when built together with the others in ocpn-manuals.</p>
+
+
+
+<a name="235413824"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332172-manuals/topic/ocpn-manuals/near/235413824" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Alec Leamas <a href="https://leamas.github.io/zulip-archive/stream/332172-manuals/topic/ocpn-manuals.html#235413824">(Apr 20 2021 at 20:57)</a>:</h4>
+<p>Which means that the third option is to not include the dev manual as a  source, but to build the whole set of manuals i. e., ocpn-manuals to see the "real" result.</p>
+
+
+
+<a name="235417351"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332172-manuals/topic/ocpn-manuals/near/235417351" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Alec Leamas <a href="https://leamas.github.io/zulip-archive/stream/332172-manuals/topic/ocpn-manuals.html#235417351">(Apr 20 2021 at 21:12)</a>:</h4>
+<blockquote>
+<p>Ok... perhaps we can describe shipdriver as a distributed component!</p>
+</blockquote>
+<p>Preferably not. The link describes a distributed component as a single component with the sources in multiple git repos. However, shipdriver is not, it has all it's sources in a single repo. Ergo: It's just a component.</p>
+
+
+
+<a name="235457141"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332172-manuals/topic/ocpn-manuals/near/235457141" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Mike Rossiter <a href="https://leamas.github.io/zulip-archive/stream/332172-manuals/topic/ocpn-manuals.html#235457141">(Apr 21 2021 at 05:19)</a>:</h4>
+<p>Fourth option:<br>
+Add the sources needed for explicit links to the dev-manual site.yml. This will be a limited number of plugins like testplugin, shipdriver plus ?<br>
+Make a simple start page like this one:<br>
+<a href="http://mikerossiter.co.uk/OpenCPN/opencpn-manuals/0.1/index.html">http://mikerossiter.co.uk/OpenCPN/opencpn-manuals/0.1/index.html</a><br>
+Why the complication of building the manuals together? I just don't get it.<br>
+We need to move this forward to allow plugin developers to see the results of their edits or interest will be lost.</p>
+<p><span class="user-mention" data-user-id="399865">@Rick Gleason</span> <br>
+<span class="user-mention" data-user-id="400132">@Jon</span>  </p>
+<p>Can we have your thoughts on this please?</p>
+
+
+
+<a name="235459903"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332172-manuals/topic/ocpn-manuals/near/235459903" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Alec Leamas <a href="https://leamas.github.io/zulip-archive/stream/332172-manuals/topic/ocpn-manuals.html#235459903">(Apr 21 2021 at 06:02)</a>:</h4>
+<blockquote>
+<p>Add the sources needed for explicit links to the dev-manual site.yml. This will be a limited number of plugins like testplugin, shipdriver plus ?</p>
+</blockquote>
+<p>Works for links from dev-manual -&gt; plugins, but not for links plugins -&gt; dev manual</p>
+
+
+
+<a name="235460253"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332172-manuals/topic/ocpn-manuals/near/235460253" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Mike Rossiter <a href="https://leamas.github.io/zulip-archive/stream/332172-manuals/topic/ocpn-manuals.html#235460253">(Apr 21 2021 at 06:07)</a>:</h4>
+<p>What is the reason for the link plugin -&gt; dev manual?</p>
+
+
+
+<a name="235460257"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332172-manuals/topic/ocpn-manuals/near/235460257" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Alec Leamas <a href="https://leamas.github.io/zulip-archive/stream/332172-manuals/topic/ocpn-manuals.html#235460257">(Apr 21 2021 at 06:07)</a>:</h4>
+<blockquote>
+<p>We need to move this forward to allow plugin developers to see the results of their edits or interest will be lost.</p>
+</blockquote>
+<p>Agreed. But to see the results, plugin devs  can:</p>
+<ul>
+<li>Build as today and, also as today, avoid linking to the dev manual.</li>
+<li>Or, add links to the dev manual, clone the ocpn-manuals project and build that .</li>
+</ul>
+
+
+
+<a name="235460413"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332172-manuals/topic/ocpn-manuals/near/235460413" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Alec Leamas <a href="https://leamas.github.io/zulip-archive/stream/332172-manuals/topic/ocpn-manuals.html#235460413">(Apr 21 2021 at 06:09)</a>:</h4>
+<p>As long as there are no links plugins -&gt; dev manual  everything just works, be it a local plugin manual build or the overall ocpn-manuals. We have done the important step when modifýing the plugins and bera-plugins navigation using partials.</p>
+
+
+
+<a name="235460630"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332172-manuals/topic/ocpn-manuals/near/235460630" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Mike Rossiter <a href="https://leamas.github.io/zulip-archive/stream/332172-manuals/topic/ocpn-manuals.html#235460630">(Apr 21 2021 at 06:12)</a>:</h4>
+<p>I am still totally against this monolithic behemoth that is ocpn-manuals.</p>
+
+
+
+<a name="235460692"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332172-manuals/topic/ocpn-manuals/near/235460692" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Alec Leamas <a href="https://leamas.github.io/zulip-archive/stream/332172-manuals/topic/ocpn-manuals.html#235460692">(Apr 21 2021 at 06:13)</a>:</h4>
+<p>So, there are three builds:</p>
+<ul>
+<li>A single plugin manual.</li>
+<li>The <em>plugins manual</em> or <em>beta plugins manual</em></li>
+<li>The <em>ocpn-plugins-manual</em></li>
+</ul>
+<p>Note that a  plugin developer still needs to use another project to build the manual, usually opencpn-plugins-manual or, perhaps, ocpn-manuals.</p>
+
+
+
+<a name="235460770"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332172-manuals/topic/ocpn-manuals/near/235460770" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Alec Leamas <a href="https://leamas.github.io/zulip-archive/stream/332172-manuals/topic/ocpn-manuals.html#235460770">(Apr 21 2021 at 06:14)</a>:</h4>
+<p>And, to be fair, ocpn-manuals is certainly not monolithic. It's very much structured...</p>
+
+
+
+<a name="235460863"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332172-manuals/topic/ocpn-manuals/near/235460863" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Alec Leamas <a href="https://leamas.github.io/zulip-archive/stream/332172-manuals/topic/ocpn-manuals.html#235460863">(Apr 21 2021 at 06:16)</a>:</h4>
+<p>Let's sleep on it. The basic message is that we can build this thing either way.  The only exception is when a plugin manual want to link to the the dev manual which at his point doesn't look common</p>
+
+
+
+<a name="235461203"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332172-manuals/topic/ocpn-manuals/near/235461203" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Mike Rossiter <a href="https://leamas.github.io/zulip-archive/stream/332172-manuals/topic/ocpn-manuals.html#235461203">(Apr 21 2021 at 06:21)</a>:</h4>
+<p>The most common use case would be that the dev wants a help file for their plugin. The structure of the plugin manual is such that they can place a site.yml in their manual and build the html. Put the html in the plugin data folder and they have an offline help file that the plugin can use. otidalplan_pi has this.<br>
+Alternatively they can use some java and make a pdf for similar use.</p>
+
+
+
+<a name="235461319"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332172-manuals/topic/ocpn-manuals/near/235461319" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Alec Leamas <a href="https://leamas.github.io/zulip-archive/stream/332172-manuals/topic/ocpn-manuals.html#235461319">(Apr 21 2021 at 06:23)</a>:</h4>
+<p>And then there is just no sane way to have links to the dev manual...</p>
+
+
+
+<a name="235461486"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332172-manuals/topic/ocpn-manuals/near/235461486" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Mike Rossiter <a href="https://leamas.github.io/zulip-archive/stream/332172-manuals/topic/ocpn-manuals.html#235461486">(Apr 21 2021 at 06:24)</a>:</h4>
+<p>This is offline stuff.</p>
+
+
+
+<a name="235461506"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332172-manuals/topic/ocpn-manuals/near/235461506" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Alec Leamas <a href="https://leamas.github.io/zulip-archive/stream/332172-manuals/topic/ocpn-manuals.html#235461506">(Apr 21 2021 at 06:25)</a>:</h4>
+<p>agreed</p>
+
+
+
+<a name="235461896"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332172-manuals/topic/ocpn-manuals/near/235461896" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Alec Leamas <a href="https://leamas.github.io/zulip-archive/stream/332172-manuals/topic/ocpn-manuals.html#235461896">(Apr 21 2021 at 06:30)</a>:</h4>
+<p>which means the all three builds  (single plugin, all plugins or dev  manual + all plugins) just works today. No changes needed</p>
+
+
+
+<a name="235462482"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332172-manuals/topic/ocpn-manuals/near/235462482" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Mike Rossiter <a href="https://leamas.github.io/zulip-archive/stream/332172-manuals/topic/ocpn-manuals.html#235462482">(Apr 21 2021 at 06:38)</a>:</h4>
+<p>dev manual + all plugins???</p>
+
+
+
+<a name="235463165"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332172-manuals/topic/ocpn-manuals/near/235463165" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Alec Leamas <a href="https://leamas.github.io/zulip-archive/stream/332172-manuals/topic/ocpn-manuals.html#235463165">(Apr 21 2021 at 06:48)</a>:</h4>
+<p>I. e., ocpn-manuals</p>
+
+
+
+<a name="235518092"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332172-manuals/topic/ocpn-manuals/near/235518092" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Rick Gleason <a href="https://leamas.github.io/zulip-archive/stream/332172-manuals/topic/ocpn-manuals.html#235518092">(Apr 21 2021 at 14:20)</a>:</h4>
+<p>I have not digested this entire discussion and have been doing other things. Sorry about that.  I believe that for ocpn-manuals  I need to provide direct links to each repos.  I've got to go now. Dentist. ....Later.</p>
+
+
+
+<a name="235531114"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332172-manuals/topic/ocpn-manuals/near/235531114" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Alec Leamas <a href="https://leamas.github.io/zulip-archive/stream/332172-manuals/topic/ocpn-manuals.html#235531114">(Apr 21 2021 at 15:26)</a>:</h4>
+<p><span class="user-mention" data-user-id="399865">@Rick Gleason</span> : You don't really need to spend any time to walk through this discussion. It's rather long, but does not boil down to any conclusions for ocpn-dev-manual  or plain plugin manuals like watchdog. What has been done is  modifying the opencpn-plugins-manual navigation. </p>
+<p>We also have a branch in ocpn-manuals which builds all manuals, both ocpn-dev-manual and the plugins to a common document. It's yet unclear if or how this should be used.</p>
+<p>Nothing of this affects ocpn-dev-manual. OTOH, this needs some love, there are open PRs etc.</p>
+
+
+
+<a name="235623006"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332172-manuals/topic/ocpn-manuals/near/235623006" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Mike Rossiter <a href="https://leamas.github.io/zulip-archive/stream/332172-manuals/topic/ocpn-manuals.html#235623006">(Apr 22 2021 at 05:45)</a>:</h4>
+<p>Nothing to stop a repo having multiple folders each with an antora.yml  and/or build.yml at it's head. So, what about asking Dave for a repo "manuals", under <a href="http://github.com/OpenCPN">github.com/OpenCPN</a>? Under this are folders "user", "dev", "plugins".  Monster builds can take place using the top level manuals site.yml. This can be used to populate the <a href="http://OpenCPN.org">OpenCPN.org</a> website.<br>
+In, FI, plugins there is a build.yml that can be used to build test versions of the plugins-manual.<br>
+There can be an antora.yml in the top level of plugins to allow the site.yml to work. This can avoid using sources to pull in stuff.<br>
+@Alec : Could you setup a manuals repo with collaboration where we could test this arrangement?<br>
+The positives: True component references become possible. Less reliance on sources in other gits.  Everybody can work in and test their own folders and contribute to other folders.<br>
+The negatives: Forking would result in a large download for a dev to use. However, once forked the dev could use just the plugins folder. A suitable .gitignore would avoid overwriting other manuals.  Similar idea for a manual editor. Other negatives?</p>
+
+
+
+<a name="235656976"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332172-manuals/topic/ocpn-manuals/near/235656976" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Alec Leamas <a href="https://leamas.github.io/zulip-archive/stream/332172-manuals/topic/ocpn-manuals.html#235656976">(Apr 22 2021 at 11:05)</a>:</h4>
+<p>I sure could. However: What is  the true advantages with this arrangement? That we all work in a common repo? This certainly comes with pros and cons (?)</p>
+
+
+
+<a name="235657115"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332172-manuals/topic/ocpn-manuals/near/235657115" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Alec Leamas <a href="https://leamas.github.io/zulip-archive/stream/332172-manuals/topic/ocpn-manuals.html#235657115">(Apr 22 2021 at 11:07)</a>:</h4>
+<blockquote>
+<p>True component references become possible. </p>
+</blockquote>
+<p>Here, I don't follow you... In what way would a common repo support this better then the current ocpn-manuals?</p>
+
+
+
+<a name="235657898"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332172-manuals/topic/ocpn-manuals/near/235657898" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Alec Leamas <a href="https://leamas.github.io/zulip-archive/stream/332172-manuals/topic/ocpn-manuals.html#235657898">(Apr 22 2021 at 11:14)</a>:</h4>
+<blockquote>
+<p>Less reliance on sources in other gits.</p>
+</blockquote>
+<p>Yes, this is a concern. All of a sudden the ocpn-manuals build breaks because of changes in the sources. More general, we don't have reproducible commits  in ocnp-manuals, since the sources  are not part of of the repo.</p>
+<p>I have been thinking of using git submodules for this. That is, instead of a list of sources there is submodules, on for each source.   This would be very similar to your approach, each module would be a  subdirectory , but we could keep the current idea about different maintainers for different sources/submodules.  </p>
+<p>Pros:</p>
+<ul>
+<li>Reproducible builds of ocpn-manuals</li>
+<li>Distributed maintenance.</li>
+</ul>
+<p>Cons:</p>
+<ul>
+<li>complexity.</li>
+</ul>
+
+
+
+<a name="235658623"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332172-manuals/topic/ocpn-manuals/near/235658623" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Alec Leamas <a href="https://leamas.github.io/zulip-archive/stream/332172-manuals/topic/ocpn-manuals.html#235658623">(Apr 22 2021 at 11:21)</a>:</h4>
+<p>Thoughts?</p>
+
+
+
+<a name="235714292"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332172-manuals/topic/ocpn-manuals/near/235714292" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Alec Leamas <a href="https://leamas.github.io/zulip-archive/stream/332172-manuals/topic/ocpn-manuals.html#235714292">(Apr 22 2021 at 17:12)</a>:</h4>
+<p>One of my brilliant ideas which does not work. It turns out that antora doesn't support submodules. Back to the drawing board....</p>
+
+
+
+<a name="235725877"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332172-manuals/topic/ocpn-manuals/near/235725877" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Mike Rossiter <a href="https://leamas.github.io/zulip-archive/stream/332172-manuals/topic/ocpn-manuals.html#235725877">(Apr 22 2021 at 18:28)</a>:</h4>
+<p>So... how about mocking up the folders. You are doing a lot with the dev-manual and can add that. Grab my plugins-manual as well. I can fork and test links between the two manuals. Would prefer simple folder names like dev and plugins! <br>
+Final product is going to need scripting for the builds and chron jobs and for the FTP the product to a website (not <a href="http://github.io">github.io</a>). Neither Rick or I have the knowledge for that.</p>
+
+
+
+<a name="235732257"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332172-manuals/topic/ocpn-manuals/near/235732257" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Alec Leamas <a href="https://leamas.github.io/zulip-archive/stream/332172-manuals/topic/ocpn-manuals.html#235732257">(Apr 22 2021 at 19:12)</a>:</h4>
+<p>I will. Have explored the submodules path, dropping it for now.  Stay tuned, it wil ltake some time</p>
+
+
+
+<a name="235732368"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332172-manuals/topic/ocpn-manuals/near/235732368" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Alec Leamas <a href="https://leamas.github.io/zulip-archive/stream/332172-manuals/topic/ocpn-manuals.html#235732368">(Apr 22 2021 at 19:13)</a>:</h4>
+<p>But: the dev manual eventually is maintained by Rick.</p>
+
+
+
+<a name="235736044"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332172-manuals/topic/ocpn-manuals/near/235736044" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Mike Rossiter <a href="https://leamas.github.io/zulip-archive/stream/332172-manuals/topic/ocpn-manuals.html#235736044">(Apr 22 2021 at 19:39)</a>:</h4>
+<p>"dev manual eventually is maintained by Rick."<br>
+Of course. This is a proof of concept not a final version .</p>
+
+
+
+<a name="235948942"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332172-manuals/topic/ocpn-manuals/near/235948942" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Mike Rossiter <a href="https://leamas.github.io/zulip-archive/stream/332172-manuals/topic/ocpn-manuals.html#235948942">(Apr 24 2021 at 07:12)</a>:</h4>
+<p>Made a monster manual!<br>
+<a href="https://rasbats.github.io/manual/manuals/0.1/index.html">https://rasbats.github.io/manual/manuals/0.1/index.html</a><br>
+Git is here:<br>
+<a href="https://github.com/Rasbats/manual">https://github.com/Rasbats/manual</a><br>
+Some component references will need changing in the dev manual but this shows the basic idea.</p>
+
+
+
+<a name="236036128"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332172-manuals/topic/ocpn-manuals/near/236036128" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Alec Leamas <a href="https://leamas.github.io/zulip-archive/stream/332172-manuals/topic/ocpn-manuals.html#236036128">(Apr 25 2021 at 04:23)</a>:</h4>
+<p>Sorry for late reply -- a lot of things happening for me now, not all of which related to opencpn.</p>
+<p>This is great, it's the kind of experimenting we need to do before finding out the path to handle this. Some quick notes:</p>
+<ul>
+<li>The build completes in a few seconds for me, hardly a monster. Overall, I don't find the size of the docs we produce overwhelming.</li>
+<li>The possibility to create links are the same as when all repos are remote ones, like in ocpn-manuals</li>
+<li>Having the main manuals in one single repo is a less complex setup, but needs clear informal rules about who owns what.  The latter shouldn't be a problem.</li>
+<li>Since the plugin manuals are remote (and has to be) we are still facing the problem that builds are not reproducible -- the same commit in manuals/ or ocpn-manuals/ can produce different output or even fail if a plugin repo is updated.</li>
+</ul>
+<p>The solution to the last bullet was to use submodules -- but doesn't work. Same for git subtrees. I have an idea how to solve it by some scripting, but to little time.</p>
+
+
+
+<a name="236040411"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332172-manuals/topic/ocpn-manuals/near/236040411" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Mike Rossiter <a href="https://leamas.github.io/zulip-archive/stream/332172-manuals/topic/ocpn-manuals.html#236040411">(Apr 25 2021 at 05:48)</a>:</h4>
+<p>'modules' folder in the manual repo (top level) was not needed... removed.</p>
+<p>" the same commit in manuals/ or ocpn-manuals/ can produce different output or even fail if a plugin repo is updated."<br>
+As long as the master folder of the plugin repo is used and contains manual/&lt;plugin-name&gt; there should not be a problem.</p>
+<p>With a 'manual' repo the only problem with plugins is the need for duplication of the sources in the manual site.yml and the plugins build.yml, if they are to be built independently by a developer.(But... why not build the whole manual and extract your plugin HTML from that?) (Or even better... put a build.yml in your own repo and build the HTML/pdf there)</p>
+
+
+
+<a name="236041813"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332172-manuals/topic/ocpn-manuals/near/236041813" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Alec Leamas <a href="https://leamas.github.io/zulip-archive/stream/332172-manuals/topic/ocpn-manuals.html#236041813">(Apr 25 2021 at 06:16)</a>:</h4>
+<blockquote>
+<p>As long as the master folder of the plugin repo is used and contains manual/&lt;plugin-name&gt; there should not be a problem.</p>
+</blockquote>
+<p>master folder? master branch?</p>
+<p>Anyway, the core problem is that regardless what branch used, something which worked in manuals/ might break (build break, wrong result) when the owner of the plugin manual  pushes a new commit. The manuals/ directory simply has no control over what's in the plugin repos. Testing/reviewing might succeed, and the result might be broken anyway  later.</p>
+
+
+
+<a name="236042473"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332172-manuals/topic/ocpn-manuals/near/236042473" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Mike Rossiter <a href="https://leamas.github.io/zulip-archive/stream/332172-manuals/topic/ocpn-manuals.html#236042473">(Apr 25 2021 at 06:29)</a>:</h4>
+<p>Sorry ... master branch.<br>
+The manuals directory of the consolidated manual repo  does not use any sources. Surely the next build of the OpenCPN manual takes care of the change in the devs plugin repo.</p>
+
+
+
+<a name="236042808"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332172-manuals/topic/ocpn-manuals/near/236042808" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Alec Leamas <a href="https://leamas.github.io/zulip-archive/stream/332172-manuals/topic/ocpn-manuals.html#236042808">(Apr 25 2021 at 06:34)</a>:</h4>
+<blockquote>
+<p>. Surely the next build of the OpenCPN manual takes care of the change in the devs plugin repo.</p>
+</blockquote>
+<p>And that's the problem --  we don't want the plugin manual to be updated until explicitly requested.  In other words: If we review the manual at a given state it must not change when rebuilt until we want  it to.</p>
+
+
+
+<a name="236042985"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332172-manuals/topic/ocpn-manuals/near/236042985" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Mike Rossiter <a href="https://leamas.github.io/zulip-archive/stream/332172-manuals/topic/ocpn-manuals.html#236042985">(Apr 25 2021 at 06:37)</a>:</h4>
+<p>My misunderstanding. By plugin manual you mean the plugins directory of the consolidated manual repo. Is that correct?</p>
+
+
+
+<a name="236043255"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332172-manuals/topic/ocpn-manuals/near/236043255" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Mike Rossiter <a href="https://leamas.github.io/zulip-archive/stream/332172-manuals/topic/ocpn-manuals.html#236043255">(Apr 25 2021 at 06:43)</a>:</h4>
+<p>Perhaps better to remove build.yml from the plugins directory to stop firkling. I could put it back with a .gitignore to allow local builds for testing on my fork of 'manual'.</p>
+
+
+
+<a name="236043417"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332172-manuals/topic/ocpn-manuals/near/236043417" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Mike Rossiter <a href="https://leamas.github.io/zulip-archive/stream/332172-manuals/topic/ocpn-manuals.html#236043417">(Apr 25 2021 at 06:46)</a>:</h4>
+<blockquote>
+<p>my fork of 'manual'.</p>
+</blockquote>
+<p>Or should that be clone?</p>
+
+
+
+<a name="236043648"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332172-manuals/topic/ocpn-manuals/near/236043648" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Alec Leamas <a href="https://leamas.github.io/zulip-archive/stream/332172-manuals/topic/ocpn-manuals.html#236043648">(Apr 25 2021 at 06:51)</a>:</h4>
+<p>One idea would be to clone the plugins, and make sources point to the local directories. We could  then update the clones manually (or rather with a script) when required, but until we do the plugins are frozen. I think that should  work in the sense that we will not be surprised by new  updates. We could even record the state of each plugin repo in a file which is committed.  From this we could then re-create the state</p>
+
+
+
+<a name="236043741"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332172-manuals/topic/ocpn-manuals/near/236043741" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Alec Leamas <a href="https://leamas.github.io/zulip-archive/stream/332172-manuals/topic/ocpn-manuals.html#236043741">(Apr 25 2021 at 06:53)</a>:</h4>
+<blockquote>
+<p>My misunderstanding. By plugin manual you mean the plugins directory of the consolidated manual repo. Is that correct?</p>
+</blockquote>
+<p>No. I assume that the manuals/ directory builds also plugin manuals (?)</p>
+
+
+
+<a name="236044674"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332172-manuals/topic/ocpn-manuals/near/236044674" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Mike Rossiter <a href="https://leamas.github.io/zulip-archive/stream/332172-manuals/topic/ocpn-manuals.html#236044674">(Apr 25 2021 at 07:05)</a>:</h4>
+<p>.No. I assume that the manuals/ directory builds also plugin manuals (?)</p>
+<p>Not so ... the plugin manuals are built as part of the main manual. It is just that because of the plugins folder they appear as separate entities in the HTML output. The manuals directory is just an index for the different manuals - user, dev, plugins - that provides for navigation to those manuals.</p>
+
+
+
+<a name="236044856"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332172-manuals/topic/ocpn-manuals/near/236044856" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Mike Rossiter <a href="https://leamas.github.io/zulip-archive/stream/332172-manuals/topic/ocpn-manuals.html#236044856">(Apr 25 2021 at 07:08)</a>:</h4>
+<p>In fact the manuals directory could be removed and the modules/ROOT placed in the top level folder. Bit neater.</p>
+
+
+
+<a name="236045045"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332172-manuals/topic/ocpn-manuals/near/236045045" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Alec Leamas <a href="https://leamas.github.io/zulip-archive/stream/332172-manuals/topic/ocpn-manuals.html#236045045">(Apr 25 2021 at 07:11)</a>:</h4>
+<p>It doesn't really matter. It's a  basic flaw in Antora: As soon as you have a remote r the build is non-reproducible. And it's sort of a blocking error for us as I see it.</p>
+<p>see: <a href="https://antora.zulipchat.com/#narrow/stream/282400-users/topic/git.20submodule.20source.20problems/near/235687872">https://antora.zulipchat.com/#narrow/stream/282400-users/topic/git.20submodule.20source.20problems/near/235687872</a></p>
+
+
+
+<a name="236054027"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332172-manuals/topic/ocpn-manuals/near/236054027" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Alec Leamas <a href="https://leamas.github.io/zulip-archive/stream/332172-manuals/topic/ocpn-manuals.html#236054027">(Apr 25 2021 at 10:06)</a>:</h4>
+<p>I have pushed a new branch <em>manual</em> to ocpn-manuals. It's a copy of rasbats/manual with a single commit on top. </p>
+<p>That commit solves my concerns. It stores the plugins as locally cloned repos under a new directory <em>sources</em>.  A new script <a href="http://source-state.sh">source-state.sh</a> handles this directory and a state file. </p>
+<p>The state file lists all known plugin repos, their url and the commit used.</p>
+<p><a href="http://source-state.sh">source-state.sh</a> has three operations:</p>
+<ul>
+<li>restore:  restores all plugins sources using url and commit form state  file</li>
+<li>save: updates the state file with possible new repos + url and actual commit</li>
+<li>update: Updates each plugin repo to latest HEAD.</li>
+</ul>
+<p>Ideally, update should respect the branch setting in site.yml, but this requires python to parse the yaml. Perhaps later...  </p>
+<p>Since docs/ now can be generated from sources, it should really be added to .gitignore. Later, also this...</p>
+
+
+
+<a name="236082848"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332172-manuals/topic/ocpn-manuals/near/236082848" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Mike Rossiter <a href="https://leamas.github.io/zulip-archive/stream/332172-manuals/topic/ocpn-manuals.html#236082848">(Apr 25 2021 at 18:04)</a>:</h4>
+<blockquote>
+<p>As soon as you have a remote r the build is non-reproducible. And it's sort of a blocking error for us as I see it.</p>
+</blockquote>
+<blockquote>
+<p>build is non-reproducible</p>
+</blockquote>
+<p>Which build are we talking about here? There is only one - in ocpn-manuals.  Which other build are you  referring to? The build.yml in the plugins directory should be removed. It was only there for testing purposes when using opencpn-plugins-manual. If left the sources could drift away from the ones  I had in site.yml. Was this the concern?</p>
+<p>I think the build.yml in dev needs removing as well.  <br>
+In my manual repo neither build.yml was used, only the site.yml at the top level.</p>
+<blockquote>
+<p>As soon as you have a remote</p>
+</blockquote>
+<p>Do we need any remotes? Can't everyone contribute to the same repo?</p>
+<blockquote>
+<p>It stores the plugins as locally cloned repos</p>
+</blockquote>
+<p>This does not seem necessary, given the above.</p>
+
+
+
+<a name="236088300"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332172-manuals/topic/ocpn-manuals/near/236088300" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Alec Leamas <a href="https://leamas.github.io/zulip-archive/stream/332172-manuals/topic/ocpn-manuals.html#236088300">(Apr 25 2021 at 19:41)</a>:</h4>
+<blockquote>
+<p>Which build are we talking about here?</p>
+</blockquote>
+<p>For example site.yml in <a href="https://github.com/Rasbats/manual/">https://github.com/Rasbats/manual/</a></p>
+
+
+
+<a name="236088469"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332172-manuals/topic/ocpn-manuals/near/236088469" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Mike Rossiter <a href="https://leamas.github.io/zulip-archive/stream/332172-manuals/topic/ocpn-manuals.html#236088469">(Apr 25 2021 at 19:44)</a>:</h4>
+<p>What is the reason for referencing it in leamas/ocpn-manuals?</p>
+
+
+
+<a name="236088484"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332172-manuals/topic/ocpn-manuals/near/236088484" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Alec Leamas <a href="https://leamas.github.io/zulip-archive/stream/332172-manuals/topic/ocpn-manuals.html#236088484">(Apr 25 2021 at 19:44)</a>:</h4>
+<p>None, I use it as-is</p>
+
+
+
+<a name="236088637"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332172-manuals/topic/ocpn-manuals/near/236088637" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Mike Rossiter <a href="https://leamas.github.io/zulip-archive/stream/332172-manuals/topic/ocpn-manuals.html#236088637">(Apr 25 2021 at 19:47)</a>:</h4>
+<p>But, but, but why use it? If you fork Rasbats/manual you have the whole thing. Rename manual as ocpn-manuals if needed and change a link or two.</p>
+
+
+
+<a name="236088795"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332172-manuals/topic/ocpn-manuals/near/236088795" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Alec Leamas <a href="https://leamas.github.io/zulip-archive/stream/332172-manuals/topic/ocpn-manuals.html#236088795">(Apr 25 2021 at 19:48)</a>:</h4>
+<p>That is what I did (more or less, imported it to a branch instead of forking it). Now, looking at  site.yml in <a href="https://github.com/Rasbats/manual/">https://github.com/Rasbats/manual/</a> it contains a large number of plugin manual repos, right?</p>
+
+
+
+<a name="236088935"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332172-manuals/topic/ocpn-manuals/near/236088935" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Mike Rossiter <a href="https://leamas.github.io/zulip-archive/stream/332172-manuals/topic/ocpn-manuals.html#236088935">(Apr 25 2021 at 19:51)</a>:</h4>
+<p>It uses as sources a large number of developers repos, yes.</p>
+
+
+
+<a name="236089114"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332172-manuals/topic/ocpn-manuals/near/236089114" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Alec Leamas <a href="https://leamas.github.io/zulip-archive/stream/332172-manuals/topic/ocpn-manuals.html#236089114">(Apr 25 2021 at 19:54)</a>:</h4>
+<p>And these repos are not just an impressing list, they are actually used (rhetoric question).</p>
+<p>Which means that the build is not reproducible. What is forged by site.yml depends on what's committed in each repo. Commits which cannot be controlled from the main manuals project. You could make a test build, review the results and then make a final build just to see it fail because of some commit in some plugin repo.</p>
+
+
+
+<a name="236089339"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332172-manuals/topic/ocpn-manuals/near/236089339" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Mike Rossiter <a href="https://leamas.github.io/zulip-archive/stream/332172-manuals/topic/ocpn-manuals.html#236089339">(Apr 25 2021 at 19:59)</a>:</h4>
+<p>Ok. I will need to test that. </p>
+<blockquote>
+<p>and then make a final build just to see it fail because of some commit in some plugin repo.</p>
+</blockquote>
+<p>I thought it would just take what was in the git at the time of the final build but not fail. Yes, it may be different because of an update to the manual but fail? I will test tomorrow.</p>
+
+
+
+<a name="236089648"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332172-manuals/topic/ocpn-manuals/near/236089648" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Alec Leamas <a href="https://leamas.github.io/zulip-archive/stream/332172-manuals/topic/ocpn-manuals.html#236089648">(Apr 25 2021 at 20:04)</a>:</h4>
+<p>"Fail" in this context is not just about if the build fails -- in a way that would actually be lucky since it would be discovered.  A much worse error would be if late commits introduced stuff which was wrong -- such errors would not be found.</p>
+<p>And there is the general problem that a given commit in the main project does not reflect the actual state of the main manual. The build cannot be done at another time and produce the same result.</p>
+
+
+
+<a name="236089926"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332172-manuals/topic/ocpn-manuals/near/236089926" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Mike Rossiter <a href="https://leamas.github.io/zulip-archive/stream/332172-manuals/topic/ocpn-manuals.html#236089926">(Apr 25 2021 at 20:09)</a>:</h4>
+<blockquote>
+<p>a given commit in the main project does not reflect the actual state of the main manual</p>
+</blockquote>
+<p>We are talking here about a developer's plugin repo. Is this correct? Still getting my head around it.</p>
+
+
+
+<a name="236090004"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332172-manuals/topic/ocpn-manuals/near/236090004" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Mike Rossiter <a href="https://leamas.github.io/zulip-archive/stream/332172-manuals/topic/ocpn-manuals.html#236090004">(Apr 25 2021 at 20:10)</a>:</h4>
+<blockquote>
+<p>The build cannot be done at another time and produce the same result.</p>
+</blockquote>
+<p>Why does this matter?</p>
+
+
+
+<a name="236090121"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332172-manuals/topic/ocpn-manuals/near/236090121" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Alec Leamas <a href="https://leamas.github.io/zulip-archive/stream/332172-manuals/topic/ocpn-manuals.html#236090121">(Apr 25 2021 at 20:13)</a>:</h4>
+<p>No. rasbats/manual is currently at 4487d17. I could check out this very commit and build using site.yml.  In a versiond world, this would give me the complete manual as of 4487d17.  But realities are that the same commit will produce different versions of the manual(s), all depending on the state of the sources.</p>
+
+
+
+<a name="236090408"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332172-manuals/topic/ocpn-manuals/near/236090408" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Alec Leamas <a href="https://leamas.github.io/zulip-archive/stream/332172-manuals/topic/ocpn-manuals.html#236090408">(Apr 25 2021 at 20:19)</a>:</h4>
+<p>It matters a lot, because the whole idea with version management (not only git) is that a given version is inmutable.   If not, there is no git diff, no possibility to make a patch and rebuild just adding the patch, and what not. Actually, it means that we have no version management of the overall manual(s)</p>
+
+
+
+<a name="236090638"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332172-manuals/topic/ocpn-manuals/near/236090638" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Mike Rossiter <a href="https://leamas.github.io/zulip-archive/stream/332172-manuals/topic/ocpn-manuals.html#236090638">(Apr 25 2021 at 20:23)</a>:</h4>
+<blockquote>
+<p>Actually, it means that we have no version management of the overall manual(s)</p>
+</blockquote>
+<p>Beyond my pay grade.</p>
+<p>Each build could have a timestamp. Is this not sufficient? I have not seen this problem come up with other antora manuals?</p>
+
+
+
+<a name="236090742"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332172-manuals/topic/ocpn-manuals/near/236090742" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Alec Leamas <a href="https://leamas.github.io/zulip-archive/stream/332172-manuals/topic/ocpn-manuals.html#236090742">(Apr 25 2021 at 20:25)</a>:</h4>
+<p>No, theres is no version management. No patches, no history, no what not. We might as well stop using git for the playbook. And that's certainly not what we want.</p>
+
+
+
+<a name="236090908"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332172-manuals/topic/ocpn-manuals/near/236090908" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Alec Leamas <a href="https://leamas.github.io/zulip-archive/stream/332172-manuals/topic/ocpn-manuals.html#236090908">(Apr 25 2021 at 20:28)</a>:</h4>
+<p>Just consider the situation when an error is found and a patch is submitted (as a PR or whatever). We then have zero possibility to rebuild after just applying that parch and get the corresponding change. Instead, we will get a potentially new manual, with a need to check each and every bit instead of just checking what's patched.</p>
+
+
+
+<a name="236091128"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332172-manuals/topic/ocpn-manuals/near/236091128" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Mike Rossiter <a href="https://leamas.github.io/zulip-archive/stream/332172-manuals/topic/ocpn-manuals.html#236091128">(Apr 25 2021 at 20:32)</a>:</h4>
+<p>I think you need to build a new branch of ocpn-manuals, removing my opencpn plugins manual repos as sources so we can see what a unified  repo would look like with the plugin repo clones. Much like I did with Rasbats/manual. </p>
+<p>The sight of all those plugin clones was quite a shock to the system.</p>
+
+
+
+<a name="236091280"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332172-manuals/topic/ocpn-manuals/near/236091280" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Alec Leamas <a href="https://leamas.github.io/zulip-archive/stream/332172-manuals/topic/ocpn-manuals.html#236091280">(Apr 25 2021 at 20:35)</a>:</h4>
+<blockquote>
+<p>The sight of all those plugin clones was quite a shock to the system.</p>
+</blockquote>
+<p>Possibly. OTOH, they have always been there, just that they have been out of sight ;) (remote repos are cloned to private directories; on linux at ~/.cache/antora. So the difference is not that big...)</p>
+
+
+
+<a name="236091423"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332172-manuals/topic/ocpn-manuals/near/236091423" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Alec Leamas <a href="https://leamas.github.io/zulip-archive/stream/332172-manuals/topic/ocpn-manuals.html#236091423">(Apr 25 2021 at 20:37)</a>:</h4>
+<blockquote>
+<p>what a unified repo would look like with the plugin repo clones</p>
+</blockquote>
+<p>I know that would work, have no problems (well, not that much at least). But in this case I  think we should focus on hard part first. And the hard part is the plugin repos.</p>
+
+
+
+<a name="236091951"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332172-manuals/topic/ocpn-manuals/near/236091951" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Mike Rossiter <a href="https://leamas.github.io/zulip-archive/stream/332172-manuals/topic/ocpn-manuals.html#236091951">(Apr 25 2021 at 20:47)</a>:</h4>
+<p>Another day tomorrow. Good night!</p>
+
+
+
+<a name="236092088"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332172-manuals/topic/ocpn-manuals/near/236092088" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Alec Leamas <a href="https://leamas.github.io/zulip-archive/stream/332172-manuals/topic/ocpn-manuals.html#236092088">(Apr 25 2021 at 20:50)</a>:</h4>
+<p>night!</p>
+
+
+
+<a name="236125296"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332172-manuals/topic/ocpn-manuals/near/236125296" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Mike Rossiter <a href="https://leamas.github.io/zulip-archive/stream/332172-manuals/topic/ocpn-manuals.html#236125296">(Apr 26 2021 at 06:15)</a>:</h4>
+<p>Ok... following on from your idea of source-state could sparse-checkout help with speed and clutter avoidance:<br>
+<a href="/user_uploads/33951/POha8hN8a09dR0KCjR45PsXs/source-sparse.sh">source-sparse.sh</a></p>
+
+
+
+<a name="236125450"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332172-manuals/topic/ocpn-manuals/near/236125450" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Mike Rossiter <a href="https://leamas.github.io/zulip-archive/stream/332172-manuals/topic/ocpn-manuals.html#236125450">(Apr 26 2021 at 06:18)</a>:</h4>
+<p><a href="https://stackoverflow.com/questions/600079/how-do-i-clone-a-subdirectory-only-of-a-git-repository">https://stackoverflow.com/questions/600079/how-do-i-clone-a-subdirectory-only-of-a-git-repository</a></p>
+
+
+
+<a name="236150053"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332172-manuals/topic/ocpn-manuals/near/236150053" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Alec Leamas <a href="https://leamas.github.io/zulip-archive/stream/332172-manuals/topic/ocpn-manuals.html#236150053">(Apr 26 2021 at 10:22)</a>:</h4>
+<p>Hm... interesting. Had no idea such a thing existed (hell, who has the complete knowledge what exists in git?). It looks like a solution which could be integrated into the  <a href="http://source-state.sh">source-state.sh</a> script. And agreed, some optimization like that would be great (if this doesn't work, we could just remove everything  besides manual/ after cloning)</p>
+<p>So yes, some optimization is needed, and git sparse-checkout might be the solution.</p>
+
+
+
+<a name="236151245"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332172-manuals/topic/ocpn-manuals/near/236151245" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Alec Leamas <a href="https://leamas.github.io/zulip-archive/stream/332172-manuals/topic/ocpn-manuals.html#236151245">(Apr 26 2021 at 10:33)</a>:</h4>
+<p>One problem with sparse-checkout is that the configuration lives in the source. That is, for this to work we need to apply the sparse configuration to each and every plugin, and keep it sane. Doable?</p>
+
+
+
+<a name="236151763"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332172-manuals/topic/ocpn-manuals/near/236151763" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Alec Leamas <a href="https://leamas.github.io/zulip-archive/stream/332172-manuals/topic/ocpn-manuals.html#236151763">(Apr 26 2021 at 10:37)</a>:</h4>
+<p>As a first step I tried the dead-simple approach to just clone as usual, but remove everything besides manual/ and friends. The  result lives in the branch <em>state</em> in ocpn-manuals. It brings down the sources directory to just over 400M. Good enough?</p>
+
+
+
+<a name="236156849"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332172-manuals/topic/ocpn-manuals/near/236156849" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Alec Leamas <a href="https://leamas.github.io/zulip-archive/stream/332172-manuals/topic/ocpn-manuals.html#236156849">(Apr 26 2021 at 11:27)</a>:</h4>
+<p>Pushed a new variant, still branch state in leamas/ocpn-manuals. Here, I use spare-checkout if available. I  <em>think</em> the initial download is the same (everything comes over the wire?), but the actual sources/ dir is now down to around 150M.</p>
+
+
+
+<a name="236250300"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332172-manuals/topic/ocpn-manuals/near/236250300" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Mike Rossiter <a href="https://leamas.github.io/zulip-archive/stream/332172-manuals/topic/ocpn-manuals.html#236250300">(Apr 26 2021 at 21:48)</a>:</h4>
+<p>My fork of ocpn-manuals is here:<br>
+<a href="https://github.com/Rasbats/ocpn-manuals">https://github.com/Rasbats/ocpn-manuals</a><br>
+Using branch 'manual'<br>
+Need to rebuild the sources. I had a problem with git add.<br>
+Manual generated:<br>
+<a href="https://rasbats.github.io/ocpn-manuals/opencpn-master-plugins/0.1/index.html">https://rasbats.github.io/ocpn-manuals/opencpn-master-plugins/0.1/index.html</a></p>
+<p><a href="http://source-sparse.sh">source-sparse.sh</a> has been updated for all 'registered' plugins at the moment. Bit crude but it makes the sources if you run it.</p>
+
+
+
+<a name="236288613"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332172-manuals/topic/ocpn-manuals/near/236288613" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Mike Rossiter <a href="https://leamas.github.io/zulip-archive/stream/332172-manuals/topic/ocpn-manuals.html#236288613">(Apr 27 2021 at 06:19)</a>:</h4>
+<p>Updated <a href="http://source-sparse.sh">source-sparse.sh</a>. All the dev plugin manuals bar one are in their master branches so the script now clones only that branch (dashboard-tactics_pi uses another branch, which is allowed for)  This should speed the cloning.</p>
+
+
+
+<a name="236289892"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332172-manuals/topic/ocpn-manuals/near/236289892" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Alec Leamas <a href="https://leamas.github.io/zulip-archive/stream/332172-manuals/topic/ocpn-manuals.html#236289892">(Apr 27 2021 at 06:36)</a>:</h4>
+<p>we  are basically doing the same thing. <a href="http://source-state.sh">source-state.sh</a> also uses git sparse-checkout if available.  However, it also supports the state file, and does not have a hardcoded list of plugins, it adapts to what's in the sources/ directory.</p>
+<p>I think we should proceed in this direction. Will merge my state branch into main as a starting point. Also needs to verify that our list of plugins matches (ii e., that I have each and every plugin in your list also in my dir.).<br>
+'</p>
+
+
+
+<a name="236290192"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332172-manuals/topic/ocpn-manuals/near/236290192" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Mike Rossiter <a href="https://leamas.github.io/zulip-archive/stream/332172-manuals/topic/ocpn-manuals.html#236290192">(Apr 27 2021 at 06:41)</a>:</h4>
+<p>How about just using the master branch of the devs plugin repo?</p>
+
+
+
+<a name="236367578"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332172-manuals/topic/ocpn-manuals/near/236367578" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Rick Gleason <a href="https://leamas.github.io/zulip-archive/stream/332172-manuals/topic/ocpn-manuals.html#236367578">(Apr 27 2021 at 16:22)</a>:</h4>
+<p>Thanks.</p>
+
+
+
+<a name="236373934"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332172-manuals/topic/ocpn-manuals/near/236373934" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Mike Rossiter <a href="https://leamas.github.io/zulip-archive/stream/332172-manuals/topic/ocpn-manuals.html#236373934">(Apr 27 2021 at 17:04)</a>:</h4>
+<blockquote>
+<p>How about just using the master branch of the devs plugin repo?</p>
+</blockquote>
+<p>For <a href="http://source-state.sh">source-state.sh</a> I was thinking of:  "git clone --branch master --single-branch". This would improve the speed of the build.</p>
+<p><span class="user-mention" data-user-id="399865">@Rick Gleason</span> </p>
+<blockquote>
+<p>Thanks</p>
+</blockquote>
+<p>??? </p>
+<blockquote>
+<p>master branch of the devs plugin repo?</p>
+</blockquote>
+<p>Refers to  a plugin developer repository, not the ocpn-dev-manual.</p>
+
+
+
+<a name="236384420"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332172-manuals/topic/ocpn-manuals/near/236384420" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Alec Leamas <a href="https://leamas.github.io/zulip-archive/stream/332172-manuals/topic/ocpn-manuals.html#236384420">(Apr 27 2021 at 18:17)</a>:</h4>
+<p>I have basically no problems with more optimizations. But might be the wrong focus right now..</p>
+
+
+
+<a name="236384598"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332172-manuals/topic/ocpn-manuals/near/236384598" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Alec Leamas <a href="https://leamas.github.io/zulip-archive/stream/332172-manuals/topic/ocpn-manuals.html#236384598">(Apr 27 2021 at 18:18)</a>:</h4>
+<p>Trying to unwrap the strange dependencies in the plugins manials, and the .git  redirection. What is the purpose of this?</p>
+
+
+
+<a name="236384654"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332172-manuals/topic/ocpn-manuals/near/236384654" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Alec Leamas <a href="https://leamas.github.io/zulip-archive/stream/332172-manuals/topic/ocpn-manuals.html#236384654">(Apr 27 2021 at 18:19)</a>:</h4>
+<p>Can you handle symlinks on your windows box (settings issue, sort of)?</p>
+
+
+
+<a name="236387742"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332172-manuals/topic/ocpn-manuals/near/236387742" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Mike Rossiter <a href="https://leamas.github.io/zulip-archive/stream/332172-manuals/topic/ocpn-manuals.html#236387742">(Apr 27 2021 at 18:37)</a>:</h4>
+<blockquote>
+<p>Trying to unwrap the strange dependencies in the plugins manials (sic), and the .git redirection</p>
+</blockquote>
+<p>When the modules were setup for each plugin the name in the module may not always have matched the plugin git name. e.g. GPS-Odometer became manual/odometer and the page 'odometer.adoc'. The constant is &lt;plugin-name&lt;&gt;/manual.</p>
+<blockquote>
+<p>.git redirection</p>
+</blockquote>
+<p>Not sure what this refers to. When commiting the git after building sources I needed to use the command line, which gave a warning that I was referencing a git repo. This was for each git plugin repo. The commit and push worked fine. Git Desktop did not like using plugin git repos.</p>
+
+
+
+<a name="236387974"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332172-manuals/topic/ocpn-manuals/near/236387974" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Mike Rossiter <a href="https://leamas.github.io/zulip-archive/stream/332172-manuals/topic/ocpn-manuals.html#236387974">(Apr 27 2021 at 18:39)</a>:</h4>
+<blockquote>
+<p>Can you handle symlinks on your windows box (settings issue, sort of)?</p>
+</blockquote>
+<p>Never played with symlinks...yet.</p>
+
+
+
+<a name="236388401"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332172-manuals/topic/ocpn-manuals/near/236388401" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Alec Leamas <a href="https://leamas.github.io/zulip-archive/stream/332172-manuals/topic/ocpn-manuals.html#236388401">(Apr 27 2021 at 18:42)</a>:</h4>
+<p>There was a strane plain file called .git which basically redirected the git directory like ../../whatever. Not a nice kind of dependency. I have removed it, trying to get the pieces together.</p>
+<p>A symlink to the sources directory might solve many problems here, but I need more time to investigate</p>
+
+
+
+<a name="236389050"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332172-manuals/topic/ocpn-manuals/near/236389050" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Mike Rossiter <a href="https://leamas.github.io/zulip-archive/stream/332172-manuals/topic/ocpn-manuals.html#236389050">(Apr 27 2021 at 18:47)</a>:</h4>
+<p>Those .git files were produced by my <a href="http://sources-sparse.sh">sources-sparse.sh</a>.</p>
+
+
+
+<a name="236389250"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332172-manuals/topic/ocpn-manuals/near/236389250" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Alec Leamas <a href="https://leamas.github.io/zulip-archive/stream/332172-manuals/topic/ocpn-manuals.html#236389250">(Apr 27 2021 at 18:48)</a>:</h4>
+<p>OK,  right to  remove them... But I'm sort of lost right now, this will take time I don't really have until the end of the week.</p>
+
+
+
+<a name="236810440"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332172-manuals/topic/ocpn-manuals/near/236810440" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Mike Rossiter <a href="https://leamas.github.io/zulip-archive/stream/332172-manuals/topic/ocpn-manuals.html#236810440">(Apr 30 2021 at 09:48)</a>:</h4>
+<p>Updated <a href="http://source-sparse.sh">source-sparse.sh</a> and made a new sources.state file that almost reflects the state of the plugins.<br>
+<a href="https://rasbats.github.io/ocpn-manuals/">https://rasbats.github.io/ocpn-manuals/</a><br>
+To avoid difficult edits of scripts I am making a plain list of all plugin urls (url only) that can be used by the scripts. I will include this list in my fork of ocpn-manuals when ready. <br>
+The list for master plugins will follow the categories used in the manual. Betas will be random.</p>
+
+
+
+<a name="236821472"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332172-manuals/topic/ocpn-manuals/near/236821472" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Mike Rossiter <a href="https://leamas.github.io/zulip-archive/stream/332172-manuals/topic/ocpn-manuals.html#236821472">(Apr 30 2021 at 11:37)</a>:</h4>
+<p>Master plugins list now made. ordered.sources.state follows the categories ordering.<br>
+<a href="https://github.com/Rasbats/ocpn-manuals">https://github.com/Rasbats/ocpn-manuals</a></p>
+
+
+
+<a name="236821700"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332172-manuals/topic/ocpn-manuals/near/236821700" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Mike Rossiter <a href="https://leamas.github.io/zulip-archive/stream/332172-manuals/topic/ocpn-manuals.html#236821700">(Apr 30 2021 at 11:40)</a>:</h4>
+<p>Next job is passing the beta plugin manuals to developers where possible. After this I will make a Beta plugins list and add to the ordered.sources.state.</p>
+
+
+
+<a name="237305632"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332172-manuals/topic/ocpn-manuals/near/237305632" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Mike Rossiter <a href="https://leamas.github.io/zulip-archive/stream/332172-manuals/topic/ocpn-manuals.html#237305632">(May 04 2021 at 11:13)</a>:</h4>
+<p>Updated sources.state for master and beta plugins (53 so far).<br>
+Ran modified <a href="http://source-state.sh">source-state.sh</a> to produce sparse sources, removing the  .git folder (which prevented pushing to the manual branch)<br>
+Added empty repo to allow local build:<br>
+<a href="https://gitlab.com/antora/antora/-/issues/284">https://gitlab.com/antora/antora/-/issues/284</a><br>
+site.yml changed to use local files/folders<br>
+Only two repos in site.yml as sources at the moment - ShipDriver and otcurrent.<br>
+OpenCPN manuals builds with links to the limited number of plugin sources.<br>
+<a href="https://rasbats.github.io/ocpn-manuals/opencpn-master-plugins/0.1/plugins.html">https://rasbats.github.io/ocpn-manuals/opencpn-master-plugins/0.1/plugins.html</a><br>
+Next step: Add the remaining 51 plugins! The sources are already there. Just need to edit site.yml.<br>
+Note: In <a href="http://source-state.sh">source-state.sh</a> there was no attempt to edit save and update options. Only restore in use.</p>
+
+
+
+<a name="237315591"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332172-manuals/topic/ocpn-manuals/near/237315591" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Alec Leamas <a href="https://leamas.github.io/zulip-archive/stream/332172-manuals/topic/ocpn-manuals.html#237315591">(May 04 2021 at 12:37)</a>:</h4>
+<p>source-state basically just reflects whatever is available in the sources/ directory. No need for a list...</p>
+<p>Must de-prioritize this for now -- the time I have is hunting bugs before next release which will be upon us soon.</p>
+
+
+
+<a name="237318066"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332172-manuals/topic/ocpn-manuals/near/237318066" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Mike Rossiter <a href="https://leamas.github.io/zulip-archive/stream/332172-manuals/topic/ocpn-manuals.html#237318066">(May 04 2021 at 12:54)</a>:</h4>
+<p>Understood.</p>
+
+
+
+<a name="237322017"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332172-manuals/topic/ocpn-manuals/near/237322017" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Mike Rossiter <a href="https://leamas.github.io/zulip-archive/stream/332172-manuals/topic/ocpn-manuals.html#237322017">(May 04 2021 at 13:19)</a>:</h4>
+<p>Just for reference:<br>
+Latest ocpn-manuals:<br>
+<a href="https://rasbats.github.io/ocpn-manuals">https://rasbats.github.io/ocpn-manuals</a><br>
+Repo has the updated site.yml</p>
+
+
+
+<a name="290757767"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332172-manuals/topic/ocpn-manuals/near/290757767" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Notification Bot <a href="https://leamas.github.io/zulip-archive/stream/332172-manuals/topic/ocpn-manuals.html#290757767">(Jul 25 2022 at 13:23)</a>:</h4>
+<p>This topic was moved here from <a class="stream-topic" data-stream-id="283224" href="/#narrow/stream/283224-ocpn-user-plugins-manual/topic/ocpn-manuals">#ocpn-user-plugins-manual &gt; ocpn-manuals</a> by <span class="user-mention silent" data-user-id="399510">Alec Leamas</span>.</p>
+
+
+
+<hr><p>Last updated: Dec 19 2022 at 16:41 UTC</p>
+</html>

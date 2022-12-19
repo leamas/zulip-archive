@@ -1,0 +1,179 @@
+<html>
+<head><meta charset="utf-8"><title>Antora 3.0 tries · manuals · Zulip Chat Archive</title></head>
+<h2>Stream: <a href="https://leamas.github.io/zulip-archive/stream/332172-manuals/index.html">manuals</a></h2>
+<h3>Topic: <a href="https://leamas.github.io/zulip-archive/stream/332172-manuals/topic/Antora.203.2E0.20tries.html">Antora 3.0 tries</a></h3>
+
+<hr>
+
+<base href="https://opencpn.zulipchat.com">
+
+<head><link href="https://leamas.github.io/zulip-archive/style.css" rel="stylesheet"></head>
+
+<a name="272798276"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332172-manuals/topic/Antora%203.0%20tries/near/272798276" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Alec Leamas <a href="https://leamas.github.io/zulip-archive/stream/332172-manuals/topic/Antora.203.2E0.20tries.html#272798276">(Feb 22 2022 at 12:55)</a>:</h4>
+<p>I have made some experimenst with the new Antora version 3.0. The new manual is available at <a href="https://leamas.github.io/manuals-v2/manuals/index.html">https://leamas.github.io/manuals-v2/manuals/index.html</a>.</p>
+<p>The big change in 3.0 is the addition of extensions. Here is two, concrete results from this for us.</p>
+<p>One is an in my eyes really good search function. Try it, you'll like it :)</p>
+<p>I have also made a own extension (with lot's of help from Dave Allen) which lists the state (last commit, date etc) in all repos we use. As a result it is possible to drop the sources.state and <a href="http://source-state.sh">source-state.sh</a> completely, just using Antora straight off.  The easiest is to use npm script, see INSTALL.md. </p>
+<p>The output form the extension is  available at <a href="https://leamas.github.io/manuals-v2/manuals/sources.html">https://leamas.github.io/manuals-v2/manuals/sources.html</a>. Enjoy.</p>
+
+
+
+<a name="272803706"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332172-manuals/topic/Antora%203.0%20tries/near/272803706" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Rick Gleason <a href="https://leamas.github.io/zulip-archive/stream/332172-manuals/topic/Antora.203.2E0.20tries.html#272803706">(Feb 22 2022 at 13:42)</a>:</h4>
+<p>Alec  I agree, the search is a huge improvement.  Don't quite get the dropping of <a href="http://source-state.sh">source-state.sh</a></p>
+
+
+
+<a name="272805698"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332172-manuals/topic/Antora%203.0%20tries/near/272805698" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Alec Leamas <a href="https://leamas.github.io/zulip-archive/stream/332172-manuals/topic/Antora.203.2E0.20tries.html#272805698">(Feb 22 2022 at 13:58)</a>:</h4>
+<p>For now, let's agree that <a href="http://source-state.sh">source-state.sh</a> is a damned complicated thing to handle. </p>
+<p>What it does is to make sure that we build exactly the same thing on github as we did earlier in  a local build. This is good in a way, but it comes with a cost. The new extension attacks the problem from another angle: If something changes, it is visible in the appendix.  This is IMHO good enough to just build without using anything like source-state-sh.</p>
+<p>And believe me, it's so much  simpler.</p>
+
+
+
+<a name="274011183"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332172-manuals/topic/Antora%203.0%20tries/near/274011183" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Mike Rossiter <a href="https://leamas.github.io/zulip-archive/stream/332172-manuals/topic/Antora.203.2E0.20tries.html#274011183">(Mar 03 2022 at 17:51)</a>:</h4>
+<p><span class="user-mention" data-user-id="399510">@Alec Leamas</span>  You've done a lot of work here. The search function works well.<br>
+Correct me if wrong but it looks like the whole manual (all 3 sections) is built from the <em>manuals</em> repo. <br>
+Is the upgrade as simple as moving your stuff into <em>opencpn-manuals/main</em>? And then building from there. We would need to remove the <em>plugins</em> and <em>development</em> separate page builds as they would not be updated. Advise users they need to access the manuals via the main index page. <br>
+Massive simplification.</p>
+
+
+
+<a name="274013782"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332172-manuals/topic/Antora%203.0%20tries/near/274013782" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Alec Leamas <a href="https://leamas.github.io/zulip-archive/stream/332172-manuals/topic/Antora.203.2E0.20tries.html#274013782">(Mar 03 2022 at 18:06)</a>:</h4>
+<p>Yes, all three sections are built by main. Also, the link to the main manual is what we have communicated, so there's nothing new when it comes to users.</p>
+<p>Still, you are really radical here when you talk about dropping the plugin manual build completely. I havn't really thought about it, but I think you are right. For that to work we must make sure you can build the main manual. Should not be a problem, but needs to be verified. Suggestion: clone <a href="https://github.com/leamas/manuals-v2.git">https://github.com/leamas/manuals-v2.git</a> and test if you can make a local build as described in INSTALL.md</p>
+<p>OK?</p>
+
+
+
+<a name="274014064"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332172-manuals/topic/Antora%203.0%20tries/near/274014064" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Alec Leamas <a href="https://leamas.github.io/zulip-archive/stream/332172-manuals/topic/Antora.203.2E0.20tries.html#274014064">(Mar 03 2022 at 18:08)</a>:</h4>
+<p>When it  comes to the development manual I think it makes sense to keep the site.yml for the same reason we have a site.yml in the plugins: to make a "local" build, avoiding the need to rebuild the complete manual just to check simple edits.</p>
+
+
+
+<a name="274017680"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332172-manuals/topic/Antora%203.0%20tries/near/274017680" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Alec Leamas <a href="https://leamas.github.io/zulip-archive/stream/332172-manuals/topic/Antora.203.2E0.20tries.html#274017680">(Mar 03 2022 at 18:33)</a>:</h4>
+<p>BTW: You don't really need to install Antora, things should work as son as you have npm installed. Need to update INSTALL.md</p>
+
+
+
+<a name="274027253"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332172-manuals/topic/Antora%203.0%20tries/near/274027253" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Alec Leamas <a href="https://leamas.github.io/zulip-archive/stream/332172-manuals/topic/Antora.203.2E0.20tries.html#274027253">(Mar 03 2022 at 19:38)</a>:</h4>
+<p><span class="user-mention" data-user-id="399559">@Mike Rossiter</span>   ^</p>
+
+
+
+<a name="274092150"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332172-manuals/topic/Antora%203.0%20tries/near/274092150" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Mike Rossiter <a href="https://leamas.github.io/zulip-archive/stream/332172-manuals/topic/Antora.203.2E0.20tries.html#274092150">(Mar 04 2022 at 07:53)</a>:</h4>
+<p>Local build of manuals-v2 works, with the two extensions (Lunr and sources) also working.</p>
+
+
+
+<a name="274096278"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332172-manuals/topic/Antora%203.0%20tries/near/274096278" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Alec Leamas <a href="https://leamas.github.io/zulip-archive/stream/332172-manuals/topic/Antora.203.2E0.20tries.html#274096278">(Mar 04 2022 at 08:37)</a>:</h4>
+<p><span class="user-mention" data-user-id="399559">@Mike Rossiter</span> : OK,  I'll then update the "usual" main repo with the changes, clean up and rebuild. That then makes  opencpn-manuals/plugin sort of obsolete, it will still work but supposedly not maintained.  All new builds will be in opencpn-manuals/main.</p>
+
+
+
+<a name="274097898"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332172-manuals/topic/Antora%203.0%20tries/near/274097898" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Alec Leamas <a href="https://leamas.github.io/zulip-archive/stream/332172-manuals/topic/Antora.203.2E0.20tries.html#274097898">(Mar 04 2022 at 08:53)</a>:</h4>
+<p>Done: <a href="https://opencpn-manuals.github.io/main">https://opencpn-manuals.github.io/main</a></p>
+
+
+
+<a name="274098248"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332172-manuals/topic/Antora%203.0%20tries/near/274098248" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Alec Leamas <a href="https://leamas.github.io/zulip-archive/stream/332172-manuals/topic/Antora.203.2E0.20tries.html#274098248">(Mar 04 2022 at 08:57)</a>:</h4>
+<p><span class="user-mention" data-user-id="399559">@Mike Rossiter</span> : there are two files 'beta_plugins.txt ' and 'dokuwiki plugins.txt' in the top directory. Looks like obsolete transition stuff to me. Can we remove them?</p>
+
+
+
+<a name="274161303"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332172-manuals/topic/Antora%203.0%20tries/near/274161303" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Mike Rossiter <a href="https://leamas.github.io/zulip-archive/stream/332172-manuals/topic/Antora.203.2E0.20tries.html#274161303">(Mar 04 2022 at 17:24)</a>:</h4>
+<p><span class="user-mention" data-user-id="399510">@Alec Leamas</span> &gt;Can we remove them?<br>
+Yes, no longer needed.<br>
+There is a long list of files/directories that need to be removed, now that sources.state is not being used. Do we need the <em>sources</em> directory?</p>
+
+
+
+<a name="274162252"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332172-manuals/topic/Antora%203.0%20tries/near/274162252" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Mike Rossiter <a href="https://leamas.github.io/zulip-archive/stream/332172-manuals/topic/Antora.203.2E0.20tries.html#274162252">(Mar 04 2022 at 17:31)</a>:</h4>
+<p>Do we remove the sources.state stuff in opencpn-manuals/plugins as well?  Does your link checker work when the manuals are built from main?</p>
+
+
+
+<a name="274177765"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332172-manuals/topic/Antora%203.0%20tries/near/274177765" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Alec Leamas <a href="https://leamas.github.io/zulip-archive/stream/332172-manuals/topic/Antora.203.2E0.20tries.html#274177765">(Mar 04 2022 at 19:31)</a>:</h4>
+<p>yes, link checking works as it always havr. you can remove the complete sources directoru</p>
+
+
+
+<a name="274241072"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332172-manuals/topic/Antora%203.0%20tries/near/274241072" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Alec Leamas <a href="https://leamas.github.io/zulip-archive/stream/332172-manuals/topic/Antora.203.2E0.20tries.html#274241072">(Mar 05 2022 at 12:36)</a>:</h4>
+<p>Hard times writing on my phone, sorry for being not that clear.</p>
+<p>I can help you streamline the plugins manual if you want, assuming that we both use the main directory when we build the manuals. Just let me know.</p>
+<p>IN any case, the sources/ directory has never been part of the git repo and can just be removed.</p>
+
+
+
+<a name="274256407"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332172-manuals/topic/Antora%203.0%20tries/near/274256407" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Mike Rossiter <a href="https://leamas.github.io/zulip-archive/stream/332172-manuals/topic/Antora.203.2E0.20tries.html#274256407">(Mar 05 2022 at 17:55)</a>:</h4>
+<p><span class="user-mention" data-user-id="399510">@Alec Leamas</span> &gt;I can help you streamline the plugins manual<br>
+Yes please. We need to reduce this to the minimum necessary for it to function.<br>
+<span class="user-mention" data-user-id="399865">@Rick Gleason</span>  I assume that you have no need for building plugins from the plugins repo???</p>
+
+
+
+<a name="274267005"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332172-manuals/topic/Antora%203.0%20tries/near/274267005" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Rick Gleason <a href="https://leamas.github.io/zulip-archive/stream/332172-manuals/topic/Antora.203.2E0.20tries.html#274267005">(Mar 05 2022 at 21:56)</a>:</h4>
+<p>Mike what do you mean?  I have been using a "plugins" directory on my repository is there some other way?  If so, and if you want to remove it, that is fine with me if it makes things more complicated.</p>
+
+
+
+<a name="274298145"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332172-manuals/topic/Antora%203.0%20tries/near/274298145" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Mike Rossiter <a href="https://leamas.github.io/zulip-archive/stream/332172-manuals/topic/Antora.203.2E0.20tries.html#274298145">(Mar 06 2022 at 10:28)</a>:</h4>
+<p><span class="user-mention" data-user-id="399865">@Rick Gleason</span> <br>
+Up until now the plugins manual could be built independently of the main manual. This was using the <em>opencpn-manuals/plugins</em> repo on github. The sources.state file was used to ensure the manual was in line with the latest edits of individual plugin manuals. Now that the OpenCPN plugins manual is built using the  <em>opencpn-manuals/main</em> directory I would like to trim out all the stuff that is connected with <em>sources.state</em> and that file. This simplifies things and removes obsolete work.</p>
+
+
+
+<a name="274304445"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332172-manuals/topic/Antora%203.0%20tries/near/274304445" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Mike Rossiter <a href="https://leamas.github.io/zulip-archive/stream/332172-manuals/topic/Antora.203.2E0.20tries.html#274304445">(Mar 06 2022 at 12:54)</a>:</h4>
+<p>Making a local build of the manual from main the two json files, <em>package-lock.json</em> and <em>package.json</em> are changed. I have stashed these changes but should they be added to the .gitignore?</p>
+
+
+
+<a name="274318705"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332172-manuals/topic/Antora%203.0%20tries/near/274318705" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Rick Gleason <a href="https://leamas.github.io/zulip-archive/stream/332172-manuals/topic/Antora.203.2E0.20tries.html#274318705">(Mar 06 2022 at 17:43)</a>:</h4>
+<p>Mike wrote:<br>
+The sources.state file was used to ensure the manual was in line with the latest edits of individual plugin manuals. Now that the OpenCPN plugins manual is built using the opencpn-manuals/main directory I would like to trim out all the stuff that is connected with sources.state and that file.</p>
+<p>So how are the individual plugin manuals maintained now and how can you ensure that the full manual is in line with the lastest edits of the individual manuals?  Do you just copy reprocess them all each time, since sources.state does not exist?</p>
+<p>Also how do the commands to do this change?  I am pretty sure this has changed what we do to update the main manual.</p>
+<p>See under Discussions <br>
+<a href="https://github.com/opencpn-manuals/main/discussions/20">https://github.com/opencpn-manuals/main/discussions/20</a></p>
+<p>and in particular<br>
+<a href="https://github.com/opencpn-manuals/main/discussions/20#discussioncomment-1363128">https://github.com/opencpn-manuals/main/discussions/20#discussioncomment-1363128</a></p>
+
+
+
+<a name="274319108"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332172-manuals/topic/Antora%203.0%20tries/near/274319108" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Mike Rossiter <a href="https://leamas.github.io/zulip-archive/stream/332172-manuals/topic/Antora.203.2E0.20tries.html#274319108">(Mar 06 2022 at 17:52)</a>:</h4>
+<p>Rick: Do you just copy reprocess them all each time, since sources.state does not exist?<br>
+Me: Basically, yes.<br>
+Rick: Also how do the commands to do this change?<br>
+Me: Far simpler. Building the main repo with <em>git push -f origin HEAD:build</em> does the job of gathering all the latest edits of the manuals. If you look at <em>site.yml</em> for <em>opencpn-manuals/main</em> you will see the github sources listed.</p>
+
+
+
+<a name="290757020"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332172-manuals/topic/Antora%203.0%20tries/near/290757020" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Notification Bot <a href="https://leamas.github.io/zulip-archive/stream/332172-manuals/topic/Antora.203.2E0.20tries.html#290757020">(Jul 25 2022 at 13:16)</a>:</h4>
+<p>This topic was moved here from <a class="stream-topic" data-stream-id="282854" href="/#narrow/stream/282854-general/topic/Antora.203.2E0.20tries">#general &gt; Antora 3.0 tries</a> by <span class="user-mention silent" data-user-id="399510">Alec Leamas</span>.</p>
+
+
+
+<hr><p>Last updated: Dec 19 2022 at 16:41 UTC</p>
+</html>

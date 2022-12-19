@@ -1,0 +1,458 @@
+[
+    {
+        "content": "<p>Abandoned the branch v3.2. New tag sd3.2.0-beta1 for testing wx32 builds. Old tag deleted.<br>\nShipDriver is fine.<br>\nUKTides_pi  has a problem with bullseye-wx32 builds:<br>\n<a href=\"https://app.circleci.com/pipelines/github/Rasbats/UKTides_pi\">https://app.circleci.com/pipelines/github/Rasbats/UKTides_pi</a><br>\nSeems to be related to the use of a bounding box.<br>\nWindows msvc-wx32 builds are ok.</p>",
+        "id": 311270611,
+        "sender_full_name": "Mike Rossiter",
+        "timestamp": 1669032956
+    },
+    {
+        "content": "<p>I know that UKTides problem. It's about <a href=\"https://github.com/wxWidgets/wxWidgets/issues/22790\">https://github.com/wxWidgets/wxWidgets/issues/22790</a>.</p>\n<p>Basically this boils down to that  wxw 3.2.1 and gcc 12 does not work together. In the Flatpak build I applied a patch to wxWidgets to handle it :(.  We don't have that option on Debian, but we can use an older compiler like gcc-11 or gcc-10 to work around this. I'll look into it.</p>",
+        "id": 311273689,
+        "sender_full_name": "Alec Leamas",
+        "timestamp": 1669034276
+    },
+    {
+        "content": "<blockquote>\n<p>Windows msvc-wx32 builds are ok.</p>\n</blockquote>\n<p>Did you do that?</p>",
+        "id": 311273776,
+        "sender_full_name": "Alec Leamas",
+        "timestamp": 1669034304
+    },
+    {
+        "content": "<p>No need for a 3.2 branch until we have released 3.2, until then we work in master.</p>",
+        "id": 311274410,
+        "sender_full_name": "Alec Leamas",
+        "timestamp": 1669034542
+    },
+    {
+        "content": "<p>Working in master now.</p>\n<blockquote>\n<p>Windows msvc-wx32 builds are ok.<br>\nDid you do that?</p>\n</blockquote>\n<p>ShipDriver and UKTides working fine for Windows. I am having issues with JavaScript. SVG icons do not appear. I used UKTides as a guide. Still working on this one.</p>",
+        "id": 311277198,
+        "sender_full_name": "Mike Rossiter",
+        "timestamp": 1669035602
+    },
+    {
+        "content": "<p>I have not made any wx32 builds for windows, for sure. Assuming you don't have either.</p>\n<p>As for UKTides, we will have to patch the wxWidgets headers until it is fixed upstream in 3.2.3 which is a long way  ahead (3.2.2 is still not released). No need to rebuild the packages, though. This is because we are using an deprecated API which of course hasn't been that much tested.</p>",
+        "id": 311278412,
+        "sender_full_name": "Alec Leamas",
+        "timestamp": 1669036042
+    },
+    {
+        "content": "<p>Looking at the wx32 builds and realizes that this will become messy. We need to make two separate builds, one for msvc and another for msvc-wx32. For circleci, this is simple, basically just about  entries in _.circleci/config_ But appveyor only  have a single appveyor.yml. </p>\n<p>Thanks for listening, I think you helped me to sort this out. <span aria-label=\"smile\" class=\"emoji emoji-1f642\" role=\"img\" title=\"smile\">:smile:</span></p>",
+        "id": 311413176,
+        "sender_full_name": "Alec Leamas",
+        "timestamp": 1669046245
+    },
+    {
+        "content": "<p>Ah... now I see why have are talking about msvc-wx32 builds. You just changed the abi in PluginSetup.cmake </p>\n<p>One basic note here: Could you please try to write a little more descriptive commit messages? Here you just said <em>Update PluginSetup.cmake</em>. To be frank,  the message could have been empty, it would be no difference  (no problem to see which file which is updated).  If you had written something like <em>update target to msvc-wx32</em> it would have saved some time for me. </p>\n<p>And it's not as simple as that. We need to make two different plugins, one which is linked against 3.1.2 (that is msvc) and one which is linked against 3.2.1 (msvc-wx32). I'm on it, but the windows CLI environment is, well, let's say a little different ;)</p>",
+        "id": 311452375,
+        "sender_full_name": "Alec Leamas",
+        "timestamp": 1669058954
+    },
+    {
+        "content": "<blockquote>\n<p>We need to make two different plugins</p>\n</blockquote>\n<p>I am using template sd3.1.4 for msvc builds and sd3.2.0-beta1 for msvc-w32 builds. msvc will soon be deprecated. Will there still be a need for msvc builds?</p>",
+        "id": 311471624,
+        "sender_full_name": "Mike Rossiter",
+        "timestamp": 1669063458
+    },
+    {
+        "content": "<blockquote>\n<p>Will there still be a need for msvc builds?</p>\n</blockquote>\n<p>Yes, we need to support both O56 and O58 on Bullseye/Focal. The trick is basically to do two builds in the same appveyor.yml. I have it more or less working, but have run out of steam trying to fight the soo inconsisten CLI environment. </p>\n<p>Should probably learn powershell, it seems to be better defined. But...</p>",
+        "id": 311484090,
+        "sender_full_name": "Alec Leamas",
+        "timestamp": 1669069117
+    },
+    {
+        "content": "<blockquote>\n<p>MSVC: build both against wxWidgets 3.2 and 3.1 (#2797) #466 </p>\n</blockquote>\n<p>If people only knew what work you guys put into this! <br>\nAre we in a position to make a tag that I can test with <em>update-templates</em>?</p>",
+        "id": 312256901,
+        "sender_full_name": "Mike Rossiter",
+        "timestamp": 1669409948
+    },
+    {
+        "content": "<p>We can always make tags and test. However, there is still work to do. The MacOS builds needs an update, part of this is to create new binaries of OpnCPN which is on <span class=\"user-mention\" data-user-id=\"517002\">@Dave Register</span>'s table.</p>\n<p>Dave and I has also had a private discussion about the need to support Bionic; for us this means building plugins for Buster. The starting point was that he wanted to build,  while I did not want that. We are heading into some sort of compromise. We have already agreed  that builds for Buster should not go into the catalog except in rare cases.</p>",
+        "id": 312259283,
+        "sender_full_name": "Alec Leamas",
+        "timestamp": 1669411511
+    },
+    {
+        "content": "<p>But, as I said, don't let this stop you from making tags and test them. Be prepared to problems w update-templates...</p>",
+        "id": 312259480,
+        "sender_full_name": "Alec Leamas",
+        "timestamp": 1669411667
+    },
+    {
+        "content": "<p><span class=\"user-mention\" data-user-id=\"399559\">@Mike Rossiter</span>   My brain found some bugs in appveyor.bat over the night. Stay tuned for an update.</p>",
+        "id": 312307328,
+        "sender_full_name": "Alec Leamas",
+        "timestamp": 1669451583
+    },
+    {
+        "content": "<p>Thanks.<br>\nWith <em>opencpn-libs/api-16</em> and <em>opencpn-libs/api-17</em> we have a wx3.1.2 build of OpenCPN at present. For O5.8 how is the build going to distinguish between msw and msw-wx32 <em>opencpn.lib</em> in these directories? Naming?</p>",
+        "id": 312370491,
+        "sender_full_name": "Mike Rossiter",
+        "timestamp": 1669480110
+    },
+    {
+        "content": "<p>I don't really follow you here. The tarballs have the target in their name i. e., they have either <em>msvc</em> or <em>msvc-wx32</em> as part of the name. Is this what you are  looking for?</p>",
+        "id": 312398536,
+        "sender_full_name": "Alec Leamas",
+        "timestamp": 1669498547
+    },
+    {
+        "content": "<p>ah... ok, I see: the two different libraries (the dll files) has the same name. This might be a problem in corner cases, and in any way confusing for devs. I'll look into it.</p>\n<p>Good catch!</p>",
+        "id": 312398886,
+        "sender_full_name": "Alec Leamas",
+        "timestamp": 1669498845
+    },
+    {
+        "content": "<p>But, but ... it is the <em>opencpn.lib</em> we are using for the Windows build. For building legacy plugins  for O5.6 we can't use an <em>msw-wx32</em> version of <em>opencpn.lib</em>. Updates like <em>sd3.1.4</em> will fail.</p>",
+        "id": 312438370,
+        "sender_full_name": "Mike Rossiter",
+        "timestamp": 1669537927
+    },
+    {
+        "content": "<p>Right. Two different things. Need to look also into this, might take some time.</p>\n<p>Windows build environment is, well, interesting...</p>",
+        "id": 312447138,
+        "sender_full_name": "Alec Leamas",
+        "timestamp": 1669543726
+    },
+    {
+        "content": "<p>It's not that bad, everything happens in  libs/api-16 and libs/api-17. We need to add a new,  wx32-based lib to these and link to depending on some condition.</p>\n<p><span class=\"user-mention\" data-user-id=\"399559\">@Mike Rossiter</span> First step would be to create a opencpn.lib linked against wx32. Something you could do?</p>",
+        "id": 312453195,
+        "sender_full_name": "Alec Leamas",
+        "timestamp": 1669547104
+    },
+    {
+        "content": "<p>I have one ready. And the relevant <em>ocpn_plugin.h</em>.<br>\n<a href=\"/user_uploads/33951/hZHUl4pqgTpgIsgEzuMG3i7T/ocpn_plugin.h\">ocpn_plugin.h</a>  <br>\n<a href=\"/user_uploads/33951/Wla4uU9RxZ5fKdd12fO32J3X/opencpn.lib\">opencpn.lib</a></p>",
+        "id": 312453599,
+        "sender_full_name": "Mike Rossiter",
+        "timestamp": 1669547314
+    },
+    {
+        "content": "<p>The header should definitely be the same, this is just about how it it is compiled. </p>\n<p>Thanks for the lib! Busy doing other things, but should be able to come up with something today. Might perhaps be late.</p>",
+        "id": 312455816,
+        "sender_full_name": "Alec Leamas",
+        "timestamp": 1669548572
+    },
+    {
+        "content": "<p><span class=\"user-mention\" data-user-id=\"399559\">@Mike Rossiter</span>  OK, I have a PR pending also for the opencpn.lib stuff. The bulk of the changes are in opencpn-libs -- these are already pushed.</p>\n<p>However, it would save some time for  me if you first merged <a href=\"https://github.com/Rasbats/shipdriver_pi/pull/469\">https://github.com/Rasbats/shipdriver_pi/pull/469</a>, otherwise I don't really know what to rebase to. Waiting for input from you.</p>",
+        "id": 312479515,
+        "sender_full_name": "Alec Leamas",
+        "timestamp": 1669560521
+    },
+    {
+        "content": "<blockquote>\n<p>However, it would save some time for me if you first merged <a href=\"https://github.com/Rasbats/shipdriver_pi/pull/469\">https://github.com/Rasbats/shipdriver_pi/pull/469</a></p>\n</blockquote>\n<p>Now merged.</p>",
+        "id": 312512271,
+        "sender_full_name": "Mike Rossiter",
+        "timestamp": 1669578752
+    },
+    {
+        "content": "<p>OK. will make new PR. Interesting development in <a href=\"https://github.com/OpenCPN/OpenCPN/discussions/2797\">https://github.com/OpenCPN/OpenCPN/discussions/2797</a>, though: after all, no need to make wx30 plugins, wx32 is enough. Need to simplify things...</p>",
+        "id": 312514267,
+        "sender_full_name": "Alec Leamas",
+        "timestamp": 1669580114
+    },
+    {
+        "content": "<blockquote>\n<p>OK. will make new PR.</p>\n</blockquote>\n<p>done: <a href=\"https://github.com/Rasbats/shipdriver_pi/pull/470\">https://github.com/Rasbats/shipdriver_pi/pull/470</a></p>",
+        "id": 312516520,
+        "sender_full_name": "Alec Leamas",
+        "timestamp": 1669581674
+    },
+    {
+        "content": "<p>I will wait for the simplification! The msvc-wx32 builds are not appearing on Cloudsmith at the moment, although they seem to be built correctly by appveyor.</p>",
+        "id": 312604260,
+        "sender_full_name": "Mike Rossiter",
+        "timestamp": 1669634159
+    },
+    {
+        "content": "<blockquote>\n<p>The msvc-wx32 builds are not appearing on Cloudsmith</p>\n</blockquote>\n<p>Can you send a link  to such a build?</p>",
+        "id": 312626184,
+        "sender_full_name": "Alec Leamas",
+        "timestamp": 1669641722
+    },
+    {
+        "content": "<p>I. e, the build on appveyor?</p>",
+        "id": 312626359,
+        "sender_full_name": "Alec Leamas",
+        "timestamp": 1669641776
+    },
+    {
+        "content": "<blockquote>\n<p>the build on appveyor?</p>\n</blockquote>\n<p><a href=\"https://ci.appveyor.com/project/Rasbats/shipdriver-pi/builds/45507351\">https://ci.appveyor.com/project/Rasbats/shipdriver-pi/builds/45507351</a></p>",
+        "id": 312635295,
+        "sender_full_name": "Mike Rossiter",
+        "timestamp": 1669644360
+    },
+    {
+        "content": "<p>Looks like the choco server(s) was down at the moment this build ran, see below. Can you make a try to just rebuild the same sources?</p>\n<div class=\"codehilite\"><pre><span></span><code>Requirement already satisfied: pip in c:\\python311\\lib\\site-packages (22.3.1)\nChocolatey v1.2.0\nInstalling the following packages:\nwget\nBy installing, you accept licenses for the packages.\nError retrieving packages from source &#39;https://community.chocolatey.org/api/v2/&#39;:\n Could not connect to the feed specified at &#39;https://community.chocolatey.org/api/v2/&#39;. Please verify that the package source (located in the Package Manager Settings) is valid and ensure your network connectivity.\nwget not installed. The package was not found with the source(s) listed.\n Source(s): &#39;https://community.chocolatey.org/api/v2/&#39;\n NOTE: When you specify explicit sources, it overrides default sources.\nIf the package version is a prerelease and you didn&#39;t specify `--pre`,\n</code></pre></div>",
+        "id": 312649523,
+        "sender_full_name": "Alec Leamas",
+        "timestamp": 1669648171
+    },
+    {
+        "content": "<blockquote>\n<p>just rebuild the same sources</p>\n</blockquote>\n<p>Done. Produces an msvc-wx32 tarball. The import works but not the installation. The dll is <em>ShipDriver_pi-wx32.dll</em> and the data folder <em>ShipDriver_pi-wx32</em>. Was this intended?</p>",
+        "id": 312656299,
+        "sender_full_name": "Mike Rossiter",
+        "timestamp": 1669650020
+    },
+    {
+        "content": "<p>Yes, sort of... but now I understand that it will fail, since the folder name does not match <em>GetCommonName()</em>  in the API. Sorry, my bad. Back to the drawing board</p>",
+        "id": 312667712,
+        "sender_full_name": "Alec Leamas",
+        "timestamp": 1669653069
+    },
+    {
+        "content": "<p>New PR: <a href=\"https://github.com/Rasbats/shipdriver_pi/pull/471\">https://github.com/Rasbats/shipdriver_pi/pull/471</a></p>\n<p>For now, let's focus on getting this working before we start simplifying.</p>",
+        "id": 312737516,
+        "sender_full_name": "Alec Leamas",
+        "timestamp": 1669676476
+    },
+    {
+        "content": "<p>Using  OpenCPN alpha 5.7.1 fe9f867:<br>\n<a href=\"/user_uploads/33951/6DVcS1kXdIOW9S88PVnG7pSy/msvc-wx32.png\">Picture</a> <br>\nWith the build from the PR the dll is sent to <em>.jail</em>.<br>\nAppveyor build is here:<br>\n<a href=\"https://ci.appveyor.com/project/Rasbats/shipdriver-pi/builds/45519295\">https://ci.appveyor.com/project/Rasbats/shipdriver-pi/builds/45519295</a><br>\nTarballs are here:<br>\n<a href=\"https://cloudsmith.io/~opencpn/repos/shipdriver-alpha/packages/?page=1\">https://cloudsmith.io/~opencpn/repos/shipdriver-alpha/packages/?page=1</a></p>\n<div class=\"message_inline_image\"><a href=\"/user_uploads/33951/6DVcS1kXdIOW9S88PVnG7pSy/msvc-wx32.png\" title=\"Picture\"><img src=\"/user_uploads/33951/6DVcS1kXdIOW9S88PVnG7pSy/msvc-wx32.png\"></a></div>",
+        "id": 312806829,
+        "sender_full_name": "Mike Rossiter",
+        "timestamp": 1669716533
+    },
+    {
+        "content": "<p>That the \"jail\" code is still there makes me mad, I have spent some time getting rid of it  and now it's there again. Sigh.</p>\n<p>Can you please post opencpn.log, running with <em>--loglevel debug</em>?</p>",
+        "id": 312841140,
+        "sender_full_name": "Alec Leamas",
+        "timestamp": 1669728167
+    },
+    {
+        "content": "<p>By the way: If you open  <em>Options</em> | <em>Plugins</em> | <em>Settings</em> : what is the Active Setting displayed in the Compatibility panel?</p>",
+        "id": 312841803,
+        "sender_full_name": "Alec Leamas",
+        "timestamp": 1669728363
+    },
+    {
+        "content": "<blockquote>\n<p>That the \"jail\" code is still there makes me mad</p>\n</blockquote>\n<p>That was the last installer on the Forum.  Maybe I need to grab/compile the latest master.</p>\n<blockquote>\n<p>Active Setting displayed in the Compatibility panel?</p>\n</blockquote>\n<p><em>CatalogExpert=1</em> has not been used. We have just the 'normal' installed settings.</p>\n<blockquote>\n<p>running with --loglevel debug?</p>\n</blockquote>\n<p>Back later.</p>",
+        "id": 312847613,
+        "sender_full_name": "Mike Rossiter",
+        "timestamp": 1669730081
+    },
+    {
+        "content": "<blockquote>\n<p>has not been used. We have just the 'normal' installed settings.</p>\n</blockquote>\n<p>Still, interested in what's \"normal\" for you...</p>",
+        "id": 312854265,
+        "sender_full_name": "Alec Leamas",
+        "timestamp": 1669731946
+    },
+    {
+        "content": "<blockquote>\n<p>Still, interested in what's \"normal\" for you</p>\n</blockquote>\n<p>Basic parallel installation. No settings changed.</p>\n<p>opencpn.log with --loglevel debug :<br>\n<a href=\"/user_uploads/33951/Cxs9bsjcD1eniKvrwfp_CeW2/opencpn.shipdriver.import.log\">opencpn.shipdriver.import.log</a></p>",
+        "id": 312898091,
+        "sender_full_name": "Mike Rossiter",
+        "timestamp": 1669743874
+    },
+    {
+        "content": "<p>Hm... the log says:</p>\n<div class=\"codehilite\"><pre><span></span><code>ERROR dlmsw.cpp:167 Failed to load shared library &#39;C:\\Users\\Mike\\AppData\\Local\\opencpn\\plugins\\ShipDriver_pi.dll&#39;(error 126: The specified module could not be found.)\n</code></pre></div>\n<p>Bit it should be there, unless this pesky jailing stuff has already done it's evil work. I must debug this myself, will try to find some time later.</p>",
+        "id": 312940584,
+        "sender_full_name": "Alec Leamas",
+        "timestamp": 1669757039
+    },
+    {
+        "content": "<p>hm... more thinking. If you (after loading the VS studio CLI tools) runs <em>dumpbin /dependents opencpn.exe</em>  where opencpn.exe is the file you use: what is the output? That is, is it really linked to wxWidgets 3.2?</p>",
+        "id": 312941895,
+        "sender_full_name": "Alec Leamas",
+        "timestamp": 1669757510
+    },
+    {
+        "content": "<p>The error message above ( Error 126...) is typically about unresolved runtime deps. What dumpbin does is to show these runtime deps.</p>",
+        "id": 312942113,
+        "sender_full_name": "Alec Leamas",
+        "timestamp": 1669757593
+    },
+    {
+        "content": "<p>No <em>buster</em> metadata files added to auto branch of fork of OpenCPN/plugins.<br>\nDoes <em>build-conf.rc</em> need an edit.</p>\n<p>This is the <em>maybe-push-upload.sh</em> script:<br>\n...<br>\ncase ${OCPN_TARGET,} in<br>\n<em>buster</em>)<br>\n      upload=\"$oldstable_upload\"<br>\n      git_push=\"$oldstable_git_push\"<br>\n      ;;</p>\n<p><em>android</em>)<br>\n      upload=\"$android_upload\"<br>\n      git_push=\"$android_git_push\"<br>\n      ;;</p>\n<p>*)  upload=\"true\"<br>\n      git_push=\"true\"<br>\n      ;;<br>\nesac<br>\n...</p>",
+        "id": 316472514,
+        "sender_full_name": "Mike Rossiter",
+        "timestamp": 1671289802
+    },
+    {
+        "content": "<p>It is on purpose, by default we should not build and in particular not upload buster builds. That is, we keep existing buster entries in the catalogue as is. The only exception is if there a serious buster bugfix, something I doubt will ever happen</p>",
+        "id": 316479421,
+        "sender_full_name": "Alec Leamas",
+        "timestamp": 1671292926
+    },
+    {
+        "content": "<p>Thanks. Forgot about this discussion.<br>\nPR for shipdriver_pi with OpenCPN/plugins failed checks. Am I getting too far ahead??? Maybe the catalog for wx32 is not ready.<br>\nOr does ocpn-plugin.xsd need updating or something else.</p>",
+        "id": 316480238,
+        "sender_full_name": "Mike Rossiter",
+        "timestamp": 1671293372
+    },
+    {
+        "content": "<p>log here:<br>\n<a href=\"https://github.com/OpenCPN/plugins/actions/runs/3720544300/jobs/6310088725\">https://github.com/OpenCPN/plugins/actions/runs/3720544300/jobs/6310088725</a></p>",
+        "id": 316480403,
+        "sender_full_name": "Mike Rossiter",
+        "timestamp": 1671293445
+    },
+    {
+        "content": "<p>Good catch. Seems that the flatpak build used something like flatpak- wx32 , it should not. On phone. Can you check the target value used?</p>",
+        "id": 316481514,
+        "sender_full_name": "Alec Leamas",
+        "timestamp": 1671294026
+    },
+    {
+        "content": "<p><em>set(plugin_target \"flatpak\")</em> in PluginSetup.cmake.</p>",
+        "id": 316482148,
+        "sender_full_name": "Mike Rossiter",
+        "timestamp": 1671294399
+    },
+    {
+        "content": "<p>I mean the actual result in the XML metadata</p>",
+        "id": 316482428,
+        "sender_full_name": "Alec Leamas",
+        "timestamp": 1671294553
+    },
+    {
+        "content": "<p>Standby ... just looking.</p>",
+        "id": 316482604,
+        "sender_full_name": "Mike Rossiter",
+        "timestamp": 1671294655
+    },
+    {
+        "content": "<p>Hard to stand by. I'm part of today's dinner party host couple</p>",
+        "id": 316483006,
+        "sender_full_name": "Alec Leamas",
+        "timestamp": 1671294858
+    },
+    {
+        "content": "<p>&lt;target&gt;flatpak-x86_64&lt;/target&gt;</p>",
+        "id": 316483401,
+        "sender_full_name": "Mike Rossiter",
+        "timestamp": 1671295055
+    },
+    {
+        "content": "<p>Your partner needs to tell you to switch off and enjoy the wine.</p>",
+        "id": 316483525,
+        "sender_full_name": "Mike Rossiter",
+        "timestamp": 1671295109
+    },
+    {
+        "content": "<p>Wrong - cannot find flatpack build in the ShipDriver/prod tarballs. They are present in the alpha tarballs. Investigating.</p>",
+        "id": 316484237,
+        "sender_full_name": "Mike Rossiter",
+        "timestamp": 1671295438
+    },
+    {
+        "content": "<p>The target is actually ok ..</p>",
+        "id": 316484816,
+        "sender_full_name": "Alec Leamas",
+        "timestamp": 1671295694
+    },
+    {
+        "content": "<p>Should I be using the beta catalog at the moment. I find a tarball in ShipDriver/beta.</p>",
+        "id": 316484891,
+        "sender_full_name": "Mike Rossiter",
+        "timestamp": 1671295735
+    },
+    {
+        "content": "<p>No <em>ShipDriver-sd3.2.0-beta7-flatpak.wx32-22.08</em> tarball in ShipDriver/beta either.<br>\nTagged build pushes to ShipDriver/alpha:<br>\n<a href=\"https://app.circleci.com/pipelines/github/Rasbats/shipdriver_pi/847/workflows/0663c8b6-19fd-41fc-8607-2bb765e9dad7/jobs/7215\">https://app.circleci.com/pipelines/github/Rasbats/shipdriver_pi/847/workflows/0663c8b6-19fd-41fc-8607-2bb765e9dad7/jobs/7215</a></p>",
+        "id": 316486994,
+        "sender_full_name": "Mike Rossiter",
+        "timestamp": 1671296750
+    },
+    {
+        "content": "<p>In <em>shipdriver.yaml</em>:<br>\n...<br>\nruntime: org.opencpn.OpenCPN<br>\nruntime-version: beta   # FIXME(alec) Revert to stable when updated to 22.08<br>\nsdk: org.freedesktop.Sdk//22.08<br>\n...</p>",
+        "id": 316488857,
+        "sender_full_name": "Mike Rossiter",
+        "timestamp": 1671297725
+    },
+    {
+        "content": "<p>Not flatpak-wx32,  just flatpak.</p>",
+        "id": 316516373,
+        "sender_full_name": "Alec Leamas",
+        "timestamp": 1671315572
+    },
+    {
+        "content": "<p><em>ShipDriver-sd3.2.0-beta7-flatpak.wx32-22.08</em> is the name of the tarball in ShipDriver/alpha.</p>",
+        "id": 316556846,
+        "sender_full_name": "Mike Rossiter",
+        "timestamp": 1671353431
+    },
+    {
+        "content": "<p><em>metadata.cmake</em> seems to be where the wx32 is added.</p>",
+        "id": 316559946,
+        "sender_full_name": "Mike Rossiter",
+        "timestamp": 1671355605
+    },
+    {
+        "content": "<p>Slight hangover here.</p>\n<p>Making a local flatpak build with the same options as the CI job  <code>make -DCMAKE_BUILD_TYPE=Release -DOCPN_WX_ABI=wx32 ..: make flatpak</code> I get a target which is  <code>flatpak-x86_64-wx32</code>. This rightfully  refuses to validate, it should be <code>flatpak-x86_64</code>.</p>\n<p>PR coming</p>",
+        "id": 316561201,
+        "sender_full_name": "Alec Leamas",
+        "timestamp": 1671356398
+    },
+    {
+        "content": "<p><a href=\"https://github.com/Rasbats/shipdriver_pi/pull/483\">https://github.com/Rasbats/shipdriver_pi/pull/483</a></p>",
+        "id": 316562362,
+        "sender_full_name": "Alec Leamas",
+        "timestamp": 1671357278
+    },
+    {
+        "content": "<p>These are the metadata xml files for a beta build:<br>\n<a href=\"https://github.com/Rasbats/plugins/tree/auto/metadata\">https://github.com/Rasbats/plugins/tree/auto/metadata</a><br>\nCorresponding tarballs found in ShipDriver/beta.</p>",
+        "id": 316574703,
+        "sender_full_name": "Mike Rossiter",
+        "timestamp": 1671363954
+    },
+    {
+        "content": "<p>Made a release build/tag sd3.2.0 for the master catalog. PR for this made for OpenCPN/plugins. Validation checks all passed.</p>",
+        "id": 316581138,
+        "sender_full_name": "Mike Rossiter",
+        "timestamp": 1671366780
+    },
+    {
+        "content": "<p>Great! I will announce the release, stand by..</p>\n<p>BTW: Thanks for your thorough testing!</p>",
+        "id": 316581425,
+        "sender_full_name": "Alec Leamas",
+        "timestamp": 1671366888
+    },
+    {
+        "content": "<p>You missed to update  the release date  in ChangeLog, shit happens. I have updated master.</p>",
+        "id": 316582442,
+        "sender_full_name": "Alec Leamas",
+        "timestamp": 1671367330
+    },
+    {
+        "content": "<p><a href=\"https://github.com/OpenCPN/OpenCPN/discussions/2886\">https://github.com/OpenCPN/OpenCPN/discussions/2886</a></p>",
+        "id": 316583269,
+        "sender_full_name": "Alec Leamas",
+        "timestamp": 1671367801
+    },
+    {
+        "content": "<p>hm... we have a major problem with the sd3.2.0 tag: It exists i  two versions <em>sd3.2.0</em>  and <em>sd3.2.0(1)</em>. The one listed by update-templates is <em>sd3.2.0</em>  a. k.a  6ef81d9 from yesterday.<br>\n<span class=\"user-mention\" data-user-id=\"399559\">@Mike Rossiter</span>  Are you there?</p>",
+        "id": 316584873,
+        "sender_full_name": "Alec Leamas",
+        "timestamp": 1671368546
+    },
+    {
+        "content": "<p>Assuming  not. I will try to handle this, stay tuned...</p>",
+        "id": 316585577,
+        "sender_full_name": "Alec Leamas",
+        "timestamp": 1671368911
+    },
+    {
+        "content": "<blockquote>\n<p>It exists in two versions sd3.2.0 and sd3.2.0(1). </p>\n</blockquote>\n<p>Removed the old 3.2.0 tag today. The replacement should link to commit eb7b01.</p>",
+        "id": 316588582,
+        "sender_full_name": "Mike Rossiter",
+        "timestamp": 1671370347
+    },
+    {
+        "content": "<p>I have handled it. See <a href=\"https://github.com/OpenCPN/OpenCPN/discussions/2886\">https://github.com/OpenCPN/OpenCPN/discussions/2886</a></p>",
+        "id": 316588620,
+        "sender_full_name": "Alec Leamas",
+        "timestamp": 1671370370
+    },
+    {
+        "content": "<p>Tag is 3.2.1 not sd3.2.1. Was that intended?</p>",
+        "id": 316588822,
+        "sender_full_name": "Mike Rossiter",
+        "timestamp": 1671370460
+    },
+    {
+        "content": "<p>Thanks. Had some problems after pushing all of my local tags, this was probably caused by this. I just removed that one.</p>\n<p>However, the sd3.2.1  has  been there since announced, and this is the only one \"seen\" by update-templates. It <strong>is</strong> a vary bad thing to remove pushed tags, but inb this case I think it made sense.</p>\n<p>Thanks again!</p>",
+        "id": 316590358,
+        "sender_full_name": "Alec Leamas",
+        "timestamp": 1671371179
+    },
+    {
+        "content": "<p>Lesson learned: we should have a release checklist.</p>",
+        "id": 316590763,
+        "sender_full_name": "Alec Leamas",
+        "timestamp": 1671371350
+    }
+]

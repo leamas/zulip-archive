@@ -1,0 +1,218 @@
+[
+    {
+        "content": "<p>What a mess. PITA.  I accepted the PR.  It overwrote all my work on Watchdog Manual.<br>\nI am going to have to unwind this. and go back to the previous commit Somehow.<br>\nHowever, I have also been working on WatchDog program!   So I am going to have to make a new branch, unwind that, get the documents and copy them back into the master.<br>\nThen I have to push the changes to my remote and then Mike can make  the PR again.</p>\n<p>It that how I should fix this?</p>",
+        "id": 233002292,
+        "sender_full_name": "Rick Gleason",
+        "timestamp": 1617451962
+    },
+    {
+        "content": "<p>10 Days ago  watchdog _pi/modules/root <br>\n<a href=\"https://github.com/rgleason/watchdog_pi/tree/389dddac7a70e21147fc4bde097bb012ab01299e/modules/ROOT\">https://github.com/rgleason/watchdog_pi/tree/389dddac7a70e21147fc4bde097bb012ab01299e/modules/ROOT</a><br>\nHave created  <a href=\"https://github.com/rgleason/watchdog_pi/tree/docs\">https://github.com/rgleason/watchdog_pi/tree/docs</a>  branch<br>\nI think this is the most recent before Mike made a PR without first pulling upstream.<br>\nMy Lesson:  Never Trust a PR and just merge it.</p>",
+        "id": 233005714,
+        "sender_full_name": "Rick Gleason",
+        "timestamp": 1617455676
+    },
+    {
+        "content": "<p>Now what do I do?  <br>\ngit fetch<br>\ngit checkout docs<br>\nCopy all of Modules/   somewhere<br>\ngit checkout master<br>\nThen copy modules where so it will work?</p>",
+        "id": 233005858,
+        "sender_full_name": "Rick Gleason",
+        "timestamp": 1617455839
+    },
+    {
+        "content": "<p><span class=\"user-mention\" data-user-id=\"399559\">@Mike Rossiter</span>  <span class=\"user-mention\" data-user-id=\"399510\">@Alec Leamas</span>   Thanks for the support.<br>\nI think I fixed it, but antora does not run  needs legal copy of git, and can't find watchdog.adoc it is buried so deep. <br>\n  Tried  from watchdog root and from manual/watchdog  and still errors.  Tried adding the paths. to antora.yml<br>\nThen tried adding paths to <br>\nWhat is the required setup?<br>\nDoes this have to be so deep?  Why can't I get rid of the second \"watchdog\"</p>\n<p>from root directory github/watchdog_pi<br>\n<strong>bldloc.yml </strong>  </p>\n<p>site:<br>\n  title: Watchdog Plugin Manual<br>\n  url: <a href=\"https://leamas.github.io/ocpn-manuals/\">https://leamas.github.io/ocpn-manuals/</a><br>\n  start_page:  manual:watchdog:ROOT:watchdog.adoc</p>\n<p>content:<br>\n  sources:</p>\n<div class=\"codehilite\"><pre><span></span><code>- url: ~/documents/github/watchdog_pi\n  branches: master\n  edit_url: true\n</code></pre></div>\n\n<p>ui:<br>\n  bundle:<br>\n    url: <a href=\"https://gitlab.com/antora/antora-ui-default/-/jobs/artifacts/master/raw/build/ui-bundle.zip?job=bundle-stable\">https://gitlab.com/antora/antora-ui-default/-/jobs/artifacts/master/raw/build/ui-bundle.zip?job=bundle-stable</a><br>\n    snapshot: true</p>\n<p><strong>antora.yml</strong><br>\nname: watchdog<br>\ntitle: Watchdog Plugin Manual<br>\nversion: '2.4.24'<br>\nstart_page: ROOT:watchdog.adoc</p>\n<p><strong>ERROR</strong></p>\n<p>Rick@Dart MINGW64 ~/documents/github/watchdog_pi (master)<br>\n$ antora bldloc.yml<br>\nStart page specified for 2.4.24@watchdog not found: ROOT:watchdog.adoc<br>\nStart page specified for site has invalid syntax: manual:watchdog:ROOT:watchdog.adoc</p>\n<p>Also I have pushed up the correct Manual pages I believe after recovering them.</p>",
+        "id": 233010198,
+        "sender_full_name": "Rick Gleason",
+        "timestamp": 1617460320
+    },
+    {
+        "content": "<p><span class=\"user-mention\" data-user-id=\"399559\">@Mike Rossiter</span>    How do you build your shipdriver and dr plugins with antora locally?  I see no build yml</p>",
+        "id": 233012989,
+        "sender_full_name": "Rick Gleason",
+        "timestamp": 1617463420
+    },
+    {
+        "content": "<p>This is ridiculous</p>",
+        "id": 233013250,
+        "sender_full_name": "Rick Gleason",
+        "timestamp": 1617463743
+    },
+    {
+        "content": "<p>Rick@Dart MINGW64 ~/documents/github/watchdog_pi (master)<br>\n$ antora bldloc.yml<br>\nStart page specified for 2.4.24@watchdog not found: ROOT:watchdog.adoc<br>\nStart page specified for site not found: ROOT:watchdog.adoc</p>\n<p>Again. What a waste of time!!!!  <br>\nDirectory is too deep. I am going back to what worked now. Sccrew it..</p>",
+        "id": 233013357,
+        "sender_full_name": "Rick Gleason",
+        "timestamp": 1617463842
+    },
+    {
+        "content": "<p>You can always go back in history. If the last good commit was deadbee, you could first  create a backup tag: <em>git tag bak</em>  and then go back : <em>git reset --hard deadbee</em>.  This is a history break, and you'll need to make a push -f , but it might be worth it.</p>",
+        "id": 233013743,
+        "sender_full_name": "Alec Leamas",
+        "timestamp": 1617464272
+    },
+    {
+        "content": "<p><span class=\"user-mention\" data-user-id=\"399865\">@Rick Gleason</span> :  \"How do you build your shipdriver and dr plugins with antora locally? I see no build yml\"<br>\nI don't build locally if I can see the whole manual builds correctly. The build.yml is part of the manual repo. If I do a local build I use the .yml as shown in your Watchdog folder. This has a build.yml. In powershell cd to that folder and you can run the usual antora --fetch etc.</p>\n<p>I did the PR for the images because I could see a lot were missing. Sorry if your edits were overwritten.</p>\n<p>' Why can't I get rid of the second \"watchdog\"'<br>\nIn the manual there is only one \"watchdog\" folder.  Before my first PR this sat as a module with that name in opencpn-plugins-manual.</p>\n<p>For plugins that have no developer the module with the plugin name will have to stay in that repository.</p>",
+        "id": 233018541,
+        "sender_full_name": "Mike Rossiter",
+        "timestamp": 1617469430
+    },
+    {
+        "content": "<p>Sorry... forgot to add that viewing the adoc with Firefox will not show a sidebar. Only comes with the plugins manual build.</p>",
+        "id": 233018693,
+        "sender_full_name": "Mike Rossiter",
+        "timestamp": 1617469566
+    },
+    {
+        "content": "<p>Mike wrote<br>\n\" The build.yml is part of the manual repo. If I do a local build I use the .yml as shown in your Watchdog folder. This has a build.yml. In powershell cd to that folder and you can run the usual antora --fetch etc.\"</p>\n<ul>\n<li>Ok, already did try it but with bash prompt which is the same I think, but will try.</li>\n<li>I had a setup that ran from watchdog root,  totally locally with no fetch.  You gave me that path to use, but when I extend it antora objects.</li>\n</ul>\n<p>Why is this stuff so elusive?  The yml file should be titled I think with the functions.</p>\n<p>Also how do I get the html generated to land in my local directory, say build/site  like we had it?<br>\nthere was an output function at the end I think...</p>\n<p>I noticed the other images, we'll see if something is missing, and I can rectify it.</p>",
+        "id": 233036392,
+        "sender_full_name": "Rick Gleason",
+        "timestamp": 1617487523
+    },
+    {
+        "content": "<p><span class=\"user-mention\" data-user-id=\"399559\">@Mike Rossiter</span> <br>\n I moved modules back to where you had it as it wasn't working in a higher dir.<br>\nI shortend the antora title to Watchdog.<br>\nI restored module-rasbats and copied the additional files to modules ROOT images<br>\nI like your  wiki links soome good stuff there.<br>\nI've gave up on Watchdog docs today and worked on  Dev Manual and TP.  It is almost roughed out, but lots of editing left.<br>\nMaybe I can figure it out tomorrow.</p>",
+        "id": 233043317,
+        "sender_full_name": "Rick Gleason",
+        "timestamp": 1617495640
+    },
+    {
+        "content": "<p><span class=\"user-mention\" data-user-id=\"399559\">@Mike Rossiter</span>   <br>\nIs this really where you intend to put the docs?</p>\n<p>Rick@Dart MINGW64 ~/documents/github/watchdog_pi/manual/watchdog/modules/ROOT (master)<br>\n$ dir<br>\nimages  pages</p>\n<p>Here is what is happening </p>\n<p>Rick@Dart MINGW64 ~/documents/github/watchdog_pi/manual/watchdog (master)<br>\n$ dir<br>\nantora.yml  build.yml  modules</p>\n<p>Rick@Dart MINGW64 ~/documents/github/watchdog_pi/manual/watchdog (master)<br>\n$ antora build.yml<br>\nerror: Local content source must be a git repository: C:\\Users\\Rick\\documents\\github\\watchdog_pi\\manual\\watchdog (url: .)<br>\nAdd the --stacktrace option to see the cause.</p>",
+        "id": 233047002,
+        "sender_full_name": "Rick Gleason",
+        "timestamp": 1617500083
+    },
+    {
+        "content": "<p>Tried it again after checking both antora.yml and build.yml</p>\n<p>Rick@Dart MINGW64 ~/documents/github/watchdog_pi/manual/watchdog (master)<br>\n$ antora build.yml<br>\nerror: Local content source must be a git repository: C:\\Users\\Rick\\documents\\github\\watchdog_pi\\manual\\watchdog (url: .)<br>\nAdd the --stacktrace option to see the cause.</p>\n<p>Something is wrong with this setup. Have you tried it?</p>",
+        "id": 233050279,
+        "sender_full_name": "Rick Gleason",
+        "timestamp": 1617504168
+    },
+    {
+        "content": "<p>Good reading - some glimmer of the problem.  Need a push. but I have done so.</p>\n<p><a href=\"https://gitlab.com/antora/antora/-/issues/282\">https://gitlab.com/antora/antora/-/issues/282</a></p>",
+        "id": 233052836,
+        "sender_full_name": "Rick Gleason",
+        "timestamp": 1617507388
+    },
+    {
+        "content": "<p>Works for me but I need to make it work locally. Need to take another look.</p>",
+        "id": 233063324,
+        "sender_full_name": "Mike Rossiter",
+        "timestamp": 1617521193
+    },
+    {
+        "content": "<p>Still needs work but start here: <a href=\"https://github.com/Rasbats/opencpn-plugins-manual/wiki/Local-Build\">https://github.com/Rasbats/opencpn-plugins-manual/wiki/Local-Build</a></p>",
+        "id": 233076674,
+        "sender_full_name": "Mike Rossiter",
+        "timestamp": 1617537564
+    },
+    {
+        "content": "<p>It would be helpful if the full path from github were clearly shown.<br>\nI had tried git init from the root watchdog_pi folder, that did not work.<br>\nso git only goes down into sub-dir so far?  How far?</p>\n<p>Is this directory  documents/github/watchdog_pi/watchdog? <br>\nI can't tell because there are other things in there too and it does not seem to have what I have<br>\nI have<br>\ndocuments/github/watchdog_pi/manual/watchdog/ modules<br>\ndocuments/github/watchdog_pi/manual/watchdog/antora.yml<br>\ndocuments/github/watchdog_pi/manual/watchdog/build.yml<br>\nIs that correct?</p>\n<p>Is it this directory where I execute those commands?<br>\ndocuments/github/watchdog_pi/manual/watchdog/ </p>\n<p>Thanks for getting me straightened out.<br>\nNOTE: I did push the changes last night, did you catch them as html somewhere?</p>\n<p>I think plugin dev's are going to need to do this git init  commands.<br>\nIs there any way the path could be shortened up, it really is qu</p>",
+        "id": 233078933,
+        "sender_full_name": "Rick Gleason",
+        "timestamp": 1617540142
+    },
+    {
+        "content": "<p>I note you have playbook.yml and \"Public\" and some other files/dir<br>\nI have just what I wrote above and the full path to pages is<br>\nC:\\Users\\Rick\\Documents\\GitHub\\watchdog_pi\\manual\\watchdog\\modules\\ROOT\\pages</p>\n<p>So you must have a different setup than what you pushed to me.</p>\n<p>Any way the path could be shortened?<br>\nit is actually documents/watchdog_pii/manual/watchdog/  sorry about that</p>",
+        "id": 233079200,
+        "sender_full_name": "Rick Gleason",
+        "timestamp": 1617540453
+    },
+    {
+        "content": "<p>Maybe your pages which are a good addition, should be under Edit or Editors or something like that, in the Dev Manual.   We found this necessary with dokuwiki.  The problem is that it might get included with releases or something like that.</p>",
+        "id": 233085152,
+        "sender_full_name": "Rick Gleason",
+        "timestamp": 1617547429
+    },
+    {
+        "content": "<p>I  now have .git in  github/watchdog_pi/manual/    after doing those commands<br>\nI put bldloc.yml in that dir.<br>\ntried  antora  bldloc.yml   from that dir.</p>\n<p>Rick@Dart MINGW64 ~/documents/github/watchdog_pi/manual (master)<br>\n$ antora bldloc.yml<br>\nStart page specified for 2.4.24@watchdog not found: ROOT:watchdog.adoc<br>\nStart page specified for site not found: ROOT:watchdog.adoc</p>\n<p>same errors</p>\n<p>bldloc.yml</p>\n<p>site:<br>\n  title: Watchdog<br>\n  url: <a href=\"https://leamas.github.io/ocpn-manuals/\">https://leamas.github.io/ocpn-manuals/</a><br>\n  start_page:  ROOT:watchdog.adoc</p>\n<p>content:<br>\n  sources:</p>\n<div class=\"codehilite\"><pre><span></span><code>- url: ~/documents/github/watchdog_pi/\n  branches: HEAD\n  edit_url: true\n</code></pre></div>\n\n<p>ui:<br>\n  bundle:<br>\n    url: <a href=\"https://gitlab.com/antora/antora-ui-default/-/jobs/artifacts/master/raw/build/ui-bundle.zip?job=bundle-stable\">https://gitlab.com/antora/antora-ui-default/-/jobs/artifacts/master/raw/build/ui-bundle.zip?job=bundle-stable</a><br>\n    snapshot: true<br>\noutput:<br>\n  dir: ./docs</p>",
+        "id": 233085640,
+        "sender_full_name": "Rick Gleason",
+        "timestamp": 1617547951
+    },
+    {
+        "content": "<p>Because of the error I started adding sub-dir to the local path in   bldloc.yml<br>\nThen with the last try I get again that it is not a git directory again!</p>\n<p>Rick@Dart MINGW64 ~/documents/github/watchdog_pi/manual (master)<br>\nerror: antora.yml not found in C:\\Users\\Rick\\documents\\github\\watchdog_pi\\manual\\ (ref: master &lt;worktree&gt;)page specified for 2.4.24@watchdog not found: ROOT:watchdog.adoc<br>\nAdd the --stacktrace option to see the cause.:watchdog.adoc</p>\n<p>Rick@Dart MINGW64 ~/documents/github/watchdog_pi/manual (master)<br>\n$ antora bldloc.yml<br>\nerror: antora.yml not found in C:\\Users\\Rick\\documents\\github\\watchdog_pi\\manual\\ (ref: master &lt;worktree&gt;)<br>\nAdd the --stacktrace option to see the cause.</p>\n<p>Rick@Dart MINGW64 ~/documents/github/watchdog_pi/manual (master)<br>\n$ antora bldloc.yml<br>\nerror: Local content source must be a git repository: C:\\Users\\Rick\\documents\\github\\watchdog_pi\\manual\\watchdog\\ (url: ~/documents/github/watchdog_pi/manual/watchdog/)<br>\nAdd the --stacktrace option to see the cause.</p>",
+        "id": 233085859,
+        "sender_full_name": "Rick Gleason",
+        "timestamp": 1617548212
+    },
+    {
+        "content": "<p>This is getting pretty absurd</p>",
+        "id": 233085866,
+        "sender_full_name": "Rick Gleason",
+        "timestamp": 1617548226
+    },
+    {
+        "content": "<p>It may be better to pull out the manual from the repo for working somewhere other than in your repo.<br>\nNo full github repository is needed.  CD to the manual folder. Make an empty repo in that folder as shown above.</p>\n<p>Here is the structure as it applies to Watchdog.</p>\n<p>├── manual<br>\n|   └── .git<br>\n|   └── playbook.yml (or bldloc.yml or whatever)<br>\n|   └── ui-bundle.zip<br>\n|   └── .gitignore<br>\n||└── watchdog<br>\n ||||   ├── antora.yml<br>\n ||||   └── modules<br>\n    ||||||    └── ROOT<br>\n    ||||||||        ├── images<br>\n    ||||||||        └── pages<br>\n    ||||||||||            └── watchdog.adoc</p>\n<p>The watchdog folder is exactly as first sent to you via PR.</p>\n<p>Get ui-bundle.zip from:<br>\n<a href=\"https://github.com/leamas/ocpn-manuals/\">https://github.com/leamas/ocpn-manuals/</a> or the link below.</p>\n<p>playbook.yml has the following text:</p>\n<p><a href=\"/user_uploads/33951/DCgNtwVe23cQLThJ9Xe8xRhi/ui-bundle.zip\">ui-bundle.zip</a></p>\n<p><a href=\"/user_uploads/33951/1fXctCEtNacG9ry2tQdVRtT3/playbook.yml\">playbook.yml</a></p>\n<p>CD to the manual folder, if not already there, and use: <br>\nantora --fetch playbook.yml --stacktrace</p>\n<p>Hope this finally works. The output is in the public directory. An index html is created automatically and the output appears as in the opencpn-plugins-manual.</p>\n<p>The advantage of this structure is that the tool (playbook.yml) is separated from the module (watchdog). Another tool allows making a pdf of the watchdog plugin manual. TBC</p>",
+        "id": 233096348,
+        "sender_full_name": "Mike Rossiter",
+        "timestamp": 1617554037
+    },
+    {
+        "content": "<p>This stuff is useful but it is not really related to building the opencpn-plugins-manual. Firefox will show you what your edits have achieved. I will update the Local Build section of the wiki for the manual. Steep learning curve for me as well ;)</p>",
+        "id": 233096560,
+        "sender_full_name": "Mike Rossiter",
+        "timestamp": 1617554216
+    },
+    {
+        "content": "<p>Thanks ever so much Mike.  Your PR was exactly what you show above in the tree, I can confirm that..  I tried moving modules up one level and it did not work due to git not being found.  I will download these and give her a go and let you know.</p>",
+        "id": 233108806,
+        "sender_full_name": "Rick Gleason",
+        "timestamp": 1617567866
+    },
+    {
+        "content": "<p>It works from  github/watchdog_pi/manual/ <br>\nantora  playbook.yml <br>\nand it creates  github/watchdog_pi/manual/public/  sub-dir where it places html files!<br>\nThis is much better.</p>\n<p>Also I learned that block quoting  with ....  at beginning and end does not allow links to work.<br>\nNext  try is getting it to build from ocpn-manuals.</p>\n<p>Also should I put playbook.yml and antora.yml in .gitignore?<br>\nI think for editing, I am going to try making a batch file for adding  /modules/ because it is pretty deep.</p>",
+        "id": 233113114,
+        "sender_full_name": "Rick Gleason",
+        "timestamp": 1617570874
+    },
+    {
+        "content": "<p>Now going from ocpn-manuals  and trying to modify  bldloc.yml<br>\nI kept adding another sub-dir in  bldloc.yml until I just included the entire file watchdog.adoc<br>\nIt keeps not finding the content.  Maybe I am going about this wrong?</p>\n<p><strong>bldloc.yml </strong></p>\n<p>site:<br>\n  title: OpenCPN Developer Manual<br>\n  # the 404 page and sitemap files only get generated when the url property is seto<br>\n  url: <a href=\"https://leamas.github.io/ocpn-manuals/\">https://leamas.github.io/ocpn-manuals/</a><br>\n  start_page: ocpn-dev-manual:ROOT:developer_guide.adoc</p>\n<p>content:<br>\n  sources:</p>\n<div class=\"codehilite\"><pre><span></span><code>- url: ~/documents/github/ocpn-dev-manual\n  branches: main\n  edit_url: false\n\n- url: https://github.com/leamas/ocpn-pi-docs.git\n  branches: main\n  edit_url: true\n\n- url: https://github.com/leamas/shipdriver_pi.git\n  branches: master\n  edit_url: true\n\n- url: https://github.com/rgleason/watchdog_pi.git/manual/watchdog/modules/ROOT/pages/watchdog.adoc\n  branches: master\n  edit_url: true\n</code></pre></div>\n\n<p>ui:<br>\n  bundle:<br>\n    url: <a href=\"https://gitlab.com/antora/antora-ui-default/-/jobs/artifacts/master/raw/build/ui-bundle.zip?job=bundle-stable\">https://gitlab.com/antora/antora-ui-default/-/jobs/artifacts/master/raw/build/ui-bundle.zip?job=bundle-stable</a><br>\n    snapshot: true<br>\noutput:<br>\n  dir: ./docs</p>\n<p>Rick@Dart MINGW64 ~/documents/github/ocpn-manuals (main)<br>\n$ antora bldloc.yml<br>\n[clone] ...l/watchdog/modules/ROOT/pages/watchdog.adoc [-------------------------------------------]error: Content repository not found (url: <a href=\"https://github.com/rgleason/watchdog_pi.git/manual/watchdog/modules/ROOT/pages/watchdog.adoc\">https://github.com/rgleason/watchdog_pi.git/manual/watchdog/modules/ROOT/pages/watchdog.adoc</a>)<br>\nAdd the --stacktrace option to see the cause.</p>",
+        "id": 233116140,
+        "sender_full_name": "Rick Gleason",
+        "timestamp": 1617574015
+    },
+    {
+        "content": "<p>I am trying something else next.  Changing the watchdog section of bldloc.yml  which is in root of ocpn-manuals<br>\nto this, adding the nest sub-dir each time until I added the watchdog.adoc file itself.</p>\n<p>site:<br>\n  title: OpenCPN Developer Manual<br>\n  # the 404 page and sitemap files only get generated when the url property is seto<br>\n  url: <a href=\"https://leamas.github.io/ocpn-manuals/\">https://leamas.github.io/ocpn-manuals/</a><br>\n  start_page: ocpn-dev-manual:ROOT:developer_guide.adoc</p>\n<p>content:<br>\n  sources:</p>\n<div class=\"codehilite\"><pre><span></span><code>- url: ~/documents/github/ocpn-dev-manual\n  branches: main\n  edit_url: false\n\n- url: https://github.com/leamas/ocpn-pi-docs.git\n  branches: main\n  edit_url: true\n\n- url: https://github.com/leamas/shipdriver_pi.git\n  branches: master\n  edit_url: true\n\n- url: ~/documents/github/watchdog_pi/manual/watchdog/modules/ROOT/pages/watchdog.adoc\n  branches: master\n  edit_url: false\n</code></pre></div>\n\n<h1>- url: <a href=\"https://github.com/rgleason/watchdog_pi.git\">https://github.com/rgleason/watchdog_pi.git</a></h1>\n<h1>branches: master</h1>\n<h1>edit_url: true</h1>\n<p>ui:<br>\n  bundle:<br>\n    url: <a href=\"https://gitlab.com/antora/antora-ui-default/-/jobs/artifacts/master/raw/build/ui-bundle.zip?job=bundle-stable\">https://gitlab.com/antora/antora-ui-default/-/jobs/artifacts/master/raw/build/ui-bundle.zip?job=bundle-stable</a><br>\n    snapshot: true<br>\noutput:<br>\n  dir: ./docs</p>\n<p>Usually results in something like this.</p>\n<p>Rick@Dart MINGW64 ~/documents/github/ocpn-manuals (main)<br>\n$ antora bldloc.yml<br>\nerror: Local content source does not exist: C:\\Users\\Rick\\documents\\github\\watchdog_pi\\manual\\watchdog\\modules\\ROOT\\pages\\watchdog.adoc (url: ~/documents/github/watchdog_pi/manual/watchdog/modules/ROOT/pages/watchdog.adoc)<br>\nAdd the --stacktrace option to see the cause.</p>",
+        "id": 233116840,
+        "sender_full_name": "Rick Gleason",
+        "timestamp": 1617574882
+    },
+    {
+        "content": "<p>BTW Happy Easter   Mike, Alec and Jon</p>",
+        "id": 233117708,
+        "sender_full_name": "Rick Gleason",
+        "timestamp": 1617575985
+    },
+    {
+        "content": "<p>Alec,  saw the change you wanted and  I changed and pushed the change for  \"Workflow Prerequisites\"</p>",
+        "id": 233117859,
+        "sender_full_name": "Rick Gleason",
+        "timestamp": 1617576104
+    },
+    {
+        "content": "<p><span class=\"user-mention\" data-user-id=\"399865\">@Rick Gleason</span> : What is going on? I thought we had 3 separate manuals and you are putting stuff from the plugins manual in the developer manual?</p>",
+        "id": 233139384,
+        "sender_full_name": "Mike Rossiter",
+        "timestamp": 1617601361
+    },
+    {
+        "content": "<p>There is definitely three separate manuals. When we encounter a need to link between the manuals, we will have to do it informally at this point.</p>\n<p>I <em>do</em> have a vision that we in a distant future should be able to build everything in one go (and thus also enable full cross-linking). But, just my vision,  for the life in a distant galaxy far, far away...</p>",
+        "id": 233145053,
+        "sender_full_name": "Alec Leamas",
+        "timestamp": 1617607338
+    },
+    {
+        "content": "<p>Mike, I had added some lines to my bldloc.yml in ocpn-manuals   so that the watchdog plugin built with antora and the shipdriver plugin built (I think Alex added that earlier)   Now this doesn't build because we moved the source down several levels and it is not found.</p>\n<p>See my email about this.   I think it would be easier to have a separate repository for watchdog_doc   and remove the documentation from watchdog_pi  </p>\n<p>Then make as shallow a directory structure as possible that works for your Plugin Manual and allows easier local builds too.<br>\nAlso the problem with commits to a plugin is that circleci runs and builds and may deploy when a commit is accepted. I think it is best to avoid that problem.</p>\n<p>Ready to make these changes and give it a try. Just need your advice by return email  (see what I wrote)</p>",
+        "id": 233189812,
+        "sender_full_name": "Rick Gleason",
+        "timestamp": 1617637353
+    },
+    {
+        "content": "<p>Mike wrote:<br>\n 1:42 AM    @Rick Gleason : What is going on? I thought we had 3 separate manuals and you are putting stuff from the plugins manual in the developer manual?</p>\n<p>Well I did that a while ago, picking the one I thought was right while things were in flux, forked it and used my fork. I realize now that it should be a dynamic link to your plugins manual because what I did requires that I make a PR from your repos to my fork.   So please confirm to me what link to use, please.  </p>\n<p>Also I did not like the fact that when going to the plugin manual the entire ocpn-dev-manual link at the top changed to another repository. That is wrong and very confusing to a user, so you will need to change that to be my repos I think.  ---This needs to be solved because the manual seems very fragmented with links changing destinations etc.  I absolutely do not like this and will not accept it (Alec).</p>",
+        "id": 236367074,
+        "sender_full_name": "Rick Gleason",
+        "timestamp": 1619540347
+    },
+    {
+        "content": "<p>This topic was moved here from <a class=\"stream-topic\" data-stream-id=\"282854\" href=\"/#narrow/stream/282854-general/topic/Watchdog.20Overwritten.20by.20Merge\">#general &gt; Watchdog Overwritten by Merge</a> by <span class=\"user-mention silent\" data-user-id=\"399510\">Alec Leamas</span>.</p>",
+        "id": 290756823,
+        "sender_full_name": "Notification Bot",
+        "timestamp": 1658754877
+    }
+]

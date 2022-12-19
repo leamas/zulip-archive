@@ -1,0 +1,320 @@
+[
+    {
+        "content": "<p>@leamas: I am fighting distributed components at the moment. Have you found any examples?</p>",
+        "id": 231596074,
+        "sender_full_name": "Mike Rossiter",
+        "timestamp": 1616573362
+    },
+    {
+        "content": "<p>Distributed components? Could you expand a little?</p>",
+        "id": 231598016,
+        "sender_full_name": "Alec Leamas",
+        "timestamp": 1616574634
+    },
+    {
+        "content": "<p>In your initial ocpn-dev-manual site.yml you seem to pull in adocs from <a href=\"https://github.com/leamas/ocpn-pi-docs.git\">https://github.com/leamas/ocpn-pi-docs.git</a>.<br>\nI cannot find where you might have xref referenced the adocs in this git. </p>\n<p>I need to pull in adocs from all the plugin gits but... finding it impossible to xref the modules in those manual directories. </p>\n<p>All references to distributed components show the adocs coming from two different folders in the same repo, eg:<br>\nmanual/project1<br>\nmanual/project2 </p>\n<p>This is to allow links to several plugin manuals to be embedded in a single page of the main ocpn-user-plugins-manual.</p>\n<p>I have some python code that can pull this stuff together from the individual gits but I was looking for a more asciidoc way of doing it.</p>",
+        "id": 231608390,
+        "sender_full_name": "Mike Rossiter",
+        "timestamp": 1616580245
+    },
+    {
+        "content": "<p>OK. Note the general antora xref syntax as of <a href=\"https://docs.antora.org/antora/2.2/asciidoc/page-to-page-xref/\">https://docs.antora.org/antora/2.2/asciidoc/page-to-page-xref/</a>. In particular, it contains a component part. So, to reference a page in another component just use xref:component:ROOT:page.adoc.  The component part is the component name as of antora .yml.</p>",
+        "id": 231611334,
+        "sender_full_name": "Alec Leamas",
+        "timestamp": 1616581630
+    },
+    {
+        "content": "<p>One example from the mockup  navbar</p>\n<p>xref:plugin-installer:ROOT:Home.adoc[Home] . </p>\n<p>This is the homepage for my converted wiki on the  plugin installer. It's antora.yml has name: plugin-installer</p>",
+        "id": 231611723,
+        "sender_full_name": "Alec Leamas",
+        "timestamp": 1616581830
+    },
+    {
+        "content": "<p>(deleted)</p>",
+        "id": 231623213,
+        "sender_full_name": "Rick Gleason",
+        "timestamp": 1616588206
+    },
+    {
+        "content": "<p><span class=\"user-mention\" data-user-id=\"399510\">@Alec Leamas</span> : Have you made a build recently of ocpn-manuals. Still struggling with the external refs.<br>\nTrying to mirror your work but with a local build.<br>\nMy repos:<br>\n<a href=\"https://github.com/Rasbats/ocpn-manuals-test\">https://github.com/Rasbats/ocpn-manuals-test</a><br>\n<a href=\"https://github.com/Rasbats/ocpn-user-plugins-manual\">https://github.com/Rasbats/ocpn-user-plugins-manual</a><br>\n<a href=\"https://github.com/Rasbats/shipdriver_pi\">https://github.com/Rasbats/shipdriver_pi</a></p>\n<p>Something is wrong. Many changes, some of which will differ from your work.</p>",
+        "id": 231667480,
+        "sender_full_name": "Mike Rossiter",
+        "timestamp": 1616604280
+    },
+    {
+        "content": "<p>Just rebuilt ocpn-manuals, looks good. In particular, the reference to managed_plugins is OK.</p>",
+        "id": 231674361,
+        "sender_full_name": "Alec Leamas",
+        "timestamp": 1616606676
+    },
+    {
+        "content": "<p>What is wrong, really?  Have an example on a failing page reference?</p>",
+        "id": 231674476,
+        "sender_full_name": "Alec Leamas",
+        "timestamp": 1616606722
+    },
+    {
+        "content": "<p>The start page is the main issue. Everything else builds but something is not linked. I will take another look at your repo.</p>",
+        "id": 231674628,
+        "sender_full_name": "Mike Rossiter",
+        "timestamp": 1616606772
+    },
+    {
+        "content": "<p>Is about the site url? The links in index.html needs to have this correct, to the public url where you publish the site</p>",
+        "id": 231674966,
+        "sender_full_name": "Alec Leamas",
+        "timestamp": 1616606890
+    },
+    {
+        "content": "<p>So it is not possible to make a local build. Is this correct?</p>",
+        "id": 231676786,
+        "sender_full_name": "Mike Rossiter",
+        "timestamp": 1616607474
+    },
+    {
+        "content": "<p>It certainly is. I can browse docs/index.html without problems</p>",
+        "id": 231676973,
+        "sender_full_name": "Alec Leamas",
+        "timestamp": 1616607526
+    },
+    {
+        "content": "<p>But...  the public url where you publish the site ... I am using a github repo. Do I need to use  github pages?</p>",
+        "id": 231677637,
+        "sender_full_name": "Mike Rossiter",
+        "timestamp": 1616607733
+    },
+    {
+        "content": "<p>Basically yes. The url is to the generated HTML, not the sources i. e., the url you use.</p>",
+        "id": 231678233,
+        "sender_full_name": "Alec Leamas",
+        "timestamp": 1616607939
+    },
+    {
+        "content": "<p>But re-checking, my local build works, I can browse docs/index.html. So, I was wrong. Works even if I set it to the wrong address ;)</p>",
+        "id": 231678436,
+        "sender_full_name": "Alec Leamas",
+        "timestamp": 1616608003
+    },
+    {
+        "content": "<p>What is the exact error message you get when accessin index.html?</p>",
+        "id": 231678522,
+        "sender_full_name": "Alec Leamas",
+        "timestamp": 1616608035
+    },
+    {
+        "content": "<p>No index.html in the root. No ocpn-user-plugins-manual index.html or html pages. I will re-check the links.</p>",
+        "id": 231679163,
+        "sender_full_name": "Mike Rossiter",
+        "timestamp": 1616608238
+    },
+    {
+        "content": "<p>but isn't index.html supposed to live in docs/, where you generate your files?</p>",
+        "id": 231679667,
+        "sender_full_name": "Alec Leamas",
+        "timestamp": 1616608432
+    },
+    {
+        "content": "<p>Now building! I had master instead of main in the build.yml.</p>",
+        "id": 231680400,
+        "sender_full_name": "Mike Rossiter",
+        "timestamp": 1616608704
+    },
+    {
+        "content": "<p>Been there, done that...</p>",
+        "id": 231680461,
+        "sender_full_name": "Alec Leamas",
+        "timestamp": 1616608726
+    },
+    {
+        "content": "<p>Please let me know when there is some progress...\"curious\"</p>",
+        "id": 231680632,
+        "sender_full_name": "Alec Leamas",
+        "timestamp": 1616608796
+    },
+    {
+        "content": "<p>antora Links again.  ocpn-dev-manual</p>\n<p>Tried-  build-loc.html    from ocpn-manuals</p>\n<p>ssite:<br>\n  title: OpenCPN Developer Manual<br>\n  # the 404 page and sitemap files only get generated when the url property is seto<br>\n  url: <a href=\"https://leamas.github.io/ocpn-manuals/\">https://leamas.github.io/ocpn-manuals/</a><br>\n  start_page: ocpn-dev-manual:ROOT:nav.adoc</p>\n<p>Result again,  just like   when  used   start_page:  ocpn-dev-manual:ROOT:developer_guide.adoc</p>\n<p>Rick@Dart MINGW64 ~/documents/github/ocpn-manuals (main)<br>\n$ antora build-loc.yml<br>\nStart page specified for site not found: ocpn-dev-manual:ROOT:nav.adoc</p>\n<p>Both adocs exist locally</p>\n<p>Also <br>\n<a href=\"#narrow/stream/282854-general/topic/Update.20ocpn-dev-manual\">https://opencpn.zulipchat.com/#narrow/stream/282854-general/topic/Update.20ocpn-dev-manual</a></p>",
+        "id": 231682271,
+        "sender_full_name": "Rick Gleason",
+        "timestamp": 1616609367
+    },
+    {
+        "content": "<p>ocpn-manuals builds fine using build.yml. The conclusion must be that something is wrong in build-loc.yml, a personal file of yours. You need to compare with build.yml, change repo after repo until you find the error. An error which I suspect  is related to one of your local directories</p>",
+        "id": 231686063,
+        "sender_full_name": "Alec Leamas",
+        "timestamp": 1616610842
+    },
+    {
+        "content": "<p>Unless the branch is wrong. There is some overall confusion about main vs master, see Ricks dialog above</p>",
+        "id": 231686350,
+        "sender_full_name": "Alec Leamas",
+        "timestamp": 1616610957
+    },
+    {
+        "content": "<p>Well I removed this line entirely<br>\nStart page specified for site not found: ocpn-dev-manual:ROOT:nav.adoc</p>\n<p>And I still got this message</p>\n<p>Rick@Dart MINGW64 ~/documents/github/ocpn-manuals (main)<br>\n$ antora build-loc.yml<br>\nStart page specified for site not found: ROOT:developer_guide.adoc</p>\n<p>So where does that message come from?  Some held over cache or something?</p>",
+        "id": 231691114,
+        "sender_full_name": "Rick Gleason",
+        "timestamp": 1616612791
+    },
+    {
+        "content": "<p>I have noted that some of you has added a start_page like that to antora.yml. Could it be the culprit?</p>",
+        "id": 231691597,
+        "sender_full_name": "Alec Leamas",
+        "timestamp": 1616612982
+    },
+    {
+        "content": "<p>I took that line out. Same problem.  Is it a cache problem?</p>",
+        "id": 231691821,
+        "sender_full_name": "Rick Gleason",
+        "timestamp": 1616613065
+    },
+    {
+        "content": "<p>antora doesn't make this very easy.  I hope this become clearer</p>",
+        "id": 231692005,
+        "sender_full_name": "Rick Gleason",
+        "timestamp": 1616613156
+    },
+    {
+        "content": "<p>It is really hard for me to tell what's wrong in local setup I cannot reproduce.  You have the build.yml which works, and unless you figure out the problem the only remaining solution is restart the process, start  with build.yml, change it bit bit to make it more and more similar to your build-loc.yml, testing each and every change.</p>",
+        "id": 231692266,
+        "sender_full_name": "Alec Leamas",
+        "timestamp": 1616613279
+    },
+    {
+        "content": "<p>Started over using build.yml and found that<br>\nantora build.yml    works locally now with no change<br>\nantora --fetch build.yml  works remotely </p>\n<p>In ocpn-manuals\\docs\\  I have these components<br>\nocpn-dev-manuals<br>\nplugin-installer<br>\nshipdriver<br>\nwatchdog</p>",
+        "id": 231698237,
+        "sender_full_name": "Rick Gleason",
+        "timestamp": 1616615619
+    },
+    {
+        "content": "<p>Ok will do that.</p>\n<p>The search would also need to include a block  \"image::\" and \"image:\"  <br>\nThe script needs to find each link's file name and if the file exists in the media directory add it to a FoundImageList if it doesn't find a file, output the link to the screen as a bad link that needs fixing.<br>\nThen compare the Found Image list with the media directory to make a list of Unused media files.<br>\nAnother script should find all bad image  links</p>",
+        "id": 231698273,
+        "sender_full_name": "Rick Gleason",
+        "timestamp": 1616615637
+    },
+    {
+        "content": "<p>No. All images lives in ROOT/images, all pages in ROOT/pages. So there are no paths, just simple filenames.</p>",
+        "id": 231700478,
+        "sender_full_name": "Alec Leamas",
+        "timestamp": 1616616545
+    },
+    {
+        "content": "<p><a href=\"/user_uploads/33951/1rBxSLwKwIo9hl5glLL1anrM/list-unused_images.sh\">list-unused_images.sh</a></p>",
+        "id": 231705125,
+        "sender_full_name": "Alec Leamas",
+        "timestamp": 1616618583
+    },
+    {
+        "content": "<p>Nice.  I run this from bash while in a directory that contains the file?<br>\nWhere should I put the script?  (i am using windows bash</p>",
+        "id": 231843448,
+        "sender_full_name": "Rick Gleason",
+        "timestamp": 1616693517
+    },
+    {
+        "content": "<p>\" All images lives in ROOT/images, all pages in ROOT/pages. So there are no paths, just simple filenames.\"<br>\nIs this a rule?<br>\nThen I broke it.</p>",
+        "id": 231843723,
+        "sender_full_name": "Rick Gleason",
+        "timestamp": 1616693595
+    },
+    {
+        "content": "<p>Well, basically you can arrange is as you like. But having everything flat makes things so much simpler, especially when re-arranging the structure, so I think it's the best way.</p>",
+        "id": 231845274,
+        "sender_full_name": "Alec Leamas",
+        "timestamp": 1616694214
+    },
+    {
+        "content": "<p>Yes, after my experience with media directories in dokuwiki, I tend to agree. <br>\nI will flatten it and make the link changes.</p>",
+        "id": 231851780,
+        "sender_full_name": "Rick Gleason",
+        "timestamp": 1616696574
+    },
+    {
+        "content": "<p>Note: changing  the  bldloc.yml  third line down for the start page fixed the starrtup page in ocpn-dev-manual.</p>\n<p>Now I have another question regarding watchdog.</p>\n<p>I've used playbook.yml to modify my bldloc.yml  and it works after git initializing following<br>\n<a href=\"https://github.com/Rasbats/opencpn-plugins-manual/wiki/Local-Build\">https://github.com/Rasbats/opencpn-plugins-manual/wiki/Local-Build</a>  and I have run this several times<br>\nafter changing the version number in the antora.yml in the directory below.</p>\n<p>I am wondering if that new version number 2.4.29  and the manual changes got pushed up to rasbats plugin manual?</p>\n<p>I also have a question regarding creating a new branch to make changes to the plugin and changes are needed to the manual, what should we do then?   Where should we make the changes and is there anything specifci that we should do?</p>",
+        "id": 233498208,
+        "sender_full_name": "Rick Gleason",
+        "timestamp": 1617805988
+    },
+    {
+        "content": "<p>Well, I updated the manual on the watchdog_pi/mast-reorg branch  having run 'antora bldloc.yml' from the  watchdog_pi/manual sub-dir and then pushed those changes to my remote repository.  Do you see them in the Plugin Manual now after you rebuild it?  Version number is now 2.4.29</p>",
+        "id": 233505889,
+        "sender_full_name": "Rick Gleason",
+        "timestamp": 1617808081
+    },
+    {
+        "content": "<p><span class=\"user-mention\" data-user-id=\"399559\">@Mike Rossiter</span>  ^^</p>",
+        "id": 233537547,
+        "sender_full_name": "Alec Leamas",
+        "timestamp": 1617819511
+    },
+    {
+        "content": "<p>Rick: I think you may have misunderstood what happens. You update the plugin manual. Your local build is not needed by the  OpenCPN Plugins Manual. My repo has the build.yml, which collects your changes and builds the OPM. Those changes will show in the OPM on my next build, which will be tonight. Have a look at the OPM repo and you will see the build.yml for plugins. For the dev manual Alec has an ocpn-manuals repo with the build.yml which collects any edits you make. Your ocpn-dev-manual is the source and has the antora.yml. <br>\nAlec: A start page is needed for each plugin module that is managed by the dev. But Rick does not build the output for the plugins manual. The pages are collected from his repo and built into the final website. In the case of non-dev managed plugins the main start page is specified in the main site antora.yml.  Individual modules, if in the main repo, do not have an antora.yml. <br>\nNote: Need to document the workflow.</p>",
+        "id": 233537759,
+        "sender_full_name": "Mike Rossiter",
+        "timestamp": 1617819609
+    },
+    {
+        "content": "<p><em>Individual modules, if in the main repo, do not have an antora.yml.</em><br>\nThey don't?</p>",
+        "id": 233538389,
+        "sender_full_name": "Alec Leamas",
+        "timestamp": 1617819899
+    },
+    {
+        "content": "<p>IOW, dumb question since I havn't followed this closely: Is the manual part in each plugin an Antora module or a component?</p>",
+        "id": 233538794,
+        "sender_full_name": "Alec Leamas",
+        "timestamp": 1617820084
+    },
+    {
+        "content": "<p>OK; at least watchdog is a component if I get this right.</p>\n<p>What I don't understand is the <em>start_page:</em> line in antora.yml. What is it good for. In a local build is is not used, for sure.</p>\n<p>When accessed from outside, it is not really useful since there is an index.adoc file. <em>start_page</em>'s use is to provide a filename to use in the absence of index.adoc.  Hence, it might make sense top just drop it.</p>",
+        "id": 233540498,
+        "sender_full_name": "Alec Leamas",
+        "timestamp": 1617820753
+    },
+    {
+        "content": "<p>Alec: This is amusing/confusing. It is a module when it is in the main manual repo. It becomes a component when I add an antora.yml and make the PR to the dev.</p>",
+        "id": 233549000,
+        "sender_full_name": "Mike Rossiter",
+        "timestamp": 1617824345
+    },
+    {
+        "content": "<p>antora does not need an index.adoc. It can have any start page. It generates an index.html which points to the chosen start page.</p>",
+        "id": 233549451,
+        "sender_full_name": "Mike Rossiter",
+        "timestamp": 1617824551
+    },
+    {
+        "content": "<p>Differs In my main manual. There is a ROOT folder which contains nav.adoc. This points to an  index.adoc. Again I think that nav.adoc could point to another start page. This cat can be skinned in many ways ;)</p>",
+        "id": 233550039,
+        "sender_full_name": "Mike Rossiter",
+        "timestamp": 1617824859
+    },
+    {
+        "content": "<p><em>Alec: This is amusing/confusing. It is a module when it is in the main manual repo.</em></p>\n<p>Isn't it easier to handle it as a component, always? I. e., having it in a separate git repo in all cases? Seems more sane to me? \"not sure...\"</p>",
+        "id": 233690762,
+        "sender_full_name": "Alec Leamas",
+        "timestamp": 1617901664
+    },
+    {
+        "content": "<p>Where the developer is active and accepts a PR that will always be the case. I need to work through the plugins, farming them out. I don't want to clone non-active repos. Should I? It would create a lot more work.</p>",
+        "id": 233703202,
+        "sender_full_name": "Mike Rossiter",
+        "timestamp": 1617905791
+    },
+    {
+        "content": "<p>Perhaps you could have the yet-not-submitted -as-pr modules as simple directories instead, each directory a component? i. e.,  a new directory components/ , a sibling to modules. Here you could have some_plugin as components/some_plugin with an url like ./components/some_plugin. This way, everything would be a component, either by you or when made part of the plugin. The only difference would be the url.</p>\n<p>Not tested, just throwing up ideas...</p>",
+        "id": 233706897,
+        "sender_full_name": "Alec Leamas",
+        "timestamp": 1617907183
+    },
+    {
+        "content": "<p>This topic was moved here from <a class=\"stream-topic\" data-stream-id=\"282854\" href=\"/#narrow/stream/282854-general/topic/antora.20links\">#general &gt; antora links</a> by <span class=\"user-mention silent\" data-user-id=\"399510\">Alec Leamas</span>.</p>",
+        "id": 290756648,
+        "sender_full_name": "Notification Bot",
+        "timestamp": 1658754784
+    },
+    {
+        "content": "<p>This topic was moved here from <a class=\"stream-topic\" data-stream-id=\"282916\" href=\"/#narrow/stream/282916-Image-and-Screenshot-Guidelines/topic/antora.20links\">#Image and Screenshot Guidelines &gt; antora links</a> by <span class=\"user-mention silent\" data-user-id=\"399510\">Alec Leamas</span>.</p>",
+        "id": 290757978,
+        "sender_full_name": "Notification Bot",
+        "timestamp": 1658755512
+    }
+]

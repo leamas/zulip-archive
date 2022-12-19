@@ -1,0 +1,74 @@
+[
+    {
+        "content": "<p>The component version is causing us nothing but troubles. One example is the default plugin left pane which list all plugins in the form \"Admiralty Tides 0.1\"  etc. Here, 0.1 only adds confusion, we do not maintain versions in the manual.</p>\n<p>The new Antora version makes it possible to get rid of this. This is done in antora.yml,  with a patch like</p>\n<div class=\"codehilite\"><pre><span></span><code>diff --git a/antora.yml b/antora.yml\nindex 2fe95228..930e22ae 100644\n--- a/antora.yml\n+++ b/antora.yml\n@@ -1,5 +1,5 @@\n name: ocpn-dev-manual\n title: OpenCPN Developer Manual\n-version: &#39;5.3.1&#39;\n+version: ~\n nav:\n - modules/ROOT/nav.adoc\n</code></pre></div>\n<p>i. e., <em>version:</em> is changed from whatever it was to '~'. </p>\n<p><span class=\"user-mention\" data-user-id=\"399865\">@Rick Gleason</span>  <span class=\"user-mention\" data-user-id=\"399559\">@Mike Rossiter</span> : I'll try to file PR:s for those plugins which are maintained by other devs. Could you take care of your own?</p>",
+        "id": 274101025,
+        "sender_full_name": "Alec Leamas",
+        "timestamp": 1646385639
+    },
+    {
+        "content": "<p>Yes, but can we make this change to eliminate the version  as we update plugins?  I need to update all the TP to 1.0.193 now.   I don't want to use up my opensource build allotment.</p>",
+        "id": 274120052,
+        "sender_full_name": "Rick Gleason",
+        "timestamp": 1646396405
+    },
+    {
+        "content": "<p>Sure, no hurry.</p>",
+        "id": 274120747,
+        "sender_full_name": "Alec Leamas",
+        "timestamp": 1646396889
+    },
+    {
+        "content": "<p>Alec, I am going to make the change locally to all of them in one pass and add a commit.<br>\nThen when I push it will be done.  I have one question though.</p>\n<p>in antora.yml  I do not have these lines what are they for?</p>\n<p>nav:</p>\n<ul>\n<li>modules/ROOT/nav.adoc</li>\n</ul>",
+        "id": 274121894,
+        "sender_full_name": "Rick Gleason",
+        "timestamp": 1646397521
+    },
+    {
+        "content": "<p>Is there a plugin example, like shipdriver?</p>",
+        "id": 274122007,
+        "sender_full_name": "Rick Gleason",
+        "timestamp": 1646397590
+    },
+    {
+        "content": "<p>I found this <a href=\"https://github.com/opencpn-manuals/plugins/commit/b4181f31f5e63dcada567542eb6e7f2d3395e945\">https://github.com/opencpn-manuals/plugins/commit/b4181f31f5e63dcada567542eb6e7f2d3395e945</a></p>",
+        "id": 274122202,
+        "sender_full_name": "Rick Gleason",
+        "timestamp": 1646397695
+    },
+    {
+        "content": "<p>So should we be adding ?</p>\n<p>\"nav:\"<br>\n\"- modules/ROOT/nav.adoc\"</p>\n<p>Like this file?<br>\n<a href=\"https://github.com/opencpn-manuals/plugins/blob/b4181f31f5e63dcada567542eb6e7f2d3395e945/manual/plugins/antora.yml\">https://github.com/opencpn-manuals/plugins/blob/b4181f31f5e63dcada567542eb6e7f2d3395e945/manual/plugins/antora.yml</a></p>",
+        "id": 274122398,
+        "sender_full_name": "Rick Gleason",
+        "timestamp": 1646397796
+    },
+    {
+        "content": "<p>nav.adoc is the underpinnings for the left-pane navigation.  When there is just a single .adoc page it is not required, and this is the case in almost all plugins.</p>",
+        "id": 274134711,
+        "sender_full_name": "Alec Leamas",
+        "timestamp": 1646403467
+    },
+    {
+        "content": "<p>Did not like 'default' appearing instead of version number.  Would have preferred a blank line. Tried using <em>display_version: '  '</em> but this still left a symbol in the space below the plugin name. Reverted to just the <em>version: ~</em> and accepting <em>default</em>.</p>",
+        "id": 274304045,
+        "sender_full_name": "Mike Rossiter",
+        "timestamp": 1646570665
+    },
+    {
+        "content": "<p>Version number has now been removed from the Rasbats plugins.</p>",
+        "id": 274311949,
+        "sender_full_name": "Mike Rossiter",
+        "timestamp": 1646581056
+    },
+    {
+        "content": "<blockquote>\n<p>Mike Rossiter1:44 PM<br>\nDid not like 'default' appearing instead </p>\n</blockquote>\n<p>If we should do anything about this, it's about patching the ui bundle. Possible, but needs time. Note that sources appendix does the right thing -- it drops the version part completely when it is 'default'.</p>",
+        "id": 274366812,
+        "sender_full_name": "Alec Leamas",
+        "timestamp": 1646645392
+    },
+    {
+        "content": "<p>This topic was moved here from <a class=\"stream-topic\" data-stream-id=\"282854\" href=\"/#narrow/stream/282854-general/topic/Clear.20component.20versions\">#general &gt; Clear component versions</a> by <span class=\"user-mention silent\" data-user-id=\"399510\">Alec Leamas</span>.</p>",
+        "id": 290757149,
+        "sender_full_name": "Notification Bot",
+        "timestamp": 1658755073
+    }
+]

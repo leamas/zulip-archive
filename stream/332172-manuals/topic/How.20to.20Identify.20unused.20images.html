@@ -1,0 +1,64 @@
+<html>
+<head><meta charset="utf-8"><title>How to Identify unused images · manuals · Zulip Chat Archive</title></head>
+<h2>Stream: <a href="https://leamas.github.io/zulip-archive/stream/332172-manuals/index.html">manuals</a></h2>
+<h3>Topic: <a href="https://leamas.github.io/zulip-archive/stream/332172-manuals/topic/How.20to.20Identify.20unused.20images.html">How to Identify unused images</a></h3>
+
+<hr>
+
+<base href="https://opencpn.zulipchat.com">
+
+<head><link href="https://leamas.github.io/zulip-archive/style.css" rel="stylesheet"></head>
+
+<a name="231647006"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332172-manuals/topic/How%20to%20Identify%20unused%20images/near/231647006" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Rick Gleason <a href="https://leamas.github.io/zulip-archive/stream/332172-manuals/topic/How.20to.20Identify.20unused.20images.html#231647006">(Mar 24 2021 at 14:51)</a>:</h4>
+<p>In Watchdog  antora manual which is one big page,   the entire document is 5.1mb  and images take up 4.8mb <br>
+All the images are less than 100kb but there are a lot of them.  <br>
+I have identified many unused images left over from previous editing by using the linkchecker screen and manually comparing to the actual directory in antora  under  C:\Users[user]Documents\GitHub\watchdog_pi\modules\ROOT\images</p>
+<p>This check is tedious and will be needed quite frequently. Does anyone know of a small program/technique that would help?</p>
+
+
+
+<a name="231679335"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332172-manuals/topic/How%20to%20Identify%20unused%20images/near/231679335" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Alec Leamas <a href="https://leamas.github.io/zulip-archive/stream/332172-manuals/topic/How.20to.20Identify.20unused.20images.html#231679335">(Mar 24 2021 at 17:51)</a>:</h4>
+<p>It shouldnt  be hard to script: grep for all image: tags and their content. List all images in ROOT/images.  Take the intersection, the image files not present in the list of image tags.</p>
+
+
+
+<a name="231684439"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332172-manuals/topic/How%20to%20Identify%20unused%20images/near/231684439" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Rick Gleason <a href="https://leamas.github.io/zulip-archive/stream/332172-manuals/topic/How.20to.20Identify.20unused.20images.html#231684439">(Mar 24 2021 at 18:24)</a>:</h4>
+<p>Doesn't  look that easy</p>
+<p><a href="https://stackoverflow.com/questions/3183444/check-for-valid-link-url">https://stackoverflow.com/questions/3183444/check-for-valid-link-url</a><br>
+<a href="https://stackoverflow.com/questions/3183444/check-for-valid-link-url">https://stackoverflow.com/questions/3183444/check-for-valid-link-url</a></p>
+
+
+
+<a name="231686723"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332172-manuals/topic/How%20to%20Identify%20unused%20images/near/231686723" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Rick Gleason <a href="https://leamas.github.io/zulip-archive/stream/332172-manuals/topic/How.20to.20Identify.20unused.20images.html#231686723">(Mar 24 2021 at 18:38)</a>:</h4>
+<p>grep  recursive    (looking for some pattern)    (in this folder)<br>
+grep -r   https:// ???   (in this folder) and  (if this prefix is found, then  add the filename to a LinkFoundList.)  and compare it to all files in an adjacent media folder and if they match  add the file to a  MediaFileFoundList  if they don't match add it to MediaFileNotFoundList.<br>
+Then compare the MediaDirectory to  MediaFoundList adding all files that arent listed to a MediaFilesUnusedList.    Need to run this in bash too.</p>
+<p>+Compare Source Links with Media Folder</p>
+<div class="codehilite"><pre><span></span><code>  + Media file found (ok)
+  + Media file not found  (need to fix this link or find the file)
+</code></pre></div>
+
+<p>Compare MediaFileFound List with Media Folder files</p>
+<div class="codehilite"><pre><span></span><code> + Unused Media file  (need to remove)  -any file that is not part of MediaFileFound
+</code></pre></div>
+
+
+
+<a name="231691865"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332172-manuals/topic/How%20to%20Identify%20unused%20images/near/231691865" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Alec Leamas <a href="https://leamas.github.io/zulip-archive/stream/332172-manuals/topic/How.20to.20Identify.20unused.20images.html#231691865">(Mar 24 2021 at 19:11)</a>:</h4>
+<p>That SO reply is irrelevant. We know that our image links look like image:file.png[caption], and this is trivial to parse.</p>
+
+
+
+<a name="290757956"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332172-manuals/topic/How%20to%20Identify%20unused%20images/near/290757956" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Notification Bot <a href="https://leamas.github.io/zulip-archive/stream/332172-manuals/topic/How.20to.20Identify.20unused.20images.html#290757956">(Jul 25 2022 at 13:25)</a>:</h4>
+<p>5 messages were moved here from <a class="stream-topic" data-stream-id="282916" href="/#narrow/stream/282916-Image-and-Screenshot-Guidelines/topic/How.20to.20Identify.20unused.20images">#Image and Screenshot Guidelines &gt; How to Identify unused images</a> by <span class="user-mention silent" data-user-id="399510">Alec Leamas</span>.</p>
+
+
+
+<hr><p>Last updated: Dec 19 2022 at 16:41 UTC</p>
+</html>

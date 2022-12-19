@@ -1,0 +1,128 @@
+[
+    {
+        "content": "<p>We need to start thinking about the beta: <a href=\"https://github.com/OpenCPN/OpenCPN/discussions/2797\">https://github.com/OpenCPN/OpenCPN/discussions/2797</a></p>",
+        "id": 306201932,
+        "sender_full_name": "Alec Leamas",
+        "timestamp": 1666777640
+    },
+    {
+        "content": "<p>Preparations for  Beta..<br>\nThere are in my mind some more things to consider before Beta.<br>\nApart from the \"TODO list for Alpha\" some issues so far:</p>\n<ul>\n<li>Prioritization by user of incoming sources for position/voyage/GNSS/(HDT). Now we give prio to first received. We may  need a GUI to select by what's received. Preferable within both types: serial and N2k. (Signalk may live it's own life here?) As a start I can setup a N2k AIS including GNSS and a N2k GNSS/HDG sensor to test on.</li>\n<li>Outgoing messages from a activated route is not listed in NMEA Debug window.</li>\n<li>\"PushNMEABuffer()\" is not working. Nothing is sent when used. Just noted in Debug window as: \"(virtual) $ECAIQ,VSD*32&lt;0x0D&gt;&lt;0x0A&gt;\"</li>\n</ul>",
+        "id": 306259306,
+        "sender_full_name": "Håkan Svensson",
+        "timestamp": 1666796176
+    },
+    {
+        "content": "<p>A message was moved here from <a class=\"stream-topic\" data-stream-id=\"332168\" href=\"/#narrow/stream/332168-comms/topic/misc\">#comms &gt; misc</a> by <span class=\"user-mention silent\" data-user-id=\"399510\">Alec Leamas</span>.</p>",
+        "id": 306305619,
+        "sender_full_name": "Notification Bot",
+        "timestamp": 1666809438
+    },
+    {
+        "content": "<p>A message was moved here from <a class=\"stream-topic\" data-stream-id=\"332168\" href=\"/#narrow/stream/332168-comms/topic/misc\">#comms &gt; misc</a> by <span class=\"user-mention silent\" data-user-id=\"399510\">Alec Leamas</span>.</p>",
+        "id": 306305711,
+        "sender_full_name": "Notification Bot",
+        "timestamp": 1666809453
+    },
+    {
+        "content": "<p>Hakan..<br>\nFixed these:<br>\nOutgoing messages from a activated route is not listed in NMEA Debug window.<br>\n\"PushNMEABuffer()\" is not working. Nothing is sent when used. Just noted in Debug window as: \"(virtual) $ECAIQ,VSD*32&lt;0x0D&gt;&lt;0x0A&gt;\"</p>",
+        "id": 306576656,
+        "sender_full_name": "Dave Register",
+        "timestamp": 1666926731
+    },
+    {
+        "content": "<p>Both fix confirmed. Thanks! So now is AIS_VD plugin working as before.</p>",
+        "id": 306838113,
+        "sender_full_name": "Håkan Svensson",
+        "timestamp": 1667049621
+    },
+    {
+        "content": "<p>The beta  will break also the windows ABI. Unlike Flatpak and Debian/Ubuntu, we can probably not use the version number in a meaningful way here (?)  This then means that we need a new ABI designator like <em>msvc-wx32</em> instead of the current <em>msvc</em>.</p>\n<p><span class=\"user-mention\" data-user-id=\"522486\">@Håkan Svensson</span>  <span class=\"user-mention\" data-user-id=\"517002\">@Dave Register</span>  Thoughts?</p>",
+        "id": 308608580,
+        "sender_full_name": "Alec Leamas",
+        "timestamp": 1667920482
+    },
+    {
+        "content": "<p><span class=\"user-mention\" data-user-id=\"399510\">@Alec Leamas</span> <br>\n Yes.  I am heads down on getting the wx321 Appveyor build working.<br>\nI think that \"msvc-wx32\" will work, without major refactor of plugin metadata structure.<br>\nWhen I get wx321 branch merged, we can formalize the plugin metadata requirements.  Soon now.<br>\nRant:  I truly dislike debugging Appveyor CI builds.  If we could only get a ssh console to the build machine, like CCI gives us, it would save a lot of time.  Might make sense to investigate CCI for Windows builds....</p>",
+        "id": 308614307,
+        "sender_full_name": "Dave Register",
+        "timestamp": 1667922053
+    },
+    {
+        "content": "<p><span class=\"user-mention\" data-user-id=\"517002\">@Dave Register</span> :   <a href=\"https://github.com/OpenCPN/plugins/pull/746\">https://github.com/OpenCPN/plugins/pull/746</a></p>\n<p>Might need a review of <em>IsCompatible()</em>, there is hardcoded windows stuff. Will try to late today or tomorrow.</p>",
+        "id": 308620604,
+        "sender_full_name": "Alec Leamas",
+        "timestamp": 1667923837
+    },
+    {
+        "content": "<p>Agreed: It would simplify in many ways if we could build WIndows on CCI. Also hate it.</p>",
+        "id": 308620871,
+        "sender_full_name": "Alec Leamas",
+        "timestamp": 1667923917
+    },
+    {
+        "content": "<p><a href=\"https://github.com/OpenCPN/OpenCPN/pull/2811\">https://github.com/OpenCPN/OpenCPN/pull/2811</a></p>",
+        "id": 308672076,
+        "sender_full_name": "Alec Leamas",
+        "timestamp": 1667940853
+    },
+    {
+        "content": "<p><span class=\"user-mention\" data-user-id=\"517002\">@Dave Register</span>  You might want use install a more recent cmake, which is available as a python wheel.  As I understand it, only a recent cmake version can really handle wxW 3.2.</p>\n<p>Basically, something like <code>python3 -m pip install --user -q cmake</code> should give you  the latest cmake. See for example  <a href=\"https://github.com/Rasbats/shipdriver_pi/blob/master/ci/circleci-build-debian-wx31.sh\">https://github.com/Rasbats/shipdriver_pi/blob/master/ci/circleci-build-debian-wx31.sh</a> around line 43</p>",
+        "id": 308672878,
+        "sender_full_name": "Alec Leamas",
+        "timestamp": 1667941183
+    },
+    {
+        "content": "<p><span class=\"user-mention\" data-user-id=\"399510\">@Alec Leamas</span> <br>\nIt turns out that my ugly hacks on FindwxWidgets.cmake were not required, after all.  VS2022 image at Appveyor has a sufficiently recent cmake to work, once the script is all correct.  My core problem is the same that everyone runs into:  VS2022 defaults to build an x64 app, and we need a WIN32 app.  So we need to add to cmake invocation:<br>\n    -DCMAKE_GENERATOR_PLATFORM=Win32     <br>\nAll good now, I think.  Final CI build before merge is underway.</p>",
+        "id": 308674386,
+        "sender_full_name": "Dave Register",
+        "timestamp": 1667941806
+    },
+    {
+        "content": "<p>OK. Still, sooner or alter we will need to build 64 bits on Windows , I guess.</p>",
+        "id": 308674700,
+        "sender_full_name": "Alec Leamas",
+        "timestamp": 1667941959
+    },
+    {
+        "content": "<p>I'm not at all sure why we would need that, but we can cross that bridge when we have leisure time (HaHa !)<br>\np.s.  Sorry for the commit noise on this branch.  I see no other way to debug Appveyor except by trial and error....</p>",
+        "id": 308674997,
+        "sender_full_name": "Dave Register",
+        "timestamp": 1667942085
+    },
+    {
+        "content": "<p>No problems with commit noise on a feature branch. I feel your pain.</p>",
+        "id": 308676582,
+        "sender_full_name": "Alec Leamas",
+        "timestamp": 1667942773
+    },
+    {
+        "content": "<p>I have merged, built, and tested wxwin321 branch.  Looks good so far.<br>\nFor reference, this is built with vs2020, v143.  As modern as it gets.<br>\nNext step is to build some plugins against wx321, for Windows  I'm on it.</p>",
+        "id": 308697762,
+        "sender_full_name": "Dave Register",
+        "timestamp": 1667953858
+    },
+    {
+        "content": "<p><span class=\"user-mention\" data-user-id=\"517002\">@Dave Register</span> I think the “preferred” method is on the cmake configure command line use -AWin32 as the architecture.  </p>\n<p>Going to 64 bit on windows will be a significant project I think. Anyway, something for next year maybe.</p>\n<p><span class=\"user-mention\" data-user-id=\"399510\">@Alec Leamas</span> The issue where I could not build the command line opencpn in wx3.1.x was caused by forcing the linker to build for Windows on the cmake configure command line. Cmake has an issue where there are too many ways to specify the type of Windows executable (command line -subsystem , add_executable, etc.). The command line option overrides the CONSOLE type of add_executable.</p>",
+        "id": 308767202,
+        "sender_full_name": "Dan Dickey",
+        "timestamp": 1667993478
+    },
+    {
+        "content": "<p>There would be no urgent use for 64 b Win as I understand it. If so we'd need two program versions or a installer detecting target system. Still two versions to build I suppose. <br>\nWe will for long time have a lot users with an old PC in the boat. Not usable for games but perfectly suitable for OCPN.</p>",
+        "id": 308773326,
+        "sender_full_name": "Håkan Svensson",
+        "timestamp": 1667995858
+    },
+    {
+        "content": "<p>Yea, I know. But this is an ABI break, in a better world we would have done also this change now.  But the world is what it is, agreed.</p>",
+        "id": 308792405,
+        "sender_full_name": "Alec Leamas",
+        "timestamp": 1668002340
+    },
+    {
+        "content": "<p>\" I think the “preferred” method is on the cmake configure command line use -AWin32\"<br>\nDo you have a reference for this?</p>",
+        "id": 308797918,
+        "sender_full_name": "Dave Register",
+        "timestamp": 1668003960
+    }
+]

@@ -1,0 +1,74 @@
+[
+    {
+        "content": "<p>I have digged a little into dependencies for the comm stuff. One major culprit is  comm_navmsg.h, any changes to this  forces a big recompile indicating unacceptable dependencies. I'm almost sure that it is about datadriver.h being included, and this is actually a left-over from the first sketch. The only thing we use is the name of the driver, no need to include the complete header for that. Will fix.</p>\n<p>I also see that chart1 now depends  on various comm* headers. This is not necessarily a Bad Thing, but it shows how some  message message processing is done in a GUI part. It would IMHO be better if we could disconnect this, just having  application message passing.  This is more about overall design of GUI application, where complicated processing in GUI parts is generally frowned upon for good reasons, these things takes place in the model part which  does not depend on the GUI.</p>\n<p>And anyway, chart1 is already a too big jack of all trades...</p>",
+        "id": 292307873,
+        "sender_full_name": "Alec Leamas",
+        "timestamp": 1659861839
+    },
+    {
+        "content": "<p>Removed the \"datastream.h include in comm_driver.h. However, this leaves it with a ConnectionParams.h instead because of the test entry. Despite the name, ConnectionParams.h actually has GUI dependencies since it defines a wxPanel.</p>\n<p>The basic problem seems to  be that ConnectionParams is mixing the low-level parameters with a GUI component. It is certainly possible to refactor this to two separate things which we probably should do.</p>\n<p>Q: will we live with this test code for some time? Thoughts?</p>",
+        "id": 292310921,
+        "sender_full_name": "Alec Leamas",
+        "timestamp": 1659866319
+    },
+    {
+        "content": "<p>Good catch on ConnectionParams.  Needs refactor to extract the GUI stuff.<br>\nChart1.cpp work starting soon.</p>",
+        "id": 292319595,
+        "sender_full_name": "Dave Register",
+        "timestamp": 1659878537
+    },
+    {
+        "content": "<p>I have looked a little to the overall. global use of \"#include chart1.h\". Seems that a lot of it can be handled by simple clean-up  patches on the headers, and even more after breaking out the print support and TimedPopupWindow. However, doing anything about pluginmanager is a major headache.</p>\n<p>Writing this because of all .cpp files which depends on and uses gFrame.  As of today, this means including chart1.h with all of it's dependendies. It would be great if you could refactor this to a separate gframe.h header with less dependencies. </p>\n<p>Also seems that a lot has t o do with gFrame.GetPrimaryCanvas() and friends. In better world, this would live in a separate object...</p>",
+        "id": 292507813,
+        "sender_full_name": "Alec Leamas",
+        "timestamp": 1659999442
+    },
+    {
+        "content": "<p>My plan is this:</p>\n<ol>\n<li>Fix it so that no \"include\" file includes \"chart1.h\".  This is the main source of \"everything includes everything\" problem.</li>\n<li>Remove \"#include chart1.h\" from each .cpp file where found, fixing the build problems by either fwd class declaration, or selective include files.</li>\n<li>After all this, probably chart1.h is gone.<br>\nBut, the details....</li>\n</ol>",
+        "id": 292584653,
+        "sender_full_name": "Dave Register",
+        "timestamp": 1660053881
+    },
+    {
+        "content": "<p>The first part , headers, is feasible. I have almost done it. One need to refactor  the MyPrintout print support and TimedPopupMessage; the latter can live  in gui_lib.h.    pluginmanager is a mess, though. </p>\n<p>When it comes to cpp files the main culprit is gFrame.  There are some functions which are used all over the place. This includes the Colorscheme and Canvases stuff. One strategy could be to split current gFrame into for example MyAppbase and MyApp. MyAppBase would contain the functions used by other modules be declared in a separate header. MyApp would ineherit fomr MyAppBase and basically be the same.</p>\n<p>Of course, if it was possible to refactor Canvases and Colorschemes to separate objects that would be better...</p>\n<p>However, due to the silly MS linker, this can only work if modules which needs to access BaseFrame  uses an getter like function. This is because that linker does not understand polymorphic objects. OTOH, a function like GetBaseFrame() which returns  MyApp as a BaseFrame* should  be fine.</p>",
+        "id": 292594170,
+        "sender_full_name": "Alec Leamas",
+        "timestamp": 1660056959
+    },
+    {
+        "content": "<p>Yes, I know you have or will change those names.Using the old for now, though.</p>",
+        "id": 292594403,
+        "sender_full_name": "Alec Leamas",
+        "timestamp": 1660057020
+    },
+    {
+        "content": "<p>Headers:  I have almost done it too.  Hope we have no major merge conflicts.<br>\ngFrame: refactor happening now.  I hope to merge tonight, leaving you lots of fun tomorrow.</p>",
+        "id": 292639667,
+        "sender_full_name": "Dave Register",
+        "timestamp": 1660071980
+    },
+    {
+        "content": "<p>The big refactor pushed now.  There is more to be done, e.g. remove more GUI elements from ocpn_app.cpp, re-home the printing functions, etc.<br>\nBut it builds and runs as it sits tonight.<br>\n chart1.h/cpp is gone.  All global statics now live in ocpn_app.cpp <br>\nI'll start moving the comm listeners from MyFrame to MyApp next.  Then build some app_msg pathways.</p>",
+        "id": 292685662,
+        "sender_full_name": "Dave Register",
+        "timestamp": 1660098738
+    },
+    {
+        "content": "<p>Moved TimedPopupWin and MyPrintout to separate files. One major advantage is that <code>include ocpn_frame.h</code> is gone in ocpn_app.h, it only exists in the new <code>ocpn_print.h</code> which has much less impact.</p>",
+        "id": 292720735,
+        "sender_full_name": "Alec Leamas",
+        "timestamp": 1660123713
+    },
+    {
+        "content": "<p>We could certainly do a better job here, for example refactoring the ColorScheme and ChartCanvas handling to have less dependencies on ocpn_frame.  However,  this is a huge step in the right direction and I suggest that we declare this as \"good enough\" for 5.8 and put focus on the communications from now.</p>\n<p>When this is merged we should IMHO file a bug about all ocpn_frame deps and work with that in next cycle.</p>",
+        "id": 292725074,
+        "sender_full_name": "Alec Leamas",
+        "timestamp": 1660125621
+    },
+    {
+        "content": "<p>I say \"good enough\" as well.  If I have some dead time (small chance), I will think on the color stuff.  I think the canvas management will probably need to stay mostly in ocpn_frame, since the frame is the parent container for the canvases. <br>\nAnyway, back to comms, and messaging.</p>",
+        "id": 292756369,
+        "sender_full_name": "Dave Register",
+        "timestamp": 1660138677
+    }
+]

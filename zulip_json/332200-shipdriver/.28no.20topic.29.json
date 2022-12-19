@@ -1,0 +1,476 @@
+[
+    {
+        "content": "<p>Good. I think you have it. The files in the cache from windeps.bat  do not provide the dependents.<br>\n<a href=\"/user_uploads/33951/5HtfWzT21ghslCI2uuZpGsmx/dump.txt\">dump.txt</a></p>",
+        "id": 313011478,
+        "sender_full_name": "Mike Rossiter",
+        "timestamp": 1669798252
+    },
+    {
+        "content": "<p>Yes. And this is really about the opencpn binary, which is linked to <em>wxmsw32u_XX_custom.dll</em> whereas the plugins are linked against the official release <em>wxbase32u_XX_vc14x.dll</em>. </p>\n<p>I'd argue that the plugins does the right thing here, and that the thing to fix is main opencpn. We need <span class=\"user-mention\" data-user-id=\"517002\">@Dave Register</span>  in the loop.</p>",
+        "id": 313018926,
+        "sender_full_name": "Alec Leamas",
+        "timestamp": 1669801168
+    },
+    {
+        "content": "<p><span class=\"user-mention\" data-user-id=\"517002\">@Dave Register</span> : thoughts?</p>",
+        "id": 313019189,
+        "sender_full_name": "Alec Leamas",
+        "timestamp": 1669801262
+    },
+    {
+        "content": "<p>Compiled the latest master (Windows). .jail still taking place. ShipDriver does not install.</p>",
+        "id": 313029797,
+        "sender_full_name": "Mike Rossiter",
+        "timestamp": 1669805013
+    },
+    {
+        "content": "<p>Yes. The jailing is <a href=\"https://github.com/OpenCPN/OpenCPN/issues/2516\">https://github.com/OpenCPN/OpenCPN/issues/2516</a></p>\n<p>You could try my version. It has patches for the jailing  and is also using the official wxWidgets 3.2.1 build. To get it:</p>\n<div class=\"codehilite\"><pre><span></span><code>&gt; git remote add leamas https://github.com/leamas/OpenCPN.git\n&gt; git remote update leamas\n&gt; git fetch leamas master:master.leamas\n&gt; git checkout  master.ĺeamas\n</code></pre></div>\n<p>The tests are broken, you need to  configure with <em>-DOCPN_BUILD_TEST=OFF</em></p>",
+        "id": 313033736,
+        "sender_full_name": "Alec Leamas",
+        "timestamp": 1669806370
+    },
+    {
+        "content": "<blockquote>\n<p>ShipDriver does not install</p>\n</blockquote>\n<p>We can and IMHO should test my version as of above to make sure that our analyze is correct and that more bugs does not surface when using it. However, we need Dave to wake up to and chime in before making any final decisions how to handle this.</p>",
+        "id": 313036667,
+        "sender_full_name": "Alec Leamas",
+        "timestamp": 1669807407
+    },
+    {
+        "content": "<p><span class=\"user-mention\" data-user-id=\"399510\">@Alec Leamas</span>  Compiling now.</p>",
+        "id": 313036886,
+        "sender_full_name": "Mike Rossiter",
+        "timestamp": 1669807487
+    },
+    {
+        "content": "<p>Away for a while.</p>",
+        "id": 313044219,
+        "sender_full_name": "Alec Leamas",
+        "timestamp": 1669810014
+    },
+    {
+        "content": "<blockquote>\n<p>should test my version as of above </p>\n</blockquote>\n<p>Done. No .jail. shipdriver.dll is present but not recognised. No warnings and does not install in the list of plugins. I will run a debug log again.</p>",
+        "id": 313044902,
+        "sender_full_name": "Mike Rossiter",
+        "timestamp": 1669810219
+    },
+    {
+        "content": "<p>I will investigate today.</p>",
+        "id": 313073011,
+        "sender_full_name": "Dave Register",
+        "timestamp": 1669818756
+    },
+    {
+        "content": "<p>The log shows the same error:<br>\n<a href=\"/user_uploads/33951/wGFXuVkpjYIWBwosHpyOS3oh/opencpn.log\">opencpn.log</a></p>",
+        "id": 313073551,
+        "sender_full_name": "Mike Rossiter",
+        "timestamp": 1669818897
+    },
+    {
+        "content": "<p>OK. Time then to use dumpbin on opencpn.exe and check that the results there corresponds to the end of the appveyor build log where dumpbin is run on the plugin (note: the end of the first build, the last one is not wx32).</p>\n<p>Do they match? Is the dependencies the same? They should be...</p>",
+        "id": 313078123,
+        "sender_full_name": "Alec Leamas",
+        "timestamp": 1669820129
+    },
+    {
+        "content": "<p>I don't really have the time now to breathe life into my Windows environment...</p>",
+        "id": 313078449,
+        "sender_full_name": "Alec Leamas",
+        "timestamp": 1669820215
+    },
+    {
+        "content": "<p>Maybe late today</p>",
+        "id": 313078488,
+        "sender_full_name": "Alec Leamas",
+        "timestamp": 1669820228
+    },
+    {
+        "content": "<p>No problem. I an on it.</p>",
+        "id": 313078578,
+        "sender_full_name": "Mike Rossiter",
+        "timestamp": 1669820260
+    },
+    {
+        "content": "<p><span class=\"user-mention\" data-user-id=\"517002\">@Dave Register</span> Just to be clear: From our horizon, the important thing is to finalize the libraries which should be used, they must be the same both in main opencpn and the plugins. As now, main opencpn uses a custom build whereas the SD machinery uses the official build.  </p>\n<p>Needless to say, I think using the official build is the right way to go</p>",
+        "id": 313079156,
+        "sender_full_name": "Alec Leamas",
+        "timestamp": 1669820408
+    },
+    {
+        "content": "<p>Dump from leamas OpenCPN and  latest ShipDriver appveyor dump is here: <br>\n<a href=\"/user_uploads/33951/8xwGrbN8Pc4qK56_kwdkDwEV/dump.leamas.txt\">dump.leamas.txt</a></p>",
+        "id": 313083646,
+        "sender_full_name": "Mike Rossiter",
+        "timestamp": 1669821747
+    },
+    {
+        "content": "<p>opencpn.exe still links to <em>wxmsw32u_XX_custom.dll</em>. You must remove all of these files and replace them with the files downloaded by appveyor.yml.  The easiest way to obtain these files might be to copy them from the shipdriver repo after running win_deps.bat which places the files in the directory <em>cache</em>.</p>\n<p>Also note that you need new values for wxWidgets_ROOT_DIR and wxWidgets_LIB_DIR. The values depends on where you store the downloaded files.</p>\n<p>As long as opencpn.exe is linked to <em>wxmsw32u_XX_custom.dll</em> there is no point testing anything.</p>",
+        "id": 313086838,
+        "sender_full_name": "Alec Leamas",
+        "timestamp": 1669822579
+    },
+    {
+        "content": "<p>OOPS!! You need to run <em>win_deps.bat wx32</em> in order to get the wx32 files. Without <em>wx32</em> it downloads the wrong  3.1 version of wxWidgets</p>",
+        "id": 313087389,
+        "sender_full_name": "Alec Leamas",
+        "timestamp": 1669822724
+    },
+    {
+        "content": "<p>The alternative would be to use (just to test) the appveyor built package on <a href=\"https://dl.cloudsmith.io/public/alec-leamas/opencpn/raw/files/opencpn-msvc_5.7.1+2256.946dff9_setup.exe\">https://dl.cloudsmith.io/public/alec-leamas/opencpn/raw/files/opencpn-msvc_5.7.1+2256.946dff9_setup.exe</a>.</p>\n<p>I see that Dave in this very moment is moving main opencpn to use the official build, so the question seems settled. That means that you will have to update your build environment in any case, the net result is the same: No custom dlls should be visible in the build, only the official  vx14x ones.</p>",
+        "id": 313101833,
+        "sender_full_name": "Alec Leamas",
+        "timestamp": 1669826454
+    },
+    {
+        "content": "<p>Interesting ... both your installer and my new one suffer from the same missing .dll.</p>\n<p><a href=\"/user_uploads/33951/LtMFtf59i5zDQt-VS-Ca8CZr/missing.vc14x.dll.jpg\">missing.vc14x.dll.jpg</a></p>\n<div class=\"message_inline_image\"><a href=\"/user_uploads/33951/LtMFtf59i5zDQt-VS-Ca8CZr/missing.vc14x.dll.jpg\" title=\"missing.vc14x.dll.jpg\"><img src=\"/user_uploads/33951/LtMFtf59i5zDQt-VS-Ca8CZr/missing.vc14x.dll.jpg\"></a></div>",
+        "id": 313103987,
+        "sender_full_name": "Mike Rossiter",
+        "timestamp": 1669827022
+    },
+    {
+        "content": "<p>let's focus on your development setup for now. Have you that file available there?</p>",
+        "id": 313105726,
+        "sender_full_name": "Alec Leamas",
+        "timestamp": 1669827481
+    },
+    {
+        "content": "<p>Yes ... just adding it to the program directory to test.</p>",
+        "id": 313106058,
+        "sender_full_name": "Mike Rossiter",
+        "timestamp": 1669827558
+    },
+    {
+        "content": "<p>More missing .dll fixed by adding stuff. OpenCPN starts but a series of debug messages - timer, image data format. This also happens with my own latest build. </p>\n<p>The missing .dll were in <em>wxMSW-3.2.1_vc14x_ReleaseDLL.7z</em> cf <em>wxMSW-3.2.1_vc14x_Dev.7z</em> from <em>win_deps.bat</em>.<br>\nURL for  <em>wxMSW-3.2.1_vc14x_ReleaseDLL.7z</em> is here:<br>\n<a href=\"https://www.wxwidgets.org/downloads/#v3.2.1_msw\">https://www.wxwidgets.org/downloads/#v3.2.1_msw</a></p>",
+        "id": 313109418,
+        "sender_full_name": "Mike Rossiter",
+        "timestamp": 1669828491
+    },
+    {
+        "content": "<p>Hm... I think it is like this:</p>\n<ul>\n<li>We are using the headers download, no problems here.</li>\n<li>We are also using the Dev download. This contains for example wxmsw32ud_gl_vc14x.dll. This is the unstripped development library with debugging symbols and quite big.</li>\n<li>The Release download contains the stripped library   wxmsw32u_gl_vc14x.dll.</li>\n<li>Since we are using REL_WITH_DEBINFO cmake links to the stripped library. But we have not downloaded that one.</li>\n</ul>\n<p>Ergo: download  <a href=\"https://github.com/wxWidgets/wxWidgets/releases/download/v3.2.1/wxMSW-3.2.1_vc14x_ReleaseDLL.7z\">https://github.com/wxWidgets/wxWidgets/releases/download/v3.2.1/wxMSW-3.2.1_vc14x_ReleaseDLL.7z</a> and put these files in the same place as where you have your other dlls and report back</p>",
+        "id": 313109548,
+        "sender_full_name": "Alec Leamas",
+        "timestamp": 1669828530
+    },
+    {
+        "content": "<blockquote>\n<p>put these files in the same place as where you have your other dlls and report back</p>\n</blockquote>\n<p>Compiled with the stripped library added to wxWidgets-3.1.2. OpenCPN shows it depends on vc14x but it does not run. Added vc14x .dll to the program directory. Program starts but I still get the same errors and it crashes.</p>",
+        "id": 313120311,
+        "sender_full_name": "Mike Rossiter",
+        "timestamp": 1669831408
+    },
+    {
+        "content": "<p>I have update OCPN master branch, appyeyor script, to use the \"official\"  source images now.<br>\nv3.2.1/wxMSW-3.2.1_vc14x<br>\nShould resolve this collision automatically.  I'm in the process of updating o-charts_pi to ShipDriver, so I will confirm.</p>",
+        "id": 313124866,
+        "sender_full_name": "Dave Register",
+        "timestamp": 1669832722
+    },
+    {
+        "content": "<p><span class=\"user-mention\" data-user-id=\"517002\">@Dave Register</span>  Note the linkage problems, wxmsw32u vs wxmsw32ud , see above</p>",
+        "id": 313146582,
+        "sender_full_name": "Alec Leamas",
+        "timestamp": 1669839244
+    },
+    {
+        "content": "<p>I just made a build on Windows. I can reproduce the bad behaviour:  opencpn.exe links to msw32ud_ files i. e. the development libraries with debug info, but we want it to use msw32u, the release libraries. I'm on it...</p>",
+        "id": 313150657,
+        "sender_full_name": "Alec Leamas",
+        "timestamp": 1669840686
+    },
+    {
+        "content": "<p>Yes, I see the same.  Waiting for your patch...</p>",
+        "id": 313151110,
+        "sender_full_name": "Dave Register",
+        "timestamp": 1669840865
+    },
+    {
+        "content": "<p>This is not trivial... don't know if it will be today.</p>",
+        "id": 313154515,
+        "sender_full_name": "Alec Leamas",
+        "timestamp": 1669842026
+    },
+    {
+        "content": "<p>I give up for now. Filed an issue on wxWidgets forum: <a href=\"https://forums.wxwidgets.org/viewtopic.php?f=19&amp;t=49888\">https://forums.wxwidgets.org/viewtopic.php?f=19&amp;t=49888</a></p>\n<p>Yes, I have reproduced this on the minimal sample in the wxw sources. So it's some basic, very basic problem. Let's see if there is any feedback</p>",
+        "id": 313166791,
+        "sender_full_name": "Alec Leamas",
+        "timestamp": 1669846267
+    },
+    {
+        "content": "<p>Back with new experiments, progress: using <code>cmake --build . --target package --config Release</code> fixes the linkage -- opencpn is linked  the the msw32u libraries. However, these libraries are not bundled in the NSIS package,  needs fixing. </p>\n<p>But with manual copying of the relevant libs it should maybe work for now.</p>",
+        "id": 313178729,
+        "sender_full_name": "Alec Leamas",
+        "timestamp": 1669851746
+    },
+    {
+        "content": "<blockquote>\n<p>it should maybe work for now</p>\n</blockquote>\n<p>It does. Needed to remove the custom.dll in the program folder as well. Latest shipdriver_pi build and o-charts_pi from the catalog run fine.</p>",
+        "id": 313245921,
+        "sender_full_name": "Mike Rossiter",
+        "timestamp": 1669890652
+    },
+    {
+        "content": "<p>This using the leamas opencpn code.</p>",
+        "id": 313246176,
+        "sender_full_name": "Mike Rossiter",
+        "timestamp": 1669890730
+    },
+    {
+        "content": "<p>Great to hear!  </p>\n<p>The open issue is about getting the dlls into the NSIS installer. :(</p>",
+        "id": 313248158,
+        "sender_full_name": "Alec Leamas",
+        "timestamp": 1669891356
+    },
+    {
+        "content": "<blockquote>\n<p>The open issue is about getting the dlls into the NSIS installer.</p>\n</blockquote>\n<p>My naive solution was to replace the wxWidgets in <em>/buildwin</em> with <em>wx32u...vc_14x.dll</em> versions. This made a package that installed correctly, without any further action to replace files. Is this all that is needed, an updated <em>buildwin</em> <em>.7z</em> from <span class=\"user-mention\" data-user-id=\"517002\">@Dave Register</span> ?</p>",
+        "id": 313371386,
+        "sender_full_name": "Mike Rossiter",
+        "timestamp": 1669926871
+    },
+    {
+        "content": "<p>Nothing  bad bad with a quick fix. But we certainly need something more sane in the long run. I know not all agree on this, but I do insist.</p>\n<p>I'm on it with the time I have. Trying to reset the build environment in OpenCPN, it 's a true nightmare today.</p>",
+        "id": 313378519,
+        "sender_full_name": "Alec Leamas",
+        "timestamp": 1669929224
+    },
+    {
+        "content": "<p>OK, I think I have a workable solution, at least for O58 release.<br>\nThe trouble was not in NSIS (thank goodness), but in our cmake install step.  So I patched to do the following:</p>\n<ol>\n<li>In appveyor.yml, download wx321 Release DLLs, and install alongside the DLLs coming from the -dev package. </li>\n<li>In cmake install step, arrange to copy the required wx321 no-debug Release DLLs into the install directory.</li>\n<li>Happily, NSIS blindly copies what it finds in the install directory, and builds a package  without editorial comment.</li>\n</ol>\n<p>Seems to work.  Base package starts up, and o-charts loads correctly, since it uses ShipDriver template (mostly), which builds against wx321 Release.<br>\nSolution is in github master now.</p>\n<p>There may be more elegant solutions, but I am not  encouraging more work on this right now.  We need to stabilize, and get to Beta.<br>\nFor the record, I am not opposed to using \"officially maintained\" libraries and components.  I only object to the build breakage and additional fiddly work it brings us, every darned time. :)</p>",
+        "id": 313426322,
+        "sender_full_name": "Dave Register",
+        "timestamp": 1669956384
+    },
+    {
+        "content": "<p>There is already an option in CMakeLists OCPN_BUNDLE_WXDLLS which obviously is aimed to fix exactly this.</p>",
+        "id": 313452711,
+        "sender_full_name": "Alec Leamas",
+        "timestamp": 1669971580
+    },
+    {
+        "content": "<p>I have an alternative solution under way, let's see if I can land it today. It offers some other benefits.</p>",
+        "id": 313452865,
+        "sender_full_name": "Alec Leamas",
+        "timestamp": 1669971622
+    },
+    {
+        "content": "<p><span class=\"user-mention\" data-user-id=\"399559\">@Mike Rossiter</span> Could you perhaps give me a hand? I have created a opencpn installer package, but it crashes directly on startup.  Problem is that  when I rebuild current master I get the same result, so I suspect it's something wrong with my windows box rather than the actual package.</p>\n<p>So, could you just try to download <a href=\"https://dl.cloudsmith.io/public/alec-leamas/opencpn/raw/files/opencpn-msvc_5.7.1+2813.31a35d8_setup.exe\">https://dl.cloudsmith.io/public/alec-leamas/opencpn/raw/files/opencpn-msvc_5.7.1+2813.31a35d8_setup.exe</a>, install it and see if it crashes directly on startup also for you?</p>",
+        "id": 313471668,
+        "sender_full_name": "Alec Leamas",
+        "timestamp": 1669978055
+    },
+    {
+        "content": "<blockquote>\n<p>install it and see if it crashes directly on startup also for you?</p>\n</blockquote>\n<p>It does not crash. Installs normally and previous wx32 plugins work correctly.</p>",
+        "id": 313484213,
+        "sender_full_name": "Mike Rossiter",
+        "timestamp": 1669982698
+    },
+    {
+        "content": "<p>Now back to the garden!</p>",
+        "id": 313484258,
+        "sender_full_name": "Mike Rossiter",
+        "timestamp": 1669982711
+    },
+    {
+        "content": "<p>\"There is already an option in CMakeLists OCPN_BUNDLE_WXDLLS which obviously is aimed to fix exactly this.\"<br>\nWhich was broken....</p>",
+        "id": 313504378,
+        "sender_full_name": "Dave Register",
+        "timestamp": 1669989265
+    },
+    {
+        "content": "<p>I have fixed it. PR under way.</p>",
+        "id": 313511188,
+        "sender_full_name": "Alec Leamas",
+        "timestamp": 1669991218
+    },
+    {
+        "content": "<p><a href=\"https://github.com/OpenCPN/OpenCPN/pull/2841\">https://github.com/OpenCPN/OpenCPN/pull/2841</a></p>",
+        "id": 313512806,
+        "sender_full_name": "Alec Leamas",
+        "timestamp": 1669991697
+    },
+    {
+        "content": "<p><span class=\"user-mention\" data-user-id=\"399559\">@Mike Rossiter</span> Thanks!</p>",
+        "id": 313513868,
+        "sender_full_name": "Alec Leamas",
+        "timestamp": 1669992040
+    },
+    {
+        "content": "<p><span class=\"user-mention\" data-user-id=\"399559\">@Mike Rossiter</span>      Back here after some work on the main OpenCPN side. Still not much time, kitchen repairs takes a toll. Are you aware of anything besides cleaning up the MasOS builds which stops us from making a release?</p>",
+        "id": 314127228,
+        "sender_full_name": "Alec Leamas",
+        "timestamp": 1670275434
+    },
+    {
+        "content": "<blockquote>\n<p>Are you aware of anything besides cleaning up the MasOS builds which stops us from making a release?</p>\n</blockquote>\n<p>Nothing  in ShipDriver. Only concerned my crude update of <em>leamas/opencpn-libs/api</em>  does not match the <em>devel</em> version. And  for Windows an update of <em>opencpn-libs</em> may be needed as well as <em>update-templates</em>.</p>\n<p>Still have the toolbar icon problem with JavaScript_pi. Need to have another look at that.</p>",
+        "id": 314194206,
+        "sender_full_name": "Mike Rossiter",
+        "timestamp": 1670317331
+    },
+    {
+        "content": "<p>Last build from commit 3fea86e produced two debian bullseye armhf tarballs. The name is the same (ShipDriver-3.2-debian-A32-11-tarball ). Contents?</p>",
+        "id": 314206249,
+        "sender_full_name": "Mike Rossiter",
+        "timestamp": 1670322260
+    },
+    {
+        "content": "<p>Batch files in <em>buildwin</em> need updating or removing.</p>",
+        "id": 314215618,
+        "sender_full_name": "Mike Rossiter",
+        "timestamp": 1670325666
+    },
+    {
+        "content": "<p>Thanks for feedback, I'll try to have a look. But, as I said earlier, kitchen takes most of my time so slow progress here.</p>",
+        "id": 314222506,
+        "sender_full_name": "Alec Leamas",
+        "timestamp": 1670328267
+    },
+    {
+        "content": "<p>Possible typo in api-17 <em>CMakeLists.txt</em>:<br>\nLine 22:<br>\nOCPN_API_WX_32<br>\nShould it read:<br>\nOCPN_API_WX32</p>",
+        "id": 314271918,
+        "sender_full_name": "Mike Rossiter",
+        "timestamp": 1670343765
+    },
+    {
+        "content": "<blockquote>\n<p>Last build from commit 3fea86e produced two debian bullseye armhf tarballs.</p>\n</blockquote>\n<p>Good catch, thanks! <a href=\"https://github.com/Rasbats/shipdriver_pi/pull/473\">https://github.com/Rasbats/shipdriver_pi/pull/473</a></p>",
+        "id": 314616104,
+        "sender_full_name": "Alec Leamas",
+        "timestamp": 1670483497
+    },
+    {
+        "content": "<blockquote>\n<p>Possible typo in api-17 CMakeLists.txt:</p>\n</blockquote>\n<p>This is already fixed in current devel branch.  </p>\n<p>It's time to release opencpn-libs, at that point master will be updated to devel. However, before that it is crucial to add a api-18 library, without this plugins cannot access the new communications framework.</p>",
+        "id": 314616728,
+        "sender_full_name": "Alec Leamas",
+        "timestamp": 1670483867
+    },
+    {
+        "content": "<p><span class=\"user-mention\" data-user-id=\"517002\">@Dave Register</span> : Could you provide Alec with an <em>opencpn.lib</em> or shall I make one from your <em>master</em> code?</p>",
+        "id": 314621285,
+        "sender_full_name": "Mike Rossiter",
+        "timestamp": 1670486202
+    },
+    {
+        "content": "<p>Mike...<br>\nFor now, you should use the one that is produced by a normal master build.</p>",
+        "id": 314703180,
+        "sender_full_name": "Dave Register",
+        "timestamp": 1670513879
+    },
+    {
+        "content": "<p>Thanks. I will make a new build.</p>",
+        "id": 314704764,
+        "sender_full_name": "Mike Rossiter",
+        "timestamp": 1670514343
+    },
+    {
+        "content": "<p><span class=\"user-mention\" data-user-id=\"399510\">@Alec Leamas</span> <em>.lib</em> and <em>.h</em> are here:<br>\n<a href=\"/user_uploads/33951/kHoeoyZUMmdkg0AsHT_3IOOG/api-18\">api-18</a><br>\nRelWithDebInfo version of the <em>.lib</em>.</p>",
+        "id": 314724594,
+        "sender_full_name": "Mike Rossiter",
+        "timestamp": 1670519915
+    },
+    {
+        "content": "<p>Thanks! I'll try to find some time, probably tomorrow morning.</p>",
+        "id": 314746392,
+        "sender_full_name": "Alec Leamas",
+        "timestamp": 1670525267
+    },
+    {
+        "content": "<p><span class=\"user-mention\" data-user-id=\"517002\">@Dave Register</span>  api 18: Empty link? </p>\n<p>BTW: from which commit do you build?</p>",
+        "id": 314779690,
+        "sender_full_name": "Alec Leamas",
+        "timestamp": 1670536614
+    },
+    {
+        "content": "<p>I always build from master/HEAD</p>",
+        "id": 314797586,
+        "sender_full_name": "Dave Register",
+        "timestamp": 1670545398
+    },
+    {
+        "content": "<p>Still  nothing in that link. Rebuilt windows from 43d90aab, added library (Release) + pdb file to new subdirectory api-18 into devel branch.  Will merge into master and release opencpn-libs \"shortly\".</p>",
+        "id": 314897712,
+        "sender_full_name": "Alec Leamas",
+        "timestamp": 1670593565
+    },
+    {
+        "content": "<blockquote>\n<p>Still nothing in that link</p>\n</blockquote>\n<p>My mistake. I thought I had made a zip file. Thanks for building.</p>",
+        "id": 314905230,
+        "sender_full_name": "Mike Rossiter",
+        "timestamp": 1670595721
+    },
+    {
+        "content": "<p>I have one pending change for macos, stay tuned</p>",
+        "id": 315309695,
+        "sender_full_name": "Alec Leamas",
+        "timestamp": 1670832960
+    },
+    {
+        "content": "<p>No, I have nothing pending for the moment. Discussion at <a href=\"https://github.com/OpenCPN/OpenCPN/discussions/2797#discussioncomment-4373532\">https://github.com/OpenCPN/OpenCPN/discussions/2797#discussioncomment-4373532</a></p>",
+        "id": 315321620,
+        "sender_full_name": "Alec Leamas",
+        "timestamp": 1670837391
+    },
+    {
+        "content": "<p>MacOS has tarball name <em>ShipDriver-3.2-darwin-wx315-10.13.6-tar…</em>  <br>\nwx32?</p>",
+        "id": 315326912,
+        "sender_full_name": "Mike Rossiter",
+        "timestamp": 1670839182
+    },
+    {
+        "content": "<p><span class=\"user-mention\" data-user-id=\"399559\">@Mike Rossiter</span>  Away for a while</p>",
+        "id": 315599105,
+        "sender_full_name": "Alec Leamas",
+        "timestamp": 1670940500
+    },
+    {
+        "content": "<p><span class=\"user-mention\" data-user-id=\"399559\">@Mike Rossiter</span>  My test case looks fine, and I think we have addressed all the things you have talked about. Time to make a 3.2.0 release?</p>",
+        "id": 316230431,
+        "sender_full_name": "Alec Leamas",
+        "timestamp": 1671186519
+    },
+    {
+        "content": "<p>I would like to make another beta tag to test against other plugins.</p>",
+        "id": 316230890,
+        "sender_full_name": "Mike Rossiter",
+        "timestamp": 1671186629
+    },
+    {
+        "content": "<p>More testing is not wrong....</p>",
+        "id": 316231438,
+        "sender_full_name": "Alec Leamas",
+        "timestamp": 1671186793
+    },
+    {
+        "content": "<p>I'll wait for input from you</p>",
+        "id": 316231488,
+        "sender_full_name": "Alec Leamas",
+        "timestamp": 1671186808
+    },
+    {
+        "content": "<p>Thanks. beta6 coming.</p>",
+        "id": 316231573,
+        "sender_full_name": "Mike Rossiter",
+        "timestamp": 1671186830
+    },
+    {
+        "content": "<p>NOte <a href=\"https://github.com/Rasbats/shipdriver_pi/pull/480\">https://github.com/Rasbats/shipdriver_pi/pull/480</a></p>",
+        "id": 316231858,
+        "sender_full_name": "Alec Leamas",
+        "timestamp": 1671186919
+    },
+    {
+        "content": "<p>Thanks - nearly missed that one. Now tagging.</p>",
+        "id": 316233481,
+        "sender_full_name": "Mike Rossiter",
+        "timestamp": 1671187299
+    },
+    {
+        "content": "<p>Found a somewhat embarrassing error: <a href=\"https://github.com/Rasbats/shipdriver_pi/pull/482\">https://github.com/Rasbats/shipdriver_pi/pull/482</a></p>",
+        "id": 316435636,
+        "sender_full_name": "Alec Leamas",
+        "timestamp": 1671275091
+    },
+    {
+        "content": "<p>Now merged.<br>\n16 OS! <br>\nTag 7 coming!<br>\nBTW found a fix for the bounding box problem that you solved with a patch for wxWidgets. Now using wxRect iso bbox for UKTides. Compiles but not yet tested with bullseye.</p>",
+        "id": 316438868,
+        "sender_full_name": "Mike Rossiter",
+        "timestamp": 1671276141
+    },
+    {
+        "content": "<p>How can I local build a plugin using GA? Thinking of <em>dashboardsk_pi</em>?</p>",
+        "id": 316439080,
+        "sender_full_name": "Mike Rossiter",
+        "timestamp": 1671276243
+    }
+]

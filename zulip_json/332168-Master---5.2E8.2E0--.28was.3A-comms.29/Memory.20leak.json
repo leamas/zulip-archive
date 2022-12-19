@@ -1,0 +1,170 @@
+[
+    {
+        "content": "<p>I have been running OpenCPN/comm branch all day today under VS2022.  There appears to be a memory leak where a bazillion NMEA messages get left on the heap.  Takes about 30 minutes for Visual Studio to print out all the leaked blocks when O closes.  So far have not been able to get VS to mark the block with the code that allocated the leaks.</p>",
+        "id": 293450683,
+        "sender_full_name": "Dan Dickey",
+        "timestamp": 1660521682
+    },
+    {
+        "content": "<p>Assuming that this is about Nmea0183Msg type of messages, right?  </p>\n<p>Some of them are local variables on stack like  <code>Nmea0183Msg n0183_msg_GSV(\"GSV\")</code>.  Lets assume these just cannot be a problem.</p>\n<p>The others are allocated using  <code>make_unique</code>in expressions like <code>auto msg = std::make_unique&lt;const Nmea0183Msg&gt;(identifier, full_sentence, GetAddress())</code>.  The compiler should ensure that such an object does not leak.</p>\n<p>There are two things  I can see. The first is that the unique_ptr  is transferred in a wxEvent which only accepts void*.  To that  end, the unique_ptr is first wrapped in a container, and the pointer to that container is what's carried by wxEvent. On the receiving side the unique_ptr is retrieved from the container again. I don't see any problems with this, but...</p>\n<p>The other is that some functions in commBridge all of a sudden uses  <code>std::shared_ptr&lt;const Nmea0183Msg&gt;</code> as argument, dropping the idea of a single copy of the message. This is clearly a bug that should be fixed, but I'm uncertain as if this is what you see.</p>",
+        "id": 293474846,
+        "sender_full_name": "Alec Leamas",
+        "timestamp": 1660547755
+    },
+    {
+        "content": "<p><span class=\"user-mention\" data-user-id=\"517002\">@Dave Register</span> ^ shared_ptr...</p>",
+        "id": 293474909,
+        "sender_full_name": "Alec Leamas",
+        "timestamp": 1660547775
+    },
+    {
+        "content": "<p>The way forward here is to fix the unit test build on windows. There is already a test there sending a considerable amount of data through the system, and if there is any leaks in the basic message handling it should be revealed there.</p>",
+        "id": 293475076,
+        "sender_full_name": "Alec Leamas",
+        "timestamp": 1660547897
+    },
+    {
+        "content": "<p><span class=\"user-mention\" data-user-id=\"517002\">@Dave Register</span> Forget it, <code>shared_ptr</code>is as it should. A classical \"I'm not dumb, just having bad luck when I think\"</p>",
+        "id": 293477492,
+        "sender_full_name": "Alec Leamas",
+        "timestamp": 1660549327
+    },
+    {
+        "content": "<p><span class=\"user-mention\" data-user-id=\"522729\">@Dan Dickey</span>  I have reviewed the code, and it looks sane. The overall scheme is that messages are created using <code>make_unique</code>, but when they are sent though the wxEvent messaging system they are implicitly converted to <code>shared_ptr</code>. This is as it should since there are typically more than one receiving party for each message. There is no reason the compiler should not be able to handle this. Still, here seems to be some kind of bug...</p>\n<p>Back to unit tests and overall Windows build.</p>",
+        "id": 293480186,
+        "sender_full_name": "Alec Leamas",
+        "timestamp": 1660550805
+    },
+    {
+        "content": "<p><span class=\"user-mention\" data-user-id=\"517002\">@Dave Register</span>  I am sure it is a real thing.  Started O last night and it required 189MB memory.  This morning it is consuming 490MB.</p>\n<p>Just to be clear, I am running OpenCPN/comm branch.  Some thread mentioned \"comms\" branch but did not see that in the repo.</p>",
+        "id": 293488874,
+        "sender_full_name": "Dan Dickey",
+        "timestamp": 1660555252
+    },
+    {
+        "content": "<p>I build comm branch for Jammy under WSL.  I think the same leak happens there too.  Overnight it built up over 300MB of heap.  Still haven't found the offending alloc.</p>",
+        "id": 293489352,
+        "sender_full_name": "Dan Dickey",
+        "timestamp": 1660555477
+    },
+    {
+        "content": "<p>I don't doubt your findings, don't get me wrong. Just trying to explain the situation, partly for you, partly to myself ;)</p>",
+        "id": 293491694,
+        "sender_full_name": "Alec Leamas",
+        "timestamp": 1660556709
+    },
+    {
+        "content": "<p><span class=\"user-mention\" data-user-id=\"522729\">@Dan Dickey</span>  I have pushed updates to the windows build to comm @169c5559c. It builds to unit tests, an appveyor build here: <a href=\"https://ci.appveyor.com/project/leamas/opencpn-dfmjc/builds/44468934\">https://ci.appveyor.com/project/leamas/opencpn-dfmjc/builds/44468934</a></p>\n<p>The interesting test is Guernsey - play_log. It processes around 65000 messages in a fraction of  second. The important thing is  <code>GuernseyApp</code>in test/tests.cpp. It should be easy to modify so it  runs in a loop, perhaps best done in the corresponding TEST() at line  393. </p>\n<p>If you could  reproduce this problem in the test we would have some common ground. Also, this way  you won't have to wait to next morning for results..</p>",
+        "id": 293498806,
+        "sender_full_name": "Alec Leamas",
+        "timestamp": 1660560455
+    },
+    {
+        "content": "<p><span class=\"user-mention\" data-user-id=\"518981\">@Github Bot</span> #169c5559c</p>",
+        "id": 293500075,
+        "sender_full_name": "Alec Leamas",
+        "timestamp": 1660561111
+    },
+    {
+        "content": "<p><span class=\"user-mention\" data-user-id=\"517002\">@Dave Register</span> In the destructor do we also need to Ubind the event handler?</p>\n<p>CommDriverN0183Net::~CommDriverN0183Net()<br>\n{<br>\n  Unbind(wxEVT_COMMDRIVER_N0183_NET, &amp;CommDriverN0183Net::handle_N0183_MSG, this);<br>\n  Close();<br>\n}</p>",
+        "id": 293508602,
+        "sender_full_name": "Dan Dickey",
+        "timestamp": 1660565254
+    },
+    {
+        "content": "<p><a href=\"/user_uploads/33951/OOKeydZ7IH20SM7TG6jlTPVF/valgrind.log\">valgrind.log</a></p>\n<p>Running valgrind on the unit  test gives (excerpt). This is the \"definitely lost\"  items,  needs to be dealt with.</p>\n<div class=\"codehilite\"><pre><span></span><code>=2281266== 667,305 bytes in 14,522 blocks are definitely lost in loss record 269 of 274\n==2281266==    at 0x4845FF5: operator new(unsigned long) (vg_replace_malloc.c:422)\n==2281266==    by 0x44D02B: void std::__cxx11::basic_string&lt;char, std::char_traits&lt;char&gt;, std::allocator&lt;char&gt; &gt;::_M_construct&lt;char*&gt;(char*, char*, std::forward_iterator_tag) [clone .isra.0] (basic_string.tcc:225)\n==2281266==    by 0x44F468: basic_string (basic_string.h:544)\n==2281266==    by 0x44F468: Nmea0183Msg (comm_navmsg.h:192)\n==2281266==    by 0x44F468: std::__detail::_MakeUniq&lt;Nmea0183Msg&gt;::__single_object std::make_unique&lt;Nmea0183Msg, std::__cxx11::basic_string&lt;char, std::char_traits&lt;char&gt;, std::allocator&lt;char&gt; &gt; const&amp;, std::__cxx11::basic_string&lt;char, std::char_traits&lt;char&gt;, std::allocator&lt;char&gt; &gt;&amp;, std::shared_ptr&lt;NavAddr&gt;&amp;&gt;(std::__cxx11::basic_string&lt;char, std::char_traits&lt;char&gt;, std::allocator&lt;char&gt; &gt; const&amp;, std::__cxx11::basic_string&lt;char, std::char_traits&lt;char&gt;, std::allocator&lt;char&gt; &gt;&amp;, std::shared_ptr&lt;NavAddr&gt;&amp;) (unique_ptr.h:1065)\n==2281266==    by 0x44E927: LineToMessage (comm_drv_file.cpp:98)\n==2281266==    by 0x44E927: FileCommDriver::Activate() (comm_drv_file.cpp:115)\n==2281266==    by 0x430FC0: GuernseyApp::GuernseyApp(std::vector&lt;std::__cxx11::basic_string&lt;char, std::char_traits&lt;char&gt;, std::allocator&lt;char&gt; &gt;, std::allocator&lt;std::__cxx11::basic_string&lt;char, std::char_traits&lt;char&gt;, std::allocator&lt;char&gt; &gt; &gt; &gt;&amp;) (tests.cpp:228)\n==2281266==    by 0x4276E9: Guernsey_play_log_Test::TestBody() (tests.cpp:395)\n==2281266==    by 0x4E09DE: HandleSehExceptionsInMethodIfSupported&lt;testing::Test, void&gt; (gtest.cc:2599)\n==2281266==    by 0x4E09DE: void testing::internal::HandleExceptionsInMethodIfSupported&lt;testing::Test, void&gt;(testing::Test*, void (testing::Test::*)(), char const*) (gtest.cc:2635)\n==2281266==    by 0x4D12E7: Run (gtest.cc:2674)\n==2281266==    by 0x4D12E7: testing::Test::Run() (gtest.cc:2664)\n==2281266==    by 0x4D151C: testing::TestInfo::Run() (gtest.cc:2853)\n==2281266==    by 0x4D16DA: testing::TestSuite::Run() [clone .part.0] (gtest.cc:3012)\n==2281266==    by 0x4D88CF: Run (gtest.cc:2986)\n==2281266==    by 0x4D88CF: testing::internal::UnitTestImpl::RunAllTests() (gtest.cc:5870)\n==2281266==    by 0x4E0E5E: HandleSehExceptionsInMethodIfSupported&lt;testing::internal::UnitTestImpl, bool&gt; (gtest.cc:2599)\n==2281266==    by 0x4E0E5E: bool testing::internal::HandleExceptionsInMethodIfSupported&lt;testing::internal::UnitTestImpl, bool&gt;(testing::internal::UnitTestImpl*, bool (testing::internal::UnitTestImpl::*)(), char const*) (gtest.cc:2635)\n</code></pre></div>",
+        "id": 293515686,
+        "sender_full_name": "Alec Leamas",
+        "timestamp": 1660568393
+    },
+    {
+        "content": "<p>Dan...<br>\nMy understanding is that when a wxEvtHandler object is destroyed, the handlers are automatically unbound.  Also, anything in the event queue  is purged.But it is probably cleaner to do that explicitly.  Do you see any dangling events triggering?</p>",
+        "id": 293521016,
+        "sender_full_name": "Dave Register",
+        "timestamp": 1660570579
+    },
+    {
+        "content": "<p>Alec.<br>\nI am wondering about the unique_ptr that is used to notify a listener, e.g.</p>\n<div class=\"codehilite\"><pre><span></span><code>    auto msg = std::make_unique&lt;const Nmea0183Msg&gt;(identifier, full_sentence, GetAddress());\n    m_listener.Notify(std::move(msg));\n</code></pre></div>\n\n<p>That pointer ownership is transferred to notify.   Who destroys that pointer?</p>",
+        "id": 293523078,
+        "sender_full_name": "Dave Register",
+        "timestamp": 1660571370
+    },
+    {
+        "content": "<p>Never mind, I see that the leak happens in test also, so probably not involving N0183 net driver.  Also, the unique_ptr goes away out of scope after being moved.</p>",
+        "id": 293523792,
+        "sender_full_name": "Dave Register",
+        "timestamp": 1660571655
+    },
+    {
+        "content": "<p>Dave, I did see a dangling event cause a crash before adding the Close(); call.  Since then no issue noted so it must be that takes care of the events still in the queue.  I think this issue is fixed.  Now on to the leak.</p>",
+        "id": 293646547,
+        "sender_full_name": "Dan Dickey",
+        "timestamp": 1660614260
+    },
+    {
+        "content": "<p>Just a status report</p>\n<p>I have two findings. One is that with current code some messages are created  using <code>make_unique&lt;&gt;</code>  and then fed as <code>unique_ptr</code>  to for example Notify() which requires a <code>shared_ptr</code>. This compiles, the <code>unique_ptr</code> is converted to a shared_ptr, but in this process it will use the default destructor. The net result is that the elements defined in NavMsg are destructed, but not those in derived types as Nmea0183Msg. The fix is to create the message using <code>make_shared</code> from the beginning,  this ensures that the correct deleter will be used.</p>\n<p>The next finding is in the very hart of the listen-notify machinery.  It's about the PointerMsg class, which is what's transported as a void* through the event. For some reason the DTOR is not invoked. Digging into it.</p>\n<p>There might be more.</p>",
+        "id": 293674074,
+        "sender_full_name": "Alec Leamas",
+        "timestamp": 1660638506
+    },
+    {
+        "content": "<p>I have basically something working. I had to rewrite the listen/notify core.  There are now basically no leaks  besides some statically  allocated event lists -- the size of this depends on the number of message types processed,  but is otherwise constant -- it does not grow when processing messages. Nevertheless I'll make a stab also on this while on it.</p>\n<p><span class=\"user-mention\" data-user-id=\"517002\">@Dave Register</span> Brace yourself,  to implement this means all sort of changes in drivers and comm_bridge.   Plan to do this tomorrow,  so please commit before that. </p>\n<p><span class=\"user-mention\" data-user-id=\"522729\">@Dan Dickey</span>  Good catch, thanks! This would have been really painful if discovered at  a later stage.</p>",
+        "id": 293772313,
+        "sender_full_name": "Alec Leamas",
+        "timestamp": 1660673267
+    },
+    {
+        "content": "<p>Android clang compiler issued some warnings not seen before.  To me, they may be related to the memory leak issue.  Here is one:</p>\n<div class=\"codehilite\"><pre><span></span><code>In file included from /home/circleci/project/include/comm_appmsg_bus.h:39:\n/home/circleci/project/include/comm_appmsg.h:97:11: warning: explicitly defaulted copy assignment operator is implicitly deleted       [-Wdefaulted-function-deleted]\n  AppMsg&amp; operator=(const AppMsg&amp;) = default;\n      ^\n/home/circleci/project/include/comm_appmsg.h:88:14: note: copy assignment operator of &#39;AppMsg&#39; is implicitly deleted because field &#39;type&#39; is of const-qualified type &#39;const AppMsg::Type&#39;\n  const Type type;\n</code></pre></div>",
+        "id": 293780877,
+        "sender_full_name": "Dave Register",
+        "timestamp": 1660676290
+    },
+    {
+        "content": "<p>Probably not related. I have now unit tests running with no leaks whatsoever.  </p>\n<p>Message above means that  compiler would  generate an error if the implicitly deleted copy assignment  operator was indeed invoked. However, this seems not to be the case.  To handle it one would have to write a complete assignment operator; tedious but not hard.</p>",
+        "id": 293786671,
+        "sender_full_name": "Alec Leamas",
+        "timestamp": 1660678561
+    },
+    {
+        "content": "<p>I need to review the Android error messages. clang spots other points than gcc. Don't really care about VS as long as it compiles, though.</p>",
+        "id": 293788031,
+        "sender_full_name": "Alec Leamas",
+        "timestamp": 1660679085
+    },
+    {
+        "content": "<p><span class=\"user-mention\" data-user-id=\"517002\">@Dave Register</span>  I have pushed a new branch \"comm-memleak\"  with fixes. It's a large diff. Could you make a smoke test? If OK, it should be ready to merge.</p>",
+        "id": 293815013,
+        "sender_full_name": "Alec Leamas",
+        "timestamp": 1660691249
+    },
+    {
+        "content": "<p>OK, I will.<br>\nGo to bed.</p>",
+        "id": 293816051,
+        "sender_full_name": "Dave Register",
+        "timestamp": 1660691890
+    },
+    {
+        "content": "<p>Sorry, FTBS.<br>\n  Cannot find source file:    include/observable_globvar.h</p>",
+        "id": 293817840,
+        "sender_full_name": "Dave Register",
+        "timestamp": 1660693310
+    },
+    {
+        "content": "<p>Sigh... I was too tired. Force-pushed new version of comm-memleak.</p>",
+        "id": 293838671,
+        "sender_full_name": "Alec Leamas",
+        "timestamp": 1660715326
+    },
+    {
+        "content": "<p>Force-pushed a new version, rebased on comm</p>",
+        "id": 293848878,
+        "sender_full_name": "Alec Leamas",
+        "timestamp": 1660721872
+    },
+    {
+        "content": "<p>Smoke test OK. Memory leak corrections not tested. Merged and pushed.  <br>\nThanks for the long hours.</p>",
+        "id": 293898612,
+        "sender_full_name": "Dave Register",
+        "timestamp": 1660743609
+    }
+]

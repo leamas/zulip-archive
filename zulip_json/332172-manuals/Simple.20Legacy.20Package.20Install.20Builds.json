@@ -1,0 +1,176 @@
+[
+    {
+        "content": "<p>Comments about the Legacy Package Installer  page in the Dev Manual</p>\n<p>Rick<br>\n    So Alec, do we have the appropriate documentation for aspiring plugin developers to setup a very simple plugin to compile without having all the files and setup for the full CI CMake distribution system?</p>\n<p>Alec<br>\nNot really. But this is another issue, perhaps best discussed on zulip, Mike also mentioned this. But let's focus getting the overall structure in order for the things we already have before adding more stuff.</p>\n<p>Rick<br>\nThis is really important, and the purpose behind having the category Legacy Plugin Package Installer section!<br>\nWe need to have an up to date explanation for how to get started, and that is focused around the \"legacy\" Plugin Package Installer. That is the simplest way to get going without all the accounts and overhead. I believe we need to have that in the main Developer Manual it is how small plugins get built and grow.</p>\n<p>We need this for Linux, Win and  MacOS</p>",
+        "id": 233190119,
+        "sender_full_name": "Rick Gleason",
+        "timestamp": 1617637498
+    },
+    {
+        "content": "<p>First: there is no such thing as the <em>Legacy Package Installer</em> . That name indicates that there is a part in core OpenCPN which corresponds to the Plugin Manager and it's handling of modern plugins. However, there is no such part, legacy plugins are installed outside of OpenCPN.</p>\n<p>EDIT: Name could perhaps be  <em>Legacy Package Installation</em> ?</p>",
+        "id": 233213924,
+        "sender_full_name": "Alec Leamas",
+        "timestamp": 1617649074
+    },
+    {
+        "content": "<p>Next thing is that at least in shipdriver creating a legacy package is basically just to run <code>make pkg</code>. So this is not much to document.</p>",
+        "id": 233214464,
+        "sender_full_name": "Alec Leamas",
+        "timestamp": 1617649299
+    },
+    {
+        "content": "<p>The last part is how legacy packages are installed by the end user. This is basically undocumented, and a page on this could certainly be useful. The details here are hairy and platform-dependent.</p>",
+        "id": 233214508,
+        "sender_full_name": "Alec Leamas",
+        "timestamp": 1617649323
+    },
+    {
+        "content": "<p><em>We need to have an up to date explanation for how to get started, and that is focused around the \"legacy\" Plugin Package Installer.</em></p>\n<p>Why? Using shipdriver no ci scripts are involved when doing <code>make tarball</code> or <code>make pkg</code>. But in one way you are probably right: the current docs are focused on porting an existing plugin using the templates. One missing piece is a description how to start with shipdriver/testplugin \"from scratch\". However, I don't think creating legacy plugins would be simpler. In any case  such descriptions will be template-specific, different for shipdriver and testplugin.</p>\n<p>And I don't think it would be easier to invent a new set of templates for the \"start from scratch\" usecase.</p>",
+        "id": 233217313,
+        "sender_full_name": "Alec Leamas",
+        "timestamp": 1617650697
+    },
+    {
+        "content": "<p><span class=\"user-mention\" data-user-id=\"399559\">@Mike Rossiter</span> : thoughts?</p>",
+        "id": 233217686,
+        "sender_full_name": "Alec Leamas",
+        "timestamp": 1617650894
+    },
+    {
+        "content": "<p>DR_pi has been forked 29 times. This was the basis for the learning pages of the dokuwiki. Very simple legacy plugin in the v2.1.1-non-managed branch. Could this plugin be updated and re-purposed? Nothing very special, uses the API. What about simplifying .... legacy-demo_pi!</p>",
+        "id": 233223248,
+        "sender_full_name": "Mike Rossiter",
+        "timestamp": 1617653697
+    },
+    {
+        "content": "<p>This overwrought technical discussion seems to be missing the point.  This is a Developer Manual for everyone, not just some exclusive group of people building for distribution. There are programmers who will want some help getting setup to build a very simple plugin.  Some of these programmers will be new some seasoned and they do not give a damn about distribution, they want to build a simple plugin.   The title is \"Legacy Plugin Installer\"  it does not say there is code in the main Opencpn program and never did.  The installer is an executable  exe .deb or pkg and the detail description should  states so and I believe it does.  The description does not imply that this is code in OpenCPN.    It is the way we have built and installed plugins since the beginning.   The Dev manual is not just about Opencpn Code  It is about DEVELOPMENT, and the Plugins are an important part of that because expansion of the main program has been focused on certain core things, and addiitional functionality has been put into plugins.</p>",
+        "id": 233240926,
+        "sender_full_name": "Rick Gleason",
+        "timestamp": 1617662268
+    },
+    {
+        "content": "<p>? Who has talked about distribution needs here? Certainly not I or Mike. Re-iterating myself: I see the need for a tutorial focused on <em>beginning from scratch</em>.</p>\n<p>My point is that building a tarball actually is easier than building a legacy package. It's also dead easy to test using the Import function, simpler than installing an .exe/.img/.deb.  Requires no CI whatsoever. So, if we make a tutorial, why focus it on the more complicated legacy technology? Which actually <em>is</em> legacy?</p>\n<p>The DR_pi track seems interesting.  Might work,  but  (again) perhaps better by making a tarball rather than a legacy package.</p>",
+        "id": 233274186,
+        "sender_full_name": "Alec Leamas",
+        "timestamp": 1617692063
+    },
+    {
+        "content": "<p>Good stuff. I like the tarball idea.</p>",
+        "id": 233274518,
+        "sender_full_name": "Mike Rossiter",
+        "timestamp": 1617692324
+    },
+    {
+        "content": "<p>Alec: Could you fork the legacy branch of DR_pi and see how the tarball can be made?</p>",
+        "id": 233275479,
+        "sender_full_name": "Mike Rossiter",
+        "timestamp": 1617692786
+    },
+    {
+        "content": "<p>We need   Rick's input first. </p>\n<p>And this <em>would</em> be to develop a third template set, although simpler. It will take some time, and I'm a little bogged down.  I think the priority should be to wrap up what we have  before  we look into this. A first step would be to handle the open issues on ocpn-dev-manual. If we can agree on the overall approach we could  file a new RFE issue for it.</p>",
+        "id": 233277221,
+        "sender_full_name": "Alec Leamas",
+        "timestamp": 1617693981
+    },
+    {
+        "content": "<p>Agree. But thinking ...<br>\nIs the demo_pi built-in plugin of OpenCPN needed? Could this be replaced? But as a separate plugin. Happy to play with this when time is available.</p>",
+        "id": 233277442,
+        "sender_full_name": "Mike Rossiter",
+        "timestamp": 1617694202
+    },
+    {
+        "content": "<p>hm... good input. I might find some time to fix <a href=\"https://github.com/Rasbats/shipdriver_pi/issues/164\">https://github.com/Rasbats/shipdriver_pi/issues/164</a>. With that in place, installing the shipdriver templates basically is a single command. Could be a starter. User can just remove the ci/directory, to get rid of scary stuff..</p>",
+        "id": 233277767,
+        "sender_full_name": "Alec Leamas",
+        "timestamp": 1617694409
+    },
+    {
+        "content": "<p>We have both demo_pi and DR_pi. This is one too much. If we find DR_pi useful in this context, I think the best would be a PR which just nuked demo_pi. </p>\n<p>Removing stuff is the best change :)</p>",
+        "id": 233277962,
+        "sender_full_name": "Alec Leamas",
+        "timestamp": 1617694521
+    },
+    {
+        "content": "<p>\" User can just remove the ci/directory, to get rid of scary stuff\"<br>\nOver my toast and marmalade I had reached a similar conclusion. Too much stuff in shipdriver but I was looking at simplifying and issuing as ship-demo_pi or something. Forget DR_pi.</p>",
+        "id": 233288202,
+        "sender_full_name": "Mike Rossiter",
+        "timestamp": 1617700101
+    },
+    {
+        "content": "<p>Of course, there is more to drop. But in principle, yes.</p>",
+        "id": 233290289,
+        "sender_full_name": "Alec Leamas",
+        "timestamp": 1617701273
+    },
+    {
+        "content": "<p>ship-demo looks like an interesting idea!</p>",
+        "id": 233290402,
+        "sender_full_name": "Alec Leamas",
+        "timestamp": 1617701322
+    },
+    {
+        "content": "<p><span class=\"user-mention\" data-user-id=\"399865\">@Rick Gleason</span> : thoughts?</p>",
+        "id": 233339654,
+        "sender_full_name": "Alec Leamas",
+        "timestamp": 1617722639
+    },
+    {
+        "content": "<p>I like Mike's idea, also related. This morning I opened up the folder for ocpn-dev--manuals and a page popped out to me, legacy-plugins.adoc    This page is beautifully written and is precisely the lead page that we need.  Alec did you write that?<br>\nI have attached it to Legacy Package Plugins  in nav.doc.  (Not pushed yet.)   </p>\n<p>Additionally Jon advises and I know, that Testplugin always creates deb, exe and pkg  and stores them in cloudsmith. Since Testplugin can be run locally too, it could be forked and used for development without the cloud stuff.  I suppose the process should be written up.  I imagine that shipdriver could do the same.   I wonder if we could have some name cmake name trigger for this simpler more direct process, but perhaps that is too complicated and a ship-demo might be good or perhaps a more neutral name.</p>",
+        "id": 233344862,
+        "sender_full_name": "Rick Gleason",
+        "timestamp": 1617724562
+    },
+    {
+        "content": "<p>Yes, I wrote that page, we have talked about it -- the link to it in nav.adoc was lost in a rebase you did. Shit happens... :)</p>",
+        "id": 233346932,
+        "sender_full_name": "Alec Leamas",
+        "timestamp": 1617725322
+    },
+    {
+        "content": "<p>Here are a lot of good ideas for the <em>start form scratch</em> example.  The common denominator is that they are based on shipdriver or testplugin, and requires some technical work before the documents can be written. </p>\n<p>IMHO, all this strengthen my initial view that we could and should  move everything under Legacy plugins to testplugin (nothing is related to shipdriver) besides legacy-plugins.adoc</p>",
+        "id": 233347209,
+        "sender_full_name": "Alec Leamas",
+        "timestamp": 1617725437
+    },
+    {
+        "content": "<p>Alec,  you want all the legacy pages moved to testplugin and I don't think that is going to help things for testplugin clarity either.</p>\n<p>I will look at them more carefully,   but I think we've agreed to have a page/section titled Legacy Plugins or Legacy Package Plugins using Alecs lead page and write it up from scratch which will take some time.   </p>\n<p>So do you want those pages just dropped  or a note put in there that they are OLD and NOT to BE USED without REWRITE?<br>\nI also think we need to start winnowing some of these unused pages out somehow, so we don''t get muddled! </p>\n<p>Maybe move them to a sub-directory or something?</p>",
+        "id": 233348973,
+        "sender_full_name": "Rick Gleason",
+        "timestamp": 1617726176
+    },
+    {
+        "content": "<p>As I see it, the are not useful in their current form. So, as far as I am concerned we should  move them to the Attic.</p>\n<p>That said, I simply know too little about  testplugin to judge if they are useful  in that context. If they are, they could be moved to testplugin instead.</p>\n<p>Yes, we need to add new stuff written from scratch, perhaps  under the Legacy Plugin Packaging header, perhaps under testplugin/shipdriver.  But we should IMHO first focus on the pages we have, and make sure they are in the right location.  After that, we can review what we have and try to get it in shape.  As I  see it, this should be our first priority.</p>",
+        "id": 233352114,
+        "sender_full_name": "Alec Leamas",
+        "timestamp": 1617727444
+    },
+    {
+        "content": "<p>Perhaps a subdirectory in the Attic...</p>",
+        "id": 233352383,
+        "sender_full_name": "Alec Leamas",
+        "timestamp": 1617727553
+    },
+    {
+        "content": "<p>I don't believe we have an attic subdir. that is the problem.  Plus moving stuff there requires changing all the links too. May not be too hardd to do right now in just nav.doc</p>",
+        "id": 233352906,
+        "sender_full_name": "Rick Gleason",
+        "timestamp": 1617727752
+    },
+    {
+        "content": "<p>I will settle for moving the other pages out and leaving the first Legacy Plugin page for riight now.  Ok?</p>",
+        "id": 233353100,
+        "sender_full_name": "Rick Gleason",
+        "timestamp": 1617727822
+    },
+    {
+        "content": "<p>Just moving them in nav.adoc is fine with me.  We seem to agree that they are not useful as-is, this is the important  conclusion.</p>",
+        "id": 233353706,
+        "sender_full_name": "Alec Leamas",
+        "timestamp": 1617728082
+    },
+    {
+        "content": "<p>This topic was moved here from <a class=\"stream-topic\" data-stream-id=\"282854\" href=\"/#narrow/stream/282854-general/topic/Simple.20Legacy.20Package.20Install.20Builds\">#general &gt; Simple Legacy Package Install Builds</a> by <span class=\"user-mention silent\" data-user-id=\"399510\">Alec Leamas</span>.</p>",
+        "id": 290756538,
+        "sender_full_name": "Notification Bot",
+        "timestamp": 1658754714
+    }
+]

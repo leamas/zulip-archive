@@ -1,0 +1,239 @@
+<html>
+<head><meta charset="utf-8"><title>Memory leak · Master - 5.8.0  (was: comms) · Zulip Chat Archive</title></head>
+<h2>Stream: <a href="https://leamas.github.io/zulip-archive/stream/332168-Master---5.2E8.2E0--.28was.3A-comms.29/index.html">Master - 5.8.0  (was: comms)</a></h2>
+<h3>Topic: <a href="https://leamas.github.io/zulip-archive/stream/332168-Master---5.2E8.2E0--.28was.3A-comms.29/topic/Memory.20leak.html">Memory leak</a></h3>
+
+<hr>
+
+<base href="https://opencpn.zulipchat.com">
+
+<head><link href="https://leamas.github.io/zulip-archive/style.css" rel="stylesheet"></head>
+
+<a name="293450683"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332168-Master%20-%205.8.0%20%20%28was%3A%20comms%29/topic/Memory%20leak/near/293450683" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Dan Dickey <a href="https://leamas.github.io/zulip-archive/stream/332168-Master---5.2E8.2E0--.28was.3A-comms.29/topic/Memory.20leak.html#293450683">(Aug 15 2022 at 00:01)</a>:</h4>
+<p>I have been running OpenCPN/comm branch all day today under VS2022.  There appears to be a memory leak where a bazillion NMEA messages get left on the heap.  Takes about 30 minutes for Visual Studio to print out all the leaked blocks when O closes.  So far have not been able to get VS to mark the block with the code that allocated the leaks.</p>
+
+
+
+<a name="293474846"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332168-Master%20-%205.8.0%20%20%28was%3A%20comms%29/topic/Memory%20leak/near/293474846" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Alec Leamas <a href="https://leamas.github.io/zulip-archive/stream/332168-Master---5.2E8.2E0--.28was.3A-comms.29/topic/Memory.20leak.html#293474846">(Aug 15 2022 at 07:15)</a>:</h4>
+<p>Assuming that this is about Nmea0183Msg type of messages, right?  </p>
+<p>Some of them are local variables on stack like  <code>Nmea0183Msg n0183_msg_GSV("GSV")</code>.  Lets assume these just cannot be a problem.</p>
+<p>The others are allocated using  <code>make_unique</code>in expressions like <code>auto msg = std::make_unique&lt;const Nmea0183Msg&gt;(identifier, full_sentence, GetAddress())</code>.  The compiler should ensure that such an object does not leak.</p>
+<p>There are two things  I can see. The first is that the unique_ptr  is transferred in a wxEvent which only accepts void*.  To that  end, the unique_ptr is first wrapped in a container, and the pointer to that container is what's carried by wxEvent. On the receiving side the unique_ptr is retrieved from the container again. I don't see any problems with this, but...</p>
+<p>The other is that some functions in commBridge all of a sudden uses  <code>std::shared_ptr&lt;const Nmea0183Msg&gt;</code> as argument, dropping the idea of a single copy of the message. This is clearly a bug that should be fixed, but I'm uncertain as if this is what you see.</p>
+
+
+
+<a name="293474909"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332168-Master%20-%205.8.0%20%20%28was%3A%20comms%29/topic/Memory%20leak/near/293474909" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Alec Leamas <a href="https://leamas.github.io/zulip-archive/stream/332168-Master---5.2E8.2E0--.28was.3A-comms.29/topic/Memory.20leak.html#293474909">(Aug 15 2022 at 07:16)</a>:</h4>
+<p><span class="user-mention" data-user-id="517002">@Dave Register</span> ^ shared_ptr...</p>
+
+
+
+<a name="293475076"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332168-Master%20-%205.8.0%20%20%28was%3A%20comms%29/topic/Memory%20leak/near/293475076" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Alec Leamas <a href="https://leamas.github.io/zulip-archive/stream/332168-Master---5.2E8.2E0--.28was.3A-comms.29/topic/Memory.20leak.html#293475076">(Aug 15 2022 at 07:18)</a>:</h4>
+<p>The way forward here is to fix the unit test build on windows. There is already a test there sending a considerable amount of data through the system, and if there is any leaks in the basic message handling it should be revealed there.</p>
+
+
+
+<a name="293477492"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332168-Master%20-%205.8.0%20%20%28was%3A%20comms%29/topic/Memory%20leak/near/293477492" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Alec Leamas <a href="https://leamas.github.io/zulip-archive/stream/332168-Master---5.2E8.2E0--.28was.3A-comms.29/topic/Memory.20leak.html#293477492">(Aug 15 2022 at 07:42)</a>:</h4>
+<p><span class="user-mention" data-user-id="517002">@Dave Register</span> Forget it, <code>shared_ptr</code>is as it should. A classical "I'm not dumb, just having bad luck when I think"</p>
+
+
+
+<a name="293480186"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332168-Master%20-%205.8.0%20%20%28was%3A%20comms%29/topic/Memory%20leak/near/293480186" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Alec Leamas <a href="https://leamas.github.io/zulip-archive/stream/332168-Master---5.2E8.2E0--.28was.3A-comms.29/topic/Memory.20leak.html#293480186">(Aug 15 2022 at 08:06)</a>:</h4>
+<p><span class="user-mention" data-user-id="522729">@Dan Dickey</span>  I have reviewed the code, and it looks sane. The overall scheme is that messages are created using <code>make_unique</code>, but when they are sent though the wxEvent messaging system they are implicitly converted to <code>shared_ptr</code>. This is as it should since there are typically more than one receiving party for each message. There is no reason the compiler should not be able to handle this. Still, here seems to be some kind of bug...</p>
+<p>Back to unit tests and overall Windows build.</p>
+
+
+
+<a name="293488874"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332168-Master%20-%205.8.0%20%20%28was%3A%20comms%29/topic/Memory%20leak/near/293488874" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Dan Dickey <a href="https://leamas.github.io/zulip-archive/stream/332168-Master---5.2E8.2E0--.28was.3A-comms.29/topic/Memory.20leak.html#293488874">(Aug 15 2022 at 09:20)</a>:</h4>
+<p><span class="user-mention" data-user-id="517002">@Dave Register</span>  I am sure it is a real thing.  Started O last night and it required 189MB memory.  This morning it is consuming 490MB.</p>
+<p>Just to be clear, I am running OpenCPN/comm branch.  Some thread mentioned "comms" branch but did not see that in the repo.</p>
+
+
+
+<a name="293489352"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332168-Master%20-%205.8.0%20%20%28was%3A%20comms%29/topic/Memory%20leak/near/293489352" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Dan Dickey <a href="https://leamas.github.io/zulip-archive/stream/332168-Master---5.2E8.2E0--.28was.3A-comms.29/topic/Memory.20leak.html#293489352">(Aug 15 2022 at 09:24)</a>:</h4>
+<p>I build comm branch for Jammy under WSL.  I think the same leak happens there too.  Overnight it built up over 300MB of heap.  Still haven't found the offending alloc.</p>
+
+
+
+<a name="293491694"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332168-Master%20-%205.8.0%20%20%28was%3A%20comms%29/topic/Memory%20leak/near/293491694" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Alec Leamas <a href="https://leamas.github.io/zulip-archive/stream/332168-Master---5.2E8.2E0--.28was.3A-comms.29/topic/Memory.20leak.html#293491694">(Aug 15 2022 at 09:45)</a>:</h4>
+<p>I don't doubt your findings, don't get me wrong. Just trying to explain the situation, partly for you, partly to myself ;)</p>
+
+
+
+<a name="293498806"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332168-Master%20-%205.8.0%20%20%28was%3A%20comms%29/topic/Memory%20leak/near/293498806" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Alec Leamas <a href="https://leamas.github.io/zulip-archive/stream/332168-Master---5.2E8.2E0--.28was.3A-comms.29/topic/Memory.20leak.html#293498806">(Aug 15 2022 at 10:47)</a>:</h4>
+<p><span class="user-mention" data-user-id="522729">@Dan Dickey</span>  I have pushed updates to the windows build to comm @169c5559c. It builds to unit tests, an appveyor build here: <a href="https://ci.appveyor.com/project/leamas/opencpn-dfmjc/builds/44468934">https://ci.appveyor.com/project/leamas/opencpn-dfmjc/builds/44468934</a></p>
+<p>The interesting test is Guernsey - play_log. It processes around 65000 messages in a fraction of  second. The important thing is  <code>GuernseyApp</code>in test/tests.cpp. It should be easy to modify so it  runs in a loop, perhaps best done in the corresponding TEST() at line  393. </p>
+<p>If you could  reproduce this problem in the test we would have some common ground. Also, this way  you won't have to wait to next morning for results..</p>
+
+
+
+<a name="293500075"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332168-Master%20-%205.8.0%20%20%28was%3A%20comms%29/topic/Memory%20leak/near/293500075" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Alec Leamas <a href="https://leamas.github.io/zulip-archive/stream/332168-Master---5.2E8.2E0--.28was.3A-comms.29/topic/Memory.20leak.html#293500075">(Aug 15 2022 at 10:58)</a>:</h4>
+<p><span class="user-mention" data-user-id="518981">@Github Bot</span> #169c5559c</p>
+
+
+
+<a name="293508602"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332168-Master%20-%205.8.0%20%20%28was%3A%20comms%29/topic/Memory%20leak/near/293508602" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Dan Dickey <a href="https://leamas.github.io/zulip-archive/stream/332168-Master---5.2E8.2E0--.28was.3A-comms.29/topic/Memory.20leak.html#293508602">(Aug 15 2022 at 12:07)</a>:</h4>
+<p><span class="user-mention" data-user-id="517002">@Dave Register</span> In the destructor do we also need to Ubind the event handler?</p>
+<p>CommDriverN0183Net::~CommDriverN0183Net()<br>
+{<br>
+  Unbind(wxEVT_COMMDRIVER_N0183_NET, &amp;CommDriverN0183Net::handle_N0183_MSG, this);<br>
+  Close();<br>
+}</p>
+
+
+
+<a name="293515686"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332168-Master%20-%205.8.0%20%20%28was%3A%20comms%29/topic/Memory%20leak/near/293515686" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Alec Leamas <a href="https://leamas.github.io/zulip-archive/stream/332168-Master---5.2E8.2E0--.28was.3A-comms.29/topic/Memory.20leak.html#293515686">(Aug 15 2022 at 12:59)</a>:</h4>
+<p><a href="/user_uploads/33951/OOKeydZ7IH20SM7TG6jlTPVF/valgrind.log">valgrind.log</a></p>
+<p>Running valgrind on the unit  test gives (excerpt). This is the "definitely lost"  items,  needs to be dealt with.</p>
+<div class="codehilite"><pre><span></span><code>=2281266== 667,305 bytes in 14,522 blocks are definitely lost in loss record 269 of 274
+==2281266==    at 0x4845FF5: operator new(unsigned long) (vg_replace_malloc.c:422)
+==2281266==    by 0x44D02B: void std::__cxx11::basic_string&lt;char, std::char_traits&lt;char&gt;, std::allocator&lt;char&gt; &gt;::_M_construct&lt;char*&gt;(char*, char*, std::forward_iterator_tag) [clone .isra.0] (basic_string.tcc:225)
+==2281266==    by 0x44F468: basic_string (basic_string.h:544)
+==2281266==    by 0x44F468: Nmea0183Msg (comm_navmsg.h:192)
+==2281266==    by 0x44F468: std::__detail::_MakeUniq&lt;Nmea0183Msg&gt;::__single_object std::make_unique&lt;Nmea0183Msg, std::__cxx11::basic_string&lt;char, std::char_traits&lt;char&gt;, std::allocator&lt;char&gt; &gt; const&amp;, std::__cxx11::basic_string&lt;char, std::char_traits&lt;char&gt;, std::allocator&lt;char&gt; &gt;&amp;, std::shared_ptr&lt;NavAddr&gt;&amp;&gt;(std::__cxx11::basic_string&lt;char, std::char_traits&lt;char&gt;, std::allocator&lt;char&gt; &gt; const&amp;, std::__cxx11::basic_string&lt;char, std::char_traits&lt;char&gt;, std::allocator&lt;char&gt; &gt;&amp;, std::shared_ptr&lt;NavAddr&gt;&amp;) (unique_ptr.h:1065)
+==2281266==    by 0x44E927: LineToMessage (comm_drv_file.cpp:98)
+==2281266==    by 0x44E927: FileCommDriver::Activate() (comm_drv_file.cpp:115)
+==2281266==    by 0x430FC0: GuernseyApp::GuernseyApp(std::vector&lt;std::__cxx11::basic_string&lt;char, std::char_traits&lt;char&gt;, std::allocator&lt;char&gt; &gt;, std::allocator&lt;std::__cxx11::basic_string&lt;char, std::char_traits&lt;char&gt;, std::allocator&lt;char&gt; &gt; &gt; &gt;&amp;) (tests.cpp:228)
+==2281266==    by 0x4276E9: Guernsey_play_log_Test::TestBody() (tests.cpp:395)
+==2281266==    by 0x4E09DE: HandleSehExceptionsInMethodIfSupported&lt;testing::Test, void&gt; (gtest.cc:2599)
+==2281266==    by 0x4E09DE: void testing::internal::HandleExceptionsInMethodIfSupported&lt;testing::Test, void&gt;(testing::Test*, void (testing::Test::*)(), char const*) (gtest.cc:2635)
+==2281266==    by 0x4D12E7: Run (gtest.cc:2674)
+==2281266==    by 0x4D12E7: testing::Test::Run() (gtest.cc:2664)
+==2281266==    by 0x4D151C: testing::TestInfo::Run() (gtest.cc:2853)
+==2281266==    by 0x4D16DA: testing::TestSuite::Run() [clone .part.0] (gtest.cc:3012)
+==2281266==    by 0x4D88CF: Run (gtest.cc:2986)
+==2281266==    by 0x4D88CF: testing::internal::UnitTestImpl::RunAllTests() (gtest.cc:5870)
+==2281266==    by 0x4E0E5E: HandleSehExceptionsInMethodIfSupported&lt;testing::internal::UnitTestImpl, bool&gt; (gtest.cc:2599)
+==2281266==    by 0x4E0E5E: bool testing::internal::HandleExceptionsInMethodIfSupported&lt;testing::internal::UnitTestImpl, bool&gt;(testing::internal::UnitTestImpl*, bool (testing::internal::UnitTestImpl::*)(), char const*) (gtest.cc:2635)
+</code></pre></div>
+
+
+
+<a name="293521016"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332168-Master%20-%205.8.0%20%20%28was%3A%20comms%29/topic/Memory%20leak/near/293521016" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Dave Register <a href="https://leamas.github.io/zulip-archive/stream/332168-Master---5.2E8.2E0--.28was.3A-comms.29/topic/Memory.20leak.html#293521016">(Aug 15 2022 at 13:36)</a>:</h4>
+<p>Dan...<br>
+My understanding is that when a wxEvtHandler object is destroyed, the handlers are automatically unbound.  Also, anything in the event queue  is purged.But it is probably cleaner to do that explicitly.  Do you see any dangling events triggering?</p>
+
+
+
+<a name="293523078"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332168-Master%20-%205.8.0%20%20%28was%3A%20comms%29/topic/Memory%20leak/near/293523078" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Dave Register <a href="https://leamas.github.io/zulip-archive/stream/332168-Master---5.2E8.2E0--.28was.3A-comms.29/topic/Memory.20leak.html#293523078">(Aug 15 2022 at 13:49)</a>:</h4>
+<p>Alec.<br>
+I am wondering about the unique_ptr that is used to notify a listener, e.g.</p>
+<div class="codehilite"><pre><span></span><code>    auto msg = std::make_unique&lt;const Nmea0183Msg&gt;(identifier, full_sentence, GetAddress());
+    m_listener.Notify(std::move(msg));
+</code></pre></div>
+
+<p>That pointer ownership is transferred to notify.   Who destroys that pointer?</p>
+
+
+
+<a name="293523792"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332168-Master%20-%205.8.0%20%20%28was%3A%20comms%29/topic/Memory%20leak/near/293523792" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Dave Register <a href="https://leamas.github.io/zulip-archive/stream/332168-Master---5.2E8.2E0--.28was.3A-comms.29/topic/Memory.20leak.html#293523792">(Aug 15 2022 at 13:54)</a>:</h4>
+<p>Never mind, I see that the leak happens in test also, so probably not involving N0183 net driver.  Also, the unique_ptr goes away out of scope after being moved.</p>
+
+
+
+<a name="293646547"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332168-Master%20-%205.8.0%20%20%28was%3A%20comms%29/topic/Memory%20leak/near/293646547" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Dan Dickey <a href="https://leamas.github.io/zulip-archive/stream/332168-Master---5.2E8.2E0--.28was.3A-comms.29/topic/Memory.20leak.html#293646547">(Aug 16 2022 at 01:44)</a>:</h4>
+<p>Dave, I did see a dangling event cause a crash before adding the Close(); call.  Since then no issue noted so it must be that takes care of the events still in the queue.  I think this issue is fixed.  Now on to the leak.</p>
+
+
+
+<a name="293674074"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332168-Master%20-%205.8.0%20%20%28was%3A%20comms%29/topic/Memory%20leak/near/293674074" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Alec Leamas <a href="https://leamas.github.io/zulip-archive/stream/332168-Master---5.2E8.2E0--.28was.3A-comms.29/topic/Memory.20leak.html#293674074">(Aug 16 2022 at 08:28)</a>:</h4>
+<p>Just a status report</p>
+<p>I have two findings. One is that with current code some messages are created  using <code>make_unique&lt;&gt;</code>  and then fed as <code>unique_ptr</code>  to for example Notify() which requires a <code>shared_ptr</code>. This compiles, the <code>unique_ptr</code> is converted to a shared_ptr, but in this process it will use the default destructor. The net result is that the elements defined in NavMsg are destructed, but not those in derived types as Nmea0183Msg. The fix is to create the message using <code>make_shared</code> from the beginning,  this ensures that the correct deleter will be used.</p>
+<p>The next finding is in the very hart of the listen-notify machinery.  It's about the PointerMsg class, which is what's transported as a void* through the event. For some reason the DTOR is not invoked. Digging into it.</p>
+<p>There might be more.</p>
+
+
+
+<a name="293772313"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332168-Master%20-%205.8.0%20%20%28was%3A%20comms%29/topic/Memory%20leak/near/293772313" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Alec Leamas <a href="https://leamas.github.io/zulip-archive/stream/332168-Master---5.2E8.2E0--.28was.3A-comms.29/topic/Memory.20leak.html#293772313">(Aug 16 2022 at 18:07)</a>:</h4>
+<p>I have basically something working. I had to rewrite the listen/notify core.  There are now basically no leaks  besides some statically  allocated event lists -- the size of this depends on the number of message types processed,  but is otherwise constant -- it does not grow when processing messages. Nevertheless I'll make a stab also on this while on it.</p>
+<p><span class="user-mention" data-user-id="517002">@Dave Register</span> Brace yourself,  to implement this means all sort of changes in drivers and comm_bridge.   Plan to do this tomorrow,  so please commit before that. </p>
+<p><span class="user-mention" data-user-id="522729">@Dan Dickey</span>  Good catch, thanks! This would have been really painful if discovered at  a later stage.</p>
+
+
+
+<a name="293780877"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332168-Master%20-%205.8.0%20%20%28was%3A%20comms%29/topic/Memory%20leak/near/293780877" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Dave Register <a href="https://leamas.github.io/zulip-archive/stream/332168-Master---5.2E8.2E0--.28was.3A-comms.29/topic/Memory.20leak.html#293780877">(Aug 16 2022 at 18:58)</a>:</h4>
+<p>Android clang compiler issued some warnings not seen before.  To me, they may be related to the memory leak issue.  Here is one:</p>
+<div class="codehilite"><pre><span></span><code>In file included from /home/circleci/project/include/comm_appmsg_bus.h:39:
+/home/circleci/project/include/comm_appmsg.h:97:11: warning: explicitly defaulted copy assignment operator is implicitly deleted       [-Wdefaulted-function-deleted]
+  AppMsg&amp; operator=(const AppMsg&amp;) = default;
+      ^
+/home/circleci/project/include/comm_appmsg.h:88:14: note: copy assignment operator of &#39;AppMsg&#39; is implicitly deleted because field &#39;type&#39; is of const-qualified type &#39;const AppMsg::Type&#39;
+  const Type type;
+</code></pre></div>
+
+
+
+<a name="293786671"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332168-Master%20-%205.8.0%20%20%28was%3A%20comms%29/topic/Memory%20leak/near/293786671" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Alec Leamas <a href="https://leamas.github.io/zulip-archive/stream/332168-Master---5.2E8.2E0--.28was.3A-comms.29/topic/Memory.20leak.html#293786671">(Aug 16 2022 at 19:36)</a>:</h4>
+<p>Probably not related. I have now unit tests running with no leaks whatsoever.  </p>
+<p>Message above means that  compiler would  generate an error if the implicitly deleted copy assignment  operator was indeed invoked. However, this seems not to be the case.  To handle it one would have to write a complete assignment operator; tedious but not hard.</p>
+
+
+
+<a name="293788031"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332168-Master%20-%205.8.0%20%20%28was%3A%20comms%29/topic/Memory%20leak/near/293788031" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Alec Leamas <a href="https://leamas.github.io/zulip-archive/stream/332168-Master---5.2E8.2E0--.28was.3A-comms.29/topic/Memory.20leak.html#293788031">(Aug 16 2022 at 19:44)</a>:</h4>
+<p>I need to review the Android error messages. clang spots other points than gcc. Don't really care about VS as long as it compiles, though.</p>
+
+
+
+<a name="293815013"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332168-Master%20-%205.8.0%20%20%28was%3A%20comms%29/topic/Memory%20leak/near/293815013" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Alec Leamas <a href="https://leamas.github.io/zulip-archive/stream/332168-Master---5.2E8.2E0--.28was.3A-comms.29/topic/Memory.20leak.html#293815013">(Aug 16 2022 at 23:07)</a>:</h4>
+<p><span class="user-mention" data-user-id="517002">@Dave Register</span>  I have pushed a new branch "comm-memleak"  with fixes. It's a large diff. Could you make a smoke test? If OK, it should be ready to merge.</p>
+
+
+
+<a name="293816051"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332168-Master%20-%205.8.0%20%20%28was%3A%20comms%29/topic/Memory%20leak/near/293816051" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Dave Register <a href="https://leamas.github.io/zulip-archive/stream/332168-Master---5.2E8.2E0--.28was.3A-comms.29/topic/Memory.20leak.html#293816051">(Aug 16 2022 at 23:18)</a>:</h4>
+<p>OK, I will.<br>
+Go to bed.</p>
+
+
+
+<a name="293817840"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332168-Master%20-%205.8.0%20%20%28was%3A%20comms%29/topic/Memory%20leak/near/293817840" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Dave Register <a href="https://leamas.github.io/zulip-archive/stream/332168-Master---5.2E8.2E0--.28was.3A-comms.29/topic/Memory.20leak.html#293817840">(Aug 16 2022 at 23:41)</a>:</h4>
+<p>Sorry, FTBS.<br>
+  Cannot find source file:    include/observable_globvar.h</p>
+
+
+
+<a name="293838671"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332168-Master%20-%205.8.0%20%20%28was%3A%20comms%29/topic/Memory%20leak/near/293838671" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Alec Leamas <a href="https://leamas.github.io/zulip-archive/stream/332168-Master---5.2E8.2E0--.28was.3A-comms.29/topic/Memory.20leak.html#293838671">(Aug 17 2022 at 05:48)</a>:</h4>
+<p>Sigh... I was too tired. Force-pushed new version of comm-memleak.</p>
+
+
+
+<a name="293848878"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332168-Master%20-%205.8.0%20%20%28was%3A%20comms%29/topic/Memory%20leak/near/293848878" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Alec Leamas <a href="https://leamas.github.io/zulip-archive/stream/332168-Master---5.2E8.2E0--.28was.3A-comms.29/topic/Memory.20leak.html#293848878">(Aug 17 2022 at 07:37)</a>:</h4>
+<p>Force-pushed a new version, rebased on comm</p>
+
+
+
+<a name="293898612"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332168-Master%20-%205.8.0%20%20%28was%3A%20comms%29/topic/Memory%20leak/near/293898612" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Dave Register <a href="https://leamas.github.io/zulip-archive/stream/332168-Master---5.2E8.2E0--.28was.3A-comms.29/topic/Memory.20leak.html#293898612">(Aug 17 2022 at 13:40)</a>:</h4>
+<p>Smoke test OK. Memory leak corrections not tested. Merged and pushed.  <br>
+Thanks for the long hours.</p>
+
+
+
+<hr><p>Last updated: Dec 19 2022 at 16:41 UTC</p>
+</html>

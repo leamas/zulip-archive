@@ -1,0 +1,1214 @@
+[
+    {
+        "content": "<p>I have \"github/ocpn-manuals\"  locally only.  It has regularly updated  html documentation in \"github/ocpn-manuals/docs\"<br>\nshould I push that up to my remote repository so that Mike can access it somehow?</p>\n<p>Or is it better to have the \"watchdog_doc\"  repository that can be named as a unique sub-module in Mikes ocpn-user-plugin-manual?</p>",
+        "id": 232013983,
+        "sender_full_name": "Rick Gleason",
+        "timestamp": 1616784285
+    },
+    {
+        "content": "<p>Submodule is too static and not the right thing to use. points to a certain commit.</p>\n<p>A git submodule is a record within a host git repository that points to a specific commit in another external repository. Submodules are very static and only track specific commits. Submodules do not track git refs or branches and are not automatically updated when the host repository is updated. When adding a submodule to a repository a new .gitmodules file will be created.  </p>\n<p>see <a href=\"https://www.atlassian.com/git/tutorials/git-submodule\">https://www.atlassian.com/git/tutorials/git-submodule</a></p>",
+        "id": 232028530,
+        "sender_full_name": "Rick Gleason",
+        "timestamp": 1616791177
+    },
+    {
+        "content": "<p>Don't get into submodules now.  Frankly, you know too little about git yet for that.</p>\n<p>You should (of course) push your changes on ocpn-manuals to github to make them visible. Probably not much idea to merge things yet (here, I'm upstream)</p>",
+        "id": 232029211,
+        "sender_full_name": "Alec Leamas",
+        "timestamp": 1616791542
+    },
+    {
+        "content": "<p>I think the right way to do this is to have an action script that runs in  ocpn-user-plugin-manual  that git fetches all of the plugin_doc html files into different directories.   The ocpn-user-plugin-manual should then become a &lt;username&gt;&gt;github.io   public Github Page</p>",
+        "id": 232029429,
+        "sender_full_name": "Rick Gleason",
+        "timestamp": 1616791657
+    },
+    {
+        "content": "<p>I realized later that the html is being created in build/site and is not pushed up to the remote repository, so unless that is changed, the output cannot be done in a distributed fashion.  I expect that Mike has decided to use antora/asciidoc to create a centralized version using  the oplaydo opensource repository which will be something like <a href=\"http://oplaydo.github.io\">oplaydo.github.io</a></p>",
+        "id": 232306916,
+        "sender_full_name": "Rick Gleason",
+        "timestamp": 1617039732
+    },
+    {
+        "content": "<p>Rick:<br>\nI am building the demo plugins site in exactly the same way as Alec. I do a local test with .gitignore docs and then push the result to Github. This automatically populates the <a href=\"http://github.io\">github.io</a> pages.<br>\nRepo is here:<br>\n<a href=\"https://github.com/Rasbats/opencpn-plugins-manual\">https://github.com/Rasbats/opencpn-plugins-manual</a><br>\nYou can see the docs folder.<br>\n<a href=\"http://github.io\">github.io</a> pages are here:<br>\n<a href=\"https://rasbats.github.io/opencpn-plugins-manual/opencpn-plugins-manual/0.1/index.html\">https://rasbats.github.io/opencpn-plugins-manual/opencpn-plugins-manual/0.1/index.html</a><br>\nWatchdog is one of the plugins created by using the module in your repo.<br>\nThe oplaydo account is being used for my PR to developers to avoid having their forks in my Rasbats account.</p>",
+        "id": 233196155,
+        "sender_full_name": "Mike Rossiter",
+        "timestamp": 1617640394
+    },
+    {
+        "content": "<p>Thanks for the links.  As I understand it, an open source user is allowed just one  <a href=\"http://github.io\">github.io</a> page? Is that correct?<br>\nWow, you've done most of them!   This gets complicated doesn't it.</p>\n<p>Can a user web page support the individual plugin repositories documentation too?</p>",
+        "id": 233350080,
+        "sender_full_name": "Rick Gleason",
+        "timestamp": 1617726621
+    },
+    {
+        "content": "<p>\"Can a user web page support the individual plugin repositories documentation too?\"<br>\nOf course. Just copy the docs folder for the plugin to your site (or the contents).</p>",
+        "id": 233381525,
+        "sender_full_name": "Mike Rossiter",
+        "timestamp": 1617740188
+    },
+    {
+        "content": "<p>Interesting points for the OPM here:<br>\n<a href=\"https://github.com/Rasbats/opencpn-plugins-manual/issues/1\">https://github.com/Rasbats/opencpn-plugins-manual/issues/1</a></p>\n<p>Should a developer be able to use the plugin version as the version number shown for the manual for the plugin?<br>\nI think this is a good idea. Just needs a small change in antora.yml for the plugin, made by the developer(s).</p>",
+        "id": 233382194,
+        "sender_full_name": "Mike Rossiter",
+        "timestamp": 1617740474
+    },
+    {
+        "content": "<p><em>I think this is a good idea. Just needs a small change in antora.yml for the plugin, made by the developer(s).</em></p>\n<p>It might be better to generate antora.yml from <a href=\"http://antora.yml.in\">antora.yml.in</a> in cmake...</p>",
+        "id": 233384890,
+        "sender_full_name": "Alec Leamas",
+        "timestamp": 1617741642
+    },
+    {
+        "content": "<p>I would prefer to keep antora.yml in the module. CMake could update antora.yml in the manual location? This makes it possible for the developer to use other tools within the module e.g. pdf creation.</p>",
+        "id": 233432719,
+        "sender_full_name": "Mike Rossiter",
+        "timestamp": 1617772492
+    },
+    {
+        "content": "<p>Agreed, that's what I meant, sorry if being too short</p>",
+        "id": 233441337,
+        "sender_full_name": "Alec Leamas",
+        "timestamp": 1617779034
+    },
+    {
+        "content": "<p>\"I would prefer to keep antora.yml in the module\"<br>\nI meant dev plugin component!</p>\n<p>New manual build.<br>\nSummary:<br>\nRick is now using mast-reorg for his updated watchdog manual. Change build.yml to reflect change. <br>\nDashboard_Tactics accepted PR for the manual and is now a component. Update plugins.adoc. Remove module from the master repo modules.<br>\nPush to origin with .gitignore docs.<br>\nTest build locally.<br>\nblank .gitignore<br>\nPush to origin</p>",
+        "id": 233555653,
+        "sender_full_name": "Mike Rossiter",
+        "timestamp": 1617827270
+    },
+    {
+        "content": "<p>Propose using beta for the version number for the beta plugins?</p>",
+        "id": 233555936,
+        "sender_full_name": "Mike Rossiter",
+        "timestamp": 1617827387
+    },
+    {
+        "content": "<p>Mike, I don't know how this is going to work. I was in the middle of working on watchdog improvements, the manual came with me when I checked out mast-reorg,  I tried to make the changes in master, but was taken back to mast-reorg so I ran antora  bldloc.yml from that.   What is the right way to do this?   It should be coming from the master branch I think. When I commit I will run antora bldloc.yml again?    There is some complexity here and we need a process explanation.</p>",
+        "id": 233651738,
+        "sender_full_name": "Rick Gleason",
+        "timestamp": 1617888459
+    },
+    {
+        "content": "<p>This was because you moved the manual to mast-reorg ;) You may want to go forward with the master branch. Move/use the manual there and I will edit my work to use that branch. To avoid confusion you need to stop using bldloc.yml. Get the result from Firefox or wait for the opencpn plugins manual build.</p>",
+        "id": 233652538,
+        "sender_full_name": "Mike Rossiter",
+        "timestamp": 1617888802
+    },
+    {
+        "content": "<p>I didn't move it.  When I git checkout -b mast-reorg it all came over to that branch. I was in the middle of that work and had to make changes to Watchdog as you wanted.   I realize now that I don't generate for the Plugin Manual, that is initiated by you and done by antora from your repos for ocpn-plugins-manual  </p>\n<p>I find I have to see the results when I am editing.  What is the problem with running bldloc.yml?  Is it doing somethiing remotely too?<br>\nI don't think it should affect your antora build.yml? </p>\n<p>I think it is my pushs  of changes up to branch mast-reorg that is possibly causing something to happen there.</p>\n<p>This is getting pretty complicated, I hope this will work in real life for Plugin Devs many of whom do not understand git as much.</p>",
+        "id": 233653480,
+        "sender_full_name": "Rick Gleason",
+        "timestamp": 1617889185
+    },
+    {
+        "content": "<p>\"initiated by you and done by antora from your repos for ocpn-plugins-manual\"<br>\ninitiated by me but the antora.yml is the one in manual/watchdog that is used. My antora.yml is for modules not yet given to the devs.<br>\n\"What is the problem with running bldloc.yml?\"<br>\nNo problem. It does not affect the build of the plugins manual.<br>\n\"This is getting pretty complicated\"<br>\nAgreed. But once you crack it you will see the advantages. Antora is well documented unlike my stuff !<br>\nDo you want to use the master branch of Watchdog?</p>",
+        "id": 233654650,
+        "sender_full_name": "Mike Rossiter",
+        "timestamp": 1617889674
+    },
+    {
+        "content": "<p>Yes that is the main branch.  I make checkouts for changes then merge back.  Sean has not bothered to accept my pr's but I will try again in a little while.  It is pretty clear he does not want to be bothered with the cloud overhead process. I will just continue with his other plugins as before.</p>",
+        "id": 233657185,
+        "sender_full_name": "Rick Gleason",
+        "timestamp": 1617890539
+    },
+    {
+        "content": "<p>Let me know when you are ready and I wil get things set up for another manual build.</p>",
+        "id": 233657425,
+        "sender_full_name": "Mike Rossiter",
+        "timestamp": 1617890630
+    },
+    {
+        "content": "<p>OPM updated to include the change to Watchdog master branch. Radar_pi also updated with Hakan changes.</p>",
+        "id": 233800238,
+        "sender_full_name": "Mike Rossiter",
+        "timestamp": 1617965038
+    },
+    {
+        "content": "<p>Does not look like I can stop the builds triggered by my PR for CircleCI.<br>\n<a href=\"https://circleci.com/docs/2.0/skip-build/\">https://circleci.com/docs/2.0/skip-build/</a></p>",
+        "id": 233929545,
+        "sender_full_name": "Mike Rossiter",
+        "timestamp": 1618034441
+    },
+    {
+        "content": "<p>indeed, for some reason (why?) But this is only about the PR, not about your forked repo which is the main usecase.  Again, just trying to read the docs.</p>",
+        "id": 233937439,
+        "sender_full_name": "Alec Leamas",
+        "timestamp": 1618042459
+    },
+    {
+        "content": "<p>Mockup for the betas:<br>\n<a href=\"https://rasbats.github.io/opencpn-plugins-manual/opencpn-plugins-manual/0.1/index.html\">https://rasbats.github.io/opencpn-plugins-manual/opencpn-plugins-manual/0.1/index.html</a><br>\nUse the version number to indicate a beta? (beta)<br>\nTake your point about moving the modules into components to make the left side index. At the moment it is easier for my work with devs to keep it as it is. Easier to find/move stuff. May need a new component for the betas, again with modules for each plugin, to start with.</p>",
+        "id": 233939996,
+        "sender_full_name": "Mike Rossiter",
+        "timestamp": 1618045280
+    },
+    {
+        "content": "<p>looks great overall. Perhaps too early fir this kind of feedback, but I miss the short introductions: What is this User Plugins Manual, what is Beta Plugins?  A few sentences on these subjects should be good.</p>",
+        "id": 233954280,
+        "sender_full_name": "Alec Leamas",
+        "timestamp": 1618060377
+    },
+    {
+        "content": "<p>For combining the three manuals this might be relevant:<br>\n<a href=\"https://gitlab.com/djencks/simple-examples/-/issues/2#note_537076523\">https://gitlab.com/djencks/simple-examples/-/issues/2#note_537076523</a><br>\nIt might need a conventional web page as Kathi already has for <a href=\"http://OpenCPN.org\">OpenCPN.org</a> manuals.</p>",
+        "id": 234105786,
+        "sender_full_name": "Mike Rossiter",
+        "timestamp": 1618205913
+    },
+    {
+        "content": "<p>Eventually, we need some decision-making here. One route would be to merge everything in ocpn-manuals or some other repo.  Doing so, we would need to work with the structure and the TOC, but would stick to the Antora overall ideas. The different manuals would just be items in the  overall TOC.</p>\n<p>Another would be to keep the current \"different manuals\" approach where each manual a separate playbook.</p>\n<p>Thoughts?</p>",
+        "id": 234116282,
+        "sender_full_name": "Alec Leamas",
+        "timestamp": 1618213296
+    },
+    {
+        "content": "<p>\" One route would be to merge everything in ocpn-manuals or some other repo\"<br>\nI think this might be difficult to structure, in view of the note above.  <br>\nThe plugins part would probably need a regular refresh for new material, whereas the other manuals would change less rapidly. <br>\nKeeping three separate manuals would make reporting issues and forking to allow PR easier.<br>\nEasy enough to make http links between the manuals. You already have this idea being used in Resources. The UI would be consistent across the manuals because of the common UI bundle. As well as Resources have a header item dropdown, OpenCPN Manuals.<br>\nI feel the separate approach is better.</p>",
+        "id": 234125795,
+        "sender_full_name": "Mike Rossiter",
+        "timestamp": 1618218250
+    },
+    {
+        "content": "<p>The overall links are simple. What doesn't work that well is pointers to a specific part of another manual, right? Like a pointer from Developer Manual to the \"Welcome to the community\" part of the User's Manual etc.</p>",
+        "id": 234132326,
+        "sender_full_name": "Alec Leamas",
+        "timestamp": 1618221641
+    },
+    {
+        "content": "<p>As for the updates, I don't really see the problem. Why not rebuild the complete manual on a regular basis, each night or so? If/when there is a need to freeze a version, there manuals are versioned so we should be able to do that by freezing a given version and continue to work with next version (?)</p>",
+        "id": 234132690,
+        "sender_full_name": "Alec Leamas",
+        "timestamp": 1618221821
+    },
+    {
+        "content": "<p>Note: The manuals are still separate as seen when doing for example a PR. It's just about building all of them from the same playbook.</p>",
+        "id": 234132848,
+        "sender_full_name": "Alec Leamas",
+        "timestamp": 1618221902
+    },
+    {
+        "content": "<p>But there are separate components in different repos, which was why I raised the issue with David Jencks.</p>",
+        "id": 234133144,
+        "sender_full_name": "Mike Rossiter",
+        "timestamp": 1618222066
+    },
+    {
+        "content": "<p>Hyperlinks are trivial, pointing to specific sections of another manual:<br>\nAdded this to the plugins manual start page:<br>\nxref:betaplugins.adoc[Beta Plugins]<br>\nTest link:<br>\n<a href=\"https://leamas.github.io/ocpn-manuals/plugin-installer/0.0.1/Program-design.html#_catalog_and_tarballs\">https://leamas.github.io/ocpn-manuals/plugin-installer/0.0.1/Program-design.html#_catalog_and_tarballs</a></p>",
+        "id": 234139509,
+        "sender_full_name": "Mike Rossiter",
+        "timestamp": 1618225525
+    },
+    {
+        "content": "<p>I still don't understand. Yes, there are multiple components in different repos, agreed. But I don't see the problem building all of them in the same playbook. What am I missing?</p>",
+        "id": 234142743,
+        "sender_full_name": "Alec Leamas",
+        "timestamp": 1618227503
+    },
+    {
+        "content": "<p>Your playbook would use antora.yml from the different manual repos as sources. The source for a manual is drawn from many components and you would not find all those components, I think. <br>\nOnly the site.yml of the separate manual knows where all those components are and is able to build from them.<br>\nYou can have many components in a single repo but not many repo with many components with a single playbook.yml to build them, I think. I could be wrong!</p>",
+        "id": 234144395,
+        "sender_full_name": "Mike Rossiter",
+        "timestamp": 1618228414
+    },
+    {
+        "content": "<p>Problem is perhaps the notion of \"my\" playbook vs \"yours\"... What if ocpn-manuals was \"our\" playbook? Which we both have full access to?  What would then be the problem to replicate the info from \"your \"site.yml into \"our\" playbook?</p>",
+        "id": 234171851,
+        "sender_full_name": "Alec Leamas",
+        "timestamp": 1618238851
+    },
+    {
+        "content": "<p>I did some basic tests and failed. But why not try replicating \"my\" site.yml  in <a href=\"https://github.com/leamas/ocpn-manuals/\">https://github.com/leamas/ocpn-manuals/</a><br>\nand see what happens? Will the references (page-id?)work across repos?</p>",
+        "id": 234177295,
+        "sender_full_name": "Mike Rossiter",
+        "timestamp": 1618240485
+    },
+    {
+        "content": "<p>I may need to remove site.yml for this to be tested.</p>",
+        "id": 234177596,
+        "sender_full_name": "Mike Rossiter",
+        "timestamp": 1618240589
+    },
+    {
+        "content": "<p>I will, but later. Preparing for work tomorrow for now. Stay tuned...</p>",
+        "id": 234179879,
+        "sender_full_name": "Alec Leamas",
+        "timestamp": 1618241378
+    },
+    {
+        "content": "<p><a href=\"https://rasbats.github.io/opencpn-plugins-manual/opencpn-beta-plugins/0.1/beta-plugins.html\">https://rasbats.github.io/opencpn-plugins-manual/opencpn-beta-plugins/0.1/beta-plugins.html</a><br>\nUsed two components, one for the master plugins and the other for the betas. Propose using 'beta' for the version string for the beta to make them obvious. Both components in the same repo ;) Now to start delegating the modules.</p>",
+        "id": 234398664,
+        "sender_full_name": "Mike Rossiter",
+        "timestamp": 1618347204
+    },
+    {
+        "content": "<p>I think we have confidence that Antora/asciidoc will be able to produce the updated manual for OpenCPN. Priority for me now is having a repo under the OpenCPN github repos. Without this it looks as if 'Rasbats' is taking over the world. Having \"opencpn/opencpn-plugins-manual\" would promote ownership of the plugin manuals.<br>\nIn the mean time intend adding pages to explain the use of Antora/asciidoc, to help developers write/update their manuals. The wiki will form the basis for this.</p>",
+        "id": 234445023,
+        "sender_full_name": "Mike Rossiter",
+        "timestamp": 1618379727
+    },
+    {
+        "content": "<p><a href=\"https://rasbats.github.io/opencpn-plugins-manual/opencpn-master-plugins/0.1/index.html\">https://rasbats.github.io/opencpn-plugins-manual/opencpn-master-plugins/0.1/index.html</a><br>\nSeeing the result perhaps 'Authoring the manuals' would be better in the dev-manual. <br>\nThoughts?</p>",
+        "id": 234446922,
+        "sender_full_name": "Mike Rossiter",
+        "timestamp": 1618381218
+    },
+    {
+        "content": "<p>I did a preliminary run with all components included in ocpn-manuals. Just looks fine, but we need to merge nav.adoc. While basically trivial, I have a open discussion with Rick about it, so we need to sit back here a little.</p>",
+        "id": 234446923,
+        "sender_full_name": "Alec Leamas",
+        "timestamp": 1618381218
+    },
+    {
+        "content": "<p>I agree that we have faith in Antora doing the job for the Developers and the Plugin manual. I also agree that we need to have this  under the OpenCPN umbrella, but perhaps not yet. There are things to flesh out, like the structure of the DM and also the overall relationship between the manuals. So, perhaps continue in \"local mode\" for a while.</p>",
+        "id": 234446931,
+        "sender_full_name": "Alec Leamas",
+        "timestamp": 1618381223
+    },
+    {
+        "content": "<p>We clashed! 'Authoring the manuals'?</p>",
+        "id": 234447011,
+        "sender_full_name": "Mike Rossiter",
+        "timestamp": 1618381275
+    },
+    {
+        "content": "<p>hm... \"bewildered\"... could you please expand a little...</p>",
+        "id": 234447151,
+        "sender_full_name": "Alec Leamas",
+        "timestamp": 1618381412
+    },
+    {
+        "content": "<p>In the wiki for the opencpn-plugins-manual I have some notes aimed at developers authoring plugin manuals.<br>\n<a href=\"https://github.com/Rasbats/opencpn-plugins-manual/wiki\">https://github.com/Rasbats/opencpn-plugins-manual/wiki</a><br>\nThis needs easy reference and my first thought was pages in the plugins manual.<br>\n<a href=\"https://rasbats.github.io/opencpn-plugins-manual/opencpn-master-plugins/0.1/index.html\">https://rasbats.github.io/opencpn-plugins-manual/opencpn-master-plugins/0.1/index.html</a><br>\nBut this could distract a user from searching for a plugin manual and perhaps the information needs to be in the developers manual.</p>",
+        "id": 234447583,
+        "sender_full_name": "Mike Rossiter",
+        "timestamp": 1618381788
+    },
+    {
+        "content": "<p>Off to pack the car with boat bits. BBL</p>",
+        "id": 234448272,
+        "sender_full_name": "Mike Rossiter",
+        "timestamp": 1618382206
+    },
+    {
+        "content": "<p>There already is a \"Maintenance of this Manual\" chapter in the DM , it fits nicely there.  Ergo: we should make a common playbook which includes all the repos (DM + plugins) with a common nav.adoc.</p>",
+        "id": 234449147,
+        "sender_full_name": "Alec Leamas",
+        "timestamp": 1618382802
+    },
+    {
+        "content": "<p><span class=\"user-mention\" data-user-id=\"399559\">@Mike Rossiter</span>  I  have invited you as a collaborator in ocpn-manuals. Here is a branch called 'merge' which is the playground -- feel free to try whatever ideas you have. But please leave the main branch for now,  to avoid pulling the carpet under Rick</p>",
+        "id": 234572157,
+        "sender_full_name": "Alec Leamas",
+        "timestamp": 1618433249
+    },
+    {
+        "content": "<p>In the merge branch, I have a first draft of a variant which merges all three manuals into one. It's far from perfect, bit looks in my eyes promising. I have not exported it, but 'antora site.yml' builds it in docs/ for preview..</p>",
+        "id": 234572984,
+        "sender_full_name": "Alec Leamas",
+        "timestamp": 1618433600
+    },
+    {
+        "content": "<p>In particular,  see how the actual contents in each manual is delegated to \"sub-nav\" file in partials/.  As I understand it, this could  be part of another repo as well so for example the plugins contents could be maintained by opencpn-user-manual.</p>",
+        "id": 234573326,
+        "sender_full_name": "Alec Leamas",
+        "timestamp": 1618433744
+    },
+    {
+        "content": "<p>Accepted the invitation but I am unable to clone a fork of ocpn-manuals that I made in Rasbats. Is this because I am collaborating in leamas/ocpn-manuals?</p>",
+        "id": 234621695,
+        "sender_full_name": "Mike Rossiter",
+        "timestamp": 1618466671
+    },
+    {
+        "content": "<p>My turn to be confused. I thought the discussion was about referencing adoc material in another component's adoc file. I don't see how we have moved forward with that. Yes, it is nice to see all the repos gathered together but this could have been done with a single web page using 2 repos? We now have 3 repos to get that result.<br>\nBUT you can build the website html in one place, which is a big step forward for maintenance.</p>",
+        "id": 234623306,
+        "sender_full_name": "Mike Rossiter",
+        "timestamp": 1618467986
+    },
+    {
+        "content": "<p>I think we are getting sources and components mixed up. You are using the repo as a source. That source has many components. In dev-manual for example Rick cannot reference the manual-beta component plugins-beta.adoc page  in plugins-manual, other than by using a hyperlink.</p>",
+        "id": 234623763,
+        "sender_full_name": "Mike Rossiter",
+        "timestamp": 1618468381
+    },
+    {
+        "content": "<p>Another thing! Does the build of ocpn-manuals result in a build of ocpn-dev-manual for instance? Or is it just gathered as a source?</p>",
+        "id": 234628223,
+        "sender_full_name": "Mike Rossiter",
+        "timestamp": 1618470761
+    },
+    {
+        "content": "<p>Here the idea is that that we view all manuals as  a single \"OpenCPN manual\", where each manual is a subsection. Remember, just trying to explore paths here...</p>",
+        "id": 234633636,
+        "sender_full_name": "Alec Leamas",
+        "timestamp": 1618473695
+    },
+    {
+        "content": "<p>Since everything now is built in one go, for example rick is free to reference whatever he wants in the plugin manuals. Basically, everything is visible everywhere. This is IMHO a major advantage.</p>",
+        "id": 234633964,
+        "sender_full_name": "Alec Leamas",
+        "timestamp": 1618473857
+    },
+    {
+        "content": "<p>I get your message of the different roles. Have been very conservative with adding contents to ocpn-manuals, it's only a welcome page + navigation, nothing more. And, the core navigation files which lives under partials/ could and probably should be moved to plugins-manual and development manual.   That is, if we want to explore this path.</p>",
+        "id": 234634269,
+        "sender_full_name": "Alec Leamas",
+        "timestamp": 1618474024
+    },
+    {
+        "content": "<p>\"Cannot clone\"... have you tried cloning into an alternative directory, like <em>git clone git@github.com:leamas/ocpn-manuals.git foobar</em></p>",
+        "id": 234635398,
+        "sender_full_name": "Alec Leamas",
+        "timestamp": 1618474577
+    },
+    {
+        "content": "<p>\"rick is free to reference whatever he wants in the plugin manuals\"<br>\nCan we agree that this has to be a hyperlink reference not a component link?<br>\n\"everything is visible everywhere. This is IMHO a major advantage\"<br>\nAgree.<br>\n\"Does the build of ocpn-manuals result in a build of ocpn-dev-manual?\"<br>\nCan we agree that there is no build of the dev-manual? It is acting as a source.</p>",
+        "id": 234638685,
+        "sender_full_name": "Mike Rossiter",
+        "timestamp": 1618476287
+    },
+    {
+        "content": "<p>\"Can we agree that this has to be a hyperlink reference not a component link?\" No. Why can't he just make a component link in this setup?</p>",
+        "id": 234640305,
+        "sender_full_name": "Alec Leamas",
+        "timestamp": 1618477157
+    },
+    {
+        "content": "<p>\"Can we agree that there is no build of the dev-manual? It is acting as a source.\" For better or worse: yes.</p>",
+        "id": 234640348,
+        "sender_full_name": "Alec Leamas",
+        "timestamp": 1618477189
+    },
+    {
+        "content": "<p>\"BUT you can build the website html in one place, which is a big step forward for maintenance\" <br>\nMaybe we could take it from this point. If we want this to work, the only change required in the dev and plugins manuals is about navigation. Basically, it needs to be refactored with the main part living as a list in partials/. This would work just fine also in the local build, but also makes it possible to include it as a part of the overall nav.doc.  Worth trying?</p>",
+        "id": 234640936,
+        "sender_full_name": "Alec Leamas",
+        "timestamp": 1618477447
+    },
+    {
+        "content": "<p>I cannot make the component link work myself, as discussed above. If Rick or yourself have a way of doing this I will update David Jenks with the result.</p>",
+        "id": 234641308,
+        "sender_full_name": "Mike Rossiter",
+        "timestamp": 1618477655
+    },
+    {
+        "content": "<p>But if a make a PR?</p>",
+        "id": 234641334,
+        "sender_full_name": "Alec Leamas",
+        "timestamp": 1618477673
+    },
+    {
+        "content": "<p>Yes, that works but I wanted a clone in my github to play with.</p>",
+        "id": 234641523,
+        "sender_full_name": "Mike Rossiter",
+        "timestamp": 1618477751
+    },
+    {
+        "content": "<p>\"the only change required in the dev and plugins manuals is about navigation. Basically, it needs to be refactored with the main part living as a list in partials/.\"<br>\nI will have a play with this. Need to do some reading.</p>",
+        "id": 234641652,
+        "sender_full_name": "Mike Rossiter",
+        "timestamp": 1618477820
+    },
+    {
+        "content": "<p>You still cannot clone? What is the error message?</p>",
+        "id": 234641706,
+        "sender_full_name": "Alec Leamas",
+        "timestamp": 1618477847
+    },
+    {
+        "content": "<p>I am using github desktop. Maybe that's the limitation. Have to make a food order. BBL</p>",
+        "id": 234641882,
+        "sender_full_name": "Mike Rossiter",
+        "timestamp": 1618477948
+    },
+    {
+        "content": "<p>ON my way to the boat. Let's focus on the cloning first.... BBL</p>",
+        "id": 234641971,
+        "sender_full_name": "Alec Leamas",
+        "timestamp": 1618478006
+    },
+    {
+        "content": "<p>\" have you tried cloning into an alternative directory, like git clone git@github.com:leamas/ocpn-manuals.git foobar\"<br>\nOk. With the command line cloning my fork of ocpn-manuals worked.</p>",
+        "id": 234649428,
+        "sender_full_name": "Mike Rossiter",
+        "timestamp": 1618481506
+    },
+    {
+        "content": "<p>Various magic happened and I can now play with my fork of ocpn-manuals, without making changes to the leamas repo.</p>",
+        "id": 234655359,
+        "sender_full_name": "Mike Rossiter",
+        "timestamp": 1618484738
+    },
+    {
+        "content": "<p>There has been so many attempts to create a git GUI wrapper. They all seem to fail as soon as there is something just slightly beside the standard workflow :) In  the end, the CLI interface prevails.</p>",
+        "id": 234658914,
+        "sender_full_name": "Alec Leamas",
+        "timestamp": 1618486639
+    },
+    {
+        "content": "<p>In for an hour or so. Then, bicycle to the boat -- here is really nice weather</p>",
+        "id": 234659093,
+        "sender_full_name": "Alec Leamas",
+        "timestamp": 1618486707
+    },
+    {
+        "content": "<p>Thanks for the steer on partials. Improves the navigation considerably.</p>",
+        "id": 234661162,
+        "sender_full_name": "Mike Rossiter",
+        "timestamp": 1618487689
+    },
+    {
+        "content": "<p>Now using this in plugins-manual.</p>",
+        "id": 234661215,
+        "sender_full_name": "Mike Rossiter",
+        "timestamp": 1618487711
+    },
+    {
+        "content": "<p>Out of time now, but will look into it later. Please don't forget to push what you have :)</p>",
+        "id": 234663086,
+        "sender_full_name": "Alec Leamas",
+        "timestamp": 1618488445
+    },
+    {
+        "content": "<p>BTW: <a href=\"https://docs.antora.org/antora/2.3/navigation/include-lists/\">https://docs.antora.org/antora/2.3/navigation/include-lists/</a></p>",
+        "id": 234663186,
+        "sender_full_name": "Alec Leamas",
+        "timestamp": 1618488483
+    },
+    {
+        "content": "<p>Have updated ocpn-manuals (the merge branch) so it uses your partials instead of mine. This is IMHO a great step forward, manual can be built all at once or separately.</p>",
+        "id": 235008815,
+        "sender_full_name": "Alec Leamas",
+        "timestamp": 1618684873
+    },
+    {
+        "content": "<p>Now, going back to old issues:<br>\n\"Rick is free to reference whatever he wants in the plugin manuals\"<br>\nCan we agree that this has to be a hyperlink reference not a component link?</p>\n<p>What am I missing here? Why cannot Rick use a component link if we build everything in one go a là   ocpn-manuals?</p>",
+        "id": 235008913,
+        "sender_full_name": "Alec Leamas",
+        "timestamp": 1618685038
+    },
+    {
+        "content": "<p>The plugins manual now has two components - manual, with an id of \"opencpn-master-plugins\" and manual-beta with an id \"opencpn-beta-plugins\". <br>\nIn the index.adoc for the manual-beta component I can use \"xref:opencpn-master-plugins::index.adoc[Pages for the Master Plugins]\" to make the link to the manual component, with the master plugins. <br>\nThe ids are set up in two antora.yml one in the manual component and one in the manual-beta component. How does Rick reference \"xref:opencpn-master-plugins\" from the ocpn-dev-manual repository? I have tried and failed and, perhaps naively, believe David Jencks, one of the main Antora people, when he says it is not possible to reference a component outside the repo you are working in. Actually this is probably a good idea because you avoid broken links in repos outside your control.<br>\nThe only way this would work would be to have a unified repo containing components (directories) for user manual, dev manual and plugins manual, all in the same repository. IMHO this would be a nightmare to maintain.</p>",
+        "id": 235046699,
+        "sender_full_name": "Mike Rossiter",
+        "timestamp": 1618725142
+    },
+    {
+        "content": "<p>Perhaps I was naive... Give me some time to check...</p>",
+        "id": 235198502,
+        "sender_full_name": "Alec Leamas",
+        "timestamp": 1618845396
+    },
+    {
+        "content": "<p>\"The only way this would work would be to have a unified repo containing components (directories) for user manual, dev manual and plugins manual, all in the same repository. IMHO this would be a nightmare to maintain.\"</p>\n<p>Agreed</p>",
+        "id": 235198807,
+        "sender_full_name": "Alec Leamas",
+        "timestamp": 1618845458
+    },
+    {
+        "content": "<p>But still: give me some time...</p>",
+        "id": 235198885,
+        "sender_full_name": "Alec Leamas",
+        "timestamp": 1618845476
+    },
+    {
+        "content": "<p>I have now made a test:</p>\n<ul>\n<li>Changed site.yml so it uses   <a href=\"https://github.com/leamas/ocpn-dev-manual.git\">https://github.com/leamas/ocpn-dev-manual.git</a> instead of  <a href=\"https://github.com/rgleason/ocpn-dev-manual\">https://github.com/rgleason/ocpn-dev-manual</a>. </li>\n<li>In ocpn-dev-manual I have made a component link like  xref:opencpn-master-plugins:squiddio:squiddio.adoc[Squiddio] into the opencpn-plugins-manual</li>\n</ul>\n<p>The test  is pushed to the merge branch and it works just fine. So, it seems  possible to make a component link from \"Rick's manual\" to \"your manual\" as I presumed. So, still feeling a bit dumb: What am I missing? And, why doesn't it work for you?</p>",
+        "id": 235291589,
+        "sender_full_name": "Alec Leamas",
+        "timestamp": 1618898434
+    },
+    {
+        "content": "<p>Interesting. Squiddio is not yet hosted by Mauro. Could you try, say, ShipDriver, which I am managing?</p>",
+        "id": 235292019,
+        "sender_full_name": "Mike Rossiter",
+        "timestamp": 1618898735
+    },
+    {
+        "content": "<p>Other things in between... wait</p>",
+        "id": 235292687,
+        "sender_full_name": "Alec Leamas",
+        "timestamp": 1618899315
+    },
+    {
+        "content": "<p>A lińk <em>to</em> Shipdriver or <em>from</em> Shipdriver?</p>",
+        "id": 235292730,
+        "sender_full_name": "Alec Leamas",
+        "timestamp": 1618899352
+    },
+    {
+        "content": "<p>A link to ShipDriver from ocpn-dev-manual. xref:opencpn-master-plugins may not work because ShipDriver is an independent source. You would need to include it as a source in the dev-manual, as you did before, as an example.</p>",
+        "id": 235293155,
+        "sender_full_name": "Mike Rossiter",
+        "timestamp": 1618899674
+    },
+    {
+        "content": "<p>It works.  The merge branch builds the complete thing, using the linktest branch of  <a href=\"https://github.com/leamas/shipdriver_pi.git\">https://github.com/leamas/shipdriver_pi.git</a> instead of  <a href=\"https://github.com/Rasbats/shipdriver_pi.git\">https://github.com/Rasbats/shipdriver_pi.git</a>. See the  commits for details</p>",
+        "id": 235294949,
+        "sender_full_name": "Alec Leamas",
+        "timestamp": 1618900931
+    },
+    {
+        "content": "<p>\" I have tried and failed and, perhaps naively, believe David Jencks, one of the main Antora people, when he says it is not possible to reference a component outside the repo you are working in.\"  </p>\n<p>Can you link to this?</p>",
+        "id": 235295062,
+        "sender_full_name": "Alec Leamas",
+        "timestamp": 1618901021
+    },
+    {
+        "content": "<p><a href=\"https://gitlab.com/djencks/simple-examples/-/issues/2#note_537076523\">https://gitlab.com/djencks/simple-examples/-/issues/2#note_537076523</a><br>\nRunning out of time this morning. I will have a closer look tonight.</p>",
+        "id": 235295194,
+        "sender_full_name": "Mike Rossiter",
+        "timestamp": 1618901107
+    },
+    {
+        "content": "<p>OK, same for me.  Thanks for the link. BBL</p>",
+        "id": 235295261,
+        "sender_full_name": "Alec Leamas",
+        "timestamp": 1618901143
+    },
+    {
+        "content": "<p>I'm  a sloppy reader , again. The test is about a link <em>from</em> shipdriver <em>to</em> ocpn-dev-manual.</p>",
+        "id": 235296803,
+        "sender_full_name": "Alec Leamas",
+        "timestamp": 1618902061
+    },
+    {
+        "content": "<p>Added link dev manual -&gt; shipdriver, in the community page. Also this one works.</p>",
+        "id": 235298191,
+        "sender_full_name": "Alec Leamas",
+        "timestamp": 1618902486
+    },
+    {
+        "content": "<p>Reading the docs, I find no limitations as to component links crossing git repositories boundaries.  The only thing I see is basically a linker, and linkers are all the same: They first scan the input files to find all symbols (here, link targets) and builds a table with those. In next step, it re-scans the input files and resolves all the references (the xref's) using the table.</p>\n<p>No, I havn't checked the code. It's just my mental picture how it works. Given that picture, I see no reason whatsoever why there should be any limitations of the kind we discuss.</p>",
+        "id": 235298582,
+        "sender_full_name": "Alec Leamas",
+        "timestamp": 1618902746
+    },
+    {
+        "content": "<p>\"Added link dev manual -&gt; shipdriver, in the community page\"<br>\nGetting a 404 looking for community.adoc.<br>\nCould you give a link for this?</p>",
+        "id": 235391506,
+        "sender_full_name": "Mike Rossiter",
+        "timestamp": 1618943190
+    },
+    {
+        "content": "<p>Not really a link right now. Can you</p>\n<ul>\n<li>In ocpn-manuals, pull current merge branch tip at c834eea0f</li>\n<li>Rebuild: antora site.yml</li>\n<li>Browse: firefox docs/index.html</li>\n<li>In the left navigation pane you find the community page:   OpenCPN Developer Manual | Introduction | Community</li>\n<li>The shipdriver link is in the line with a FIXME (second paragraph fir me)</li>\n</ul>\n<p>Let me know if it doesn't  work!</p>",
+        "id": 235401909,
+        "sender_full_name": "Alec Leamas",
+        "timestamp": 1618947225
+    },
+    {
+        "content": "<p>Shortcut to community page: <code>firefox  docs/ocpn-dev-manual/5.3.1/intro-Community.html</code></p>",
+        "id": 235402879,
+        "sender_full_name": "Alec Leamas",
+        "timestamp": 1618947606
+    },
+    {
+        "content": "<p>Sorry, you are linking in the same way that I use to build the plugins-manual. You are not linking to a component in opencpn-plugins-manual. You setup the source and use the antora.yml from the source. The source is not a component. If it was a component the xref would be something like \"component::shipdriver:ROOT:shipdriver.adoc\". (Note the double colon).<br>\nYour test is ok for just one plugin, shipdriver. shipdriver.adoc is generating the index page. If shipdriver had a further page, say demo.adoc the xref:shipdriver:ROOT:demo.adoc reference would not work because the antora in shipdriver points to shipdriver.adoc. I stand to be corrected!</p>",
+        "id": 235407540,
+        "sender_full_name": "Mike Rossiter",
+        "timestamp": 1618949647
+    },
+    {
+        "content": "<p>One example is in Shipdriver... If you follow the link to \"my\" shipdriver there is a link to Plugin Guidelines. This is a secondary page in the Development Manual. or?</p>",
+        "id": 235407953,
+        "sender_full_name": "Alec Leamas",
+        "timestamp": 1618949856
+    },
+    {
+        "content": "<p>BTW: Why do you think that shipdriver isn't a component? As I see it, it is.</p>",
+        "id": 235408331,
+        "sender_full_name": "Alec Leamas",
+        "timestamp": 1618950021
+    },
+    {
+        "content": "<p>Hm... perhaps you got it wrong (?)... the shipdriver's antora does not really point to shipdriver.adoc. It's core  thing is the <code>name: shipdriver</code>, which is used to resolve anything like <em>shipdriver:ROOT:foo.adoc</em>. The <code>start_page:</code> line is only used for the default page, the page used when the component is referenced <em>without</em> a page name. I. e., it can be dropped if there was an <em>index.adoc</em>, the default page name.</p>",
+        "id": 235409706,
+        "sender_full_name": "Alec Leamas",
+        "timestamp": 1618950624
+    },
+    {
+        "content": "<p>As an example, the ocpn-dev-manual's antora.yml  doesn't have any <code>start_page:</code>. Still works just fine</p>",
+        "id": 235410638,
+        "sender_full_name": "Alec Leamas",
+        "timestamp": 1618950957
+    },
+    {
+        "content": "<p><a href=\"https://docs.antora.org/antora/2.3/distributed-component-version/\">https://docs.antora.org/antora/2.3/distributed-component-version/</a><br>\nOk... perhaps we can describe shipdriver as a distributed component!<br>\nWhere is this leading? Does the plugin manual have to build ocpn-dev-manual as a source just to reference the page \"pm-plugin-guidelines.adoc\". Why not a hyperlink? This is getting overcomplicated. I will sleep on it.</p>",
+        "id": 235412286,
+        "sender_full_name": "Mike Rossiter",
+        "timestamp": 1618951624
+    },
+    {
+        "content": "<p>A hyperlink will only work at a specific location -&gt; maintenance problems.</p>\n<p>The plugin manual could either include ocpn-dev-manual, and have a working link to it. Or don't,  in which case the link will be  broken. It will then still work when built together with the others in ocpn-manuals.</p>",
+        "id": 235413145,
+        "sender_full_name": "Alec Leamas",
+        "timestamp": 1618951972
+    },
+    {
+        "content": "<p>Which means that the third option is to not include the dev manual as a  source, but to build the whole set of manuals i. e., ocpn-manuals to see the \"real\" result.</p>",
+        "id": 235413824,
+        "sender_full_name": "Alec Leamas",
+        "timestamp": 1618952263
+    },
+    {
+        "content": "<blockquote>\n<p>Ok... perhaps we can describe shipdriver as a distributed component!</p>\n</blockquote>\n<p>Preferably not. The link describes a distributed component as a single component with the sources in multiple git repos. However, shipdriver is not, it has all it's sources in a single repo. Ergo: It's just a component.</p>",
+        "id": 235417351,
+        "sender_full_name": "Alec Leamas",
+        "timestamp": 1618953139
+    },
+    {
+        "content": "<p>Fourth option:<br>\nAdd the sources needed for explicit links to the dev-manual site.yml. This will be a limited number of plugins like testplugin, shipdriver plus ?<br>\nMake a simple start page like this one:<br>\n<a href=\"http://mikerossiter.co.uk/OpenCPN/opencpn-manuals/0.1/index.html\">http://mikerossiter.co.uk/OpenCPN/opencpn-manuals/0.1/index.html</a><br>\nWhy the complication of building the manuals together? I just don't get it.<br>\nWe need to move this forward to allow plugin developers to see the results of their edits or interest will be lost.</p>\n<p><span class=\"user-mention\" data-user-id=\"399865\">@Rick Gleason</span> <br>\n<span class=\"user-mention\" data-user-id=\"400132\">@Jon</span>  </p>\n<p>Can we have your thoughts on this please?</p>",
+        "id": 235457141,
+        "sender_full_name": "Mike Rossiter",
+        "timestamp": 1618982359
+    },
+    {
+        "content": "<blockquote>\n<p>Add the sources needed for explicit links to the dev-manual site.yml. This will be a limited number of plugins like testplugin, shipdriver plus ?</p>\n</blockquote>\n<p>Works for links from dev-manual -&gt; plugins, but not for links plugins -&gt; dev manual</p>",
+        "id": 235459903,
+        "sender_full_name": "Alec Leamas",
+        "timestamp": 1618984972
+    },
+    {
+        "content": "<p>What is the reason for the link plugin -&gt; dev manual?</p>",
+        "id": 235460253,
+        "sender_full_name": "Mike Rossiter",
+        "timestamp": 1618985235
+    },
+    {
+        "content": "<blockquote>\n<p>We need to move this forward to allow plugin developers to see the results of their edits or interest will be lost.</p>\n</blockquote>\n<p>Agreed. But to see the results, plugin devs  can:</p>\n<ul>\n<li>Build as today and, also as today, avoid linking to the dev manual.</li>\n<li>Or, add links to the dev manual, clone the ocpn-manuals project and build that .</li>\n</ul>",
+        "id": 235460257,
+        "sender_full_name": "Alec Leamas",
+        "timestamp": 1618985243
+    },
+    {
+        "content": "<p>As long as there are no links plugins -&gt; dev manual  everything just works, be it a local plugin manual build or the overall ocpn-manuals. We have done the important step when modifýing the plugins and bera-plugins navigation using partials.</p>",
+        "id": 235460413,
+        "sender_full_name": "Alec Leamas",
+        "timestamp": 1618985389
+    },
+    {
+        "content": "<p>I am still totally against this monolithic behemoth that is ocpn-manuals.</p>",
+        "id": 235460630,
+        "sender_full_name": "Mike Rossiter",
+        "timestamp": 1618985540
+    },
+    {
+        "content": "<p>So, there are three builds:</p>\n<ul>\n<li>A single plugin manual.</li>\n<li>The <em>plugins manual</em> or <em>beta plugins manual</em></li>\n<li>The <em>ocpn-plugins-manual</em></li>\n</ul>\n<p>Note that a  plugin developer still needs to use another project to build the manual, usually opencpn-plugins-manual or, perhaps, ocpn-manuals.</p>",
+        "id": 235460692,
+        "sender_full_name": "Alec Leamas",
+        "timestamp": 1618985615
+    },
+    {
+        "content": "<p>And, to be fair, ocpn-manuals is certainly not monolithic. It's very much structured...</p>",
+        "id": 235460770,
+        "sender_full_name": "Alec Leamas",
+        "timestamp": 1618985678
+    },
+    {
+        "content": "<p>Let's sleep on it. The basic message is that we can build this thing either way.  The only exception is when a plugin manual want to link to the the dev manual which at his point doesn't look common</p>",
+        "id": 235460863,
+        "sender_full_name": "Alec Leamas",
+        "timestamp": 1618985788
+    },
+    {
+        "content": "<p>The most common use case would be that the dev wants a help file for their plugin. The structure of the plugin manual is such that they can place a site.yml in their manual and build the html. Put the html in the plugin data folder and they have an offline help file that the plugin can use. otidalplan_pi has this.<br>\nAlternatively they can use some java and make a pdf for similar use.</p>",
+        "id": 235461203,
+        "sender_full_name": "Mike Rossiter",
+        "timestamp": 1618986102
+    },
+    {
+        "content": "<p>And then there is just no sane way to have links to the dev manual...</p>",
+        "id": 235461319,
+        "sender_full_name": "Alec Leamas",
+        "timestamp": 1618986182
+    },
+    {
+        "content": "<p>This is offline stuff.</p>",
+        "id": 235461486,
+        "sender_full_name": "Mike Rossiter",
+        "timestamp": 1618986294
+    },
+    {
+        "content": "<p>agreed</p>",
+        "id": 235461506,
+        "sender_full_name": "Alec Leamas",
+        "timestamp": 1618986311
+    },
+    {
+        "content": "<p>which means the all three builds  (single plugin, all plugins or dev  manual + all plugins) just works today. No changes needed</p>",
+        "id": 235461896,
+        "sender_full_name": "Alec Leamas",
+        "timestamp": 1618986625
+    },
+    {
+        "content": "<p>dev manual + all plugins???</p>",
+        "id": 235462482,
+        "sender_full_name": "Mike Rossiter",
+        "timestamp": 1618987084
+    },
+    {
+        "content": "<p>I. e., ocpn-manuals</p>",
+        "id": 235463165,
+        "sender_full_name": "Alec Leamas",
+        "timestamp": 1618987694
+    },
+    {
+        "content": "<p>I have not digested this entire discussion and have been doing other things. Sorry about that.  I believe that for ocpn-manuals  I need to provide direct links to each repos.  I've got to go now. Dentist. ....Later.</p>",
+        "id": 235518092,
+        "sender_full_name": "Rick Gleason",
+        "timestamp": 1619014821
+    },
+    {
+        "content": "<p><span class=\"user-mention\" data-user-id=\"399865\">@Rick Gleason</span> : You don't really need to spend any time to walk through this discussion. It's rather long, but does not boil down to any conclusions for ocpn-dev-manual  or plain plugin manuals like watchdog. What has been done is  modifying the opencpn-plugins-manual navigation. </p>\n<p>We also have a branch in ocpn-manuals which builds all manuals, both ocpn-dev-manual and the plugins to a common document. It's yet unclear if or how this should be used.</p>\n<p>Nothing of this affects ocpn-dev-manual. OTOH, this needs some love, there are open PRs etc.</p>",
+        "id": 235531114,
+        "sender_full_name": "Alec Leamas",
+        "timestamp": 1619018767
+    },
+    {
+        "content": "<p>Nothing to stop a repo having multiple folders each with an antora.yml  and/or build.yml at it's head. So, what about asking Dave for a repo \"manuals\", under <a href=\"http://github.com/OpenCPN\">github.com/OpenCPN</a>? Under this are folders \"user\", \"dev\", \"plugins\".  Monster builds can take place using the top level manuals site.yml. This can be used to populate the <a href=\"http://OpenCPN.org\">OpenCPN.org</a> website.<br>\nIn, FI, plugins there is a build.yml that can be used to build test versions of the plugins-manual.<br>\nThere can be an antora.yml in the top level of plugins to allow the site.yml to work. This can avoid using sources to pull in stuff.<br>\n@Alec : Could you setup a manuals repo with collaboration where we could test this arrangement?<br>\nThe positives: True component references become possible. Less reliance on sources in other gits.  Everybody can work in and test their own folders and contribute to other folders.<br>\nThe negatives: Forking would result in a large download for a dev to use. However, once forked the dev could use just the plugins folder. A suitable .gitignore would avoid overwriting other manuals.  Similar idea for a manual editor. Other negatives?</p>",
+        "id": 235623006,
+        "sender_full_name": "Mike Rossiter",
+        "timestamp": 1619070322
+    },
+    {
+        "content": "<p>I sure could. However: What is  the true advantages with this arrangement? That we all work in a common repo? This certainly comes with pros and cons (?)</p>",
+        "id": 235656976,
+        "sender_full_name": "Alec Leamas",
+        "timestamp": 1619089535
+    },
+    {
+        "content": "<blockquote>\n<p>True component references become possible. </p>\n</blockquote>\n<p>Here, I don't follow you... In what way would a common repo support this better then the current ocpn-manuals?</p>",
+        "id": 235657115,
+        "sender_full_name": "Alec Leamas",
+        "timestamp": 1619089620
+    },
+    {
+        "content": "<blockquote>\n<p>Less reliance on sources in other gits.</p>\n</blockquote>\n<p>Yes, this is a concern. All of a sudden the ocpn-manuals build breaks because of changes in the sources. More general, we don't have reproducible commits  in ocnp-manuals, since the sources  are not part of of the repo.</p>\n<p>I have been thinking of using git submodules for this. That is, instead of a list of sources there is submodules, on for each source.   This would be very similar to your approach, each module would be a  subdirectory , but we could keep the current idea about different maintainers for different sources/submodules.  </p>\n<p>Pros:</p>\n<ul>\n<li>Reproducible builds of ocpn-manuals</li>\n<li>Distributed maintenance.</li>\n</ul>\n<p>Cons:</p>\n<ul>\n<li>complexity.</li>\n</ul>",
+        "id": 235657898,
+        "sender_full_name": "Alec Leamas",
+        "timestamp": 1619090087
+    },
+    {
+        "content": "<p>Thoughts?</p>",
+        "id": 235658623,
+        "sender_full_name": "Alec Leamas",
+        "timestamp": 1619090483
+    },
+    {
+        "content": "<p>One of my brilliant ideas which does not work. It turns out that antora doesn't support submodules. Back to the drawing board....</p>",
+        "id": 235714292,
+        "sender_full_name": "Alec Leamas",
+        "timestamp": 1619111528
+    },
+    {
+        "content": "<p>So... how about mocking up the folders. You are doing a lot with the dev-manual and can add that. Grab my plugins-manual as well. I can fork and test links between the two manuals. Would prefer simple folder names like dev and plugins! <br>\nFinal product is going to need scripting for the builds and chron jobs and for the FTP the product to a website (not <a href=\"http://github.io\">github.io</a>). Neither Rick or I have the knowledge for that.</p>",
+        "id": 235725877,
+        "sender_full_name": "Mike Rossiter",
+        "timestamp": 1619116105
+    },
+    {
+        "content": "<p>I will. Have explored the submodules path, dropping it for now.  Stay tuned, it wil ltake some time</p>",
+        "id": 235732257,
+        "sender_full_name": "Alec Leamas",
+        "timestamp": 1619118765
+    },
+    {
+        "content": "<p>But: the dev manual eventually is maintained by Rick.</p>",
+        "id": 235732368,
+        "sender_full_name": "Alec Leamas",
+        "timestamp": 1619118826
+    },
+    {
+        "content": "<p>\"dev manual eventually is maintained by Rick.\"<br>\nOf course. This is a proof of concept not a final version .</p>",
+        "id": 235736044,
+        "sender_full_name": "Mike Rossiter",
+        "timestamp": 1619120350
+    },
+    {
+        "content": "<p>Made a monster manual!<br>\n<a href=\"https://rasbats.github.io/manual/manuals/0.1/index.html\">https://rasbats.github.io/manual/manuals/0.1/index.html</a><br>\nGit is here:<br>\n<a href=\"https://github.com/Rasbats/manual\">https://github.com/Rasbats/manual</a><br>\nSome component references will need changing in the dev manual but this shows the basic idea.</p>",
+        "id": 235948942,
+        "sender_full_name": "Mike Rossiter",
+        "timestamp": 1619248346
+    },
+    {
+        "content": "<p>Sorry for late reply -- a lot of things happening for me now, not all of which related to opencpn.</p>\n<p>This is great, it's the kind of experimenting we need to do before finding out the path to handle this. Some quick notes:</p>\n<ul>\n<li>The build completes in a few seconds for me, hardly a monster. Overall, I don't find the size of the docs we produce overwhelming.</li>\n<li>The possibility to create links are the same as when all repos are remote ones, like in ocpn-manuals</li>\n<li>Having the main manuals in one single repo is a less complex setup, but needs clear informal rules about who owns what.  The latter shouldn't be a problem.</li>\n<li>Since the plugin manuals are remote (and has to be) we are still facing the problem that builds are not reproducible -- the same commit in manuals/ or ocpn-manuals/ can produce different output or even fail if a plugin repo is updated.</li>\n</ul>\n<p>The solution to the last bullet was to use submodules -- but doesn't work. Same for git subtrees. I have an idea how to solve it by some scripting, but to little time.</p>",
+        "id": 236036128,
+        "sender_full_name": "Alec Leamas",
+        "timestamp": 1619324637
+    },
+    {
+        "content": "<p>'modules' folder in the manual repo (top level) was not needed... removed.</p>\n<p>\" the same commit in manuals/ or ocpn-manuals/ can produce different output or even fail if a plugin repo is updated.\"<br>\nAs long as the master folder of the plugin repo is used and contains manual/&lt;plugin-name&gt; there should not be a problem.</p>\n<p>With a 'manual' repo the only problem with plugins is the need for duplication of the sources in the manual site.yml and the plugins build.yml, if they are to be built independently by a developer.(But... why not build the whole manual and extract your plugin HTML from that?) (Or even better... put a build.yml in your own repo and build the HTML/pdf there)</p>",
+        "id": 236040411,
+        "sender_full_name": "Mike Rossiter",
+        "timestamp": 1619329706
+    },
+    {
+        "content": "<blockquote>\n<p>As long as the master folder of the plugin repo is used and contains manual/&lt;plugin-name&gt; there should not be a problem.</p>\n</blockquote>\n<p>master folder? master branch?</p>\n<p>Anyway, the core problem is that regardless what branch used, something which worked in manuals/ might break (build break, wrong result) when the owner of the plugin manual  pushes a new commit. The manuals/ directory simply has no control over what's in the plugin repos. Testing/reviewing might succeed, and the result might be broken anyway  later.</p>",
+        "id": 236041813,
+        "sender_full_name": "Alec Leamas",
+        "timestamp": 1619331377
+    },
+    {
+        "content": "<p>Sorry ... master branch.<br>\nThe manuals directory of the consolidated manual repo  does not use any sources. Surely the next build of the OpenCPN manual takes care of the change in the devs plugin repo.</p>",
+        "id": 236042473,
+        "sender_full_name": "Mike Rossiter",
+        "timestamp": 1619332154
+    },
+    {
+        "content": "<blockquote>\n<p>. Surely the next build of the OpenCPN manual takes care of the change in the devs plugin repo.</p>\n</blockquote>\n<p>And that's the problem --  we don't want the plugin manual to be updated until explicitly requested.  In other words: If we review the manual at a given state it must not change when rebuilt until we want  it to.</p>",
+        "id": 236042808,
+        "sender_full_name": "Alec Leamas",
+        "timestamp": 1619332453
+    },
+    {
+        "content": "<p>My misunderstanding. By plugin manual you mean the plugins directory of the consolidated manual repo. Is that correct?</p>",
+        "id": 236042985,
+        "sender_full_name": "Mike Rossiter",
+        "timestamp": 1619332648
+    },
+    {
+        "content": "<p>Perhaps better to remove build.yml from the plugins directory to stop firkling. I could put it back with a .gitignore to allow local builds for testing on my fork of 'manual'.</p>",
+        "id": 236043255,
+        "sender_full_name": "Mike Rossiter",
+        "timestamp": 1619333011
+    },
+    {
+        "content": "<blockquote>\n<p>my fork of 'manual'.</p>\n</blockquote>\n<p>Or should that be clone?</p>",
+        "id": 236043417,
+        "sender_full_name": "Mike Rossiter",
+        "timestamp": 1619333177
+    },
+    {
+        "content": "<p>One idea would be to clone the plugins, and make sources point to the local directories. We could  then update the clones manually (or rather with a script) when required, but until we do the plugins are frozen. I think that should  work in the sense that we will not be surprised by new  updates. We could even record the state of each plugin repo in a file which is committed.  From this we could then re-create the state</p>",
+        "id": 236043648,
+        "sender_full_name": "Alec Leamas",
+        "timestamp": 1619333488
+    },
+    {
+        "content": "<blockquote>\n<p>My misunderstanding. By plugin manual you mean the plugins directory of the consolidated manual repo. Is that correct?</p>\n</blockquote>\n<p>No. I assume that the manuals/ directory builds also plugin manuals (?)</p>",
+        "id": 236043741,
+        "sender_full_name": "Alec Leamas",
+        "timestamp": 1619333622
+    },
+    {
+        "content": "<p>.No. I assume that the manuals/ directory builds also plugin manuals (?)</p>\n<p>Not so ... the plugin manuals are built as part of the main manual. It is just that because of the plugins folder they appear as separate entities in the HTML output. The manuals directory is just an index for the different manuals - user, dev, plugins - that provides for navigation to those manuals.</p>",
+        "id": 236044674,
+        "sender_full_name": "Mike Rossiter",
+        "timestamp": 1619334343
+    },
+    {
+        "content": "<p>In fact the manuals directory could be removed and the modules/ROOT placed in the top level folder. Bit neater.</p>",
+        "id": 236044856,
+        "sender_full_name": "Mike Rossiter",
+        "timestamp": 1619334510
+    },
+    {
+        "content": "<p>It doesn't really matter. It's a  basic flaw in Antora: As soon as you have a remote r the build is non-reproducible. And it's sort of a blocking error for us as I see it.</p>\n<p>see: <a href=\"https://antora.zulipchat.com/#narrow/stream/282400-users/topic/git.20submodule.20source.20problems/near/235687872\">https://antora.zulipchat.com/#narrow/stream/282400-users/topic/git.20submodule.20source.20problems/near/235687872</a></p>",
+        "id": 236045045,
+        "sender_full_name": "Alec Leamas",
+        "timestamp": 1619334718
+    },
+    {
+        "content": "<p>I have pushed a new branch <em>manual</em> to ocpn-manuals. It's a copy of rasbats/manual with a single commit on top. </p>\n<p>That commit solves my concerns. It stores the plugins as locally cloned repos under a new directory <em>sources</em>.  A new script <a href=\"http://source-state.sh\">source-state.sh</a> handles this directory and a state file. </p>\n<p>The state file lists all known plugin repos, their url and the commit used.</p>\n<p><a href=\"http://source-state.sh\">source-state.sh</a> has three operations:</p>\n<ul>\n<li>restore:  restores all plugins sources using url and commit form state  file</li>\n<li>save: updates the state file with possible new repos + url and actual commit</li>\n<li>update: Updates each plugin repo to latest HEAD.</li>\n</ul>\n<p>Ideally, update should respect the branch setting in site.yml, but this requires python to parse the yaml. Perhaps later...  </p>\n<p>Since docs/ now can be generated from sources, it should really be added to .gitignore. Later, also this...</p>",
+        "id": 236054027,
+        "sender_full_name": "Alec Leamas",
+        "timestamp": 1619345185
+    },
+    {
+        "content": "<blockquote>\n<p>As soon as you have a remote r the build is non-reproducible. And it's sort of a blocking error for us as I see it.</p>\n</blockquote>\n<blockquote>\n<p>build is non-reproducible</p>\n</blockquote>\n<p>Which build are we talking about here? There is only one - in ocpn-manuals.  Which other build are you  referring to? The build.yml in the plugins directory should be removed. It was only there for testing purposes when using opencpn-plugins-manual. If left the sources could drift away from the ones  I had in site.yml. Was this the concern?</p>\n<p>I think the build.yml in dev needs removing as well.  <br>\nIn my manual repo neither build.yml was used, only the site.yml at the top level.</p>\n<blockquote>\n<p>As soon as you have a remote</p>\n</blockquote>\n<p>Do we need any remotes? Can't everyone contribute to the same repo?</p>\n<blockquote>\n<p>It stores the plugins as locally cloned repos</p>\n</blockquote>\n<p>This does not seem necessary, given the above.</p>",
+        "id": 236082848,
+        "sender_full_name": "Mike Rossiter",
+        "timestamp": 1619373840
+    },
+    {
+        "content": "<blockquote>\n<p>Which build are we talking about here?</p>\n</blockquote>\n<p>For example site.yml in <a href=\"https://github.com/Rasbats/manual/\">https://github.com/Rasbats/manual/</a></p>",
+        "id": 236088300,
+        "sender_full_name": "Alec Leamas",
+        "timestamp": 1619379712
+    },
+    {
+        "content": "<p>What is the reason for referencing it in leamas/ocpn-manuals?</p>",
+        "id": 236088469,
+        "sender_full_name": "Mike Rossiter",
+        "timestamp": 1619379870
+    },
+    {
+        "content": "<p>None, I use it as-is</p>",
+        "id": 236088484,
+        "sender_full_name": "Alec Leamas",
+        "timestamp": 1619379892
+    },
+    {
+        "content": "<p>But, but, but why use it? If you fork Rasbats/manual you have the whole thing. Rename manual as ocpn-manuals if needed and change a link or two.</p>",
+        "id": 236088637,
+        "sender_full_name": "Mike Rossiter",
+        "timestamp": 1619380021
+    },
+    {
+        "content": "<p>That is what I did (more or less, imported it to a branch instead of forking it). Now, looking at  site.yml in <a href=\"https://github.com/Rasbats/manual/\">https://github.com/Rasbats/manual/</a> it contains a large number of plugin manual repos, right?</p>",
+        "id": 236088795,
+        "sender_full_name": "Alec Leamas",
+        "timestamp": 1619380130
+    },
+    {
+        "content": "<p>It uses as sources a large number of developers repos, yes.</p>",
+        "id": 236088935,
+        "sender_full_name": "Mike Rossiter",
+        "timestamp": 1619380279
+    },
+    {
+        "content": "<p>And these repos are not just an impressing list, they are actually used (rhetoric question).</p>\n<p>Which means that the build is not reproducible. What is forged by site.yml depends on what's committed in each repo. Commits which cannot be controlled from the main manuals project. You could make a test build, review the results and then make a final build just to see it fail because of some commit in some plugin repo.</p>",
+        "id": 236089114,
+        "sender_full_name": "Alec Leamas",
+        "timestamp": 1619380486
+    },
+    {
+        "content": "<p>Ok. I will need to test that. </p>\n<blockquote>\n<p>and then make a final build just to see it fail because of some commit in some plugin repo.</p>\n</blockquote>\n<p>I thought it would just take what was in the git at the time of the final build but not fail. Yes, it may be different because of an update to the manual but fail? I will test tomorrow.</p>",
+        "id": 236089339,
+        "sender_full_name": "Mike Rossiter",
+        "timestamp": 1619380781
+    },
+    {
+        "content": "<p>\"Fail\" in this context is not just about if the build fails -- in a way that would actually be lucky since it would be discovered.  A much worse error would be if late commits introduced stuff which was wrong -- such errors would not be found.</p>\n<p>And there is the general problem that a given commit in the main project does not reflect the actual state of the main manual. The build cannot be done at another time and produce the same result.</p>",
+        "id": 236089648,
+        "sender_full_name": "Alec Leamas",
+        "timestamp": 1619381055
+    },
+    {
+        "content": "<blockquote>\n<p>a given commit in the main project does not reflect the actual state of the main manual</p>\n</blockquote>\n<p>We are talking here about a developer's plugin repo. Is this correct? Still getting my head around it.</p>",
+        "id": 236089926,
+        "sender_full_name": "Mike Rossiter",
+        "timestamp": 1619381389
+    },
+    {
+        "content": "<blockquote>\n<p>The build cannot be done at another time and produce the same result.</p>\n</blockquote>\n<p>Why does this matter?</p>",
+        "id": 236090004,
+        "sender_full_name": "Mike Rossiter",
+        "timestamp": 1619381459
+    },
+    {
+        "content": "<p>No. rasbats/manual is currently at 4487d17. I could check out this very commit and build using site.yml.  In a versiond world, this would give me the complete manual as of 4487d17.  But realities are that the same commit will produce different versions of the manual(s), all depending on the state of the sources.</p>",
+        "id": 236090121,
+        "sender_full_name": "Alec Leamas",
+        "timestamp": 1619381594
+    },
+    {
+        "content": "<p>It matters a lot, because the whole idea with version management (not only git) is that a given version is inmutable.   If not, there is no git diff, no possibility to make a patch and rebuild just adding the patch, and what not. Actually, it means that we have no version management of the overall manual(s)</p>",
+        "id": 236090408,
+        "sender_full_name": "Alec Leamas",
+        "timestamp": 1619381975
+    },
+    {
+        "content": "<blockquote>\n<p>Actually, it means that we have no version management of the overall manual(s)</p>\n</blockquote>\n<p>Beyond my pay grade.</p>\n<p>Each build could have a timestamp. Is this not sufficient? I have not seen this problem come up with other antora manuals?</p>",
+        "id": 236090638,
+        "sender_full_name": "Mike Rossiter",
+        "timestamp": 1619382239
+    },
+    {
+        "content": "<p>No, theres is no version management. No patches, no history, no what not. We might as well stop using git for the playbook. And that's certainly not what we want.</p>",
+        "id": 236090742,
+        "sender_full_name": "Alec Leamas",
+        "timestamp": 1619382348
+    },
+    {
+        "content": "<p>Just consider the situation when an error is found and a patch is submitted (as a PR or whatever). We then have zero possibility to rebuild after just applying that parch and get the corresponding change. Instead, we will get a potentially new manual, with a need to check each and every bit instead of just checking what's patched.</p>",
+        "id": 236090908,
+        "sender_full_name": "Alec Leamas",
+        "timestamp": 1619382516
+    },
+    {
+        "content": "<p>I think you need to build a new branch of ocpn-manuals, removing my opencpn plugins manual repos as sources so we can see what a unified  repo would look like with the plugin repo clones. Much like I did with Rasbats/manual. </p>\n<p>The sight of all those plugin clones was quite a shock to the system.</p>",
+        "id": 236091128,
+        "sender_full_name": "Mike Rossiter",
+        "timestamp": 1619382763
+    },
+    {
+        "content": "<blockquote>\n<p>The sight of all those plugin clones was quite a shock to the system.</p>\n</blockquote>\n<p>Possibly. OTOH, they have always been there, just that they have been out of sight ;) (remote repos are cloned to private directories; on linux at ~/.cache/antora. So the difference is not that big...)</p>",
+        "id": 236091280,
+        "sender_full_name": "Alec Leamas",
+        "timestamp": 1619382910
+    },
+    {
+        "content": "<blockquote>\n<p>what a unified repo would look like with the plugin repo clones</p>\n</blockquote>\n<p>I know that would work, have no problems (well, not that much at least). But in this case I  think we should focus on hard part first. And the hard part is the plugin repos.</p>",
+        "id": 236091423,
+        "sender_full_name": "Alec Leamas",
+        "timestamp": 1619383068
+    },
+    {
+        "content": "<p>Another day tomorrow. Good night!</p>",
+        "id": 236091951,
+        "sender_full_name": "Mike Rossiter",
+        "timestamp": 1619383644
+    },
+    {
+        "content": "<p>night!</p>",
+        "id": 236092088,
+        "sender_full_name": "Alec Leamas",
+        "timestamp": 1619383805
+    },
+    {
+        "content": "<p>Ok... following on from your idea of source-state could sparse-checkout help with speed and clutter avoidance:<br>\n<a href=\"/user_uploads/33951/POha8hN8a09dR0KCjR45PsXs/source-sparse.sh\">source-sparse.sh</a></p>",
+        "id": 236125296,
+        "sender_full_name": "Mike Rossiter",
+        "timestamp": 1619417757
+    },
+    {
+        "content": "<p><a href=\"https://stackoverflow.com/questions/600079/how-do-i-clone-a-subdirectory-only-of-a-git-repository\">https://stackoverflow.com/questions/600079/how-do-i-clone-a-subdirectory-only-of-a-git-repository</a></p>",
+        "id": 236125450,
+        "sender_full_name": "Mike Rossiter",
+        "timestamp": 1619417900
+    },
+    {
+        "content": "<p>Hm... interesting. Had no idea such a thing existed (hell, who has the complete knowledge what exists in git?). It looks like a solution which could be integrated into the  <a href=\"http://source-state.sh\">source-state.sh</a> script. And agreed, some optimization like that would be great (if this doesn't work, we could just remove everything  besides manual/ after cloning)</p>\n<p>So yes, some optimization is needed, and git sparse-checkout might be the solution.</p>",
+        "id": 236150053,
+        "sender_full_name": "Alec Leamas",
+        "timestamp": 1619432522
+    },
+    {
+        "content": "<p>One problem with sparse-checkout is that the configuration lives in the source. That is, for this to work we need to apply the sparse configuration to each and every plugin, and keep it sane. Doable?</p>",
+        "id": 236151245,
+        "sender_full_name": "Alec Leamas",
+        "timestamp": 1619433189
+    },
+    {
+        "content": "<p>As a first step I tried the dead-simple approach to just clone as usual, but remove everything besides manual/ and friends. The  result lives in the branch <em>state</em> in ocpn-manuals. It brings down the sources directory to just over 400M. Good enough?</p>",
+        "id": 236151763,
+        "sender_full_name": "Alec Leamas",
+        "timestamp": 1619433479
+    },
+    {
+        "content": "<p>Pushed a new variant, still branch state in leamas/ocpn-manuals. Here, I use spare-checkout if available. I  <em>think</em> the initial download is the same (everything comes over the wire?), but the actual sources/ dir is now down to around 150M.</p>",
+        "id": 236156849,
+        "sender_full_name": "Alec Leamas",
+        "timestamp": 1619436445
+    },
+    {
+        "content": "<p>My fork of ocpn-manuals is here:<br>\n<a href=\"https://github.com/Rasbats/ocpn-manuals\">https://github.com/Rasbats/ocpn-manuals</a><br>\nUsing branch 'manual'<br>\nNeed to rebuild the sources. I had a problem with git add.<br>\nManual generated:<br>\n<a href=\"https://rasbats.github.io/ocpn-manuals/opencpn-master-plugins/0.1/index.html\">https://rasbats.github.io/ocpn-manuals/opencpn-master-plugins/0.1/index.html</a></p>\n<p><a href=\"http://source-sparse.sh\">source-sparse.sh</a> has been updated for all 'registered' plugins at the moment. Bit crude but it makes the sources if you run it.</p>",
+        "id": 236250300,
+        "sender_full_name": "Mike Rossiter",
+        "timestamp": 1619473692
+    },
+    {
+        "content": "<p>Updated <a href=\"http://source-sparse.sh\">source-sparse.sh</a>. All the dev plugin manuals bar one are in their master branches so the script now clones only that branch (dashboard-tactics_pi uses another branch, which is allowed for)  This should speed the cloning.</p>",
+        "id": 236288613,
+        "sender_full_name": "Mike Rossiter",
+        "timestamp": 1619504363
+    },
+    {
+        "content": "<p>we  are basically doing the same thing. <a href=\"http://source-state.sh\">source-state.sh</a> also uses git sparse-checkout if available.  However, it also supports the state file, and does not have a hardcoded list of plugins, it adapts to what's in the sources/ directory.</p>\n<p>I think we should proceed in this direction. Will merge my state branch into main as a starting point. Also needs to verify that our list of plugins matches (ii e., that I have each and every plugin in your list also in my dir.).<br>\n'</p>",
+        "id": 236289892,
+        "sender_full_name": "Alec Leamas",
+        "timestamp": 1619505407
+    },
+    {
+        "content": "<p>How about just using the master branch of the devs plugin repo?</p>",
+        "id": 236290192,
+        "sender_full_name": "Mike Rossiter",
+        "timestamp": 1619505702
+    },
+    {
+        "content": "<p>Thanks.</p>",
+        "id": 236367578,
+        "sender_full_name": "Rick Gleason",
+        "timestamp": 1619540541
+    },
+    {
+        "content": "<blockquote>\n<p>How about just using the master branch of the devs plugin repo?</p>\n</blockquote>\n<p>For <a href=\"http://source-state.sh\">source-state.sh</a> I was thinking of:  \"git clone --branch master --single-branch\". This would improve the speed of the build.</p>\n<p><span class=\"user-mention\" data-user-id=\"399865\">@Rick Gleason</span> </p>\n<blockquote>\n<p>Thanks</p>\n</blockquote>\n<p>??? </p>\n<blockquote>\n<p>master branch of the devs plugin repo?</p>\n</blockquote>\n<p>Refers to  a plugin developer repository, not the ocpn-dev-manual.</p>",
+        "id": 236373934,
+        "sender_full_name": "Mike Rossiter",
+        "timestamp": 1619543093
+    },
+    {
+        "content": "<p>I have basically no problems with more optimizations. But might be the wrong focus right now..</p>",
+        "id": 236384420,
+        "sender_full_name": "Alec Leamas",
+        "timestamp": 1619547451
+    },
+    {
+        "content": "<p>Trying to unwrap the strange dependencies in the plugins manials, and the .git  redirection. What is the purpose of this?</p>",
+        "id": 236384598,
+        "sender_full_name": "Alec Leamas",
+        "timestamp": 1619547515
+    },
+    {
+        "content": "<p>Can you handle symlinks on your windows box (settings issue, sort of)?</p>",
+        "id": 236384654,
+        "sender_full_name": "Alec Leamas",
+        "timestamp": 1619547550
+    },
+    {
+        "content": "<blockquote>\n<p>Trying to unwrap the strange dependencies in the plugins manials (sic), and the .git redirection</p>\n</blockquote>\n<p>When the modules were setup for each plugin the name in the module may not always have matched the plugin git name. e.g. GPS-Odometer became manual/odometer and the page 'odometer.adoc'. The constant is &lt;plugin-name&lt;&gt;/manual.</p>\n<blockquote>\n<p>.git redirection</p>\n</blockquote>\n<p>Not sure what this refers to. When commiting the git after building sources I needed to use the command line, which gave a warning that I was referencing a git repo. This was for each git plugin repo. The commit and push worked fine. Git Desktop did not like using plugin git repos.</p>",
+        "id": 236387742,
+        "sender_full_name": "Mike Rossiter",
+        "timestamp": 1619548677
+    },
+    {
+        "content": "<blockquote>\n<p>Can you handle symlinks on your windows box (settings issue, sort of)?</p>\n</blockquote>\n<p>Never played with symlinks...yet.</p>",
+        "id": 236387974,
+        "sender_full_name": "Mike Rossiter",
+        "timestamp": 1619548770
+    },
+    {
+        "content": "<p>There was a strane plain file called .git which basically redirected the git directory like ../../whatever. Not a nice kind of dependency. I have removed it, trying to get the pieces together.</p>\n<p>A symlink to the sources directory might solve many problems here, but I need more time to investigate</p>",
+        "id": 236388401,
+        "sender_full_name": "Alec Leamas",
+        "timestamp": 1619548942
+    },
+    {
+        "content": "<p>Those .git files were produced by my <a href=\"http://sources-sparse.sh\">sources-sparse.sh</a>.</p>",
+        "id": 236389050,
+        "sender_full_name": "Mike Rossiter",
+        "timestamp": 1619549242
+    },
+    {
+        "content": "<p>OK,  right to  remove them... But I'm sort of lost right now, this will take time I don't really have until the end of the week.</p>",
+        "id": 236389250,
+        "sender_full_name": "Alec Leamas",
+        "timestamp": 1619549332
+    },
+    {
+        "content": "<p>Updated <a href=\"http://source-sparse.sh\">source-sparse.sh</a> and made a new sources.state file that almost reflects the state of the plugins.<br>\n<a href=\"https://rasbats.github.io/ocpn-manuals/\">https://rasbats.github.io/ocpn-manuals/</a><br>\nTo avoid difficult edits of scripts I am making a plain list of all plugin urls (url only) that can be used by the scripts. I will include this list in my fork of ocpn-manuals when ready. <br>\nThe list for master plugins will follow the categories used in the manual. Betas will be random.</p>",
+        "id": 236810440,
+        "sender_full_name": "Mike Rossiter",
+        "timestamp": 1619776093
+    },
+    {
+        "content": "<p>Master plugins list now made. ordered.sources.state follows the categories ordering.<br>\n<a href=\"https://github.com/Rasbats/ocpn-manuals\">https://github.com/Rasbats/ocpn-manuals</a></p>",
+        "id": 236821472,
+        "sender_full_name": "Mike Rossiter",
+        "timestamp": 1619782677
+    },
+    {
+        "content": "<p>Next job is passing the beta plugin manuals to developers where possible. After this I will make a Beta plugins list and add to the ordered.sources.state.</p>",
+        "id": 236821700,
+        "sender_full_name": "Mike Rossiter",
+        "timestamp": 1619782806
+    },
+    {
+        "content": "<p>Updated sources.state for master and beta plugins (53 so far).<br>\nRan modified <a href=\"http://source-state.sh\">source-state.sh</a> to produce sparse sources, removing the  .git folder (which prevented pushing to the manual branch)<br>\nAdded empty repo to allow local build:<br>\n<a href=\"https://gitlab.com/antora/antora/-/issues/284\">https://gitlab.com/antora/antora/-/issues/284</a><br>\nsite.yml changed to use local files/folders<br>\nOnly two repos in site.yml as sources at the moment - ShipDriver and otcurrent.<br>\nOpenCPN manuals builds with links to the limited number of plugin sources.<br>\n<a href=\"https://rasbats.github.io/ocpn-manuals/opencpn-master-plugins/0.1/plugins.html\">https://rasbats.github.io/ocpn-manuals/opencpn-master-plugins/0.1/plugins.html</a><br>\nNext step: Add the remaining 51 plugins! The sources are already there. Just need to edit site.yml.<br>\nNote: In <a href=\"http://source-state.sh\">source-state.sh</a> there was no attempt to edit save and update options. Only restore in use.</p>",
+        "id": 237305632,
+        "sender_full_name": "Mike Rossiter",
+        "timestamp": 1620126834
+    },
+    {
+        "content": "<p>source-state basically just reflects whatever is available in the sources/ directory. No need for a list...</p>\n<p>Must de-prioritize this for now -- the time I have is hunting bugs before next release which will be upon us soon.</p>",
+        "id": 237315591,
+        "sender_full_name": "Alec Leamas",
+        "timestamp": 1620131829
+    },
+    {
+        "content": "<p>Understood.</p>",
+        "id": 237318066,
+        "sender_full_name": "Mike Rossiter",
+        "timestamp": 1620132850
+    },
+    {
+        "content": "<p>Just for reference:<br>\nLatest ocpn-manuals:<br>\n<a href=\"https://rasbats.github.io/ocpn-manuals\">https://rasbats.github.io/ocpn-manuals</a><br>\nRepo has the updated site.yml</p>",
+        "id": 237322017,
+        "sender_full_name": "Mike Rossiter",
+        "timestamp": 1620134397
+    },
+    {
+        "content": "<p>This topic was moved here from <a class=\"stream-topic\" data-stream-id=\"283224\" href=\"/#narrow/stream/283224-ocpn-user-plugins-manual/topic/ocpn-manuals\">#ocpn-user-plugins-manual &gt; ocpn-manuals</a> by <span class=\"user-mention silent\" data-user-id=\"399510\">Alec Leamas</span>.</p>",
+        "id": 290757767,
+        "sender_full_name": "Notification Bot",
+        "timestamp": 1658755402
+    }
+]

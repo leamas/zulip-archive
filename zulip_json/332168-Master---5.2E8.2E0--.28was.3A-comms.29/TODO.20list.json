@@ -1,0 +1,98 @@
+[
+    {
+        "content": "<p>Have been hard working on my first two priorites: Landing of the CLI  stuff and merging the my own and your stuff. After that,  we IMHO need to prioritize.</p>\n<p>My own priorities as I see it right now:<br>\n1) Make a test output driver which accepts N2k data  and outputs it to terminal or file<br>\n2) Make a corresponding test input driver which reads data and make is available on the Transport raw message bus.<br>\n3 ) Read up on test environments<br>\n4) Set up some unit test framework so we can start writing tests</p>\n<p>Thoughts? Which are your priorities?</p>",
+        "id": 291107076,
+        "sender_full_name": "Alec Leamas",
+        "timestamp": 1658954359
+    },
+    {
+        "content": "<p><span class=\"user-mention\" data-user-id=\"517002\">@Dave Register</span>  ^</p>",
+        "id": 291107086,
+        "sender_full_name": "Alec Leamas",
+        "timestamp": 1658954370
+    },
+    {
+        "content": "<p>I think it would be great if you focus on the CLI, and test harness buildup.  Meanwhile, I will proceed to:</p>\n<ol>\n<li>Build the listener/notify pieces for the GUI core, resulting in N2K data from my simple live net driving the basic nav functions.  Extend to N0183, and network streams, and sK.</li>\n<li>Start considering the plugin API updates to support this new data stream method.</li>\n<li>Possible refactor of chart1.cpp.  Extract class MyFrame to separate source file.  Transfer the comm listeners to MyApp.  Thoughts?  Any impact to CLI model?</li>\n</ol>\n<p>Do you have live N2K data source, or are you planning to use some sort of test stream input?</p>",
+        "id": 291133716,
+        "sender_full_name": "Dave Register",
+        "timestamp": 1658975369
+    },
+    {
+        "content": "<p>Ack. I'll focus on test stuff etc for now.  But, first I need to code also the application layer messaging.  Should not be hard,  the tricky issues are solved now. Forgot that one yesterday.</p>\n<p>I have no  N2k   hardware available, so my only choice is testing from recorded data. </p>\n<p>Refactoring chart1 is a Good Thing, it's definitely too big. However, it does not affect the CLI/model part since it neither is nor will be included in the model since they contains GUI dependencies. This applies to both chart1 and upcoming MyFrame.</p>",
+        "id": 291146647,
+        "sender_full_name": "Alec Leamas",
+        "timestamp": 1658990662
+    },
+    {
+        "content": "<p>Q: I have a need to clean up some naming. No problem for anything committed, but might break things which are not.  Could you commit what you have late today so I can do some changes tomorrow  (really early your time) without breaking too many eggs?</p>",
+        "id": 291146770,
+        "sender_full_name": "Alec Leamas",
+        "timestamp": 1658990801
+    },
+    {
+        "content": "<p>Yes, I will commit commit late today, wherever I am.</p>",
+        "id": 291178761,
+        "sender_full_name": "Dave Register",
+        "timestamp": 1659013555
+    },
+    {
+        "content": "<p>Pushed all, I am done for this evening.  Have fun.</p>",
+        "id": 291273463,
+        "sender_full_name": "Dave Register",
+        "timestamp": 1659057884
+    },
+    {
+        "content": "<p>Fun or not, did some things, look in new misc topic</p>",
+        "id": 291317722,
+        "sender_full_name": "Alec Leamas",
+        "timestamp": 1659099779
+    },
+    {
+        "content": "<p>Zulip has some support for this...<br>\n/todo</p>",
+        "id": 291619330,
+        "sender_full_name": "Alec Leamas",
+        "timestamp": 1659380780
+    },
+    {
+        "content": "<p>/todo</p>",
+        "id": 291619353,
+        "sender_full_name": "Alec Leamas",
+        "timestamp": 1659380789
+    },
+    {
+        "content": "<p>commDriverN0183Net completed.</p>",
+        "id": 291791892,
+        "sender_full_name": "Dave Register",
+        "timestamp": 1659492575
+    },
+    {
+        "content": "<p>Not completely... still missing the glue upwards: set_listener() and registration, supposed to happen in Activate(). It's basically boiler-plate snippets, you can look in comm_drv_file.  Or, if you prefer that I can do it.</p>",
+        "id": 291835046,
+        "sender_full_name": "Alec Leamas",
+        "timestamp": 1659526308
+    },
+    {
+        "content": "<p>Also, note that received messages should be routed to the listener.</p>",
+        "id": 291835537,
+        "sender_full_name": "Alec Leamas",
+        "timestamp": 1659526584
+    },
+    {
+        "content": "<p>I'll take care of the drivers, including upstream and registry.</p>",
+        "id": 291875027,
+        "sender_full_name": "Dave Register",
+        "timestamp": 1659543775
+    },
+    {
+        "content": "<p>\"Also, note that received messages should be routed to the listener.\"<br>\nThis is already happening by notify() in the driver.  Another listener?</p>",
+        "id": 291875195,
+        "sender_full_name": "Dave Register",
+        "timestamp": 1659543852
+    },
+    {
+        "content": "<p>Not sure I understand set_listener().  Tutorial?</p>",
+        "id": 291875243,
+        "sender_full_name": "Dave Register",
+        "timestamp": 1659543881
+    }
+]

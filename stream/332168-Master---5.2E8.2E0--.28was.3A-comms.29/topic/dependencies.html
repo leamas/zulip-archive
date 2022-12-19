@@ -1,0 +1,107 @@
+<html>
+<head><meta charset="utf-8"><title>dependencies · Master - 5.8.0  (was: comms) · Zulip Chat Archive</title></head>
+<h2>Stream: <a href="https://leamas.github.io/zulip-archive/stream/332168-Master---5.2E8.2E0--.28was.3A-comms.29/index.html">Master - 5.8.0  (was: comms)</a></h2>
+<h3>Topic: <a href="https://leamas.github.io/zulip-archive/stream/332168-Master---5.2E8.2E0--.28was.3A-comms.29/topic/dependencies.html">dependencies</a></h3>
+
+<hr>
+
+<base href="https://opencpn.zulipchat.com">
+
+<head><link href="https://leamas.github.io/zulip-archive/style.css" rel="stylesheet"></head>
+
+<a name="292307873"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332168-Master%20-%205.8.0%20%20%28was%3A%20comms%29/topic/dependencies/near/292307873" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Alec Leamas <a href="https://leamas.github.io/zulip-archive/stream/332168-Master---5.2E8.2E0--.28was.3A-comms.29/topic/dependencies.html#292307873">(Aug 07 2022 at 08:43)</a>:</h4>
+<p>I have digged a little into dependencies for the comm stuff. One major culprit is  comm_navmsg.h, any changes to this  forces a big recompile indicating unacceptable dependencies. I'm almost sure that it is about datadriver.h being included, and this is actually a left-over from the first sketch. The only thing we use is the name of the driver, no need to include the complete header for that. Will fix.</p>
+<p>I also see that chart1 now depends  on various comm* headers. This is not necessarily a Bad Thing, but it shows how some  message message processing is done in a GUI part. It would IMHO be better if we could disconnect this, just having  application message passing.  This is more about overall design of GUI application, where complicated processing in GUI parts is generally frowned upon for good reasons, these things takes place in the model part which  does not depend on the GUI.</p>
+<p>And anyway, chart1 is already a too big jack of all trades...</p>
+
+
+
+<a name="292310921"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332168-Master%20-%205.8.0%20%20%28was%3A%20comms%29/topic/dependencies/near/292310921" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Alec Leamas <a href="https://leamas.github.io/zulip-archive/stream/332168-Master---5.2E8.2E0--.28was.3A-comms.29/topic/dependencies.html#292310921">(Aug 07 2022 at 09:58)</a>:</h4>
+<p>Removed the "datastream.h include in comm_driver.h. However, this leaves it with a ConnectionParams.h instead because of the test entry. Despite the name, ConnectionParams.h actually has GUI dependencies since it defines a wxPanel.</p>
+<p>The basic problem seems to  be that ConnectionParams is mixing the low-level parameters with a GUI component. It is certainly possible to refactor this to two separate things which we probably should do.</p>
+<p>Q: will we live with this test code for some time? Thoughts?</p>
+
+
+
+<a name="292319595"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332168-Master%20-%205.8.0%20%20%28was%3A%20comms%29/topic/dependencies/near/292319595" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Dave Register <a href="https://leamas.github.io/zulip-archive/stream/332168-Master---5.2E8.2E0--.28was.3A-comms.29/topic/dependencies.html#292319595">(Aug 07 2022 at 13:22)</a>:</h4>
+<p>Good catch on ConnectionParams.  Needs refactor to extract the GUI stuff.<br>
+Chart1.cpp work starting soon.</p>
+
+
+
+<a name="292507813"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332168-Master%20-%205.8.0%20%20%28was%3A%20comms%29/topic/dependencies/near/292507813" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Alec Leamas <a href="https://leamas.github.io/zulip-archive/stream/332168-Master---5.2E8.2E0--.28was.3A-comms.29/topic/dependencies.html#292507813">(Aug 08 2022 at 22:57)</a>:</h4>
+<p>I have looked a little to the overall. global use of "#include chart1.h". Seems that a lot of it can be handled by simple clean-up  patches on the headers, and even more after breaking out the print support and TimedPopupWindow. However, doing anything about pluginmanager is a major headache.</p>
+<p>Writing this because of all .cpp files which depends on and uses gFrame.  As of today, this means including chart1.h with all of it's dependendies. It would be great if you could refactor this to a separate gframe.h header with less dependencies. </p>
+<p>Also seems that a lot has t o do with gFrame.GetPrimaryCanvas() and friends. In better world, this would live in a separate object...</p>
+
+
+
+<a name="292584653"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332168-Master%20-%205.8.0%20%20%28was%3A%20comms%29/topic/dependencies/near/292584653" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Dave Register <a href="https://leamas.github.io/zulip-archive/stream/332168-Master---5.2E8.2E0--.28was.3A-comms.29/topic/dependencies.html#292584653">(Aug 09 2022 at 14:04)</a>:</h4>
+<p>My plan is this:</p>
+<ol>
+<li>Fix it so that no "include" file includes "chart1.h".  This is the main source of "everything includes everything" problem.</li>
+<li>Remove "#include chart1.h" from each .cpp file where found, fixing the build problems by either fwd class declaration, or selective include files.</li>
+<li>After all this, probably chart1.h is gone.<br>
+But, the details....</li>
+</ol>
+
+
+
+<a name="292594170"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332168-Master%20-%205.8.0%20%20%28was%3A%20comms%29/topic/dependencies/near/292594170" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Alec Leamas <a href="https://leamas.github.io/zulip-archive/stream/332168-Master---5.2E8.2E0--.28was.3A-comms.29/topic/dependencies.html#292594170">(Aug 09 2022 at 14:55)</a>:</h4>
+<p>The first part , headers, is feasible. I have almost done it. One need to refactor  the MyPrintout print support and TimedPopupMessage; the latter can live  in gui_lib.h.    pluginmanager is a mess, though. </p>
+<p>When it comes to cpp files the main culprit is gFrame.  There are some functions which are used all over the place. This includes the Colorscheme and Canvases stuff. One strategy could be to split current gFrame into for example MyAppbase and MyApp. MyAppBase would contain the functions used by other modules be declared in a separate header. MyApp would ineherit fomr MyAppBase and basically be the same.</p>
+<p>Of course, if it was possible to refactor Canvases and Colorschemes to separate objects that would be better...</p>
+<p>However, due to the silly MS linker, this can only work if modules which needs to access BaseFrame  uses an getter like function. This is because that linker does not understand polymorphic objects. OTOH, a function like GetBaseFrame() which returns  MyApp as a BaseFrame* should  be fine.</p>
+
+
+
+<a name="292594403"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332168-Master%20-%205.8.0%20%20%28was%3A%20comms%29/topic/dependencies/near/292594403" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Alec Leamas <a href="https://leamas.github.io/zulip-archive/stream/332168-Master---5.2E8.2E0--.28was.3A-comms.29/topic/dependencies.html#292594403">(Aug 09 2022 at 14:57)</a>:</h4>
+<p>Yes, I know you have or will change those names.Using the old for now, though.</p>
+
+
+
+<a name="292639667"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332168-Master%20-%205.8.0%20%20%28was%3A%20comms%29/topic/dependencies/near/292639667" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Dave Register <a href="https://leamas.github.io/zulip-archive/stream/332168-Master---5.2E8.2E0--.28was.3A-comms.29/topic/dependencies.html#292639667">(Aug 09 2022 at 19:06)</a>:</h4>
+<p>Headers:  I have almost done it too.  Hope we have no major merge conflicts.<br>
+gFrame: refactor happening now.  I hope to merge tonight, leaving you lots of fun tomorrow.</p>
+
+
+
+<a name="292685662"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332168-Master%20-%205.8.0%20%20%28was%3A%20comms%29/topic/dependencies/near/292685662" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Dave Register <a href="https://leamas.github.io/zulip-archive/stream/332168-Master---5.2E8.2E0--.28was.3A-comms.29/topic/dependencies.html#292685662">(Aug 10 2022 at 02:32)</a>:</h4>
+<p>The big refactor pushed now.  There is more to be done, e.g. remove more GUI elements from ocpn_app.cpp, re-home the printing functions, etc.<br>
+But it builds and runs as it sits tonight.<br>
+ chart1.h/cpp is gone.  All global statics now live in ocpn_app.cpp <br>
+I'll start moving the comm listeners from MyFrame to MyApp next.  Then build some app_msg pathways.</p>
+
+
+
+<a name="292720735"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332168-Master%20-%205.8.0%20%20%28was%3A%20comms%29/topic/dependencies/near/292720735" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Alec Leamas <a href="https://leamas.github.io/zulip-archive/stream/332168-Master---5.2E8.2E0--.28was.3A-comms.29/topic/dependencies.html#292720735">(Aug 10 2022 at 09:28)</a>:</h4>
+<p>Moved TimedPopupWin and MyPrintout to separate files. One major advantage is that <code>include ocpn_frame.h</code> is gone in ocpn_app.h, it only exists in the new <code>ocpn_print.h</code> which has much less impact.</p>
+
+
+
+<a name="292725074"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332168-Master%20-%205.8.0%20%20%28was%3A%20comms%29/topic/dependencies/near/292725074" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Alec Leamas <a href="https://leamas.github.io/zulip-archive/stream/332168-Master---5.2E8.2E0--.28was.3A-comms.29/topic/dependencies.html#292725074">(Aug 10 2022 at 10:00)</a>:</h4>
+<p>We could certainly do a better job here, for example refactoring the ColorScheme and ChartCanvas handling to have less dependencies on ocpn_frame.  However,  this is a huge step in the right direction and I suggest that we declare this as "good enough" for 5.8 and put focus on the communications from now.</p>
+<p>When this is merged we should IMHO file a bug about all ocpn_frame deps and work with that in next cycle.</p>
+
+
+
+<a name="292756369"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332168-Master%20-%205.8.0%20%20%28was%3A%20comms%29/topic/dependencies/near/292756369" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Dave Register <a href="https://leamas.github.io/zulip-archive/stream/332168-Master---5.2E8.2E0--.28was.3A-comms.29/topic/dependencies.html#292756369">(Aug 10 2022 at 13:37)</a>:</h4>
+<p>I say "good enough" as well.  If I have some dead time (small chance), I will think on the color stuff.  I think the canvas management will probably need to stay mostly in ocpn_frame, since the frame is the parent container for the canvases. <br>
+Anyway, back to comms, and messaging.</p>
+
+
+
+<hr><p>Last updated: Dec 19 2022 at 16:41 UTC</p>
+</html>

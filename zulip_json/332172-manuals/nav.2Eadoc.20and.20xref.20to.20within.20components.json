@@ -1,0 +1,110 @@
+[
+    {
+        "content": "<p>This is proving to be a quite excellent waste of time.  How are we supposed to get current?<br>\nMy local html  Table of Contents does not match yours.  I've got all the PR pulled local. I have run antora --fetch after pushing back up.   Why is my nav different than yours.</p>\n<p>How to I configure an xref  to Mikes circleci page for example?</p>",
+        "id": 232360561,
+        "sender_full_name": "Rick Gleason",
+        "timestamp": 1617067928
+    },
+    {
+        "content": "<p>For some reason, the workflow is flawed in ocpn-dev-manual.  We need to sort this out.</p>\n<p>There is exactly one really simple workflow here since you are upstream. It requires a start where your local main branch is exactly the same as rgleason/ocpn-dev-manual/main. </p>\n<p>From that point you should never make a PR. Just make changes, commit and push. As long as you are alone, there is nothing more to it.</p>\n<p>Occasionally, I'll make a PR. When this happens:</p>\n<ul>\n<li>Commit and push all local changes.</li>\n<li>If my PR needs to be rebased after that, tell me to rebase it.</li>\n<li>If/when the PR can be applied, you merge it.</li>\n<li>After that, rebase your local branch on top of rgleason/ocpn-dev-manual/main...</li>\n</ul>\n<p>... which means that you are back on square one, your local branch is the same as the remote, and you can forget me. This is actually dead simple.</p>",
+        "id": 232480018,
+        "sender_full_name": "Alec Leamas",
+        "timestamp": 1617131221
+    },
+    {
+        "content": "<p>\"My local html Table of Contents does not match yours.\"</p>\n<p>What does \"my\" and \"yours\" mean here?</p>",
+        "id": 232480246,
+        "sender_full_name": "Alec Leamas",
+        "timestamp": 1617131308
+    },
+    {
+        "content": "<p>\" How to I configure an xref to Mikes circleci page for example?\"<br>\nThe general syntax is here: <a href=\"https://docs.antora.org/antora/2.2/asciidoc/page-to-page-xref/\">https://docs.antora.org/antora/2.2/asciidoc/page-to-page-xref/</a></p>\n<p>There are an examples in  nav.adoc, look for the \"Building Locally\" heading. Here are things like  xref:AlternativeWorkflow:ROOT:Useful-Stuff.html[]</p>\n<p>AlternativeWorkflow is the <em>name:</em> token from antora.yml in Mike's managed_plugins repo. This repo is loaded since it's mentioned in the ocpn-manuals' build.yml.</p>\n<p>The other parts should be obvious, module and page  in managed_plugins.</p>",
+        "id": 232482910,
+        "sender_full_name": "Alec Leamas",
+        "timestamp": 1617132336
+    },
+    {
+        "content": "<p>There is an awful lot to think about and remember here. Meanwhile I still don't know where my damn changes are.  I have a hunch I'd better copy and save your suggestions. </p>\n<p>Incidentally, I don't think I had changes that were not committed.  I don't know if I had pushed them up to origin main, but then I would have been notified when I did git rebase origin main  or even git pull origin main</p>",
+        "id": 232499366,
+        "sender_full_name": "Rick Gleason",
+        "timestamp": 1617138886
+    },
+    {
+        "content": "<p>In ocpn-dev-manual  have a nav.doc that has pretty close to the right outline. It just does not show when viewing local html's<br>\nWhat should I do to update the html?  I have not done an antora antora.yml from this directory that I can remember.<br>\nAlso when I am in bash prompt at github/ocpn-dev-manual   and   \"antora antora.yml\"  I get errors.  So I have never done this.<br>\nAlways have updated html from ocpn-manuals  which is totally counter intuitive IMHO  Like trying to tie your shoe with a long pole (or cut your hair in a mirror with a long pole).</p>\n<p>Rick@Dart MINGW64 ~/documents/github/ocpn-dev-manual (main)<br>\n$ antora antora.yml<br>\nerror: ui.bundle.url: must be of type String<br>\nconfiguration param 'name' not declared in the schema<br>\nconfiguration param 'title' not declared in the schema<br>\nconfiguration param 'version' not declared in the schema<br>\nconfiguration param 'nav' not declared in the schema<br>\nAdd the --stacktrace option to see the cause.</p>\n<hr>\n<p>$ antora antora.yml --stacktrace<br>\nError: ui.bundle.url: must be of type String<br>\nconfiguration param 'name' not declared in the schema<br>\nconfiguration param 'title' not declared in the schema<br>\nconfiguration param 'version' not declared in the schema<br>\nconfiguration param 'nav' not declared in the schema<br>\n    at Object.validate (C:\\Users\\Rick\\AppData\\Roaming\\npm\\node_modules\\@antora\\site-generator-default\\node_modules\\convict\\src\\main.js:671:17)<br>\n    at buildPlaybook (C:\\Users\\Rick\\AppData\\Roaming\\npm\\node_modules\\@antora\\site-generator-default\\node_modules\\@antora\\playbook-builder\\lib\\build-playbook.js:60:10)<br>\n    at generateSite (C:\\Users\\Rick\\AppData\\Roaming\\npm\\node_modules\\@antora\\site-generator-default\\lib\\generate-site.js:16:20)<br>\n    at Command.&lt;anonymous&gt; (C:\\Users\\Rick\\AppData\\Roaming\\npm\\node_modules\\@antora\\cli\\lib\\cli.js:76:20)<br>\n    at Command.listener [as _actionHandler] (C:\\Users\\Rick\\AppData\\Roaming\\npm\\node_modules\\@antora\\cli\\node_modules\\commander\\index.js:426:31)<br>\n    at Command._parseCommand (C:\\Users\\Rick\\AppData\\Roaming\\npm\\node_modules\\@antora\\cli\\node_modules\\commander\\index.js:1002:14)<br>\n    at Command._dispatchSubcommand (C:\\Users\\Rick\\AppData\\Roaming\\npm\\node_modules\\@antora\\cli\\node_modules\\commander\\index.js:953:18)<br>\n    at Command._parseCommand (C:\\Users\\Rick\\AppData\\Roaming\\npm\\node_modules\\@antora\\cli\\node_modules\\commander\\index.js:979:12)<br>\n    at Command.parse (C:\\Users\\Rick\\AppData\\Roaming\\npm\\node_modules\\@antora\\cli\\node_modules\\commander\\index.js:801:10)<br>\n    at run (C:\\Users\\Rick\\AppData\\Roaming\\npm\\node_modules\\@antora\\cli\\lib\\cli.js:15:22)</p>\n<hr>\n<p>Rick@Dart MINGW64 ~/documents/github/ocpn-dev-manual (main)<br>\n$ antora --fetch antora.yml<br>\nerror: ui.bundle.url: must be of type String<br>\nconfiguration param 'name' not declared in the schema<br>\nconfiguration param 'title' not declared in the schema<br>\nconfiguration param 'version' not declared in the schema<br>\nconfiguration param 'nav' not declared in the schema<br>\nAdd the --stacktrace option to see the cause.</p>",
+        "id": 232502382,
+        "sender_full_name": "Rick Gleason",
+        "timestamp": 1617140452
+    },
+    {
+        "content": "<p>Now I am thinking that my build.yml is gone. Christ this is a mess..</p>",
+        "id": 232502811,
+        "sender_full_name": "Rick Gleason",
+        "timestamp": 1617140692
+    },
+    {
+        "content": "<p>And I am not supposed to push my own local build.yml up to the repos?<br>\nSo I guess I have to config a .gitignore   <br>\nHow do I prevent a PR merge from deleting it locally?</p>",
+        "id": 232503056,
+        "sender_full_name": "Rick Gleason",
+        "timestamp": 1617140836
+    },
+    {
+        "content": "<p>I tried going to ocpn-manuals and antora bldloc.yml and it builds but this does not change:<br>\nPlugin development<br>\nPlugin Workflow<br>\n    Package Installer<br>\nManaged Installer<br>\n    Services Setup<br>\n    Shipdriver<br>\n    Testplugin<br>\n    Additional Support</p>\n<p>Not sure about this workflow right now.  My changes to nav.adoc are not showing up</p>",
+        "id": 232503890,
+        "sender_full_name": "Rick Gleason",
+        "timestamp": 1617141305
+    },
+    {
+        "content": "<p>Also why does it go to your repos  <br>\n<a href=\"https://leamas.github.io/ocpn-manuals/ocpn-dev-manual/5.3.1/AboutThisManual.html\">https://leamas.github.io/ocpn-manuals/ocpn-dev-manual/5.3.1/AboutThisManual.html</a><br>\nWhen I hit the title??    couldn't that be relative to where the html is located?</p>",
+        "id": 232504308,
+        "sender_full_name": "Rick Gleason",
+        "timestamp": 1617141515
+    },
+    {
+        "content": "<p>Have checked antora.yml located in ocpn-dev-manual root directory</p>\n<p>name: ocpn-dev-manual<br>\ntitle: OpenCPN Developer Manual<br>\nversion: '5.3.1'<br>\nnav: </p>\n<ul>\n<li>modules/ROOT/nav.adoc</li>\n</ul>\n<p>which is correct.<br>\nThen deleted all html in ocpn-manuals  and ran my local build bldloc.yml<br>\nthe nav index.html remained the same.</p>\n<p>Maybe bldloc.yml is misconfigureed.<br>\nYes, the branch was changed from mockup to main.</p>",
+        "id": 232512114,
+        "sender_full_name": "Rick Gleason",
+        "timestamp": 1617145948
+    },
+    {
+        "content": "<p>\" antora antora.yml\"</p>\n<p>This makes no sense. antora.yml  is the  component descriptor, not the build file.</p>",
+        "id": 232542791,
+        "sender_full_name": "Alec Leamas",
+        "timestamp": 1617172372
+    },
+    {
+        "content": "<p>But, the important issue: If you have a nav.adoc which is what you want: commit  and push. Pronto.  At this point, we can handle possible problems by new commits, this is no problem. But as long as you persist doing local changes all is a mess which I cannot help you with.</p>",
+        "id": 232543297,
+        "sender_full_name": "Alec Leamas",
+        "timestamp": 1617172767
+    },
+    {
+        "content": "<p>BTW: Adding  <code>build-loc*.yml</code> to .gitignore is actually a good idea.</p>",
+        "id": 232543599,
+        "sender_full_name": "Alec Leamas",
+        "timestamp": 1617173024
+    },
+    {
+        "content": "<p>Alec, I think I am on track now. Pushed last night, making changes today.<br>\nOn thing however I think the name for your new installer is  \"Plugin Manager\". and the legacy one is \"Plugin Package Installer\".    AKA  \"Managed Installer\"  ( is okay too I think.)<br>\nI think we should be very consistent about that.<br>\nBTW look at the <a href=\"https://github.com/OpenCPN\">https://github.com/OpenCPN</a>  repository   plugins  - \"Container Project for an Integrated Plugin Management Facility \"  perhaps it was you who wrote that some time ago.</p>",
+        "id": 232614349,
+        "sender_full_name": "Rick Gleason",
+        "timestamp": 1617205522
+    },
+    {
+        "content": "<p>We should write all those things (there are more of them) on some sort  of checklist. Perhaps we should add a Terminology page?</p>",
+        "id": 232636125,
+        "sender_full_name": "Alec Leamas",
+        "timestamp": 1617213264
+    },
+    {
+        "content": "<p>The keyword \"legacy\" is good and sort of established. So, we have the Plugin Manager (Plugin Installer?) and  Legacy Plugin Installation or so.</p>",
+        "id": 232641528,
+        "sender_full_name": "Alec Leamas",
+        "timestamp": 1617215306
+    },
+    {
+        "content": "<p>This topic was moved here from <a class=\"stream-topic\" data-stream-id=\"282854\" href=\"/#narrow/stream/282854-general/topic/nav.2Eadoc.20and.20xref.20to.20within.20components\">#general &gt; nav.adoc and xref to within components</a> by <span class=\"user-mention silent\" data-user-id=\"399510\">Alec Leamas</span>.</p>",
+        "id": 290756377,
+        "sender_full_name": "Notification Bot",
+        "timestamp": 1658754606
+    }
+]

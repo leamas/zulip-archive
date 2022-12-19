@@ -1,0 +1,164 @@
+[
+    {
+        "content": "<p>Dave wrote:</p>\n<blockquote>\n<p>I   am implementing the new idea for listen/notify driver stacks, trying<br>\nto follow the logic of your sketch, even if some class names are changed.</p>\n</blockquote>\n<blockquote>\n<p>There are some questions to clarify your ideas, before I go off on some<br>\nunexpected direction.</p>\n</blockquote>\n<blockquote>\n<ol>\n<li>App element places listen() call to singleton class \"transport\", specifying desired data by key.</li>\n</ol>\n</blockquote>\n<p>Yes</p>\n<blockquote>\n<ol start=\"2\">\n<li>Transport class maintains lists of what app element has asked for what kind of messages (key).  Probably a hash map.</li>\n</ol>\n</blockquote>\n<p>This is actually already done  in <em>observable.h</em>. The only thing needed is a specialization for <code>nav_msg_ptr</code>,  probably just a simple header-only thing.</p>\n<blockquote>\n<ol start=\"3\">\n<li>Driver receives an n2k PGN, asyncronously.</li>\n</ol>\n</blockquote>\n<blockquote>\n<ol start=\"4\">\n<li>Fuzzy here:  Driver calls transport class (inline on main app thread) with ptr to raw data, and other info.  Has the appropriate method in the transport class been defined? I don't see it</li>\n</ol>\n</blockquote>\n<p>This is notify((). As said, it is in observable.h</p>\n<p>Still, the listening side must of course define the method invoked for the message, most likely a lambda.  But no need to declare that in the interface </p>\n<blockquote>\n<ol start=\"5\">\n<li>Transport class determines who wants this PGN, if anyone, by inspection of PGN, and consultation of it's listener lists.  And posts a Notify() to the matching listeners.</li>\n</ol>\n</blockquote>\n<p>No. Observable posts an event to all listeners, listeners does not use or  see <code>notify()</code> in any other way than a received event. OTOH.  listeners define the method invoked for the message, most likely a lambda.  But no need to declare that in the interface </p>\n<blockquote>\n<ol start=\"6\">\n<li>Everybody is happy.</li>\n</ol>\n</blockquote>\n<p>Not until  we have some actual code.-</p>\n<blockquote>\n<p>OK so far?</p>\n</blockquote>\n<p>Not really, see above ;)</p>\n<blockquote>\n<ol start=\"7\">\n<li>Looking at transport class, I see it derived from \"DriverListener\".  What is this interface used for, especially its Notify() methods?</li>\n</ol>\n</blockquote>\n<p>This is really about upper layers. Since the driver layer has no knowledge about the upper layers, it cannot declare a \"upper layer parameter\". For example,  it cannot define a function like <code>set_listener(Transport transport)</code>where transport  listens to some  messages. Instead ,  it defines an interface which can be easily implemented by Transport, and makes the transport instance a legal method argument to for example <code>AbstractDriver::set_listener()</code>.</p>\n<p>Keeping things this way is important for example when  testing since we dont hardcode  the listerner and thus can use a some test setup instead. It also keeps the layer structure clean:  lower has no dependencies i. e.  includes from  upper ones.</p>\n<p>My feeling is that I'm behind schedule</p>",
+        "id": 290775128,
+        "sender_full_name": "Alec Leamas",
+        "timestamp": 1658763137
+    },
+    {
+        "content": "<p>Sidenote:  The exact meaning of  what a listener in waiting for is in  the <code>msg_key</code>class.   This is an unique string which represents  a message type and used to classify both incoming  messages  to <code>notify()</code> and listeners.</p>",
+        "id": 290776700,
+        "sender_full_name": "Alec Leamas",
+        "timestamp": 1658763766
+    },
+    {
+        "content": "<p>OK, I'm following most of that.  To me, observable.h and friends is magic, until I study the code some more.<br>\nJust to let you know, I'm not stuck with nothing to do, but I will be soon.<br>\nI have built a class structure for drivers, trying to get to some orthogonality in the definitions.<br>\nFor instance, n2k driver stack today looks like a three class hierarchy.<br>\ncommDriverBase-&gt;commDriverN2K-&gt;commDriverN2kSerial<br>\nWe will also have:<br>\ncommDriverBase-&gt;commDriverN0183-&gt;commDriverN0183Serial<br>\ncommDriverBase-&gt;commDriverN0183-&gt;commDriverN0183Net<br>\netc.</p>\n<p>I have built working code for commDriverN2KSerial, which handles YachtDevices and Actisense devicess which come into USB as a serial interface.  I am getting live N2K data from the simple network I cobbled together, ready to send to higher layers when able.<br>\nAlso built commDriversN0183Serial, which stole code from OCPN_Datastream.  I see OCPN_Datastream as going away in this evolution.</p>\n<p>I am going to read observable.h now.</p>",
+        "id": 290802097,
+        "sender_full_name": "Dave Register",
+        "timestamp": 1658774763
+    },
+    {
+        "content": "<p>Probably a good idea. But if you wait until tomorrow I'm pretty sure I will have first round of at least the raw message bus in place. More or less finished with my first priority <a href=\"https://github.com/OpenCPN/OpenCPN/pull/2689\">https://github.com/OpenCPN/OpenCPN/pull/2689</a></p>",
+        "id": 290815166,
+        "sender_full_name": "Alec Leamas",
+        "timestamp": 1658781519
+    },
+    {
+        "content": "<p>I have  been able to transfer a ref-counted pointer through a wxEvent's  void* . The basic idea is to wrap the pointer in a class, transfer the class and retrieve the class including pointer on the receiving side. It's somewhat messy, but could be hidden within the observable specialization. And even if messy, it's  IMHO still better than templating. Could be wrong, bit it is just  an implementation detail.</p>",
+        "id": 290823922,
+        "sender_full_name": "Alec Leamas",
+        "timestamp": 1658786205
+    },
+    {
+        "content": "<p>After merging the CLI work, I have created a new branch creatively called \"comm\", pushed to github.<br>\nThis will be our working branch for n2k driver/application data model, for now.<br>\nI am ready now to understand and code the notify() calls from the driver.  I would appreciate any input and code snippets to make this happen.</p>\n<p>commDriverN2KSerial.cpp:126</p>\n<p>std::vector&lt;unsigned char&gt; *data = p.get();</p>\n<p>// Create the upstream message<br>\n  Nmea2000_msg n2kmsg;<br>\n<a href=\"http://n2kmsg.id\">n2kmsg.id</a> =   N2kId(data);<br>\n  n2kmsg.payload = *data;</p>\n<p>// This is where we want to build a \"nav_msg\", using a shared_ptr<br>\n  // and then call notify()</p>",
+        "id": 290845661,
+        "sender_full_name": "Dave Register",
+        "timestamp": 1658806139
+    },
+    {
+        "content": "<p>P.S.<br>\nI hope my refactoring/renaming does not disagree with you.</p>",
+        "id": 290846960,
+        "sender_full_name": "Dave Register",
+        "timestamp": 1658807919
+    },
+    {
+        "content": "<p>Havn'tr looked at it yet. Have test code working for the basic parts, working with notify()/get_listener() parts. Will probably not have anything ready today.  Lots's of exciting C++ stuff. But I'm on it.</p>",
+        "id": 290885961,
+        "sender_full_name": "Alec Leamas",
+        "timestamp": 1658839874
+    },
+    {
+        "content": "<p>hm... actually,  not really fond of AbstractDriver -&gt; commDriverBase.  The usual convention is is that AbstractClass describes the interface, whereas BaseClass carries common implementations used by (in this case( multiple drivers.</p>\n<p>Perhaps we thus should have two classes, one <code>AbstractCommDriver </code>which is the public interface and a <code>CommBaseDriver</code> or so which is the common implementation stuiff?</p>",
+        "id": 290886857,
+        "sender_full_name": "Alec Leamas",
+        "timestamp": 1658840365
+    },
+    {
+        "content": "<p>Sure, I can do something like that.  I did not like the term \"AbstractDriver\".  Driver for what?</p>",
+        "id": 290889872,
+        "sender_full_name": "Dave Register",
+        "timestamp": 1658841912
+    },
+    {
+        "content": "<p>Driver for anything. Basically, for usage above the driver layer AbstractDriver is the external interface implemented by all drivers. That is, all drivers should inherit it.</p>",
+        "id": 290898532,
+        "sender_full_name": "Alec Leamas",
+        "timestamp": 1658845105
+    },
+    {
+        "content": "<p><span class=\"user-mention\" data-user-id=\"517002\">@Dave Register</span>  Serious problems: Unions cannot have members with constructors, for example vectors Will have to  redesign NavMsg to be a inherited class structure instead of a union. Also, I need food and sleep. Hopefully things will be better tomorrow.</p>",
+        "id": 290908131,
+        "sender_full_name": "Alec Leamas",
+        "timestamp": 1658848440
+    },
+    {
+        "content": "<p>What other drivers do we have, or anticipate?  The drivers header file is loaded with comm specific structs, etc.  Not really generic.</p>",
+        "id": 290935402,
+        "sender_full_name": "Dave Register",
+        "timestamp": 1658859622
+    },
+    {
+        "content": "<p>Sorry, now I see your point. AbstractCommDriver is  certainly a better name.</p>",
+        "id": 290940576,
+        "sender_full_name": "Alec Leamas",
+        "timestamp": 1658862049
+    },
+    {
+        "content": "<p>I have fixed Hakan's report of o-charts plugin failure.<br>\nI added a new obvserverd variable  to plugin_loader: <br>\n EventVar evt_plugin_loadall_finalize;<br>\nThis gets notified after all plugins have been loaded, especially on app startup.  The activated method sets up the GL libraries, etc.  Might need touchup for CLI build.</p>\n<p>Good practice toward understanding new observed variable concept.<br>\nI'll push this as soon as Windows test build completes locally.</p>",
+        "id": 290947866,
+        "sender_full_name": "Dave Register",
+        "timestamp": 1658865502
+    },
+    {
+        "content": "<p>sounds great! There should be no need to think about the cli build: The events are generated in plugin_loader (which is part of the CLI) but processed in pluginmanager which is not part of the CLI. Net result is just that  in the cli case nothing is listening to the new event.</p>",
+        "id": 290965936,
+        "sender_full_name": "Alec Leamas",
+        "timestamp": 1658875883
+    },
+    {
+        "content": "<p>First iteration of notify/listen now works, at least  in simple cases. NavMsg is now a class hierarchy, not a union. Need to make the same change with NavAddr, not idea how much  this is yet used. </p>\n<p>Merge job looming...</p>",
+        "id": 290966170,
+        "sender_full_name": "Alec Leamas",
+        "timestamp": 1658876070
+    },
+    {
+        "content": "<p>At the moment, MSW does not build.  Problems with struct definitions.  A bit strange that GCC accepts them...I'll wait until you merge the refactor of NavMsg, etc. to fix</p>",
+        "id": 290983294,
+        "sender_full_name": "Dave Register",
+        "timestamp": 1658892252
+    },
+    {
+        "content": "<p>Anyway, I'm in the process to remove the structs and use classes instead.</p>",
+        "id": 291008568,
+        "sender_full_name": "Alec Leamas",
+        "timestamp": 1658913716
+    },
+    {
+        "content": "<p>BTW: Really happy for that you fixed the o-charts bug.  My own chances to handling  that would probably like snowball in hell. Thanks!</p>",
+        "id": 291022361,
+        "sender_full_name": "Alec Leamas",
+        "timestamp": 1658922535
+    },
+    {
+        "content": "<p>I have pushed updates to the comm branch. It is  rebased to current master and hence needs to be fetched using -f or so.</p>\n<p>There is test/demonstration code in <em>console.cpp</em>, look for <code>test_transport()</code>. <code>opencpn-cmd test-transport</code> runs it and uses notify/listen in a simple way. Plan is that the test code now in console.cpp should be moved to some unittest framework to be determined. </p>\n<p>I had to remove the serial driver, it includes some header from your home directory outside the repo. Check  67314134b,  currently HEAD^. </p>\n<p>We might need to discuss naming, but at least this compiles</p>",
+        "id": 291030216,
+        "sender_full_name": "Alec Leamas",
+        "timestamp": 1658927051
+    },
+    {
+        "content": "<blockquote>\n<p>A bit strange that GCC accepts them...</p>\n</blockquote>\n<p>Actually, I have found many cases which are accepted by both clang and gcc but not VS.  The ms linker is a major pain is this respect and forced some ugly solutions to the split plugon_loader/pluginmanager.</p>",
+        "id": 291030962,
+        "sender_full_name": "Alec Leamas",
+        "timestamp": 1658927391
+    },
+    {
+        "content": "<p>I'm on the windows build errors. This is actually a mess, stay tuned.</p>",
+        "id": 291091522,
+        "sender_full_name": "Alec Leamas",
+        "timestamp": 1658947321
+    },
+    {
+        "content": "<p>Rant.  Microsoft compiler did not like a class member named \"interface\".  Somehow interpreting that as a keyword.  Two hours later, the Windows build compiles.  Rant over.</p>",
+        "id": 291131728,
+        "sender_full_name": "Dave Register",
+        "timestamp": 1658972800
+    },
+    {
+        "content": "<p>I follow the logic in console,cpp.  Implementing now for real source/sink.  I'll keep you posted on how it goes.<br>\nThanks for the code sample.</p>",
+        "id": 291135405,
+        "sender_full_name": "Dave Register",
+        "timestamp": 1658977304
+    },
+    {
+        "content": "<p>\"rant followup\" I ran into the same issue, also cost me some time. Ended up in <em>71d734d21 commdriverBase: Avoid using 'interface' as identifier</em> with the SO link:  <a href=\"https://stackoverflow.com/questions/59973219\">https://stackoverflow.com/questions/59973219</a>. Sigh, indeed.</p>",
+        "id": 291146209,
+        "sender_full_name": "Alec Leamas",
+        "timestamp": 1658990182
+    },
+    {
+        "content": "<blockquote>\n<p>Thanks for the code sample.</p>\n</blockquote>\n<p>Actually,  they contained a memory leak bug, left-overs from some bug hunting. I have updated TransportSource to  correct form.</p>",
+        "id": 291147169,
+        "sender_full_name": "Alec Leamas",
+        "timestamp": 1658991205
+    }
+]

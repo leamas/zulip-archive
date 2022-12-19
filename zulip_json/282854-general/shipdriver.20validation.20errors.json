@@ -1,0 +1,878 @@
+[
+    {
+        "content": "<p><span class=\"user-mention\" data-user-id=\"399865\">@Rick Gleason</span>  reports:</p>\n<blockquote>\n<p>I've tried to update-templates  VDR_pi twice and all I get is a bunch of<br>\nthese.</p>\n<p>What is the problem?</p>\n<p><a href=\"https://github.com/OpenCPN/plugins/runs/5859820856?check_suite_focus=true\">https://github.com/OpenCPN/plugins/runs/5859820856?check_suite_focus=true</a></p>\n</blockquote>\n<p>The link contains </p>\n<div class=\"codehilite\"><pre><span></span><code>The value &#39;ubuntu-wx315-x86_64&#39; is not an element of the set {&#39;all&#39;, &#39;android-arm64-v8a&#39;, &#39;android-armeabi-v7a&#39;,\n&#39;android-armhf&#39;, &#39;android-arm64&#39;, &#39;darwin&#39;, &#39;darwin-wx315&#39;, &#39;debian-x86_64&#39;, &#39;debian-armhf&#39;, &#39;flatpak-aarch64&#39;,\n&#39;flatpak-x86_64&#39;, &#39;flatpak-x86_64-wx315&#39;, &#39;mingw&#39;, &#39;mingw-x86_64&#39;, &#39;msvc&#39;, &#39;ubuntu-gtk3-x86_64&#39;, &#39;ubuntu-x86_64&#39;,\n&#39;ubuntu-gtk3-armhf&#39;, &#39;ubuntu-armhf&#39;, &#39;raspbian-armhf&#39;}.\n</code></pre></div>\n<p>That is, it builds a (yet) not defined <em>ABI  ubuntu-wx315-x86_64</em></p>\n<p>This is <a href=\"https://github.com/Rasbats/shipdriver_pi/issues/437\">https://github.com/Rasbats/shipdriver_pi/issues/437</a>, filed by you and fixed in 3.1.1. So you could just update to 3.1.1 to fix problem, or remove the offending build manually</p>",
+        "id": 278153244,
+        "sender_full_name": "Alec Leamas",
+        "timestamp": 1649333135
+    },
+    {
+        "content": "<p>Thanks Alec, I think  was confused and linked to the first version using outdated update-template sd3.0.1-beta (VDR 1.3.22).  Recently I updated-template sd3.1.1  (<a href=\"https://github.com/rgleason/vdr_pi/commits/master\">VDR 1.3.23)  which all built 14 hours ago</a>  That built and is <a href=\"https://cloudsmith.io/~opencpn/repos/vdr-prod/packages/\">all available in Cloudsmith</a>  Now isn't something done automatically. Then I have to complete it somehow?  PS Sorry for the pesky questions. I have to get the routine remembered.  I want to do same with logbook too.</p>",
+        "id": 278162871,
+        "sender_full_name": "Rick Gleason",
+        "timestamp": 1649337785
+    },
+    {
+        "content": "<p>I now see my  <a href=\"https://github.com/rgleason/plugins/tree/auto/metadata\">rgleason/plugins/auto</a>  Shows both the VDR 1.3.22 and 1.3.23</p>",
+        "id": 278164625,
+        "sender_full_name": "Rick Gleason",
+        "timestamp": 1649338638
+    },
+    {
+        "content": "<p>Now what?  It turns into a big mess after this.</p>\n<p>fcgle@Hesper MINGW64 ~/source/plugins (master)<br>\n$ git remote update upstream<br>\nFetching upstream</p>\n<p>fcgle@Hesper MINGW64 ~/source/plugins (master)<br>\n$ git checkout master<br>\nAlready on 'master'<br>\nYour branch is up to date with 'origin/master'.</p>\n<p>fcgle@Hesper MINGW64 ~/source/plugins (master)<br>\n$ git rebase upstream/master<br>\nSuccessfully rebased and updated refs/heads/master.</p>\n<p>fcgle@Hesper MINGW64 ~/source/plugins (master)<br>\n$ git fetch origin auto:auto<br>\nEnter passphrase for key '/c/Users/fcgle/.ssh/id_ed25519':<br>\nEnter passphrase for key '/c/Users/fcgle/.ssh/id_ed25519':</p>\n<p>fcgle@Hesper MINGW64 ~/source/plugins (master)<br>\n$ git checkout auto<br>\nSwitched to branch 'auto'<br>\nYour branch and 'upstream/master' have diverged,<br>\nand have 50 and 34 different commits each, respectively.<br>\n  (use \"git pull\" to merge the remote branch into yours)</p>",
+        "id": 278166349,
+        "sender_full_name": "Rick Gleason",
+        "timestamp": 1649339336
+    },
+    {
+        "content": "<p>BTW  I have Logbook v1.4.29  here <a href=\"https://cloudsmith.io/~opencpn/repos/logbookkonni-prod/packages/\">in circleci</a>  and  I am finding v1.4.28 and 1.4.29 in my plugins/auto</p>",
+        "id": 278166774,
+        "sender_full_name": "Rick Gleason",
+        "timestamp": 1649339521
+    },
+    {
+        "content": "<p>I have half a mind to just copy the right stuff, change to Master branch and paste it in.<br>\nThat is a lot simpler.</p>",
+        "id": 278166955,
+        "sender_full_name": "Rick Gleason",
+        "timestamp": 1649339606
+    },
+    {
+        "content": "<p>If you are <strong>really</strong> sure that you a) have the correct contents in your local master branch and b) that noone is using  your repo besides you you can force-push using <code>git push -f  origin master:master</code>. This will effectively overwrite the history in your remote repo, and break the overall git promise that nothing ever is lost. But it will work</p>\n<p>If you have the correct content in the remote branch you can do like this:</p>\n<div class=\"codehilite\"><pre><span></span><code>$ git checkout -b tmp\n$ git remote update origin\n$ git branch -m master master.old\n$ git fetch origin master:master\n$ git checkout master\n</code></pre></div>\n\n<p>This will give a master branch which is a copy of the remote master branch, saving you local master branch as master.old. Here, everything is still available, but you  need to be careful when re-constructing master.</p>\n<p>Don't copy files. It's generally a bad idea, and even more so on windows where you more or less always get permissions problems</p>",
+        "id": 278168043,
+        "sender_full_name": "Alec Leamas",
+        "timestamp": 1649340053
+    },
+    {
+        "content": "<p>Thanks Alec .  What branch am I supposed to execute the above from?<br>\nI absolutely HATE that goddamn Bash Editor which is required when merge conflicts occur, and they always occur at the worst time. It is a totally impossible interface. I've tried to read the instructions and it still makes no sense and does not work as expected.</p>\n<p>PS: Why should I care about my plugins history?</p>",
+        "id": 278169540,
+        "sender_full_name": "Rick Gleason",
+        "timestamp": 1649340707
+    },
+    {
+        "content": "<p>Let's start over.  My remote  <a href=\"https://github.com/rgleason/plugins/tree/auto/metadata\">rgleason/plugins  \"auto\" branch</a> has the metadata for vdr 1.3.23  and  logbookkonni  1.4.29   done yesterday.  How do I get these into the master catalog?</p>",
+        "id": 278171707,
+        "sender_full_name": "Rick Gleason",
+        "timestamp": 1649341598
+    },
+    {
+        "content": "<p>Please keep this simple.</p>",
+        "id": 278172806,
+        "sender_full_name": "Rick Gleason",
+        "timestamp": 1649342065
+    },
+    {
+        "content": "<p><a href=\"https://stackoverflow.com/questions/19085807/please-enter-a-commit-message-to-explain-why-this-merge-is-necessary-especially\">From stackoverflow</a> <br>\n    press \"i\" (i for insert)<br>\n    write your merge message<br>\n    press \"esc\" (escape)<br>\n    write \":wq\" (write &amp; quit)<br>\n    then press enter<br>\nThis does work, but very strange.</p>",
+        "id": 278174356,
+        "sender_full_name": "Rick Gleason",
+        "timestamp": 1649342671
+    },
+    {
+        "content": "<p>I have no idea how I got here, but the changes for VDR 1.3.23 are now pushed to remote and I tried to make a PR<br>\nand it still fails!!!!    This is totally ridiculous.   I have updated to sd3.1.1!!!!!!!!<br>\n<a href=\"https://github.com/OpenCPN/plugins/pull/649\">https://github.com/OpenCPN/plugins/pull/649</a></p>\n<p>I would have had this Done several hours ago using TP</p>",
+        "id": 278175301,
+        "sender_full_name": "Rick Gleason",
+        "timestamp": 1649343056
+    },
+    {
+        "content": "<p>if you have metadata in the auto branch, the procedure is in <a href=\"https://opencpn-manuals.github.io/main/AlternativeWorkflow/InstallConfigure/Catalog-Github-Integration.html#make-PR\">https://opencpn-manuals.github.io/main/AlternativeWorkflow/InstallConfigure/Catalog-Github-Integration.html#make-PR</a></p>\n<p>That procedure rebases your auto branch. This means that the merge operation is fast-forward, and you should not have to enter  any commit message. The key bindings from stackoverflow is from using vim which is my everyday editor, so it's not strange for me. But basically, if you come into such a window you are doing something wrong. In particular, you havn't rebased hence getting a messy merge.</p>",
+        "id": 278176290,
+        "sender_full_name": "Alec Leamas",
+        "timestamp": 1649343446
+    },
+    {
+        "content": "<p>Incidentally,<br>\nI note that what I have done is so SCREWED up. Commits that I thought were for 1.3.23 and labeled accordingly are actually overwriting 1.3.23 with 1.3.22!   Etc.    <br>\nWith this system everything seems to be upside down again.  I will try this again since I have no choice.</p>",
+        "id": 278178414,
+        "sender_full_name": "Rick Gleason",
+        "timestamp": 1649344163
+    },
+    {
+        "content": "<p>One useful command is <code>git reset --hard   &lt;commit&gt;</code>.  It basically throws away anything after the given commit, moving your branch back int time to a hopefully sane starting point</p>",
+        "id": 278178644,
+        "sender_full_name": "Alec Leamas",
+        "timestamp": 1649344258
+    },
+    {
+        "content": "<p>For \"Synching Branches\"  what branches are we talking about here?<br>\nWhere do I start?  What branch?</p>",
+        "id": 278178657,
+        "sender_full_name": "Rick Gleason",
+        "timestamp": 1649344263
+    },
+    {
+        "content": "<p>ARe you making a PR against master or Beta?</p>",
+        "id": 278178711,
+        "sender_full_name": "Alec Leamas",
+        "timestamp": 1649344288
+    },
+    {
+        "content": "<p>I intend to make a PR against Opencpn/plugins/master</p>",
+        "id": 278178820,
+        "sender_full_name": "Rick Gleason",
+        "timestamp": 1649344326
+    },
+    {
+        "content": "<p>Well,  as described in that  chapter you can then just do the three first commands which updates master</p>",
+        "id": 278178953,
+        "sender_full_name": "Alec Leamas",
+        "timestamp": 1649344390
+    },
+    {
+        "content": "<p>So execute these from my local rgleason/plugins  master branch?<br>\n git remote update upstream<br>\n git checkout master<br>\n git rebase upstream/master</p>",
+        "id": 278179155,
+        "sender_full_name": "Rick Gleason",
+        "timestamp": 1649344465
+    },
+    {
+        "content": "<p>from any branch, actually</p>",
+        "id": 278179204,
+        "sender_full_name": "Alec Leamas",
+        "timestamp": 1649344484
+    },
+    {
+        "content": "<p>Totally independent of what branch?  I never understood that.</p>",
+        "id": 278179266,
+        "sender_full_name": "Rick Gleason",
+        "timestamp": 1649344515
+    },
+    {
+        "content": "<p>The first is about the remote i. e., all branches. The second will move you to master branch...</p>",
+        "id": 278179422,
+        "sender_full_name": "Alec Leamas",
+        "timestamp": 1649344566
+    },
+    {
+        "content": "<p>OK, have done it. There are problems.  I guess I will just <br>\n\"One useful command is git reset --hard   &lt;commit&gt;\"</p>\n<p>fcgle@Hesper MINGW64 ~/source/plugins (master)<br>\n$ git remote update upstream<br>\nFetching upstream</p>\n<p>fcgle@Hesper MINGW64 ~/source/plugins (master)<br>\n$ git checkout master<br>\nAlready on 'master'<br>\nYour branch is up to date with 'origin/master'.</p>\n<p>fcgle@Hesper MINGW64 ~/source/plugins (master)<br>\n$ git rebase upstream/master<br>\nCONFLICT (rename/rename): Rename \"metadata/VDR-v1.3.20-ubuntu-gtk3-20.04.xml\"-&gt;\"metadata/VDR-v1.3.23-ubuntu-gtk3-20.04.xml\" in branch \"HEAD\" rename \"metadata/VDR-v1.3.20-ubuntu-gtk3-20.04.xml\"-&gt;\"metadata/VDR-v1.3.22-ubuntu-gtk3-20.04.xml\" in \"778488f (VDR 1.3.22)\"<br>\nAuto-merging metadata/VDR-v1.3.23-ubuntu-gtk3-20.04.xml and metadata/VDR-v1.3.22-ubuntu-gtk3-20.04.xml, both renamed from metadata/VDR-v1.3.20-ubuntu-gtk3-20.04.xml<br>\nCONFLICT (rename/rename): Rename \"metadata/VDR-v1.3.20-ubuntu-gtk3-18.04.xml\"-&gt;\"metadata/VDR-v1.3.23-ubuntu-gtk3-18.04.xml\" in branch \"HEAD\" rename \"metadata/VDR-v1.3.20-ubuntu-gtk3-18.04.xml\"-&gt;\"metadata/VDR-v1.3.22-ubuntu-gtk3-18.04.xml\" in \"778488f (VDR 1.3.22)\"<br>\nAuto-merging metadata/VDR-v1.3.23-ubuntu-gtk3-18.04.xml and metadata/VDR-v1.3.22-ubuntu-gtk3-18.04.xml, both renamed from metadata/VDR-v1.3.20-ubuntu-gtk3-18.04.xml<br>\nCONFLICT (rename/rename): Rename \"metadata/VDR-v1.3.20-raspbian-9.13.xml\"-&gt;\"metadata/VDR-v1.3.23-ubuntu-A32-18.04.xml\" in branch \"HEAD\" rename \"metadata/VDR-v1.3.20-raspbian-9.13.xml\"-&gt;\"metadata/VDR-v1.3.22-ubuntu-A32-18.04.xml\" in \"778488f (VDR 1.3.22)\"<br>\nAuto-merging metadata/VDR-v1.3.23-ubuntu-A32-18.04.xml and metadata/VDR-v1.3.22-ubuntu-A32-18.04.xml, both renamed from metadata/VDR-v1.3.20-raspbian-9.13.xml<br>\nCONFLICT (rename/rename): Rename \"metadata/VDR-v1.3.20-ubuntu-18.04.xml\"-&gt;\"metadata/VDR-v1.3.23-ubuntu-18.04.xml\" in branch \"HEAD\" rename \"metadata/VDR-v1.3.20-ubuntu-18.04.xml\"-&gt;\"metadata/VDR-v1.3.22-ubuntu-18.04.xml\" in \"778488f (VDR 1.3.22)\"<br>\nAuto-merging metadata/VDR-v1.3.23-ubuntu-18.04.xml and metadata/VDR-v1.3.22-ubuntu-18.04.xml, both renamed from metadata/VDR-v1.3.20-ubuntu-18.04.xml<br>\nCONFLICT (rename/rename): Rename \"metadata/VDR-v1.3.20-msvc-10.0.14393.xml\"-&gt;\"metadata/VDR-v1.3.23-msvc-10.0.14393.xml\" in branch \"HEAD\" rename \"metadata/VDR-v1.3.20-msvc-10.0.14393.xml\"-&gt;\"metadata/VDR-v1.3.22-msvc-10.0.14393.xml\" in \"778488f (VDR 1.3.22)\"<br>\nAuto-merging metadata/VDR-v1.3.23-msvc-10.0.14393.xml and metadata/VDR-v1.3.22-msvc-10.0.14393.xml, both renamed from metadata/VDR-v1.3.20-msvc-10.0.14393.xml<br>\nCONFLICT (rename/rename): Rename \"metadata/VDR-v1.3.20-flatpak-A64-20.08.xml\"-&gt;\"metadata/VDR-v1.3.23-flatpak-A64-20.08.xml\" in branch \"HEAD\" rename \"metadata/VDR-v1.3.20-flatpak-A64-20.08.xml\"-&gt;\"metadata/VDR-v1.3.22-flatpak-A64-20.08.xml\" in \"778488f (VDR 1.3.22)\"<br>\nAuto-merging metadata/VDR-v1.3.23-flatpak-A64-20.08.xml and metadata/VDR-v1.3.22-flatpak-A64-20.08.xml, both renamed from metadata/VDR-v1.3.20-flatpak-A64-20.08.xml<br>\nCONFLICT (rename/rename): Rename \"metadata/VDR-v1.3.20-flatpak-20.08.xml\"-&gt;\"metadata/VDR-v1.3.23-flatpak-20.08.xml\" in branch \"HEAD\" rename \"metadata/VDR-v1.3.20-flatpak-20.08.xml\"-&gt;\"metadata/VDR-v1.3.22-flatpak-20.08.xml\" in \"778488f (VDR 1.3.22)\"<br>\nAuto-merging metadata/VDR-v1.3.23-flatpak-20.08.xml and metadata/VDR-v1.3.22-flatpak-20.08.xml, both renamed from metadata/VDR-v1.3.20-flatpak-20.08.xml<br>\nCONFLICT (rename/rename): Rename \"metadata/VDR-v1.3.20-raspbian-11.xml\"-&gt;\"metadata/VDR-v1.3.23-debian-A32-11.xml\" in branch \"HEAD\" rename \"metadata/VDR-v1.3.20-raspbian-11.xml\"-&gt;\"metadata/VDR-v1.3.22-debian-A32-11.xml\" in \"778488f (VDR 1.3.22)\"<br>\nAuto-merging metadata/VDR-v1.3.23-debian-A32-11.xml and metadata/VDR-v1.3.22-debian-A32-11.xml, both renamed from metadata/VDR-v1.3.20-raspbian-11.xml<br>\nCONFLICT (rename/rename): Rename \"metadata/VDR-v1.3.20-raspbian-10.xml\"-&gt;\"metadata/VDR-v1.3.23-debian-A32-10.xml\" in branch \"HEAD\" rename \"metadata/VDR-v1.3.20-raspbian-10.xml\"-&gt;\"metadata/VDR-v1.3.22-debian-A32-10.xml\" in \"778488f (VDR 1.3.22)\"<br>\nAuto-merging metadata/VDR-v1.3.23-debian-A32-10.xml and metadata/VDR-v1.3.22-debian-A32-10.xml, both renamed from metadata/VDR-v1.3.20-raspbian-10.xml<br>\nCONFLICT (rename/rename): Rename \"metadata/VDR-v1.3.20-debian-10.xml\"-&gt;\"metadata/VDR-v1.3.23-debian-10.xml\" in branch \"HEAD\" rename \"metadata/VDR-v1.3.20-debian-10.xml\"-&gt;\"metadata/VDR-v1.3.22-debian-10.xml\" in \"778488f (VDR 1.3.22)\"<br>\nAuto-merging metadata/VDR-v1.3.23-debian-10.xml and metadata/VDR-v1.3.22-debian-10.xml, both renamed from metadata/VDR-v1.3.20-debian-10.xml<br>\nCONFLICT (renerror: could not apply 778488f... VDR 1.3.22<br>\nResolve all conflicts manually, mark them as resolved with<br>\n\"git add/rm &lt;conflicted_files&gt;\", then run \"git rebase --continue\".<br>\nYou can instead skip this commit: run \"git rebase --skip\".<br>\nTo abort and get back to the state before \"git rebase\", run \"git rebase --abort\".<br>\nCould not apply 778488f... VDR 1.3.22<br>\name/rename): Rename \"metadata/VDR-v1.3.20-darwin-wx315-10.13.6.xml\"-&gt;\"metadata/VDR-v1.3.23-darwin-wx315-10.13.6.xml\" in branch \"HEAD\" rename \"metadata/VDR-v1.3.20-darwin-wx315-10.13.6.xml\"-&gt;\"metadata/VDR-v1.3.22-darwin-wx315-10.13.6.xml\" in \"778488f (VDR 1.3.22)\"<br>\nAuto-merging metadata/VDR-v1.3.23-darwin-wx315-10.13.6.xml and metadata/VDR-v1.3.22-darwin-wx315-10.13.6.xml, both renamed from metadata/VDR-v1.3.20-darwin-wx315-10.13.6.xml<br>\nCONFLICT (rename/rename): Rename \"metadata/VDR-v1.3.20-android-armhf-16.xml\"-&gt;\"metadata/VDR-v1.3.23-android-armhf-A32-16.xml\" in branch \"HEAD\" rename \"metadata/VDR-v1.3.20-android-armhf-16.xml\"-&gt;\"metadata/VDR-v1.3.22-android-armhf-A32-16.xml\" in \"778488f (VDR 1.3.22)\"<br>\nAuto-merging metadata/VDR-v1.3.23-android-armhf-A32-16.xml and metadata/VDR-v1.3.22-android-armhf-A32-16.xml, both renamed from metadata/VDR-v1.3.20-android-armhf-16.xml<br>\nCONFLICT (rename/rename): Rename \"metadata/VDR-v1.3.20-android-arm64-A64-16.xml\"-&gt;\"metadata/VDR-v1.3.23-android-arm64-A64-16.xml\" in branch \"HEAD\" rename \"metadata/VDR-v1.3.20-android-arm64-A64-16.xml\"-&gt;\"metadata/VDR-v1.3.22-android-arm64-A64-16.xml\" in \"778488f (VDR 1.3.22)\"<br>\nAuto-merging metadata/VDR-v1.3.23-android-arm64-A64-16.xml and metadata/VDR-v1.3.22-android-arm64-A64-16.xml, both renamed from metadata/VDR-v1.3.20-android-arm64-A64-16.xml</p>\n<p>fcgle@Hesper MINGW64 ~/source/plugins (master|REBASE 3/4)</p>",
+        "id": 278179723,
+        "sender_full_name": "Rick Gleason",
+        "timestamp": 1649344673
+    },
+    {
+        "content": "<p>fcgle@Hesper MINGW64 ~/source/plugins (master|REBASE 3/4)<br>\n$ git log --oneline -10<br>\n7e34ae2 (HEAD) vdr 1.3.23<br>\naaab5d4 VDR 1.3.22<br>\nca973a4 (upstream/master) Merge pull request #651 from leamas/add-win64-mm64<br>\n787bed8 ocpn-plugin.xsd: Keep ABI entries sorted.<br>\n43d8c68 Add new API targets darwin-arm64 and msvc-64<br>\nbedae90 Automatic update of ocpn-plugins.xml<br>\ncc86813 Merge pull request #650 from Rasbats/master<br>\n91e399f Remove old v1.4 xml files<br>\n5f7ed17 updated UKTides_pi v1.4.0<br>\n4cc0f8a Merge branch 'OpenCPN:master' into master</p>",
+        "id": 278179901,
+        "sender_full_name": "Rick Gleason",
+        "timestamp": 1649344729
+    },
+    {
+        "content": "<p>Yes, you have probably some messy commits. Use <code>git reset --hard</code> to go to a sane point in your history. <code>git log --oneline -20</code>or so displays the history, so you can select which commit you wan to come back to.</p>\n<p>If you can see <code>upstream/master</code>in  your history a reasonable approach might be <code>git reset --hard upstream/master</code>. However, be aware that anything after that commit is lost.</p>",
+        "id": 278180251,
+        "sender_full_name": "Alec Leamas",
+        "timestamp": 1649344880
+    },
+    {
+        "content": "<p>EDIT: Forget what I said about upstream/master. Just select a commit...</p>",
+        "id": 278180393,
+        "sender_full_name": "Alec Leamas",
+        "timestamp": 1649344939
+    },
+    {
+        "content": "<p>Should I do this one?   ca973a4 (upstream/master) Merge pull request #651 from leamas/add-win64-macos-arm64</p>\n<p>fcgle@Hesper MINGW64 ~/source/plugins (master|REBASE 3/4)<br>\n$ git log --oneline -20<br>\n7e34ae2 (HEAD) vdr 1.3.23<br>\naaab5d4 VDR 1.3.22<br>\nca973a4 (upstream/master) Merge pull request #651 from leamas/add-win64-macos-arm64<br>\n787bed8 ocpn-plugin.xsd: Keep ABI entries sorted.<br>\n43d8c68 Add new API targets darwin-arm64 and msvc-64<br>\nbedae90 Automatic update of ocpn-plugins.xml<br>\ncc86813 Merge pull request #650 from Rasbats/master<br>\n91e399f Remove old v1.4 xml files<br>\n5f7ed17 updated UKTides_pi v1.4.0<br>\n4cc0f8a Merge branch 'OpenCPN:master' into master<br>\n6faf001 Automatic update of ocpn-plugins.xml<br>\n24ad018 Merge pull request #648 from rgleason/master<br>\nfbe3de3 statusbar 0.7.16 and rm old tactics<br>\n6c1ccda Automatic update of ocpn-plugins.xml<br>\nac6d714 Merge pull request #647 from rgleason/master<br>\n8fd436c tactics 1.0.29<br>\n455695d Automatic update of ocpn-plugins.xml<br>\nbcb9f8a Merge pull request #646 from rgleason/master<br>\naa4997d climatology squiddio polar<br>\n2a4e102 Automatic update of ocpn-plugins.xml</p>",
+        "id": 278180554,
+        "sender_full_name": "Rick Gleason",
+        "timestamp": 1649345015
+    },
+    {
+        "content": "<p>Are you on VDR?</p>",
+        "id": 278180757,
+        "sender_full_name": "Alec Leamas",
+        "timestamp": 1649345101
+    },
+    {
+        "content": "<p>I am here<br>\nfcgle@Hesper MINGW64 ~/source/plugins (master|REBASE 3/4)</p>\n<p>Should I do      git reset --hard ca973a4</p>",
+        "id": 278180840,
+        "sender_full_name": "Rick Gleason",
+        "timestamp": 1649345147
+    },
+    {
+        "content": "<p>I have absolutely no idea, I cannot see your branch. Are you working with VDR_pi?</p>",
+        "id": 278180987,
+        "sender_full_name": "Alec Leamas",
+        "timestamp": 1649345200
+    },
+    {
+        "content": "<p>No, I am using the \"plugins\" branch!</p>\n<p><a href=\"https://github.com/rgleason/plugins?organization=rgleason&amp;organization=rgleason\">https://github.com/rgleason/plugins?organization=rgleason&amp;organization=rgleason</a></p>",
+        "id": 278181064,
+        "sender_full_name": "Rick Gleason",
+        "timestamp": 1649345234
+    },
+    {
+        "content": "<p>OK, you are in the pluginss project... I see. Do like this: <code>git push origin master:tmp</code>. This way, I can see your branch</p>",
+        "id": 278181239,
+        "sender_full_name": "Alec Leamas",
+        "timestamp": 1649345292
+    },
+    {
+        "content": "<p>Ok I pushed it to tmp</p>",
+        "id": 278181377,
+        "sender_full_name": "Rick Gleason",
+        "timestamp": 1649345352
+    },
+    {
+        "content": "<p>wait...</p>",
+        "id": 278181397,
+        "sender_full_name": "Alec Leamas",
+        "timestamp": 1649345359
+    },
+    {
+        "content": "<p>I cannot find any commit ca973a4 in that branch?</p>",
+        "id": 278181872,
+        "sender_full_name": "Alec Leamas",
+        "timestamp": 1649345535
+    },
+    {
+        "content": "<p>what's your current branch?</p>",
+        "id": 278181908,
+        "sender_full_name": "Alec Leamas",
+        "timestamp": 1649345553
+    },
+    {
+        "content": "<p>Well that number SHA is from my local branch which is screwed up!  It is in the middle of a Rebase!</p>",
+        "id": 278182240,
+        "sender_full_name": "Rick Gleason",
+        "timestamp": 1649345660
+    },
+    {
+        "content": "<p>This is just wrong . The branch you pushed to tmp should be  your master, and it's just not there. What does <code>git branch</code>and <code>git rev-parse master</code>say?</p>",
+        "id": 278182444,
+        "sender_full_name": "Alec Leamas",
+        "timestamp": 1649345743
+    },
+    {
+        "content": "<p>sorry... <code>git rebase --abort</code>. Just do it.</p>",
+        "id": 278182600,
+        "sender_full_name": "Alec Leamas",
+        "timestamp": 1649345787
+    },
+    {
+        "content": "<p>fcgle@Hesper MINGW64 ~/source/plugins (master|REBASE 3/4)<br>\n$ git branch</p>\n<ul>\n<li>(no branch, rebasing master)<br>\n  Beta<br>\n  auto<br>\n  master<br>\ngit</li>\n</ul>",
+        "id": 278182690,
+        "sender_full_name": "Rick Gleason",
+        "timestamp": 1649345821
+    },
+    {
+        "content": "<p>Did the abort</p>",
+        "id": 278182707,
+        "sender_full_name": "Rick Gleason",
+        "timestamp": 1649345829
+    },
+    {
+        "content": "<p>Now push to tmp?</p>",
+        "id": 278182734,
+        "sender_full_name": "Rick Gleason",
+        "timestamp": 1649345841
+    },
+    {
+        "content": "<p>yes</p>",
+        "id": 278182751,
+        "sender_full_name": "Alec Leamas",
+        "timestamp": 1649345850
+    },
+    {
+        "content": "<p>you need to use <code>git push -f origin master:tmp</code>this time</p>",
+        "id": 278182820,
+        "sender_full_name": "Alec Leamas",
+        "timestamp": 1649345877
+    },
+    {
+        "content": "<p>fcgle@Hesper MINGW64 ~/source/plugins (master)<br>\n$ git push origin master:tmp<br>\nEnter passphrase for key '/c/Users/fcgle/.ssh/id_ed25519':<br>\nEverything up-to-date</p>",
+        "id": 278182960,
+        "sender_full_name": "Rick Gleason",
+        "timestamp": 1649345923
+    },
+    {
+        "content": "<p>Sorry</p>\n<p>fcgle@Hesper MINGW64 ~/source/plugins (master)<br>\n$ git push -f origin master:tmp<br>\nEnter passphrase for key '/c/Users/fcgle/.ssh/id_ed25519':<br>\nEverything up-to-date</p>\n<p>fcgle@Hesper MINGW64 ~/source/plugins (master)<br>\n$ git push -f origin master:tmp<br>\nEnter passphrase for key '/c/Users/fcgle/.ssh/id_ed25519':<br>\nEverything up-to-date</p>",
+        "id": 278183103,
+        "sender_full_name": "Rick Gleason",
+        "timestamp": 1649345980
+    },
+    {
+        "content": "<p>fcgle@Hesper MINGW64 ~/source/plugins (master)<br>\n$ git log --oneline -20<br>\n4af1075 (HEAD -&gt; master, origin/tmp, origin/master, origin/HEAD) ng vdrgerge branch 'master' of github.com:rgleason/plugins<br>\n5db7e47 vdr 1.3.23<br>\n1867065 VDR 1.3.22<br>\nd372796 vdr 1.3.23<br>\n0610658 Merge branch 'master' of <a href=\"https://github.com/OpenCPN/plugins\">https://github.com/OpenCPN/plugins</a><br>\nbedae90 Automatic update of ocpn-plugins.xml<br>\ncc86813 Merge pull request #650 from Rasbats/master<br>\n91e399f Remove old v1.4 xml files<br>\n5f7ed17 updated UKTides_pi v1.4.0<br>\n4cc0f8a Merge branch 'OpenCPN:master' into master<br>\n778488f VDR 1.3.22<br>\n6faf001 Automatic update of ocpn-plugins.xml<br>\n24ad018 Merge pull request #648 from rgleason/master<br>\nfbe3de3 statusbar 0.7.16 and rm old tactics<br>\n6c1ccda Automatic update of ocpn-plugins.xml<br>\nac6d714 Merge pull request #647 from rgleason/master<br>\n8fd436c tactics 1.0.29<br>\n455695d Automatic update of ocpn-plugins.xml<br>\nbcb9f8a Merge pull request #646 from rgleason/master<br>\naa4997d climatology squiddio polar</p>",
+        "id": 278183254,
+        "sender_full_name": "Rick Gleason",
+        "timestamp": 1649346021
+    },
+    {
+        "content": "<p>Maybe use   0610658 Merge branch 'master' of <a href=\"https://github.com/OpenCPN/plugins\">https://github.com/OpenCPN/plugins</a>?</p>",
+        "id": 278183345,
+        "sender_full_name": "Rick Gleason",
+        "timestamp": 1649346059
+    },
+    {
+        "content": "<p>OK, that master branch is seriously broken. You need to reset it. Do:</p>\n<div class=\"codehilite\"><pre><span></span><code>$ git checkout -b foo\n$ git remote update upstream\n$ git fetch -f upstream master:master\n$ git checkout master\n</code></pre></div>\n\n<p>This  will give you a fresh, rebased version of the master branch.</p>",
+        "id": 278183677,
+        "sender_full_name": "Alec Leamas",
+        "timestamp": 1649346174
+    },
+    {
+        "content": "<p>You can remove the <em>foo</em> branch when done: <code>git branch -D foo</code></p>",
+        "id": 278183811,
+        "sender_full_name": "Alec Leamas",
+        "timestamp": 1649346230
+    },
+    {
+        "content": "<p>fcgle@Hesper MINGW64 ~/source/plugins (master)<br>\n$ git checkout -b foo<br>\nSwitched to a new branch 'foo'</p>\n<p>fcgle@Hesper MINGW64 ~/source/plugins (foo)<br>\n$ git remote update upstream<br>\nFetching upstream</p>\n<p>fcgle@Hesper MINGW64 ~/source/plugins (foo)<br>\n$ git fetch -f upstream master:master<br>\nFrom <a href=\"https://github.com/OpenCPN/plugins\">https://github.com/OpenCPN/plugins</a></p>\n<ul>\n<li>4af1075...ca973a4 master     -&gt; master  (forced update)</li>\n</ul>\n<p>fcgle@Hesper MINGW64 ~/source/plugins (foo)<br>\n$ git checkout master<br>\nSwitched to branch 'master'<br>\nYour branch and 'origin/master' have diverged,<br>\nand have 3 and 6 different commits each, respectively.<br>\n  (use \"git pull\" to merge the remote branch into yours)</p>\n<p>fcgle@Hesper MINGW64 ~/source/plugins (master)<br>\n$ git log --oneline -5<br>\nca973a4 (HEAD -&gt; master, upstream/master) Merge pull request #651 from leamas/add-win64-macos-arm64<br>\n787bed8 ocpn-plugin.xsd: Keep ABI entries sorted.<br>\n43d8c68 Add new API targets darwin-arm64 and msvc-64<br>\nbedae90 Automatic update of ocpn-plugins.xml<br>\ncc86813 Merge pull request #650 from Rasbats/master</p>\n<p>fcgle@Hesper MINGW64 ~/source/plugins (master)</p>",
+        "id": 278184007,
+        "sender_full_name": "Rick Gleason",
+        "timestamp": 1649346290
+    },
+    {
+        "content": "<p>OK, that means that you are done with the first heading \"Syncing branches\". Now proceed to next heading...</p>",
+        "id": 278184160,
+        "sender_full_name": "Alec Leamas",
+        "timestamp": 1649346347
+    },
+    {
+        "content": "<p>OK   Master Catalog<br>\n git fetch origin auto:auto<br>\n git checkout auto<br>\n git rebase master<br>\n git checkout master<br>\n git merge --squash auto<br>\n git commit</p>",
+        "id": 278184376,
+        "sender_full_name": "Rick Gleason",
+        "timestamp": 1649346419
+    },
+    {
+        "content": "<p>indeed...</p>",
+        "id": 278184463,
+        "sender_full_name": "Alec Leamas",
+        "timestamp": 1649346450
+    },
+    {
+        "content": "<p>Now it committed and I am in the VIM interface again!  What next?</p>",
+        "id": 278184740,
+        "sender_full_name": "Rick Gleason",
+        "timestamp": 1649346554
+    },
+    {
+        "content": "<p>You have somehow got shipdriver metadata files in your auto branch. How on earth dit that happen?</p>",
+        "id": 278184793,
+        "sender_full_name": "Alec Leamas",
+        "timestamp": 1649346580
+    },
+    {
+        "content": "<p>I don't really know.</p>",
+        "id": 278184935,
+        "sender_full_name": "Rick Gleason",
+        "timestamp": 1649346620
+    },
+    {
+        "content": "<p>I am stuck in VIM now, how do you suggest I finish this commit?</p>",
+        "id": 278185086,
+        "sender_full_name": "Rick Gleason",
+        "timestamp": 1649346685
+    },
+    {
+        "content": "<p>Maybe they are left over from an earlier time?</p>",
+        "id": 278185175,
+        "sender_full_name": "Rick Gleason",
+        "timestamp": 1649346718
+    },
+    {
+        "content": "<p>Try :q!</p>\n<p>Anyway , running out of time now. Just leave things as they are, I can reproduce your problems and will repair the broken auto branch late this evening. SIgning off.</p>",
+        "id": 278185361,
+        "sender_full_name": "Alec Leamas",
+        "timestamp": 1649346784
+    },
+    {
+        "content": "<p>Alec, looking at this a little further.  The update-template  sd3.1.1 run resulting in VDR  1.3.23  and for some reason that is not validating   <a href=\"https://github.com/OpenCPN/plugins/runs/5870569608?check_suite_focus=true\">\"metadata/VDR-v1.3.23-ubuntu-wx315-20.04.xml fails to validate\"</a>   </p>\n<p>This is another problem I need to solve.<br>\n..</p>",
+        "id": 278204278,
+        "sender_full_name": "Rick Gleason",
+        "timestamp": 1649354898
+    },
+    {
+        "content": "<p>Now I see this  in Shipdriver</p>\n<p>@Rasbats<br>\nAlec Leamas and Rasbats .circleci/config: Remove ubuntu-wx315 build (#437).<br>\n<a href=\"https://github.com/Rasbats/shipdriver_pi/commit/5152ee1cff546742191f7223b867224a355284c4\">https://github.com/Rasbats/shipdriver_pi/commit/5152ee1cff546742191f7223b867224a355284c4</a></p>\n<p>What's going on here?  I used the update-templates sd3.1.1 and that should be current.  Now the entire push is canceled every time, when it is just a problem not created by me or the plugin.</p>",
+        "id": 278212898,
+        "sender_full_name": "Rick Gleason",
+        "timestamp": 1649358817
+    },
+    {
+        "content": "<p>First: If you have updated to 3.1.1 there is no ubuntu-wx315 build. This is the fix for #437 which you filed.  Assuming this is about VDR, please push your master branch to tmp using 'git push origin master:tmp`so I can have a look.</p>",
+        "id": 278219320,
+        "sender_full_name": "Alec Leamas",
+        "timestamp": 1649361991
+    },
+    {
+        "content": "<p>Second: I have rebased your auto branch. Don't know what has happened to it, perhaps you merged something into it, dunno. To get the rebased auto branch from me to your plugins repo:</p>\n<div class=\"codehilite\"><pre><span></span><code>$ cd plugins\n$ git remote add leamas  https://github.com/leamas/plugins.git\n$ git remote update leamas\n$ git branch -m auto auto.old\n$ git fetch leamas rgleason/auto:auto\n$ git checkout auto\n</code></pre></div>\n\n<p>This will place you in position to merge the auto branch into master as described in <a href=\"https://opencpn-manuals.github.io/main/AlternativeWorkflow/InstallConfigure/Catalog-Github-Integration.html#_master_catalog\">the manual</a>. Note that you should <strong>not</strong> fetch the auto branch as described there (first command), you have already fetched from me instead.</p>",
+        "id": 278220067,
+        "sender_full_name": "Alec Leamas",
+        "timestamp": 1649362412
+    },
+    {
+        "content": "<p>Alec, Thank you.  I have pushed vdr_pi  to origin master:tmp<br>\nand will do the plugins git commands and report back.</p>",
+        "id": 278223519,
+        "sender_full_name": "Rick Gleason",
+        "timestamp": 1649364171
+    },
+    {
+        "content": "<p>Master Catalog<br>\nAdding metadata files from the OpenCPN/plugins fork auto branch to the master branch goes like this:<br>\n git fetch origin auto:auto    &lt;--- Already did this from Leamas repos<br>\n git checkout auto  &lt;--- already done above.<br>\n git rebase master   <br>\n git checkout master<br>\n git merge --squash auto<br>\n git commit</p>",
+        "id": 278224599,
+        "sender_full_name": "Rick Gleason",
+        "timestamp": 1649364767
+    },
+    {
+        "content": "<p>Please enter the commit message for your changes. Lines starting<br>\n with '#' will be ignored, and an empty message aborts the commit.</p>\n<p>On branch master<br>\n Your branch and 'origin/master' have diverged,<br>\n and have 3 and 6 different commits each, respectively.<br>\n   (use \"git pull\" to merge the remote branch into yours)</p>\n<p>Changes to be committed:<br>\n       new file:   metadata/Logbook-v1.4.29-darwin-wx315-10.13.6.xml<br>\n       new file:   metadata/Logbook-v1.4.29-debian-10.xml<br>\n       new file:   metadata/Logbook-v1.4.29-debian-11.xml<br>\n       new file:   metadata/Logbook-v1.4.29-debian-A32-10.xml<br>\n       new file:   metadata/Logbook-v1.4.29-debian-A32-11.xml<br>\n       new file:   metadata/Logbook-v1.4.29-flatpak-20.08.xml<br>\n       new file:   metadata/Logbook-v1.4.29-flatpak-A64-20.08.xml<br>\n       new file:   metadata/Logbook-v1.4.29-msvc-10.0.14393.xml<br>\n       new file:   metadata/Logbook-v1.4.29-ubuntu-18.04.xml<br>\n       new file:   metadata/Logbook-v1.4.29-ubuntu-A32-18.04.xml<br>\n       new file:   metadata/Logbook-v1.4.29-ubuntu-gtk3-18.04.xml<br>\n       new file:   metadata/Logbook-v1.4.29-ubuntu-gtk3-20.04.xml<br>\n       new file:   metadata/Logbook-v1.4.29-ubuntu-gtk3-A32-20.04.xml<br>\n       new file:   metadata/Logbook-v1.4.29-ubuntu-wx315-20.04.xml<br>\n       renamed:    metadata/VDR-v1.3.20-android-arm64-A64-16.xml -&gt; metadata/VDR-v1.3.22-android-arm64-A64-16.xml<br>\n       renamed:    metadata/VDR-v1.3.20-android-armhf-16.xml -&gt; metadata/VDR-v1.3.22-android-armhf-A32-16.xml<br>\n       renamed:    metadata/VDR-v1.3.20-darwin-wx315-10.13.6.xml -&gt; metadata/VDR-v1.3.22-darwin-wx315-10.13.6.xml<br>\n       renamed:    metadata/VDR-v1.3.20-debian-10.xml -&gt; metadata/VDR-v1.3.22-debian-10.xml<br>\n       new file:   metadata/VDR-v1.3.22-debian-11.xml<br>\n       renamed:    metadata/VDR-v1.3.20-raspbian-10.xml -&gt; metadata/VDR-v1.3.22-debian-A32-10.xml<br>\n       renamed:    metadata/VDR-v1.3.20-raspbian-11.xml -&gt; metadata/VDR-v1.3.22-debian-A32-11.xml<br>\n       renamed:    metadata/VDR-v1.3.20-flatpak-20.08.xml -&gt; metadata/VDR-v1.3.22-flatpak-20.08.xml<br>\n       renamed:    metadata/VDR-v1.3.20-flatpak-A64-20.08.xml -&gt; metadata/VDR-v1.3.22-flatpak-A64-20.08.xml<br>\n       new file:   metadata/VDR-v1.3.22-flatpak.wx315-20.08.xml<br>\n       renamed:    metadata/VDR-v1.3.20-msvc-10.0.14393.xml -&gt; metadata/VDR-v1.3.22-msvc-10.0.14393.xml<br>\n       renamed:    metadata/VDR-v1.3.20-ubuntu-18.04.xml -&gt; metadata/VDR-v1.3.22-ubuntu-18.04.xml<br>\n       renamed:    metadata/VDR-v1.3.20-raspbian-9.13.xml -&gt; metadata/VDR-v1.3.22-ubuntu-A32-18.04.xml<br>\n       renamed:    metadata/VDR-v1.3.20-ubuntu-gtk3-18.04.xml -&gt; metadata/VDR-v1.3.22-ubuntu-gtk3-18.04.xml<br>\n       renamed:    metadata/VDR-v1.3.20-ubuntu-gtk3-20.04.xml -&gt; metadata/VDR-v1.3.22-ubuntu-gtk3-20.04.xml<br>\n       new file:   metadata/VDR-v1.3.22-ubuntu-gtk3-A32-20.04.xml<br>\n       new file:   metadata/VDR-v1.3.22-ubuntu-wx315-20.04.xml<br>\n       new file:   metadata/VDR-v1.3.23-android-arm64-A64-16.xml<br>\n       new file:   metadata/VDR-v1.3.23-android-armhf-A32-16.xml<br>\n       new file:   metadata/VDR-v1.3.23-darwin-wx315-10.13.6.xml<br>\n       new file:   metadata/VDR-v1.3.23-debian-10.xml<br>\n       new file:   metadata/VDR-v1.3.23-debian-11.xml<br>\n       new file:   metadata/VDR-v1.3.23-debian-A32-10.xml<br>\n       new file:   metadata/VDR-v1.3.23-debian-A32-11.xml<br>\n       new file:   metadata/VDR-v1.3.23-flatpak-20.08.xml<br>\n       new file:   metadata/VDR-v1.3.23-flatpak-A64-20.08.xml<br>\n       new file:   metadata/VDR-v1.3.23-msvc-10.0.14393.xml<br>\n       new file:   metadata/VDR-v1.3.23-ubuntu-18.04.xml<br>\n       new file:   metadata/VDR-v1.3.23-ubuntu-A32-18.04.xml<br>\n       new file:   metadata/VDR-v1.3.23-ubuntu-gtk3-18.04.xml<br>\n       new file:   metadata/VDR-v1.3.23-ubuntu-gtk3-20.04.xml<br>\n       new file:   metadata/VDR-v1.3.23-ubuntu-gtk3-A32-20.04.xml<br>\n       new file:   metadata/VDR-v1.3.23-ubuntu-wx315-20.04.xml</p>",
+        "id": 278224671,
+        "sender_full_name": "Rick Gleason",
+        "timestamp": 1649364812
+    },
+    {
+        "content": "<p>yes... you need to make a commit. vim is probably to hard for you, I'll guide you here but we need to get around it later. For now:</p>\n<p>Press 'i'<br>\nEnter commit message<br>\nEnter: &lt;esc&gt;  i.  e., the esc button<br>\nEnter: :wq</p>",
+        "id": 278225006,
+        "sender_full_name": "Alec Leamas",
+        "timestamp": 1649365002
+    },
+    {
+        "content": "<p>fcgle@Hesper MINGW64 ~/source/plugins (master)<br>\n$ git commit<br>\n[master a4c2287d] Squashed commit of the following:<br>\n 47 files changed, 885 insertions(+), 55 deletions(-)<br>\n create mode 100644 metadata/Logbook-v1.4.29-darwin-wx315-10.13.6.xml<br>\n create mode 100644 metadata/Logbook-v1.4.29-debian-10.xml<br>\n create mode 100644 metadata/Logbook-v1.4.29-debian-11.xml<br>\n create mode 100644 metadata/Logbook-v1.4.29-debian-A32-10.xml<br>\n create mode 100644 metadata/Logbook-v1.4.29-debian-A32-11.xml<br>\n create mode 100644 metadata/Logbook-v1.4.29-flatpak-20.08.xml<br>\n create mode 100644 metadata/Logbook-v1.4.29-flatpak-A64-20.08.xml<br>\n create mode 100644 metadata/Logbook-v1.4.29-msvc-10.0.14393.xml<br>\n create mode 100644 metadata/Logbook-v1.4.29-ubuntu-18.04.xml<br>\n create mode 100644 metadata/Logbook-v1.4.29-ubuntu-A32-18.04.xml<br>\n create mode 100644 metadata/Logbook-v1.4.29-ubuntu-gtk3-18.04.xml<br>\n create mode 100644 metadata/Logbook-v1.4.29-ubuntu-gtk3-20.04.xml<br>\n create mode 100644 metadata/Logbook-v1.4.29-ubuntu-gtk3-A32-20.04.xml<br>\n create mode 100644 metadata/Logbook-v1.4.29-ubuntu-wx315-20.04.xml<br>\n rename metadata/{VDR-v1.3.20-android-arm64-A64-16.xml =&gt; VDR-v1.3.22-android-arm64-A64-16.xml} (69%)<br>\n rename metadata/{VDR-v1.3.20-android-armhf-16.xml =&gt; VDR-v1.3.22-android-armhf-A32-16.xml} (69%)<br>\n rename metadata/{VDR-v1.3.20-darwin-wx315-10.13.6.xml =&gt; VDR-v1.3.22-darwin-wx315-10.13.6.xml} (69%)<br>\n rename metadata/{VDR-v1.3.20-debian-10.xml =&gt; VDR-v1.3.22-debian-10.xml} (70%)<br>\n create mode 100644 metadata/VDR-v1.3.22-debian-11.xml<br>\n rename metadata/{VDR-v1.3.20-raspbian-10.xml =&gt; VDR-v1.3.22-debian-A32-10.xml} (66%)<br>\n rename metadata/{VDR-v1.3.20-raspbian-11.xml =&gt; VDR-v1.3.22-debian-A32-11.xml} (70%)<br>\n rename metadata/{VDR-v1.3.20-flatpak-20.08.xml =&gt; VDR-v1.3.22-flatpak-20.08.xml} (69%)<br>\n rename metadata/{VDR-v1.3.20-flatpak-A64-20.08.xml =&gt; VDR-v1.3.22-flatpak-A64-20.08.xml} (69%)<br>\n create mode 100644 metadata/VDR-v1.3.22-flatpak.wx315-20.08.xml<br>\n rename metadata/{VDR-v1.3.20-msvc-10.0.14393.xml =&gt; VDR-v1.3.22-msvc-10.0.14393.xml} (68%)<br>\n rename metadata/{VDR-v1.3.20-ubuntu-18.04.xml =&gt; VDR-v1.3.22-ubuntu-18.04.xml} (70%)<br>\n rename metadata/{VDR-v1.3.20-raspbian-9.13.xml =&gt; VDR-v1.3.22-ubuntu-A32-18.04.xml} (62%)<br>\n rename metadata/{VDR-v1.3.20-ubuntu-gtk3-18.04.xml =&gt; VDR-v1.3.22-ubuntu-gtk3-18.04.xml} (69%)<br>\n rename metadata/{VDR-v1.3.20-ubuntu-gtk3-20.04.xml =&gt; VDR-v1.3.22-ubuntu-gtk3-20.04.xml} (69%)<br>\n create mode 100644 metadata/VDR-v1.3.22-ubuntu-gtk3-A32-20.04.xml<br>\n create mode 100644 metadata/VDR-v1.3.22-ubuntu-wx315-20.04.xml<br>\n create mode 100644 metadata/VDR-v1.3.23-android-arm64-A64-16.xml<br>\n create mode 100644 metadata/VDR-v1.3.23-android-armhf-A32-16.xml<br>\n create mode 100644 metadata/VDR-v1.3.23-darwin-wx315-10.13.6.xml<br>\n create mode 100644 metadata/VDR-v1.3.23-debian-10.xml<br>\n create mode 100644 metadata/VDR-v1.3.23-debian-11.xml<br>\n create mode 100644 metadata/VDR-v1.3.23-debian-A32-10.xml<br>\n create mode 100644 metadata/VDR-v1.3.23-debian-A32-11.xml<br>\n create mode 100644 metadata/VDR-v1.3.23-flatpak-20.08.xml<br>\n create mode 100644 metadata/VDR-v1.3.23-flatpak-A64-20.08.xml<br>\n create mode 100644 metadata/VDR-v1.3.23-msvc-10.0.14393.xml<br>\n create mode 100644 metadata/VDR-v1.3.23-ubuntu-18.04.xml<br>\n create mode 100644 metadata/VDR-v1.3.23-ubuntu-A32-18.04.xml<br>\n create mode 100644 metadata/VDR-v1.3.23-ubuntu-gtk3-18.04.xml<br>\n create mode 100644 metadata/VDR-v1.3.23-ubuntu-gtk3-20.04.xml<br>\n create mode 100644 metadata/VDR-v1.3.23-ubuntu-gtk3-A32-20.04.xml<br>\n create mode 100644 metadata/VDR-v1.3.23-ubuntu-wx315-20.04.xml</p>",
+        "id": 278225062,
+        "sender_full_name": "Rick Gleason",
+        "timestamp": 1649365033
+    },
+    {
+        "content": "<p>YOu have successfully merged the auto branch into master.</p>",
+        "id": 278225106,
+        "sender_full_name": "Alec Leamas",
+        "timestamp": 1649365065
+    },
+    {
+        "content": "<p>Great. Thank you for the quidance.  I notice that VDR has the offending metadata file.</p>\n<p>Or is this one ok?<br>\ncreate mode 100644 metadata/VDR-v1.3.23-ubuntu-wx315-20.04.xml</p>",
+        "id": 278225284,
+        "sender_full_name": "Rick Gleason",
+        "timestamp": 1649365148
+    },
+    {
+        "content": "<p>Before you do these things you could try the following command: <code>export EDITOR=notepad</code>. That should fire up notepad instead of vim to enter the message. But the simples is perhaps to replace <code>git commit </code>with  <code>git commit -am \"Merging auto branch into master\"</code>. This way there is no need to edit the message.</p>",
+        "id": 278225446,
+        "sender_full_name": "Alec Leamas",
+        "timestamp": 1649365211
+    },
+    {
+        "content": "<p>Now, you have done the \"Master Catalog\" part.  next part is \"Cleaning up old metadata\"</p>",
+        "id": 278225571,
+        "sender_full_name": "Alec Leamas",
+        "timestamp": 1649365267
+    },
+    {
+        "content": "<p>Awesome!  Will make those changes and will try to learn VIM too.</p>",
+        "id": 278225589,
+        "sender_full_name": "Rick Gleason",
+        "timestamp": 1649365273
+    },
+    {
+        "content": "<p>create mode 100644 metadata/VDR-v1.3.23-ubuntu-wx315-20.04.xml   This does not have flatpak so I guess it is ok.</p>",
+        "id": 278225653,
+        "sender_full_name": "Rick Gleason",
+        "timestamp": 1649365306
+    },
+    {
+        "content": "<p>Don't invest in learning vim. It's an awfully powerful editor -- with an awfully steep learning curve.</p>",
+        "id": 278225725,
+        "sender_full_name": "Alec Leamas",
+        "timestamp": 1649365328
+    },
+    {
+        "content": "<p>Ok.  I will next clean up old metadata and then push back up to my repos. <br>\nI notice that this also includes logbook!!  a nice benefit.<br>\nThank you for all of your help. I hope I can do this all by myself the next time!</p>",
+        "id": 278225869,
+        "sender_full_name": "Rick Gleason",
+        "timestamp": 1649365424
+    },
+    {
+        "content": "<p>It will probably work just fine.</p>\n<p>However: please stick to the documentation. And if there is some problem,  stop and ask for help rather that try to fix the situation with ad-hoc git commands.  It actually saves time compared to trying to clean up messy git states later...</p>",
+        "id": 278226298,
+        "sender_full_name": "Alec Leamas",
+        "timestamp": 1649365605
+    },
+    {
+        "content": "<p>OK this is where it (I) am screwing up!  The damn thing looks like XXXX and has the offending flappak-wx315.<br>\nIt failed again.<br>\n<a href=\"https://github.com/OpenCPN/plugins/runs/5876024853?check_suite_focus=true\">https://github.com/OpenCPN/plugins/runs/5876024853?check_suite_focus=true</a></p>",
+        "id": 278227243,
+        "sender_full_name": "Rick Gleason",
+        "timestamp": 1649366099
+    },
+    {
+        "content": "<p>So now what?  The auto branch is correct.<br>\nI just need to get the master branch to mirror  opencpn/plugins master   (upstream)<br>\nThen do the set of commands again.</p>",
+        "id": 278227442,
+        "sender_full_name": "Rick Gleason",
+        "timestamp": 1649366183
+    },
+    {
+        "content": "<blockquote>\n<p>I notice that this also includes logbook!! a nice benefit.</p>\n</blockquote>\n<p>Of course, so to speak. All builds you do pushes to the  same auto branch. Thus,  what you merge is all successful builds since  you reset  your auto branch.  The branch is created in <a href=\"https://opencpn-manuals.github.io/main/AlternativeWorkflow/InstallConfigure/GithubPreps.html\">Github OpenCPN/plugins fork</a>. Each time you do this, all builds which are present in auto but yet not made to PR will be lost. For that reason, you should avoid these steps after being done, it's just  an initial  setup. The only exception is when changing from master to Beta or the other way around</p>",
+        "id": 278227540,
+        "sender_full_name": "Alec Leamas",
+        "timestamp": 1649366241
+    },
+    {
+        "content": "<blockquote>\n<p>I t failed again.</p>\n</blockquote>\n<p>This is <a href=\"https://github.com/Rasbats/shipdriver_pi/issues/443\">https://github.com/Rasbats/shipdriver_pi/issues/443</a>. Remove the .drone.yml file for now.</p>",
+        "id": 278227678,
+        "sender_full_name": "Alec Leamas",
+        "timestamp": 1649366314
+    },
+    {
+        "content": "<p>Now I recall that that was the issue with Logbook!!! I ended up disabling the drone setup for logbook. Very sorry I did not recall that problem.   It was last used 19 days ago.   Same for logbook which was also turned off.</p>",
+        "id": 278228257,
+        "sender_full_name": "Rick Gleason",
+        "timestamp": 1649366575
+    },
+    {
+        "content": "<p>Alec,  my drone repository for vdr is not active!!!!</p>",
+        "id": 278228616,
+        "sender_full_name": "Rick Gleason",
+        "timestamp": 1649366775
+    },
+    {
+        "content": "<p>Whatever,  <a href=\"http://drone.io\">drone.io</a> seems to be a bit out of control. Removing .drone.yml solves the problem and is the correct solution. The only problem is that update-templates leaves it in place</p>",
+        "id": 278228741,
+        "sender_full_name": "Alec Leamas",
+        "timestamp": 1649366874
+    },
+    {
+        "content": "<p>So I should totally remove vdr_pi and logbook  from drone?  I sse no way to delete vdr or logbook  as they are simply set to \"inactive\"</p>",
+        "id": 278229114,
+        "sender_full_name": "Rick Gleason",
+        "timestamp": 1649367081
+    },
+    {
+        "content": "<p>Don't care about the drone settings in the ui. When you remove .drone.yml there will no attempt to build anything.</p>",
+        "id": 278229309,
+        "sender_full_name": "Alec Leamas",
+        "timestamp": 1649367185
+    },
+    {
+        "content": "<p>Remove drone.yml from vdr_pi  ?  I don't find any drone.yml in vdr_pi</p>",
+        "id": 278229312,
+        "sender_full_name": "Rick Gleason",
+        "timestamp": 1649367188
+    },
+    {
+        "content": "<p>I certainly see it in  653e0085</p>",
+        "id": 278229469,
+        "sender_full_name": "Alec Leamas",
+        "timestamp": 1649367264
+    },
+    {
+        "content": "<p>Note that it's <em>.drone.yml</em>, not <em>drone.yml</em></p>",
+        "id": 278229605,
+        "sender_full_name": "Alec Leamas",
+        "timestamp": 1649367330
+    },
+    {
+        "content": "<p>Ok I see in the remote.  It is not in my local.</p>",
+        "id": 278229710,
+        "sender_full_name": "Rick Gleason",
+        "timestamp": 1649367388
+    },
+    {
+        "content": "<p>Which means that if you push your local branch to the remote everything is fine. After all, no-one besides you sees your local branch.</p>",
+        "id": 278229791,
+        "sender_full_name": "Alec Leamas",
+        "timestamp": 1649367461
+    },
+    {
+        "content": "<p>Ok, I've deleted in the remote making a delete commit. Then pulled the change down to local.  I will now delete that file and try pushing again to opencpn/plugins</p>",
+        "id": 278230005,
+        "sender_full_name": "Rick Gleason",
+        "timestamp": 1649367600
+    },
+    {
+        "content": "<p>Now I think that originally I did it all ok, except for that drone.yml problem.</p>",
+        "id": 278230110,
+        "sender_full_name": "Rick Gleason",
+        "timestamp": 1649367641
+    },
+    {
+        "content": "<p>However you've taught a lot here. Thank you.</p>",
+        "id": 278230164,
+        "sender_full_name": "Rick Gleason",
+        "timestamp": 1649367677
+    },
+    {
+        "content": "<p>you miss the build step in between. This is how it works:</p>\n<p>- You make a local change in  vdr_pi, removing .drone.yml<br>\n  - You push vdr_pi to github<br>\n  - github triggers the builds. Each build pushes metadata changes to auto in the very end<br>\n  - When all builds are completed you can merge auto into master in plugins repo and make a PR</p>",
+        "id": 278230314,
+        "sender_full_name": "Alec Leamas",
+        "timestamp": 1649367783
+    },
+    {
+        "content": "<p>OK I really have to start the whole process over again, including the builds?  Don't I need to increment the version again and add a new tag in order to get it to go into Prod?</p>",
+        "id": 278230754,
+        "sender_full_name": "Rick Gleason",
+        "timestamp": 1649368070
+    },
+    {
+        "content": "<p>Also I didn't have .drone.yml in my local, so I removed it in the remote.</p>",
+        "id": 278230854,
+        "sender_full_name": "Rick Gleason",
+        "timestamp": 1649368131
+    },
+    {
+        "content": "<p>Yes. The build should be tagged to go into prod or stable.  These kind of problems is why I prefer to first run the builds untagged, check for problems, tag, push tags and rebuild.</p>",
+        "id": 278231206,
+        "sender_full_name": "Alec Leamas",
+        "timestamp": 1649368354
+    },
+    {
+        "content": "<p>Ok thanks.  So I have to do the process all over again, no shortcuts because the commits initiate all the subsequent actions.  This is pretty crucial to understand I think.</p>",
+        "id": 278231655,
+        "sender_full_name": "Rick Gleason",
+        "timestamp": 1649368663
+    },
+    {
+        "content": "<p>Yes, do the process again. lesson learned: Don't try to merge auto until the builds are OK</p>",
+        "id": 278231837,
+        "sender_full_name": "Alec Leamas",
+        "timestamp": 1649368759
+    },
+    {
+        "content": "<p>Alec, while you are here, before I do anything more, with vdr_pi, I have to setup plugins don't I?<br>\nboth master and auto branches?</p>",
+        "id": 278231847,
+        "sender_full_name": "Rick Gleason",
+        "timestamp": 1649368765
+    },
+    {
+        "content": "<blockquote>\n<p>setup  plugins?</p>\n</blockquote>",
+        "id": 278231881,
+        "sender_full_name": "Alec Leamas",
+        "timestamp": 1649368793
+    },
+    {
+        "content": "<p>Well don't I have to \"clear\" auto or something?</p>",
+        "id": 278231965,
+        "sender_full_name": "Rick Gleason",
+        "timestamp": 1649368822
+    },
+    {
+        "content": "<p>Ah... you must not do that. See my long post  \"Of course\" above</p>",
+        "id": 278232055,
+        "sender_full_name": "Alec Leamas",
+        "timestamp": 1649368870
+    },
+    {
+        "content": "<p>Also shouldn't I be sure that my plugins \"master\"  matches opencpn/plugins  \"master\"?</p>",
+        "id": 278232081,
+        "sender_full_name": "Rick Gleason",
+        "timestamp": 1649368879
+    },
+    {
+        "content": "<p>That's what the rebase step does. You do that in when making the PR, not before</p>",
+        "id": 278232184,
+        "sender_full_name": "Alec Leamas",
+        "timestamp": 1649368922
+    },
+    {
+        "content": "<p>Basic message: do what's described in the docs. No more, and no less.</p>",
+        "id": 278232325,
+        "sender_full_name": "Alec Leamas",
+        "timestamp": 1649368974
+    },
+    {
+        "content": "<p>OK. I hope I've got it now.</p>",
+        "id": 278232603,
+        "sender_full_name": "Rick Gleason",
+        "timestamp": 1649369128
+    },
+    {
+        "content": "<p>If not, file an an issue against the manual.  The game here is really to read, understand and possibly fix the manual so it describes the workflow. There should not really be any personal annotations or anything like that.</p>",
+        "id": 278232794,
+        "sender_full_name": "Alec Leamas",
+        "timestamp": 1649369234
+    },
+    {
+        "content": "<p>So the SD system is very automatic once you have committed, and any mistake or error requires a new version and eventually a tag to get it into PROD.   Then the second step is to get the metadata pushed to a catalog.</p>",
+        "id": 278233764,
+        "sender_full_name": "Rick Gleason",
+        "timestamp": 1649369841
+    },
+    {
+        "content": "<p>Yes. However, there is no need for a new tag (i. e., a new version) if you first run your build without any tag. What we do in shipdriver, a typical example:</p>\n<ul>\n<li>When we start working the in  the 3.1.x branch we set the version to 3.1.0. This is just so that the artifacts will have a 3.1 in the filename.</li>\n<li>We commit various changes and builds. No tags. Checks that the build looks ok.</li>\n<li>After a while we need to release a version. The final finish is usually just to update the Changelog file, which contains the release date.</li>\n<li>This last commit is tagged and built. We now know that the build will be OK, things runs smoothly.</li>\n</ul>",
+        "id": 278234329,
+        "sender_full_name": "Alec Leamas",
+        "timestamp": 1649370214
+    },
+    {
+        "content": "<p>Ok, that approach to versioning makes sense for SD where there is incremental work to get things right. <br>\nOften if we are just updating a PI's SD frontend there are fewer steps invovled.</p>\n<p>Alec, I actually don't think I did anything wrong here.  I think the problem appears to have been from the beginning the .drone.yml</p>",
+        "id": 278234915,
+        "sender_full_name": "Rick Gleason",
+        "timestamp": 1649370613
+    },
+    {
+        "content": "<p>Perhaps. But both your master and auto branch was broken. Now, with sane branches you will see that while there are some steps they are quick and actually not that complicated.</p>",
+        "id": 278235094,
+        "sender_full_name": "Alec Leamas",
+        "timestamp": 1649370753
+    },
+    {
+        "content": "<p>Well, you can tag directly and build. Doing it is taking a chance, good if it works, more work if  it fails. Your call.</p>",
+        "id": 278235272,
+        "sender_full_name": "Alec Leamas",
+        "timestamp": 1649370870
+    },
+    {
+        "content": "<p>Alec I am changing the version and committing and then push.  Then add tag later.</p>",
+        "id": 278235365,
+        "sender_full_name": "Rick Gleason",
+        "timestamp": 1649370946
+    },
+    {
+        "content": "<p>Yeez the first ones build very fast.</p>",
+        "id": 278235511,
+        "sender_full_name": "Rick Gleason",
+        "timestamp": 1649371043
+    },
+    {
+        "content": "<p>everything built. now  <br>\ngit tag v1.3.24<br>\ngit push --tags origin master:master</p>",
+        "id": 278235970,
+        "sender_full_name": "Rick Gleason",
+        "timestamp": 1649371401
+    },
+    {
+        "content": "<p>you will need to trigger the build manually in the web interface</p>",
+        "id": 278237704,
+        "sender_full_name": "Alec Leamas",
+        "timestamp": 1649372672
+    },
+    {
+        "content": "<p>i. e., make a \"Rebuild\"</p>",
+        "id": 278237848,
+        "sender_full_name": "Alec Leamas",
+        "timestamp": 1649372773
+    },
+    {
+        "content": "<p>Yes, that's right.  Good idea. It was not building because I needed a commit.  Alternatively</p>\n<p>git tag v1.2.3<br>\n   git push v1.2.3<br>\n   git commit --allow-empty -m \"Trigger build\"<br>\n   git push origin </p>\n<p>OR do it all at the same time</p>\n<p>git tag v1.2.3<br>\n   git commit -am \"1.2.3  release to master branch\"<br>\n   git push origin --atomic refs/tags/v1.2.3:refs/tags/v1.2.3 master:master </p>\n<p>Well, I just incremented and tagged this time.</p>",
+        "id": 278237878,
+        "sender_full_name": "Rick Gleason",
+        "timestamp": 1649372810
+    },
+    {
+        "content": "<p>good night...</p>",
+        "id": 278237882,
+        "sender_full_name": "Alec Leamas",
+        "timestamp": 1649372816
+    },
+    {
+        "content": "<p>Nigfht Thanks!!!!</p>",
+        "id": 278237891,
+        "sender_full_name": "Rick Gleason",
+        "timestamp": 1649372827
+    },
+    {
+        "content": "<p>Alec, I am sorry but this is just not working!  I pushed with a new tag v1.3.25<br>\nand this happened<br>\n<a href=\"https://github.com/OpenCPN/plugins/runs/5877252099?check_suite_focus=true\">https://github.com/OpenCPN/plugins/runs/5877252099?check_suite_focus=true</a></p>\n<p>Same XXXXXXXXX thing.  I am quiting.</p>",
+        "id": 278238695,
+        "sender_full_name": "Rick Gleason",
+        "timestamp": 1649373470
+    },
+    {
+        "content": "<p>...which means that the version built (which is ec3a7ce113) still contains .drone.yml. The  commit  can be seen in the build log, under the  Set Up Job heading.</p>\n<p>Could be verified  using <code>git checkout ec3a7ce1</code>; this will show you that  .drone.yml is still part of  of this commit .</p>\n<p>In the end, make sure to tag and build a version without .drone.yml.</p>",
+        "id": 278264444,
+        "sender_full_name": "Alec Leamas",
+        "timestamp": 1649401759
+    },
+    {
+        "content": "<p>.... and remove build-focal-wx31 from .circleci/config:</p>\n<div class=\"codehilite\"><pre><span></span><code>diff --git a/.circleci/config.yml b/.circleci/config.yml\nindex 7672198..4beb625 100644\n--- a/.circleci/config.yml\n+++ b/.circleci/config.yml\n@@ -233,8 +233,8 @@ workflows:\n       - build-focal:\n           &lt;&lt;: *std-filters\n\n-      - build-focal-wx31:\n-          &lt;&lt;: *std-filters\n+      # - build-focal-wx31:\n+      #    &lt;&lt;: *std-filters\n\n       - build-buster:\n           &lt;&lt;: *std-filters\n</code></pre></div>",
+        "id": 278268465,
+        "sender_full_name": "Alec Leamas",
+        "timestamp": 1649404742
+    },
+    {
+        "content": "<p><a href=\"https://github.com/Rasbats/shipdriver_pi/issues/444\">https://github.com/Rasbats/shipdriver_pi/issues/444</a></p>",
+        "id": 278268878,
+        "sender_full_name": "Alec Leamas",
+        "timestamp": 1649404922
+    },
+    {
+        "content": "<p>I have revised the manual at <a href=\"https://opencpn-manuals.github.io/main/AlternativeWorkflow/InstallConfigure/Catalog-Github-Integration.html\">https://opencpn-manuals.github.io/main/AlternativeWorkflow/InstallConfigure/Catalog-Github-Integration.html</a>,  re-organized it and added section numbers which at least should make it easier to talk about</p>",
+        "id": 278289269,
+        "sender_full_name": "Alec Leamas",
+        "timestamp": 1649416642
+    },
+    {
+        "content": "<p>I don't find   git checkout ec3a7ce1; </p>\n<p>git checkout ec3a7ce1<br>\nerror: pathspec 'ec3a7ce1' did not match any file(s) known to git</p>\n<p>Also</p>\n<p>fcgle@Hesper MINGW64 ~/source/vdr_pi (master)<br>\n$ git log --oneline -40<br>\n120f2b0 (HEAD -&gt; master, origin/master, origin/HEAD) remove build focal wx31<br>\n20f4176 (tag: v1.3.25) 1.3.25<br>\nc14e8f9 (tag: v1.3.24) 1.3.24.0 try again<br>\n7efd286 Delete .drone.yml<br>\n653e008 (tag: v1.3.23, origin/tmp) 1.3.23.0<br>\n0033131 cmake: Update TemplateVersion to a388052<br>\nee5b6f2 Templates: Updating cmake<br>\n7c64e16 cmake: Update TemplateVersion to a388052<br>\nc340670 opencpn-libs: Update to latest version.<br>\n2b0deb6 Templates: Updating other files<br>\n7eb751c Templates: Updating ci<br>\nba461cc Templates: Updating cmake<br>\n20fa599 (tag: v1.3.22) 1.3.22.0<br>\n2efc94c (tag: v1.3.21) 1.3.21 + move to opencpn-libs<br>\nc2f0f58 cmake: Update TemplateVersion to 3213da1<br>\n63ad10c opencpn-libs: Update to latest version.<br>\n5371cd0 Templates: Updating other files<br>\n7011f64 Templates: Updating buildwin<br>\ndf8409b Templates: Updating ci<br>\n2043336 Templates: Updating cmake<br>\nbcb9daf update-templates 3.1.0<br>\nb27bd66 (tag: v1.3.20) 1.3.20.0<br>\n44e4edd (tag: v1.3.19) 1.3.19.0<br>\n8630485 (tag: v1.3.18-beta, tag: 1.3.18) 1.3.18-beta<br>\n1e886bb (tag: v1.3.17-beta3, tag: v1.3.17, tag: remove) fix config yml again<br>\n52dc29e (tag: v1.3.17-beta2) fix config yml<br>\n4fcf0d8 (tag: v1.3.17-beta) 1.3.17-beta<br>\n6337aed remove xenial build<br>\n5974c47 cmake: Update TemplateVersion to 7745f78<br>\n7cb900b Templates: Updating other files<br>\n0adcaa9 Templates: Updating cmake<br>\n01b23b6 new update-templates<br>\n973c1bc 1.3.17beta<br>\ndeb17ff (tag: v1.3.16) v1.3.16<br>\n691ca18 1.3.16-beta1<br>\n4380bfd 1.3.15-beta1<br>\n8a3a1cb cmake: Update TemplateVersion to e49825d<br>\ned6c7fb Templates: Updating other files<br>\n7739577 Templates: Updating libs<br>\n63ad519 Templates: Updating buildwin<br>\n(END)</p>\n<p>Also .drone.yml no longer exists in my remote!!!!  (or my local!)  Here is was deleted.<br>\n<a href=\"https://github.com/rgleason/vdr_pi/commit/7efd2867b166978e53fe4303d36aabc0b203babe\">https://github.com/rgleason/vdr_pi/commit/7efd2867b166978e53fe4303d36aabc0b203babe</a></p>\n<p>It is also canceled in Drone yet it still builds.  What a pain in the butt.</p>",
+        "id": 278297860,
+        "sender_full_name": "Rick Gleason",
+        "timestamp": 1649421671
+    },
+    {
+        "content": "<p>By the way. yesterday when we were getting those errors from the plugin commit script, it was absolutely not clear to me if the script was wrong or if the plugin metadata was wrong, because so often it is a problem with the changes in the script!   Therefore I spent an inordinate amount of time trying to get it to work, when I should have just deleted the damn files and moved on.   So please be clear about what the source of the error is,  if you know.  It helps others.  You can just say  \"delete this metadata file\"  or \"It is not the script, script is correct\"</p>\n<p>Also BTW I have tried to remove all the offending metadata files from my remote rgleason/plugins \"auto\" branch, thinking that this could possibly be part of the problem.</p>\n<p>Possibly I should just delete the auto branch and set it up again.</p>",
+        "id": 278302022,
+        "sender_full_name": "Rick Gleason",
+        "timestamp": 1649423748
+    },
+    {
+        "content": "<p>That commit is in the plugins repo. I suppose you were looking in vdr_pi, right?</p>\n<p>Anyway, let's drop this. I'll make a build, stay tuned.</p>",
+        "id": 278303185,
+        "sender_full_name": "Alec Leamas",
+        "timestamp": 1649424284
+    },
+    {
+        "content": "<p><span class=\"user-mention\" data-user-id=\"399865\">@Rick Gleason</span> : I have </p>\n<ul>\n<li>Checked out 20f4176 a. k. a. 1.3.25</li>\n<li>Applied this patch:</li>\n</ul>\n<div class=\"codehilite\"><pre><span></span><code>iff --git a/.circleci/config.yml b/.circleci/config.yml\nindex 7672198..4beb625 100644\n--- a/.circleci/config.yml\n+++ b/.circleci/config.yml\n@@ -233,8 +233,8 @@ workflows:\n       - build-focal:\n           &lt;&lt;: *std-filters\n\n-      - build-focal-wx31:\n-          &lt;&lt;: *std-filters\n+      # - build-focal-wx31:\n+      #    &lt;&lt;: *std-filters\n\n       - build-buster:\n           &lt;&lt;: *std-filters\n</code></pre></div>\n<ul>\n<li>Pushed and built, build logs <a href=\"https://app.circleci.com/pipelines/github/leamas/vdr_pi-1/3/workflows/dac7c734-3d19-45d2-a69e-7db9b9ee5af0\">here</a></li>\n<li>Applied the steps in \"Creating a catalog PR\"</li>\n<li>In particular, run the final test which is  the same as done on the PR when submitted. It's all OK.</li>\n</ul>\n<p>Ergo: you should be able to do the same...</p>",
+        "id": 278306793,
+        "sender_full_name": "Alec Leamas",
+        "timestamp": 1649425897
+    },
+    {
+        "content": "<p>Thanks Alec, I did that patch to both VDR and Logbook this morning, to kind of clean things up.</p>",
+        "id": 278314417,
+        "sender_full_name": "Rick Gleason",
+        "timestamp": 1649429088
+    },
+    {
+        "content": "<p>You did read the whole post, did you?</p>",
+        "id": 278328957,
+        "sender_full_name": "Alec Leamas",
+        "timestamp": 1649435391
+    },
+    {
+        "content": "<p><a href=\"https://cloudsmith.io/~opencpn/repos/vdr-prod/packages/\">https://cloudsmith.io/~opencpn/repos/vdr-prod/packages/</a><br>\n<a href=\"https://cloudsmith.io/~opencpn/repos/plugins-prod/packages/\">https://cloudsmith.io/~opencpn/repos/plugins-prod/packages/</a></p>\n<p><a href=\"https://github.com/rgleason/LogbookKonni_pi/runs/5885311806\">https://github.com/rgleason/LogbookKonni_pi/runs/5885311806</a><br>\n<a href=\"https://cloudsmith.io/~opencpn/repos/logbookkonni-prod/packages/\">https://cloudsmith.io/~opencpn/repos/logbookkonni-prod/packages/</a></p>",
+        "id": 278373693,
+        "sender_full_name": "Rick Gleason",
+        "timestamp": 1649460220
+    },
+    {
+        "content": "<p><a href=\"https://opencpn-manuals.github.io/main/AlternativeWorkflow/InstallConfigure/Catalog-Github-Integration.html#_merging_the_auto_branch\">https://opencpn-manuals.github.io/main/AlternativeWorkflow/InstallConfigure/Catalog-Github-Integration.html#_merging_the_auto_branch</a></p>\n<p><a href=\"https://opencpn-manuals.github.io/main/AlternativeWorkflow/InstallConfigure/Catalog-Github-Integration.html#_using_master\">https://opencpn-manuals.github.io/main/AlternativeWorkflow/InstallConfigure/Catalog-Github-Integration.html#_using_master</a></p>",
+        "id": 278375694,
+        "sender_full_name": "Rick Gleason",
+        "timestamp": 1649462373
+    },
+    {
+        "content": "<p>fcgle@Hesper MINGW64 ~/source/plugins (master)<br>\n$ git remote update upstream<br>\nFetching upstream<br>\nremote: Enumerating objects: 58, done.<br>\nremote: Counting objects: 100% (58/58), done.<br>\nremote: Compressing objects: 100% (14/14), done.<br>\nremote: Total 58 (delta 44), reused 55 (delta 44), pack-reused 0<br>\nUnpacking objects: 100% (58/58), 32.12 KiB | 194.00 KiB/s, done.<br>\nFrom <a href=\"https://github.com/OpenCPN/plugins\">https://github.com/OpenCPN/plugins</a><br>\n   ca973a47..b2404e1e  master     -&gt; upstream/master</p>\n<p>fcgle@Hesper MINGW64 ~/source/plugins (master)<br>\n$ git checkout master<br>\nAlready on 'master'<br>\nYour branch is up to date with 'origin/master'.</p>\n<p>fcgle@Hesper MINGW64 ~/source/plugins (master)<br>\n$ git rebase upstream/master<br>\nSuccessfully rebased and updated refs/heads/master.</p>",
+        "id": 278375699,
+        "sender_full_name": "Rick Gleason",
+        "timestamp": 1649462379
+    },
+    {
+        "content": "<p>fcgle@Hesper MINGW64 ~/source/plugins (master)<br>\n$ git fetch origin auto:auto<br>\nEnter passphrase for key '/c/Users/fcgle/.ssh/id_ed25519':<br>\nEnter passphrase for key '/c/Users/fcgle/.ssh/id_ed25519':<br>\nremote: Enumerating objects: 359, done.<br>\nremote: Counting objects: 100% (359/359), done.<br>\nremote: Compressing objects: 100% (95/95), done.<br>\nremote: Total 359 (delta 264), reused 358 (delta 264), pack-reused 0<br>\nReceiving objects: 100% (359/359), 55.06 KiB | 1.31 MiB/s, done.<br>\nResolving deltas: 100% (264/264), completed with 4 local objects.<br>\nFrom github.com:rgleason/plugins<br>\n ! [rejected]          auto       -&gt; auto  (non-fast-forward)<br>\n   49bc4051..6543a686  auto       -&gt; origin/auto</p>\n<p>fcgle@Hesper MINGW64 ~/source/plugins (master)<br>\n$ git checkout auto<br>\nSwitched to branch 'auto'</p>\n<p>fcgle@Hesper MINGW64 ~/source/plugins (auto)<br>\n$ git rebase master<br>\nerror: could not apply 9a2f8b76... remove old vdr v1.3.20 data<br>\nResolve all conflicts manually, mark them as resolved with<br>\n\"git add/rm &lt;conflicted_files&gt;\", then run \"git rebase --continue\".<br>\nYou can instead skip this commit: run \"git rebase --skip\".<br>\nTo abort and get back to the state before \"git rebase\", run \"git rebase --abort\".<br>\nCould not apply 9a2f8b76... remove old vdr v1.3.20 data<br>\nCONFLICT (rename/delete): metadata/VDR-v1.3.20-ubuntu-gtk3-20.04.xml deleted in 9a2f8b76 (remove old vdr v1.3.20 data) and renamed to metadata/VDR-v1.3.25-ubuntu-gtk3-20.04.xml in HEAD. Version HEAD of metadata/VDR-v1.3.25-ubuntu-gtk3-20.04.xml left in tree.<br>\nCONFLICT (rename/delete): metadata/VDR-v1.3.20-ubuntu-gtk3-18.04.xml deleted in 9a2f8b76 (remove old vdr v1.3.20 data) and renamed to metadata/VDR-v1.3.25-ubuntu-gtk3-18.04.xml in HEAD. Version HEAD of metadata/VDR-v1.3.25-ubuntu-gtk3-18.04.xml left in tree.<br>\nCONFLICT (rename/delete): metadata/VDR-v1.3.20-raspbian-9.13.xml deleted in 9a2f8b76 (remove old vdr v1.3.20 data) and renamed to metadata/VDR-v1.3.25-ubuntu-A32-18.04.xml in HEAD. Version HEAD of metadata/VDR-v1.3.25-ubuntu-A32-18.04.xml left in tree.<br>\nCONFLICT (rename/delete): metadata/VDR-v1.3.20-ubuntu-18.04.xml deleted in 9a2f8b76 (remove old vdr v1.3.20 data) and renamed to metadata/VDR-v1.3.25-ubuntu-18.04.xml in HEAD. Version HEAD of metadata/VDR-v1.3.25-ubuntu-18.04.xml left in tree.<br>\nCONFLICT (rename/delete): metadata/VDR-v1.3.20-msvc-10.0.14393.xml deleted in 9a2f8b76 (remove old vdr v1.3.20 data) and renamed to metadata/VDR-v1.3.25-msvc-10.0.14393.xml in HEAD. Version HEAD of metadata/VDR-v1.3.25-msvc-10.0.14393.xml left in tree.<br>\nCONFLICT (rename/delete): metadata/VDR-v1.3.20-flatpak-A64-20.08.xml deleted in 9a2f8b76 (remove old vdr v1.3.20 data) and renamed to metadata/VDR-v1.3.25-flatpak-A64-20.08.xml in HEAD. Version HEAD of metadata/VDR-v1.3.25-flatpak-A64-20.08.xml left in tree.<br>\nCONFLICT (rename/delete): metadata/VDR-v1.3.20-flatpak-20.08.xml deleted in 9a2f8b76 (remove old vdr v1.3.20 data) and renamed to metadata/VDR-v1.3.25-flatpak-20.08.xml in HEAD. Version HEAD of metadata/VDR-v1.3.25-flatpak-20.08.xml left in tree.<br>\nCONFLICT (rename/delete): metadata/VDR-v1.3.20-raspbian-11.xml deleted in 9a2f8b76 (remove old vdr v1.3.20 data) and renamed to metadata/VDR-v1.3.25-debian-A32-11.xml in HEAD. Version HEAD of metadata/VDR-v1.3.25-debian-A32-11.xml left in tree.<br>\nCONFLICT (rename/delete): metadata/VDR-v1.3.20-raspbian-10.xml deleted in 9a2f8b76 (remove old vdr v1.3.20 data) and renamed to metadata/VDR-v1.3.25-debian-A32-10.xml in HEAD. Version HEAD of metadata/VDR-v1.3.25-debian-A32-10.xml left in tree.<br>\nCONFLICT (rename/delete): metadata/VDR-v1.3.20-debian-10.xml deleted in 9a2f8b76 (remove old vdr v1.3.20 data) and renamed to metadata/VDR-v1.3.25-debian-10.xml in HEAD. Version HEAD of metadata/VDR-v1.3.25-debian-10.xml left in tree.<br>\nCONFLICT (rename/delete): metadata/VDR-v1.3.20-darwin-wx315-10.13.6.xml deleted in 9a2f8b76 (remove old vdr v1.3.20 data) and renamed to metadata/VDR-v1.3.25-darwin-wx315-10.13.6.xml in HEAD. Version HEAD of metadata/VDR-v1.3.25-darwin-wx315-10.13.6.xml left in tree.<br>\nCONFLICT (rename/delete): metadata/VDR-v1.3.20-android-armhf-16.xml deleted in 9a2f8b76 (remove old vdr v1.3.20 data) and renamed to metadata/VDR-v1.3.25-android-armhf-A32-16.xml in HEAD. Version HEAD of metadata/VDR-v1.3.25-android-armhf-A32-16.xml left in tree.<br>\nCONFLICT (rename/delete): metadata/VDR-v1.3.20-android-arm64-A64-16.xml deleted in 9a2f8b76 (remove old vdr v1.3.20 data) and renamed to metadata/VDR-v1.3.25-android-arm64-A64-16.xml in HEAD. Version HEAD of metadata/VDR-v1.3.25-android-arm64-A64-16.xml left in tree.</p>",
+        "id": 278375800,
+        "sender_full_name": "Rick Gleason",
+        "timestamp": 1649462418
+    },
+    {
+        "content": "<p>fcgle@Hesper MINGW64 ~/source/plugins (auto|REBASE 19/50)<br>\n$ git checkout master<br>\nerror: you need to resolve your current index first<br>\nmetadata/VDR-v1.3.25-android-arm64-A64-16.xml: needs merge<br>\nmetadata/VDR-v1.3.25-android-armhf-A32-16.xml: needs merge<br>\nmetadata/VDR-v1.3.25-darwin-wx315-10.13.6.xml: needs merge<br>\nmetadata/VDR-v1.3.25-debian-10.xml: needs merge<br>\nmetadata/VDR-v1.3.25-debian-A32-10.xml: needs merge<br>\nmetadata/VDR-v1.3.25-debian-A32-11.xml: needs merge<br>\nmetadata/VDR-v1.3.25-flatpak-20.08.xml: needs merge<br>\nmetadata/VDR-v1.3.25-flatpak-A64-20.08.xml: needs merge<br>\nmetadata/VDR-v1.3.25-msvc-10.0.14393.xml: needs merge<br>\nmetadata/VDR-v1.3.25-ubuntu-18.04.xml: needs merge<br>\nmetadata/VDR-v1.3.25-ubuntu-A32-18.04.xml: needs merge<br>\nmetadata/VDR-v1.3.25-ubuntu-gtk3-18.04.xml: needs merge<br>\nmetadata/VDR-v1.3.25-ubuntu-gtk3-20.04.xml: needs merge</p>\n<p>fcgle@Hesper MINGW64 ~/source/plugins (auto|REBASE 19/50)<br>\n$ git merge --squash auto<br>\nerror: Merging is not possible because you have unmerged files.<br>\nhint: Fix them up in the work tree, and then use 'git add/rm &lt;file&gt;'<br>\nhint: as appropriate to mark resolution and make a commit.<br>\nfatal: Exiting because of an unresolved conflict.</p>\n<p>fcgle@Hesper MINGW64 ~/source/plugins (auto|REBASE 19/50)<br>\n$ git status<br>\ninteractive rebase in progress; onto b2404e1e<br>\nLast commands done (19 commands done):<br>\n   pick c6390461 20fa599: msvc: 1.3.22.0<br>\n   pick 9a2f8b76 remove old vdr v1.3.20 data<br>\n  (see more in file .git/rebase-merge/done)<br>\nNext commands to do (31 remaining commands):<br>\n   pick 43a64a1a 0ccb75c: msvc: 1.4.29.0<br>\n   pick 16d71cda 0ccb75c: ubuntu-gtk3-x86_64: 1.4.29.0<br>\n  (use \"git rebase --edit-todo\" to view and edit)<br>\nYou are currently rebasing branch 'auto' on 'b2404e1e'.<br>\n  (fix conflicts and then run \"git rebase --continue\")<br>\n  (use \"git rebase --skip\" to skip this patch)<br>\n  (use \"git rebase --abort\" to check out the original branch)</p>\n<p>Unmerged paths:<br>\n  (use \"git restore --staged &lt;file&gt;...\" to unstage)<br>\n  (use \"git add &lt;file&gt;...\" to mark resolution)<br>\n        added by us:     metadata/VDR-v1.3.25-android-arm64-A64-16.xml<br>\n        added by us:     metadata/VDR-v1.3.25-android-armhf-A32-16.xml<br>\n        added by us:     metadata/VDR-v1.3.25-darwin-wx315-10.13.6.xml<br>\n        added by us:     metadata/VDR-v1.3.25-debian-10.xml<br>\n        added by us:     metadata/VDR-v1.3.25-debian-A32-10.xml<br>\n        added by us:     metadata/VDR-v1.3.25-debian-A32-11.xml<br>\n        added by us:     metadata/VDR-v1.3.25-flatpak-20.08.xml<br>\n        added by us:     metadata/VDR-v1.3.25-flatpak-A64-20.08.xml<br>\n        added by us:     metadata/VDR-v1.3.25-msvc-10.0.14393.xml<br>\n        added by us:     metadata/VDR-v1.3.25-ubuntu-18.04.xml<br>\n        added by us:     metadata/VDR-v1.3.25-ubuntu-A32-18.04.xml<br>\n        added by us:     metadata/VDR-v1.3.25-ubuntu-gtk3-18.04.xml<br>\n        added by us:     metadata/VDR-v1.3.25-ubuntu-gtk3-20.04.xml</p>\n<p>no changes added to commit (use \"git add\" and/or \"git commit -a\")</p>",
+        "id": 278375876,
+        "sender_full_name": "Rick Gleason",
+        "timestamp": 1649462486
+    },
+    {
+        "content": "<p>fcgle@Hesper MINGW64 ~/source/plugins (auto|REBASE 19/50)<br>\n$ git add metadata/</p>\n<p>fcgle@Hesper MINGW64 ~/source/plugins (auto|REBASE 19/50)<br>\n$ git status<br>\ninteractive rebase in progress; onto b2404e1e<br>\nLast commands done (19 commands done):<br>\n   pick c6390461 20fa599: msvc: 1.3.22.0<br>\n   pick 9a2f8b76 remove old vdr v1.3.20 data<br>\n  (see more in file .git/rebase-merge/done)<br>\nNext commands to do (31 remaining commands):<br>\n   pick 43a64a1a 0ccb75c: msvc: 1.4.29.0<br>\n   pick 16d71cda 0ccb75c: ubuntu-gtk3-x86_64: 1.4.29.0<br>\n  (use \"git rebase --edit-todo\" to view and edit)<br>\nYou are currently rebasing branch 'auto' on 'b2404e1e'.<br>\n  (all conflicts fixed: run \"git rebase --continue\")</p>\n<p>nothing to commit, working tree clean</p>\n<p>fcgle@Hesper MINGW64 ~/source/plugins (auto|REBASE 19/50)<br>\n$ git rebase --continue<br>\ndropping 43a64a1adbcc4b9d2be8303abe8bfcc392bbb3e0 0ccb75c: msvc: 1.4.29.0 -- patch contents already upstream<br>\ndropping 16d71cda55008de23d30f261d18405d00c9924d9 0ccb75c: ubuntu-gtk3-x86_64: 1.4.29.0 -- patch contents already upstream<br>\ndropping 79c2ea8af2f881995f1db96e4b8a61f312082076 0ccb75c: ubuntu-x86_64: 1.4.29.0 -- patch contents already upstream<br>\ndropping fdd87c95e5734aab8f4543794ad476f6c1acc0c6 0ccb75c: ubuntu-gtk3-x86_64: 1.4.29.0 -- patch contents already upstream<br>\ndropping 023a587aa6ab207038fb03d2f827901e1255009e 0ccb75c: debian-x86_64: 1.4.29.0 -- patch contents already upstream<br>\ndropping 3938e1736a7871d2d6b3036bbea82825c835f486 0ccb75c: ubuntu-armhf: 1.4.29.0 -- patch contents already upstream<br>\ndropping cb636769f2d785047a94d064a6ca19fcae299dc9 0ccb75c: debian-x86_64: 1.4.29.0 -- patch contents already upstream<br>\ndropping b6593148d49b1a0338bc620cc8095477758e4243 0ccb75c: debian-armhf: 1.4.29.0 -- patch contents already upstream<br>\ndropping 2c4c310af5183fc4bd61a46912804bcef8f7f573 0ccb75c: ubuntu-gtk3-armhf: 1.4.29.0 -- patch contents already upstream<br>\ndropping 047f3fbd5657a5e99337d956edd50334b9989c7c 0ccb75c: debian-armhf: 1.4.29.0 -- patch contents already upstream<br>\ndropping dd93380af3131e098e389a3fc6b85a6bb5c54950 0ccb75c: flatpak-aarch64: 1.4.29.0 -- patch contents already upstream<br>\ndropping bdba04a05cf7ebf854a11c79861b886c62efece8 0ccb75c: darwin-wx315: 1.4.29.0 -- patch contents already upstream<br>\ndropping 6564b6ebcc9c25224fcca69097b1cc3900e4143c 0ccb75c: flatpak-x86_64: 1.4.29.0 -- patch contents already upstream<br>\nSuccessfully rebased and updated refs/heads/a</p>",
+        "id": 278375898,
+        "sender_full_name": "Rick Gleason",
+        "timestamp": 1649462510
+    },
+    {
+        "content": "<p>fcgle@Hesper MINGW64 ~/source/plugins (auto)<br>\n$ git commit -m \"merging auto branch into master</p>\n<blockquote>\n<p>\"<br>\nOn branch auto<br>\nnothing to commit, working tree clean</p>\n</blockquote>",
+        "id": 278376065,
+        "sender_full_name": "Rick Gleason",
+        "timestamp": 1649462646
+    },
+    {
+        "content": "<p>A PR (pull request) can then be made from the master branch for updating the master catalog of OpenCPN/plugins.</p>",
+        "id": 278376077,
+        "sender_full_name": "Rick Gleason",
+        "timestamp": 1649462661
+    },
+    {
+        "content": "<p>Northing to compare.....<br>\n<a href=\"https://github.com/OpenCPN/plugins/compare/master...rgleason:master\">https://github.com/OpenCPN/plugins/compare/master...rgleason:master</a></p>",
+        "id": 278376121,
+        "sender_full_name": "Rick Gleason",
+        "timestamp": 1649462728
+    },
+    {
+        "content": "<p>Why is your auto branch in such a mess? No idea. I will look into this,  time permitting.</p>",
+        "id": 278401541,
+        "sender_full_name": "Alec Leamas",
+        "timestamp": 1649499726
+    },
+    {
+        "content": "<p>Ok. For some reason your auto branch is broken beyond repair. Do like this:</p>\n<ul>\n<li>reset the auto branch according to <a href=\"https://opencpn-manuals.github.io/main/AlternativeWorkflow/InstallConfigure/GithubPreps.html\">https://opencpn-manuals.github.io/main/AlternativeWorkflow/InstallConfigure/GithubPreps.html</a>, step 2 \"Creating the auto branch\"</li>\n<li>Rebuild vdr in the CircleCI and Appveyor GUI</li>\n<li>Run the steps you tried earlier <a href=\"https://opencpn-manuals.github.io/main/AlternativeWorkflow/InstallConfigure/Catalog-Github-Integration.html#_merging_the_auto_branch\">https://opencpn-manuals.github.io/main/AlternativeWorkflow/InstallConfigure/Catalog-Github-Integration.html#_merging_the_auto_branch</a></li>\n</ul>\n<p>Neither rebase nor merge should cause any problem. Again, all clean for me using our master branch and a fresh auto branch.</p>",
+        "id": 278458916,
+        "sender_full_name": "Alec Leamas",
+        "timestamp": 1649584085
+    }
+]

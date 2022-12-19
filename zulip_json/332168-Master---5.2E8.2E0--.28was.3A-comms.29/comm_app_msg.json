@@ -1,0 +1,248 @@
+[
+    {
+        "content": "<p>What is \"comm_app_msg \" all about?  How used?</p>",
+        "id": 291392930,
+        "sender_full_name": "Dave Register",
+        "timestamp": 1659137251
+    },
+    {
+        "content": "<p>Naming style... it's new also to me, although I think I'm closer to it. Let's make a try! If we keep to the habit ti commit before we go to bed it's easier to just fix things than to discuss them as long as it's about implementing the guidelines.</p>\n<p>comm_app_msg is the skeleton for the decoded, application messages for example decoded GPS or AIS data. It will be very similar to Transport  but handling AppMsg instead of NavMsg. BTW, Transport needs to be renamed.</p>",
+        "id": 291406832,
+        "sender_full_name": "Alec Leamas",
+        "timestamp": 1659156247
+    },
+    {
+        "content": "<p>OK on all.  What will we use AppMsg for, in general?  Examples?  What am I missing?<br>\nI have basic GPS handling from N2K implemented and working, all contained within the class that defined the listeners.  I could craft an AppMsg for the decoded result, but who would be listening for this?  Plugin?</p>",
+        "id": 291428574,
+        "sender_full_name": "Dave Register",
+        "timestamp": 1659187026
+    },
+    {
+        "content": "<p>Do you remember the sketch with the different layers? app_msg is the topmost layer. Both plugins and core GUI parts should be able to not only get the raw data but also the decoded data when it exists, for example positions. </p>\n<p>The app_msg things thus lives un upper layers consuming the raw data and decoding it. It has nothing to do with the driver layer, it's later. But It makes sense to have the skeletons in place (?)</p>",
+        "id": 291429709,
+        "sender_full_name": "Alec Leamas",
+        "timestamp": 1659188746
+    },
+    {
+        "content": "<p>I think the comm_app_msg will be mostly useful for plugins.  I suppose in some cases it would provide a mechanism to avoid using global variables for sharing information within the core.  I'll keep that in mind.  Makes sense to create the skeleton, anyway.</p>",
+        "id": 291441657,
+        "sender_full_name": "Dave Register",
+        "timestamp": 1659202564
+    },
+    {
+        "content": "<p>Agreed, my thinking as well.</p>",
+        "id": 291445805,
+        "sender_full_name": "Alec Leamas",
+        "timestamp": 1659207934
+    },
+    {
+        "content": "<p>I'm still fuzzy on how best to use comm_app_msg, especially things like GnssFix and AisData.  It seems needless overhead to use these in OCPN core.  Why not just use the statics?<br>\nRegarding AIS, I have the AISDecoder class listening for AIS messages from NavMsgBus directly.<br>\nI suppose some other module somewhere (PluginManager?) will also listen to NavBusMsg for AIS messages, and post an AppMasg notification so that plugins can get the event ( and a \"cooked\" message) if they listen ?</p>",
+        "id": 292333293,
+        "sender_full_name": "Dave Register",
+        "timestamp": 1659897576
+    },
+    {
+        "content": "<p>One advantage with messaging is that if pushing for example GnssFix it becomes available (somehow...) also for the plugins. </p>\n<p>Another is that the message is not only about data, it also carries info on exact when it is updated. That is, a component (core or gui) which needs to to something with the position has no need to \"poll\" position or so, it knows if/when it is updated. In short, GUI applications are fundamentally event driven, and the messaging here is nothing else than events. Using messages overall creates a more responsive system.</p>\n<p>But then again, these are just my ideas.  I don't think the overhead is anything to pay attention to though, the events here are very fast. Of course, one of my pain points is that using global variables to share information is, well, you know...</p>\n<p>From another angle, I argue for a model part which does the actual computing of positions etc. A GUI which handles the visual things. And that these are disconnected in a way which creates a clean interface to the GUI. And that the model does not depend on the GUI, which means our messaging system is a nice fit. This is nothing else than standard design of GUI applications, a limited way to apply the classical MVC pattern (wihtout a Controller, though).</p>",
+        "id": 292335812,
+        "sender_full_name": "Alec Leamas",
+        "timestamp": 1659901061
+    },
+    {
+        "content": "<ol>\n<li>For plugins, I agree with the idea of comm_app_msg.  Thyis will be new in our new model.  No plugins today will take advantage of it.  New ones will, if desired.</li>\n<li>Legacy logic does not poll, anywhere, except in RX threads where the thread can block waiting data..  We are already using wxEvents widely, to distribute comm interface data strings.</li>\n<li>globals, yes, I know...</li>\n<li>The disconnect between app and GUI is largely a matter of refactoring existing code.  Removal of the comm protocol handling from the primary GUI class (MyFrame).  And that is the plan for chart1.cpp.</li>\n</ol>",
+        "id": 292338475,
+        "sender_full_name": "Dave Register",
+        "timestamp": 1659904792
+    },
+    {
+        "content": "<p>Then this basically boils down to the interface between the new part which does the decoding, lets call call it \"Decoder\" for now now, and chart1.</p>\n<p>Obviously Decoder need to transfer data to chart1. That chart1 just calls methods in Decoder won't cut it, since only the Decoder knows when data arrives. Which basically boils down to that either the decoder must send events to chart1, or it call methods in chart1.</p>\n<p>Calling methods in chart1 means including chart1.h, bringing us back to square one where everything includes everything (since chart1.h includes everything).</p>\n<p>If Decoder should send events, why not use the appmsg which just is sugar on top of event passing? In particular, it disconnects Decoder in the sense that it does not need to know about the window handle for chart1, the handle it otherwise needs to send events. </p>\n<p>Using the appmsg interface also means that it is dead simple to test the Decoder. Again, this is IMHO actually a big deal</p>",
+        "id": 292365073,
+        "sender_full_name": "Alec Leamas",
+        "timestamp": 1659940304
+    },
+    {
+        "content": "<p>And, of course, using appmsg means being on track for a solution for plugins without any more fuzz.</p>",
+        "id": 292375375,
+        "sender_full_name": "Alec Leamas",
+        "timestamp": 1659948489
+    },
+    {
+        "content": "<p>Copy all.<br>\nI plan for chart1.cpp to disappear, replaced by ocpn_app.cpp and ocpn_frame.cpp.  And maybe comm_decoder.cpp<br>\nSo, following your scheme. ocpn_app contains the comm listeners, and probably initially the Decoder functionality (although that might best be split out later).  Anyway, app sends messages to frame.  So we might as well use appmsg for this.  We may need to grow the set of passed data structures as necessary to satisfy all requirements of frame, and other appmsg consumers.<br>\nWe retain the ability for a module (other than Decoder) to listen for comm events and process them as desired.  I'm thinking AIS here, which has a pretty complex decode function.  The set of data structures necessary to hold all possible AIS stream content is daunting. But we can readdress this later, if desired.<br>\nI plan to start this work tonight, in a private local branch.  Expect things will be broken for a while, locally.<br>\nThanks for the thought provoking ideas.</p>",
+        "id": 292401452,
+        "sender_full_name": "Dave Register",
+        "timestamp": 1659965336
+    },
+    {
+        "content": "<p>And of course the multiplexer will listen to raw N0183 messages, to support the legacy re-transmit use-case.<br>\nAnd the pluginmanager to support the legacy plugin API functions.</p>",
+        "id": 292403002,
+        "sender_full_name": "Dave Register",
+        "timestamp": 1659966091
+    },
+    {
+        "content": "<p>Overall, this looks sound to me, a step in the right direction which, important, will ensure that we won't get even more bogged down in the current mess. It's the start of doing  things the right way.</p>\n<p>I presume that  ocpn_app the would be a non-gui object, right?</p>\n<p>One interesting thing to do in parallel is to check those modules which include chart1.h. What  exactly breaks if <code>#include chart1.h</code> is removed?  Can it be refactored to a separate object which can replace chart1 for the including module?  Can it be ocpn_app?</p>\n<blockquote>\n<p>We may need to grow the set of passed data structures as necessary </p>\n</blockquote>\n<p>Yes, the one I did are about illustrating concepts, nothing more.</p>",
+        "id": 292406900,
+        "sender_full_name": "Alec Leamas",
+        "timestamp": 1659967820
+    },
+    {
+        "content": "<p>I need name advice/suggestions.<br>\nI am building a new class that:</p>\n<ol>\n<li>Listens for comm events, through observables.</li>\n<li>Posts comm_appmsgs (using notify()) to interested listeners, such as MyFrame, and plugin system.<br>\nClass Name:  All I can come up with is \"CommBridge\"  Not real happy with this name...<br>\nBetter ideas?</li>\n</ol>",
+        "id": 292821514,
+        "sender_full_name": "Dave Register",
+        "timestamp": 1660160776
+    },
+    {
+        "content": "<p>The events listened for are raw events?</p>",
+        "id": 292821704,
+        "sender_full_name": "Alec Leamas",
+        "timestamp": 1660160863
+    },
+    {
+        "content": "<p>Perhaps Decoder ;)</p>",
+        "id": 292821814,
+        "sender_full_name": "Alec Leamas",
+        "timestamp": 1660160893
+    },
+    {
+        "content": "<p>Yes, raw events.<br>\nI had planned to put Decoder into its own class.  More isolation.  So CommBridge (or whatever) is not much more that a \"connector\", using Decoder to craft its output.</p>",
+        "id": 292823487,
+        "sender_full_name": "Dave Register",
+        "timestamp": 1660161548
+    },
+    {
+        "content": "<p>ah....sort of Facade? DecoderFacade?</p>",
+        "id": 292824153,
+        "sender_full_name": "Alec Leamas",
+        "timestamp": 1660161805
+    },
+    {
+        "content": "<p>You will see the results tomorrow, I expect.<br>\nSerious philosophical question:<br>\nDoes it bother you, in an undefinable way, that modern computer sciences essentially demands that source code be written in English?  Always wondered that...</p>",
+        "id": 292845893,
+        "sender_full_name": "Dave Register",
+        "timestamp": 1660172537
+    },
+    {
+        "content": "<p>I built CommBridge and CommDecoder, pushed all.<br>\nThe idea is that CommBridge listens to raw data drivers.  When it gets a raw comm event, CommBridge  constructs an AppMsg, and posts it to the AppMsgBus.  MyFrame listens for the event, and will process as necessary in the frame GUI.</p>\n<p>Except, it does not quite work.  The CommBridge gets hit alright, decodes the message, and notifies the AppMsgBus .<br>\nBut the lambda callback point in MyFrame never gets hit.<br>\nI suspect the problem is the same as the one you fixed on NavMsgBus, in the getInstance() method.  Maybe.<br>\nThoughts?</p>",
+        "id": 292859448,
+        "sender_full_name": "Dave Register",
+        "timestamp": 1660184992
+    },
+    {
+        "content": "<p>can you push what you have to a temporary branch so I can have a look?</p>",
+        "id": 292867467,
+        "sender_full_name": "Alec Leamas",
+        "timestamp": 1660194025
+    },
+    {
+        "content": "<p>OK, you have pushed sorry.</p>",
+        "id": 292877919,
+        "sender_full_name": "Alec Leamas",
+        "timestamp": 1660202130
+    },
+    {
+        "content": "<p>Here are three things. The first is that AppMsgBus::getIistance() returns a raw pointer(). While not wrong per se, it  differs from the reference returned by <code>NavMsgBus::getInstance()</code>. I thought I had fixed this, but obviously not.  Pushing an update.</p>\n<p>The second is the key you use when listening:</p>\n<div class=\"codehilite\"><pre><span></span><code>listener_BasicNavData = msgbus.get_listener(EVT_BASIC_NAV_DATA, this, &quot;BasicNavData&quot;);\n</code></pre></div>\n\n<p>Simply put, this does not work. The way to obtain a key it is as done in  the test code:</p>\n<div class=\"codehilite\"><pre><span></span><code>     auto&amp; a = AppMsgBus::getInstance();\n      AppMsg msg(AppMsg::Type::GnssFix);\n      listener = a.get_listener(EVT_FOO, this, msg.key());\n</code></pre></div>\n<p>Basically, <code>msg.key()</code> adds all sorts of  prefixes to make sure the key is unique. The same keyspace is used for AppMsg, NavMsg, GlobalVar, ConfigVar and what not... I don't update this, my feeling is that it is better if you do.</p>\n<p>Also, here is the thing about source formatting. I'm starting to get used to how it should be, makes it easier to read. Running the things through cmake-format to fix this now rather than later.</p>",
+        "id": 292879060,
+        "sender_full_name": "Alec Leamas",
+        "timestamp": 1660202790
+    },
+    {
+        "content": "<p>Hm... also, you have added a new type which is fine, but one must then also update <code>AppMsg::TypeToStringI()</code> in comm_appmsg.cpp. Without this, there is no sane key.</p>",
+        "id": 292880733,
+        "sender_full_name": "Alec Leamas",
+        "timestamp": 1660203780
+    },
+    {
+        "content": "<p>Clearly, we (I) could enhance tings here. One simple thing is to remove the <code>default' case label in </code>AppMsg::TypeToStringI()` -- this would create a compiler warning for the missing enum. Will do.</p>",
+        "id": 292881697,
+        "sender_full_name": "Alec Leamas",
+        "timestamp": 1660204258
+    },
+    {
+        "content": "<p>Another question is if the argument to <code>get_listener()</code> really should be a plain string.  It obviously opens for silly mistakes, a typed argument might be a better choice. Let me think...</p>",
+        "id": 292882049,
+        "sender_full_name": "Alec Leamas",
+        "timestamp": 1660204428
+    },
+    {
+        "content": "<p>Pushing changes: Use a reference in <code>AppMsgBus::getInstance()</code>, run clang-format, handle the new message types in <code>AppMsg::TypeToString()</code></p>",
+        "id": 292882571,
+        "sender_full_name": "Alec Leamas",
+        "timestamp": 1660204633
+    },
+    {
+        "content": "<p>Updated  <code>AppMsgBus::get_listener()</code> so it takes an AppMsg argument rather than a string.  Forced me to update all parts, also those I initially thought were better you did. </p>\n<p>Sort of interested how this works...</p>",
+        "id": 292890654,
+        "sender_full_name": "Alec Leamas",
+        "timestamp": 1660208301
+    },
+    {
+        "content": "<p>Quick build and smoke test with live data.  Success. The lambda callback gets hit now.  Thanks for the corrections.<br>\nTime to write some more code to completely test the process.<br>\nFYI: the live data I am using is coming from a network server that Hakan maintains.  It replays a recorded N0183 stream from one of his voyages on a tcp connection.  Reports ownship and lots of AIS targets.<br>\nAddress: <a href=\"http://signalk.stupan.se\">signalk.stupan.se</a><br>\nPort: 10112<br>\nType: tcp<br>\nThis connection can be enabled by Options-&gt;Connections, as per legacy.</p>",
+        "id": 292931936,
+        "sender_full_name": "Dave Register",
+        "timestamp": 1660225253
+    },
+    {
+        "content": "<p>\"Updated AppMsgBus::get_listener() so it takes an AppMsg argument rather than a string.\"<br>\nThis is a real improvement.  Key strings are baked into the source, opaque to the caller.  Nice.</p>",
+        "id": 292932885,
+        "sender_full_name": "Dave Register",
+        "timestamp": 1660225570
+    },
+    {
+        "content": "<blockquote>\n<p>This is a real improvement. </p>\n</blockquote>\n<p>Yes, in hindsight I don't understand why I didn't do that from the very beginning. I will update the NavMsgBus::get_listener in the same way  later, hopefully tomorrow.</p>\n<p>Thanks for reminder on Håkan's signalK server.</p>",
+        "id": 292951927,
+        "sender_full_name": "Alec Leamas",
+        "timestamp": 1660231591
+    },
+    {
+        "content": "<blockquote>\n<p>Time to write some more code to completely test the process.</p>\n</blockquote>\n<p>If you can. it's a huge advantage if you can add these tests to test/tests.cpp. The thing with having them there is that they are used to find regressions.</p>",
+        "id": 292952545,
+        "sender_full_name": "Alec Leamas",
+        "timestamp": 1660231777
+    },
+    {
+        "content": "<p>Pushed various housekeeping, trying to make code more up to date w r t Google style GL and other common sense things. Hope you don't have things to rebase...</p>",
+        "id": 293059488,
+        "sender_full_name": "Alec Leamas",
+        "timestamp": 1660289912
+    },
+    {
+        "content": "<p>Why? We are creating brand new code, and I think it's important to set an example. Others will no doubt watch..</p>",
+        "id": 293060280,
+        "sender_full_name": "Alec Leamas",
+        "timestamp": 1660290340
+    },
+    {
+        "content": "<p>Looking at BasicNavdataMsg. It seems that you don't initiate the Position::Type argument to pos. The result is a position which basically is undefined, it needs to know about N/S and E/W to  be in a defined state..</p>",
+        "id": 293065876,
+        "sender_full_name": "Alec Leamas",
+        "timestamp": 1660292951
+    },
+    {
+        "content": "<p>Ah... you are using negative degrees for that. Should be fine, but we then needs to redefine Position somehow.  Probably deducing Type from the actual lat/lon arguments, and skip the constructor with a  Type argument.  Which means that the actual lat/lon might be negative, they are just converted  to positive values in <code>to_string()</code></p>\n<p>Thoughts?</p>",
+        "id": 293067082,
+        "sender_full_name": "Alec Leamas",
+        "timestamp": 1660293572
+    },
+    {
+        "content": "<p>Updated the Position interface. It should work  with current use cases, and is reasonably documented.</p>",
+        "id": 293080800,
+        "sender_full_name": "Alec Leamas",
+        "timestamp": 1660300062
+    },
+    {
+        "content": "<p>More thinking about AppMsg in general an for example BasicNavDataMsg:  We used shared_ptr to distribute this message to all sorts of consumers. In the end, this means all listeners has a pointer to the same message. For this reason, the message should probably never be changed  since, well...</p>\n<p>The pointer is actually declared as <code>const</code>  Despite this, I think it would be better if all variables in the messages are declared as <code>const</code>.  This would create a safety net, and make the indended usage clear. Yest, I know, I'm also s sinner. but still...</p>\n<p>Pushing an update</p>",
+        "id": 293085985,
+        "sender_full_name": "Alec Leamas",
+        "timestamp": 1660302454
+    },
+    {
+        "content": "<p>\"const\" on message members:  At some point I changed that to remove the \"const\", experimenting with my logic.  Forgot to change it back.  Sorry.  I agree that these members are fundamentally \"const\".</p>",
+        "id": 293105240,
+        "sender_full_name": "Dave Register",
+        "timestamp": 1660309703
+    },
+    {
+        "content": "<p>\"Which means that the actual lat/lon might be negative\".  That has been our tradition in core logic.  Makes the math easier everywhere.</p>",
+        "id": 293105726,
+        "sender_full_name": "Dave Register",
+        "timestamp": 1660309864
+    }
+]

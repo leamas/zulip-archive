@@ -1,0 +1,32 @@
+[
+    {
+        "content": "<p>We have multiple includes like <code>#include \"wx/wx.h\"</code>which should be <code>#include &lt;wx/wx.h&gt;</code> according to standard C/C++ conventions. Annoying, and creates yet another (small) barrier for casual readers.</p>\n<p>Could and should be fixed using a sed oneliner: <code>sed -i  '/include \"wx/s/\"\\([^\"]*\\)\"/&lt;\\1&gt;/'  include/*.h  src/*.cpp</code>.  Just a reminder for later.</p>",
+        "id": 308542785,
+        "sender_full_name": "Alec Leamas",
+        "timestamp": 1667898240
+    },
+    {
+        "content": "<p><span class=\"user-mention silent\" data-user-id=\"399510\">Alec Leamas</span> <a href=\"#narrow/stream/332168-comms/topic/Bad.20wxWidgets.20includes/near/308542785\">said</a>:</p>\n<blockquote>\n<p>We have multiple includes like <code>#include \"wx/wx.h\"</code>which should be <code>#include &lt;wx/wx.h&gt;</code> according to standard C/C++ conventions. Annoying, and creates yet another (small) barrier for casual readers.</p>\n<p>Could and should be fixed using a sed oneliner: <code>sed -i  '/include \"wx/s/\"\\([^\"]*\\)\"/&lt;\\1&gt;/'  include/*.h  src/*.cpp</code>.  Just a reminder for later.</p>\n</blockquote>\n<p>I think this is no longer true in wx321 branch.</p>",
+        "id": 308587903,
+        "sender_full_name": "Dan Dickey",
+        "timestamp": 1667914192
+    },
+    {
+        "content": "<p>It is:  (on branch wxwin321)</p>\n<div class=\"codehilite\"><pre><span></span><code>$ git grep &#39;include &quot;wx&#39; ../src\n../src/Osenc.cpp:#include &quot;wx/wxprec.h&quot;\n../src/Osenc.cpp:#include &quot;wx/wx.h&quot;\n../src/RoutePoint.cpp:#include &quot;wx/wxprec.h&quot;\n../src/RoutePoint.cpp:#include &quot;wx28compat.h&quot;\n../src/SencManager.cpp:#include &quot;wx/wxprec.h&quot;\n../src/SencManager.cpp:#include &quot;wx/wx.h&quot;\n../src/TCWin.cpp:#include &quot;wx28compat.h&quot;\n../src/ais.cpp:#include &quot;wx28compat.h&quot;\n../src/androidUTIL.cpp:#include &quot;wx/wxprec.h&quot;\n../src/androidUTIL.cpp:#include &quot;wx/wx.h&quot;\n../src/chcanv.cpp:#include &quot;wx28compat.h&quot;\n../src/cm93.cpp:#include &quot;wx/wxprec.h&quot;\n../src/cm93.cpp:#include &quot;wx/wx.h&quot;\n../src/cm93.cpp:#include &quot;wx28compat.h&quot;\n../src/compasswin.cpp:#include &quot;wx/wxprec.h&quot;\n../src/compasswin.cpp:#include &quot;wx/wx.h&quot;\n../src/compasswin.cpp:#include &quot;wx28compat.h&quot;\n../src/concanv.cpp:#include &quot;wx28compat.h&quot;\n../src/console.cpp:#include &quot;wx/wxprec.h&quot;\n../src/console.cpp:#include &quot;wx/wx.h&quot;\n../src/macutils.c:#include &quot;wx/wxprec.h&quot;\n../src/mygeom.cpp:#include &quot;wx/wxprec.h&quot;\n../src/mygeom.cpp:#include &quot;wx/wx.h&quot;\n../src/mygeom.cpp:#include &quot;wx/tokenzr.h&quot;\n../src/ocpndc.cpp:#include &quot;wx28compat.h&quot;\n../src/options.cpp:#include &quot;wx28compat.h&quot;\n../src/piano.cpp:#include &quot;wx28compat.h&quot;\n../src/route.cpp:#include &quot;wx/wx.h&quot;\n../src/route_point.cpp:#include &quot;wx28compat.h&quot;\n../src/routeprintout.cpp:#include &quot;wx28compat.h&quot;\n../src/s57chart.cpp:#include &quot;wx/wxprec.h&quot;\n../src/s57chart.cpp:#include &quot;wx/wx.h&quot;\n../src/s57chart.cpp:#include &quot;wx/image.h&quot;  // for some reason, needed for msvc???\n../src/s57chart.cpp:#include &quot;wx/tokenzr.h&quot;\n../src/s57chart.cpp:#include &quot;wx28compat.h&quot;\n../src/s57obj.cpp:#include &quot;wx/wxprec.h&quot;\n../src/s57obj.cpp:#include &quot;wx/wx.h&quot;\n../src/s57obj.cpp:#include &quot;wx/image.h&quot;  // for some reason, needed for msvc???\n../src/s57obj.cpp:#include &quot;wx/tokenzr.h&quot;\n../src/s57obj.cpp:#include &quot;wx28compat.h&quot;\n../src/scrollingdialog.cpp:#include &quot;wx/wx.h&quot;\n../src/scrollingdialog.cpp:#include &quot;wx/module.h&quot;\n../src/scrollingdialog.cpp:#include &quot;wx/display.h&quot;\n../src/scrollingdialog.cpp:#include &quot;wx/bookctrl.h&quot;\n../src/styles.cpp:#include &quot;wx28compat.h&quot;\n../src/svg_utils.cpp:#include &quot;wxSVG/svg.h&quot;\n../src/thumbwin.cpp:#include &quot;wx28compat.h&quot;\n../src/wificlient.cpp:#include &quot;wx/wxprec.h&quot;\n../src/wificlient.cpp:#include &quot;wx/wx.h&quot;\n</code></pre></div>",
+        "id": 308595660,
+        "sender_full_name": "Alec Leamas",
+        "timestamp": 1667916685
+    },
+    {
+        "content": "<p>Ok, I submitted (or thought I did) this yesterday.  Will submit PR shortly.</p>",
+        "id": 308598444,
+        "sender_full_name": "Dan Dickey",
+        "timestamp": 1667917555
+    },
+    {
+        "content": "<p><span class=\"user-mention\" data-user-id=\"522729\">@Dan Dickey</span> This is definitely not just about \"your\" changes, this is bad code since long. You could just leave it for now, I'll make a PR  or so once the wxwin31 branch is merged. </p>\n<p>What happened here is that I first noticed this in your PR, and thought it would be a good idea to have \"new\" code fixed. But I now see that this is all over the place and thus needs  a  more \"global\" fix so to speak. Let's keep this thread as a reminder.</p>",
+        "id": 308612781,
+        "sender_full_name": "Alec Leamas",
+        "timestamp": 1667921573
+    }
+]

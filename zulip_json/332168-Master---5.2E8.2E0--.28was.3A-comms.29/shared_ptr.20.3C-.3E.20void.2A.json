@@ -1,0 +1,20 @@
+[
+    {
+        "content": "<p>Dave wrote:</p>\n<blockquote>\n<p>I cannot work out how to usefully pass a shared_ptr in the void* slot of<br>\na wxCommandEvent.  Casting shared_ptr to void* easy enough. But casting<br>\nback to shared ptr in event processing is a mystery.</p>\n</blockquote>\n<p>Overall, almost everything about overloaded pointers is a mystery for me. So yes, I have also been thinking about this. Nothing conclusive, for sure. But we must find a way to transfer the ref-counted  pointer through  the listen-notify basics. If it cannot be passed as a <code>void*</code> the alternative would be to use a derived message type instead of <code>wxCommandEvent</code> in the basic  machinery which then must be converted to a template. This can be done behind the scenes without changing any public interfaces,  but I basically try to avoid templates unless required...'</p>\n<p>I still need to fix the open bug in <a href=\"https://github.com/OpenCPN/OpenCPN/pull/2689\">https://github.com/OpenCPN/OpenCPN/pull/2689</a>. My next priority is to code the two listen-notify message buses (application and raw messages), where this comes up as first item. I don't know exactly how to handle it, but I'm convinced it can be solved.</p>",
+        "id": 290763621,
+        "sender_full_name": "Alec Leamas",
+        "timestamp": 1658758329
+    },
+    {
+        "content": "<p><span class=\"user-mention\" data-user-id=\"517002\">@Dave Register</span>  ^</p>",
+        "id": 290763681,
+        "sender_full_name": "Alec Leamas",
+        "timestamp": 1658758364
+    },
+    {
+        "content": "<p>OK, let's explore that path then. As I said, this means templating the basic stuff, but it can probably be done without interface changes. </p>\n<p>The overall interface I see is </p>\n<div class=\"codehilite\"><pre><span></span><code>class NavMsgBus  {\n    /**  Inform listeners about a an incoming message.*/\n    void  notify(nav_msg_ptr ptr);\n\n    /** Return object  which handles incoming messages which contains a nav_msg_ptr */\n    NavMsgListener get_listener(wxEvtHandler listener);\n}\n</code></pre></div>\n<p>We still need to handle listeners which goes out of scope, hence <code>get_listener()</code> rather than <code>listen()</code>. Similar fot the application message bus. Back later.</p>",
+        "id": 290766190,
+        "sender_full_name": "Alec Leamas",
+        "timestamp": 1658759557
+    }
+]

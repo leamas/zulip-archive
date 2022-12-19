@@ -1,0 +1,76 @@
+<html>
+<head><meta charset="utf-8"><title>JavaScript v2.0 · JavaScript_pi · Zulip Chat Archive</title></head>
+<h2>Stream: <a href="https://leamas.github.io/zulip-archive/stream/349785-JavaScript_pi/index.html">JavaScript_pi</a></h2>
+<h3>Topic: <a href="https://leamas.github.io/zulip-archive/stream/349785-JavaScript_pi/topic/JavaScript.20v2.2E0.html">JavaScript v2.0</a></h3>
+
+<hr>
+
+<base href="https://opencpn.zulipchat.com">
+
+<head><link href="https://leamas.github.io/zulip-archive/style.css" rel="stylesheet"></head>
+
+<a name="310402168"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/349785-JavaScript_pi/topic/JavaScript%20v2.0/near/310402168" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Tony Voss <a href="https://leamas.github.io/zulip-archive/stream/349785-JavaScript_pi/topic/JavaScript.20v2.2E0.html#310402168">(Nov 16 2022 at 13:01)</a>:</h4>
+<p>V2.0 alpha is now available <a href="https://cloudsmith.io/~opencpn/repos/javascript-alpha/packages/">in the repository</a>.  As I am MacOS only, please can some kind souls (<span class="user-mention" data-user-id="399559">@Mike Rossiter</span> ?) test on other platforms, especially as detailed here:</p>
+<p><strong>Console management</strong><br>
+When cruising, I normally have three JavaScripts running (keeping iNavX on mobile devices sync’d; tackAdvisor and a script that writes navigational data out for my FileMaker-based ship’s log).  Between passages, a fourth script writes tracks out as .kml files for my blog.  With the JavaScript plugin v1, having all these scripts running could get in the way of enjoying OpenCPN itself.  Although a script could be hidden, making it visible again involved unhiding all consoles.  JavaScript v2.0 makes all this much much better and easier.</p>
+<p>The following is true for MacOS: Windows can now be minimised to a size that just contains the traffic lights and the console name.  The minimum size is adjusted for name length and if the console is renamed the minimum size adjusts accordingly.  Consoles can be parked in the window bar above the chart, keeping them out of the chart itself.  If not in full-screen mode, a console can even be parked above the main window. A new script function <code>consolePark()</code> allows a script to park itself in available space at the highest level of other consoles.<br>
+When a console has output to display, it is enlarged so that the output can be seen.  It is now possible to enlarge and view parked consoles and minimise them again individually.  The test scripts now include a <em>Park console</em> test that exercises this.  Herewith a screen shot of how it looks under MacOS, showing five consoles of different name lengths.<br>
+<a href="/user_uploads/33951/r44M0ZmXJGq7KZqB3L7GHCMp/Parked-consoles-OSX.png">Parked-consoles-OSX.png</a> </p>
+<div class="message_inline_image"><a href="/user_uploads/33951/r44M0ZmXJGq7KZqB3L7GHCMp/Parked-consoles-OSX.png" title="Parked-consoles-OSX.png"><img src="/user_uploads/33951/r44M0ZmXJGq7KZqB3L7GHCMp/Parked-consoles-OSX.png"></a></div><p>I have no idea how this will work out under Windows or other platforms.  In particular, the width allowing for different console name lengths may not be correct with different platform fonts.  It may require platform-specific tweaks.</p>
+<p><strong>messageBox( )</strong> <br>
+This new function displays a modal message box - much easier for sequential steps in scripts than having to set up a dialogue with a function to process the user choice.</p>
+<p>Because scripts can execute functions in response to an event, a script could have more than one modal window open. It is also possible for a script to be closed with modal message boxes still displayed.  Clearing such windows is fraught but I have it such that orphaned message boxes can be later dismissed with any button without ill effect such as crashing OpenCPN.</p>
+<p>The test suite has been completely rewritten and makes much use of <code>messageBox( )</code>.  If you do not respond to a test action with a dialogue box open and the test times out, that is a good exercise of coping with orphaned windows.</p>
+<p><strong>Here is a full list of the changes in V2.0</strong></p>
+<p><em>Load script</em><br>
+ The plugin now keeps a list of the ten most recently accessed script files. Load now displays a dialogue in which you can select a file from the lists or you can choose Other... which opens a file selection dialogue. You can also add a recent file to a list of favourites, which will always be offered, or you can remove a favourite. </p>
+<p><em>Consoles</em> </p>
+<ul>
+<li>The script and output panes are now more flexible and better optimise their space, including when resized.  </li>
+<li>The splitter sash between the script and output pane now shows adjustments while being moved.  </li>
+<li>Consoles can now be reduced to a minimal size just showing the console name to facilitate parking out of the way.  </li>
+<li>The consoles page of the tools now allows you to change the name of a console.  </li>
+</ul>
+<p><em>Extended APIs</em> </p>
+<ul>
+<li><code>readTextFile(fileString)</code> -  fileString can now be a URL and text will be read from that location, if OpenCPN is on-line.</li>
+</ul>
+<p><em>New APIs</em><br>
+ * <code>onContextMenu()</code> - create a context menu item and handle its selection with a function <br>
+• <code>consoleName()</code> - set the console name from a script <br>
+• <code>consolePark()</code> - park this console <br>
+• <code>messageBox ()</code><br>
+• <code>OCPNgetCursorPosition()</code> - gets cursor position - useful with onContextMenu( )<br>
+• <code>OCPNsoundAlarm()</code>  - draw attention to script </p>
+<p><em>Other</em>  </p>
+<ul>
+<li>JavaScript engine updated from v2.5.0 to 2.7.0. Performance improvements and bug fixes only.  </li>
+<li><code>OCPNpushNMEA( )</code> now checks the sentence starts "$.....,"</li>
+</ul>
+<p><a href="https://github.com/antipole2/JavaScript_pi/blob/v2.0/documentation/JavaScript_plugin_user_guide.pdf">Updated User Guide here.</a></p>
+
+
+
+<a name="310404350"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/349785-JavaScript_pi/topic/JavaScript%20v2.0/near/310404350" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Tony Voss <a href="https://leamas.github.io/zulip-archive/stream/349785-JavaScript_pi/topic/JavaScript.20v2.2E0.html#310404350">(Nov 16 2022 at 13:15)</a>:</h4>
+<p>PS The builds assume OCPN5.6.2 - likely not good for later.</p>
+
+
+
+<a name="310434064"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/349785-JavaScript_pi/topic/JavaScript%20v2.0/near/310434064" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Mike Rossiter <a href="https://leamas.github.io/zulip-archive/stream/349785-JavaScript_pi/topic/JavaScript.20v2.2E0.html#310434064">(Nov 16 2022 at 15:23)</a>:</h4>
+<p><span class="user-mention" data-user-id="554731">@Tony Voss</span>  Time is at a premium. Could you suggest one or two scripts that will stress test the plugin?</p>
+
+
+
+<a name="310449068"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/349785-JavaScript_pi/topic/JavaScript%20v2.0/near/310449068" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Tony Voss <a href="https://leamas.github.io/zulip-archive/stream/349785-JavaScript_pi/topic/JavaScript.20v2.2E0.html#310449068">(Nov 16 2022 at 16:31)</a>:</h4>
+<p><span class="user-mention" data-user-id="399559">@Mike Rossiter</span>  The test suite tests almost all things in a pretty stressful way.  It is in the Test_scripts folder.  If you do not have the relevant version,  you can <a href="https://github.com/antipole2/JavaScript_pi/tree/v2.0/Tests_scripts">download it from here</a>.<br>
+The most critical testing is the console minimisation and parking.  I suggest you run the <em>Park console</em> test individually before running all, so you can study the result and compare with my screenshot without the time out timer timing out.  It would be good to see screenshots equivalent to mine above from the other platforms.</p>
+<p>The new thing not covered in the test suite is the completely new Load script button.  I don't expect it to have platform dependent issues but worth checking.    Load a few scripts and check they appear in the recents list and can be reloaded by selecting from the list.  Also in the Load scripts window check that <em>Organise favourites</em> allows you to make a recent a favourite and you can also remove a favourite.  The list of recents and favourites should be preserved across plugin deactivation and reactivation.</p>
+
+
+
+<hr><p>Last updated: Dec 19 2022 at 16:41 UTC</p>
+</html>

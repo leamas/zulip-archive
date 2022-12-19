@@ -1,0 +1,270 @@
+<html>
+<head><meta charset="utf-8"><title>Question about comm sketch · Master - 5.8.0  (was: comms) · Zulip Chat Archive</title></head>
+<h2>Stream: <a href="https://leamas.github.io/zulip-archive/stream/332168-Master---5.2E8.2E0--.28was.3A-comms.29/index.html">Master - 5.8.0  (was: comms)</a></h2>
+<h3>Topic: <a href="https://leamas.github.io/zulip-archive/stream/332168-Master---5.2E8.2E0--.28was.3A-comms.29/topic/Question.20about.20comm.20sketch.html">Question about comm sketch</a></h3>
+
+<hr>
+
+<base href="https://opencpn.zulipchat.com">
+
+<head><link href="https://leamas.github.io/zulip-archive/style.css" rel="stylesheet"></head>
+
+<a name="290775128"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332168-Master%20-%205.8.0%20%20%28was%3A%20comms%29/topic/Question%20about%20comm%20sketch/near/290775128" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Alec Leamas <a href="https://leamas.github.io/zulip-archive/stream/332168-Master---5.2E8.2E0--.28was.3A-comms.29/topic/Question.20about.20comm.20sketch.html#290775128">(Jul 25 2022 at 15:32)</a>:</h4>
+<p>Dave wrote:</p>
+<blockquote>
+<p>I   am implementing the new idea for listen/notify driver stacks, trying<br>
+to follow the logic of your sketch, even if some class names are changed.</p>
+</blockquote>
+<blockquote>
+<p>There are some questions to clarify your ideas, before I go off on some<br>
+unexpected direction.</p>
+</blockquote>
+<blockquote>
+<ol>
+<li>App element places listen() call to singleton class "transport", specifying desired data by key.</li>
+</ol>
+</blockquote>
+<p>Yes</p>
+<blockquote>
+<ol start="2">
+<li>Transport class maintains lists of what app element has asked for what kind of messages (key).  Probably a hash map.</li>
+</ol>
+</blockquote>
+<p>This is actually already done  in <em>observable.h</em>. The only thing needed is a specialization for <code>nav_msg_ptr</code>,  probably just a simple header-only thing.</p>
+<blockquote>
+<ol start="3">
+<li>Driver receives an n2k PGN, asyncronously.</li>
+</ol>
+</blockquote>
+<blockquote>
+<ol start="4">
+<li>Fuzzy here:  Driver calls transport class (inline on main app thread) with ptr to raw data, and other info.  Has the appropriate method in the transport class been defined? I don't see it</li>
+</ol>
+</blockquote>
+<p>This is notify((). As said, it is in observable.h</p>
+<p>Still, the listening side must of course define the method invoked for the message, most likely a lambda.  But no need to declare that in the interface </p>
+<blockquote>
+<ol start="5">
+<li>Transport class determines who wants this PGN, if anyone, by inspection of PGN, and consultation of it's listener lists.  And posts a Notify() to the matching listeners.</li>
+</ol>
+</blockquote>
+<p>No. Observable posts an event to all listeners, listeners does not use or  see <code>notify()</code> in any other way than a received event. OTOH.  listeners define the method invoked for the message, most likely a lambda.  But no need to declare that in the interface </p>
+<blockquote>
+<ol start="6">
+<li>Everybody is happy.</li>
+</ol>
+</blockquote>
+<p>Not until  we have some actual code.-</p>
+<blockquote>
+<p>OK so far?</p>
+</blockquote>
+<p>Not really, see above ;)</p>
+<blockquote>
+<ol start="7">
+<li>Looking at transport class, I see it derived from "DriverListener".  What is this interface used for, especially its Notify() methods?</li>
+</ol>
+</blockquote>
+<p>This is really about upper layers. Since the driver layer has no knowledge about the upper layers, it cannot declare a "upper layer parameter". For example,  it cannot define a function like <code>set_listener(Transport transport)</code>where transport  listens to some  messages. Instead ,  it defines an interface which can be easily implemented by Transport, and makes the transport instance a legal method argument to for example <code>AbstractDriver::set_listener()</code>.</p>
+<p>Keeping things this way is important for example when  testing since we dont hardcode  the listerner and thus can use a some test setup instead. It also keeps the layer structure clean:  lower has no dependencies i. e.  includes from  upper ones.</p>
+<p>My feeling is that I'm behind schedule</p>
+
+
+
+<a name="290776700"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332168-Master%20-%205.8.0%20%20%28was%3A%20comms%29/topic/Question%20about%20comm%20sketch/near/290776700" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Alec Leamas <a href="https://leamas.github.io/zulip-archive/stream/332168-Master---5.2E8.2E0--.28was.3A-comms.29/topic/Question.20about.20comm.20sketch.html#290776700">(Jul 25 2022 at 15:42)</a>:</h4>
+<p>Sidenote:  The exact meaning of  what a listener in waiting for is in  the <code>msg_key</code>class.   This is an unique string which represents  a message type and used to classify both incoming  messages  to <code>notify()</code> and listeners.</p>
+
+
+
+<a name="290802097"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332168-Master%20-%205.8.0%20%20%28was%3A%20comms%29/topic/Question%20about%20comm%20sketch/near/290802097" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Dave Register <a href="https://leamas.github.io/zulip-archive/stream/332168-Master---5.2E8.2E0--.28was.3A-comms.29/topic/Question.20about.20comm.20sketch.html#290802097">(Jul 25 2022 at 18:46)</a>:</h4>
+<p>OK, I'm following most of that.  To me, observable.h and friends is magic, until I study the code some more.<br>
+Just to let you know, I'm not stuck with nothing to do, but I will be soon.<br>
+I have built a class structure for drivers, trying to get to some orthogonality in the definitions.<br>
+For instance, n2k driver stack today looks like a three class hierarchy.<br>
+commDriverBase-&gt;commDriverN2K-&gt;commDriverN2kSerial<br>
+We will also have:<br>
+commDriverBase-&gt;commDriverN0183-&gt;commDriverN0183Serial<br>
+commDriverBase-&gt;commDriverN0183-&gt;commDriverN0183Net<br>
+etc.</p>
+<p>I have built working code for commDriverN2KSerial, which handles YachtDevices and Actisense devicess which come into USB as a serial interface.  I am getting live N2K data from the simple network I cobbled together, ready to send to higher layers when able.<br>
+Also built commDriversN0183Serial, which stole code from OCPN_Datastream.  I see OCPN_Datastream as going away in this evolution.</p>
+<p>I am going to read observable.h now.</p>
+
+
+
+<a name="290815166"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332168-Master%20-%205.8.0%20%20%28was%3A%20comms%29/topic/Question%20about%20comm%20sketch/near/290815166" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Alec Leamas <a href="https://leamas.github.io/zulip-archive/stream/332168-Master---5.2E8.2E0--.28was.3A-comms.29/topic/Question.20about.20comm.20sketch.html#290815166">(Jul 25 2022 at 20:38)</a>:</h4>
+<p>Probably a good idea. But if you wait until tomorrow I'm pretty sure I will have first round of at least the raw message bus in place. More or less finished with my first priority <a href="https://github.com/OpenCPN/OpenCPN/pull/2689">https://github.com/OpenCPN/OpenCPN/pull/2689</a></p>
+
+
+
+<a name="290823922"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332168-Master%20-%205.8.0%20%20%28was%3A%20comms%29/topic/Question%20about%20comm%20sketch/near/290823922" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Alec Leamas <a href="https://leamas.github.io/zulip-archive/stream/332168-Master---5.2E8.2E0--.28was.3A-comms.29/topic/Question.20about.20comm.20sketch.html#290823922">(Jul 25 2022 at 21:56)</a>:</h4>
+<p>I have  been able to transfer a ref-counted pointer through a wxEvent's  void* . The basic idea is to wrap the pointer in a class, transfer the class and retrieve the class including pointer on the receiving side. It's somewhat messy, but could be hidden within the observable specialization. And even if messy, it's  IMHO still better than templating. Could be wrong, bit it is just  an implementation detail.</p>
+
+
+
+<a name="290845661"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332168-Master%20-%205.8.0%20%20%28was%3A%20comms%29/topic/Question%20about%20comm%20sketch/near/290845661" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Dave Register <a href="https://leamas.github.io/zulip-archive/stream/332168-Master---5.2E8.2E0--.28was.3A-comms.29/topic/Question.20about.20comm.20sketch.html#290845661">(Jul 26 2022 at 03:28)</a>:</h4>
+<p>After merging the CLI work, I have created a new branch creatively called "comm", pushed to github.<br>
+This will be our working branch for n2k driver/application data model, for now.<br>
+I am ready now to understand and code the notify() calls from the driver.  I would appreciate any input and code snippets to make this happen.</p>
+<p>commDriverN2KSerial.cpp:126</p>
+<p>std::vector&lt;unsigned char&gt; *data = p.get();</p>
+<p>// Create the upstream message<br>
+  Nmea2000_msg n2kmsg;<br>
+<a href="http://n2kmsg.id">n2kmsg.id</a> =   N2kId(data);<br>
+  n2kmsg.payload = *data;</p>
+<p>// This is where we want to build a "nav_msg", using a shared_ptr<br>
+  // and then call notify()</p>
+
+
+
+<a name="290846960"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332168-Master%20-%205.8.0%20%20%28was%3A%20comms%29/topic/Question%20about%20comm%20sketch/near/290846960" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Dave Register <a href="https://leamas.github.io/zulip-archive/stream/332168-Master---5.2E8.2E0--.28was.3A-comms.29/topic/Question.20about.20comm.20sketch.html#290846960">(Jul 26 2022 at 03:58)</a>:</h4>
+<p>P.S.<br>
+I hope my refactoring/renaming does not disagree with you.</p>
+
+
+
+<a name="290885961"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332168-Master%20-%205.8.0%20%20%28was%3A%20comms%29/topic/Question%20about%20comm%20sketch/near/290885961" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Alec Leamas <a href="https://leamas.github.io/zulip-archive/stream/332168-Master---5.2E8.2E0--.28was.3A-comms.29/topic/Question.20about.20comm.20sketch.html#290885961">(Jul 26 2022 at 12:51)</a>:</h4>
+<p>Havn'tr looked at it yet. Have test code working for the basic parts, working with notify()/get_listener() parts. Will probably not have anything ready today.  Lots's of exciting C++ stuff. But I'm on it.</p>
+
+
+
+<a name="290886857"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332168-Master%20-%205.8.0%20%20%28was%3A%20comms%29/topic/Question%20about%20comm%20sketch/near/290886857" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Alec Leamas <a href="https://leamas.github.io/zulip-archive/stream/332168-Master---5.2E8.2E0--.28was.3A-comms.29/topic/Question.20about.20comm.20sketch.html#290886857">(Jul 26 2022 at 12:59)</a>:</h4>
+<p>hm... actually,  not really fond of AbstractDriver -&gt; commDriverBase.  The usual convention is is that AbstractClass describes the interface, whereas BaseClass carries common implementations used by (in this case( multiple drivers.</p>
+<p>Perhaps we thus should have two classes, one <code>AbstractCommDriver </code>which is the public interface and a <code>CommBaseDriver</code> or so which is the common implementation stuiff?</p>
+
+
+
+<a name="290889872"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332168-Master%20-%205.8.0%20%20%28was%3A%20comms%29/topic/Question%20about%20comm%20sketch/near/290889872" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Dave Register <a href="https://leamas.github.io/zulip-archive/stream/332168-Master---5.2E8.2E0--.28was.3A-comms.29/topic/Question.20about.20comm.20sketch.html#290889872">(Jul 26 2022 at 13:25)</a>:</h4>
+<p>Sure, I can do something like that.  I did not like the term "AbstractDriver".  Driver for what?</p>
+
+
+
+<a name="290898532"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332168-Master%20-%205.8.0%20%20%28was%3A%20comms%29/topic/Question%20about%20comm%20sketch/near/290898532" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Alec Leamas <a href="https://leamas.github.io/zulip-archive/stream/332168-Master---5.2E8.2E0--.28was.3A-comms.29/topic/Question.20about.20comm.20sketch.html#290898532">(Jul 26 2022 at 14:18)</a>:</h4>
+<p>Driver for anything. Basically, for usage above the driver layer AbstractDriver is the external interface implemented by all drivers. That is, all drivers should inherit it.</p>
+
+
+
+<a name="290908131"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332168-Master%20-%205.8.0%20%20%28was%3A%20comms%29/topic/Question%20about%20comm%20sketch/near/290908131" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Alec Leamas <a href="https://leamas.github.io/zulip-archive/stream/332168-Master---5.2E8.2E0--.28was.3A-comms.29/topic/Question.20about.20comm.20sketch.html#290908131">(Jul 26 2022 at 15:14)</a>:</h4>
+<p><span class="user-mention" data-user-id="517002">@Dave Register</span>  Serious problems: Unions cannot have members with constructors, for example vectors Will have to  redesign NavMsg to be a inherited class structure instead of a union. Also, I need food and sleep. Hopefully things will be better tomorrow.</p>
+
+
+
+<a name="290935402"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332168-Master%20-%205.8.0%20%20%28was%3A%20comms%29/topic/Question%20about%20comm%20sketch/near/290935402" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Dave Register <a href="https://leamas.github.io/zulip-archive/stream/332168-Master---5.2E8.2E0--.28was.3A-comms.29/topic/Question.20about.20comm.20sketch.html#290935402">(Jul 26 2022 at 18:20)</a>:</h4>
+<p>What other drivers do we have, or anticipate?  The drivers header file is loaded with comm specific structs, etc.  Not really generic.</p>
+
+
+
+<a name="290940576"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332168-Master%20-%205.8.0%20%20%28was%3A%20comms%29/topic/Question%20about%20comm%20sketch/near/290940576" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Alec Leamas <a href="https://leamas.github.io/zulip-archive/stream/332168-Master---5.2E8.2E0--.28was.3A-comms.29/topic/Question.20about.20comm.20sketch.html#290940576">(Jul 26 2022 at 19:00)</a>:</h4>
+<p>Sorry, now I see your point. AbstractCommDriver is  certainly a better name.</p>
+
+
+
+<a name="290947866"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332168-Master%20-%205.8.0%20%20%28was%3A%20comms%29/topic/Question%20about%20comm%20sketch/near/290947866" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Dave Register <a href="https://leamas.github.io/zulip-archive/stream/332168-Master---5.2E8.2E0--.28was.3A-comms.29/topic/Question.20about.20comm.20sketch.html#290947866">(Jul 26 2022 at 19:58)</a>:</h4>
+<p>I have fixed Hakan's report of o-charts plugin failure.<br>
+I added a new obvserverd variable  to plugin_loader: <br>
+ EventVar evt_plugin_loadall_finalize;<br>
+This gets notified after all plugins have been loaded, especially on app startup.  The activated method sets up the GL libraries, etc.  Might need touchup for CLI build.</p>
+<p>Good practice toward understanding new observed variable concept.<br>
+I'll push this as soon as Windows test build completes locally.</p>
+
+
+
+<a name="290965936"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332168-Master%20-%205.8.0%20%20%28was%3A%20comms%29/topic/Question%20about%20comm%20sketch/near/290965936" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Alec Leamas <a href="https://leamas.github.io/zulip-archive/stream/332168-Master---5.2E8.2E0--.28was.3A-comms.29/topic/Question.20about.20comm.20sketch.html#290965936">(Jul 26 2022 at 22:51)</a>:</h4>
+<p>sounds great! There should be no need to think about the cli build: The events are generated in plugin_loader (which is part of the CLI) but processed in pluginmanager which is not part of the CLI. Net result is just that  in the cli case nothing is listening to the new event.</p>
+
+
+
+<a name="290966170"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332168-Master%20-%205.8.0%20%20%28was%3A%20comms%29/topic/Question%20about%20comm%20sketch/near/290966170" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Alec Leamas <a href="https://leamas.github.io/zulip-archive/stream/332168-Master---5.2E8.2E0--.28was.3A-comms.29/topic/Question.20about.20comm.20sketch.html#290966170">(Jul 26 2022 at 22:54)</a>:</h4>
+<p>First iteration of notify/listen now works, at least  in simple cases. NavMsg is now a class hierarchy, not a union. Need to make the same change with NavAddr, not idea how much  this is yet used. </p>
+<p>Merge job looming...</p>
+
+
+
+<a name="290983294"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332168-Master%20-%205.8.0%20%20%28was%3A%20comms%29/topic/Question%20about%20comm%20sketch/near/290983294" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Dave Register <a href="https://leamas.github.io/zulip-archive/stream/332168-Master---5.2E8.2E0--.28was.3A-comms.29/topic/Question.20about.20comm.20sketch.html#290983294">(Jul 27 2022 at 03:24)</a>:</h4>
+<p>At the moment, MSW does not build.  Problems with struct definitions.  A bit strange that GCC accepts them...I'll wait until you merge the refactor of NavMsg, etc. to fix</p>
+
+
+
+<a name="291008568"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332168-Master%20-%205.8.0%20%20%28was%3A%20comms%29/topic/Question%20about%20comm%20sketch/near/291008568" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Alec Leamas <a href="https://leamas.github.io/zulip-archive/stream/332168-Master---5.2E8.2E0--.28was.3A-comms.29/topic/Question.20about.20comm.20sketch.html#291008568">(Jul 27 2022 at 09:21)</a>:</h4>
+<p>Anyway, I'm in the process to remove the structs and use classes instead.</p>
+
+
+
+<a name="291022361"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332168-Master%20-%205.8.0%20%20%28was%3A%20comms%29/topic/Question%20about%20comm%20sketch/near/291022361" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Alec Leamas <a href="https://leamas.github.io/zulip-archive/stream/332168-Master---5.2E8.2E0--.28was.3A-comms.29/topic/Question.20about.20comm.20sketch.html#291022361">(Jul 27 2022 at 11:48)</a>:</h4>
+<p>BTW: Really happy for that you fixed the o-charts bug.  My own chances to handling  that would probably like snowball in hell. Thanks!</p>
+
+
+
+<a name="291030216"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332168-Master%20-%205.8.0%20%20%28was%3A%20comms%29/topic/Question%20about%20comm%20sketch/near/291030216" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Alec Leamas <a href="https://leamas.github.io/zulip-archive/stream/332168-Master---5.2E8.2E0--.28was.3A-comms.29/topic/Question.20about.20comm.20sketch.html#291030216">(Jul 27 2022 at 13:04)</a>:</h4>
+<p>I have pushed updates to the comm branch. It is  rebased to current master and hence needs to be fetched using -f or so.</p>
+<p>There is test/demonstration code in <em>console.cpp</em>, look for <code>test_transport()</code>. <code>opencpn-cmd test-transport</code> runs it and uses notify/listen in a simple way. Plan is that the test code now in console.cpp should be moved to some unittest framework to be determined. </p>
+<p>I had to remove the serial driver, it includes some header from your home directory outside the repo. Check  67314134b,  currently HEAD^. </p>
+<p>We might need to discuss naming, but at least this compiles</p>
+
+
+
+<a name="291030962"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332168-Master%20-%205.8.0%20%20%28was%3A%20comms%29/topic/Question%20about%20comm%20sketch/near/291030962" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Alec Leamas <a href="https://leamas.github.io/zulip-archive/stream/332168-Master---5.2E8.2E0--.28was.3A-comms.29/topic/Question.20about.20comm.20sketch.html#291030962">(Jul 27 2022 at 13:09)</a>:</h4>
+<blockquote>
+<p>A bit strange that GCC accepts them...</p>
+</blockquote>
+<p>Actually, I have found many cases which are accepted by both clang and gcc but not VS.  The ms linker is a major pain is this respect and forced some ugly solutions to the split plugon_loader/pluginmanager.</p>
+
+
+
+<a name="291091522"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332168-Master%20-%205.8.0%20%20%28was%3A%20comms%29/topic/Question%20about%20comm%20sketch/near/291091522" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Alec Leamas <a href="https://leamas.github.io/zulip-archive/stream/332168-Master---5.2E8.2E0--.28was.3A-comms.29/topic/Question.20about.20comm.20sketch.html#291091522">(Jul 27 2022 at 18:42)</a>:</h4>
+<p>I'm on the windows build errors. This is actually a mess, stay tuned.</p>
+
+
+
+<a name="291131728"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332168-Master%20-%205.8.0%20%20%28was%3A%20comms%29/topic/Question%20about%20comm%20sketch/near/291131728" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Dave Register <a href="https://leamas.github.io/zulip-archive/stream/332168-Master---5.2E8.2E0--.28was.3A-comms.29/topic/Question.20about.20comm.20sketch.html#291131728">(Jul 28 2022 at 01:46)</a>:</h4>
+<p>Rant.  Microsoft compiler did not like a class member named "interface".  Somehow interpreting that as a keyword.  Two hours later, the Windows build compiles.  Rant over.</p>
+
+
+
+<a name="291135405"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332168-Master%20-%205.8.0%20%20%28was%3A%20comms%29/topic/Question%20about%20comm%20sketch/near/291135405" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Dave Register <a href="https://leamas.github.io/zulip-archive/stream/332168-Master---5.2E8.2E0--.28was.3A-comms.29/topic/Question.20about.20comm.20sketch.html#291135405">(Jul 28 2022 at 03:01)</a>:</h4>
+<p>I follow the logic in console,cpp.  Implementing now for real source/sink.  I'll keep you posted on how it goes.<br>
+Thanks for the code sample.</p>
+
+
+
+<a name="291146209"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332168-Master%20-%205.8.0%20%20%28was%3A%20comms%29/topic/Question%20about%20comm%20sketch/near/291146209" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Alec Leamas <a href="https://leamas.github.io/zulip-archive/stream/332168-Master---5.2E8.2E0--.28was.3A-comms.29/topic/Question.20about.20comm.20sketch.html#291146209">(Jul 28 2022 at 06:36)</a>:</h4>
+<p>"rant followup" I ran into the same issue, also cost me some time. Ended up in <em>71d734d21 commdriverBase: Avoid using 'interface' as identifier</em> with the SO link:  <a href="https://stackoverflow.com/questions/59973219">https://stackoverflow.com/questions/59973219</a>. Sigh, indeed.</p>
+
+
+
+<a name="291147169"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332168-Master%20-%205.8.0%20%20%28was%3A%20comms%29/topic/Question%20about%20comm%20sketch/near/291147169" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Alec Leamas <a href="https://leamas.github.io/zulip-archive/stream/332168-Master---5.2E8.2E0--.28was.3A-comms.29/topic/Question.20about.20comm.20sketch.html#291147169">(Jul 28 2022 at 06:53)</a>:</h4>
+<blockquote>
+<p>Thanks for the code sample.</p>
+</blockquote>
+<p>Actually,  they contained a memory leak bug, left-overs from some bug hunting. I have updated TransportSource to  correct form.</p>
+
+
+
+<hr><p>Last updated: Dec 19 2022 at 16:41 UTC</p>
+</html>

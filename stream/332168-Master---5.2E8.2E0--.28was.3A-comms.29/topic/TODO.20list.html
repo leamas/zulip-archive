@@ -1,0 +1,125 @@
+<html>
+<head><meta charset="utf-8"><title>TODO list · Master - 5.8.0  (was: comms) · Zulip Chat Archive</title></head>
+<h2>Stream: <a href="https://leamas.github.io/zulip-archive/stream/332168-Master---5.2E8.2E0--.28was.3A-comms.29/index.html">Master - 5.8.0  (was: comms)</a></h2>
+<h3>Topic: <a href="https://leamas.github.io/zulip-archive/stream/332168-Master---5.2E8.2E0--.28was.3A-comms.29/topic/TODO.20list.html">TODO list</a></h3>
+
+<hr>
+
+<base href="https://opencpn.zulipchat.com">
+
+<head><link href="https://leamas.github.io/zulip-archive/style.css" rel="stylesheet"></head>
+
+<a name="291107076"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332168-Master%20-%205.8.0%20%20%28was%3A%20comms%29/topic/TODO%20list/near/291107076" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Alec Leamas <a href="https://leamas.github.io/zulip-archive/stream/332168-Master---5.2E8.2E0--.28was.3A-comms.29/topic/TODO.20list.html#291107076">(Jul 27 2022 at 20:39)</a>:</h4>
+<p>Have been hard working on my first two priorites: Landing of the CLI  stuff and merging the my own and your stuff. After that,  we IMHO need to prioritize.</p>
+<p>My own priorities as I see it right now:<br>
+1) Make a test output driver which accepts N2k data  and outputs it to terminal or file<br>
+2) Make a corresponding test input driver which reads data and make is available on the Transport raw message bus.<br>
+3 ) Read up on test environments<br>
+4) Set up some unit test framework so we can start writing tests</p>
+<p>Thoughts? Which are your priorities?</p>
+
+
+
+<a name="291107086"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332168-Master%20-%205.8.0%20%20%28was%3A%20comms%29/topic/TODO%20list/near/291107086" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Alec Leamas <a href="https://leamas.github.io/zulip-archive/stream/332168-Master---5.2E8.2E0--.28was.3A-comms.29/topic/TODO.20list.html#291107086">(Jul 27 2022 at 20:39)</a>:</h4>
+<p><span class="user-mention" data-user-id="517002">@Dave Register</span>  ^</p>
+
+
+
+<a name="291133716"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332168-Master%20-%205.8.0%20%20%28was%3A%20comms%29/topic/TODO%20list/near/291133716" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Dave Register <a href="https://leamas.github.io/zulip-archive/stream/332168-Master---5.2E8.2E0--.28was.3A-comms.29/topic/TODO.20list.html#291133716">(Jul 28 2022 at 02:29)</a>:</h4>
+<p>I think it would be great if you focus on the CLI, and test harness buildup.  Meanwhile, I will proceed to:</p>
+<ol>
+<li>Build the listener/notify pieces for the GUI core, resulting in N2K data from my simple live net driving the basic nav functions.  Extend to N0183, and network streams, and sK.</li>
+<li>Start considering the plugin API updates to support this new data stream method.</li>
+<li>Possible refactor of chart1.cpp.  Extract class MyFrame to separate source file.  Transfer the comm listeners to MyApp.  Thoughts?  Any impact to CLI model?</li>
+</ol>
+<p>Do you have live N2K data source, or are you planning to use some sort of test stream input?</p>
+
+
+
+<a name="291146647"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332168-Master%20-%205.8.0%20%20%28was%3A%20comms%29/topic/TODO%20list/near/291146647" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Alec Leamas <a href="https://leamas.github.io/zulip-archive/stream/332168-Master---5.2E8.2E0--.28was.3A-comms.29/topic/TODO.20list.html#291146647">(Jul 28 2022 at 06:44)</a>:</h4>
+<p>Ack. I'll focus on test stuff etc for now.  But, first I need to code also the application layer messaging.  Should not be hard,  the tricky issues are solved now. Forgot that one yesterday.</p>
+<p>I have no  N2k   hardware available, so my only choice is testing from recorded data. </p>
+<p>Refactoring chart1 is a Good Thing, it's definitely too big. However, it does not affect the CLI/model part since it neither is nor will be included in the model since they contains GUI dependencies. This applies to both chart1 and upcoming MyFrame.</p>
+
+
+
+<a name="291146770"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332168-Master%20-%205.8.0%20%20%28was%3A%20comms%29/topic/TODO%20list/near/291146770" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Alec Leamas <a href="https://leamas.github.io/zulip-archive/stream/332168-Master---5.2E8.2E0--.28was.3A-comms.29/topic/TODO.20list.html#291146770">(Jul 28 2022 at 06:46)</a>:</h4>
+<p>Q: I have a need to clean up some naming. No problem for anything committed, but might break things which are not.  Could you commit what you have late today so I can do some changes tomorrow  (really early your time) without breaking too many eggs?</p>
+
+
+
+<a name="291178761"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332168-Master%20-%205.8.0%20%20%28was%3A%20comms%29/topic/TODO%20list/near/291178761" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Dave Register <a href="https://leamas.github.io/zulip-archive/stream/332168-Master---5.2E8.2E0--.28was.3A-comms.29/topic/TODO.20list.html#291178761">(Jul 28 2022 at 13:05)</a>:</h4>
+<p>Yes, I will commit commit late today, wherever I am.</p>
+
+
+
+<a name="291273463"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332168-Master%20-%205.8.0%20%20%28was%3A%20comms%29/topic/TODO%20list/near/291273463" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Dave Register <a href="https://leamas.github.io/zulip-archive/stream/332168-Master---5.2E8.2E0--.28was.3A-comms.29/topic/TODO.20list.html#291273463">(Jul 29 2022 at 01:24)</a>:</h4>
+<p>Pushed all, I am done for this evening.  Have fun.</p>
+
+
+
+<a name="291317722"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332168-Master%20-%205.8.0%20%20%28was%3A%20comms%29/topic/TODO%20list/near/291317722" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Alec Leamas <a href="https://leamas.github.io/zulip-archive/stream/332168-Master---5.2E8.2E0--.28was.3A-comms.29/topic/TODO.20list.html#291317722">(Jul 29 2022 at 13:02)</a>:</h4>
+<p>Fun or not, did some things, look in new misc topic</p>
+
+
+
+<a name="291619330"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332168-Master%20-%205.8.0%20%20%28was%3A%20comms%29/topic/TODO%20list/near/291619330" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Alec Leamas <a href="https://leamas.github.io/zulip-archive/stream/332168-Master---5.2E8.2E0--.28was.3A-comms.29/topic/TODO.20list.html#291619330">(Aug 01 2022 at 19:06)</a>:</h4>
+<p>Zulip has some support for this...<br>
+/todo</p>
+
+
+
+<a name="291619353"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332168-Master%20-%205.8.0%20%20%28was%3A%20comms%29/topic/TODO%20list/near/291619353" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Alec Leamas <a href="https://leamas.github.io/zulip-archive/stream/332168-Master---5.2E8.2E0--.28was.3A-comms.29/topic/TODO.20list.html#291619353">(Aug 01 2022 at 19:06)</a>:</h4>
+<p>/todo</p>
+
+
+
+<a name="291791892"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332168-Master%20-%205.8.0%20%20%28was%3A%20comms%29/topic/TODO%20list/near/291791892" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Dave Register <a href="https://leamas.github.io/zulip-archive/stream/332168-Master---5.2E8.2E0--.28was.3A-comms.29/topic/TODO.20list.html#291791892">(Aug 03 2022 at 02:09)</a>:</h4>
+<p>commDriverN0183Net completed.</p>
+
+
+
+<a name="291835046"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332168-Master%20-%205.8.0%20%20%28was%3A%20comms%29/topic/TODO%20list/near/291835046" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Alec Leamas <a href="https://leamas.github.io/zulip-archive/stream/332168-Master---5.2E8.2E0--.28was.3A-comms.29/topic/TODO.20list.html#291835046">(Aug 03 2022 at 11:31)</a>:</h4>
+<p>Not completely... still missing the glue upwards: set_listener() and registration, supposed to happen in Activate(). It's basically boiler-plate snippets, you can look in comm_drv_file.  Or, if you prefer that I can do it.</p>
+
+
+
+<a name="291835537"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332168-Master%20-%205.8.0%20%20%28was%3A%20comms%29/topic/TODO%20list/near/291835537" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Alec Leamas <a href="https://leamas.github.io/zulip-archive/stream/332168-Master---5.2E8.2E0--.28was.3A-comms.29/topic/TODO.20list.html#291835537">(Aug 03 2022 at 11:36)</a>:</h4>
+<p>Also, note that received messages should be routed to the listener.</p>
+
+
+
+<a name="291875027"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332168-Master%20-%205.8.0%20%20%28was%3A%20comms%29/topic/TODO%20list/near/291875027" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Dave Register <a href="https://leamas.github.io/zulip-archive/stream/332168-Master---5.2E8.2E0--.28was.3A-comms.29/topic/TODO.20list.html#291875027">(Aug 03 2022 at 16:22)</a>:</h4>
+<p>I'll take care of the drivers, including upstream and registry.</p>
+
+
+
+<a name="291875195"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332168-Master%20-%205.8.0%20%20%28was%3A%20comms%29/topic/TODO%20list/near/291875195" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Dave Register <a href="https://leamas.github.io/zulip-archive/stream/332168-Master---5.2E8.2E0--.28was.3A-comms.29/topic/TODO.20list.html#291875195">(Aug 03 2022 at 16:24)</a>:</h4>
+<p>"Also, note that received messages should be routed to the listener."<br>
+This is already happening by notify() in the driver.  Another listener?</p>
+
+
+
+<a name="291875243"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332168-Master%20-%205.8.0%20%20%28was%3A%20comms%29/topic/TODO%20list/near/291875243" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Dave Register <a href="https://leamas.github.io/zulip-archive/stream/332168-Master---5.2E8.2E0--.28was.3A-comms.29/topic/TODO.20list.html#291875243">(Aug 03 2022 at 16:24)</a>:</h4>
+<p>Not sure I understand set_listener().  Tutorial?</p>
+
+
+
+<hr><p>Last updated: Dec 19 2022 at 16:41 UTC</p>
+</html>

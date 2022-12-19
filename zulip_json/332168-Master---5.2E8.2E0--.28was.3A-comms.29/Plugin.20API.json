@@ -1,0 +1,446 @@
+[
+    {
+        "content": "<p>With the rest in reasonable shape, the last (?) piece in the overall design is the plugin API.</p>\n<p>The basic idea would of course be to export <code>notify()</code> and <code>get_listener()</code> and the corresponding message types.  However, given how things are organized this will most likely break the current model where the complete API is defined in a single header.</p>\n<p>Have you any thoughts about this?</p>",
+        "id": 291488090,
+        "sender_full_name": "Alec Leamas",
+        "timestamp": 1659270689
+    },
+    {
+        "content": "<p>I suggest wrapper functions, with a defined set of possible function arguments in the API header.<br>\nFor plugins that listen only (i.e. most of them), we have API functions like:<br>\nint listen_N0183( std::string identifier);<br>\nint listen_N2K( uint32 pgn);<br>\netc.<br>\nTo notify a plugin, there are choices:</p>\n<ol>\n<li>we adapt our notify() methods to call a handler in plugin_manager that wraps up the data, and makes a defined API call to the plugin.  Plugins are not receiving wxEvents in this idea.</li>\n<li>Or define and exposes the wxEvent structure contained in the core.<br>\nI prefer something like (1), and I'm sure the plugin authors will too.  They are already processing a number of \"direct call\" functions to get NMEA0183 data in our now-legacy model, for example.</li>\n</ol>\n<p>Plugins that need to write to a specific N2K driver:  More thought required, including some registry enumeration/GETCAPS notion.</p>",
+        "id": 291508364,
+        "sender_full_name": "Dave Register",
+        "timestamp": 1659296289
+    },
+    {
+        "content": "<p>I'm not sure if it will work. We should probably sort this out quite soon, it  has potential to break a lot of things...</p>",
+        "id": 291511324,
+        "sender_full_name": "Alec Leamas",
+        "timestamp": 1659300014
+    },
+    {
+        "content": "<p>I have it working in my head. But it requires a small API change, using the idea of a void * client_data field in the NavMsg.<br>\nI'll try to cobble it together in the next day or so, and we shall see.  I'll work in a private branch, so please carry on.</p>",
+        "id": 291518604,
+        "sender_full_name": "Dave Register",
+        "timestamp": 1659310739
+    },
+    {
+        "content": "<p>I fiddled around some.  Observations:</p>\n<ol>\n<li>For the plugin API, I think it will be fine to re-use the wxEvent employed in the listener and callback lambda.  For plugins, hat just means that all of the (say) NMEA0183 messages arrive on the same event handler or direct call, like they do today in legacy model.  Plugin will be parsing sentences as received, according to defined protocol, anyway.</li>\n<li>The bigger problem is this:  if we are going to manage the Observable mechanism in the plugin manager, thus making life for the plugin author easier, then we need to find a way to allow dynamic creation of \"ObservedVarListener\" objects, while still keeping them in some scope.  Only thing I found that would work is a static array, like ObservedVarListener aovl[10];.  This works, but is truly ugly, and impossible to manage dynamically.  I could not make a std::vector&lt;ObservedVarListener&gt; work, probably due to the fact that \"T\" gets allocated on the heap, so is somehow lost to the logic.</li>\n<li>Adding an opaque void * client_data field to observable machinery is probably possible.  Will affect many classes.  But this is an important idea.  The void * will contain a pointer to the plugin that made the listen_N0183 call.  In the lambda callback, we fetch this pointer from the msg, cast it, and then call the plugin directly with the NMEA0183 sentence.</li>\n</ol>\n<p>Let's discuss this idea a bit, before discarding and doing it the hard way for plugin authors.<br>\nThoughts?</p>",
+        "id": 291526411,
+        "sender_full_name": "Dave Register",
+        "timestamp": 1659321597
+    },
+    {
+        "content": "<p>hm.. important discussion, this one.<br>\n1.</p>\n<blockquote>\n<p>For plugins, hat just means that all of the (say) NMEA0183 messages arrive on the same event handler or direct call, like they do today in legacy model.</p>\n</blockquote>\n<p>Yes, possible, but not really general. Why not let plugins do the same as the core: bind a specific event (and thus handler)  to a specific message?  This is also about efficiency:  if plugins only listens to things they actually want we get an early \"filtering\" so to speak.</p>\n<ol start=\"2\">\n<li>\n<p>The listener concept is really about handling the listeners which goes out of scope.  Plugins have a life cycle, so we perhaps needs another concept for plugins. The basic principle is that anything  doing a <code>listen()</code> must invoke <code>unlisten()</code> before going out of scope (now done in the listener destructor). If at all possible, it should not be manual. Let me think, I'm not really used to plugins'  inner life.</p>\n</li>\n<li>\n<p>I don't really follow you here. What exactly is it that you could access using a void* which you cannot access in the lambda context?</p>\n</li>\n</ol>",
+        "id": 291537665,
+        "sender_full_name": "Alec Leamas",
+        "timestamp": 1659336586
+    },
+    {
+        "content": "<ol start=\"2\">\n<li>I probably miss something here as well. What is the problem declaring the listener as a member in the plugin class? For example, looking at shipdriver we have <code>class ShipDriver_pi : public opencpn_plugin_116</code>with all sorts of class variables which eventually are deleted when going out of scope. Why can't the listener just be declared here?</li>\n</ol>",
+        "id": 291538465,
+        "sender_full_name": "Alec Leamas",
+        "timestamp": 1659337396
+    },
+    {
+        "content": "<ol start=\"4\">\n<li>In any case we need to expose NavMsg and AppMsg, the actual messages, to the plugin API. This is then about <em>comm_navmsg.h</em> and <em>comm_appmsg.h</em>, both of which pulling in all sorts of headers. We could perhaps re-factor this so that the message definitions are in separate headers with less dependencies, but this is still a pain to merge into <em>ocpn_plugin.h</em> Sigh.</li>\n</ol>",
+        "id": 291539889,
+        "sender_full_name": "Alec Leamas",
+        "timestamp": 1659338707
+    },
+    {
+        "content": "<p>As I see it, the plugin interface can be done in one of two quite different ways.</p>\n<ol>\n<li>Try (very hard) to hide the listener logic in pluginmanager.cpp. Present a very simple API to plugin that allows plugins to register a request for specific comm messages.  Call  methods in plugin object directly as those messages are received by pluginmanager.  No comm event handling in plugin.  This will be seen as a simple extension of current plugin logic.</li>\n</ol>\n<p>.or.</p>\n<ol start=\"2\">\n<li>Refactor comm headers, presenting a simpler subset to the plugin API.  Teach plugin authors about observable life cycle, events, Bind() lambda, etc.  Better logic?  Arguably, yes.  More complex? For sure.</li>\n</ol>\n<p>I prefer (1), if it is possible.  We get persistent complaints about the difficulty of building plugins.  I would rather not add yet more complexity.</p>\n<p>The technical problem with (1) is managing observable life cycle.<br>\nLet me ask two edgy questions, which might provoke ideas:</p>\n<ol>\n<li>Is it possible to adapt observable logic to allow dynamic observables?  Like:  MyObservable = new ObserverdVarListener();  We manage their lifetime by storing their pointers in a vector.</li>\n<li>What about the idea of a \"generic observable pool\".  A bunch of generic Observables can be statically instantiated.  Somehow \"leased\" and customized by users as needed.  Probably a non-sense idea...</li>\n</ol>\n<p>More thinking required.</p>",
+        "id": 291575984,
+        "sender_full_name": "Dave Register",
+        "timestamp": 1659360834
+    },
+    {
+        "content": "<blockquote>\n<p>Is it possible to adapt observable logic to allow dynamic observables? Like: MyObservable = new ObserverdVarListener(); We manage their lifetime by storing their pointers in a vector.</p>\n</blockquote>\n<p>Using raw pointers is IMHO absolutely the wrong way here. We should not design new interfaces with these things, they cause so much problems.  They are absolutely not simple since they lead to so many errors the compiler just cant check for.</p>\n<p>We could use a unique_ptr&lt;&gt;, but what's then the difference to maintaining a variable?The current listener can be stored in a vector if that is what you are looking for  (still don't fully understand your thinking). Note that the listener = operator is overloaded, so when you assign a listener to a new listener object listening is transferred to the new listener.</p>\n<p>But then again, if we cannot use the Listener, it's probably best to just expose <code>listen()</code> and <code>unlisten()</code>  to the plugins. OTOH, this will inevitably fail and lead to strange crashes related to plugin unloading.</p>\n<p>The more I think about this I feel that the listen()/bind() thing is the right way. It gives compile time checks, efficiency and actually simplicity. </p>\n<p>So the basic question is then if we could sell this concept to plugins devs. That they complain how hard it is to write plugins is no wonder, the API  we offer is utterly complex and not least undocumented.   However, if we document this part I think it should be quite possible to sell. After all, it is boilerplate code which isn't hard to copy-paste. If  they are intimidated by the lambda, we could make a parallel example using a method, no big deal although less powerful.</p>",
+        "id": 291583605,
+        "sender_full_name": "Alec Leamas",
+        "timestamp": 1659364421
+    },
+    {
+        "content": "<p>hm... part of the game is that if making a simplified API calling fixed methods in the plugin I can see that the void* would be useful. OTOH, I wouldn't classify handling void* as \"simple\".</p>",
+        "id": 291586315,
+        "sender_full_name": "Alec Leamas",
+        "timestamp": 1659365636
+    },
+    {
+        "content": "<p>OK, let me show some code:  (Sorry about the poor formatting. Is there some sort of code formatting in this zulip UI?)</p>\n<p>In pluginmanager.cpp</p>\n<p>//-------------------------------------------------------------<br>\n//  comm system listen/notify support for plugins</p>\n<p>// In plugin API, called by a plugin<br>\nint listen_N0183(opencpn_plugin *pi, std::string prefix) {<br>\n  return g_pi_manager-&gt;listen_N0183( pi, prefix);<br>\n}</p>\n<p>wxDEFINE_EVENT(EVT_N0183_PLUGIN, wxCommandEvent);<br>\nstd::vector&lt;ObservedVarListener&gt; vovl;<br>\nObservedVarListener aovl[10]; // static array.<br>\nint il;</p>\n<p>int PlugInManager::listen_N0183(opencpn_plugin *pi, std::string prefix) {<br>\n  auto t = NavMsgBus::getInstance();<br>\n  Nmea0183Msg n0183_msg(prefix, (void *)pi);</p>\n<p>//Three methods of managing listener, two of which work, meaning the lambda call back happens, and the data is valid<br>\n// (1)  The works as normal, \"listener_N0183_PLUGIN\" is a member of PluginManager class<br>\n//  But this method needs a predefined listener for each msg key.<br>\n  listener_N0183_PLUGIN = t-&gt;get_listener(EVT_N0183_PLUGIN, this, n0183_msg.key());</p>\n<p>// (2)  Trying to store a listener in std::vector does not work.<br>\n//  I do not know what happens to the listener.  But the callback never happens<br>\n //vovl.push_back( t-&gt;get_listener(EVT_N0183_PLUGIN, this, n0183_msg.key()));</p>\n<p>// (3) Storing listener in a static array works, just as an experiment.  Not a useful model.<br>\n  aovl[il++] = t-&gt;get_listener(EVT_N0183_PLUGIN, this, n0183_msg.key());</p>\n<p>Bind(EVT_N0183_PLUGIN, <a href=\"http://wxCommandEvent%20ev\">&amp;</a> {<br>\n         auto message = get_navmsg_ptr(ev);<br>\n         auto n0183_msg = std::dynamic_pointer_cast&lt;const Nmea0183Msg&gt;(message);<br>\n         Handle_N0183_Plugin( n0183_msg );<br>\n       });</p>\n<p>return 0;<br>\n}</p>\n<p>void PlugInManager::Handle_N0183_Plugin(std::shared_ptr &lt;const Nmea0183Msg&gt; n0183_msg) {</p>\n<p>//  In theory,  NMEA0183 messages that have been listened to will come back here.<br>\n//  Since they used the same wxEvent</p>\n<div class=\"codehilite\"><pre><span></span><code>std::string s = n0183_msg-&gt;payload;\nprintf(&quot;Handle_N0183_Plugin: %s&quot;, s.c_str());\n</code></pre></div>\n\n<p>// Here I would like to have a pointer to the plugin that created the listener<br>\n// If there was a pointer to the plugin in the n0183_msg, I could cast to  (opencpn_plugin *), and call<br>\n//  plugin-&gt;SetNMEAMessage( s );</p>\n<p>//  Failing that, I could send the message to all plugins that have set the WANTS_NMEA_MESSAGES flag on init.  Less efficient.<br>\n//  See PlugInManager::SendNMEASentenceToAllPlugIns()<br>\n}</p>",
+        "id": 291612224,
+        "sender_full_name": "Dave Register",
+        "timestamp": 1659377202
+    },
+    {
+        "content": "<p>not really digested this yet. Could you format using ``` before-after?</p>",
+        "id": 291614515,
+        "sender_full_name": "Alec Leamas",
+        "timestamp": 1659378470
+    },
+    {
+        "content": "<blockquote>\n<p>Trying to store a listener in std::vector does not work.</p>\n</blockquote>\n<p>If so, this is a bug that should be fixed.</p>",
+        "id": 291614987,
+        "sender_full_name": "Alec Leamas",
+        "timestamp": 1659378699
+    },
+    {
+        "content": "<p>hm... But how is the lifecycle of the listeners related to the plugin in this model? The very idea with  the listener is that is destroyed and hence  invokes <code>unlisten()</code> when the plugin goes out of scope. But how could we guarantee that we not have a dangling listener here?</p>",
+        "id": 291615858,
+        "sender_full_name": "Alec Leamas",
+        "timestamp": 1659379101
+    },
+    {
+        "content": "<p>A dangling listener is a sure crash when notify sends an event to a non-existing windows handle...</p>",
+        "id": 291615978,
+        "sender_full_name": "Alec Leamas",
+        "timestamp": 1659379177
+    },
+    {
+        "content": "<p>Debugging the listener in std::vector should be easy, and not involve as-yet undefined plugin API stuff.  I'll try a test case with the known working commN2KSerial driver.  If I can understand this, I can build some working plugin code.</p>\n<p>Lifecycle:<br>\nI expect the plugin to call an Unlisten() API function in its destructor, (or DeInit(), in the case of a plugin).  I will read the code, and try to see how this may remove the listener from the vector, effectively destroying it.</p>\n<p>But this may not matter.  In my scheme, the risk of dangling listener is lowered, since the recipient of the events is class PluginManager, which stays around for the entire OCPN instance.  PluginManager knows which plugins are alive, and surely will not try to send any messages to a dead plugin.  In my mind this is actually safer.</p>",
+        "id": 291633270,
+        "sender_full_name": "Dave Register",
+        "timestamp": 1659387734
+    },
+    {
+        "content": "<p>As I said, if this is the route it's probably easier to expose <code>listen()</code>and <code>unlisten()</code> in the observable API (they are protected now). To destroy a listener manually is just a complicated way to invoke unlisten -- the whole idea with a listener does not add anything in this case. It is designed to work automatically and thus safe.</p>",
+        "id": 291638573,
+        "sender_full_name": "Alec Leamas",
+        "timestamp": 1659390873
+    },
+    {
+        "content": "<blockquote>\n<p>I expect the plugin to call an Unlisten() API function in its destructor, (or DeInit(), in the case of a plugin</p>\n</blockquote>\n<p>In any case, it's not as safe and easy as a variable declared in the plugin, a class member. All this manual stuff... well...</p>",
+        "id": 291638891,
+        "sender_full_name": "Alec Leamas",
+        "timestamp": 1659391087
+    },
+    {
+        "content": "<p>An interesting exercise would be to write the documentation for plugin devs in two variants, one based on your approach and one on mine. Title \"How to receive and send messages\". In the end, this is probably what's it all about.</p>",
+        "id": 291639940,
+        "sender_full_name": "Alec Leamas",
+        "timestamp": 1659391716
+    },
+    {
+        "content": "<p>Interesting, indeed.<br>\nMeanwhile, I am blocked.  I have not been able to successfully store a \"dynamic\"  ObservedVarListener object in a std::vector.  I built some simple test in chart1.cpp, using the n2k listeners already known to work when notified by the driver.  Compiles and runs, but notify() results in ...nothing.<br>\nBasically I do this</p>\n<div class=\"codehilite\"><pre><span></span><code>ObservedVarListener l = t-&gt;get_listener(EVT_N2K_129029, this, n2k_msg_129029.key());   \ng_vec.push_back(l);\n</code></pre></div>\n\n<p>So, what has happened to the listener?  Copy overload did not work right?<br>\nPlease have a look in chart1.cpp, around line 7078 \"FIXME\".  Maybe my simple-minded approach is too simple?<br>\nThanks.</p>",
+        "id": 291654958,
+        "sender_full_name": "Dave Register",
+        "timestamp": 1659404664
+    },
+    {
+        "content": "<p>Stepping back a little.<br>\nThe plugin API is always additive, by contract.  That is, all old methods must still work in a new API level.  And an updated API shall not automatically require any or all plugins to be rebuilt.<br>\nTo support this policy in the new comm architecture cleanly requires a slight modification of the N0183 listener logic.  We need to be able to listen for (and get callback events for) ALL N0183 sentences, regardless of identifier (key).  I think it would be most useful if we could have some sort of \"wild card\" logic in the identifier matching.  Something like \"??RMC\", or \"?????\".<br>\nThoughts?</p>",
+        "id": 291849663,
+        "sender_full_name": "Dave Register",
+        "timestamp": 1659533476
+    },
+    {
+        "content": "<p>This would defeat one of the core design goals here: efficiency. You would still have to handle all messages, it it could be some load when handling n2k if I understands this correctly. It would probably require some  really serious rewrite of the observable core (?)</p>\n<p>I have come to understand that it should be possible to export the \"real stuff\" without pulling in all those headers. Will try to explore this path further to something more concrete. Who knows, perhaps it makes sense to provide both options as the \"simple\" and \"advanced\" alternative...</p>",
+        "id": 291850566,
+        "sender_full_name": "Alec Leamas",
+        "timestamp": 1659533889
+    },
+    {
+        "content": "<p>This discussion applies to N0183 only, for legacy support.<br>\nTaking a test case for example.  The extremely popular VDR plugin.  This plugin simply wants to receive (by direct method call) the entire N0183 data stream.  What I propose is that a listener for \"ALL N0183\" shall be instantiated in pluginmanager.  On event callback, pluginmanager sends the N0183 string to all requesting plugins.  We cannot drop this capability.<br>\nSame situation for the multiplexer.  If a N0183 comm connection is marked as \"output\",  users expect to see \"ALL n0183\", with filters applied as per connection GUI.<br>\nWe could do this the hard way, and pre-define a list of N0183 sentences that OCPN, or plugins now and future, might possibly have an interest in.  And then listen on them all.  But that seems not great.  Bound to miss something...<br>\nRelated topic:  We generally do not care about who the NMEA0183 \"talker\" is.  That is, O treats \"GPRMC\" the same as \"IIRMC\".  So the observable will need to handle this case, since we have no a-priori information on who a \"talker\" will be.  Thus, the wildcard \"??RMC\"</p>\n<p>So I see three classes of plugin support, all operable in parallel.</p>\n<ol>\n<li>Pure legacy, as we do today, and many users depend on.  Handles N0183 and sK streams only.</li>\n<li>Extended Legacy.  My proposal, if I can make it work. I'll drop this soon, if it becomes a can of worms.</li>\n<li>Full-on \"advanced\", with fully exposed observable logic.  This will be needed for any new plugin that deals with n2k directly.</li>\n</ol>",
+        "id": 291853829,
+        "sender_full_name": "Dave Register",
+        "timestamp": 1659535256
+    },
+    {
+        "content": "<ul>\n<li>\n<ol start=\"3\">\n<li>I pushed changes to ocpn_plugin.h and a new file MESSAGES.md which covers it, a first shot. The interesting conclusion is that this compiles without exposing the internal header mess. The price to pay is that in order to have an anonymous Listener class we need to use a <code>unique_ptr</code>.  Also, we need separate message types used in the API to isolate from the internals.</li>\n</ol>\n</li>\n<li>\n<ol>\n<li>Perhaps we  solve this on existing infrastructure. Everything is really about keys. Keys as generated by the drivers when receiving messages, and keys used when listening.  This game is all about matching keys. </li>\n</ol>\n</li>\n</ul>\n<p>What  if  for example the 0183 driver filed each message in two copies: One with the specific key like \"nme0183-GPGGA\" like today and another copy with a key which is just \"nmea0183\".  This way,  one could either listen to \"nmea0183\" and get all messages, or listen just a specific one. Seems simple enough to me, where is the catch?</p>\n<p>As for the XXGGA messages etc. I basically know too little of this. Is it possible to handle this in  <code>Nmea0183Msg ::key()</code> which basically defines how the key should be formed, and thus which messages which will  be sent into the same stream. Excluding the first to characters in the 0183 case is dead simple, but is it that simple?</p>",
+        "id": 291873405,
+        "sender_full_name": "Alec Leamas",
+        "timestamp": 1659543088
+    },
+    {
+        "content": "<p>\"is it that simple\"<br>\nIt may be.  I do not know how the observables match keys.  Lookup in map?  If so, then key could be \"nmea0183\" or \"nmea0183-GGA\" or \"nmea0183-creampuff\", as loang as a match is found.<br>\nI hope it is that simple.</p>",
+        "id": 291875861,
+        "sender_full_name": "Dave Register",
+        "timestamp": 1659544169
+    },
+    {
+        "content": "<p>Yes, its s simple string lookup, nothing more.</p>\n<p>The somewhat hairy details (which I have tocheck). The bottom of the observable thing is SingletonVar (not proud of that name). This is basically a map of  key  -&gt; listener list. So when doing <code>listen(key) </code>one just add a listener the listener list for that key. Likewise, when doing a <code>notify(key)</code> one sends a message to  everyone in the list for that key.</p>\n<p>So, changing the logic to use wildcards is probably not simple, and most likely slow. OTOH, seems there are other options...</p>",
+        "id": 291877639,
+        "sender_full_name": "Alec Leamas",
+        "timestamp": 1659544908
+    },
+    {
+        "content": "<p>Changed that ugly name, long overdue.</p>",
+        "id": 291880763,
+        "sender_full_name": "Alec Leamas",
+        "timestamp": 1659546231
+    },
+    {
+        "content": "<p>More API thoughts: While it is possible to \"hide\" the internal raw types like Nmea0183Msg and Nmea2000Msg behind specific types in the API, this is not the case for AppMsg. That list is really small for now,  but is likely to grow, So the question becomes how to  handle some sort of generic AppMsg in the API. Need to sleep on that one...</p>",
+        "id": 291886256,
+        "sender_full_name": "Alec Leamas",
+        "timestamp": 1659548707
+    },
+    {
+        "content": "<p>We need to sort out the different use cases when sending data:</p>\n<ul>\n<li>When replying to a message, it should be possible to use the source address of that message as destination for the reply.</li>\n<li>When sending a message to N0183, it's just a question about defining the actual device, i. e. the iface string in the driver. Simple enough.</li>\n<li>When sending a N2000 message one need to specify... exactly what? There is a string corresponding to the actual n2k bus, normally it's just one so not that interesting. Bet then there is both the n2k NAME and the message Id. Do we always broadcast messages, or do we also send messages  to a specific node? </li>\n</ul>\n<p>The last bullet it, as you can see, far from clear to me. Is it clear to you?</p>",
+        "id": 292257071,
+        "sender_full_name": "Alec Leamas",
+        "timestamp": 1659795726
+    },
+    {
+        "content": "<p>N2K transmit is not too clear to me yet. I know there are some vendor -specific hardware dependencies. I am planning to dig in when I complete the legacy N0183 processing, including legacy plugin API.  Good progress, more to do.  And I am leaving a trail of FIXME's, mostly corner cases.<br>\nJust now building and testing the 0183 \"wildcard\" function, needed for legacy plugin API.</p>",
+        "id": 292273038,
+        "sender_full_name": "Dave Register",
+        "timestamp": 1659811878
+    },
+    {
+        "content": "<p>I have updated comm_navmsg.h, basically sorting out the N2k issues -- we only use the NAME, the id is basically internal for the driver.</p>",
+        "id": 293288821,
+        "sender_full_name": "Alec Leamas",
+        "timestamp": 1660404130
+    },
+    {
+        "content": "<p>We need to define what appmsg messages we publish in the plugin API. For now, my thinking is that a single message  a là BasicNavData is actually the only one we should make visible in the first version.</p>\n<p>Anything else you think about?</p>",
+        "id": 293288980,
+        "sender_full_name": "Alec Leamas",
+        "timestamp": 1660404243
+    },
+    {
+        "content": "<p>Agreed. That was the thought when I declared it.</p>",
+        "id": 293328333,
+        "sender_full_name": "Dave Register",
+        "timestamp": 1660431771
+    },
+    {
+        "content": "<p>Looking into the API after  memory leak hunt. We need to export  <code>ObservedEvt</code>, it is required to transfer a shared_ptr in a safe way to any consumer.  I thought I could work around this, but Dan proved me wrong.</p>\n<p>First step is to make it a separate file. It will have to be pasted into ocpn_plugin.h, but that's just life.</p>",
+        "id": 294222533,
+        "sender_full_name": "Alec Leamas",
+        "timestamp": 1660898279
+    },
+    {
+        "content": "<p>I have updated the Plugin API</p>\n<ul>\n<li>Accommodated  the new memory leak changes which requires a new event type.  Duplicated code in ocpn_plugin.h and observable_evt.h, sigh.  </li>\n<li>Added handling of decoded data.</li>\n</ul>\n<p>The API seems  export the necessary parts without exposing too much of internal structure (?). The intended usage is in MESSAGES.adoc at top level.</p>",
+        "id": 294234180,
+        "sender_full_name": "Alec Leamas",
+        "timestamp": 1660904008
+    },
+    {
+        "content": "<p>Closing the \"Design API\" task. we will certainly need to revise this before done, but we do have a basic design in place.</p>",
+        "id": 294234452,
+        "sender_full_name": "Alec Leamas",
+        "timestamp": 1660904138
+    },
+    {
+        "content": "<p>Tried to implement n2k listener in Dashboard plugin, following the recipe inMESSAGES.adoc.<br>\nDid not compile.</p>\n<div class=\"codehilite\"><pre><span></span><code>  wxDEFINE_EVENT(PEVT_N2K_129540, wxCommandEvent);\n NMEA2000Id id_129540 = NMEA2000Id(129540);\n listener = std::move(GetListener(id_129540, PEVT_N2K_129540, this);\n\n Bind(PEVT_N2K_129540, [&amp;](wxCommandEvent ev) {\n   HandleN2K_129540();\n });\n</code></pre></div>\n\n<p>Error is:<br>\nopencpn/plugins/dashboard_pi/src/dashboard_pi.cpp:555:68: error: no matching function for call to ‘GetListener(NMEA2000Id&amp;, const wxEventTypeTag&lt;wxCommandEvent&gt;&amp;, dashboard_pi*)’</p>\n<p>Which, of course, there is not.  The second parameter of GetListener is \"ObservedEvt ev\".<br>\nbtw, I had to change the third parameter from \"wxEvtHandler handler\" to wxEvtHandler *handler.  Needs a pointer, not an object.<br>\n???</p>",
+        "id": 298502627,
+        "sender_full_name": "Dave Register",
+        "timestamp": 1663032690
+    },
+    {
+        "content": "<p>My bad, sorry. The GetListener() signature was plain wrong, fixed it in recent commit  0405210.</p>\n<p>A more fundamental problem is that while this will compile, it won't link since it is not implemented :(</p>",
+        "id": 298530615,
+        "sender_full_name": "Alec Leamas",
+        "timestamp": 1663055520
+    },
+    {
+        "content": "<p>Furthermore, MESSAGES.adoc needed more review. I have pushed some bugfixes, the most important being wxCommandEvt -&gt; ObservedEvt.</p>",
+        "id": 298539200,
+        "sender_full_name": "Alec Leamas",
+        "timestamp": 1663059128
+    },
+    {
+        "content": "<p>OK, can I help?  Or should I just wait for implementation?</p>",
+        "id": 298605952,
+        "sender_full_name": "Dave Register",
+        "timestamp": 1663081477
+    },
+    {
+        "content": "<p>I have plans to make it late today or early tomorrow. Can it wait until then?</p>",
+        "id": 298606727,
+        "sender_full_name": "Alec Leamas",
+        "timestamp": 1663081697
+    },
+    {
+        "content": "<p>Sure.</p>",
+        "id": 298613438,
+        "sender_full_name": "Dave Register",
+        "timestamp": 1663083670
+    },
+    {
+        "content": "<p>Pushed an untested implementation.</p>",
+        "id": 298673354,
+        "sender_full_name": "Alec Leamas",
+        "timestamp": 1663105945
+    },
+    {
+        "content": "<p>Works, with very slight patch to ocpn_plugin.h, pushed.  (f99820c)<br>\nI am able to catch and process N2K Satellite Info messages in Dashboard plugin.  I'm sure other message types will work as well.<br>\nThis patch is not quite right though, since it needs to include core file \"observable.h\".  So no good for plugins built out of core source tree.<br>\nHow to fix?</p>",
+        "id": 298689889,
+        "sender_full_name": "Dave Register",
+        "timestamp": 1663118777
+    },
+    {
+        "content": "<p>Also made slight correction to MESSAGES.adoc</p>",
+        "id": 298690246,
+        "sender_full_name": "Dave Register",
+        "timestamp": 1663119172
+    },
+    {
+        "content": "<p>And also some hacks to \"observable.h\" to satisfy the brain-dead MSW linker. You will probably want to edit this...<br>\nBut anyway, this gets us further along, and we learn.</p>",
+        "id": 298695648,
+        "sender_full_name": "Dave Register",
+        "timestamp": 1663124740
+    },
+    {
+        "content": "<p>I may run into that humble judgement of VS's capabilities trying to build here.  :)</p>",
+        "id": 298709580,
+        "sender_full_name": "Håkan Svensson",
+        "timestamp": 1663136732
+    },
+    {
+        "content": "<blockquote>\n<p>patch is not quite right though, since it needs to include core file \"observable.h\".</p>\n</blockquote>\n<p>This is a hole below water line. Need to revise the whole API.</p>",
+        "id": 298710738,
+        "sender_full_name": "Alec Leamas",
+        "timestamp": 1663137372
+    },
+    {
+        "content": "<p>OK, a quick fix was  's/unique_ptr/shared_ptr/' .  It turns out that using <code>unique_ptr</code>with an incomplete type is extremely messy.</p>\n<p>I'm not really happy with this change,  theoretically it opens up a hole for two concurrent listener instances. However,  performance should not be a problem here, pointers are only assigned on initialization. And \"normal\" usage patterns should not generate two instances. </p>\n<p>However, this gives me a bad feeling and I plan to come back to it later.  API can be changed before the release....</p>",
+        "id": 298714733,
+        "sender_full_name": "Alec Leamas",
+        "timestamp": 1663139476
+    },
+    {
+        "content": "<p>Now also VS linked ok and build succeeded.  <br>\nThanks</p>",
+        "id": 298719116,
+        "sender_full_name": "Håkan Svensson",
+        "timestamp": 1663141677
+    },
+    {
+        "content": "<p>FWIW: I read about  MESSAGES.adoc and \"<em>EVT_SHIPDRIVER_ for each received GPGGA message</em>\".<br>\nJust be careful to not accidentally call for explicit \"GPGGA\" using the talker \"GP\". According to the NMEA standard GGA talker can be \"GP\" if the GPS system only is used for position fix. Otherwise talker \"GN\" would be used. (\"GNGGA\")<br>\nThe same goes for GSV. (GPGSV, GNGSV, GAGSV and more)</p>",
+        "id": 298719823,
+        "sender_full_name": "Håkan Svensson",
+        "timestamp": 1663142013
+    },
+    {
+        "content": "<p>We need probably to think more about this, it was not clear to me at all when I wrote it (code and docs).</p>\n<p>Now, these docs are just about how the messaging system works and should IMHO be kept as simple as possible. What you talk about now probably needs another document.</p>\n<p>Should we just match on GGA instead i. e.,  ignore the talker?  This is what we do for 0183, so it might make sense. Thoughts?</p>",
+        "id": 298722476,
+        "sender_full_name": "Alec Leamas",
+        "timestamp": 1663143242
+    },
+    {
+        "content": "<blockquote>\n<p>Should we just match on GGA instead i. e., ignore the talker? </p>\n</blockquote>\n<p>Yes, talker in general, except for GGA and GSV is sender dependent for info. But for these two we need to know and in some cases, Dashboard(--GSV), react on used talker, as done today. For user individuell use the talker can though be used in mux filters.  For instance filter out $ECGGA and use others like GPGGA/GNGGA.</p>",
+        "id": 298771983,
+        "sender_full_name": "Håkan Svensson",
+        "timestamp": 1663162517
+    },
+    {
+        "content": "<p>It's hard and most likely wrong to split this to special cases. We should really, really either ignore the talker or not.</p>\n<p>Suggestion: we ignore the  talker when listening i. e. the listener gets all messages of given type. And add ssupport in Nmea2000Msg to retrieve the talker id, so the listening part (typically a plugin) can check the the talker id do whatever needed. </p>\n<p>OK?</p>",
+        "id": 298787055,
+        "sender_full_name": "Alec Leamas",
+        "timestamp": 1663167343
+    },
+    {
+        "content": "<p>I suppose you mean N0183Msg ?  Talker not defined in N2K.</p>",
+        "id": 298790078,
+        "sender_full_name": "Dave Register",
+        "timestamp": 1663168358
+    },
+    {
+        "content": "<p>Suggestion: we ignore the talker when listening i. e. the listener gets all messages of given type<br>\nAgree.</p>",
+        "id": 298790136,
+        "sender_full_name": "Dave Register",
+        "timestamp": 1663168377
+    },
+    {
+        "content": "<p>Yes, e.g. $--GGA is a N0183 message. Nothing else.<br>\nAgree!</p>",
+        "id": 298793315,
+        "sender_full_name": "Håkan Svensson",
+        "timestamp": 1663169327
+    },
+    {
+        "content": "<p>My bad. not focused as I should. just disregard</p>",
+        "id": 298793951,
+        "sender_full_name": "Alec Leamas",
+        "timestamp": 1663169527
+    },
+    {
+        "content": "<p>And btw, recall that no existing plugins will need to listen to N0183, anyway.  They already get the full N0183 stream by legacy plugin API.</p>",
+        "id": 298798865,
+        "sender_full_name": "Dave Register",
+        "timestamp": 1663170979
+    },
+    {
+        "content": "<p>Read my lips: sooner or later someone will try...</p>",
+        "id": 298801978,
+        "sender_full_name": "Alec Leamas",
+        "timestamp": 1663171925
+    },
+    {
+        "content": "<p>And we want them to, for new work.</p>",
+        "id": 298829834,
+        "sender_full_name": "Dave Register",
+        "timestamp": 1663181266
+    },
+    {
+        "content": "<p>On a sidenote we should probably keep MESSAGES.adoc in the opencn git repo, while still integrating it in the main manual.  This is how the plugin manuals work, and it's a good setup.  </p>\n<p>Suffering from degraded health -- covid?. Not much work...</p>",
+        "id": 298842733,
+        "sender_full_name": "Alec Leamas",
+        "timestamp": 1663185895
+    },
+    {
+        "content": "<p>Hope not covid.  Take good care....</p>",
+        "id": 298883058,
+        "sender_full_name": "Dave Register",
+        "timestamp": 1663199651
+    },
+    {
+        "content": "<p>When merged Dashboard would now read N2k to update GNSS Status instrument.<br>\nDave.. <br>\nPlease check with your Garmin so it's working also there.<br>\nBTW: Did you get any value on SID from Garmin?  Just \"0\" from my Simrad!</p>",
+        "id": 298971736,
+        "sender_full_name": "Håkan Svensson",
+        "timestamp": 1663249553
+    },
+    {
+        "content": "<p>New dashboard GNSS instrument works fine with my Garmin GPS receiver, YDNU interface.<br>\nSID:  Garmin reports values, increasing by \"5\" at each callback, like:  \"145, 150, 155, 160...\"</p>",
+        "id": 299064547,
+        "sender_full_name": "Dave Register",
+        "timestamp": 1663282521
+    },
+    {
+        "content": "<p>SID: So your Garmin use it but my Simrad not. Obviously not a parameter we can rely on to e.g. check if various PGN are time connected. If anywhere important we better check update time span.</p>",
+        "id": 299094893,
+        "sender_full_name": "Håkan Svensson",
+        "timestamp": 1663307403
+    },
+    {
+        "content": "<p><span class=\"user-mention\" data-user-id=\"517002\">@Dave Register</span> <br>\nDashboard wont get Heading when connected to N2K.<br>\nInstead of call a whole new PGN to DB my thought is to instead use the heading available in O core.<br>\nBut for that we need to upgrade DB from \"opencpn_plugin_16\" to \"opencpn_plugin_18\" and use SetPositionFixEx(PlugIn_Position_Fix_Ex &amp;pfix) where Hdt is included.</p>\n<p>If you think this a good idea please help to update DB to opencpn_plugin_18. I tried but didn't succeeded. Haven't done this before so it's obviously more than a simple change to opencpn_plugin_18 inside DB. <br>\nI need to study how you do it.</p>",
+        "id": 299296974,
+        "sender_full_name": "Håkan Svensson",
+        "timestamp": 1663408680
+    },
+    {
+        "content": "<p>Dave..<br>\nGot it. found the third place to change to API version 18. So now Hdt is nicely passed.<br>\nSo if the idea is good(?) I'll commit together with other changes?</p>",
+        "id": 299314484,
+        "sender_full_name": "Håkan Svensson",
+        "timestamp": 1663417399
+    },
+    {
+        "content": "<p>Yes, good.  Dashboard will be updated to API 18 for the new listener/notify signaling.<br>\nI await your PR.</p>",
+        "id": 299322445,
+        "sender_full_name": "Dave Register",
+        "timestamp": 1663421662
+    },
+    {
+        "content": "<p>Will do today. <br>\nFor info: I'll take the boat tomorrow and have access to N2K-boat  with \"a lot instrument\" so I can test DB N2K and try to make a candump with all. The latter implies my server will be down a couple of days since that's the RPi4 I'll use.</p>",
+        "id": 299323546,
+        "sender_full_name": "Håkan Svensson",
+        "timestamp": 1663422226
+    },
+    {
+        "content": "<p>OK, good.</p>",
+        "id": 299323926,
+        "sender_full_name": "Dave Register",
+        "timestamp": 1663422347
+    },
+    {
+        "content": "<p>Dave..<br>\nChanges pushed. I you've wind and depth in your captures you may want to test?</p>",
+        "id": 299332904,
+        "sender_full_name": "Håkan Svensson",
+        "timestamp": 1663426849
+    },
+    {
+        "content": "<p><strong><em>Crash at language change</em></strong><br>\nWhen I change language O crashes. In my debug it seems related to Plugins, see below.<br>\nAlso is the language list in User Interface not nice. Empty rows and question marks and other signs.  Both Win and RPi <br>\nWe may have other things now? I make a Todo task.<br>\nCall stack:</p>\n<blockquote>\n<p>radar_pi.dll!RadarPlugin::RadarInfo::GetInfoStatus() Line 1456  C++<br>\n    radar_pi.dll!RadarPlugin::MessageBoxW::CreateControls() Line 135    C++<br>\n    radar_pi.dll!RadarPlugin::MessageBoxW::Create(wxWindow * parent, RadarPlugin::radar_pi * pi) Line 100   C++<br>\n    radar_pi.dll!RadarPlugin::radar_pi::Init() Line 258 C++<br>\n    opencpn.exe!PluginLoader::UpdatePlugIns() Line 515  C++<br>\n    opencpn.exe!ApplyLocale() Line 8694 C++<br>\n    opencpn.exe!MyFrame::DoOptionsDialog() Line 4586    C++<br>\n    opencpn.exe!MyFrame::DoSettings() Line 3247 C++<br>\n    opencpn.exe!ChartCanvas::OnKeyDown(wxKeyEvent &amp; event) Line 3109    C++<br>\n    [External Code] <br>\n    [Frames below may be incorrect and/or missing, no symbols loaded for wxbase312u_vc_custom.dll]  Unknown<br>\n    opencpn.exe!WinMain(HINSTANCE__ * hInstance, HINSTANCE__ * hPrevInstance, char * __formal, int nCmdShow) Line 949   C++<br>\n    [External Code]</p>\n</blockquote>",
+        "id": 301216605,
+        "sender_full_name": "Håkan Svensson",
+        "timestamp": 1664367499
+    }
+]

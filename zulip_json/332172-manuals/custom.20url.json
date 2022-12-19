@@ -1,0 +1,146 @@
+[
+    {
+        "content": "<p><span class=\"user-mention\" data-user-id=\"399559\">@Mike Rossiter</span> :</p>\n<p>There is a need to get rid of the meta-url hack in ocpn-plugins.xml.  It causes all sorts of problems since it makes alpha catalogs incompatible with  the master, parsing problem, hard to document strange semantics and what not. It also requires Dave to merge things just to make it possible for developers to test things.</p>\n<p>The alternative is to use the \"Custom URL\" mechanism. It's actually quite simple, and does not involve the central plugins project in any way. Basically, a dev can create her own catalog, publish it and use that as Custom URL. Of course, such  an url can also be used by others.</p>\n<p>I have documented the process. The easiest might be to read the <a href=\"https://github.com/OpenCPN/plugins/pull/609/commits/01e884a77ab3831adc78447ce6f0fb78d15cbea6\">git commit</a> ; the formatted results are in <a href=\"https://github.com/OpenCPN/plugins/blob/master/TESTING.md#publish-a-private-catalog\">TESTING.md</a></p>\n<p>However, such documentation always needs testing. Have any spare cycles? The reward is a much simplified way to publish test versions of the catalog...</p>",
+        "id": 278158184,
+        "sender_full_name": "Alec Leamas",
+        "timestamp": 1649335537
+    },
+    {
+        "content": "<p>My boat is back in the water. Cycles are limited. Give us a day or two <br>\nor three. I have a plugin to update that could be used for this. As well <br>\nas testing sd3.1.1.</p>\n<p>Mike</p>",
+        "id": 278208607,
+        "sender_full_name": "Mike Rossiter",
+        "timestamp": 1649357022
+    },
+    {
+        "content": "<p>We just got another half meter of snow... </p>\n<p>Anyway, no hurry, I just want this to move forward somehow. Some days delay is basically a non-issue</p>",
+        "id": 278222216,
+        "sender_full_name": "Alec Leamas",
+        "timestamp": 1649363481
+    },
+    {
+        "content": "<p>CanadianTides_pi updated with sd3.1.1. Worked ok despite an error:</p>\n<p><a href=\"/user_uploads/33951/tVoe_E7oPsMI8TqJQt0Mcn6c/2022-04-08_11-05-45.jpg\">2022-04-08_11-05-45.jpg</a> </p>\n<div class=\"message_inline_image\"><a href=\"/user_uploads/33951/tVoe_E7oPsMI8TqJQt0Mcn6c/2022-04-08_11-05-45.jpg\" title=\"2022-04-08_11-05-45.jpg\"><img src=\"/user_uploads/33951/tVoe_E7oPsMI8TqJQt0Mcn6c/2022-04-08_11-05-45.jpg\"></a></div><p>error: pathspec 'flatpak/manifest.wx31.patch' did not match any file(s) known to git<br>\nfatal: pathspec 'flatpak/manifest.wx31.patch' did not match any files<br>\nfatal: pathspec 'flatpak/manifest.wx31.patch' did not match any files<br>\nUpdated 1 path from 5109cd6</p>\n<p>Now to make a custom url.</p>",
+        "id": 278283312,
+        "sender_full_name": "Mike Rossiter",
+        "timestamp": 1649412928
+    },
+    {
+        "content": "<p><span class=\"user-mention\" data-user-id=\"399559\">@Mike Rossiter</span> : sorry, wrong topic above, please disregard.</p>\n<p>Can you file a bug about the missing patch reference?</p>\n<p>Please note <a href=\"https://github.com/Rasbats/shipdriver_pi/issues/444\">https://github.com/Rasbats/shipdriver_pi/issues/444</a></p>",
+        "id": 278289582,
+        "sender_full_name": "Alec Leamas",
+        "timestamp": 1649416829
+    },
+    {
+        "content": "<p>Never mind about filing an issue, I can attach the fix to 444. Filed a PR: <a href=\"https://github.com/Rasbats/shipdriver_pi/pull/445\">https://github.com/Rasbats/shipdriver_pi/pull/445</a></p>",
+        "id": 278290259,
+        "sender_full_name": "Alec Leamas",
+        "timestamp": 1649417215
+    },
+    {
+        "content": "<p>A custom url works here for Windows. I should have used the Experimental branch not the master branch. Extra commits that wil appear in my next PR for a plugin update, even if nothing else has changed (because of adding metadata and then removing it again).</p>",
+        "id": 278291229,
+        "sender_full_name": "Mike Rossiter",
+        "timestamp": 1649417790
+    },
+    {
+        "content": "<p>OK, great, thanks! Do you think this has potential as a better alternative than the meta-URL?</p>",
+        "id": 278291346,
+        "sender_full_name": "Alec Leamas",
+        "timestamp": 1649417874
+    },
+    {
+        "content": "<p>BTW: It is possible to rewrite the history so  the extra commits goes away. It's a learning curve, though.</p>",
+        "id": 278291723,
+        "sender_full_name": "Alec Leamas",
+        "timestamp": 1649418079
+    },
+    {
+        "content": "<blockquote>\n<p>better alternative than the meta-URL?</p>\n</blockquote>\n<p>Not sure how custom URLs are an alternative and how they would be used. Somewhere we need a master catalog that can be validated by an xsd.  Probably my non-understanding of the issues posed by the many OS.</p>\n<p>I think Dave, Jon and yourself need to agree the way forward.</p>",
+        "id": 278299981,
+        "sender_full_name": "Mike Rossiter",
+        "timestamp": 1649422777
+    },
+    {
+        "content": "<p>Custom URL are only  for developers need when testing. The usual catalog stays as it is, it's just that we could drop the cumbersome meta-url stuff.</p>\n<p>But yes, we need Jon in the loop (I know that Dave would be just happy if he could get rid of the meta-url management). <br>\n<span class=\"user-mention\" data-user-id=\"400132\">@Jon</span> : ^ Please read whole topic.  thoughts?</p>",
+        "id": 278302500,
+        "sender_full_name": "Alec Leamas",
+        "timestamp": 1649423944
+    },
+    {
+        "content": "<p>Almost understanding. So ... drop ocpn-plugins.xml/xsd? In passing where is the xsd for an individual plugins OS metadata.</p>",
+        "id": 278304671,
+        "sender_full_name": "Mike Rossiter",
+        "timestamp": 1649424985
+    },
+    {
+        "content": "<p><span class=\"user-mention\" data-user-id=\"399559\">@Mike Rossiter</span> : too many balls in the air... back later.</p>",
+        "id": 278306116,
+        "sender_full_name": "Alec Leamas",
+        "timestamp": 1649425650
+    },
+    {
+        "content": "<p><span class=\"user-mention\" data-user-id=\"399559\">@Mike Rossiter</span>:    I don't really see what you mean here. There is no plan to drop neither ocpn-plugins.xml nor ocpn-plugins.xsd.</p>\n<p>The only plan or idea is to drop the meta-url  from ocpn-plugins.xml. Have you been using it?</p>",
+        "id": 278307326,
+        "sender_full_name": "Alec Leamas",
+        "timestamp": 1649426089
+    },
+    {
+        "content": "<p>Thought I had it wrong.  Where is the meta-url. Never used it.</p>",
+        "id": 278308492,
+        "sender_full_name": "Mike Rossiter",
+        "timestamp": 1649426568
+    },
+    {
+        "content": "<p>OK, then just just forget it. The question then becomes if you could use this to test things, perhaps even by sending the url to someone else so she could test?</p>\n<p>That is, to make a test you create a custom URL as above to be able to load the plugin using the regular install plugin GUI instead of the \"Import\" button?</p>",
+        "id": 278308947,
+        "sender_full_name": "Alec Leamas",
+        "timestamp": 1649426758
+    },
+    {
+        "content": "<p>For me it is easier to send the Cloudsmith URL for the plugin. Download and import is fast and convenient. Custom url seems overcomplicated for this.</p>",
+        "id": 278310175,
+        "sender_full_name": "Mike Rossiter",
+        "timestamp": 1649427290
+    },
+    {
+        "content": "<p>OK, there are different workflows. The basic conclusion here is that the docs are good enough to make it work. Thanks for that!</p>\n<p>Another conclusion is that if we want to get rid of the meta-url mechanism this is no problem for you  -- you just don't use it.</p>\n<p>Thanks for help!</p>",
+        "id": 278310837,
+        "sender_full_name": "Alec Leamas",
+        "timestamp": 1649427571
+    },
+    {
+        "content": "<p>Now we need input from <span class=\"user-mention\" data-user-id=\"399865\">@Rick Gleason</span>  and <span class=\"user-mention\" data-user-id=\"400132\">@Jon</span> , both of which are using the meta-url. Can we drop it  and use the Custom URL mechanism instead?</p>\n<p>Dropping meta-url means less administrative work for Dave, a way to create a test catalog without involving the plugins project, and a cleanup of ocpn-plugins.xml semantics and also syntax. So, there are many benefits. Thoughts?</p>",
+        "id": 278311219,
+        "sender_full_name": "Alec Leamas",
+        "timestamp": 1649427725
+    },
+    {
+        "content": "<p>Alec, I used it for awhile, but no one was testing those metadata, so Dave asked that we just push to master, so that users would be also testing.   That is what I have been doing for quite some time.  I like the meta-url concept as it did not involve Dave, but it was not widely known or used.  I am willing to drop it.  I don't believe Jon has been using it either. I will check with him</p>",
+        "id": 278313186,
+        "sender_full_name": "Rick Gleason",
+        "timestamp": 1649428543
+    },
+    {
+        "content": "<p>I have already pinged Jon.  Let's give him some time to chime in before we jump to conclusions.</p>",
+        "id": 278313622,
+        "sender_full_name": "Alec Leamas",
+        "timestamp": 1649428716
+    },
+    {
+        "content": "<p>Jon says OK go ahead.. I got an email from him.  It would be good if he got on Zulip though!</p>",
+        "id": 278376203,
+        "sender_full_name": "Rick Gleason",
+        "timestamp": 1649462796
+    },
+    {
+        "content": "<p>meta-url removed from plugins/alpha - pull request submitted</p>",
+        "id": 278385971,
+        "sender_full_name": "Jon",
+        "timestamp": 1649476622
+    },
+    {
+        "content": "<p>This topic was moved here from <a class=\"stream-topic\" data-stream-id=\"282854\" href=\"/#narrow/stream/282854-general/topic/custom.20url\">#general &gt; custom url</a> by <span class=\"user-mention silent\" data-user-id=\"399510\">Alec Leamas</span>.</p>",
+        "id": 290756208,
+        "sender_full_name": "Notification Bot",
+        "timestamp": 1658754517
+    }
+]

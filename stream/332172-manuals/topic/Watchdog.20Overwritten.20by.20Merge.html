@@ -1,0 +1,490 @@
+<html>
+<head><meta charset="utf-8"><title>Watchdog Overwritten by Merge · manuals · Zulip Chat Archive</title></head>
+<h2>Stream: <a href="https://leamas.github.io/zulip-archive/stream/332172-manuals/index.html">manuals</a></h2>
+<h3>Topic: <a href="https://leamas.github.io/zulip-archive/stream/332172-manuals/topic/Watchdog.20Overwritten.20by.20Merge.html">Watchdog Overwritten by Merge</a></h3>
+
+<hr>
+
+<base href="https://opencpn.zulipchat.com">
+
+<head><link href="https://leamas.github.io/zulip-archive/style.css" rel="stylesheet"></head>
+
+<a name="233002292"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332172-manuals/topic/Watchdog%20Overwritten%20by%20Merge/near/233002292" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Rick Gleason <a href="https://leamas.github.io/zulip-archive/stream/332172-manuals/topic/Watchdog.20Overwritten.20by.20Merge.html#233002292">(Apr 03 2021 at 12:12)</a>:</h4>
+<p>What a mess. PITA.  I accepted the PR.  It overwrote all my work on Watchdog Manual.<br>
+I am going to have to unwind this. and go back to the previous commit Somehow.<br>
+However, I have also been working on WatchDog program!   So I am going to have to make a new branch, unwind that, get the documents and copy them back into the master.<br>
+Then I have to push the changes to my remote and then Mike can make  the PR again.</p>
+<p>It that how I should fix this?</p>
+
+
+
+<a name="233005714"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332172-manuals/topic/Watchdog%20Overwritten%20by%20Merge/near/233005714" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Rick Gleason <a href="https://leamas.github.io/zulip-archive/stream/332172-manuals/topic/Watchdog.20Overwritten.20by.20Merge.html#233005714">(Apr 03 2021 at 13:14)</a>:</h4>
+<p>10 Days ago  watchdog _pi/modules/root <br>
+<a href="https://github.com/rgleason/watchdog_pi/tree/389dddac7a70e21147fc4bde097bb012ab01299e/modules/ROOT">https://github.com/rgleason/watchdog_pi/tree/389dddac7a70e21147fc4bde097bb012ab01299e/modules/ROOT</a><br>
+Have created  <a href="https://github.com/rgleason/watchdog_pi/tree/docs">https://github.com/rgleason/watchdog_pi/tree/docs</a>  branch<br>
+I think this is the most recent before Mike made a PR without first pulling upstream.<br>
+My Lesson:  Never Trust a PR and just merge it.</p>
+
+
+
+<a name="233005858"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332172-manuals/topic/Watchdog%20Overwritten%20by%20Merge/near/233005858" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Rick Gleason <a href="https://leamas.github.io/zulip-archive/stream/332172-manuals/topic/Watchdog.20Overwritten.20by.20Merge.html#233005858">(Apr 03 2021 at 13:17)</a>:</h4>
+<p>Now what do I do?  <br>
+git fetch<br>
+git checkout docs<br>
+Copy all of Modules/   somewhere<br>
+git checkout master<br>
+Then copy modules where so it will work?</p>
+
+
+
+<a name="233010198"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332172-manuals/topic/Watchdog%20Overwritten%20by%20Merge/near/233010198" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Rick Gleason <a href="https://leamas.github.io/zulip-archive/stream/332172-manuals/topic/Watchdog.20Overwritten.20by.20Merge.html#233010198">(Apr 03 2021 at 14:32)</a>:</h4>
+<p><span class="user-mention" data-user-id="399559">@Mike Rossiter</span>  <span class="user-mention" data-user-id="399510">@Alec Leamas</span>   Thanks for the support.<br>
+I think I fixed it, but antora does not run  needs legal copy of git, and can't find watchdog.adoc it is buried so deep. <br>
+  Tried  from watchdog root and from manual/watchdog  and still errors.  Tried adding the paths. to antora.yml<br>
+Then tried adding paths to <br>
+What is the required setup?<br>
+Does this have to be so deep?  Why can't I get rid of the second "watchdog"</p>
+<p>from root directory github/watchdog_pi<br>
+<strong>bldloc.yml </strong>  </p>
+<p>site:<br>
+  title: Watchdog Plugin Manual<br>
+  url: <a href="https://leamas.github.io/ocpn-manuals/">https://leamas.github.io/ocpn-manuals/</a><br>
+  start_page:  manual:watchdog:ROOT:watchdog.adoc</p>
+<p>content:<br>
+  sources:</p>
+<div class="codehilite"><pre><span></span><code>- url: ~/documents/github/watchdog_pi
+  branches: master
+  edit_url: true
+</code></pre></div>
+
+<p>ui:<br>
+  bundle:<br>
+    url: <a href="https://gitlab.com/antora/antora-ui-default/-/jobs/artifacts/master/raw/build/ui-bundle.zip?job=bundle-stable">https://gitlab.com/antora/antora-ui-default/-/jobs/artifacts/master/raw/build/ui-bundle.zip?job=bundle-stable</a><br>
+    snapshot: true</p>
+<p><strong>antora.yml</strong><br>
+name: watchdog<br>
+title: Watchdog Plugin Manual<br>
+version: '2.4.24'<br>
+start_page: ROOT:watchdog.adoc</p>
+<p><strong>ERROR</strong></p>
+<p>Rick@Dart MINGW64 ~/documents/github/watchdog_pi (master)<br>
+$ antora bldloc.yml<br>
+Start page specified for 2.4.24@watchdog not found: ROOT:watchdog.adoc<br>
+Start page specified for site has invalid syntax: manual:watchdog:ROOT:watchdog.adoc</p>
+<p>Also I have pushed up the correct Manual pages I believe after recovering them.</p>
+
+
+
+<a name="233012989"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332172-manuals/topic/Watchdog%20Overwritten%20by%20Merge/near/233012989" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Rick Gleason <a href="https://leamas.github.io/zulip-archive/stream/332172-manuals/topic/Watchdog.20Overwritten.20by.20Merge.html#233012989">(Apr 03 2021 at 15:23)</a>:</h4>
+<p><span class="user-mention" data-user-id="399559">@Mike Rossiter</span>    How do you build your shipdriver and dr plugins with antora locally?  I see no build yml</p>
+
+
+
+<a name="233013250"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332172-manuals/topic/Watchdog%20Overwritten%20by%20Merge/near/233013250" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Rick Gleason <a href="https://leamas.github.io/zulip-archive/stream/332172-manuals/topic/Watchdog.20Overwritten.20by.20Merge.html#233013250">(Apr 03 2021 at 15:29)</a>:</h4>
+<p>This is ridiculous</p>
+
+
+
+<a name="233013357"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332172-manuals/topic/Watchdog%20Overwritten%20by%20Merge/near/233013357" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Rick Gleason <a href="https://leamas.github.io/zulip-archive/stream/332172-manuals/topic/Watchdog.20Overwritten.20by.20Merge.html#233013357">(Apr 03 2021 at 15:30)</a>:</h4>
+<p>Rick@Dart MINGW64 ~/documents/github/watchdog_pi (master)<br>
+$ antora bldloc.yml<br>
+Start page specified for 2.4.24@watchdog not found: ROOT:watchdog.adoc<br>
+Start page specified for site not found: ROOT:watchdog.adoc</p>
+<p>Again. What a waste of time!!!!  <br>
+Directory is too deep. I am going back to what worked now. Sccrew it..</p>
+
+
+
+<a name="233013743"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332172-manuals/topic/Watchdog%20Overwritten%20by%20Merge/near/233013743" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Alec Leamas <a href="https://leamas.github.io/zulip-archive/stream/332172-manuals/topic/Watchdog.20Overwritten.20by.20Merge.html#233013743">(Apr 03 2021 at 15:37)</a>:</h4>
+<p>You can always go back in history. If the last good commit was deadbee, you could first  create a backup tag: <em>git tag bak</em>  and then go back : <em>git reset --hard deadbee</em>.  This is a history break, and you'll need to make a push -f , but it might be worth it.</p>
+
+
+
+<a name="233018541"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332172-manuals/topic/Watchdog%20Overwritten%20by%20Merge/near/233018541" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Mike Rossiter <a href="https://leamas.github.io/zulip-archive/stream/332172-manuals/topic/Watchdog.20Overwritten.20by.20Merge.html#233018541">(Apr 03 2021 at 17:03)</a>:</h4>
+<p><span class="user-mention" data-user-id="399865">@Rick Gleason</span> :  "How do you build your shipdriver and dr plugins with antora locally? I see no build yml"<br>
+I don't build locally if I can see the whole manual builds correctly. The build.yml is part of the manual repo. If I do a local build I use the .yml as shown in your Watchdog folder. This has a build.yml. In powershell cd to that folder and you can run the usual antora --fetch etc.</p>
+<p>I did the PR for the images because I could see a lot were missing. Sorry if your edits were overwritten.</p>
+<p>' Why can't I get rid of the second "watchdog"'<br>
+In the manual there is only one "watchdog" folder.  Before my first PR this sat as a module with that name in opencpn-plugins-manual.</p>
+<p>For plugins that have no developer the module with the plugin name will have to stay in that repository.</p>
+
+
+
+<a name="233018693"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332172-manuals/topic/Watchdog%20Overwritten%20by%20Merge/near/233018693" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Mike Rossiter <a href="https://leamas.github.io/zulip-archive/stream/332172-manuals/topic/Watchdog.20Overwritten.20by.20Merge.html#233018693">(Apr 03 2021 at 17:06)</a>:</h4>
+<p>Sorry... forgot to add that viewing the adoc with Firefox will not show a sidebar. Only comes with the plugins manual build.</p>
+
+
+
+<a name="233036392"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332172-manuals/topic/Watchdog%20Overwritten%20by%20Merge/near/233036392" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Rick Gleason <a href="https://leamas.github.io/zulip-archive/stream/332172-manuals/topic/Watchdog.20Overwritten.20by.20Merge.html#233036392">(Apr 03 2021 at 22:05)</a>:</h4>
+<p>Mike wrote<br>
+" The build.yml is part of the manual repo. If I do a local build I use the .yml as shown in your Watchdog folder. This has a build.yml. In powershell cd to that folder and you can run the usual antora --fetch etc."</p>
+<ul>
+<li>Ok, already did try it but with bash prompt which is the same I think, but will try.</li>
+<li>I had a setup that ran from watchdog root,  totally locally with no fetch.  You gave me that path to use, but when I extend it antora objects.</li>
+</ul>
+<p>Why is this stuff so elusive?  The yml file should be titled I think with the functions.</p>
+<p>Also how do I get the html generated to land in my local directory, say build/site  like we had it?<br>
+there was an output function at the end I think...</p>
+<p>I noticed the other images, we'll see if something is missing, and I can rectify it.</p>
+
+
+
+<a name="233043317"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332172-manuals/topic/Watchdog%20Overwritten%20by%20Merge/near/233043317" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Rick Gleason <a href="https://leamas.github.io/zulip-archive/stream/332172-manuals/topic/Watchdog.20Overwritten.20by.20Merge.html#233043317">(Apr 04 2021 at 00:20)</a>:</h4>
+<p><span class="user-mention" data-user-id="399559">@Mike Rossiter</span> <br>
+ I moved modules back to where you had it as it wasn't working in a higher dir.<br>
+I shortend the antora title to Watchdog.<br>
+I restored module-rasbats and copied the additional files to modules ROOT images<br>
+I like your  wiki links soome good stuff there.<br>
+I've gave up on Watchdog docs today and worked on  Dev Manual and TP.  It is almost roughed out, but lots of editing left.<br>
+Maybe I can figure it out tomorrow.</p>
+
+
+
+<a name="233047002"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332172-manuals/topic/Watchdog%20Overwritten%20by%20Merge/near/233047002" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Rick Gleason <a href="https://leamas.github.io/zulip-archive/stream/332172-manuals/topic/Watchdog.20Overwritten.20by.20Merge.html#233047002">(Apr 04 2021 at 01:34)</a>:</h4>
+<p><span class="user-mention" data-user-id="399559">@Mike Rossiter</span>   <br>
+Is this really where you intend to put the docs?</p>
+<p>Rick@Dart MINGW64 ~/documents/github/watchdog_pi/manual/watchdog/modules/ROOT (master)<br>
+$ dir<br>
+images  pages</p>
+<p>Here is what is happening </p>
+<p>Rick@Dart MINGW64 ~/documents/github/watchdog_pi/manual/watchdog (master)<br>
+$ dir<br>
+antora.yml  build.yml  modules</p>
+<p>Rick@Dart MINGW64 ~/documents/github/watchdog_pi/manual/watchdog (master)<br>
+$ antora build.yml<br>
+error: Local content source must be a git repository: C:\Users\Rick\documents\github\watchdog_pi\manual\watchdog (url: .)<br>
+Add the --stacktrace option to see the cause.</p>
+
+
+
+<a name="233050279"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332172-manuals/topic/Watchdog%20Overwritten%20by%20Merge/near/233050279" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Rick Gleason <a href="https://leamas.github.io/zulip-archive/stream/332172-manuals/topic/Watchdog.20Overwritten.20by.20Merge.html#233050279">(Apr 04 2021 at 02:42)</a>:</h4>
+<p>Tried it again after checking both antora.yml and build.yml</p>
+<p>Rick@Dart MINGW64 ~/documents/github/watchdog_pi/manual/watchdog (master)<br>
+$ antora build.yml<br>
+error: Local content source must be a git repository: C:\Users\Rick\documents\github\watchdog_pi\manual\watchdog (url: .)<br>
+Add the --stacktrace option to see the cause.</p>
+<p>Something is wrong with this setup. Have you tried it?</p>
+
+
+
+<a name="233052836"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332172-manuals/topic/Watchdog%20Overwritten%20by%20Merge/near/233052836" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Rick Gleason <a href="https://leamas.github.io/zulip-archive/stream/332172-manuals/topic/Watchdog.20Overwritten.20by.20Merge.html#233052836">(Apr 04 2021 at 03:36)</a>:</h4>
+<p>Good reading - some glimmer of the problem.  Need a push. but I have done so.</p>
+<p><a href="https://gitlab.com/antora/antora/-/issues/282">https://gitlab.com/antora/antora/-/issues/282</a></p>
+
+
+
+<a name="233063324"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332172-manuals/topic/Watchdog%20Overwritten%20by%20Merge/near/233063324" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Mike Rossiter <a href="https://leamas.github.io/zulip-archive/stream/332172-manuals/topic/Watchdog.20Overwritten.20by.20Merge.html#233063324">(Apr 04 2021 at 07:26)</a>:</h4>
+<p>Works for me but I need to make it work locally. Need to take another look.</p>
+
+
+
+<a name="233076674"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332172-manuals/topic/Watchdog%20Overwritten%20by%20Merge/near/233076674" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Mike Rossiter <a href="https://leamas.github.io/zulip-archive/stream/332172-manuals/topic/Watchdog.20Overwritten.20by.20Merge.html#233076674">(Apr 04 2021 at 11:59)</a>:</h4>
+<p>Still needs work but start here: <a href="https://github.com/Rasbats/opencpn-plugins-manual/wiki/Local-Build">https://github.com/Rasbats/opencpn-plugins-manual/wiki/Local-Build</a></p>
+
+
+
+<a name="233078933"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332172-manuals/topic/Watchdog%20Overwritten%20by%20Merge/near/233078933" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Rick Gleason <a href="https://leamas.github.io/zulip-archive/stream/332172-manuals/topic/Watchdog.20Overwritten.20by.20Merge.html#233078933">(Apr 04 2021 at 12:42)</a>:</h4>
+<p>It would be helpful if the full path from github were clearly shown.<br>
+I had tried git init from the root watchdog_pi folder, that did not work.<br>
+so git only goes down into sub-dir so far?  How far?</p>
+<p>Is this directory  documents/github/watchdog_pi/watchdog? <br>
+I can't tell because there are other things in there too and it does not seem to have what I have<br>
+I have<br>
+documents/github/watchdog_pi/manual/watchdog/ modules<br>
+documents/github/watchdog_pi/manual/watchdog/antora.yml<br>
+documents/github/watchdog_pi/manual/watchdog/build.yml<br>
+Is that correct?</p>
+<p>Is it this directory where I execute those commands?<br>
+documents/github/watchdog_pi/manual/watchdog/ </p>
+<p>Thanks for getting me straightened out.<br>
+NOTE: I did push the changes last night, did you catch them as html somewhere?</p>
+<p>I think plugin dev's are going to need to do this git init  commands.<br>
+Is there any way the path could be shortened up, it really is qu</p>
+
+
+
+<a name="233079200"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332172-manuals/topic/Watchdog%20Overwritten%20by%20Merge/near/233079200" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Rick Gleason <a href="https://leamas.github.io/zulip-archive/stream/332172-manuals/topic/Watchdog.20Overwritten.20by.20Merge.html#233079200">(Apr 04 2021 at 12:47)</a>:</h4>
+<p>I note you have playbook.yml and "Public" and some other files/dir<br>
+I have just what I wrote above and the full path to pages is<br>
+C:\Users\Rick\Documents\GitHub\watchdog_pi\manual\watchdog\modules\ROOT\pages</p>
+<p>So you must have a different setup than what you pushed to me.</p>
+<p>Any way the path could be shortened?<br>
+it is actually documents/watchdog_pii/manual/watchdog/  sorry about that</p>
+
+
+
+<a name="233085152"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332172-manuals/topic/Watchdog%20Overwritten%20by%20Merge/near/233085152" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Rick Gleason <a href="https://leamas.github.io/zulip-archive/stream/332172-manuals/topic/Watchdog.20Overwritten.20by.20Merge.html#233085152">(Apr 04 2021 at 14:43)</a>:</h4>
+<p>Maybe your pages which are a good addition, should be under Edit or Editors or something like that, in the Dev Manual.   We found this necessary with dokuwiki.  The problem is that it might get included with releases or something like that.</p>
+
+
+
+<a name="233085640"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332172-manuals/topic/Watchdog%20Overwritten%20by%20Merge/near/233085640" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Rick Gleason <a href="https://leamas.github.io/zulip-archive/stream/332172-manuals/topic/Watchdog.20Overwritten.20by.20Merge.html#233085640">(Apr 04 2021 at 14:52)</a>:</h4>
+<p>I  now have .git in  github/watchdog_pi/manual/    after doing those commands<br>
+I put bldloc.yml in that dir.<br>
+tried  antora  bldloc.yml   from that dir.</p>
+<p>Rick@Dart MINGW64 ~/documents/github/watchdog_pi/manual (master)<br>
+$ antora bldloc.yml<br>
+Start page specified for 2.4.24@watchdog not found: ROOT:watchdog.adoc<br>
+Start page specified for site not found: ROOT:watchdog.adoc</p>
+<p>same errors</p>
+<p>bldloc.yml</p>
+<p>site:<br>
+  title: Watchdog<br>
+  url: <a href="https://leamas.github.io/ocpn-manuals/">https://leamas.github.io/ocpn-manuals/</a><br>
+  start_page:  ROOT:watchdog.adoc</p>
+<p>content:<br>
+  sources:</p>
+<div class="codehilite"><pre><span></span><code>- url: ~/documents/github/watchdog_pi/
+  branches: HEAD
+  edit_url: true
+</code></pre></div>
+
+<p>ui:<br>
+  bundle:<br>
+    url: <a href="https://gitlab.com/antora/antora-ui-default/-/jobs/artifacts/master/raw/build/ui-bundle.zip?job=bundle-stable">https://gitlab.com/antora/antora-ui-default/-/jobs/artifacts/master/raw/build/ui-bundle.zip?job=bundle-stable</a><br>
+    snapshot: true<br>
+output:<br>
+  dir: ./docs</p>
+
+
+
+<a name="233085859"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332172-manuals/topic/Watchdog%20Overwritten%20by%20Merge/near/233085859" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Rick Gleason <a href="https://leamas.github.io/zulip-archive/stream/332172-manuals/topic/Watchdog.20Overwritten.20by.20Merge.html#233085859">(Apr 04 2021 at 14:56)</a>:</h4>
+<p>Because of the error I started adding sub-dir to the local path in   bldloc.yml<br>
+Then with the last try I get again that it is not a git directory again!</p>
+<p>Rick@Dart MINGW64 ~/documents/github/watchdog_pi/manual (master)<br>
+error: antora.yml not found in C:\Users\Rick\documents\github\watchdog_pi\manual\ (ref: master &lt;worktree&gt;)page specified for 2.4.24@watchdog not found: ROOT:watchdog.adoc<br>
+Add the --stacktrace option to see the cause.:watchdog.adoc</p>
+<p>Rick@Dart MINGW64 ~/documents/github/watchdog_pi/manual (master)<br>
+$ antora bldloc.yml<br>
+error: antora.yml not found in C:\Users\Rick\documents\github\watchdog_pi\manual\ (ref: master &lt;worktree&gt;)<br>
+Add the --stacktrace option to see the cause.</p>
+<p>Rick@Dart MINGW64 ~/documents/github/watchdog_pi/manual (master)<br>
+$ antora bldloc.yml<br>
+error: Local content source must be a git repository: C:\Users\Rick\documents\github\watchdog_pi\manual\watchdog\ (url: ~/documents/github/watchdog_pi/manual/watchdog/)<br>
+Add the --stacktrace option to see the cause.</p>
+
+
+
+<a name="233085866"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332172-manuals/topic/Watchdog%20Overwritten%20by%20Merge/near/233085866" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Rick Gleason <a href="https://leamas.github.io/zulip-archive/stream/332172-manuals/topic/Watchdog.20Overwritten.20by.20Merge.html#233085866">(Apr 04 2021 at 14:57)</a>:</h4>
+<p>This is getting pretty absurd</p>
+
+
+
+<a name="233096348"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332172-manuals/topic/Watchdog%20Overwritten%20by%20Merge/near/233096348" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Mike Rossiter <a href="https://leamas.github.io/zulip-archive/stream/332172-manuals/topic/Watchdog.20Overwritten.20by.20Merge.html#233096348">(Apr 04 2021 at 16:33)</a>:</h4>
+<p>It may be better to pull out the manual from the repo for working somewhere other than in your repo.<br>
+No full github repository is needed.  CD to the manual folder. Make an empty repo in that folder as shown above.</p>
+<p>Here is the structure as it applies to Watchdog.</p>
+<p>├── manual<br>
+|   └── .git<br>
+|   └── playbook.yml (or bldloc.yml or whatever)<br>
+|   └── ui-bundle.zip<br>
+|   └── .gitignore<br>
+||└── watchdog<br>
+ ||||   ├── antora.yml<br>
+ ||||   └── modules<br>
+    ||||||    └── ROOT<br>
+    ||||||||        ├── images<br>
+    ||||||||        └── pages<br>
+    ||||||||||            └── watchdog.adoc</p>
+<p>The watchdog folder is exactly as first sent to you via PR.</p>
+<p>Get ui-bundle.zip from:<br>
+<a href="https://github.com/leamas/ocpn-manuals/">https://github.com/leamas/ocpn-manuals/</a> or the link below.</p>
+<p>playbook.yml has the following text:</p>
+<p><a href="/user_uploads/33951/DCgNtwVe23cQLThJ9Xe8xRhi/ui-bundle.zip">ui-bundle.zip</a></p>
+<p><a href="/user_uploads/33951/1fXctCEtNacG9ry2tQdVRtT3/playbook.yml">playbook.yml</a></p>
+<p>CD to the manual folder, if not already there, and use: <br>
+antora --fetch playbook.yml --stacktrace</p>
+<p>Hope this finally works. The output is in the public directory. An index html is created automatically and the output appears as in the opencpn-plugins-manual.</p>
+<p>The advantage of this structure is that the tool (playbook.yml) is separated from the module (watchdog). Another tool allows making a pdf of the watchdog plugin manual. TBC</p>
+
+
+
+<a name="233096560"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332172-manuals/topic/Watchdog%20Overwritten%20by%20Merge/near/233096560" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Mike Rossiter <a href="https://leamas.github.io/zulip-archive/stream/332172-manuals/topic/Watchdog.20Overwritten.20by.20Merge.html#233096560">(Apr 04 2021 at 16:36)</a>:</h4>
+<p>This stuff is useful but it is not really related to building the opencpn-plugins-manual. Firefox will show you what your edits have achieved. I will update the Local Build section of the wiki for the manual. Steep learning curve for me as well ;)</p>
+
+
+
+<a name="233108806"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332172-manuals/topic/Watchdog%20Overwritten%20by%20Merge/near/233108806" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Rick Gleason <a href="https://leamas.github.io/zulip-archive/stream/332172-manuals/topic/Watchdog.20Overwritten.20by.20Merge.html#233108806">(Apr 04 2021 at 20:24)</a>:</h4>
+<p>Thanks ever so much Mike.  Your PR was exactly what you show above in the tree, I can confirm that..  I tried moving modules up one level and it did not work due to git not being found.  I will download these and give her a go and let you know.</p>
+
+
+
+<a name="233113114"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332172-manuals/topic/Watchdog%20Overwritten%20by%20Merge/near/233113114" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Rick Gleason <a href="https://leamas.github.io/zulip-archive/stream/332172-manuals/topic/Watchdog.20Overwritten.20by.20Merge.html#233113114">(Apr 04 2021 at 21:14)</a>:</h4>
+<p>It works from  github/watchdog_pi/manual/ <br>
+antora  playbook.yml <br>
+and it creates  github/watchdog_pi/manual/public/  sub-dir where it places html files!<br>
+This is much better.</p>
+<p>Also I learned that block quoting  with ....  at beginning and end does not allow links to work.<br>
+Next  try is getting it to build from ocpn-manuals.</p>
+<p>Also should I put playbook.yml and antora.yml in .gitignore?<br>
+I think for editing, I am going to try making a batch file for adding  /modules/ because it is pretty deep.</p>
+
+
+
+<a name="233116140"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332172-manuals/topic/Watchdog%20Overwritten%20by%20Merge/near/233116140" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Rick Gleason <a href="https://leamas.github.io/zulip-archive/stream/332172-manuals/topic/Watchdog.20Overwritten.20by.20Merge.html#233116140">(Apr 04 2021 at 22:06)</a>:</h4>
+<p>Now going from ocpn-manuals  and trying to modify  bldloc.yml<br>
+I kept adding another sub-dir in  bldloc.yml until I just included the entire file watchdog.adoc<br>
+It keeps not finding the content.  Maybe I am going about this wrong?</p>
+<p><strong>bldloc.yml </strong></p>
+<p>site:<br>
+  title: OpenCPN Developer Manual<br>
+  # the 404 page and sitemap files only get generated when the url property is seto<br>
+  url: <a href="https://leamas.github.io/ocpn-manuals/">https://leamas.github.io/ocpn-manuals/</a><br>
+  start_page: ocpn-dev-manual:ROOT:developer_guide.adoc</p>
+<p>content:<br>
+  sources:</p>
+<div class="codehilite"><pre><span></span><code>- url: ~/documents/github/ocpn-dev-manual
+  branches: main
+  edit_url: false
+
+- url: https://github.com/leamas/ocpn-pi-docs.git
+  branches: main
+  edit_url: true
+
+- url: https://github.com/leamas/shipdriver_pi.git
+  branches: master
+  edit_url: true
+
+- url: https://github.com/rgleason/watchdog_pi.git/manual/watchdog/modules/ROOT/pages/watchdog.adoc
+  branches: master
+  edit_url: true
+</code></pre></div>
+
+<p>ui:<br>
+  bundle:<br>
+    url: <a href="https://gitlab.com/antora/antora-ui-default/-/jobs/artifacts/master/raw/build/ui-bundle.zip?job=bundle-stable">https://gitlab.com/antora/antora-ui-default/-/jobs/artifacts/master/raw/build/ui-bundle.zip?job=bundle-stable</a><br>
+    snapshot: true<br>
+output:<br>
+  dir: ./docs</p>
+<p>Rick@Dart MINGW64 ~/documents/github/ocpn-manuals (main)<br>
+$ antora bldloc.yml<br>
+[clone] ...l/watchdog/modules/ROOT/pages/watchdog.adoc [-------------------------------------------]error: Content repository not found (url: <a href="https://github.com/rgleason/watchdog_pi.git/manual/watchdog/modules/ROOT/pages/watchdog.adoc">https://github.com/rgleason/watchdog_pi.git/manual/watchdog/modules/ROOT/pages/watchdog.adoc</a>)<br>
+Add the --stacktrace option to see the cause.</p>
+
+
+
+<a name="233116840"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332172-manuals/topic/Watchdog%20Overwritten%20by%20Merge/near/233116840" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Rick Gleason <a href="https://leamas.github.io/zulip-archive/stream/332172-manuals/topic/Watchdog.20Overwritten.20by.20Merge.html#233116840">(Apr 04 2021 at 22:21)</a>:</h4>
+<p>I am trying something else next.  Changing the watchdog section of bldloc.yml  which is in root of ocpn-manuals<br>
+to this, adding the nest sub-dir each time until I added the watchdog.adoc file itself.</p>
+<p>site:<br>
+  title: OpenCPN Developer Manual<br>
+  # the 404 page and sitemap files only get generated when the url property is seto<br>
+  url: <a href="https://leamas.github.io/ocpn-manuals/">https://leamas.github.io/ocpn-manuals/</a><br>
+  start_page: ocpn-dev-manual:ROOT:developer_guide.adoc</p>
+<p>content:<br>
+  sources:</p>
+<div class="codehilite"><pre><span></span><code>- url: ~/documents/github/ocpn-dev-manual
+  branches: main
+  edit_url: false
+
+- url: https://github.com/leamas/ocpn-pi-docs.git
+  branches: main
+  edit_url: true
+
+- url: https://github.com/leamas/shipdriver_pi.git
+  branches: master
+  edit_url: true
+
+- url: ~/documents/github/watchdog_pi/manual/watchdog/modules/ROOT/pages/watchdog.adoc
+  branches: master
+  edit_url: false
+</code></pre></div>
+
+<h1>- url: <a href="https://github.com/rgleason/watchdog_pi.git">https://github.com/rgleason/watchdog_pi.git</a></h1>
+<h1>branches: master</h1>
+<h1>edit_url: true</h1>
+<p>ui:<br>
+  bundle:<br>
+    url: <a href="https://gitlab.com/antora/antora-ui-default/-/jobs/artifacts/master/raw/build/ui-bundle.zip?job=bundle-stable">https://gitlab.com/antora/antora-ui-default/-/jobs/artifacts/master/raw/build/ui-bundle.zip?job=bundle-stable</a><br>
+    snapshot: true<br>
+output:<br>
+  dir: ./docs</p>
+<p>Usually results in something like this.</p>
+<p>Rick@Dart MINGW64 ~/documents/github/ocpn-manuals (main)<br>
+$ antora bldloc.yml<br>
+error: Local content source does not exist: C:\Users\Rick\documents\github\watchdog_pi\manual\watchdog\modules\ROOT\pages\watchdog.adoc (url: ~/documents/github/watchdog_pi/manual/watchdog/modules/ROOT/pages/watchdog.adoc)<br>
+Add the --stacktrace option to see the cause.</p>
+
+
+
+<a name="233117708"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332172-manuals/topic/Watchdog%20Overwritten%20by%20Merge/near/233117708" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Rick Gleason <a href="https://leamas.github.io/zulip-archive/stream/332172-manuals/topic/Watchdog.20Overwritten.20by.20Merge.html#233117708">(Apr 04 2021 at 22:39)</a>:</h4>
+<p>BTW Happy Easter   Mike, Alec and Jon</p>
+
+
+
+<a name="233117859"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332172-manuals/topic/Watchdog%20Overwritten%20by%20Merge/near/233117859" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Rick Gleason <a href="https://leamas.github.io/zulip-archive/stream/332172-manuals/topic/Watchdog.20Overwritten.20by.20Merge.html#233117859">(Apr 04 2021 at 22:41)</a>:</h4>
+<p>Alec,  saw the change you wanted and  I changed and pushed the change for  "Workflow Prerequisites"</p>
+
+
+
+<a name="233139384"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332172-manuals/topic/Watchdog%20Overwritten%20by%20Merge/near/233139384" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Mike Rossiter <a href="https://leamas.github.io/zulip-archive/stream/332172-manuals/topic/Watchdog.20Overwritten.20by.20Merge.html#233139384">(Apr 05 2021 at 05:42)</a>:</h4>
+<p><span class="user-mention" data-user-id="399865">@Rick Gleason</span> : What is going on? I thought we had 3 separate manuals and you are putting stuff from the plugins manual in the developer manual?</p>
+
+
+
+<a name="233145053"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332172-manuals/topic/Watchdog%20Overwritten%20by%20Merge/near/233145053" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Alec Leamas <a href="https://leamas.github.io/zulip-archive/stream/332172-manuals/topic/Watchdog.20Overwritten.20by.20Merge.html#233145053">(Apr 05 2021 at 07:22)</a>:</h4>
+<p>There is definitely three separate manuals. When we encounter a need to link between the manuals, we will have to do it informally at this point.</p>
+<p>I <em>do</em> have a vision that we in a distant future should be able to build everything in one go (and thus also enable full cross-linking). But, just my vision,  for the life in a distant galaxy far, far away...</p>
+
+
+
+<a name="233189812"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332172-manuals/topic/Watchdog%20Overwritten%20by%20Merge/near/233189812" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Rick Gleason <a href="https://leamas.github.io/zulip-archive/stream/332172-manuals/topic/Watchdog.20Overwritten.20by.20Merge.html#233189812">(Apr 05 2021 at 15:42)</a>:</h4>
+<p>Mike, I had added some lines to my bldloc.yml in ocpn-manuals   so that the watchdog plugin built with antora and the shipdriver plugin built (I think Alex added that earlier)   Now this doesn't build because we moved the source down several levels and it is not found.</p>
+<p>See my email about this.   I think it would be easier to have a separate repository for watchdog_doc   and remove the documentation from watchdog_pi  </p>
+<p>Then make as shallow a directory structure as possible that works for your Plugin Manual and allows easier local builds too.<br>
+Also the problem with commits to a plugin is that circleci runs and builds and may deploy when a commit is accepted. I think it is best to avoid that problem.</p>
+<p>Ready to make these changes and give it a try. Just need your advice by return email  (see what I wrote)</p>
+
+
+
+<a name="236367074"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332172-manuals/topic/Watchdog%20Overwritten%20by%20Merge/near/236367074" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Rick Gleason <a href="https://leamas.github.io/zulip-archive/stream/332172-manuals/topic/Watchdog.20Overwritten.20by.20Merge.html#236367074">(Apr 27 2021 at 16:19)</a>:</h4>
+<p>Mike wrote:<br>
+ 1:42 AM    @Rick Gleason : What is going on? I thought we had 3 separate manuals and you are putting stuff from the plugins manual in the developer manual?</p>
+<p>Well I did that a while ago, picking the one I thought was right while things were in flux, forked it and used my fork. I realize now that it should be a dynamic link to your plugins manual because what I did requires that I make a PR from your repos to my fork.   So please confirm to me what link to use, please.  </p>
+<p>Also I did not like the fact that when going to the plugin manual the entire ocpn-dev-manual link at the top changed to another repository. That is wrong and very confusing to a user, so you will need to change that to be my repos I think.  ---This needs to be solved because the manual seems very fragmented with links changing destinations etc.  I absolutely do not like this and will not accept it (Alec).</p>
+
+
+
+<a name="290756823"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332172-manuals/topic/Watchdog%20Overwritten%20by%20Merge/near/290756823" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Notification Bot <a href="https://leamas.github.io/zulip-archive/stream/332172-manuals/topic/Watchdog.20Overwritten.20by.20Merge.html#290756823">(Jul 25 2022 at 13:14)</a>:</h4>
+<p>This topic was moved here from <a class="stream-topic" data-stream-id="282854" href="/#narrow/stream/282854-general/topic/Watchdog.20Overwritten.20by.20Merge">#general &gt; Watchdog Overwritten by Merge</a> by <span class="user-mention silent" data-user-id="399510">Alec Leamas</span>.</p>
+
+
+
+<hr><p>Last updated: Dec 19 2022 at 16:41 UTC</p>
+</html>

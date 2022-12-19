@@ -1,0 +1,205 @@
+<html>
+<head><meta charset="utf-8"><title>nav.adoc and xref to within components · manuals · Zulip Chat Archive</title></head>
+<h2>Stream: <a href="https://leamas.github.io/zulip-archive/stream/332172-manuals/index.html">manuals</a></h2>
+<h3>Topic: <a href="https://leamas.github.io/zulip-archive/stream/332172-manuals/topic/nav.2Eadoc.20and.20xref.20to.20within.20components.html">nav.adoc and xref to within components</a></h3>
+
+<hr>
+
+<base href="https://opencpn.zulipchat.com">
+
+<head><link href="https://leamas.github.io/zulip-archive/style.css" rel="stylesheet"></head>
+
+<a name="232360561"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332172-manuals/topic/nav.adoc%20and%20xref%20to%20within%20components/near/232360561" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Rick Gleason <a href="https://leamas.github.io/zulip-archive/stream/332172-manuals/topic/nav.2Eadoc.20and.20xref.20to.20within.20components.html#232360561">(Mar 30 2021 at 01:32)</a>:</h4>
+<p>This is proving to be a quite excellent waste of time.  How are we supposed to get current?<br>
+My local html  Table of Contents does not match yours.  I've got all the PR pulled local. I have run antora --fetch after pushing back up.   Why is my nav different than yours.</p>
+<p>How to I configure an xref  to Mikes circleci page for example?</p>
+
+
+
+<a name="232480018"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332172-manuals/topic/nav.adoc%20and%20xref%20to%20within%20components/near/232480018" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Alec Leamas <a href="https://leamas.github.io/zulip-archive/stream/332172-manuals/topic/nav.2Eadoc.20and.20xref.20to.20within.20components.html#232480018">(Mar 30 2021 at 19:07)</a>:</h4>
+<p>For some reason, the workflow is flawed in ocpn-dev-manual.  We need to sort this out.</p>
+<p>There is exactly one really simple workflow here since you are upstream. It requires a start where your local main branch is exactly the same as rgleason/ocpn-dev-manual/main. </p>
+<p>From that point you should never make a PR. Just make changes, commit and push. As long as you are alone, there is nothing more to it.</p>
+<p>Occasionally, I'll make a PR. When this happens:</p>
+<ul>
+<li>Commit and push all local changes.</li>
+<li>If my PR needs to be rebased after that, tell me to rebase it.</li>
+<li>If/when the PR can be applied, you merge it.</li>
+<li>After that, rebase your local branch on top of rgleason/ocpn-dev-manual/main...</li>
+</ul>
+<p>... which means that you are back on square one, your local branch is the same as the remote, and you can forget me. This is actually dead simple.</p>
+
+
+
+<a name="232480246"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332172-manuals/topic/nav.adoc%20and%20xref%20to%20within%20components/near/232480246" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Alec Leamas <a href="https://leamas.github.io/zulip-archive/stream/332172-manuals/topic/nav.2Eadoc.20and.20xref.20to.20within.20components.html#232480246">(Mar 30 2021 at 19:08)</a>:</h4>
+<p>"My local html Table of Contents does not match yours."</p>
+<p>What does "my" and "yours" mean here?</p>
+
+
+
+<a name="232482910"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332172-manuals/topic/nav.adoc%20and%20xref%20to%20within%20components/near/232482910" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Alec Leamas <a href="https://leamas.github.io/zulip-archive/stream/332172-manuals/topic/nav.2Eadoc.20and.20xref.20to.20within.20components.html#232482910">(Mar 30 2021 at 19:25)</a>:</h4>
+<p>" How to I configure an xref to Mikes circleci page for example?"<br>
+The general syntax is here: <a href="https://docs.antora.org/antora/2.2/asciidoc/page-to-page-xref/">https://docs.antora.org/antora/2.2/asciidoc/page-to-page-xref/</a></p>
+<p>There are an examples in  nav.adoc, look for the "Building Locally" heading. Here are things like  xref:AlternativeWorkflow:ROOT:Useful-Stuff.html[]</p>
+<p>AlternativeWorkflow is the <em>name:</em> token from antora.yml in Mike's managed_plugins repo. This repo is loaded since it's mentioned in the ocpn-manuals' build.yml.</p>
+<p>The other parts should be obvious, module and page  in managed_plugins.</p>
+
+
+
+<a name="232499366"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332172-manuals/topic/nav.adoc%20and%20xref%20to%20within%20components/near/232499366" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Rick Gleason <a href="https://leamas.github.io/zulip-archive/stream/332172-manuals/topic/nav.2Eadoc.20and.20xref.20to.20within.20components.html#232499366">(Mar 30 2021 at 21:14)</a>:</h4>
+<p>There is an awful lot to think about and remember here. Meanwhile I still don't know where my damn changes are.  I have a hunch I'd better copy and save your suggestions. </p>
+<p>Incidentally, I don't think I had changes that were not committed.  I don't know if I had pushed them up to origin main, but then I would have been notified when I did git rebase origin main  or even git pull origin main</p>
+
+
+
+<a name="232502382"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332172-manuals/topic/nav.adoc%20and%20xref%20to%20within%20components/near/232502382" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Rick Gleason <a href="https://leamas.github.io/zulip-archive/stream/332172-manuals/topic/nav.2Eadoc.20and.20xref.20to.20within.20components.html#232502382">(Mar 30 2021 at 21:40)</a>:</h4>
+<p>In ocpn-dev-manual  have a nav.doc that has pretty close to the right outline. It just does not show when viewing local html's<br>
+What should I do to update the html?  I have not done an antora antora.yml from this directory that I can remember.<br>
+Also when I am in bash prompt at github/ocpn-dev-manual   and   "antora antora.yml"  I get errors.  So I have never done this.<br>
+Always have updated html from ocpn-manuals  which is totally counter intuitive IMHO  Like trying to tie your shoe with a long pole (or cut your hair in a mirror with a long pole).</p>
+<p>Rick@Dart MINGW64 ~/documents/github/ocpn-dev-manual (main)<br>
+$ antora antora.yml<br>
+error: ui.bundle.url: must be of type String<br>
+configuration param 'name' not declared in the schema<br>
+configuration param 'title' not declared in the schema<br>
+configuration param 'version' not declared in the schema<br>
+configuration param 'nav' not declared in the schema<br>
+Add the --stacktrace option to see the cause.</p>
+<hr>
+<p>$ antora antora.yml --stacktrace<br>
+Error: ui.bundle.url: must be of type String<br>
+configuration param 'name' not declared in the schema<br>
+configuration param 'title' not declared in the schema<br>
+configuration param 'version' not declared in the schema<br>
+configuration param 'nav' not declared in the schema<br>
+    at Object.validate (C:\Users\Rick\AppData\Roaming\npm\node_modules\@antora\site-generator-default\node_modules\convict\src\main.js:671:17)<br>
+    at buildPlaybook (C:\Users\Rick\AppData\Roaming\npm\node_modules\@antora\site-generator-default\node_modules\@antora\playbook-builder\lib\build-playbook.js:60:10)<br>
+    at generateSite (C:\Users\Rick\AppData\Roaming\npm\node_modules\@antora\site-generator-default\lib\generate-site.js:16:20)<br>
+    at Command.&lt;anonymous&gt; (C:\Users\Rick\AppData\Roaming\npm\node_modules\@antora\cli\lib\cli.js:76:20)<br>
+    at Command.listener [as _actionHandler] (C:\Users\Rick\AppData\Roaming\npm\node_modules\@antora\cli\node_modules\commander\index.js:426:31)<br>
+    at Command._parseCommand (C:\Users\Rick\AppData\Roaming\npm\node_modules\@antora\cli\node_modules\commander\index.js:1002:14)<br>
+    at Command._dispatchSubcommand (C:\Users\Rick\AppData\Roaming\npm\node_modules\@antora\cli\node_modules\commander\index.js:953:18)<br>
+    at Command._parseCommand (C:\Users\Rick\AppData\Roaming\npm\node_modules\@antora\cli\node_modules\commander\index.js:979:12)<br>
+    at Command.parse (C:\Users\Rick\AppData\Roaming\npm\node_modules\@antora\cli\node_modules\commander\index.js:801:10)<br>
+    at run (C:\Users\Rick\AppData\Roaming\npm\node_modules\@antora\cli\lib\cli.js:15:22)</p>
+<hr>
+<p>Rick@Dart MINGW64 ~/documents/github/ocpn-dev-manual (main)<br>
+$ antora --fetch antora.yml<br>
+error: ui.bundle.url: must be of type String<br>
+configuration param 'name' not declared in the schema<br>
+configuration param 'title' not declared in the schema<br>
+configuration param 'version' not declared in the schema<br>
+configuration param 'nav' not declared in the schema<br>
+Add the --stacktrace option to see the cause.</p>
+
+
+
+<a name="232502811"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332172-manuals/topic/nav.adoc%20and%20xref%20to%20within%20components/near/232502811" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Rick Gleason <a href="https://leamas.github.io/zulip-archive/stream/332172-manuals/topic/nav.2Eadoc.20and.20xref.20to.20within.20components.html#232502811">(Mar 30 2021 at 21:44)</a>:</h4>
+<p>Now I am thinking that my build.yml is gone. Christ this is a mess..</p>
+
+
+
+<a name="232503056"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332172-manuals/topic/nav.adoc%20and%20xref%20to%20within%20components/near/232503056" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Rick Gleason <a href="https://leamas.github.io/zulip-archive/stream/332172-manuals/topic/nav.2Eadoc.20and.20xref.20to.20within.20components.html#232503056">(Mar 30 2021 at 21:47)</a>:</h4>
+<p>And I am not supposed to push my own local build.yml up to the repos?<br>
+So I guess I have to config a .gitignore   <br>
+How do I prevent a PR merge from deleting it locally?</p>
+
+
+
+<a name="232503890"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332172-manuals/topic/nav.adoc%20and%20xref%20to%20within%20components/near/232503890" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Rick Gleason <a href="https://leamas.github.io/zulip-archive/stream/332172-manuals/topic/nav.2Eadoc.20and.20xref.20to.20within.20components.html#232503890">(Mar 30 2021 at 21:55)</a>:</h4>
+<p>I tried going to ocpn-manuals and antora bldloc.yml and it builds but this does not change:<br>
+Plugin development<br>
+Plugin Workflow<br>
+    Package Installer<br>
+Managed Installer<br>
+    Services Setup<br>
+    Shipdriver<br>
+    Testplugin<br>
+    Additional Support</p>
+<p>Not sure about this workflow right now.  My changes to nav.adoc are not showing up</p>
+
+
+
+<a name="232504308"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332172-manuals/topic/nav.adoc%20and%20xref%20to%20within%20components/near/232504308" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Rick Gleason <a href="https://leamas.github.io/zulip-archive/stream/332172-manuals/topic/nav.2Eadoc.20and.20xref.20to.20within.20components.html#232504308">(Mar 30 2021 at 21:58)</a>:</h4>
+<p>Also why does it go to your repos  <br>
+<a href="https://leamas.github.io/ocpn-manuals/ocpn-dev-manual/5.3.1/AboutThisManual.html">https://leamas.github.io/ocpn-manuals/ocpn-dev-manual/5.3.1/AboutThisManual.html</a><br>
+When I hit the title??    couldn't that be relative to where the html is located?</p>
+
+
+
+<a name="232512114"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332172-manuals/topic/nav.adoc%20and%20xref%20to%20within%20components/near/232512114" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Rick Gleason <a href="https://leamas.github.io/zulip-archive/stream/332172-manuals/topic/nav.2Eadoc.20and.20xref.20to.20within.20components.html#232512114">(Mar 30 2021 at 23:12)</a>:</h4>
+<p>Have checked antora.yml located in ocpn-dev-manual root directory</p>
+<p>name: ocpn-dev-manual<br>
+title: OpenCPN Developer Manual<br>
+version: '5.3.1'<br>
+nav: </p>
+<ul>
+<li>modules/ROOT/nav.adoc</li>
+</ul>
+<p>which is correct.<br>
+Then deleted all html in ocpn-manuals  and ran my local build bldloc.yml<br>
+the nav index.html remained the same.</p>
+<p>Maybe bldloc.yml is misconfigureed.<br>
+Yes, the branch was changed from mockup to main.</p>
+
+
+
+<a name="232542791"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332172-manuals/topic/nav.adoc%20and%20xref%20to%20within%20components/near/232542791" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Alec Leamas <a href="https://leamas.github.io/zulip-archive/stream/332172-manuals/topic/nav.2Eadoc.20and.20xref.20to.20within.20components.html#232542791">(Mar 31 2021 at 06:32)</a>:</h4>
+<p>" antora antora.yml"</p>
+<p>This makes no sense. antora.yml  is the  component descriptor, not the build file.</p>
+
+
+
+<a name="232543297"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332172-manuals/topic/nav.adoc%20and%20xref%20to%20within%20components/near/232543297" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Alec Leamas <a href="https://leamas.github.io/zulip-archive/stream/332172-manuals/topic/nav.2Eadoc.20and.20xref.20to.20within.20components.html#232543297">(Mar 31 2021 at 06:39)</a>:</h4>
+<p>But, the important issue: If you have a nav.adoc which is what you want: commit  and push. Pronto.  At this point, we can handle possible problems by new commits, this is no problem. But as long as you persist doing local changes all is a mess which I cannot help you with.</p>
+
+
+
+<a name="232543599"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332172-manuals/topic/nav.adoc%20and%20xref%20to%20within%20components/near/232543599" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Alec Leamas <a href="https://leamas.github.io/zulip-archive/stream/332172-manuals/topic/nav.2Eadoc.20and.20xref.20to.20within.20components.html#232543599">(Mar 31 2021 at 06:43)</a>:</h4>
+<p>BTW: Adding  <code>build-loc*.yml</code> to .gitignore is actually a good idea.</p>
+
+
+
+<a name="232614349"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332172-manuals/topic/nav.adoc%20and%20xref%20to%20within%20components/near/232614349" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Rick Gleason <a href="https://leamas.github.io/zulip-archive/stream/332172-manuals/topic/nav.2Eadoc.20and.20xref.20to.20within.20components.html#232614349">(Mar 31 2021 at 15:45)</a>:</h4>
+<p>Alec, I think I am on track now. Pushed last night, making changes today.<br>
+On thing however I think the name for your new installer is  "Plugin Manager". and the legacy one is "Plugin Package Installer".    AKA  "Managed Installer"  ( is okay too I think.)<br>
+I think we should be very consistent about that.<br>
+BTW look at the <a href="https://github.com/OpenCPN">https://github.com/OpenCPN</a>  repository   plugins  - "Container Project for an Integrated Plugin Management Facility "  perhaps it was you who wrote that some time ago.</p>
+
+
+
+<a name="232636125"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332172-manuals/topic/nav.adoc%20and%20xref%20to%20within%20components/near/232636125" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Alec Leamas <a href="https://leamas.github.io/zulip-archive/stream/332172-manuals/topic/nav.2Eadoc.20and.20xref.20to.20within.20components.html#232636125">(Mar 31 2021 at 17:54)</a>:</h4>
+<p>We should write all those things (there are more of them) on some sort  of checklist. Perhaps we should add a Terminology page?</p>
+
+
+
+<a name="232641528"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332172-manuals/topic/nav.adoc%20and%20xref%20to%20within%20components/near/232641528" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Alec Leamas <a href="https://leamas.github.io/zulip-archive/stream/332172-manuals/topic/nav.2Eadoc.20and.20xref.20to.20within.20components.html#232641528">(Mar 31 2021 at 18:28)</a>:</h4>
+<p>The keyword "legacy" is good and sort of established. So, we have the Plugin Manager (Plugin Installer?) and  Legacy Plugin Installation or so.</p>
+
+
+
+<a name="290756377"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332172-manuals/topic/nav.adoc%20and%20xref%20to%20within%20components/near/290756377" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Notification Bot <a href="https://leamas.github.io/zulip-archive/stream/332172-manuals/topic/nav.2Eadoc.20and.20xref.20to.20within.20components.html#290756377">(Jul 25 2022 at 13:10)</a>:</h4>
+<p>This topic was moved here from <a class="stream-topic" data-stream-id="282854" href="/#narrow/stream/282854-general/topic/nav.2Eadoc.20and.20xref.20to.20within.20components">#general &gt; nav.adoc and xref to within components</a> by <span class="user-mention silent" data-user-id="399510">Alec Leamas</span>.</p>
+
+
+
+<hr><p>Last updated: Dec 19 2022 at 16:41 UTC</p>
+</html>

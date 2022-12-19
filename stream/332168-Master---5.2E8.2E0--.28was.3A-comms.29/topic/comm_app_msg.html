@@ -1,0 +1,332 @@
+<html>
+<head><meta charset="utf-8"><title>comm_app_msg · Master - 5.8.0  (was: comms) · Zulip Chat Archive</title></head>
+<h2>Stream: <a href="https://leamas.github.io/zulip-archive/stream/332168-Master---5.2E8.2E0--.28was.3A-comms.29/index.html">Master - 5.8.0  (was: comms)</a></h2>
+<h3>Topic: <a href="https://leamas.github.io/zulip-archive/stream/332168-Master---5.2E8.2E0--.28was.3A-comms.29/topic/comm_app_msg.html">comm_app_msg</a></h3>
+
+<hr>
+
+<base href="https://opencpn.zulipchat.com">
+
+<head><link href="https://leamas.github.io/zulip-archive/style.css" rel="stylesheet"></head>
+
+<a name="291392930"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332168-Master%20-%205.8.0%20%20%28was%3A%20comms%29/topic/comm_app_msg/near/291392930" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Dave Register <a href="https://leamas.github.io/zulip-archive/stream/332168-Master---5.2E8.2E0--.28was.3A-comms.29/topic/comm_app_msg.html#291392930">(Jul 29 2022 at 23:27)</a>:</h4>
+<p>What is "comm_app_msg " all about?  How used?</p>
+
+
+
+<a name="291406832"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332168-Master%20-%205.8.0%20%20%28was%3A%20comms%29/topic/comm_app_msg/near/291406832" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Alec Leamas <a href="https://leamas.github.io/zulip-archive/stream/332168-Master---5.2E8.2E0--.28was.3A-comms.29/topic/comm_app_msg.html#291406832">(Jul 30 2022 at 04:44)</a>:</h4>
+<p>Naming style... it's new also to me, although I think I'm closer to it. Let's make a try! If we keep to the habit ti commit before we go to bed it's easier to just fix things than to discuss them as long as it's about implementing the guidelines.</p>
+<p>comm_app_msg is the skeleton for the decoded, application messages for example decoded GPS or AIS data. It will be very similar to Transport  but handling AppMsg instead of NavMsg. BTW, Transport needs to be renamed.</p>
+
+
+
+<a name="291428574"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332168-Master%20-%205.8.0%20%20%28was%3A%20comms%29/topic/comm_app_msg/near/291428574" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Dave Register <a href="https://leamas.github.io/zulip-archive/stream/332168-Master---5.2E8.2E0--.28was.3A-comms.29/topic/comm_app_msg.html#291428574">(Jul 30 2022 at 13:17)</a>:</h4>
+<p>OK on all.  What will we use AppMsg for, in general?  Examples?  What am I missing?<br>
+I have basic GPS handling from N2K implemented and working, all contained within the class that defined the listeners.  I could craft an AppMsg for the decoded result, but who would be listening for this?  Plugin?</p>
+
+
+
+<a name="291429709"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332168-Master%20-%205.8.0%20%20%28was%3A%20comms%29/topic/comm_app_msg/near/291429709" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Alec Leamas <a href="https://leamas.github.io/zulip-archive/stream/332168-Master---5.2E8.2E0--.28was.3A-comms.29/topic/comm_app_msg.html#291429709">(Jul 30 2022 at 13:45)</a>:</h4>
+<p>Do you remember the sketch with the different layers? app_msg is the topmost layer. Both plugins and core GUI parts should be able to not only get the raw data but also the decoded data when it exists, for example positions. </p>
+<p>The app_msg things thus lives un upper layers consuming the raw data and decoding it. It has nothing to do with the driver layer, it's later. But It makes sense to have the skeletons in place (?)</p>
+
+
+
+<a name="291441657"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332168-Master%20-%205.8.0%20%20%28was%3A%20comms%29/topic/comm_app_msg/near/291441657" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Dave Register <a href="https://leamas.github.io/zulip-archive/stream/332168-Master---5.2E8.2E0--.28was.3A-comms.29/topic/comm_app_msg.html#291441657">(Jul 30 2022 at 17:36)</a>:</h4>
+<p>I think the comm_app_msg will be mostly useful for plugins.  I suppose in some cases it would provide a mechanism to avoid using global variables for sharing information within the core.  I'll keep that in mind.  Makes sense to create the skeleton, anyway.</p>
+
+
+
+<a name="291445805"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332168-Master%20-%205.8.0%20%20%28was%3A%20comms%29/topic/comm_app_msg/near/291445805" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Alec Leamas <a href="https://leamas.github.io/zulip-archive/stream/332168-Master---5.2E8.2E0--.28was.3A-comms.29/topic/comm_app_msg.html#291445805">(Jul 30 2022 at 19:05)</a>:</h4>
+<p>Agreed, my thinking as well.</p>
+
+
+
+<a name="292333293"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332168-Master%20-%205.8.0%20%20%28was%3A%20comms%29/topic/comm_app_msg/near/292333293" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Dave Register <a href="https://leamas.github.io/zulip-archive/stream/332168-Master---5.2E8.2E0--.28was.3A-comms.29/topic/comm_app_msg.html#292333293">(Aug 07 2022 at 18:39)</a>:</h4>
+<p>I'm still fuzzy on how best to use comm_app_msg, especially things like GnssFix and AisData.  It seems needless overhead to use these in OCPN core.  Why not just use the statics?<br>
+Regarding AIS, I have the AISDecoder class listening for AIS messages from NavMsgBus directly.<br>
+I suppose some other module somewhere (PluginManager?) will also listen to NavBusMsg for AIS messages, and post an AppMasg notification so that plugins can get the event ( and a "cooked" message) if they listen ?</p>
+
+
+
+<a name="292335812"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332168-Master%20-%205.8.0%20%20%28was%3A%20comms%29/topic/comm_app_msg/near/292335812" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Alec Leamas <a href="https://leamas.github.io/zulip-archive/stream/332168-Master---5.2E8.2E0--.28was.3A-comms.29/topic/comm_app_msg.html#292335812">(Aug 07 2022 at 19:37)</a>:</h4>
+<p>One advantage with messaging is that if pushing for example GnssFix it becomes available (somehow...) also for the plugins. </p>
+<p>Another is that the message is not only about data, it also carries info on exact when it is updated. That is, a component (core or gui) which needs to to something with the position has no need to "poll" position or so, it knows if/when it is updated. In short, GUI applications are fundamentally event driven, and the messaging here is nothing else than events. Using messages overall creates a more responsive system.</p>
+<p>But then again, these are just my ideas.  I don't think the overhead is anything to pay attention to though, the events here are very fast. Of course, one of my pain points is that using global variables to share information is, well, you know...</p>
+<p>From another angle, I argue for a model part which does the actual computing of positions etc. A GUI which handles the visual things. And that these are disconnected in a way which creates a clean interface to the GUI. And that the model does not depend on the GUI, which means our messaging system is a nice fit. This is nothing else than standard design of GUI applications, a limited way to apply the classical MVC pattern (wihtout a Controller, though).</p>
+
+
+
+<a name="292338475"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332168-Master%20-%205.8.0%20%20%28was%3A%20comms%29/topic/comm_app_msg/near/292338475" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Dave Register <a href="https://leamas.github.io/zulip-archive/stream/332168-Master---5.2E8.2E0--.28was.3A-comms.29/topic/comm_app_msg.html#292338475">(Aug 07 2022 at 20:39)</a>:</h4>
+<ol>
+<li>For plugins, I agree with the idea of comm_app_msg.  Thyis will be new in our new model.  No plugins today will take advantage of it.  New ones will, if desired.</li>
+<li>Legacy logic does not poll, anywhere, except in RX threads where the thread can block waiting data..  We are already using wxEvents widely, to distribute comm interface data strings.</li>
+<li>globals, yes, I know...</li>
+<li>The disconnect between app and GUI is largely a matter of refactoring existing code.  Removal of the comm protocol handling from the primary GUI class (MyFrame).  And that is the plan for chart1.cpp.</li>
+</ol>
+
+
+
+<a name="292365073"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332168-Master%20-%205.8.0%20%20%28was%3A%20comms%29/topic/comm_app_msg/near/292365073" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Alec Leamas <a href="https://leamas.github.io/zulip-archive/stream/332168-Master---5.2E8.2E0--.28was.3A-comms.29/topic/comm_app_msg.html#292365073">(Aug 08 2022 at 06:31)</a>:</h4>
+<p>Then this basically boils down to the interface between the new part which does the decoding, lets call call it "Decoder" for now now, and chart1.</p>
+<p>Obviously Decoder need to transfer data to chart1. That chart1 just calls methods in Decoder won't cut it, since only the Decoder knows when data arrives. Which basically boils down to that either the decoder must send events to chart1, or it call methods in chart1.</p>
+<p>Calling methods in chart1 means including chart1.h, bringing us back to square one where everything includes everything (since chart1.h includes everything).</p>
+<p>If Decoder should send events, why not use the appmsg which just is sugar on top of event passing? In particular, it disconnects Decoder in the sense that it does not need to know about the window handle for chart1, the handle it otherwise needs to send events. </p>
+<p>Using the appmsg interface also means that it is dead simple to test the Decoder. Again, this is IMHO actually a big deal</p>
+
+
+
+<a name="292375375"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332168-Master%20-%205.8.0%20%20%28was%3A%20comms%29/topic/comm_app_msg/near/292375375" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Alec Leamas <a href="https://leamas.github.io/zulip-archive/stream/332168-Master---5.2E8.2E0--.28was.3A-comms.29/topic/comm_app_msg.html#292375375">(Aug 08 2022 at 08:48)</a>:</h4>
+<p>And, of course, using appmsg means being on track for a solution for plugins without any more fuzz.</p>
+
+
+
+<a name="292401452"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332168-Master%20-%205.8.0%20%20%28was%3A%20comms%29/topic/comm_app_msg/near/292401452" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Dave Register <a href="https://leamas.github.io/zulip-archive/stream/332168-Master---5.2E8.2E0--.28was.3A-comms.29/topic/comm_app_msg.html#292401452">(Aug 08 2022 at 13:28)</a>:</h4>
+<p>Copy all.<br>
+I plan for chart1.cpp to disappear, replaced by ocpn_app.cpp and ocpn_frame.cpp.  And maybe comm_decoder.cpp<br>
+So, following your scheme. ocpn_app contains the comm listeners, and probably initially the Decoder functionality (although that might best be split out later).  Anyway, app sends messages to frame.  So we might as well use appmsg for this.  We may need to grow the set of passed data structures as necessary to satisfy all requirements of frame, and other appmsg consumers.<br>
+We retain the ability for a module (other than Decoder) to listen for comm events and process them as desired.  I'm thinking AIS here, which has a pretty complex decode function.  The set of data structures necessary to hold all possible AIS stream content is daunting. But we can readdress this later, if desired.<br>
+I plan to start this work tonight, in a private local branch.  Expect things will be broken for a while, locally.<br>
+Thanks for the thought provoking ideas.</p>
+
+
+
+<a name="292403002"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332168-Master%20-%205.8.0%20%20%28was%3A%20comms%29/topic/comm_app_msg/near/292403002" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Dave Register <a href="https://leamas.github.io/zulip-archive/stream/332168-Master---5.2E8.2E0--.28was.3A-comms.29/topic/comm_app_msg.html#292403002">(Aug 08 2022 at 13:41)</a>:</h4>
+<p>And of course the multiplexer will listen to raw N0183 messages, to support the legacy re-transmit use-case.<br>
+And the pluginmanager to support the legacy plugin API functions.</p>
+
+
+
+<a name="292406900"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332168-Master%20-%205.8.0%20%20%28was%3A%20comms%29/topic/comm_app_msg/near/292406900" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Alec Leamas <a href="https://leamas.github.io/zulip-archive/stream/332168-Master---5.2E8.2E0--.28was.3A-comms.29/topic/comm_app_msg.html#292406900">(Aug 08 2022 at 14:10)</a>:</h4>
+<p>Overall, this looks sound to me, a step in the right direction which, important, will ensure that we won't get even more bogged down in the current mess. It's the start of doing  things the right way.</p>
+<p>I presume that  ocpn_app the would be a non-gui object, right?</p>
+<p>One interesting thing to do in parallel is to check those modules which include chart1.h. What  exactly breaks if <code>#include chart1.h</code> is removed?  Can it be refactored to a separate object which can replace chart1 for the including module?  Can it be ocpn_app?</p>
+<blockquote>
+<p>We may need to grow the set of passed data structures as necessary </p>
+</blockquote>
+<p>Yes, the one I did are about illustrating concepts, nothing more.</p>
+
+
+
+<a name="292821514"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332168-Master%20-%205.8.0%20%20%28was%3A%20comms%29/topic/comm_app_msg/near/292821514" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Dave Register <a href="https://leamas.github.io/zulip-archive/stream/332168-Master---5.2E8.2E0--.28was.3A-comms.29/topic/comm_app_msg.html#292821514">(Aug 10 2022 at 19:46)</a>:</h4>
+<p>I need name advice/suggestions.<br>
+I am building a new class that:</p>
+<ol>
+<li>Listens for comm events, through observables.</li>
+<li>Posts comm_appmsgs (using notify()) to interested listeners, such as MyFrame, and plugin system.<br>
+Class Name:  All I can come up with is "CommBridge"  Not real happy with this name...<br>
+Better ideas?</li>
+</ol>
+
+
+
+<a name="292821704"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332168-Master%20-%205.8.0%20%20%28was%3A%20comms%29/topic/comm_app_msg/near/292821704" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Alec Leamas <a href="https://leamas.github.io/zulip-archive/stream/332168-Master---5.2E8.2E0--.28was.3A-comms.29/topic/comm_app_msg.html#292821704">(Aug 10 2022 at 19:47)</a>:</h4>
+<p>The events listened for are raw events?</p>
+
+
+
+<a name="292821814"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332168-Master%20-%205.8.0%20%20%28was%3A%20comms%29/topic/comm_app_msg/near/292821814" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Alec Leamas <a href="https://leamas.github.io/zulip-archive/stream/332168-Master---5.2E8.2E0--.28was.3A-comms.29/topic/comm_app_msg.html#292821814">(Aug 10 2022 at 19:48)</a>:</h4>
+<p>Perhaps Decoder ;)</p>
+
+
+
+<a name="292823487"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332168-Master%20-%205.8.0%20%20%28was%3A%20comms%29/topic/comm_app_msg/near/292823487" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Dave Register <a href="https://leamas.github.io/zulip-archive/stream/332168-Master---5.2E8.2E0--.28was.3A-comms.29/topic/comm_app_msg.html#292823487">(Aug 10 2022 at 19:59)</a>:</h4>
+<p>Yes, raw events.<br>
+I had planned to put Decoder into its own class.  More isolation.  So CommBridge (or whatever) is not much more that a "connector", using Decoder to craft its output.</p>
+
+
+
+<a name="292824153"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332168-Master%20-%205.8.0%20%20%28was%3A%20comms%29/topic/comm_app_msg/near/292824153" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Alec Leamas <a href="https://leamas.github.io/zulip-archive/stream/332168-Master---5.2E8.2E0--.28was.3A-comms.29/topic/comm_app_msg.html#292824153">(Aug 10 2022 at 20:03)</a>:</h4>
+<p>ah....sort of Facade? DecoderFacade?</p>
+
+
+
+<a name="292845893"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332168-Master%20-%205.8.0%20%20%28was%3A%20comms%29/topic/comm_app_msg/near/292845893" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Dave Register <a href="https://leamas.github.io/zulip-archive/stream/332168-Master---5.2E8.2E0--.28was.3A-comms.29/topic/comm_app_msg.html#292845893">(Aug 10 2022 at 23:02)</a>:</h4>
+<p>You will see the results tomorrow, I expect.<br>
+Serious philosophical question:<br>
+Does it bother you, in an undefinable way, that modern computer sciences essentially demands that source code be written in English?  Always wondered that...</p>
+
+
+
+<a name="292859448"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332168-Master%20-%205.8.0%20%20%28was%3A%20comms%29/topic/comm_app_msg/near/292859448" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Dave Register <a href="https://leamas.github.io/zulip-archive/stream/332168-Master---5.2E8.2E0--.28was.3A-comms.29/topic/comm_app_msg.html#292859448">(Aug 11 2022 at 02:29)</a>:</h4>
+<p>I built CommBridge and CommDecoder, pushed all.<br>
+The idea is that CommBridge listens to raw data drivers.  When it gets a raw comm event, CommBridge  constructs an AppMsg, and posts it to the AppMsgBus.  MyFrame listens for the event, and will process as necessary in the frame GUI.</p>
+<p>Except, it does not quite work.  The CommBridge gets hit alright, decodes the message, and notifies the AppMsgBus .<br>
+But the lambda callback point in MyFrame never gets hit.<br>
+I suspect the problem is the same as the one you fixed on NavMsgBus, in the getInstance() method.  Maybe.<br>
+Thoughts?</p>
+
+
+
+<a name="292867467"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332168-Master%20-%205.8.0%20%20%28was%3A%20comms%29/topic/comm_app_msg/near/292867467" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Alec Leamas <a href="https://leamas.github.io/zulip-archive/stream/332168-Master---5.2E8.2E0--.28was.3A-comms.29/topic/comm_app_msg.html#292867467">(Aug 11 2022 at 05:00)</a>:</h4>
+<p>can you push what you have to a temporary branch so I can have a look?</p>
+
+
+
+<a name="292877919"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332168-Master%20-%205.8.0%20%20%28was%3A%20comms%29/topic/comm_app_msg/near/292877919" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Alec Leamas <a href="https://leamas.github.io/zulip-archive/stream/332168-Master---5.2E8.2E0--.28was.3A-comms.29/topic/comm_app_msg.html#292877919">(Aug 11 2022 at 07:15)</a>:</h4>
+<p>OK, you have pushed sorry.</p>
+
+
+
+<a name="292879060"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332168-Master%20-%205.8.0%20%20%28was%3A%20comms%29/topic/comm_app_msg/near/292879060" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Alec Leamas <a href="https://leamas.github.io/zulip-archive/stream/332168-Master---5.2E8.2E0--.28was.3A-comms.29/topic/comm_app_msg.html#292879060">(Aug 11 2022 at 07:26)</a>:</h4>
+<p>Here are three things. The first is that AppMsgBus::getIistance() returns a raw pointer(). While not wrong per se, it  differs from the reference returned by <code>NavMsgBus::getInstance()</code>. I thought I had fixed this, but obviously not.  Pushing an update.</p>
+<p>The second is the key you use when listening:</p>
+<div class="codehilite"><pre><span></span><code>listener_BasicNavData = msgbus.get_listener(EVT_BASIC_NAV_DATA, this, &quot;BasicNavData&quot;);
+</code></pre></div>
+
+<p>Simply put, this does not work. The way to obtain a key it is as done in  the test code:</p>
+<div class="codehilite"><pre><span></span><code>     auto&amp; a = AppMsgBus::getInstance();
+      AppMsg msg(AppMsg::Type::GnssFix);
+      listener = a.get_listener(EVT_FOO, this, msg.key());
+</code></pre></div>
+<p>Basically, <code>msg.key()</code> adds all sorts of  prefixes to make sure the key is unique. The same keyspace is used for AppMsg, NavMsg, GlobalVar, ConfigVar and what not... I don't update this, my feeling is that it is better if you do.</p>
+<p>Also, here is the thing about source formatting. I'm starting to get used to how it should be, makes it easier to read. Running the things through cmake-format to fix this now rather than later.</p>
+
+
+
+<a name="292880733"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332168-Master%20-%205.8.0%20%20%28was%3A%20comms%29/topic/comm_app_msg/near/292880733" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Alec Leamas <a href="https://leamas.github.io/zulip-archive/stream/332168-Master---5.2E8.2E0--.28was.3A-comms.29/topic/comm_app_msg.html#292880733">(Aug 11 2022 at 07:43)</a>:</h4>
+<p>Hm... also, you have added a new type which is fine, but one must then also update <code>AppMsg::TypeToStringI()</code> in comm_appmsg.cpp. Without this, there is no sane key.</p>
+
+
+
+<a name="292881697"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332168-Master%20-%205.8.0%20%20%28was%3A%20comms%29/topic/comm_app_msg/near/292881697" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Alec Leamas <a href="https://leamas.github.io/zulip-archive/stream/332168-Master---5.2E8.2E0--.28was.3A-comms.29/topic/comm_app_msg.html#292881697">(Aug 11 2022 at 07:50)</a>:</h4>
+<p>Clearly, we (I) could enhance tings here. One simple thing is to remove the <code>default' case label in </code>AppMsg::TypeToStringI()` -- this would create a compiler warning for the missing enum. Will do.</p>
+
+
+
+<a name="292882049"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332168-Master%20-%205.8.0%20%20%28was%3A%20comms%29/topic/comm_app_msg/near/292882049" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Alec Leamas <a href="https://leamas.github.io/zulip-archive/stream/332168-Master---5.2E8.2E0--.28was.3A-comms.29/topic/comm_app_msg.html#292882049">(Aug 11 2022 at 07:53)</a>:</h4>
+<p>Another question is if the argument to <code>get_listener()</code> really should be a plain string.  It obviously opens for silly mistakes, a typed argument might be a better choice. Let me think...</p>
+
+
+
+<a name="292882571"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332168-Master%20-%205.8.0%20%20%28was%3A%20comms%29/topic/comm_app_msg/near/292882571" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Alec Leamas <a href="https://leamas.github.io/zulip-archive/stream/332168-Master---5.2E8.2E0--.28was.3A-comms.29/topic/comm_app_msg.html#292882571">(Aug 11 2022 at 07:57)</a>:</h4>
+<p>Pushing changes: Use a reference in <code>AppMsgBus::getInstance()</code>, run clang-format, handle the new message types in <code>AppMsg::TypeToString()</code></p>
+
+
+
+<a name="292890654"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332168-Master%20-%205.8.0%20%20%28was%3A%20comms%29/topic/comm_app_msg/near/292890654" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Alec Leamas <a href="https://leamas.github.io/zulip-archive/stream/332168-Master---5.2E8.2E0--.28was.3A-comms.29/topic/comm_app_msg.html#292890654">(Aug 11 2022 at 08:58)</a>:</h4>
+<p>Updated  <code>AppMsgBus::get_listener()</code> so it takes an AppMsg argument rather than a string.  Forced me to update all parts, also those I initially thought were better you did. </p>
+<p>Sort of interested how this works...</p>
+
+
+
+<a name="292931936"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332168-Master%20-%205.8.0%20%20%28was%3A%20comms%29/topic/comm_app_msg/near/292931936" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Dave Register <a href="https://leamas.github.io/zulip-archive/stream/332168-Master---5.2E8.2E0--.28was.3A-comms.29/topic/comm_app_msg.html#292931936">(Aug 11 2022 at 13:40)</a>:</h4>
+<p>Quick build and smoke test with live data.  Success. The lambda callback gets hit now.  Thanks for the corrections.<br>
+Time to write some more code to completely test the process.<br>
+FYI: the live data I am using is coming from a network server that Hakan maintains.  It replays a recorded N0183 stream from one of his voyages on a tcp connection.  Reports ownship and lots of AIS targets.<br>
+Address: <a href="http://signalk.stupan.se">signalk.stupan.se</a><br>
+Port: 10112<br>
+Type: tcp<br>
+This connection can be enabled by Options-&gt;Connections, as per legacy.</p>
+
+
+
+<a name="292932885"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332168-Master%20-%205.8.0%20%20%28was%3A%20comms%29/topic/comm_app_msg/near/292932885" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Dave Register <a href="https://leamas.github.io/zulip-archive/stream/332168-Master---5.2E8.2E0--.28was.3A-comms.29/topic/comm_app_msg.html#292932885">(Aug 11 2022 at 13:46)</a>:</h4>
+<p>"Updated AppMsgBus::get_listener() so it takes an AppMsg argument rather than a string."<br>
+This is a real improvement.  Key strings are baked into the source, opaque to the caller.  Nice.</p>
+
+
+
+<a name="292951927"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332168-Master%20-%205.8.0%20%20%28was%3A%20comms%29/topic/comm_app_msg/near/292951927" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Alec Leamas <a href="https://leamas.github.io/zulip-archive/stream/332168-Master---5.2E8.2E0--.28was.3A-comms.29/topic/comm_app_msg.html#292951927">(Aug 11 2022 at 15:26)</a>:</h4>
+<blockquote>
+<p>This is a real improvement. </p>
+</blockquote>
+<p>Yes, in hindsight I don't understand why I didn't do that from the very beginning. I will update the NavMsgBus::get_listener in the same way  later, hopefully tomorrow.</p>
+<p>Thanks for reminder on Håkan's signalK server.</p>
+
+
+
+<a name="292952545"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332168-Master%20-%205.8.0%20%20%28was%3A%20comms%29/topic/comm_app_msg/near/292952545" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Alec Leamas <a href="https://leamas.github.io/zulip-archive/stream/332168-Master---5.2E8.2E0--.28was.3A-comms.29/topic/comm_app_msg.html#292952545">(Aug 11 2022 at 15:29)</a>:</h4>
+<blockquote>
+<p>Time to write some more code to completely test the process.</p>
+</blockquote>
+<p>If you can. it's a huge advantage if you can add these tests to test/tests.cpp. The thing with having them there is that they are used to find regressions.</p>
+
+
+
+<a name="293059488"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332168-Master%20-%205.8.0%20%20%28was%3A%20comms%29/topic/comm_app_msg/near/293059488" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Alec Leamas <a href="https://leamas.github.io/zulip-archive/stream/332168-Master---5.2E8.2E0--.28was.3A-comms.29/topic/comm_app_msg.html#293059488">(Aug 12 2022 at 07:38)</a>:</h4>
+<p>Pushed various housekeeping, trying to make code more up to date w r t Google style GL and other common sense things. Hope you don't have things to rebase...</p>
+
+
+
+<a name="293060280"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332168-Master%20-%205.8.0%20%20%28was%3A%20comms%29/topic/comm_app_msg/near/293060280" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Alec Leamas <a href="https://leamas.github.io/zulip-archive/stream/332168-Master---5.2E8.2E0--.28was.3A-comms.29/topic/comm_app_msg.html#293060280">(Aug 12 2022 at 07:45)</a>:</h4>
+<p>Why? We are creating brand new code, and I think it's important to set an example. Others will no doubt watch..</p>
+
+
+
+<a name="293065876"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332168-Master%20-%205.8.0%20%20%28was%3A%20comms%29/topic/comm_app_msg/near/293065876" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Alec Leamas <a href="https://leamas.github.io/zulip-archive/stream/332168-Master---5.2E8.2E0--.28was.3A-comms.29/topic/comm_app_msg.html#293065876">(Aug 12 2022 at 08:29)</a>:</h4>
+<p>Looking at BasicNavdataMsg. It seems that you don't initiate the Position::Type argument to pos. The result is a position which basically is undefined, it needs to know about N/S and E/W to  be in a defined state..</p>
+
+
+
+<a name="293067082"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332168-Master%20-%205.8.0%20%20%28was%3A%20comms%29/topic/comm_app_msg/near/293067082" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Alec Leamas <a href="https://leamas.github.io/zulip-archive/stream/332168-Master---5.2E8.2E0--.28was.3A-comms.29/topic/comm_app_msg.html#293067082">(Aug 12 2022 at 08:39)</a>:</h4>
+<p>Ah... you are using negative degrees for that. Should be fine, but we then needs to redefine Position somehow.  Probably deducing Type from the actual lat/lon arguments, and skip the constructor with a  Type argument.  Which means that the actual lat/lon might be negative, they are just converted  to positive values in <code>to_string()</code></p>
+<p>Thoughts?</p>
+
+
+
+<a name="293080800"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332168-Master%20-%205.8.0%20%20%28was%3A%20comms%29/topic/comm_app_msg/near/293080800" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Alec Leamas <a href="https://leamas.github.io/zulip-archive/stream/332168-Master---5.2E8.2E0--.28was.3A-comms.29/topic/comm_app_msg.html#293080800">(Aug 12 2022 at 10:27)</a>:</h4>
+<p>Updated the Position interface. It should work  with current use cases, and is reasonably documented.</p>
+
+
+
+<a name="293085985"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332168-Master%20-%205.8.0%20%20%28was%3A%20comms%29/topic/comm_app_msg/near/293085985" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Alec Leamas <a href="https://leamas.github.io/zulip-archive/stream/332168-Master---5.2E8.2E0--.28was.3A-comms.29/topic/comm_app_msg.html#293085985">(Aug 12 2022 at 11:07)</a>:</h4>
+<p>More thinking about AppMsg in general an for example BasicNavDataMsg:  We used shared_ptr to distribute this message to all sorts of consumers. In the end, this means all listeners has a pointer to the same message. For this reason, the message should probably never be changed  since, well...</p>
+<p>The pointer is actually declared as <code>const</code>  Despite this, I think it would be better if all variables in the messages are declared as <code>const</code>.  This would create a safety net, and make the indended usage clear. Yest, I know, I'm also s sinner. but still...</p>
+<p>Pushing an update</p>
+
+
+
+<a name="293105240"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332168-Master%20-%205.8.0%20%20%28was%3A%20comms%29/topic/comm_app_msg/near/293105240" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Dave Register <a href="https://leamas.github.io/zulip-archive/stream/332168-Master---5.2E8.2E0--.28was.3A-comms.29/topic/comm_app_msg.html#293105240">(Aug 12 2022 at 13:08)</a>:</h4>
+<p>"const" on message members:  At some point I changed that to remove the "const", experimenting with my logic.  Forgot to change it back.  Sorry.  I agree that these members are fundamentally "const".</p>
+
+
+
+<a name="293105726"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332168-Master%20-%205.8.0%20%20%28was%3A%20comms%29/topic/comm_app_msg/near/293105726" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Dave Register <a href="https://leamas.github.io/zulip-archive/stream/332168-Master---5.2E8.2E0--.28was.3A-comms.29/topic/comm_app_msg.html#293105726">(Aug 12 2022 at 13:11)</a>:</h4>
+<p>"Which means that the actual lat/lon might be negative".  That has been our tradition in core logic.  Makes the math easier everywhere.</p>
+
+
+
+<hr><p>Last updated: Dec 19 2022 at 16:41 UTC</p>
+</html>

@@ -1,0 +1,1534 @@
+<html>
+<head><meta charset="utf-8"><title>shipdriver validation errors · general · Zulip Chat Archive</title></head>
+<h2>Stream: <a href="https://leamas.github.io/zulip-archive/stream/282854-general/index.html">general</a></h2>
+<h3>Topic: <a href="https://leamas.github.io/zulip-archive/stream/282854-general/topic/shipdriver.20validation.20errors.html">shipdriver validation errors</a></h3>
+
+<hr>
+
+<base href="https://opencpn.zulipchat.com">
+
+<head><link href="https://leamas.github.io/zulip-archive/style.css" rel="stylesheet"></head>
+
+<a name="278153244"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/282854-general/topic/shipdriver%20validation%20errors/near/278153244" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Alec Leamas <a href="https://leamas.github.io/zulip-archive/stream/282854-general/topic/shipdriver.20validation.20errors.html#278153244">(Apr 07 2022 at 12:05)</a>:</h4>
+<p><span class="user-mention" data-user-id="399865">@Rick Gleason</span>  reports:</p>
+<blockquote>
+<p>I've tried to update-templates  VDR_pi twice and all I get is a bunch of<br>
+these.</p>
+<p>What is the problem?</p>
+<p><a href="https://github.com/OpenCPN/plugins/runs/5859820856?check_suite_focus=true">https://github.com/OpenCPN/plugins/runs/5859820856?check_suite_focus=true</a></p>
+</blockquote>
+<p>The link contains </p>
+<div class="codehilite"><pre><span></span><code>The value &#39;ubuntu-wx315-x86_64&#39; is not an element of the set {&#39;all&#39;, &#39;android-arm64-v8a&#39;, &#39;android-armeabi-v7a&#39;,
+&#39;android-armhf&#39;, &#39;android-arm64&#39;, &#39;darwin&#39;, &#39;darwin-wx315&#39;, &#39;debian-x86_64&#39;, &#39;debian-armhf&#39;, &#39;flatpak-aarch64&#39;,
+&#39;flatpak-x86_64&#39;, &#39;flatpak-x86_64-wx315&#39;, &#39;mingw&#39;, &#39;mingw-x86_64&#39;, &#39;msvc&#39;, &#39;ubuntu-gtk3-x86_64&#39;, &#39;ubuntu-x86_64&#39;,
+&#39;ubuntu-gtk3-armhf&#39;, &#39;ubuntu-armhf&#39;, &#39;raspbian-armhf&#39;}.
+</code></pre></div>
+<p>That is, it builds a (yet) not defined <em>ABI  ubuntu-wx315-x86_64</em></p>
+<p>This is <a href="https://github.com/Rasbats/shipdriver_pi/issues/437">https://github.com/Rasbats/shipdriver_pi/issues/437</a>, filed by you and fixed in 3.1.1. So you could just update to 3.1.1 to fix problem, or remove the offending build manually</p>
+
+
+
+<a name="278162871"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/282854-general/topic/shipdriver%20validation%20errors/near/278162871" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Rick Gleason <a href="https://leamas.github.io/zulip-archive/stream/282854-general/topic/shipdriver.20validation.20errors.html#278162871">(Apr 07 2022 at 13:23)</a>:</h4>
+<p>Thanks Alec, I think  was confused and linked to the first version using outdated update-template sd3.0.1-beta (VDR 1.3.22).  Recently I updated-template sd3.1.1  (<a href="https://github.com/rgleason/vdr_pi/commits/master">VDR 1.3.23)  which all built 14 hours ago</a>  That built and is <a href="https://cloudsmith.io/~opencpn/repos/vdr-prod/packages/">all available in Cloudsmith</a>  Now isn't something done automatically. Then I have to complete it somehow?  PS Sorry for the pesky questions. I have to get the routine remembered.  I want to do same with logbook too.</p>
+
+
+
+<a name="278164625"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/282854-general/topic/shipdriver%20validation%20errors/near/278164625" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Rick Gleason <a href="https://leamas.github.io/zulip-archive/stream/282854-general/topic/shipdriver.20validation.20errors.html#278164625">(Apr 07 2022 at 13:37)</a>:</h4>
+<p>I now see my  <a href="https://github.com/rgleason/plugins/tree/auto/metadata">rgleason/plugins/auto</a>  Shows both the VDR 1.3.22 and 1.3.23</p>
+
+
+
+<a name="278166349"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/282854-general/topic/shipdriver%20validation%20errors/near/278166349" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Rick Gleason <a href="https://leamas.github.io/zulip-archive/stream/282854-general/topic/shipdriver.20validation.20errors.html#278166349">(Apr 07 2022 at 13:48)</a>:</h4>
+<p>Now what?  It turns into a big mess after this.</p>
+<p>fcgle@Hesper MINGW64 ~/source/plugins (master)<br>
+$ git remote update upstream<br>
+Fetching upstream</p>
+<p>fcgle@Hesper MINGW64 ~/source/plugins (master)<br>
+$ git checkout master<br>
+Already on 'master'<br>
+Your branch is up to date with 'origin/master'.</p>
+<p>fcgle@Hesper MINGW64 ~/source/plugins (master)<br>
+$ git rebase upstream/master<br>
+Successfully rebased and updated refs/heads/master.</p>
+<p>fcgle@Hesper MINGW64 ~/source/plugins (master)<br>
+$ git fetch origin auto:auto<br>
+Enter passphrase for key '/c/Users/fcgle/.ssh/id_ed25519':<br>
+Enter passphrase for key '/c/Users/fcgle/.ssh/id_ed25519':</p>
+<p>fcgle@Hesper MINGW64 ~/source/plugins (master)<br>
+$ git checkout auto<br>
+Switched to branch 'auto'<br>
+Your branch and 'upstream/master' have diverged,<br>
+and have 50 and 34 different commits each, respectively.<br>
+  (use "git pull" to merge the remote branch into yours)</p>
+
+
+
+<a name="278166774"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/282854-general/topic/shipdriver%20validation%20errors/near/278166774" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Rick Gleason <a href="https://leamas.github.io/zulip-archive/stream/282854-general/topic/shipdriver.20validation.20errors.html#278166774">(Apr 07 2022 at 13:52)</a>:</h4>
+<p>BTW  I have Logbook v1.4.29  here <a href="https://cloudsmith.io/~opencpn/repos/logbookkonni-prod/packages/">in circleci</a>  and  I am finding v1.4.28 and 1.4.29 in my plugins/auto</p>
+
+
+
+<a name="278166955"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/282854-general/topic/shipdriver%20validation%20errors/near/278166955" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Rick Gleason <a href="https://leamas.github.io/zulip-archive/stream/282854-general/topic/shipdriver.20validation.20errors.html#278166955">(Apr 07 2022 at 13:53)</a>:</h4>
+<p>I have half a mind to just copy the right stuff, change to Master branch and paste it in.<br>
+That is a lot simpler.</p>
+
+
+
+<a name="278168043"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/282854-general/topic/shipdriver%20validation%20errors/near/278168043" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Alec Leamas <a href="https://leamas.github.io/zulip-archive/stream/282854-general/topic/shipdriver.20validation.20errors.html#278168043">(Apr 07 2022 at 14:00)</a>:</h4>
+<p>If you are <strong>really</strong> sure that you a) have the correct contents in your local master branch and b) that noone is using  your repo besides you you can force-push using <code>git push -f  origin master:master</code>. This will effectively overwrite the history in your remote repo, and break the overall git promise that nothing ever is lost. But it will work</p>
+<p>If you have the correct content in the remote branch you can do like this:</p>
+<div class="codehilite"><pre><span></span><code>$ git checkout -b tmp
+$ git remote update origin
+$ git branch -m master master.old
+$ git fetch origin master:master
+$ git checkout master
+</code></pre></div>
+
+<p>This will give a master branch which is a copy of the remote master branch, saving you local master branch as master.old. Here, everything is still available, but you  need to be careful when re-constructing master.</p>
+<p>Don't copy files. It's generally a bad idea, and even more so on windows where you more or less always get permissions problems</p>
+
+
+
+<a name="278169540"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/282854-general/topic/shipdriver%20validation%20errors/near/278169540" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Rick Gleason <a href="https://leamas.github.io/zulip-archive/stream/282854-general/topic/shipdriver.20validation.20errors.html#278169540">(Apr 07 2022 at 14:11)</a>:</h4>
+<p>Thanks Alec .  What branch am I supposed to execute the above from?<br>
+I absolutely HATE that goddamn Bash Editor which is required when merge conflicts occur, and they always occur at the worst time. It is a totally impossible interface. I've tried to read the instructions and it still makes no sense and does not work as expected.</p>
+<p>PS: Why should I care about my plugins history?</p>
+
+
+
+<a name="278171707"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/282854-general/topic/shipdriver%20validation%20errors/near/278171707" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Rick Gleason <a href="https://leamas.github.io/zulip-archive/stream/282854-general/topic/shipdriver.20validation.20errors.html#278171707">(Apr 07 2022 at 14:26)</a>:</h4>
+<p>Let's start over.  My remote  <a href="https://github.com/rgleason/plugins/tree/auto/metadata">rgleason/plugins  "auto" branch</a> has the metadata for vdr 1.3.23  and  logbookkonni  1.4.29   done yesterday.  How do I get these into the master catalog?</p>
+
+
+
+<a name="278172806"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/282854-general/topic/shipdriver%20validation%20errors/near/278172806" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Rick Gleason <a href="https://leamas.github.io/zulip-archive/stream/282854-general/topic/shipdriver.20validation.20errors.html#278172806">(Apr 07 2022 at 14:34)</a>:</h4>
+<p>Please keep this simple.</p>
+
+
+
+<a name="278174356"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/282854-general/topic/shipdriver%20validation%20errors/near/278174356" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Rick Gleason <a href="https://leamas.github.io/zulip-archive/stream/282854-general/topic/shipdriver.20validation.20errors.html#278174356">(Apr 07 2022 at 14:44)</a>:</h4>
+<p><a href="https://stackoverflow.com/questions/19085807/please-enter-a-commit-message-to-explain-why-this-merge-is-necessary-especially">From stackoverflow</a> <br>
+    press "i" (i for insert)<br>
+    write your merge message<br>
+    press "esc" (escape)<br>
+    write ":wq" (write &amp; quit)<br>
+    then press enter<br>
+This does work, but very strange.</p>
+
+
+
+<a name="278175301"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/282854-general/topic/shipdriver%20validation%20errors/near/278175301" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Rick Gleason <a href="https://leamas.github.io/zulip-archive/stream/282854-general/topic/shipdriver.20validation.20errors.html#278175301">(Apr 07 2022 at 14:50)</a>:</h4>
+<p>I have no idea how I got here, but the changes for VDR 1.3.23 are now pushed to remote and I tried to make a PR<br>
+and it still fails!!!!    This is totally ridiculous.   I have updated to sd3.1.1!!!!!!!!<br>
+<a href="https://github.com/OpenCPN/plugins/pull/649">https://github.com/OpenCPN/plugins/pull/649</a></p>
+<p>I would have had this Done several hours ago using TP</p>
+
+
+
+<a name="278176290"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/282854-general/topic/shipdriver%20validation%20errors/near/278176290" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Alec Leamas <a href="https://leamas.github.io/zulip-archive/stream/282854-general/topic/shipdriver.20validation.20errors.html#278176290">(Apr 07 2022 at 14:57)</a>:</h4>
+<p>if you have metadata in the auto branch, the procedure is in <a href="https://opencpn-manuals.github.io/main/AlternativeWorkflow/InstallConfigure/Catalog-Github-Integration.html#make-PR">https://opencpn-manuals.github.io/main/AlternativeWorkflow/InstallConfigure/Catalog-Github-Integration.html#make-PR</a></p>
+<p>That procedure rebases your auto branch. This means that the merge operation is fast-forward, and you should not have to enter  any commit message. The key bindings from stackoverflow is from using vim which is my everyday editor, so it's not strange for me. But basically, if you come into such a window you are doing something wrong. In particular, you havn't rebased hence getting a messy merge.</p>
+
+
+
+<a name="278178414"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/282854-general/topic/shipdriver%20validation%20errors/near/278178414" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Rick Gleason <a href="https://leamas.github.io/zulip-archive/stream/282854-general/topic/shipdriver.20validation.20errors.html#278178414">(Apr 07 2022 at 15:09)</a>:</h4>
+<p>Incidentally,<br>
+I note that what I have done is so SCREWED up. Commits that I thought were for 1.3.23 and labeled accordingly are actually overwriting 1.3.23 with 1.3.22!   Etc.    <br>
+With this system everything seems to be upside down again.  I will try this again since I have no choice.</p>
+
+
+
+<a name="278178644"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/282854-general/topic/shipdriver%20validation%20errors/near/278178644" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Alec Leamas <a href="https://leamas.github.io/zulip-archive/stream/282854-general/topic/shipdriver.20validation.20errors.html#278178644">(Apr 07 2022 at 15:10)</a>:</h4>
+<p>One useful command is <code>git reset --hard   &lt;commit&gt;</code>.  It basically throws away anything after the given commit, moving your branch back int time to a hopefully sane starting point</p>
+
+
+
+<a name="278178657"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/282854-general/topic/shipdriver%20validation%20errors/near/278178657" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Rick Gleason <a href="https://leamas.github.io/zulip-archive/stream/282854-general/topic/shipdriver.20validation.20errors.html#278178657">(Apr 07 2022 at 15:11)</a>:</h4>
+<p>For "Synching Branches"  what branches are we talking about here?<br>
+Where do I start?  What branch?</p>
+
+
+
+<a name="278178711"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/282854-general/topic/shipdriver%20validation%20errors/near/278178711" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Alec Leamas <a href="https://leamas.github.io/zulip-archive/stream/282854-general/topic/shipdriver.20validation.20errors.html#278178711">(Apr 07 2022 at 15:11)</a>:</h4>
+<p>ARe you making a PR against master or Beta?</p>
+
+
+
+<a name="278178820"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/282854-general/topic/shipdriver%20validation%20errors/near/278178820" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Rick Gleason <a href="https://leamas.github.io/zulip-archive/stream/282854-general/topic/shipdriver.20validation.20errors.html#278178820">(Apr 07 2022 at 15:12)</a>:</h4>
+<p>I intend to make a PR against Opencpn/plugins/master</p>
+
+
+
+<a name="278178953"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/282854-general/topic/shipdriver%20validation%20errors/near/278178953" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Alec Leamas <a href="https://leamas.github.io/zulip-archive/stream/282854-general/topic/shipdriver.20validation.20errors.html#278178953">(Apr 07 2022 at 15:13)</a>:</h4>
+<p>Well,  as described in that  chapter you can then just do the three first commands which updates master</p>
+
+
+
+<a name="278179155"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/282854-general/topic/shipdriver%20validation%20errors/near/278179155" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Rick Gleason <a href="https://leamas.github.io/zulip-archive/stream/282854-general/topic/shipdriver.20validation.20errors.html#278179155">(Apr 07 2022 at 15:14)</a>:</h4>
+<p>So execute these from my local rgleason/plugins  master branch?<br>
+ git remote update upstream<br>
+ git checkout master<br>
+ git rebase upstream/master</p>
+
+
+
+<a name="278179204"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/282854-general/topic/shipdriver%20validation%20errors/near/278179204" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Alec Leamas <a href="https://leamas.github.io/zulip-archive/stream/282854-general/topic/shipdriver.20validation.20errors.html#278179204">(Apr 07 2022 at 15:14)</a>:</h4>
+<p>from any branch, actually</p>
+
+
+
+<a name="278179266"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/282854-general/topic/shipdriver%20validation%20errors/near/278179266" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Rick Gleason <a href="https://leamas.github.io/zulip-archive/stream/282854-general/topic/shipdriver.20validation.20errors.html#278179266">(Apr 07 2022 at 15:15)</a>:</h4>
+<p>Totally independent of what branch?  I never understood that.</p>
+
+
+
+<a name="278179422"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/282854-general/topic/shipdriver%20validation%20errors/near/278179422" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Alec Leamas <a href="https://leamas.github.io/zulip-archive/stream/282854-general/topic/shipdriver.20validation.20errors.html#278179422">(Apr 07 2022 at 15:16)</a>:</h4>
+<p>The first is about the remote i. e., all branches. The second will move you to master branch...</p>
+
+
+
+<a name="278179723"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/282854-general/topic/shipdriver%20validation%20errors/near/278179723" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Rick Gleason <a href="https://leamas.github.io/zulip-archive/stream/282854-general/topic/shipdriver.20validation.20errors.html#278179723">(Apr 07 2022 at 15:17)</a>:</h4>
+<p>OK, have done it. There are problems.  I guess I will just <br>
+"One useful command is git reset --hard   &lt;commit&gt;"</p>
+<p>fcgle@Hesper MINGW64 ~/source/plugins (master)<br>
+$ git remote update upstream<br>
+Fetching upstream</p>
+<p>fcgle@Hesper MINGW64 ~/source/plugins (master)<br>
+$ git checkout master<br>
+Already on 'master'<br>
+Your branch is up to date with 'origin/master'.</p>
+<p>fcgle@Hesper MINGW64 ~/source/plugins (master)<br>
+$ git rebase upstream/master<br>
+CONFLICT (rename/rename): Rename "metadata/VDR-v1.3.20-ubuntu-gtk3-20.04.xml"-&gt;"metadata/VDR-v1.3.23-ubuntu-gtk3-20.04.xml" in branch "HEAD" rename "metadata/VDR-v1.3.20-ubuntu-gtk3-20.04.xml"-&gt;"metadata/VDR-v1.3.22-ubuntu-gtk3-20.04.xml" in "778488f (VDR 1.3.22)"<br>
+Auto-merging metadata/VDR-v1.3.23-ubuntu-gtk3-20.04.xml and metadata/VDR-v1.3.22-ubuntu-gtk3-20.04.xml, both renamed from metadata/VDR-v1.3.20-ubuntu-gtk3-20.04.xml<br>
+CONFLICT (rename/rename): Rename "metadata/VDR-v1.3.20-ubuntu-gtk3-18.04.xml"-&gt;"metadata/VDR-v1.3.23-ubuntu-gtk3-18.04.xml" in branch "HEAD" rename "metadata/VDR-v1.3.20-ubuntu-gtk3-18.04.xml"-&gt;"metadata/VDR-v1.3.22-ubuntu-gtk3-18.04.xml" in "778488f (VDR 1.3.22)"<br>
+Auto-merging metadata/VDR-v1.3.23-ubuntu-gtk3-18.04.xml and metadata/VDR-v1.3.22-ubuntu-gtk3-18.04.xml, both renamed from metadata/VDR-v1.3.20-ubuntu-gtk3-18.04.xml<br>
+CONFLICT (rename/rename): Rename "metadata/VDR-v1.3.20-raspbian-9.13.xml"-&gt;"metadata/VDR-v1.3.23-ubuntu-A32-18.04.xml" in branch "HEAD" rename "metadata/VDR-v1.3.20-raspbian-9.13.xml"-&gt;"metadata/VDR-v1.3.22-ubuntu-A32-18.04.xml" in "778488f (VDR 1.3.22)"<br>
+Auto-merging metadata/VDR-v1.3.23-ubuntu-A32-18.04.xml and metadata/VDR-v1.3.22-ubuntu-A32-18.04.xml, both renamed from metadata/VDR-v1.3.20-raspbian-9.13.xml<br>
+CONFLICT (rename/rename): Rename "metadata/VDR-v1.3.20-ubuntu-18.04.xml"-&gt;"metadata/VDR-v1.3.23-ubuntu-18.04.xml" in branch "HEAD" rename "metadata/VDR-v1.3.20-ubuntu-18.04.xml"-&gt;"metadata/VDR-v1.3.22-ubuntu-18.04.xml" in "778488f (VDR 1.3.22)"<br>
+Auto-merging metadata/VDR-v1.3.23-ubuntu-18.04.xml and metadata/VDR-v1.3.22-ubuntu-18.04.xml, both renamed from metadata/VDR-v1.3.20-ubuntu-18.04.xml<br>
+CONFLICT (rename/rename): Rename "metadata/VDR-v1.3.20-msvc-10.0.14393.xml"-&gt;"metadata/VDR-v1.3.23-msvc-10.0.14393.xml" in branch "HEAD" rename "metadata/VDR-v1.3.20-msvc-10.0.14393.xml"-&gt;"metadata/VDR-v1.3.22-msvc-10.0.14393.xml" in "778488f (VDR 1.3.22)"<br>
+Auto-merging metadata/VDR-v1.3.23-msvc-10.0.14393.xml and metadata/VDR-v1.3.22-msvc-10.0.14393.xml, both renamed from metadata/VDR-v1.3.20-msvc-10.0.14393.xml<br>
+CONFLICT (rename/rename): Rename "metadata/VDR-v1.3.20-flatpak-A64-20.08.xml"-&gt;"metadata/VDR-v1.3.23-flatpak-A64-20.08.xml" in branch "HEAD" rename "metadata/VDR-v1.3.20-flatpak-A64-20.08.xml"-&gt;"metadata/VDR-v1.3.22-flatpak-A64-20.08.xml" in "778488f (VDR 1.3.22)"<br>
+Auto-merging metadata/VDR-v1.3.23-flatpak-A64-20.08.xml and metadata/VDR-v1.3.22-flatpak-A64-20.08.xml, both renamed from metadata/VDR-v1.3.20-flatpak-A64-20.08.xml<br>
+CONFLICT (rename/rename): Rename "metadata/VDR-v1.3.20-flatpak-20.08.xml"-&gt;"metadata/VDR-v1.3.23-flatpak-20.08.xml" in branch "HEAD" rename "metadata/VDR-v1.3.20-flatpak-20.08.xml"-&gt;"metadata/VDR-v1.3.22-flatpak-20.08.xml" in "778488f (VDR 1.3.22)"<br>
+Auto-merging metadata/VDR-v1.3.23-flatpak-20.08.xml and metadata/VDR-v1.3.22-flatpak-20.08.xml, both renamed from metadata/VDR-v1.3.20-flatpak-20.08.xml<br>
+CONFLICT (rename/rename): Rename "metadata/VDR-v1.3.20-raspbian-11.xml"-&gt;"metadata/VDR-v1.3.23-debian-A32-11.xml" in branch "HEAD" rename "metadata/VDR-v1.3.20-raspbian-11.xml"-&gt;"metadata/VDR-v1.3.22-debian-A32-11.xml" in "778488f (VDR 1.3.22)"<br>
+Auto-merging metadata/VDR-v1.3.23-debian-A32-11.xml and metadata/VDR-v1.3.22-debian-A32-11.xml, both renamed from metadata/VDR-v1.3.20-raspbian-11.xml<br>
+CONFLICT (rename/rename): Rename "metadata/VDR-v1.3.20-raspbian-10.xml"-&gt;"metadata/VDR-v1.3.23-debian-A32-10.xml" in branch "HEAD" rename "metadata/VDR-v1.3.20-raspbian-10.xml"-&gt;"metadata/VDR-v1.3.22-debian-A32-10.xml" in "778488f (VDR 1.3.22)"<br>
+Auto-merging metadata/VDR-v1.3.23-debian-A32-10.xml and metadata/VDR-v1.3.22-debian-A32-10.xml, both renamed from metadata/VDR-v1.3.20-raspbian-10.xml<br>
+CONFLICT (rename/rename): Rename "metadata/VDR-v1.3.20-debian-10.xml"-&gt;"metadata/VDR-v1.3.23-debian-10.xml" in branch "HEAD" rename "metadata/VDR-v1.3.20-debian-10.xml"-&gt;"metadata/VDR-v1.3.22-debian-10.xml" in "778488f (VDR 1.3.22)"<br>
+Auto-merging metadata/VDR-v1.3.23-debian-10.xml and metadata/VDR-v1.3.22-debian-10.xml, both renamed from metadata/VDR-v1.3.20-debian-10.xml<br>
+CONFLICT (renerror: could not apply 778488f... VDR 1.3.22<br>
+Resolve all conflicts manually, mark them as resolved with<br>
+"git add/rm &lt;conflicted_files&gt;", then run "git rebase --continue".<br>
+You can instead skip this commit: run "git rebase --skip".<br>
+To abort and get back to the state before "git rebase", run "git rebase --abort".<br>
+Could not apply 778488f... VDR 1.3.22<br>
+ame/rename): Rename "metadata/VDR-v1.3.20-darwin-wx315-10.13.6.xml"-&gt;"metadata/VDR-v1.3.23-darwin-wx315-10.13.6.xml" in branch "HEAD" rename "metadata/VDR-v1.3.20-darwin-wx315-10.13.6.xml"-&gt;"metadata/VDR-v1.3.22-darwin-wx315-10.13.6.xml" in "778488f (VDR 1.3.22)"<br>
+Auto-merging metadata/VDR-v1.3.23-darwin-wx315-10.13.6.xml and metadata/VDR-v1.3.22-darwin-wx315-10.13.6.xml, both renamed from metadata/VDR-v1.3.20-darwin-wx315-10.13.6.xml<br>
+CONFLICT (rename/rename): Rename "metadata/VDR-v1.3.20-android-armhf-16.xml"-&gt;"metadata/VDR-v1.3.23-android-armhf-A32-16.xml" in branch "HEAD" rename "metadata/VDR-v1.3.20-android-armhf-16.xml"-&gt;"metadata/VDR-v1.3.22-android-armhf-A32-16.xml" in "778488f (VDR 1.3.22)"<br>
+Auto-merging metadata/VDR-v1.3.23-android-armhf-A32-16.xml and metadata/VDR-v1.3.22-android-armhf-A32-16.xml, both renamed from metadata/VDR-v1.3.20-android-armhf-16.xml<br>
+CONFLICT (rename/rename): Rename "metadata/VDR-v1.3.20-android-arm64-A64-16.xml"-&gt;"metadata/VDR-v1.3.23-android-arm64-A64-16.xml" in branch "HEAD" rename "metadata/VDR-v1.3.20-android-arm64-A64-16.xml"-&gt;"metadata/VDR-v1.3.22-android-arm64-A64-16.xml" in "778488f (VDR 1.3.22)"<br>
+Auto-merging metadata/VDR-v1.3.23-android-arm64-A64-16.xml and metadata/VDR-v1.3.22-android-arm64-A64-16.xml, both renamed from metadata/VDR-v1.3.20-android-arm64-A64-16.xml</p>
+<p>fcgle@Hesper MINGW64 ~/source/plugins (master|REBASE 3/4)</p>
+
+
+
+<a name="278179901"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/282854-general/topic/shipdriver%20validation%20errors/near/278179901" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Rick Gleason <a href="https://leamas.github.io/zulip-archive/stream/282854-general/topic/shipdriver.20validation.20errors.html#278179901">(Apr 07 2022 at 15:18)</a>:</h4>
+<p>fcgle@Hesper MINGW64 ~/source/plugins (master|REBASE 3/4)<br>
+$ git log --oneline -10<br>
+7e34ae2 (HEAD) vdr 1.3.23<br>
+aaab5d4 VDR 1.3.22<br>
+ca973a4 (upstream/master) Merge pull request #651 from leamas/add-win64-mm64<br>
+787bed8 ocpn-plugin.xsd: Keep ABI entries sorted.<br>
+43d8c68 Add new API targets darwin-arm64 and msvc-64<br>
+bedae90 Automatic update of ocpn-plugins.xml<br>
+cc86813 Merge pull request #650 from Rasbats/master<br>
+91e399f Remove old v1.4 xml files<br>
+5f7ed17 updated UKTides_pi v1.4.0<br>
+4cc0f8a Merge branch 'OpenCPN:master' into master</p>
+
+
+
+<a name="278180251"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/282854-general/topic/shipdriver%20validation%20errors/near/278180251" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Alec Leamas <a href="https://leamas.github.io/zulip-archive/stream/282854-general/topic/shipdriver.20validation.20errors.html#278180251">(Apr 07 2022 at 15:21)</a>:</h4>
+<p>Yes, you have probably some messy commits. Use <code>git reset --hard</code> to go to a sane point in your history. <code>git log --oneline -20</code>or so displays the history, so you can select which commit you wan to come back to.</p>
+<p>If you can see <code>upstream/master</code>in  your history a reasonable approach might be <code>git reset --hard upstream/master</code>. However, be aware that anything after that commit is lost.</p>
+
+
+
+<a name="278180393"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/282854-general/topic/shipdriver%20validation%20errors/near/278180393" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Alec Leamas <a href="https://leamas.github.io/zulip-archive/stream/282854-general/topic/shipdriver.20validation.20errors.html#278180393">(Apr 07 2022 at 15:22)</a>:</h4>
+<p>EDIT: Forget what I said about upstream/master. Just select a commit...</p>
+
+
+
+<a name="278180554"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/282854-general/topic/shipdriver%20validation%20errors/near/278180554" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Rick Gleason <a href="https://leamas.github.io/zulip-archive/stream/282854-general/topic/shipdriver.20validation.20errors.html#278180554">(Apr 07 2022 at 15:23)</a>:</h4>
+<p>Should I do this one?   ca973a4 (upstream/master) Merge pull request #651 from leamas/add-win64-macos-arm64</p>
+<p>fcgle@Hesper MINGW64 ~/source/plugins (master|REBASE 3/4)<br>
+$ git log --oneline -20<br>
+7e34ae2 (HEAD) vdr 1.3.23<br>
+aaab5d4 VDR 1.3.22<br>
+ca973a4 (upstream/master) Merge pull request #651 from leamas/add-win64-macos-arm64<br>
+787bed8 ocpn-plugin.xsd: Keep ABI entries sorted.<br>
+43d8c68 Add new API targets darwin-arm64 and msvc-64<br>
+bedae90 Automatic update of ocpn-plugins.xml<br>
+cc86813 Merge pull request #650 from Rasbats/master<br>
+91e399f Remove old v1.4 xml files<br>
+5f7ed17 updated UKTides_pi v1.4.0<br>
+4cc0f8a Merge branch 'OpenCPN:master' into master<br>
+6faf001 Automatic update of ocpn-plugins.xml<br>
+24ad018 Merge pull request #648 from rgleason/master<br>
+fbe3de3 statusbar 0.7.16 and rm old tactics<br>
+6c1ccda Automatic update of ocpn-plugins.xml<br>
+ac6d714 Merge pull request #647 from rgleason/master<br>
+8fd436c tactics 1.0.29<br>
+455695d Automatic update of ocpn-plugins.xml<br>
+bcb9f8a Merge pull request #646 from rgleason/master<br>
+aa4997d climatology squiddio polar<br>
+2a4e102 Automatic update of ocpn-plugins.xml</p>
+
+
+
+<a name="278180757"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/282854-general/topic/shipdriver%20validation%20errors/near/278180757" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Alec Leamas <a href="https://leamas.github.io/zulip-archive/stream/282854-general/topic/shipdriver.20validation.20errors.html#278180757">(Apr 07 2022 at 15:25)</a>:</h4>
+<p>Are you on VDR?</p>
+
+
+
+<a name="278180840"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/282854-general/topic/shipdriver%20validation%20errors/near/278180840" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Rick Gleason <a href="https://leamas.github.io/zulip-archive/stream/282854-general/topic/shipdriver.20validation.20errors.html#278180840">(Apr 07 2022 at 15:25)</a>:</h4>
+<p>I am here<br>
+fcgle@Hesper MINGW64 ~/source/plugins (master|REBASE 3/4)</p>
+<p>Should I do      git reset --hard ca973a4</p>
+
+
+
+<a name="278180987"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/282854-general/topic/shipdriver%20validation%20errors/near/278180987" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Alec Leamas <a href="https://leamas.github.io/zulip-archive/stream/282854-general/topic/shipdriver.20validation.20errors.html#278180987">(Apr 07 2022 at 15:26)</a>:</h4>
+<p>I have absolutely no idea, I cannot see your branch. Are you working with VDR_pi?</p>
+
+
+
+<a name="278181064"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/282854-general/topic/shipdriver%20validation%20errors/near/278181064" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Rick Gleason <a href="https://leamas.github.io/zulip-archive/stream/282854-general/topic/shipdriver.20validation.20errors.html#278181064">(Apr 07 2022 at 15:27)</a>:</h4>
+<p>No, I am using the "plugins" branch!</p>
+<p><a href="https://github.com/rgleason/plugins?organization=rgleason&amp;organization=rgleason">https://github.com/rgleason/plugins?organization=rgleason&amp;organization=rgleason</a></p>
+
+
+
+<a name="278181239"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/282854-general/topic/shipdriver%20validation%20errors/near/278181239" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Alec Leamas <a href="https://leamas.github.io/zulip-archive/stream/282854-general/topic/shipdriver.20validation.20errors.html#278181239">(Apr 07 2022 at 15:28)</a>:</h4>
+<p>OK, you are in the pluginss project... I see. Do like this: <code>git push origin master:tmp</code>. This way, I can see your branch</p>
+
+
+
+<a name="278181377"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/282854-general/topic/shipdriver%20validation%20errors/near/278181377" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Rick Gleason <a href="https://leamas.github.io/zulip-archive/stream/282854-general/topic/shipdriver.20validation.20errors.html#278181377">(Apr 07 2022 at 15:29)</a>:</h4>
+<p>Ok I pushed it to tmp</p>
+
+
+
+<a name="278181397"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/282854-general/topic/shipdriver%20validation%20errors/near/278181397" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Alec Leamas <a href="https://leamas.github.io/zulip-archive/stream/282854-general/topic/shipdriver.20validation.20errors.html#278181397">(Apr 07 2022 at 15:29)</a>:</h4>
+<p>wait...</p>
+
+
+
+<a name="278181872"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/282854-general/topic/shipdriver%20validation%20errors/near/278181872" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Alec Leamas <a href="https://leamas.github.io/zulip-archive/stream/282854-general/topic/shipdriver.20validation.20errors.html#278181872">(Apr 07 2022 at 15:32)</a>:</h4>
+<p>I cannot find any commit ca973a4 in that branch?</p>
+
+
+
+<a name="278181908"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/282854-general/topic/shipdriver%20validation%20errors/near/278181908" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Alec Leamas <a href="https://leamas.github.io/zulip-archive/stream/282854-general/topic/shipdriver.20validation.20errors.html#278181908">(Apr 07 2022 at 15:32)</a>:</h4>
+<p>what's your current branch?</p>
+
+
+
+<a name="278182240"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/282854-general/topic/shipdriver%20validation%20errors/near/278182240" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Rick Gleason <a href="https://leamas.github.io/zulip-archive/stream/282854-general/topic/shipdriver.20validation.20errors.html#278182240">(Apr 07 2022 at 15:34)</a>:</h4>
+<p>Well that number SHA is from my local branch which is screwed up!  It is in the middle of a Rebase!</p>
+
+
+
+<a name="278182444"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/282854-general/topic/shipdriver%20validation%20errors/near/278182444" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Alec Leamas <a href="https://leamas.github.io/zulip-archive/stream/282854-general/topic/shipdriver.20validation.20errors.html#278182444">(Apr 07 2022 at 15:35)</a>:</h4>
+<p>This is just wrong . The branch you pushed to tmp should be  your master, and it's just not there. What does <code>git branch</code>and <code>git rev-parse master</code>say?</p>
+
+
+
+<a name="278182600"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/282854-general/topic/shipdriver%20validation%20errors/near/278182600" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Alec Leamas <a href="https://leamas.github.io/zulip-archive/stream/282854-general/topic/shipdriver.20validation.20errors.html#278182600">(Apr 07 2022 at 15:36)</a>:</h4>
+<p>sorry... <code>git rebase --abort</code>. Just do it.</p>
+
+
+
+<a name="278182690"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/282854-general/topic/shipdriver%20validation%20errors/near/278182690" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Rick Gleason <a href="https://leamas.github.io/zulip-archive/stream/282854-general/topic/shipdriver.20validation.20errors.html#278182690">(Apr 07 2022 at 15:37)</a>:</h4>
+<p>fcgle@Hesper MINGW64 ~/source/plugins (master|REBASE 3/4)<br>
+$ git branch</p>
+<ul>
+<li>(no branch, rebasing master)<br>
+  Beta<br>
+  auto<br>
+  master<br>
+git</li>
+</ul>
+
+
+
+<a name="278182707"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/282854-general/topic/shipdriver%20validation%20errors/near/278182707" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Rick Gleason <a href="https://leamas.github.io/zulip-archive/stream/282854-general/topic/shipdriver.20validation.20errors.html#278182707">(Apr 07 2022 at 15:37)</a>:</h4>
+<p>Did the abort</p>
+
+
+
+<a name="278182734"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/282854-general/topic/shipdriver%20validation%20errors/near/278182734" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Rick Gleason <a href="https://leamas.github.io/zulip-archive/stream/282854-general/topic/shipdriver.20validation.20errors.html#278182734">(Apr 07 2022 at 15:37)</a>:</h4>
+<p>Now push to tmp?</p>
+
+
+
+<a name="278182751"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/282854-general/topic/shipdriver%20validation%20errors/near/278182751" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Alec Leamas <a href="https://leamas.github.io/zulip-archive/stream/282854-general/topic/shipdriver.20validation.20errors.html#278182751">(Apr 07 2022 at 15:37)</a>:</h4>
+<p>yes</p>
+
+
+
+<a name="278182820"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/282854-general/topic/shipdriver%20validation%20errors/near/278182820" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Alec Leamas <a href="https://leamas.github.io/zulip-archive/stream/282854-general/topic/shipdriver.20validation.20errors.html#278182820">(Apr 07 2022 at 15:37)</a>:</h4>
+<p>you need to use <code>git push -f origin master:tmp</code>this time</p>
+
+
+
+<a name="278182960"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/282854-general/topic/shipdriver%20validation%20errors/near/278182960" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Rick Gleason <a href="https://leamas.github.io/zulip-archive/stream/282854-general/topic/shipdriver.20validation.20errors.html#278182960">(Apr 07 2022 at 15:38)</a>:</h4>
+<p>fcgle@Hesper MINGW64 ~/source/plugins (master)<br>
+$ git push origin master:tmp<br>
+Enter passphrase for key '/c/Users/fcgle/.ssh/id_ed25519':<br>
+Everything up-to-date</p>
+
+
+
+<a name="278183103"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/282854-general/topic/shipdriver%20validation%20errors/near/278183103" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Rick Gleason <a href="https://leamas.github.io/zulip-archive/stream/282854-general/topic/shipdriver.20validation.20errors.html#278183103">(Apr 07 2022 at 15:39)</a>:</h4>
+<p>Sorry</p>
+<p>fcgle@Hesper MINGW64 ~/source/plugins (master)<br>
+$ git push -f origin master:tmp<br>
+Enter passphrase for key '/c/Users/fcgle/.ssh/id_ed25519':<br>
+Everything up-to-date</p>
+<p>fcgle@Hesper MINGW64 ~/source/plugins (master)<br>
+$ git push -f origin master:tmp<br>
+Enter passphrase for key '/c/Users/fcgle/.ssh/id_ed25519':<br>
+Everything up-to-date</p>
+
+
+
+<a name="278183254"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/282854-general/topic/shipdriver%20validation%20errors/near/278183254" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Rick Gleason <a href="https://leamas.github.io/zulip-archive/stream/282854-general/topic/shipdriver.20validation.20errors.html#278183254">(Apr 07 2022 at 15:40)</a>:</h4>
+<p>fcgle@Hesper MINGW64 ~/source/plugins (master)<br>
+$ git log --oneline -20<br>
+4af1075 (HEAD -&gt; master, origin/tmp, origin/master, origin/HEAD) ng vdrgerge branch 'master' of github.com:rgleason/plugins<br>
+5db7e47 vdr 1.3.23<br>
+1867065 VDR 1.3.22<br>
+d372796 vdr 1.3.23<br>
+0610658 Merge branch 'master' of <a href="https://github.com/OpenCPN/plugins">https://github.com/OpenCPN/plugins</a><br>
+bedae90 Automatic update of ocpn-plugins.xml<br>
+cc86813 Merge pull request #650 from Rasbats/master<br>
+91e399f Remove old v1.4 xml files<br>
+5f7ed17 updated UKTides_pi v1.4.0<br>
+4cc0f8a Merge branch 'OpenCPN:master' into master<br>
+778488f VDR 1.3.22<br>
+6faf001 Automatic update of ocpn-plugins.xml<br>
+24ad018 Merge pull request #648 from rgleason/master<br>
+fbe3de3 statusbar 0.7.16 and rm old tactics<br>
+6c1ccda Automatic update of ocpn-plugins.xml<br>
+ac6d714 Merge pull request #647 from rgleason/master<br>
+8fd436c tactics 1.0.29<br>
+455695d Automatic update of ocpn-plugins.xml<br>
+bcb9f8a Merge pull request #646 from rgleason/master<br>
+aa4997d climatology squiddio polar</p>
+
+
+
+<a name="278183345"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/282854-general/topic/shipdriver%20validation%20errors/near/278183345" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Rick Gleason <a href="https://leamas.github.io/zulip-archive/stream/282854-general/topic/shipdriver.20validation.20errors.html#278183345">(Apr 07 2022 at 15:40)</a>:</h4>
+<p>Maybe use   0610658 Merge branch 'master' of <a href="https://github.com/OpenCPN/plugins">https://github.com/OpenCPN/plugins</a>?</p>
+
+
+
+<a name="278183677"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/282854-general/topic/shipdriver%20validation%20errors/near/278183677" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Alec Leamas <a href="https://leamas.github.io/zulip-archive/stream/282854-general/topic/shipdriver.20validation.20errors.html#278183677">(Apr 07 2022 at 15:42)</a>:</h4>
+<p>OK, that master branch is seriously broken. You need to reset it. Do:</p>
+<div class="codehilite"><pre><span></span><code>$ git checkout -b foo
+$ git remote update upstream
+$ git fetch -f upstream master:master
+$ git checkout master
+</code></pre></div>
+
+<p>This  will give you a fresh, rebased version of the master branch.</p>
+
+
+
+<a name="278183811"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/282854-general/topic/shipdriver%20validation%20errors/near/278183811" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Alec Leamas <a href="https://leamas.github.io/zulip-archive/stream/282854-general/topic/shipdriver.20validation.20errors.html#278183811">(Apr 07 2022 at 15:43)</a>:</h4>
+<p>You can remove the <em>foo</em> branch when done: <code>git branch -D foo</code></p>
+
+
+
+<a name="278184007"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/282854-general/topic/shipdriver%20validation%20errors/near/278184007" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Rick Gleason <a href="https://leamas.github.io/zulip-archive/stream/282854-general/topic/shipdriver.20validation.20errors.html#278184007">(Apr 07 2022 at 15:44)</a>:</h4>
+<p>fcgle@Hesper MINGW64 ~/source/plugins (master)<br>
+$ git checkout -b foo<br>
+Switched to a new branch 'foo'</p>
+<p>fcgle@Hesper MINGW64 ~/source/plugins (foo)<br>
+$ git remote update upstream<br>
+Fetching upstream</p>
+<p>fcgle@Hesper MINGW64 ~/source/plugins (foo)<br>
+$ git fetch -f upstream master:master<br>
+From <a href="https://github.com/OpenCPN/plugins">https://github.com/OpenCPN/plugins</a></p>
+<ul>
+<li>4af1075...ca973a4 master     -&gt; master  (forced update)</li>
+</ul>
+<p>fcgle@Hesper MINGW64 ~/source/plugins (foo)<br>
+$ git checkout master<br>
+Switched to branch 'master'<br>
+Your branch and 'origin/master' have diverged,<br>
+and have 3 and 6 different commits each, respectively.<br>
+  (use "git pull" to merge the remote branch into yours)</p>
+<p>fcgle@Hesper MINGW64 ~/source/plugins (master)<br>
+$ git log --oneline -5<br>
+ca973a4 (HEAD -&gt; master, upstream/master) Merge pull request #651 from leamas/add-win64-macos-arm64<br>
+787bed8 ocpn-plugin.xsd: Keep ABI entries sorted.<br>
+43d8c68 Add new API targets darwin-arm64 and msvc-64<br>
+bedae90 Automatic update of ocpn-plugins.xml<br>
+cc86813 Merge pull request #650 from Rasbats/master</p>
+<p>fcgle@Hesper MINGW64 ~/source/plugins (master)</p>
+
+
+
+<a name="278184160"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/282854-general/topic/shipdriver%20validation%20errors/near/278184160" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Alec Leamas <a href="https://leamas.github.io/zulip-archive/stream/282854-general/topic/shipdriver.20validation.20errors.html#278184160">(Apr 07 2022 at 15:45)</a>:</h4>
+<p>OK, that means that you are done with the first heading "Syncing branches". Now proceed to next heading...</p>
+
+
+
+<a name="278184376"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/282854-general/topic/shipdriver%20validation%20errors/near/278184376" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Rick Gleason <a href="https://leamas.github.io/zulip-archive/stream/282854-general/topic/shipdriver.20validation.20errors.html#278184376">(Apr 07 2022 at 15:46)</a>:</h4>
+<p>OK   Master Catalog<br>
+ git fetch origin auto:auto<br>
+ git checkout auto<br>
+ git rebase master<br>
+ git checkout master<br>
+ git merge --squash auto<br>
+ git commit</p>
+
+
+
+<a name="278184463"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/282854-general/topic/shipdriver%20validation%20errors/near/278184463" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Alec Leamas <a href="https://leamas.github.io/zulip-archive/stream/282854-general/topic/shipdriver.20validation.20errors.html#278184463">(Apr 07 2022 at 15:47)</a>:</h4>
+<p>indeed...</p>
+
+
+
+<a name="278184740"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/282854-general/topic/shipdriver%20validation%20errors/near/278184740" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Rick Gleason <a href="https://leamas.github.io/zulip-archive/stream/282854-general/topic/shipdriver.20validation.20errors.html#278184740">(Apr 07 2022 at 15:49)</a>:</h4>
+<p>Now it committed and I am in the VIM interface again!  What next?</p>
+
+
+
+<a name="278184793"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/282854-general/topic/shipdriver%20validation%20errors/near/278184793" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Alec Leamas <a href="https://leamas.github.io/zulip-archive/stream/282854-general/topic/shipdriver.20validation.20errors.html#278184793">(Apr 07 2022 at 15:49)</a>:</h4>
+<p>You have somehow got shipdriver metadata files in your auto branch. How on earth dit that happen?</p>
+
+
+
+<a name="278184935"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/282854-general/topic/shipdriver%20validation%20errors/near/278184935" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Rick Gleason <a href="https://leamas.github.io/zulip-archive/stream/282854-general/topic/shipdriver.20validation.20errors.html#278184935">(Apr 07 2022 at 15:50)</a>:</h4>
+<p>I don't really know.</p>
+
+
+
+<a name="278185086"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/282854-general/topic/shipdriver%20validation%20errors/near/278185086" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Rick Gleason <a href="https://leamas.github.io/zulip-archive/stream/282854-general/topic/shipdriver.20validation.20errors.html#278185086">(Apr 07 2022 at 15:51)</a>:</h4>
+<p>I am stuck in VIM now, how do you suggest I finish this commit?</p>
+
+
+
+<a name="278185175"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/282854-general/topic/shipdriver%20validation%20errors/near/278185175" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Rick Gleason <a href="https://leamas.github.io/zulip-archive/stream/282854-general/topic/shipdriver.20validation.20errors.html#278185175">(Apr 07 2022 at 15:51)</a>:</h4>
+<p>Maybe they are left over from an earlier time?</p>
+
+
+
+<a name="278185361"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/282854-general/topic/shipdriver%20validation%20errors/near/278185361" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Alec Leamas <a href="https://leamas.github.io/zulip-archive/stream/282854-general/topic/shipdriver.20validation.20errors.html#278185361">(Apr 07 2022 at 15:53)</a>:</h4>
+<p>Try :q!</p>
+<p>Anyway , running out of time now. Just leave things as they are, I can reproduce your problems and will repair the broken auto branch late this evening. SIgning off.</p>
+
+
+
+<a name="278204278"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/282854-general/topic/shipdriver%20validation%20errors/near/278204278" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Rick Gleason <a href="https://leamas.github.io/zulip-archive/stream/282854-general/topic/shipdriver.20validation.20errors.html#278204278">(Apr 07 2022 at 18:08)</a>:</h4>
+<p>Alec, looking at this a little further.  The update-template  sd3.1.1 run resulting in VDR  1.3.23  and for some reason that is not validating   <a href="https://github.com/OpenCPN/plugins/runs/5870569608?check_suite_focus=true">"metadata/VDR-v1.3.23-ubuntu-wx315-20.04.xml fails to validate"</a>   </p>
+<p>This is another problem I need to solve.<br>
+..</p>
+
+
+
+<a name="278212898"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/282854-general/topic/shipdriver%20validation%20errors/near/278212898" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Rick Gleason <a href="https://leamas.github.io/zulip-archive/stream/282854-general/topic/shipdriver.20validation.20errors.html#278212898">(Apr 07 2022 at 19:13)</a>:</h4>
+<p>Now I see this  in Shipdriver</p>
+<p>@Rasbats<br>
+Alec Leamas and Rasbats .circleci/config: Remove ubuntu-wx315 build (#437).<br>
+<a href="https://github.com/Rasbats/shipdriver_pi/commit/5152ee1cff546742191f7223b867224a355284c4">https://github.com/Rasbats/shipdriver_pi/commit/5152ee1cff546742191f7223b867224a355284c4</a></p>
+<p>What's going on here?  I used the update-templates sd3.1.1 and that should be current.  Now the entire push is canceled every time, when it is just a problem not created by me or the plugin.</p>
+
+
+
+<a name="278219320"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/282854-general/topic/shipdriver%20validation%20errors/near/278219320" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Alec Leamas <a href="https://leamas.github.io/zulip-archive/stream/282854-general/topic/shipdriver.20validation.20errors.html#278219320">(Apr 07 2022 at 20:06)</a>:</h4>
+<p>First: If you have updated to 3.1.1 there is no ubuntu-wx315 build. This is the fix for #437 which you filed.  Assuming this is about VDR, please push your master branch to tmp using 'git push origin master:tmp`so I can have a look.</p>
+
+
+
+<a name="278220067"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/282854-general/topic/shipdriver%20validation%20errors/near/278220067" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Alec Leamas <a href="https://leamas.github.io/zulip-archive/stream/282854-general/topic/shipdriver.20validation.20errors.html#278220067">(Apr 07 2022 at 20:13)</a>:</h4>
+<p>Second: I have rebased your auto branch. Don't know what has happened to it, perhaps you merged something into it, dunno. To get the rebased auto branch from me to your plugins repo:</p>
+<div class="codehilite"><pre><span></span><code>$ cd plugins
+$ git remote add leamas  https://github.com/leamas/plugins.git
+$ git remote update leamas
+$ git branch -m auto auto.old
+$ git fetch leamas rgleason/auto:auto
+$ git checkout auto
+</code></pre></div>
+
+<p>This will place you in position to merge the auto branch into master as described in <a href="https://opencpn-manuals.github.io/main/AlternativeWorkflow/InstallConfigure/Catalog-Github-Integration.html#_master_catalog">the manual</a>. Note that you should <strong>not</strong> fetch the auto branch as described there (first command), you have already fetched from me instead.</p>
+
+
+
+<a name="278223519"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/282854-general/topic/shipdriver%20validation%20errors/near/278223519" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Rick Gleason <a href="https://leamas.github.io/zulip-archive/stream/282854-general/topic/shipdriver.20validation.20errors.html#278223519">(Apr 07 2022 at 20:42)</a>:</h4>
+<p>Alec, Thank you.  I have pushed vdr_pi  to origin master:tmp<br>
+and will do the plugins git commands and report back.</p>
+
+
+
+<a name="278224599"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/282854-general/topic/shipdriver%20validation%20errors/near/278224599" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Rick Gleason <a href="https://leamas.github.io/zulip-archive/stream/282854-general/topic/shipdriver.20validation.20errors.html#278224599">(Apr 07 2022 at 20:52)</a>:</h4>
+<p>Master Catalog<br>
+Adding metadata files from the OpenCPN/plugins fork auto branch to the master branch goes like this:<br>
+ git fetch origin auto:auto    &lt;--- Already did this from Leamas repos<br>
+ git checkout auto  &lt;--- already done above.<br>
+ git rebase master   <br>
+ git checkout master<br>
+ git merge --squash auto<br>
+ git commit</p>
+
+
+
+<a name="278224671"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/282854-general/topic/shipdriver%20validation%20errors/near/278224671" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Rick Gleason <a href="https://leamas.github.io/zulip-archive/stream/282854-general/topic/shipdriver.20validation.20errors.html#278224671">(Apr 07 2022 at 20:53)</a>:</h4>
+<p>Please enter the commit message for your changes. Lines starting<br>
+ with '#' will be ignored, and an empty message aborts the commit.</p>
+<p>On branch master<br>
+ Your branch and 'origin/master' have diverged,<br>
+ and have 3 and 6 different commits each, respectively.<br>
+   (use "git pull" to merge the remote branch into yours)</p>
+<p>Changes to be committed:<br>
+       new file:   metadata/Logbook-v1.4.29-darwin-wx315-10.13.6.xml<br>
+       new file:   metadata/Logbook-v1.4.29-debian-10.xml<br>
+       new file:   metadata/Logbook-v1.4.29-debian-11.xml<br>
+       new file:   metadata/Logbook-v1.4.29-debian-A32-10.xml<br>
+       new file:   metadata/Logbook-v1.4.29-debian-A32-11.xml<br>
+       new file:   metadata/Logbook-v1.4.29-flatpak-20.08.xml<br>
+       new file:   metadata/Logbook-v1.4.29-flatpak-A64-20.08.xml<br>
+       new file:   metadata/Logbook-v1.4.29-msvc-10.0.14393.xml<br>
+       new file:   metadata/Logbook-v1.4.29-ubuntu-18.04.xml<br>
+       new file:   metadata/Logbook-v1.4.29-ubuntu-A32-18.04.xml<br>
+       new file:   metadata/Logbook-v1.4.29-ubuntu-gtk3-18.04.xml<br>
+       new file:   metadata/Logbook-v1.4.29-ubuntu-gtk3-20.04.xml<br>
+       new file:   metadata/Logbook-v1.4.29-ubuntu-gtk3-A32-20.04.xml<br>
+       new file:   metadata/Logbook-v1.4.29-ubuntu-wx315-20.04.xml<br>
+       renamed:    metadata/VDR-v1.3.20-android-arm64-A64-16.xml -&gt; metadata/VDR-v1.3.22-android-arm64-A64-16.xml<br>
+       renamed:    metadata/VDR-v1.3.20-android-armhf-16.xml -&gt; metadata/VDR-v1.3.22-android-armhf-A32-16.xml<br>
+       renamed:    metadata/VDR-v1.3.20-darwin-wx315-10.13.6.xml -&gt; metadata/VDR-v1.3.22-darwin-wx315-10.13.6.xml<br>
+       renamed:    metadata/VDR-v1.3.20-debian-10.xml -&gt; metadata/VDR-v1.3.22-debian-10.xml<br>
+       new file:   metadata/VDR-v1.3.22-debian-11.xml<br>
+       renamed:    metadata/VDR-v1.3.20-raspbian-10.xml -&gt; metadata/VDR-v1.3.22-debian-A32-10.xml<br>
+       renamed:    metadata/VDR-v1.3.20-raspbian-11.xml -&gt; metadata/VDR-v1.3.22-debian-A32-11.xml<br>
+       renamed:    metadata/VDR-v1.3.20-flatpak-20.08.xml -&gt; metadata/VDR-v1.3.22-flatpak-20.08.xml<br>
+       renamed:    metadata/VDR-v1.3.20-flatpak-A64-20.08.xml -&gt; metadata/VDR-v1.3.22-flatpak-A64-20.08.xml<br>
+       new file:   metadata/VDR-v1.3.22-flatpak.wx315-20.08.xml<br>
+       renamed:    metadata/VDR-v1.3.20-msvc-10.0.14393.xml -&gt; metadata/VDR-v1.3.22-msvc-10.0.14393.xml<br>
+       renamed:    metadata/VDR-v1.3.20-ubuntu-18.04.xml -&gt; metadata/VDR-v1.3.22-ubuntu-18.04.xml<br>
+       renamed:    metadata/VDR-v1.3.20-raspbian-9.13.xml -&gt; metadata/VDR-v1.3.22-ubuntu-A32-18.04.xml<br>
+       renamed:    metadata/VDR-v1.3.20-ubuntu-gtk3-18.04.xml -&gt; metadata/VDR-v1.3.22-ubuntu-gtk3-18.04.xml<br>
+       renamed:    metadata/VDR-v1.3.20-ubuntu-gtk3-20.04.xml -&gt; metadata/VDR-v1.3.22-ubuntu-gtk3-20.04.xml<br>
+       new file:   metadata/VDR-v1.3.22-ubuntu-gtk3-A32-20.04.xml<br>
+       new file:   metadata/VDR-v1.3.22-ubuntu-wx315-20.04.xml<br>
+       new file:   metadata/VDR-v1.3.23-android-arm64-A64-16.xml<br>
+       new file:   metadata/VDR-v1.3.23-android-armhf-A32-16.xml<br>
+       new file:   metadata/VDR-v1.3.23-darwin-wx315-10.13.6.xml<br>
+       new file:   metadata/VDR-v1.3.23-debian-10.xml<br>
+       new file:   metadata/VDR-v1.3.23-debian-11.xml<br>
+       new file:   metadata/VDR-v1.3.23-debian-A32-10.xml<br>
+       new file:   metadata/VDR-v1.3.23-debian-A32-11.xml<br>
+       new file:   metadata/VDR-v1.3.23-flatpak-20.08.xml<br>
+       new file:   metadata/VDR-v1.3.23-flatpak-A64-20.08.xml<br>
+       new file:   metadata/VDR-v1.3.23-msvc-10.0.14393.xml<br>
+       new file:   metadata/VDR-v1.3.23-ubuntu-18.04.xml<br>
+       new file:   metadata/VDR-v1.3.23-ubuntu-A32-18.04.xml<br>
+       new file:   metadata/VDR-v1.3.23-ubuntu-gtk3-18.04.xml<br>
+       new file:   metadata/VDR-v1.3.23-ubuntu-gtk3-20.04.xml<br>
+       new file:   metadata/VDR-v1.3.23-ubuntu-gtk3-A32-20.04.xml<br>
+       new file:   metadata/VDR-v1.3.23-ubuntu-wx315-20.04.xml</p>
+
+
+
+<a name="278225006"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/282854-general/topic/shipdriver%20validation%20errors/near/278225006" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Alec Leamas <a href="https://leamas.github.io/zulip-archive/stream/282854-general/topic/shipdriver.20validation.20errors.html#278225006">(Apr 07 2022 at 20:56)</a>:</h4>
+<p>yes... you need to make a commit. vim is probably to hard for you, I'll guide you here but we need to get around it later. For now:</p>
+<p>Press 'i'<br>
+Enter commit message<br>
+Enter: &lt;esc&gt;  i.  e., the esc button<br>
+Enter: :wq</p>
+
+
+
+<a name="278225062"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/282854-general/topic/shipdriver%20validation%20errors/near/278225062" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Rick Gleason <a href="https://leamas.github.io/zulip-archive/stream/282854-general/topic/shipdriver.20validation.20errors.html#278225062">(Apr 07 2022 at 20:57)</a>:</h4>
+<p>fcgle@Hesper MINGW64 ~/source/plugins (master)<br>
+$ git commit<br>
+[master a4c2287d] Squashed commit of the following:<br>
+ 47 files changed, 885 insertions(+), 55 deletions(-)<br>
+ create mode 100644 metadata/Logbook-v1.4.29-darwin-wx315-10.13.6.xml<br>
+ create mode 100644 metadata/Logbook-v1.4.29-debian-10.xml<br>
+ create mode 100644 metadata/Logbook-v1.4.29-debian-11.xml<br>
+ create mode 100644 metadata/Logbook-v1.4.29-debian-A32-10.xml<br>
+ create mode 100644 metadata/Logbook-v1.4.29-debian-A32-11.xml<br>
+ create mode 100644 metadata/Logbook-v1.4.29-flatpak-20.08.xml<br>
+ create mode 100644 metadata/Logbook-v1.4.29-flatpak-A64-20.08.xml<br>
+ create mode 100644 metadata/Logbook-v1.4.29-msvc-10.0.14393.xml<br>
+ create mode 100644 metadata/Logbook-v1.4.29-ubuntu-18.04.xml<br>
+ create mode 100644 metadata/Logbook-v1.4.29-ubuntu-A32-18.04.xml<br>
+ create mode 100644 metadata/Logbook-v1.4.29-ubuntu-gtk3-18.04.xml<br>
+ create mode 100644 metadata/Logbook-v1.4.29-ubuntu-gtk3-20.04.xml<br>
+ create mode 100644 metadata/Logbook-v1.4.29-ubuntu-gtk3-A32-20.04.xml<br>
+ create mode 100644 metadata/Logbook-v1.4.29-ubuntu-wx315-20.04.xml<br>
+ rename metadata/{VDR-v1.3.20-android-arm64-A64-16.xml =&gt; VDR-v1.3.22-android-arm64-A64-16.xml} (69%)<br>
+ rename metadata/{VDR-v1.3.20-android-armhf-16.xml =&gt; VDR-v1.3.22-android-armhf-A32-16.xml} (69%)<br>
+ rename metadata/{VDR-v1.3.20-darwin-wx315-10.13.6.xml =&gt; VDR-v1.3.22-darwin-wx315-10.13.6.xml} (69%)<br>
+ rename metadata/{VDR-v1.3.20-debian-10.xml =&gt; VDR-v1.3.22-debian-10.xml} (70%)<br>
+ create mode 100644 metadata/VDR-v1.3.22-debian-11.xml<br>
+ rename metadata/{VDR-v1.3.20-raspbian-10.xml =&gt; VDR-v1.3.22-debian-A32-10.xml} (66%)<br>
+ rename metadata/{VDR-v1.3.20-raspbian-11.xml =&gt; VDR-v1.3.22-debian-A32-11.xml} (70%)<br>
+ rename metadata/{VDR-v1.3.20-flatpak-20.08.xml =&gt; VDR-v1.3.22-flatpak-20.08.xml} (69%)<br>
+ rename metadata/{VDR-v1.3.20-flatpak-A64-20.08.xml =&gt; VDR-v1.3.22-flatpak-A64-20.08.xml} (69%)<br>
+ create mode 100644 metadata/VDR-v1.3.22-flatpak.wx315-20.08.xml<br>
+ rename metadata/{VDR-v1.3.20-msvc-10.0.14393.xml =&gt; VDR-v1.3.22-msvc-10.0.14393.xml} (68%)<br>
+ rename metadata/{VDR-v1.3.20-ubuntu-18.04.xml =&gt; VDR-v1.3.22-ubuntu-18.04.xml} (70%)<br>
+ rename metadata/{VDR-v1.3.20-raspbian-9.13.xml =&gt; VDR-v1.3.22-ubuntu-A32-18.04.xml} (62%)<br>
+ rename metadata/{VDR-v1.3.20-ubuntu-gtk3-18.04.xml =&gt; VDR-v1.3.22-ubuntu-gtk3-18.04.xml} (69%)<br>
+ rename metadata/{VDR-v1.3.20-ubuntu-gtk3-20.04.xml =&gt; VDR-v1.3.22-ubuntu-gtk3-20.04.xml} (69%)<br>
+ create mode 100644 metadata/VDR-v1.3.22-ubuntu-gtk3-A32-20.04.xml<br>
+ create mode 100644 metadata/VDR-v1.3.22-ubuntu-wx315-20.04.xml<br>
+ create mode 100644 metadata/VDR-v1.3.23-android-arm64-A64-16.xml<br>
+ create mode 100644 metadata/VDR-v1.3.23-android-armhf-A32-16.xml<br>
+ create mode 100644 metadata/VDR-v1.3.23-darwin-wx315-10.13.6.xml<br>
+ create mode 100644 metadata/VDR-v1.3.23-debian-10.xml<br>
+ create mode 100644 metadata/VDR-v1.3.23-debian-11.xml<br>
+ create mode 100644 metadata/VDR-v1.3.23-debian-A32-10.xml<br>
+ create mode 100644 metadata/VDR-v1.3.23-debian-A32-11.xml<br>
+ create mode 100644 metadata/VDR-v1.3.23-flatpak-20.08.xml<br>
+ create mode 100644 metadata/VDR-v1.3.23-flatpak-A64-20.08.xml<br>
+ create mode 100644 metadata/VDR-v1.3.23-msvc-10.0.14393.xml<br>
+ create mode 100644 metadata/VDR-v1.3.23-ubuntu-18.04.xml<br>
+ create mode 100644 metadata/VDR-v1.3.23-ubuntu-A32-18.04.xml<br>
+ create mode 100644 metadata/VDR-v1.3.23-ubuntu-gtk3-18.04.xml<br>
+ create mode 100644 metadata/VDR-v1.3.23-ubuntu-gtk3-20.04.xml<br>
+ create mode 100644 metadata/VDR-v1.3.23-ubuntu-gtk3-A32-20.04.xml<br>
+ create mode 100644 metadata/VDR-v1.3.23-ubuntu-wx315-20.04.xml</p>
+
+
+
+<a name="278225106"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/282854-general/topic/shipdriver%20validation%20errors/near/278225106" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Alec Leamas <a href="https://leamas.github.io/zulip-archive/stream/282854-general/topic/shipdriver.20validation.20errors.html#278225106">(Apr 07 2022 at 20:57)</a>:</h4>
+<p>YOu have successfully merged the auto branch into master.</p>
+
+
+
+<a name="278225284"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/282854-general/topic/shipdriver%20validation%20errors/near/278225284" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Rick Gleason <a href="https://leamas.github.io/zulip-archive/stream/282854-general/topic/shipdriver.20validation.20errors.html#278225284">(Apr 07 2022 at 20:59)</a>:</h4>
+<p>Great. Thank you for the quidance.  I notice that VDR has the offending metadata file.</p>
+<p>Or is this one ok?<br>
+create mode 100644 metadata/VDR-v1.3.23-ubuntu-wx315-20.04.xml</p>
+
+
+
+<a name="278225446"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/282854-general/topic/shipdriver%20validation%20errors/near/278225446" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Alec Leamas <a href="https://leamas.github.io/zulip-archive/stream/282854-general/topic/shipdriver.20validation.20errors.html#278225446">(Apr 07 2022 at 21:00)</a>:</h4>
+<p>Before you do these things you could try the following command: <code>export EDITOR=notepad</code>. That should fire up notepad instead of vim to enter the message. But the simples is perhaps to replace <code>git commit </code>with  <code>git commit -am "Merging auto branch into master"</code>. This way there is no need to edit the message.</p>
+
+
+
+<a name="278225571"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/282854-general/topic/shipdriver%20validation%20errors/near/278225571" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Alec Leamas <a href="https://leamas.github.io/zulip-archive/stream/282854-general/topic/shipdriver.20validation.20errors.html#278225571">(Apr 07 2022 at 21:01)</a>:</h4>
+<p>Now, you have done the "Master Catalog" part.  next part is "Cleaning up old metadata"</p>
+
+
+
+<a name="278225589"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/282854-general/topic/shipdriver%20validation%20errors/near/278225589" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Rick Gleason <a href="https://leamas.github.io/zulip-archive/stream/282854-general/topic/shipdriver.20validation.20errors.html#278225589">(Apr 07 2022 at 21:01)</a>:</h4>
+<p>Awesome!  Will make those changes and will try to learn VIM too.</p>
+
+
+
+<a name="278225653"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/282854-general/topic/shipdriver%20validation%20errors/near/278225653" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Rick Gleason <a href="https://leamas.github.io/zulip-archive/stream/282854-general/topic/shipdriver.20validation.20errors.html#278225653">(Apr 07 2022 at 21:01)</a>:</h4>
+<p>create mode 100644 metadata/VDR-v1.3.23-ubuntu-wx315-20.04.xml   This does not have flatpak so I guess it is ok.</p>
+
+
+
+<a name="278225725"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/282854-general/topic/shipdriver%20validation%20errors/near/278225725" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Alec Leamas <a href="https://leamas.github.io/zulip-archive/stream/282854-general/topic/shipdriver.20validation.20errors.html#278225725">(Apr 07 2022 at 21:02)</a>:</h4>
+<p>Don't invest in learning vim. It's an awfully powerful editor -- with an awfully steep learning curve.</p>
+
+
+
+<a name="278225869"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/282854-general/topic/shipdriver%20validation%20errors/near/278225869" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Rick Gleason <a href="https://leamas.github.io/zulip-archive/stream/282854-general/topic/shipdriver.20validation.20errors.html#278225869">(Apr 07 2022 at 21:03)</a>:</h4>
+<p>Ok.  I will next clean up old metadata and then push back up to my repos. <br>
+I notice that this also includes logbook!!  a nice benefit.<br>
+Thank you for all of your help. I hope I can do this all by myself the next time!</p>
+
+
+
+<a name="278226298"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/282854-general/topic/shipdriver%20validation%20errors/near/278226298" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Alec Leamas <a href="https://leamas.github.io/zulip-archive/stream/282854-general/topic/shipdriver.20validation.20errors.html#278226298">(Apr 07 2022 at 21:06)</a>:</h4>
+<p>It will probably work just fine.</p>
+<p>However: please stick to the documentation. And if there is some problem,  stop and ask for help rather that try to fix the situation with ad-hoc git commands.  It actually saves time compared to trying to clean up messy git states later...</p>
+
+
+
+<a name="278227243"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/282854-general/topic/shipdriver%20validation%20errors/near/278227243" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Rick Gleason <a href="https://leamas.github.io/zulip-archive/stream/282854-general/topic/shipdriver.20validation.20errors.html#278227243">(Apr 07 2022 at 21:14)</a>:</h4>
+<p>OK this is where it (I) am screwing up!  The damn thing looks like XXXX and has the offending flappak-wx315.<br>
+It failed again.<br>
+<a href="https://github.com/OpenCPN/plugins/runs/5876024853?check_suite_focus=true">https://github.com/OpenCPN/plugins/runs/5876024853?check_suite_focus=true</a></p>
+
+
+
+<a name="278227442"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/282854-general/topic/shipdriver%20validation%20errors/near/278227442" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Rick Gleason <a href="https://leamas.github.io/zulip-archive/stream/282854-general/topic/shipdriver.20validation.20errors.html#278227442">(Apr 07 2022 at 21:16)</a>:</h4>
+<p>So now what?  The auto branch is correct.<br>
+I just need to get the master branch to mirror  opencpn/plugins master   (upstream)<br>
+Then do the set of commands again.</p>
+
+
+
+<a name="278227540"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/282854-general/topic/shipdriver%20validation%20errors/near/278227540" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Alec Leamas <a href="https://leamas.github.io/zulip-archive/stream/282854-general/topic/shipdriver.20validation.20errors.html#278227540">(Apr 07 2022 at 21:17)</a>:</h4>
+<blockquote>
+<p>I notice that this also includes logbook!! a nice benefit.</p>
+</blockquote>
+<p>Of course, so to speak. All builds you do pushes to the  same auto branch. Thus,  what you merge is all successful builds since  you reset  your auto branch.  The branch is created in <a href="https://opencpn-manuals.github.io/main/AlternativeWorkflow/InstallConfigure/GithubPreps.html">Github OpenCPN/plugins fork</a>. Each time you do this, all builds which are present in auto but yet not made to PR will be lost. For that reason, you should avoid these steps after being done, it's just  an initial  setup. The only exception is when changing from master to Beta or the other way around</p>
+
+
+
+<a name="278227678"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/282854-general/topic/shipdriver%20validation%20errors/near/278227678" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Alec Leamas <a href="https://leamas.github.io/zulip-archive/stream/282854-general/topic/shipdriver.20validation.20errors.html#278227678">(Apr 07 2022 at 21:18)</a>:</h4>
+<blockquote>
+<p>I t failed again.</p>
+</blockquote>
+<p>This is <a href="https://github.com/Rasbats/shipdriver_pi/issues/443">https://github.com/Rasbats/shipdriver_pi/issues/443</a>. Remove the .drone.yml file for now.</p>
+
+
+
+<a name="278228257"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/282854-general/topic/shipdriver%20validation%20errors/near/278228257" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Rick Gleason <a href="https://leamas.github.io/zulip-archive/stream/282854-general/topic/shipdriver.20validation.20errors.html#278228257">(Apr 07 2022 at 21:22)</a>:</h4>
+<p>Now I recall that that was the issue with Logbook!!! I ended up disabling the drone setup for logbook. Very sorry I did not recall that problem.   It was last used 19 days ago.   Same for logbook which was also turned off.</p>
+
+
+
+<a name="278228616"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/282854-general/topic/shipdriver%20validation%20errors/near/278228616" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Rick Gleason <a href="https://leamas.github.io/zulip-archive/stream/282854-general/topic/shipdriver.20validation.20errors.html#278228616">(Apr 07 2022 at 21:26)</a>:</h4>
+<p>Alec,  my drone repository for vdr is not active!!!!</p>
+
+
+
+<a name="278228741"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/282854-general/topic/shipdriver%20validation%20errors/near/278228741" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Alec Leamas <a href="https://leamas.github.io/zulip-archive/stream/282854-general/topic/shipdriver.20validation.20errors.html#278228741">(Apr 07 2022 at 21:27)</a>:</h4>
+<p>Whatever,  <a href="http://drone.io">drone.io</a> seems to be a bit out of control. Removing .drone.yml solves the problem and is the correct solution. The only problem is that update-templates leaves it in place</p>
+
+
+
+<a name="278229114"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/282854-general/topic/shipdriver%20validation%20errors/near/278229114" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Rick Gleason <a href="https://leamas.github.io/zulip-archive/stream/282854-general/topic/shipdriver.20validation.20errors.html#278229114">(Apr 07 2022 at 21:31)</a>:</h4>
+<p>So I should totally remove vdr_pi and logbook  from drone?  I sse no way to delete vdr or logbook  as they are simply set to "inactive"</p>
+
+
+
+<a name="278229309"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/282854-general/topic/shipdriver%20validation%20errors/near/278229309" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Alec Leamas <a href="https://leamas.github.io/zulip-archive/stream/282854-general/topic/shipdriver.20validation.20errors.html#278229309">(Apr 07 2022 at 21:33)</a>:</h4>
+<p>Don't care about the drone settings in the ui. When you remove .drone.yml there will no attempt to build anything.</p>
+
+
+
+<a name="278229312"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/282854-general/topic/shipdriver%20validation%20errors/near/278229312" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Rick Gleason <a href="https://leamas.github.io/zulip-archive/stream/282854-general/topic/shipdriver.20validation.20errors.html#278229312">(Apr 07 2022 at 21:33)</a>:</h4>
+<p>Remove drone.yml from vdr_pi  ?  I don't find any drone.yml in vdr_pi</p>
+
+
+
+<a name="278229469"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/282854-general/topic/shipdriver%20validation%20errors/near/278229469" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Alec Leamas <a href="https://leamas.github.io/zulip-archive/stream/282854-general/topic/shipdriver.20validation.20errors.html#278229469">(Apr 07 2022 at 21:34)</a>:</h4>
+<p>I certainly see it in  653e0085</p>
+
+
+
+<a name="278229605"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/282854-general/topic/shipdriver%20validation%20errors/near/278229605" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Alec Leamas <a href="https://leamas.github.io/zulip-archive/stream/282854-general/topic/shipdriver.20validation.20errors.html#278229605">(Apr 07 2022 at 21:35)</a>:</h4>
+<p>Note that it's <em>.drone.yml</em>, not <em>drone.yml</em></p>
+
+
+
+<a name="278229710"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/282854-general/topic/shipdriver%20validation%20errors/near/278229710" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Rick Gleason <a href="https://leamas.github.io/zulip-archive/stream/282854-general/topic/shipdriver.20validation.20errors.html#278229710">(Apr 07 2022 at 21:36)</a>:</h4>
+<p>Ok I see in the remote.  It is not in my local.</p>
+
+
+
+<a name="278229791"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/282854-general/topic/shipdriver%20validation%20errors/near/278229791" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Alec Leamas <a href="https://leamas.github.io/zulip-archive/stream/282854-general/topic/shipdriver.20validation.20errors.html#278229791">(Apr 07 2022 at 21:37)</a>:</h4>
+<p>Which means that if you push your local branch to the remote everything is fine. After all, no-one besides you sees your local branch.</p>
+
+
+
+<a name="278230005"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/282854-general/topic/shipdriver%20validation%20errors/near/278230005" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Rick Gleason <a href="https://leamas.github.io/zulip-archive/stream/282854-general/topic/shipdriver.20validation.20errors.html#278230005">(Apr 07 2022 at 21:40)</a>:</h4>
+<p>Ok, I've deleted in the remote making a delete commit. Then pulled the change down to local.  I will now delete that file and try pushing again to opencpn/plugins</p>
+
+
+
+<a name="278230110"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/282854-general/topic/shipdriver%20validation%20errors/near/278230110" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Rick Gleason <a href="https://leamas.github.io/zulip-archive/stream/282854-general/topic/shipdriver.20validation.20errors.html#278230110">(Apr 07 2022 at 21:40)</a>:</h4>
+<p>Now I think that originally I did it all ok, except for that drone.yml problem.</p>
+
+
+
+<a name="278230164"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/282854-general/topic/shipdriver%20validation%20errors/near/278230164" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Rick Gleason <a href="https://leamas.github.io/zulip-archive/stream/282854-general/topic/shipdriver.20validation.20errors.html#278230164">(Apr 07 2022 at 21:41)</a>:</h4>
+<p>However you've taught a lot here. Thank you.</p>
+
+
+
+<a name="278230314"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/282854-general/topic/shipdriver%20validation%20errors/near/278230314" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Alec Leamas <a href="https://leamas.github.io/zulip-archive/stream/282854-general/topic/shipdriver.20validation.20errors.html#278230314">(Apr 07 2022 at 21:43)</a>:</h4>
+<p>you miss the build step in between. This is how it works:</p>
+<p>- You make a local change in  vdr_pi, removing .drone.yml<br>
+  - You push vdr_pi to github<br>
+  - github triggers the builds. Each build pushes metadata changes to auto in the very end<br>
+  - When all builds are completed you can merge auto into master in plugins repo and make a PR</p>
+
+
+
+<a name="278230754"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/282854-general/topic/shipdriver%20validation%20errors/near/278230754" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Rick Gleason <a href="https://leamas.github.io/zulip-archive/stream/282854-general/topic/shipdriver.20validation.20errors.html#278230754">(Apr 07 2022 at 21:47)</a>:</h4>
+<p>OK I really have to start the whole process over again, including the builds?  Don't I need to increment the version again and add a new tag in order to get it to go into Prod?</p>
+
+
+
+<a name="278230854"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/282854-general/topic/shipdriver%20validation%20errors/near/278230854" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Rick Gleason <a href="https://leamas.github.io/zulip-archive/stream/282854-general/topic/shipdriver.20validation.20errors.html#278230854">(Apr 07 2022 at 21:48)</a>:</h4>
+<p>Also I didn't have .drone.yml in my local, so I removed it in the remote.</p>
+
+
+
+<a name="278231206"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/282854-general/topic/shipdriver%20validation%20errors/near/278231206" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Alec Leamas <a href="https://leamas.github.io/zulip-archive/stream/282854-general/topic/shipdriver.20validation.20errors.html#278231206">(Apr 07 2022 at 21:52)</a>:</h4>
+<p>Yes. The build should be tagged to go into prod or stable.  These kind of problems is why I prefer to first run the builds untagged, check for problems, tag, push tags and rebuild.</p>
+
+
+
+<a name="278231655"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/282854-general/topic/shipdriver%20validation%20errors/near/278231655" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Rick Gleason <a href="https://leamas.github.io/zulip-archive/stream/282854-general/topic/shipdriver.20validation.20errors.html#278231655">(Apr 07 2022 at 21:57)</a>:</h4>
+<p>Ok thanks.  So I have to do the process all over again, no shortcuts because the commits initiate all the subsequent actions.  This is pretty crucial to understand I think.</p>
+
+
+
+<a name="278231837"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/282854-general/topic/shipdriver%20validation%20errors/near/278231837" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Alec Leamas <a href="https://leamas.github.io/zulip-archive/stream/282854-general/topic/shipdriver.20validation.20errors.html#278231837">(Apr 07 2022 at 21:59)</a>:</h4>
+<p>Yes, do the process again. lesson learned: Don't try to merge auto until the builds are OK</p>
+
+
+
+<a name="278231847"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/282854-general/topic/shipdriver%20validation%20errors/near/278231847" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Rick Gleason <a href="https://leamas.github.io/zulip-archive/stream/282854-general/topic/shipdriver.20validation.20errors.html#278231847">(Apr 07 2022 at 21:59)</a>:</h4>
+<p>Alec, while you are here, before I do anything more, with vdr_pi, I have to setup plugins don't I?<br>
+both master and auto branches?</p>
+
+
+
+<a name="278231881"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/282854-general/topic/shipdriver%20validation%20errors/near/278231881" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Alec Leamas <a href="https://leamas.github.io/zulip-archive/stream/282854-general/topic/shipdriver.20validation.20errors.html#278231881">(Apr 07 2022 at 21:59)</a>:</h4>
+<blockquote>
+<p>setup  plugins?</p>
+</blockquote>
+
+
+
+<a name="278231965"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/282854-general/topic/shipdriver%20validation%20errors/near/278231965" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Rick Gleason <a href="https://leamas.github.io/zulip-archive/stream/282854-general/topic/shipdriver.20validation.20errors.html#278231965">(Apr 07 2022 at 22:00)</a>:</h4>
+<p>Well don't I have to "clear" auto or something?</p>
+
+
+
+<a name="278232055"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/282854-general/topic/shipdriver%20validation%20errors/near/278232055" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Alec Leamas <a href="https://leamas.github.io/zulip-archive/stream/282854-general/topic/shipdriver.20validation.20errors.html#278232055">(Apr 07 2022 at 22:01)</a>:</h4>
+<p>Ah... you must not do that. See my long post  "Of course" above</p>
+
+
+
+<a name="278232081"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/282854-general/topic/shipdriver%20validation%20errors/near/278232081" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Rick Gleason <a href="https://leamas.github.io/zulip-archive/stream/282854-general/topic/shipdriver.20validation.20errors.html#278232081">(Apr 07 2022 at 22:01)</a>:</h4>
+<p>Also shouldn't I be sure that my plugins "master"  matches opencpn/plugins  "master"?</p>
+
+
+
+<a name="278232184"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/282854-general/topic/shipdriver%20validation%20errors/near/278232184" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Alec Leamas <a href="https://leamas.github.io/zulip-archive/stream/282854-general/topic/shipdriver.20validation.20errors.html#278232184">(Apr 07 2022 at 22:02)</a>:</h4>
+<p>That's what the rebase step does. You do that in when making the PR, not before</p>
+
+
+
+<a name="278232325"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/282854-general/topic/shipdriver%20validation%20errors/near/278232325" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Alec Leamas <a href="https://leamas.github.io/zulip-archive/stream/282854-general/topic/shipdriver.20validation.20errors.html#278232325">(Apr 07 2022 at 22:02)</a>:</h4>
+<p>Basic message: do what's described in the docs. No more, and no less.</p>
+
+
+
+<a name="278232603"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/282854-general/topic/shipdriver%20validation%20errors/near/278232603" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Rick Gleason <a href="https://leamas.github.io/zulip-archive/stream/282854-general/topic/shipdriver.20validation.20errors.html#278232603">(Apr 07 2022 at 22:05)</a>:</h4>
+<p>OK. I hope I've got it now.</p>
+
+
+
+<a name="278232794"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/282854-general/topic/shipdriver%20validation%20errors/near/278232794" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Alec Leamas <a href="https://leamas.github.io/zulip-archive/stream/282854-general/topic/shipdriver.20validation.20errors.html#278232794">(Apr 07 2022 at 22:07)</a>:</h4>
+<p>If not, file an an issue against the manual.  The game here is really to read, understand and possibly fix the manual so it describes the workflow. There should not really be any personal annotations or anything like that.</p>
+
+
+
+<a name="278233764"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/282854-general/topic/shipdriver%20validation%20errors/near/278233764" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Rick Gleason <a href="https://leamas.github.io/zulip-archive/stream/282854-general/topic/shipdriver.20validation.20errors.html#278233764">(Apr 07 2022 at 22:17)</a>:</h4>
+<p>So the SD system is very automatic once you have committed, and any mistake or error requires a new version and eventually a tag to get it into PROD.   Then the second step is to get the metadata pushed to a catalog.</p>
+
+
+
+<a name="278234329"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/282854-general/topic/shipdriver%20validation%20errors/near/278234329" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Alec Leamas <a href="https://leamas.github.io/zulip-archive/stream/282854-general/topic/shipdriver.20validation.20errors.html#278234329">(Apr 07 2022 at 22:23)</a>:</h4>
+<p>Yes. However, there is no need for a new tag (i. e., a new version) if you first run your build without any tag. What we do in shipdriver, a typical example:</p>
+<ul>
+<li>When we start working the in  the 3.1.x branch we set the version to 3.1.0. This is just so that the artifacts will have a 3.1 in the filename.</li>
+<li>We commit various changes and builds. No tags. Checks that the build looks ok.</li>
+<li>After a while we need to release a version. The final finish is usually just to update the Changelog file, which contains the release date.</li>
+<li>This last commit is tagged and built. We now know that the build will be OK, things runs smoothly.</li>
+</ul>
+
+
+
+<a name="278234915"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/282854-general/topic/shipdriver%20validation%20errors/near/278234915" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Rick Gleason <a href="https://leamas.github.io/zulip-archive/stream/282854-general/topic/shipdriver.20validation.20errors.html#278234915">(Apr 07 2022 at 22:30)</a>:</h4>
+<p>Ok, that approach to versioning makes sense for SD where there is incremental work to get things right. <br>
+Often if we are just updating a PI's SD frontend there are fewer steps invovled.</p>
+<p>Alec, I actually don't think I did anything wrong here.  I think the problem appears to have been from the beginning the .drone.yml</p>
+
+
+
+<a name="278235094"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/282854-general/topic/shipdriver%20validation%20errors/near/278235094" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Alec Leamas <a href="https://leamas.github.io/zulip-archive/stream/282854-general/topic/shipdriver.20validation.20errors.html#278235094">(Apr 07 2022 at 22:32)</a>:</h4>
+<p>Perhaps. But both your master and auto branch was broken. Now, with sane branches you will see that while there are some steps they are quick and actually not that complicated.</p>
+
+
+
+<a name="278235272"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/282854-general/topic/shipdriver%20validation%20errors/near/278235272" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Alec Leamas <a href="https://leamas.github.io/zulip-archive/stream/282854-general/topic/shipdriver.20validation.20errors.html#278235272">(Apr 07 2022 at 22:34)</a>:</h4>
+<p>Well, you can tag directly and build. Doing it is taking a chance, good if it works, more work if  it fails. Your call.</p>
+
+
+
+<a name="278235365"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/282854-general/topic/shipdriver%20validation%20errors/near/278235365" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Rick Gleason <a href="https://leamas.github.io/zulip-archive/stream/282854-general/topic/shipdriver.20validation.20errors.html#278235365">(Apr 07 2022 at 22:35)</a>:</h4>
+<p>Alec I am changing the version and committing and then push.  Then add tag later.</p>
+
+
+
+<a name="278235511"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/282854-general/topic/shipdriver%20validation%20errors/near/278235511" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Rick Gleason <a href="https://leamas.github.io/zulip-archive/stream/282854-general/topic/shipdriver.20validation.20errors.html#278235511">(Apr 07 2022 at 22:37)</a>:</h4>
+<p>Yeez the first ones build very fast.</p>
+
+
+
+<a name="278235970"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/282854-general/topic/shipdriver%20validation%20errors/near/278235970" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Rick Gleason <a href="https://leamas.github.io/zulip-archive/stream/282854-general/topic/shipdriver.20validation.20errors.html#278235970">(Apr 07 2022 at 22:43)</a>:</h4>
+<p>everything built. now  <br>
+git tag v1.3.24<br>
+git push --tags origin master:master</p>
+
+
+
+<a name="278237704"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/282854-general/topic/shipdriver%20validation%20errors/near/278237704" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Alec Leamas <a href="https://leamas.github.io/zulip-archive/stream/282854-general/topic/shipdriver.20validation.20errors.html#278237704">(Apr 07 2022 at 23:04)</a>:</h4>
+<p>you will need to trigger the build manually in the web interface</p>
+
+
+
+<a name="278237848"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/282854-general/topic/shipdriver%20validation%20errors/near/278237848" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Alec Leamas <a href="https://leamas.github.io/zulip-archive/stream/282854-general/topic/shipdriver.20validation.20errors.html#278237848">(Apr 07 2022 at 23:06)</a>:</h4>
+<p>i. e., make a "Rebuild"</p>
+
+
+
+<a name="278237878"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/282854-general/topic/shipdriver%20validation%20errors/near/278237878" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Rick Gleason <a href="https://leamas.github.io/zulip-archive/stream/282854-general/topic/shipdriver.20validation.20errors.html#278237878">(Apr 07 2022 at 23:06)</a>:</h4>
+<p>Yes, that's right.  Good idea. It was not building because I needed a commit.  Alternatively</p>
+<p>git tag v1.2.3<br>
+   git push v1.2.3<br>
+   git commit --allow-empty -m "Trigger build"<br>
+   git push origin </p>
+<p>OR do it all at the same time</p>
+<p>git tag v1.2.3<br>
+   git commit -am "1.2.3  release to master branch"<br>
+   git push origin --atomic refs/tags/v1.2.3:refs/tags/v1.2.3 master:master </p>
+<p>Well, I just incremented and tagged this time.</p>
+
+
+
+<a name="278237882"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/282854-general/topic/shipdriver%20validation%20errors/near/278237882" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Alec Leamas <a href="https://leamas.github.io/zulip-archive/stream/282854-general/topic/shipdriver.20validation.20errors.html#278237882">(Apr 07 2022 at 23:06)</a>:</h4>
+<p>good night...</p>
+
+
+
+<a name="278237891"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/282854-general/topic/shipdriver%20validation%20errors/near/278237891" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Rick Gleason <a href="https://leamas.github.io/zulip-archive/stream/282854-general/topic/shipdriver.20validation.20errors.html#278237891">(Apr 07 2022 at 23:07)</a>:</h4>
+<p>Nigfht Thanks!!!!</p>
+
+
+
+<a name="278238695"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/282854-general/topic/shipdriver%20validation%20errors/near/278238695" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Rick Gleason <a href="https://leamas.github.io/zulip-archive/stream/282854-general/topic/shipdriver.20validation.20errors.html#278238695">(Apr 07 2022 at 23:17)</a>:</h4>
+<p>Alec, I am sorry but this is just not working!  I pushed with a new tag v1.3.25<br>
+and this happened<br>
+<a href="https://github.com/OpenCPN/plugins/runs/5877252099?check_suite_focus=true">https://github.com/OpenCPN/plugins/runs/5877252099?check_suite_focus=true</a></p>
+<p>Same XXXXXXXXX thing.  I am quiting.</p>
+
+
+
+<a name="278264444"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/282854-general/topic/shipdriver%20validation%20errors/near/278264444" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Alec Leamas <a href="https://leamas.github.io/zulip-archive/stream/282854-general/topic/shipdriver.20validation.20errors.html#278264444">(Apr 08 2022 at 07:09)</a>:</h4>
+<p>...which means that the version built (which is ec3a7ce113) still contains .drone.yml. The  commit  can be seen in the build log, under the  Set Up Job heading.</p>
+<p>Could be verified  using <code>git checkout ec3a7ce1</code>; this will show you that  .drone.yml is still part of  of this commit .</p>
+<p>In the end, make sure to tag and build a version without .drone.yml.</p>
+
+
+
+<a name="278268465"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/282854-general/topic/shipdriver%20validation%20errors/near/278268465" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Alec Leamas <a href="https://leamas.github.io/zulip-archive/stream/282854-general/topic/shipdriver.20validation.20errors.html#278268465">(Apr 08 2022 at 07:59)</a>:</h4>
+<p>.... and remove build-focal-wx31 from .circleci/config:</p>
+<div class="codehilite"><pre><span></span><code>diff --git a/.circleci/config.yml b/.circleci/config.yml
+index 7672198..4beb625 100644
+--- a/.circleci/config.yml
++++ b/.circleci/config.yml
+@@ -233,8 +233,8 @@ workflows:
+       - build-focal:
+           &lt;&lt;: *std-filters
+
+-      - build-focal-wx31:
+-          &lt;&lt;: *std-filters
++      # - build-focal-wx31:
++      #    &lt;&lt;: *std-filters
+
+       - build-buster:
+           &lt;&lt;: *std-filters
+</code></pre></div>
+
+
+
+<a name="278268878"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/282854-general/topic/shipdriver%20validation%20errors/near/278268878" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Alec Leamas <a href="https://leamas.github.io/zulip-archive/stream/282854-general/topic/shipdriver.20validation.20errors.html#278268878">(Apr 08 2022 at 08:02)</a>:</h4>
+<p><a href="https://github.com/Rasbats/shipdriver_pi/issues/444">https://github.com/Rasbats/shipdriver_pi/issues/444</a></p>
+
+
+
+<a name="278289269"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/282854-general/topic/shipdriver%20validation%20errors/near/278289269" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Alec Leamas <a href="https://leamas.github.io/zulip-archive/stream/282854-general/topic/shipdriver.20validation.20errors.html#278289269">(Apr 08 2022 at 11:17)</a>:</h4>
+<p>I have revised the manual at <a href="https://opencpn-manuals.github.io/main/AlternativeWorkflow/InstallConfigure/Catalog-Github-Integration.html">https://opencpn-manuals.github.io/main/AlternativeWorkflow/InstallConfigure/Catalog-Github-Integration.html</a>,  re-organized it and added section numbers which at least should make it easier to talk about</p>
+
+
+
+<a name="278297860"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/282854-general/topic/shipdriver%20validation%20errors/near/278297860" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Rick Gleason <a href="https://leamas.github.io/zulip-archive/stream/282854-general/topic/shipdriver.20validation.20errors.html#278297860">(Apr 08 2022 at 12:41)</a>:</h4>
+<p>I don't find   git checkout ec3a7ce1; </p>
+<p>git checkout ec3a7ce1<br>
+error: pathspec 'ec3a7ce1' did not match any file(s) known to git</p>
+<p>Also</p>
+<p>fcgle@Hesper MINGW64 ~/source/vdr_pi (master)<br>
+$ git log --oneline -40<br>
+120f2b0 (HEAD -&gt; master, origin/master, origin/HEAD) remove build focal wx31<br>
+20f4176 (tag: v1.3.25) 1.3.25<br>
+c14e8f9 (tag: v1.3.24) 1.3.24.0 try again<br>
+7efd286 Delete .drone.yml<br>
+653e008 (tag: v1.3.23, origin/tmp) 1.3.23.0<br>
+0033131 cmake: Update TemplateVersion to a388052<br>
+ee5b6f2 Templates: Updating cmake<br>
+7c64e16 cmake: Update TemplateVersion to a388052<br>
+c340670 opencpn-libs: Update to latest version.<br>
+2b0deb6 Templates: Updating other files<br>
+7eb751c Templates: Updating ci<br>
+ba461cc Templates: Updating cmake<br>
+20fa599 (tag: v1.3.22) 1.3.22.0<br>
+2efc94c (tag: v1.3.21) 1.3.21 + move to opencpn-libs<br>
+c2f0f58 cmake: Update TemplateVersion to 3213da1<br>
+63ad10c opencpn-libs: Update to latest version.<br>
+5371cd0 Templates: Updating other files<br>
+7011f64 Templates: Updating buildwin<br>
+df8409b Templates: Updating ci<br>
+2043336 Templates: Updating cmake<br>
+bcb9daf update-templates 3.1.0<br>
+b27bd66 (tag: v1.3.20) 1.3.20.0<br>
+44e4edd (tag: v1.3.19) 1.3.19.0<br>
+8630485 (tag: v1.3.18-beta, tag: 1.3.18) 1.3.18-beta<br>
+1e886bb (tag: v1.3.17-beta3, tag: v1.3.17, tag: remove) fix config yml again<br>
+52dc29e (tag: v1.3.17-beta2) fix config yml<br>
+4fcf0d8 (tag: v1.3.17-beta) 1.3.17-beta<br>
+6337aed remove xenial build<br>
+5974c47 cmake: Update TemplateVersion to 7745f78<br>
+7cb900b Templates: Updating other files<br>
+0adcaa9 Templates: Updating cmake<br>
+01b23b6 new update-templates<br>
+973c1bc 1.3.17beta<br>
+deb17ff (tag: v1.3.16) v1.3.16<br>
+691ca18 1.3.16-beta1<br>
+4380bfd 1.3.15-beta1<br>
+8a3a1cb cmake: Update TemplateVersion to e49825d<br>
+ed6c7fb Templates: Updating other files<br>
+7739577 Templates: Updating libs<br>
+63ad519 Templates: Updating buildwin<br>
+(END)</p>
+<p>Also .drone.yml no longer exists in my remote!!!!  (or my local!)  Here is was deleted.<br>
+<a href="https://github.com/rgleason/vdr_pi/commit/7efd2867b166978e53fe4303d36aabc0b203babe">https://github.com/rgleason/vdr_pi/commit/7efd2867b166978e53fe4303d36aabc0b203babe</a></p>
+<p>It is also canceled in Drone yet it still builds.  What a pain in the butt.</p>
+
+
+
+<a name="278302022"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/282854-general/topic/shipdriver%20validation%20errors/near/278302022" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Rick Gleason <a href="https://leamas.github.io/zulip-archive/stream/282854-general/topic/shipdriver.20validation.20errors.html#278302022">(Apr 08 2022 at 13:15)</a>:</h4>
+<p>By the way. yesterday when we were getting those errors from the plugin commit script, it was absolutely not clear to me if the script was wrong or if the plugin metadata was wrong, because so often it is a problem with the changes in the script!   Therefore I spent an inordinate amount of time trying to get it to work, when I should have just deleted the damn files and moved on.   So please be clear about what the source of the error is,  if you know.  It helps others.  You can just say  "delete this metadata file"  or "It is not the script, script is correct"</p>
+<p>Also BTW I have tried to remove all the offending metadata files from my remote rgleason/plugins "auto" branch, thinking that this could possibly be part of the problem.</p>
+<p>Possibly I should just delete the auto branch and set it up again.</p>
+
+
+
+<a name="278303185"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/282854-general/topic/shipdriver%20validation%20errors/near/278303185" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Alec Leamas <a href="https://leamas.github.io/zulip-archive/stream/282854-general/topic/shipdriver.20validation.20errors.html#278303185">(Apr 08 2022 at 13:24)</a>:</h4>
+<p>That commit is in the plugins repo. I suppose you were looking in vdr_pi, right?</p>
+<p>Anyway, let's drop this. I'll make a build, stay tuned.</p>
+
+
+
+<a name="278306793"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/282854-general/topic/shipdriver%20validation%20errors/near/278306793" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Alec Leamas <a href="https://leamas.github.io/zulip-archive/stream/282854-general/topic/shipdriver.20validation.20errors.html#278306793">(Apr 08 2022 at 13:51)</a>:</h4>
+<p><span class="user-mention" data-user-id="399865">@Rick Gleason</span> : I have </p>
+<ul>
+<li>Checked out 20f4176 a. k. a. 1.3.25</li>
+<li>Applied this patch:</li>
+</ul>
+<div class="codehilite"><pre><span></span><code>iff --git a/.circleci/config.yml b/.circleci/config.yml
+index 7672198..4beb625 100644
+--- a/.circleci/config.yml
++++ b/.circleci/config.yml
+@@ -233,8 +233,8 @@ workflows:
+       - build-focal:
+           &lt;&lt;: *std-filters
+
+-      - build-focal-wx31:
+-          &lt;&lt;: *std-filters
++      # - build-focal-wx31:
++      #    &lt;&lt;: *std-filters
+
+       - build-buster:
+           &lt;&lt;: *std-filters
+</code></pre></div>
+<ul>
+<li>Pushed and built, build logs <a href="https://app.circleci.com/pipelines/github/leamas/vdr_pi-1/3/workflows/dac7c734-3d19-45d2-a69e-7db9b9ee5af0">here</a></li>
+<li>Applied the steps in "Creating a catalog PR"</li>
+<li>In particular, run the final test which is  the same as done on the PR when submitted. It's all OK.</li>
+</ul>
+<p>Ergo: you should be able to do the same...</p>
+
+
+
+<a name="278314417"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/282854-general/topic/shipdriver%20validation%20errors/near/278314417" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Rick Gleason <a href="https://leamas.github.io/zulip-archive/stream/282854-general/topic/shipdriver.20validation.20errors.html#278314417">(Apr 08 2022 at 14:44)</a>:</h4>
+<p>Thanks Alec, I did that patch to both VDR and Logbook this morning, to kind of clean things up.</p>
+
+
+
+<a name="278328957"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/282854-general/topic/shipdriver%20validation%20errors/near/278328957" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Alec Leamas <a href="https://leamas.github.io/zulip-archive/stream/282854-general/topic/shipdriver.20validation.20errors.html#278328957">(Apr 08 2022 at 16:29)</a>:</h4>
+<p>You did read the whole post, did you?</p>
+
+
+
+<a name="278373693"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/282854-general/topic/shipdriver%20validation%20errors/near/278373693" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Rick Gleason <a href="https://leamas.github.io/zulip-archive/stream/282854-general/topic/shipdriver.20validation.20errors.html#278373693">(Apr 08 2022 at 23:23)</a>:</h4>
+<p><a href="https://cloudsmith.io/~opencpn/repos/vdr-prod/packages/">https://cloudsmith.io/~opencpn/repos/vdr-prod/packages/</a><br>
+<a href="https://cloudsmith.io/~opencpn/repos/plugins-prod/packages/">https://cloudsmith.io/~opencpn/repos/plugins-prod/packages/</a></p>
+<p><a href="https://github.com/rgleason/LogbookKonni_pi/runs/5885311806">https://github.com/rgleason/LogbookKonni_pi/runs/5885311806</a><br>
+<a href="https://cloudsmith.io/~opencpn/repos/logbookkonni-prod/packages/">https://cloudsmith.io/~opencpn/repos/logbookkonni-prod/packages/</a></p>
+
+
+
+<a name="278375694"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/282854-general/topic/shipdriver%20validation%20errors/near/278375694" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Rick Gleason <a href="https://leamas.github.io/zulip-archive/stream/282854-general/topic/shipdriver.20validation.20errors.html#278375694">(Apr 08 2022 at 23:59)</a>:</h4>
+<p><a href="https://opencpn-manuals.github.io/main/AlternativeWorkflow/InstallConfigure/Catalog-Github-Integration.html#_merging_the_auto_branch">https://opencpn-manuals.github.io/main/AlternativeWorkflow/InstallConfigure/Catalog-Github-Integration.html#_merging_the_auto_branch</a></p>
+<p><a href="https://opencpn-manuals.github.io/main/AlternativeWorkflow/InstallConfigure/Catalog-Github-Integration.html#_using_master">https://opencpn-manuals.github.io/main/AlternativeWorkflow/InstallConfigure/Catalog-Github-Integration.html#_using_master</a></p>
+
+
+
+<a name="278375699"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/282854-general/topic/shipdriver%20validation%20errors/near/278375699" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Rick Gleason <a href="https://leamas.github.io/zulip-archive/stream/282854-general/topic/shipdriver.20validation.20errors.html#278375699">(Apr 08 2022 at 23:59)</a>:</h4>
+<p>fcgle@Hesper MINGW64 ~/source/plugins (master)<br>
+$ git remote update upstream<br>
+Fetching upstream<br>
+remote: Enumerating objects: 58, done.<br>
+remote: Counting objects: 100% (58/58), done.<br>
+remote: Compressing objects: 100% (14/14), done.<br>
+remote: Total 58 (delta 44), reused 55 (delta 44), pack-reused 0<br>
+Unpacking objects: 100% (58/58), 32.12 KiB | 194.00 KiB/s, done.<br>
+From <a href="https://github.com/OpenCPN/plugins">https://github.com/OpenCPN/plugins</a><br>
+   ca973a47..b2404e1e  master     -&gt; upstream/master</p>
+<p>fcgle@Hesper MINGW64 ~/source/plugins (master)<br>
+$ git checkout master<br>
+Already on 'master'<br>
+Your branch is up to date with 'origin/master'.</p>
+<p>fcgle@Hesper MINGW64 ~/source/plugins (master)<br>
+$ git rebase upstream/master<br>
+Successfully rebased and updated refs/heads/master.</p>
+
+
+
+<a name="278375800"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/282854-general/topic/shipdriver%20validation%20errors/near/278375800" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Rick Gleason <a href="https://leamas.github.io/zulip-archive/stream/282854-general/topic/shipdriver.20validation.20errors.html#278375800">(Apr 09 2022 at 00:00)</a>:</h4>
+<p>fcgle@Hesper MINGW64 ~/source/plugins (master)<br>
+$ git fetch origin auto:auto<br>
+Enter passphrase for key '/c/Users/fcgle/.ssh/id_ed25519':<br>
+Enter passphrase for key '/c/Users/fcgle/.ssh/id_ed25519':<br>
+remote: Enumerating objects: 359, done.<br>
+remote: Counting objects: 100% (359/359), done.<br>
+remote: Compressing objects: 100% (95/95), done.<br>
+remote: Total 359 (delta 264), reused 358 (delta 264), pack-reused 0<br>
+Receiving objects: 100% (359/359), 55.06 KiB | 1.31 MiB/s, done.<br>
+Resolving deltas: 100% (264/264), completed with 4 local objects.<br>
+From github.com:rgleason/plugins<br>
+ ! [rejected]          auto       -&gt; auto  (non-fast-forward)<br>
+   49bc4051..6543a686  auto       -&gt; origin/auto</p>
+<p>fcgle@Hesper MINGW64 ~/source/plugins (master)<br>
+$ git checkout auto<br>
+Switched to branch 'auto'</p>
+<p>fcgle@Hesper MINGW64 ~/source/plugins (auto)<br>
+$ git rebase master<br>
+error: could not apply 9a2f8b76... remove old vdr v1.3.20 data<br>
+Resolve all conflicts manually, mark them as resolved with<br>
+"git add/rm &lt;conflicted_files&gt;", then run "git rebase --continue".<br>
+You can instead skip this commit: run "git rebase --skip".<br>
+To abort and get back to the state before "git rebase", run "git rebase --abort".<br>
+Could not apply 9a2f8b76... remove old vdr v1.3.20 data<br>
+CONFLICT (rename/delete): metadata/VDR-v1.3.20-ubuntu-gtk3-20.04.xml deleted in 9a2f8b76 (remove old vdr v1.3.20 data) and renamed to metadata/VDR-v1.3.25-ubuntu-gtk3-20.04.xml in HEAD. Version HEAD of metadata/VDR-v1.3.25-ubuntu-gtk3-20.04.xml left in tree.<br>
+CONFLICT (rename/delete): metadata/VDR-v1.3.20-ubuntu-gtk3-18.04.xml deleted in 9a2f8b76 (remove old vdr v1.3.20 data) and renamed to metadata/VDR-v1.3.25-ubuntu-gtk3-18.04.xml in HEAD. Version HEAD of metadata/VDR-v1.3.25-ubuntu-gtk3-18.04.xml left in tree.<br>
+CONFLICT (rename/delete): metadata/VDR-v1.3.20-raspbian-9.13.xml deleted in 9a2f8b76 (remove old vdr v1.3.20 data) and renamed to metadata/VDR-v1.3.25-ubuntu-A32-18.04.xml in HEAD. Version HEAD of metadata/VDR-v1.3.25-ubuntu-A32-18.04.xml left in tree.<br>
+CONFLICT (rename/delete): metadata/VDR-v1.3.20-ubuntu-18.04.xml deleted in 9a2f8b76 (remove old vdr v1.3.20 data) and renamed to metadata/VDR-v1.3.25-ubuntu-18.04.xml in HEAD. Version HEAD of metadata/VDR-v1.3.25-ubuntu-18.04.xml left in tree.<br>
+CONFLICT (rename/delete): metadata/VDR-v1.3.20-msvc-10.0.14393.xml deleted in 9a2f8b76 (remove old vdr v1.3.20 data) and renamed to metadata/VDR-v1.3.25-msvc-10.0.14393.xml in HEAD. Version HEAD of metadata/VDR-v1.3.25-msvc-10.0.14393.xml left in tree.<br>
+CONFLICT (rename/delete): metadata/VDR-v1.3.20-flatpak-A64-20.08.xml deleted in 9a2f8b76 (remove old vdr v1.3.20 data) and renamed to metadata/VDR-v1.3.25-flatpak-A64-20.08.xml in HEAD. Version HEAD of metadata/VDR-v1.3.25-flatpak-A64-20.08.xml left in tree.<br>
+CONFLICT (rename/delete): metadata/VDR-v1.3.20-flatpak-20.08.xml deleted in 9a2f8b76 (remove old vdr v1.3.20 data) and renamed to metadata/VDR-v1.3.25-flatpak-20.08.xml in HEAD. Version HEAD of metadata/VDR-v1.3.25-flatpak-20.08.xml left in tree.<br>
+CONFLICT (rename/delete): metadata/VDR-v1.3.20-raspbian-11.xml deleted in 9a2f8b76 (remove old vdr v1.3.20 data) and renamed to metadata/VDR-v1.3.25-debian-A32-11.xml in HEAD. Version HEAD of metadata/VDR-v1.3.25-debian-A32-11.xml left in tree.<br>
+CONFLICT (rename/delete): metadata/VDR-v1.3.20-raspbian-10.xml deleted in 9a2f8b76 (remove old vdr v1.3.20 data) and renamed to metadata/VDR-v1.3.25-debian-A32-10.xml in HEAD. Version HEAD of metadata/VDR-v1.3.25-debian-A32-10.xml left in tree.<br>
+CONFLICT (rename/delete): metadata/VDR-v1.3.20-debian-10.xml deleted in 9a2f8b76 (remove old vdr v1.3.20 data) and renamed to metadata/VDR-v1.3.25-debian-10.xml in HEAD. Version HEAD of metadata/VDR-v1.3.25-debian-10.xml left in tree.<br>
+CONFLICT (rename/delete): metadata/VDR-v1.3.20-darwin-wx315-10.13.6.xml deleted in 9a2f8b76 (remove old vdr v1.3.20 data) and renamed to metadata/VDR-v1.3.25-darwin-wx315-10.13.6.xml in HEAD. Version HEAD of metadata/VDR-v1.3.25-darwin-wx315-10.13.6.xml left in tree.<br>
+CONFLICT (rename/delete): metadata/VDR-v1.3.20-android-armhf-16.xml deleted in 9a2f8b76 (remove old vdr v1.3.20 data) and renamed to metadata/VDR-v1.3.25-android-armhf-A32-16.xml in HEAD. Version HEAD of metadata/VDR-v1.3.25-android-armhf-A32-16.xml left in tree.<br>
+CONFLICT (rename/delete): metadata/VDR-v1.3.20-android-arm64-A64-16.xml deleted in 9a2f8b76 (remove old vdr v1.3.20 data) and renamed to metadata/VDR-v1.3.25-android-arm64-A64-16.xml in HEAD. Version HEAD of metadata/VDR-v1.3.25-android-arm64-A64-16.xml left in tree.</p>
+
+
+
+<a name="278375876"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/282854-general/topic/shipdriver%20validation%20errors/near/278375876" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Rick Gleason <a href="https://leamas.github.io/zulip-archive/stream/282854-general/topic/shipdriver.20validation.20errors.html#278375876">(Apr 09 2022 at 00:01)</a>:</h4>
+<p>fcgle@Hesper MINGW64 ~/source/plugins (auto|REBASE 19/50)<br>
+$ git checkout master<br>
+error: you need to resolve your current index first<br>
+metadata/VDR-v1.3.25-android-arm64-A64-16.xml: needs merge<br>
+metadata/VDR-v1.3.25-android-armhf-A32-16.xml: needs merge<br>
+metadata/VDR-v1.3.25-darwin-wx315-10.13.6.xml: needs merge<br>
+metadata/VDR-v1.3.25-debian-10.xml: needs merge<br>
+metadata/VDR-v1.3.25-debian-A32-10.xml: needs merge<br>
+metadata/VDR-v1.3.25-debian-A32-11.xml: needs merge<br>
+metadata/VDR-v1.3.25-flatpak-20.08.xml: needs merge<br>
+metadata/VDR-v1.3.25-flatpak-A64-20.08.xml: needs merge<br>
+metadata/VDR-v1.3.25-msvc-10.0.14393.xml: needs merge<br>
+metadata/VDR-v1.3.25-ubuntu-18.04.xml: needs merge<br>
+metadata/VDR-v1.3.25-ubuntu-A32-18.04.xml: needs merge<br>
+metadata/VDR-v1.3.25-ubuntu-gtk3-18.04.xml: needs merge<br>
+metadata/VDR-v1.3.25-ubuntu-gtk3-20.04.xml: needs merge</p>
+<p>fcgle@Hesper MINGW64 ~/source/plugins (auto|REBASE 19/50)<br>
+$ git merge --squash auto<br>
+error: Merging is not possible because you have unmerged files.<br>
+hint: Fix them up in the work tree, and then use 'git add/rm &lt;file&gt;'<br>
+hint: as appropriate to mark resolution and make a commit.<br>
+fatal: Exiting because of an unresolved conflict.</p>
+<p>fcgle@Hesper MINGW64 ~/source/plugins (auto|REBASE 19/50)<br>
+$ git status<br>
+interactive rebase in progress; onto b2404e1e<br>
+Last commands done (19 commands done):<br>
+   pick c6390461 20fa599: msvc: 1.3.22.0<br>
+   pick 9a2f8b76 remove old vdr v1.3.20 data<br>
+  (see more in file .git/rebase-merge/done)<br>
+Next commands to do (31 remaining commands):<br>
+   pick 43a64a1a 0ccb75c: msvc: 1.4.29.0<br>
+   pick 16d71cda 0ccb75c: ubuntu-gtk3-x86_64: 1.4.29.0<br>
+  (use "git rebase --edit-todo" to view and edit)<br>
+You are currently rebasing branch 'auto' on 'b2404e1e'.<br>
+  (fix conflicts and then run "git rebase --continue")<br>
+  (use "git rebase --skip" to skip this patch)<br>
+  (use "git rebase --abort" to check out the original branch)</p>
+<p>Unmerged paths:<br>
+  (use "git restore --staged &lt;file&gt;..." to unstage)<br>
+  (use "git add &lt;file&gt;..." to mark resolution)<br>
+        added by us:     metadata/VDR-v1.3.25-android-arm64-A64-16.xml<br>
+        added by us:     metadata/VDR-v1.3.25-android-armhf-A32-16.xml<br>
+        added by us:     metadata/VDR-v1.3.25-darwin-wx315-10.13.6.xml<br>
+        added by us:     metadata/VDR-v1.3.25-debian-10.xml<br>
+        added by us:     metadata/VDR-v1.3.25-debian-A32-10.xml<br>
+        added by us:     metadata/VDR-v1.3.25-debian-A32-11.xml<br>
+        added by us:     metadata/VDR-v1.3.25-flatpak-20.08.xml<br>
+        added by us:     metadata/VDR-v1.3.25-flatpak-A64-20.08.xml<br>
+        added by us:     metadata/VDR-v1.3.25-msvc-10.0.14393.xml<br>
+        added by us:     metadata/VDR-v1.3.25-ubuntu-18.04.xml<br>
+        added by us:     metadata/VDR-v1.3.25-ubuntu-A32-18.04.xml<br>
+        added by us:     metadata/VDR-v1.3.25-ubuntu-gtk3-18.04.xml<br>
+        added by us:     metadata/VDR-v1.3.25-ubuntu-gtk3-20.04.xml</p>
+<p>no changes added to commit (use "git add" and/or "git commit -a")</p>
+
+
+
+<a name="278375898"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/282854-general/topic/shipdriver%20validation%20errors/near/278375898" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Rick Gleason <a href="https://leamas.github.io/zulip-archive/stream/282854-general/topic/shipdriver.20validation.20errors.html#278375898">(Apr 09 2022 at 00:01)</a>:</h4>
+<p>fcgle@Hesper MINGW64 ~/source/plugins (auto|REBASE 19/50)<br>
+$ git add metadata/</p>
+<p>fcgle@Hesper MINGW64 ~/source/plugins (auto|REBASE 19/50)<br>
+$ git status<br>
+interactive rebase in progress; onto b2404e1e<br>
+Last commands done (19 commands done):<br>
+   pick c6390461 20fa599: msvc: 1.3.22.0<br>
+   pick 9a2f8b76 remove old vdr v1.3.20 data<br>
+  (see more in file .git/rebase-merge/done)<br>
+Next commands to do (31 remaining commands):<br>
+   pick 43a64a1a 0ccb75c: msvc: 1.4.29.0<br>
+   pick 16d71cda 0ccb75c: ubuntu-gtk3-x86_64: 1.4.29.0<br>
+  (use "git rebase --edit-todo" to view and edit)<br>
+You are currently rebasing branch 'auto' on 'b2404e1e'.<br>
+  (all conflicts fixed: run "git rebase --continue")</p>
+<p>nothing to commit, working tree clean</p>
+<p>fcgle@Hesper MINGW64 ~/source/plugins (auto|REBASE 19/50)<br>
+$ git rebase --continue<br>
+dropping 43a64a1adbcc4b9d2be8303abe8bfcc392bbb3e0 0ccb75c: msvc: 1.4.29.0 -- patch contents already upstream<br>
+dropping 16d71cda55008de23d30f261d18405d00c9924d9 0ccb75c: ubuntu-gtk3-x86_64: 1.4.29.0 -- patch contents already upstream<br>
+dropping 79c2ea8af2f881995f1db96e4b8a61f312082076 0ccb75c: ubuntu-x86_64: 1.4.29.0 -- patch contents already upstream<br>
+dropping fdd87c95e5734aab8f4543794ad476f6c1acc0c6 0ccb75c: ubuntu-gtk3-x86_64: 1.4.29.0 -- patch contents already upstream<br>
+dropping 023a587aa6ab207038fb03d2f827901e1255009e 0ccb75c: debian-x86_64: 1.4.29.0 -- patch contents already upstream<br>
+dropping 3938e1736a7871d2d6b3036bbea82825c835f486 0ccb75c: ubuntu-armhf: 1.4.29.0 -- patch contents already upstream<br>
+dropping cb636769f2d785047a94d064a6ca19fcae299dc9 0ccb75c: debian-x86_64: 1.4.29.0 -- patch contents already upstream<br>
+dropping b6593148d49b1a0338bc620cc8095477758e4243 0ccb75c: debian-armhf: 1.4.29.0 -- patch contents already upstream<br>
+dropping 2c4c310af5183fc4bd61a46912804bcef8f7f573 0ccb75c: ubuntu-gtk3-armhf: 1.4.29.0 -- patch contents already upstream<br>
+dropping 047f3fbd5657a5e99337d956edd50334b9989c7c 0ccb75c: debian-armhf: 1.4.29.0 -- patch contents already upstream<br>
+dropping dd93380af3131e098e389a3fc6b85a6bb5c54950 0ccb75c: flatpak-aarch64: 1.4.29.0 -- patch contents already upstream<br>
+dropping bdba04a05cf7ebf854a11c79861b886c62efece8 0ccb75c: darwin-wx315: 1.4.29.0 -- patch contents already upstream<br>
+dropping 6564b6ebcc9c25224fcca69097b1cc3900e4143c 0ccb75c: flatpak-x86_64: 1.4.29.0 -- patch contents already upstream<br>
+Successfully rebased and updated refs/heads/a</p>
+
+
+
+<a name="278376065"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/282854-general/topic/shipdriver%20validation%20errors/near/278376065" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Rick Gleason <a href="https://leamas.github.io/zulip-archive/stream/282854-general/topic/shipdriver.20validation.20errors.html#278376065">(Apr 09 2022 at 00:04)</a>:</h4>
+<p>fcgle@Hesper MINGW64 ~/source/plugins (auto)<br>
+$ git commit -m "merging auto branch into master</p>
+<blockquote>
+<p>"<br>
+On branch auto<br>
+nothing to commit, working tree clean</p>
+</blockquote>
+
+
+
+<a name="278376077"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/282854-general/topic/shipdriver%20validation%20errors/near/278376077" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Rick Gleason <a href="https://leamas.github.io/zulip-archive/stream/282854-general/topic/shipdriver.20validation.20errors.html#278376077">(Apr 09 2022 at 00:04)</a>:</h4>
+<p>A PR (pull request) can then be made from the master branch for updating the master catalog of OpenCPN/plugins.</p>
+
+
+
+<a name="278376121"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/282854-general/topic/shipdriver%20validation%20errors/near/278376121" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Rick Gleason <a href="https://leamas.github.io/zulip-archive/stream/282854-general/topic/shipdriver.20validation.20errors.html#278376121">(Apr 09 2022 at 00:05)</a>:</h4>
+<p>Northing to compare.....<br>
+<a href="https://github.com/OpenCPN/plugins/compare/master...rgleason:master">https://github.com/OpenCPN/plugins/compare/master...rgleason:master</a></p>
+
+
+
+<a name="278401541"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/282854-general/topic/shipdriver%20validation%20errors/near/278401541" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Alec Leamas <a href="https://leamas.github.io/zulip-archive/stream/282854-general/topic/shipdriver.20validation.20errors.html#278401541">(Apr 09 2022 at 10:22)</a>:</h4>
+<p>Why is your auto branch in such a mess? No idea. I will look into this,  time permitting.</p>
+
+
+
+<a name="278458916"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/282854-general/topic/shipdriver%20validation%20errors/near/278458916" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Alec Leamas <a href="https://leamas.github.io/zulip-archive/stream/282854-general/topic/shipdriver.20validation.20errors.html#278458916">(Apr 10 2022 at 09:48)</a>:</h4>
+<p>Ok. For some reason your auto branch is broken beyond repair. Do like this:</p>
+<ul>
+<li>reset the auto branch according to <a href="https://opencpn-manuals.github.io/main/AlternativeWorkflow/InstallConfigure/GithubPreps.html">https://opencpn-manuals.github.io/main/AlternativeWorkflow/InstallConfigure/GithubPreps.html</a>, step 2 "Creating the auto branch"</li>
+<li>Rebuild vdr in the CircleCI and Appveyor GUI</li>
+<li>Run the steps you tried earlier <a href="https://opencpn-manuals.github.io/main/AlternativeWorkflow/InstallConfigure/Catalog-Github-Integration.html#_merging_the_auto_branch">https://opencpn-manuals.github.io/main/AlternativeWorkflow/InstallConfigure/Catalog-Github-Integration.html#_merging_the_auto_branch</a></li>
+</ul>
+<p>Neither rebase nor merge should cause any problem. Again, all clean for me using our master branch and a fresh auto branch.</p>
+
+
+
+<hr><p>Last updated: Dec 19 2022 at 16:41 UTC</p>
+</html>
