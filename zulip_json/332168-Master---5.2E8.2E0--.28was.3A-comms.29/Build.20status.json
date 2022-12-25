@@ -484,5 +484,23 @@
         "id": 317846911,
         "sender_full_name": "Håkan Svensson",
         "timestamp": 1671981076
+    },
+    {
+        "content": "<p>FIrst: I have started to build <em>Release</em> rather than <em>RelWithDebInfo</em>. However, the appveyor.bat still defaults to RelWithDebInfo. Please work around by setting the environment variable <code>CONFIGURATION=Release</code>for now.</p>\n<p>Looking into the <em>build\\Release</em> directory I  don't find anything named <em>plugins</em> </p>\n<div class=\"codehilite\"><pre><span></span><code>DESKTOP-VPDSRM1 MINGW64 ~/src/shipdriver_pi/build (sd3.2.1)\n$ cd Release/\n\nDESKTOP-VPDSRM1 MINGW64 ~/src/shipdriver_pi/build/Release (sd3.2.1)\n$ pwd\n/c/Users/micha/src/shipdriver_pi/build/Release\n\nDESKTOP-VPDSRM1 MINGW64 ~/src/shipdriver_pi/build/Release (sd3.2.1)\n$ find . -name plugins\n\nDESKTOP-VPDSRM1 MINGW64 ~/src/shipdriver_pi/build/Release (sd3.2.1)\n$\n</code></pre></div>\n<p>What am I missing?</p>",
+        "id": 317851089,
+        "sender_full_name": "Alec Leamas",
+        "timestamp": 1671983512
+    },
+    {
+        "content": "<blockquote>\n<p>It diffs in \"A64\" instead of \"arm64\" and \"64-11\" instead of \"64:11\"</p>\n</blockquote>\n<p>This does not actually matter, the file names are arbitrary. When looking up a plugin in the catalog, the catalog contains the correct filename, and that's that. </p>\n<p>What makes a plugin compatible or not is only about the <code>&lt;target&gt;</code>  item in the catalog  and also in the xml metadata bundled with the plugin.</p>",
+        "id": 317852070,
+        "sender_full_name": "Alec Leamas",
+        "timestamp": 1671984005
+    },
+    {
+        "content": "<blockquote>\n<p>Please work around by setting the environment variable CONFIGURATION=Release for now.</p>\n</blockquote>\n<p>Please why so?<br>\nWhen I build both project OCPN and extern plugins for RelWithDebInfo I can use the same build to both Debug O and plugins as well produce executable to run O and make a package for test runs. Very handy. What's the problem?</p>\n<p>If core O is built for Release that's good but \"not my local business\"? </p>\n<p>I've also tried to find where the file \"plugins\" is set to be created (instead of a directory). I also couldn't. But it's created by first cmake..  There is also some binary content in the file. But no one is sad when deleted.</p>",
+        "id": 317852572,
+        "sender_full_name": "Håkan Svensson",
+        "timestamp": 1671984307
     }
 ]
