@@ -2956,5 +2956,37 @@ Is there a easy fix (I or.. could push) or should i make an issue?</p>
 
 
 
-<hr><p>Last updated: Jan 06 2023 at 16:12 UTC</p>
+<a name="319813391"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332168-Master%20-%205.8.0%20%20%28was%3A%20comms%29/topic/Test%20issues/near/319813391" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Alec Leamas <a href="https://leamas.github.io/zulip-archive/stream/332168-Master---5.2E8.2E0--.28was.3A-comms.29/topic/Test.20issues.html#319813391">(Jan 06 2023 at 16:20)</a>:</h4>
+<p>At a glance, this looks broken by design. This code  sets data in  a child named "gpx", but uses  <code>name()</code> to find out whether the "gpx" child is set. Why not check if there is a "gpx" child instead? Making assumptions like "if name() is defined there is no need to create the "gpx" child" seems really  odd, especially since SetRootGPXNode() does not set that name...</p>
+<p>Thoughts?</p>
+
+
+
+<a name="319814018"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332168-Master%20-%205.8.0%20%20%28was%3A%20comms%29/topic/Test%20issues/near/319814018" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Alec Leamas <a href="https://leamas.github.io/zulip-archive/stream/332168-Master---5.2E8.2E0--.28was.3A-comms.29/topic/Test.20issues.html#319814018">(Jan 06 2023 at 16:24)</a>:</h4>
+<p>Furthermore, that function creates a node, but does not insert it anywhere. Nor does it return anything.  The bad commit seems to be 6ff5bf4abef80fce3 " Refactor navobj XML file handling." which was quite late (Dec 17...)</p>
+
+
+
+<a name="319814467"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332168-Master%20-%205.8.0%20%20%28was%3A%20comms%29/topic/Test%20issues/near/319814467" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Alec Leamas <a href="https://leamas.github.io/zulip-archive/stream/332168-Master---5.2E8.2E0--.28was.3A-comms.29/topic/Test.20issues.html#319814467">(Jan 06 2023 at 16:26)</a>:</h4>
+<p>I could probably do something about this. However, it might make more sense that Dave takes a look at it,  he has been working recently with this code and has the complete picture to the refactoring taking place here.</p>
+
+
+
+<a name="319814523"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332168-Master%20-%205.8.0%20%20%28was%3A%20comms%29/topic/Test%20issues/near/319814523" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Alec Leamas <a href="https://leamas.github.io/zulip-archive/stream/332168-Master---5.2E8.2E0--.28was.3A-comms.29/topic/Test.20issues.html#319814523">(Jan 06 2023 at 16:26)</a>:</h4>
+<p><span class="user-mention" data-user-id="517002">@Dave Register</span>  ^</p>
+
+
+
+<a name="319814781"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332168-Master%20-%205.8.0%20%20%28was%3A%20comms%29/topic/Test%20issues/near/319814781" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Håkan Svensson <a href="https://leamas.github.io/zulip-archive/stream/332168-Master---5.2E8.2E0--.28was.3A-comms.29/topic/Test.20issues.html#319814781">(Jan 06 2023 at 16:27)</a>:</h4>
+<p>The "refactor..." commit was a work on bugs in routes last month.  <br>
+Thanks for your "glance"</p>
+
+
+
+<hr><p>Last updated: Jan 06 2023 at 16:39 UTC</p>
 </html>
