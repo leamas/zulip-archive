@@ -3000,5 +3000,24 @@ Thanks.</p>
 
 
 
-<hr><p>Last updated: Jan 06 2023 at 21:24 UTC</p>
+<a name="319867191"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332168-Master%20-%205.8.0%20%20%28was%3A%20comms%29/topic/Test%20issues/near/319867191" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Alec Leamas <a href="https://leamas.github.io/zulip-archive/stream/332168-Master---5.2E8.2E0--.28was.3A-comms.29/topic/Test.20issues.html#319867191">(Jan 06 2023 at 21:34)</a>:</h4>
+<p>hm... You should probably not go for first child, it could basically be anything. The trick would be to look for a child named "GPX".</p>
+<p>And the other issue is still there. The node created is not inserted anywhere if I understand this code right.</p>
+
+
+
+<a name="319867714"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332168-Master%20-%205.8.0%20%20%28was%3A%20comms%29/topic/Test%20issues/near/319867714" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Alec Leamas <a href="https://leamas.github.io/zulip-archive/stream/332168-Master---5.2E8.2E0--.28was.3A-comms.29/topic/Test.20issues.html#319867714">(Jan 06 2023 at 21:38)</a>:</h4>
+<p>Using  <code>child(const char* name)</code> is probably the way to go for the first thing, see <a href="https://pugixml.org/docs/manual.html#access.contents">https://pugixml.org/docs/manual.html#access.contents</a></p>
+
+
+
+<a name="319868174"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332168-Master%20-%205.8.0%20%20%28was%3A%20comms%29/topic/Test%20issues/near/319868174" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Alec Leamas <a href="https://leamas.github.io/zulip-archive/stream/332168-Master---5.2E8.2E0--.28was.3A-comms.29/topic/Test.20issues.html#319868174">(Jan 06 2023 at 21:42)</a>:</h4>
+<p>Ah... OK. NavObjectCollection1 is a pugi::xml_document, so <code>append_child()</code> appends to <code>this</code>.  Case closed, the new node is actually appended implicitly. Sorry  for that noise.</p>
+
+
+
+<hr><p>Last updated: Jan 06 2023 at 21:42 UTC</p>
 </html>
