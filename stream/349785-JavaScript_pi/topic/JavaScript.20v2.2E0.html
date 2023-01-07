@@ -280,5 +280,54 @@ It also uses the constants set conditionally for Windows in consolePositioning.h
 
 
 
-<hr><p>Last updated: Jan 07 2023 at 14:42 UTC</p>
+<a name="319970144"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/349785-JavaScript_pi/topic/JavaScript%20v2.0/near/319970144" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Mike Rossiter <a href="https://leamas.github.io/zulip-archive/stream/349785-JavaScript_pi/topic/JavaScript.20v2.2E0.html#319970144">(Jan 07 2023 at 14:52)</a>:</h4>
+<p>Adding <em>#include "wx/sizer.h"</em> did not help.</p>
+
+
+
+<a name="319970513"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/349785-JavaScript_pi/topic/JavaScript%20v2.0/near/319970513" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Tony Voss <a href="https://leamas.github.io/zulip-archive/stream/349785-JavaScript_pi/topic/JavaScript.20v2.2E0.html#319970513">(Jan 07 2023 at 14:55)</a>:</h4>
+<p>JavaScriptgui_imp.h line 1036 reads<br>
+<code> TRACE(4, wxString::Format("setMinWidth %s was minimised: %b\nNew min size to %dx%d", this-&gt;mConsoleName, newMinSize.x, newMinSize.y));</code><br>
+Should be<br>
+<code> TRACE(4, wxString::Format("setMinWidth %s was minimised: %b\nNew min size to %dx%d", this-&gt;mConsoleName, wasMinimized, newMinSize.x, newMinSize.y));</code><br>
+but that does not explain the crash because TRACEing is off</p>
+
+
+
+<a name="319970655"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/349785-JavaScript_pi/topic/JavaScript%20v2.0/near/319970655" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Tony Voss <a href="https://leamas.github.io/zulip-archive/stream/349785-JavaScript_pi/topic/JavaScript.20v2.2E0.html#319970655">(Jan 07 2023 at 14:56)</a>:</h4>
+<p>With <code>setMinWidth()</code> commented out, expect the console parking tests to not look right.</p>
+
+
+
+<a name="319971047"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/349785-JavaScript_pi/topic/JavaScript%20v2.0/near/319971047" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Tony Voss <a href="https://leamas.github.io/zulip-archive/stream/349785-JavaScript_pi/topic/JavaScript.20v2.2E0.html#319971047">(Jan 07 2023 at 15:00)</a>:</h4>
+<blockquote>
+<p>But the main.js script causes a crash.</p>
+</blockquote>
+<p>It should be possible to add print statements to the <code>main.js</code> to find where it is causing a crash.  I have radically reworked that script but it should not be able to crash OCPN.  Perhaps a problem with one of my APIs.</p>
+
+
+
+<a name="319971464"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/349785-JavaScript_pi/topic/JavaScript%20v2.0/near/319971464" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Mike Rossiter <a href="https://leamas.github.io/zulip-archive/stream/349785-JavaScript_pi/topic/JavaScript.20v2.2E0.html#319971464">(Jan 07 2023 at 15:02)</a>:</h4>
+<blockquote>
+<p>Those back slashes look a little strange</p>
+</blockquote>
+<p>Not so. Escaping the ":" character.</p>
+
+
+
+<a name="319971590"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/349785-JavaScript_pi/topic/JavaScript%20v2.0/near/319971590" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Mike Rossiter <a href="https://leamas.github.io/zulip-archive/stream/349785-JavaScript_pi/topic/JavaScript.20v2.2E0.html#319971590">(Jan 07 2023 at 15:03)</a>:</h4>
+<blockquote>
+<p>It should be possible to add print statements to the main.js</p>
+</blockquote>
+<p>I will see if I can do this.</p>
+
+
+
+<hr><p>Last updated: Jan 07 2023 at 15:08 UTC</p>
 </html>
