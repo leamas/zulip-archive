@@ -202,5 +202,17 @@
         "id": 319987459,
         "sender_full_name": "Mike Rossiter",
         "timestamp": 1673112136
+    },
+    {
+        "content": "<blockquote>\n<p>Parking now ok. But consoles parked on top of each other.</p>\n</blockquote>\n<p>When a console is parked, checks to see if it is already parked  - no action<br>\nThen it looks to see what other consoles are already parked and places itself to the right of the rightmost parked console.<br>\nIssue is most likely that it is failing to determine whether a console is parked.  This could follow from issues you seem to be having with GetSize/SetSize.<br>\nThe test is done in the function <code>duk_consolePark( )</code> to be found in JSextensions.cpp<br>\nThe test is <br>\nline 593 for own console: <code>if (size.y &lt;= CONSOLE_MIN_HEIGHT){  // this console regarded as already parked </code></p>\n<p>line 602 for other consoles: <code>bool wasMinimized = (oldSize.y &lt;= CONSOLE_MIN_HEIGHT+1);  // allow for rounding error</code></p>\n<p>Note the + 1 added in case of rounding error.  <strong>If that test fails</strong>, it will not be recognized as already parked and the present console may be parked on top of it.</p>\n<p>If you need to see what values are being returned, you could turn on tracing by setting in trace.h some value like 1<br>\n<code>#define TRACE_LEVEL 0   // set to zero to omit all tracing code</code><br>\nand then insert TRACE(1, &lt;whatever to display&gt;);</p>",
+        "id": 319990840,
+        "sender_full_name": "Tony Voss",
+        "timestamp": 1673114296
+    },
+    {
+        "content": "<p>No need to comment out TRACE.  If TRACE_LEVEL set to zero, no code is inserted - it just gets a warning when compiling.</p>",
+        "id": 319990920,
+        "sender_full_name": "Tony Voss",
+        "timestamp": 1673114360
     }
 ]
