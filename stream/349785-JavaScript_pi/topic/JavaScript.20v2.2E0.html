@@ -533,5 +533,39 @@ The parking  works correctly as well.</p>
 
 
 
-<hr><p>Last updated: Jan 08 2023 at 17:07 UTC</p>
+<a name="320099293"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/349785-JavaScript_pi/topic/JavaScript%20v2.0/near/320099293" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Tony Voss <a href="https://leamas.github.io/zulip-archive/stream/349785-JavaScript_pi/topic/JavaScript.20v2.2E0.html#320099293">(Jan 08 2023 at 17:11)</a>:</h4>
+<p>Clearly, the test is failing as written on Windows but not on MacOS.  Your kludge forces it to success - but always, even when it should not.<br>
+I suspect on Windows SetMinSize() is not setting it exactly as that.  Perhaps rounding, or perhaps allowing for some minimum minimum.<br>
+We need to find out what it is doing with it.<br>
+In JSExtensions.cpp please insert these extra lines after line 622   pConsole-&gt;SetSize(minSize);</p>
+<div class="codehilite"><pre><span></span><code>// temp
+        wxSize readBack  = pConsole-&gt;GetMinSize();
+        TRACE(25, wxString::Format(&quot;%s-&gt;consolePark() resize to X:%i  Y:%i readback is X:%i  Y:%i&quot;,
+            pConsole-&gt;mConsoleName, minSize.x, minSize.y, readBack.x, readBack.y));
+// end of temp
+</code></pre></div>
+<p>For me this shows I get back what was set:</p>
+<blockquote>
+<p>L25   PluginTests-&gt;consolePark() resize to X:183  Y:20 readback is X:183  Y:20</p>
+</blockquote>
+
+
+
+<a name="320100423"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/349785-JavaScript_pi/topic/JavaScript%20v2.0/near/320100423" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Mike Rossiter <a href="https://leamas.github.io/zulip-archive/stream/349785-JavaScript_pi/topic/JavaScript.20v2.2E0.html#320100423">(Jan 08 2023 at 17:24)</a>:</h4>
+<p>Without the kludge:</p>
+<div class="codehilite"><pre><span></span><code>L0  â€“â€“â€“â€“â€“â€“â€“â€“â€“â€“â€“â€“â€“â€“â€“ Run console Test
+L25 consolePark canvas position X:9  Y:32
+L25 consolePark parkingBase:20
+L25 Test-&gt;consolePark() on call position X:580  Y:149  size X:680  Y:700
+L25 Test-&gt;consolePark() to be parked
+L25 Test-&gt;consolePark() first to be parked
+L25 Test-&gt;consolePark() resize to X:0  Y:0 readback is X:90  Y:13
+L25 Test-&gt;consolePark() parked at position X:79  Y:20  size X:90  Y:13
+</code></pre></div>
+
+
+
+<hr><p>Last updated: Jan 08 2023 at 17:25 UTC</p>
 </html>

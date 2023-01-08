@@ -304,5 +304,17 @@
         "id": 320096053,
         "sender_full_name": "Mike Rossiter",
         "timestamp": 1673195714
+    },
+    {
+        "content": "<p>Clearly, the test is failing as written on Windows but not on MacOS.  Your kludge forces it to success - but always, even when it should not.<br>\nI suspect on Windows SetMinSize() is not setting it exactly as that.  Perhaps rounding, or perhaps allowing for some minimum minimum.<br>\nWe need to find out what it is doing with it.<br>\nIn JSExtensions.cpp please insert these extra lines after line 622   pConsole-&gt;SetSize(minSize);</p>\n<div class=\"codehilite\"><pre><span></span><code>// temp\n        wxSize readBack  = pConsole-&gt;GetMinSize();\n        TRACE(25, wxString::Format(&quot;%s-&gt;consolePark() resize to X:%i  Y:%i readback is X:%i  Y:%i&quot;,\n            pConsole-&gt;mConsoleName, minSize.x, minSize.y, readBack.x, readBack.y));\n// end of temp\n</code></pre></div>\n<p>For me this shows I get back what was set:</p>\n<blockquote>\n<p>L25   PluginTests-&gt;consolePark() resize to X:183  Y:20 readback is X:183  Y:20</p>\n</blockquote>",
+        "id": 320099293,
+        "sender_full_name": "Tony Voss",
+        "timestamp": 1673197860
+    },
+    {
+        "content": "<p>Without the kludge:</p>\n<div class=\"codehilite\"><pre><span></span><code>L0  â€“â€“â€“â€“â€“â€“â€“â€“â€“â€“â€“â€“â€“â€“â€“ Run console Test\nL25 consolePark canvas position X:9  Y:32\nL25 consolePark parkingBase:20\nL25 Test-&gt;consolePark() on call position X:580  Y:149  size X:680  Y:700\nL25 Test-&gt;consolePark() to be parked\nL25 Test-&gt;consolePark() first to be parked\nL25 Test-&gt;consolePark() resize to X:0  Y:0 readback is X:90  Y:13\nL25 Test-&gt;consolePark() parked at position X:79  Y:20  size X:90  Y:13\n</code></pre></div>",
+        "id": 320100423,
+        "sender_full_name": "Mike Rossiter",
+        "timestamp": 1673198642
     }
 ]
