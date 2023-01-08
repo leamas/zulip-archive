@@ -322,5 +322,23 @@
         "id": 320101216,
         "sender_full_name": "Mike Rossiter",
         "timestamp": 1673199216
+    },
+    {
+        "content": "<p>So it seems that , under Windows, if the minimum size has never been set, GetMinSize( ) returns (0,0) although the documentation says it should take note of the sizers.<br>\nIf a console is renamed with the tools, the minimum size gets set.  But if it has not been renamed, it will not have had its minimum size set explicitly.  So...  we better do that in the console constructor.<br>\nJavaScriptgui_impl.h after line 273: <code>mBrief.briefingConsoleName = wxEmptyString;</code> please insert:<br>\n<code>setMinWidth();</code><br>\nThat method actually sets both  min width and height.</p>",
+        "id": 320102182,
+        "sender_full_name": "Tony Voss",
+        "timestamp": 1673199944
+    },
+    {
+        "content": "<p>After the change:</p>\n<div class=\"codehilite\"><pre><span></span><code>L28 setMinWidth Test was minimised: false\nNew min size to X:90  Y:13\nL28 setMinWidth Test was minimised: false\nNew min size to X:90  Y:13\nL0  â€“â€“â€“â€“â€“â€“â€“â€“â€“â€“â€“â€“â€“â€“â€“ Run console Test\nL25 consolePark canvas position X:9  Y:32\nL25 consolePark parkingBase:20\nL25 Test-&gt;consolePark() on call position X:61  Y:236  size X:680  Y:700\nL25 Test-&gt;consolePark() to be parked\nL25 Test-&gt;consolePark() first to be parked\nL25 Test-&gt;consolePark() resize to X:0  Y:0 readback is X:90  Y:13\nL25 Test-&gt;consolePark() parked at position X:79  Y:20  size X:90  Y:13\n</code></pre></div>",
+        "id": 320102974,
+        "sender_full_name": "Mike Rossiter",
+        "timestamp": 1673200492
+    },
+    {
+        "content": "<p>Knocking off for Sunday evening.  Back tomorrow.  May need to read back in <code>setMinWidth()</code> to find out what is going on.</p>",
+        "id": 320103855,
+        "sender_full_name": "Tony Voss",
+        "timestamp": 1673201120
     }
 ]

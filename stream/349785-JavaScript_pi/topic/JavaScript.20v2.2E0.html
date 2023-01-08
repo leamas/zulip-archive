@@ -573,5 +573,40 @@ L25 Test-&gt;consolePark() parked at position X:79  Y:20  size X:90  Y:13
 
 
 
-<hr><p>Last updated: Jan 08 2023 at 17:42 UTC</p>
+<a name="320102182"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/349785-JavaScript_pi/topic/JavaScript%20v2.0/near/320102182" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Tony Voss <a href="https://leamas.github.io/zulip-archive/stream/349785-JavaScript_pi/topic/JavaScript.20v2.2E0.html#320102182">(Jan 08 2023 at 17:45)</a>:</h4>
+<p>So it seems that , under Windows, if the minimum size has never been set, GetMinSize( ) returns (0,0) although the documentation says it should take note of the sizers.<br>
+If a console is renamed with the tools, the minimum size gets set.  But if it has not been renamed, it will not have had its minimum size set explicitly.  So...  we better do that in the console constructor.<br>
+JavaScriptgui_impl.h after line 273: <code>mBrief.briefingConsoleName = wxEmptyString;</code> please insert:<br>
+<code>setMinWidth();</code><br>
+That method actually sets both  min width and height.</p>
+
+
+
+<a name="320102974"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/349785-JavaScript_pi/topic/JavaScript%20v2.0/near/320102974" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Mike Rossiter <a href="https://leamas.github.io/zulip-archive/stream/349785-JavaScript_pi/topic/JavaScript.20v2.2E0.html#320102974">(Jan 08 2023 at 17:54)</a>:</h4>
+<p>After the change:</p>
+<div class="codehilite"><pre><span></span><code>L28 setMinWidth Test was minimised: false
+New min size to X:90  Y:13
+L28 setMinWidth Test was minimised: false
+New min size to X:90  Y:13
+L0  â€“â€“â€“â€“â€“â€“â€“â€“â€“â€“â€“â€“â€“â€“â€“ Run console Test
+L25 consolePark canvas position X:9  Y:32
+L25 consolePark parkingBase:20
+L25 Test-&gt;consolePark() on call position X:61  Y:236  size X:680  Y:700
+L25 Test-&gt;consolePark() to be parked
+L25 Test-&gt;consolePark() first to be parked
+L25 Test-&gt;consolePark() resize to X:0  Y:0 readback is X:90  Y:13
+L25 Test-&gt;consolePark() parked at position X:79  Y:20  size X:90  Y:13
+</code></pre></div>
+
+
+
+<a name="320103855"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/349785-JavaScript_pi/topic/JavaScript%20v2.0/near/320103855" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Tony Voss <a href="https://leamas.github.io/zulip-archive/stream/349785-JavaScript_pi/topic/JavaScript.20v2.2E0.html#320103855">(Jan 08 2023 at 18:05)</a>:</h4>
+<p>Knocking off for Sunday evening.  Back tomorrow.  May need to read back in <code>setMinWidth()</code> to find out what is going on.</p>
+
+
+
+<hr><p>Last updated: Jan 08 2023 at 18:09 UTC</p>
 </html>
