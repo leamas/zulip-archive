@@ -1,0 +1,77 @@
+<html>
+<head><meta charset="utf-8"><title>Network problems · Master - 5.8.0  (was: comms) · Zulip Chat Archive</title></head>
+<h2>Stream: <a href="https://leamas.github.io/zulip-archive/stream/332168-Master---5.2E8.2E0--.28was.3A-comms.29/index.html">Master - 5.8.0  (was: comms)</a></h2>
+<h3>Topic: <a href="https://leamas.github.io/zulip-archive/stream/332168-Master---5.2E8.2E0--.28was.3A-comms.29/topic/Network.20problems.html">Network problems</a></h3>
+
+<hr>
+
+<base href="https://opencpn.zulipchat.com">
+
+<head><link href="https://leamas.github.io/zulip-archive/style.css" rel="stylesheet"></head>
+
+<a name="320328001"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332168-Master%20-%205.8.0%20%20%28was%3A%20comms%29/topic/Network%20problems/near/320328001" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Alec Leamas <a href="https://leamas.github.io/zulip-archive/stream/332168-Master---5.2E8.2E0--.28was.3A-comms.29/topic/Network.20problems.html#320328001">(Jan 09 2023 at 20:48)</a>:</h4>
+<p>DAve wrote: <br>
+New top, interleaved, if you do not mind.<br>
+Hakan and I are working a linux network problem. Simplest scenario we can contrive:</p>
+<p>One machine, linux or Win, transmitting UDP, 1 Hz N0183 position data.<br>
+One linux machine, receiving UDP N0183 data, initially working fine, as expected.<br>
+After 19-20 minutes, the linux receiver seems to stall for about 15 seconds, eventually picking up and processing a lot of queued traffic.<br>
+This feels like some buffer overflow/rearrangement in linux side. Wireshark logs show no interruption in UDP output from (1).<br>
+As you might understand, this causes watchdog starvation on receiver side.<br>
+Additionally, we can reproduce on OCPN 562, so not (probably) related to new O571 network stack.<br>
+Also seen on socketCAN, understandable since socketCAN probably uses the linux internal socket stack.<br>
+The strangest thing is, even if we increase the traffic, by using a VDR playback of a complex environment, using TCP, the effect still occurs. 19-20 minutes is the magic number.<br>
+Thoughts?</p>
+
+
+
+<a name="320328117"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332168-Master%20-%205.8.0%20%20%28was%3A%20comms%29/topic/Network%20problems/near/320328117" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Alec Leamas <a href="https://leamas.github.io/zulip-archive/stream/332168-Master---5.2E8.2E0--.28was.3A-comms.29/topic/Network.20problems.html#320328117">(Jan 09 2023 at 20:49)</a>:</h4>
+<p><span class="user-mention" data-user-id="517002">@Dave Register</span>  <span class="user-mention" data-user-id="522486">@Håkan Svensson</span>  ^</p>
+
+
+
+<a name="320328387"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332168-Master%20-%205.8.0%20%20%28was%3A%20comms%29/topic/Network%20problems/near/320328387" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Alec Leamas <a href="https://leamas.github.io/zulip-archive/stream/332168-Master---5.2E8.2E0--.28was.3A-comms.29/topic/Network.20problems.html#320328387">(Jan 09 2023 at 20:50)</a>:</h4>
+<p>hm... let's focus on the UDP case.   TCP adds buffering, sliding windows, socket and what not, it's just more complicated. UDP is the simple case.</p>
+
+
+
+<a name="320328794"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332168-Master%20-%205.8.0%20%20%28was%3A%20comms%29/topic/Network%20problems/near/320328794" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Alec Leamas <a href="https://leamas.github.io/zulip-archive/stream/332168-Master---5.2E8.2E0--.28was.3A-comms.29/topic/Network.20problems.html#320328794">(Jan 09 2023 at 20:53)</a>:</h4>
+<p>And... UDP is not buffered in any way, it's just a best effort attempt to deliver a packet. If it's lost, it's lost.</p>
+<p>Could it it be a network problem? Is a router involved, or is it traffic on a single segment?</p>
+
+
+
+<a name="320328958"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332168-Master%20-%205.8.0%20%20%28was%3A%20comms%29/topic/Network%20problems/near/320328958" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Alec Leamas <a href="https://leamas.github.io/zulip-archive/stream/332168-Master---5.2E8.2E0--.28was.3A-comms.29/topic/Network.20problems.html#320328958">(Jan 09 2023 at 20:54)</a>:</h4>
+<p>Or, in  other words: can this be reproduced in two different networks, or are you sharing a common test setup?</p>
+
+
+
+<a name="320330110"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332168-Master%20-%205.8.0%20%20%28was%3A%20comms%29/topic/Network%20problems/near/320330110" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Dave Register <a href="https://leamas.github.io/zulip-archive/stream/332168-Master---5.2E8.2E0--.28was.3A-comms.29/topic/Network.20problems.html#320330110">(Jan 09 2023 at 21:01)</a>:</h4>
+<p>Yes, that is why we simplified to UDP.<br>
+Started on Hakan's setup.  I have started some tests here, but inconclusive.  One CF post on Beta#2 suggests the same thing, data drop after 19 minutes on socketCAN.</p>
+
+
+
+<a name="320330648"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332168-Master%20-%205.8.0%20%20%28was%3A%20comms%29/topic/Network%20problems/near/320330648" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Dave Register <a href="https://leamas.github.io/zulip-archive/stream/332168-Master---5.2E8.2E0--.28was.3A-comms.29/topic/Network.20problems.html#320330648">(Jan 09 2023 at 21:04)</a>:</h4>
+<p>UDP test are done on single local subnet/segment.</p>
+
+
+
+<a name="320331029"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332168-Master%20-%205.8.0%20%20%28was%3A%20comms%29/topic/Network%20problems/near/320331029" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Håkan Svensson <a href="https://leamas.github.io/zulip-archive/stream/332168-Master---5.2E8.2E0--.28was.3A-comms.29/topic/Network.20problems.html#320331029">(Jan 09 2023 at 21:07)</a>:</h4>
+<p>I can use the same TCP or UDP source for two Win and one Rpi4-32-Buster. All these shows no time out like this.<br>
+The RPi400 -64- Debian 11 using the same source time out after about 20 minutes. <br>
+Massive short  "lost network" and  "established network" until it halts for nearly a minute. Then ok until next about 20 minutes.<br>
+(My friends RPi400 suffer the same)</p>
+
+
+
+<hr><p>Last updated: Jan 09 2023 at 21:08 UTC</p>
+</html>

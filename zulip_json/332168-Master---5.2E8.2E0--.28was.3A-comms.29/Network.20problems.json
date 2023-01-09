@@ -1,0 +1,50 @@
+[
+    {
+        "content": "<p>DAve wrote: <br>\nNew top, interleaved, if you do not mind.<br>\nHakan and I are working a linux network problem. Simplest scenario we can contrive:</p>\n<p>One machine, linux or Win, transmitting UDP, 1 Hz N0183 position data.<br>\nOne linux machine, receiving UDP N0183 data, initially working fine, as expected.<br>\nAfter 19-20 minutes, the linux receiver seems to stall for about 15 seconds, eventually picking up and processing a lot of queued traffic.<br>\nThis feels like some buffer overflow/rearrangement in linux side. Wireshark logs show no interruption in UDP output from (1).<br>\nAs you might understand, this causes watchdog starvation on receiver side.<br>\nAdditionally, we can reproduce on OCPN 562, so not (probably) related to new O571 network stack.<br>\nAlso seen on socketCAN, understandable since socketCAN probably uses the linux internal socket stack.<br>\nThe strangest thing is, even if we increase the traffic, by using a VDR playback of a complex environment, using TCP, the effect still occurs. 19-20 minutes is the magic number.<br>\nThoughts?</p>",
+        "id": 320328001,
+        "sender_full_name": "Alec Leamas",
+        "timestamp": 1673297304
+    },
+    {
+        "content": "<p><span class=\"user-mention\" data-user-id=\"517002\">@Dave Register</span>  <span class=\"user-mention\" data-user-id=\"522486\">@Håkan Svensson</span>  ^</p>",
+        "id": 320328117,
+        "sender_full_name": "Alec Leamas",
+        "timestamp": 1673297361
+    },
+    {
+        "content": "<p>hm... let's focus on the UDP case.   TCP adds buffering, sliding windows, socket and what not, it's just more complicated. UDP is the simple case.</p>",
+        "id": 320328387,
+        "sender_full_name": "Alec Leamas",
+        "timestamp": 1673297458
+    },
+    {
+        "content": "<p>And... UDP is not buffered in any way, it's just a best effort attempt to deliver a packet. If it's lost, it's lost.</p>\n<p>Could it it be a network problem? Is a router involved, or is it traffic on a single segment?</p>",
+        "id": 320328794,
+        "sender_full_name": "Alec Leamas",
+        "timestamp": 1673297605
+    },
+    {
+        "content": "<p>Or, in  other words: can this be reproduced in two different networks, or are you sharing a common test setup?</p>",
+        "id": 320328958,
+        "sender_full_name": "Alec Leamas",
+        "timestamp": 1673297653
+    },
+    {
+        "content": "<p>Yes, that is why we simplified to UDP.<br>\nStarted on Hakan's setup.  I have started some tests here, but inconclusive.  One CF post on Beta#2 suggests the same thing, data drop after 19 minutes on socketCAN.</p>",
+        "id": 320330110,
+        "sender_full_name": "Dave Register",
+        "timestamp": 1673298078
+    },
+    {
+        "content": "<p>UDP test are done on single local subnet/segment.</p>",
+        "id": 320330648,
+        "sender_full_name": "Dave Register",
+        "timestamp": 1673298277
+    },
+    {
+        "content": "<p>I can use the same TCP or UDP source for two Win and one Rpi4-32-Buster. All these shows no time out like this.<br>\nThe RPi400 -64- Debian 11 using the same source time out after about 20 minutes. <br>\nMassive short  \"lost network\" and  \"established network\" until it halts for nearly a minute. Then ok until next about 20 minutes.<br>\n(My friends RPi400 suffer the same)</p>",
+        "id": 320331029,
+        "sender_full_name": "Håkan Svensson",
+        "timestamp": 1673298450
+    }
+]
