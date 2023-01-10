@@ -237,5 +237,61 @@ Although no connection lost log entry only the "GPS Watchdog....."</p>
 
 
 
-<hr><p>Last updated: Jan 10 2023 at 09:42 UTC</p>
+<a name="320410777"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332168-Master%20-%205.8.0%20%20%28was%3A%20comms%29/topic/Network%20problems/near/320410777" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Håkan Svensson <a href="https://leamas.github.io/zulip-archive/stream/332168-Master---5.2E8.2E0--.28was.3A-comms.29/topic/Network.20problems.html#320410777">(Jan 10 2023 at 09:47)</a>:</h4>
+<p>And you need to use history graphs in a single Dashboard to be able to extend it. Not in a board with other small instruments.<br>
+To make a new Dashboard use the + icon down left in preferences. It use to be convenient to rename the new board.<br>
+<a href="/user_uploads/33951/QsjXgYw_FkyJKxPVCvzouBNh/bild.png">bild.png</a></p>
+<div class="message_inline_image"><a href="/user_uploads/33951/QsjXgYw_FkyJKxPVCvzouBNh/bild.png" title="bild.png"><img src="/user_uploads/33951/QsjXgYw_FkyJKxPVCvzouBNh/bild.png"></a></div>
+
+
+
+<a name="320411145"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332168-Master%20-%205.8.0%20%20%28was%3A%20comms%29/topic/Network%20problems/near/320411145" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Håkan Svensson <a href="https://leamas.github.io/zulip-archive/stream/332168-Master---5.2E8.2E0--.28was.3A-comms.29/topic/Network.20problems.html#320411145">(Jan 10 2023 at 09:49)</a>:</h4>
+<p>To check for network obstacle using TCP you can also inspect the log file for lost connection and GPS watchdog.</p>
+
+
+
+<a name="320411469"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332168-Master%20-%205.8.0%20%20%28was%3A%20comms%29/topic/Network%20problems/near/320411469" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Alec Leamas <a href="https://leamas.github.io/zulip-archive/stream/332168-Master---5.2E8.2E0--.28was.3A-comms.29/topic/Network.20problems.html#320411469">(Jan 10 2023 at 09:51)</a>:</h4>
+<p>OK, the single dasboard is running.</p>
+<blockquote>
+<p>To check for network obstacle using TCP you can also inspect the log file for lost connection and GPS watchdog.</p>
+</blockquote>
+<p>Have you any examples so I can grep for them?</p>
+
+
+
+<a name="320411623"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332168-Master%20-%205.8.0%20%20%28was%3A%20comms%29/topic/Network%20problems/near/320411623" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Alec Leamas <a href="https://leamas.github.io/zulip-archive/stream/332168-Master---5.2E8.2E0--.28was.3A-comms.29/topic/Network.20problems.html#320411623">(Jan 10 2023 at 09:52)</a>:</h4>
+<p>Away for some minutes.</p>
+
+
+
+<a name="320412586"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332168-Master%20-%205.8.0%20%20%28was%3A%20comms%29/topic/Network%20problems/near/320412586" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Håkan Svensson <a href="https://leamas.github.io/zulip-archive/stream/332168-Master---5.2E8.2E0--.28was.3A-comms.29/topic/Network.20problems.html#320412586">(Jan 10 2023 at 09:57)</a>:</h4>
+<p>Examples:</p>
+<blockquote>
+<div class="codehilite"><pre><span></span><code>13:13:52.381 MESSAGE comm_drv_n0183_net.cpp:330     TCP NetworkDataStream watchdog timeout: TCP:signalk.stupan.se:10112
+</code></pre></div>
+
+<p>13:13:57.384 MESSAGE comm_bridge.cpp:190    ***GPS Watchdog timeout at Lat:57.7458   Lon: 11.6482<br>
+13:13:57.885 MESSAGE comm_drv_n0183_net.cpp:512 TCP NetworkDataStream connection established: TCP:signalk.stupan.se:10112<br>
+13:14:45.174 MESSAGE comm_drv_n0183_net.cpp:330     TCP NetworkDataStream watchdog timeout: TCP:signalk.stupan.se:10112<br>
+13:14:49.419 MESSAGE comm_bridge.cpp:190    ***GPS Watchdog timeout at Lat:57.7468   Lon: 11.6449<br>
+13:14:50.274 MESSAGE comm_drv_n0183_net.cpp:512 TCP NetworkDataStream connection established: TCP:signalk.stupan.se:10112<br>
+13:16:41.366 MESSAGE comm_drv_n0183_net.cpp:330     TCP NetworkDataStream watchdog timeout: TCP:signalk.stupan.se:10112<br>
+13:16:45.494 MESSAGE comm_bridge.cpp:190    ***GPS Watchdog timeout at Lat:57.749   Lon: 11.6375<br>
+13:16:46.373 MESSAGE comm_drv_n0183_net.cpp:512 TCP NetworkDataStream connection established: TCP:signalk.stupan.se:10112</p>
+</blockquote>
+
+
+
+<a name="320413284"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332168-Master%20-%205.8.0%20%20%28was%3A%20comms%29/topic/Network%20problems/near/320413284" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Håkan Svensson <a href="https://leamas.github.io/zulip-archive/stream/332168-Master---5.2E8.2E0--.28was.3A-comms.29/topic/Network.20problems.html#320413284">(Jan 10 2023 at 10:01)</a>:</h4>
+<p>Also away to handle firewood storage.</p>
+
+
+
+<hr><p>Last updated: Jan 10 2023 at 10:09 UTC</p>
 </html>
