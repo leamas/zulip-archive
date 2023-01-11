@@ -1,0 +1,50 @@
+<html>
+<head><meta charset="utf-8"><title>MacOS Build · Master - 5.8.0  (was: comms) · Zulip Chat Archive</title></head>
+<h2>Stream: <a href="https://leamas.github.io/zulip-archive/stream/332168-Master---5.2E8.2E0--.28was.3A-comms.29/index.html">Master - 5.8.0  (was: comms)</a></h2>
+<h3>Topic: <a href="https://leamas.github.io/zulip-archive/stream/332168-Master---5.2E8.2E0--.28was.3A-comms.29/topic/MacOS.20Build.html">MacOS Build</a></h3>
+
+<hr>
+
+<base href="https://opencpn.zulipchat.com">
+
+<head><link href="https://leamas.github.io/zulip-archive/style.css" rel="stylesheet"></head>
+
+<a name="320578817"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332168-Master%20-%205.8.0%20%20%28was%3A%20comms%29/topic/MacOS%20Build/near/320578817" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Dave Register <a href="https://leamas.github.io/zulip-archive/stream/332168-Master---5.2E8.2E0--.28was.3A-comms.29/topic/MacOS.20Build.html#320578817">(Jan 11 2023 at 01:55)</a>:</h4>
+<p>New Topic to discuss MacOS build process</p>
+
+
+
+<a name="320578909"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332168-Master%20-%205.8.0%20%20%28was%3A%20comms%29/topic/MacOS%20Build/near/320578909" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Dave Register <a href="https://leamas.github.io/zulip-archive/stream/332168-Master---5.2E8.2E0--.28was.3A-comms.29/topic/MacOS.20Build.html#320578909">(Jan 11 2023 at 01:56)</a>:</h4>
+<p>It will help to review the MacOS build process.<br>
+The build starts with normal compile and link.  Nothing special here.<br>
+The next steps, however, are very Mac specific.<br>
+A MacOS app is shipped as a bundle, containing all of the libraries required to run the app that are not normally found on a bare metal machine.  Call these libraries "special". The list includes things like wxWidgets, SSL, etc. This strategy is part of the way Apple avoids trouble when they make frequent ABI changes to libraries.  The app builder (us) needs to ensure that the build machine has appropriate versions of libraries needed at run time.  And also ensure that they get copied into the bundle.</p>
+<p>After the conventional compile/link, the process of building the bundle belongs to an Apple authored script called "fixup_bundle".  His first job is to execute a test link/load of the app, something like "ldd" on linux. Using the results, he attempts to locate and move/copy the required "special" libraries to the target bundle location.  This way, they will be known to be present on whatever system the target runs on, and are known to be compatible with the app.  Libraries bundled in the app take precedence over any similarly named libraries on the target system.</p>
+<p>The next step is to prepare a release package.  There are two conventional formats:</p>
+<ol>
+<li>DMG (Disk image) format.  The format makes a mountable disk image of the entire bundle, which may be copied onto the target system, and thereby run.  Important to note that the DMG contains a verbatim copy of the constructed bundle.</li>
+<li>PKG (Package) format.  The PKG format distributable app is itself an installer executable, similar to NSIS install found on Windows.  Most apps are distributed in this format, because is is more intuitive to end users.  This is the method we prefer for OCPN, although we build DMG images also, for completeness.</li>
+</ol>
+<p>There is one key difference in the two distribution formats.  A DMG by default contains a verbatim copy of the bundle. However, the PKG format is created from a script maintained as part of the OCPN source tree.  Due to the nature of the app that builds the PKG (cleverly called Packages), each library, symlink, and resource present in the constructed bundle must be explicitely specified in the script template.  This has implications.</p>
+<p>Historically, OCPN built for various MacOS versions has ended up using the same set of "special" libraries and resources.  So it is simple to hard-code that list into the script template, and build for whatever version is required.  But MacOS 11+ changed that.  In MacOS 11, "the fixup_bundle" utility ends up including one or more libraries that are required by MacOS 11, but are not required (or even available) for MacOS 10.  So this happens:  If we code the PKG script to include all libs required for 11, it will fail when building a PKG for 10, since some files may not be present on 10.  Conversely, if we leave the "missing" libs out of the script, the MacOS 11 will fail at runtime, since it needs the "missing" library.</p>
+<p>Stepping back to the DMG format.  The DMG built for MacOS 11 will install and run on both MacOS 10.x and MacOS 11.  Why does this work? The "missing" file needed for MacOS 11 is in the DMG, and is simply ignored on MacOS 10.  So we can conclude from this that we have a simple packaging problem, no more involved than that.</p>
+<p>So, how to fix this? Two possiblities:</p>
+<p>If we want a single PKG distributable for both MacOS 10 and 11, the simplest thing is to include correctly named "dummy" files in the MacOS 10 bundle, and let the Packages script copy these dummies into the PKG installer, where they will do no harm.  On the MacOS 11 build, we of course use the real files.<br>
+This solution has the feel of a hack, but gives us a single PKG that will run on both systems.</p>
+<p>..or..</p>
+<p>We could build a clever script that will do this:</p>
+<ol>
+<li>Read the contents of the constructed bundle, especially the location of the required special libraries ("Framework")</li>
+<li>edit (sed?) the Packages scrip template to include exactly the special files found in the constructed bundle.</li>
+<li>Using CMake, probably, convert the script template into actual script, making appropriate envirnment substitutions as is done today.</li>
+<li>Run Packages against this script.</li>
+</ol>
+<p>This process will of course build a different package for MacOS 10 than for MacOS 11.  This may not be what we want, but it is the "correct" solution.</p>
+<p>Thoughts, all?</p>
+
+
+
+<hr><p>Last updated: Jan 11 2023 at 02:13 UTC</p>
+</html>
