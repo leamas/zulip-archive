@@ -159,5 +159,35 @@ b) enough time passes that we can safely drop some legacy support, and shift min
 
 
 
-<hr><p>Last updated: Jan 12 2023 at 21:26 UTC</p>
+<a name="321039138"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332168-Master%20-%205.8.0%20%20%28was%3A%20comms%29/topic/MacOS%20Build/near/321039138" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Alec Leamas <a href="https://leamas.github.io/zulip-archive/stream/332168-Master---5.2E8.2E0--.28was.3A-comms.29/topic/MacOS.20Build.html#321039138">(Jan 12 2023 at 21:38)</a>:</h4>
+<p><span class="user-mention" data-user-id="517002">@Dave Register</span>  I think I'm  on track to solve this. It seems to be about using a distribution file, and define the allowed version. </p>
+<p>Going to bed, so writing some things here mostly for myself. But if you have time and interest... If not, I'll try a little more tomorrow.</p>
+<div class="codehilite"><pre><span></span><code>$ pkgbuild \
+  --root /Users/al/src/OpenCPN/build/OpenCPN.app  \
+  --install-location /Applications/OpenCPN.app/  \
+  --identifier opencpn \
+  OpenCPN.app.pkg
+
+$ productbuild --synthesize  --package OpenCPN.app.pkg  distro.xml
+
+Edit distro.xml, add:
+     &lt;allowed-os-versions&gt;
+        &lt;os-version min=&quot;10.10&quot;/&gt;
+     &lt;/allowed-os-versions&gt;
+
+$  productbuild  --distribution distro.xml OpenCPN.pkg
+
+ ```
+</code></pre></div>
+
+
+
+<a name="321039583"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332168-Master%20-%205.8.0%20%20%28was%3A%20comms%29/topic/MacOS%20Build/near/321039583" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Notification Bot <a href="https://leamas.github.io/zulip-archive/stream/332168-Master---5.2E8.2E0--.28was.3A-comms.29/topic/MacOS.20Build.html#321039583">(Jan 12 2023 at 21:41)</a>:</h4>
+<p>A message was moved here from <a class="stream-topic" data-stream-id="332168" href="/#narrow/stream/332168-Master---5.2E8.2E0--.28was.3A-comms.29/topic/Network.20problems">#Master - 5.8.0  (was: comms) &gt; Network problems</a> by <span class="user-mention silent" data-user-id="399510">Alec Leamas</span>.</p>
+
+
+
+<hr><p>Last updated: Jan 12 2023 at 21:42 UTC</p>
 </html>
