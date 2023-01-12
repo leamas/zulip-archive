@@ -147,5 +147,17 @@ b) enough time passes that we can safely drop some legacy support, and shift min
 
 
 
-<hr><p>Last updated: Jan 12 2023 at 20:42 UTC</p>
+<a name="321032627"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332168-Master%20-%205.8.0%20%20%28was%3A%20comms%29/topic/MacOS%20Build/near/321032627" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Alec Leamas <a href="https://leamas.github.io/zulip-archive/stream/332168-Master---5.2E8.2E0--.28was.3A-comms.29/topic/MacOS.20Build.html#321032627">(Jan 12 2023 at 20:55)</a>:</h4>
+<p>However, the pkg created by pkgbuild seems pretty low-level. Perhaps <em>productbuild(1)</em> is a better choice, it seems to be more focused on our  use case. Sample invocation, still  in  build dir.</p>
+<div class="codehilite"><pre><span></span><code>productbuild  \
+  --root /Users/al/src/OpenCPN/build/OpenCPN.app/ /Applications/OpenCPN.app \
+  opencpn.pkg
+</code></pre></div>
+<p>I <strong>think</strong> this might be a better approach. However,  the pkg file created this way does not seem to respect  MACOSX_DEPLOYMENT_TARGET, so the resulting pkg cannot start OpenCPN, it seems to think it requires 12.0 which is not available on my build host.</p>
+<p>It can be started on the command line. I'm (almost) sure there is some knob which could be used instead of MACOSX_DEPLOYMENT_TARGET, but I do not find it.</p>
+
+
+
+<hr><p>Last updated: Jan 12 2023 at 21:08 UTC</p>
 </html>
