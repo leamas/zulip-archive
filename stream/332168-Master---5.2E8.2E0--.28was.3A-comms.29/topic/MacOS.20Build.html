@@ -79,5 +79,30 @@ It seems that our CI build for MacOS 11 works everywhere tested so far.  So why 
 
 
 
-<hr><p>Last updated: Jan 11 2023 at 23:42 UTC</p>
+<a name="320820896"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332168-Master%20-%205.8.0%20%20%28was%3A%20comms%29/topic/MacOS%20Build/near/320820896" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Dave Register <a href="https://leamas.github.io/zulip-archive/stream/332168-Master---5.2E8.2E0--.28was.3A-comms.29/topic/MacOS.20Build.html#320820896">(Jan 12 2023 at 00:06)</a>:</h4>
+<p>Hmmm....<br>
+Ok, that is some good logic, though I cannot remember seeing it stated so before now.</p>
+<p>On the other hand, I am focused on shipping one PKG that runs on all versions, from a reasonable legacy version (2-3 years old) through to current MacOS release at the time we ship.  One PKG.</p>
+<p>So, if our build for 10.15 will do that, then we should defer the 11/12/13 optimizations until:<br>
+a)  we have no choice, since we cannot run , say on 13+, without a new build for that version, or<br>
+b) enough time passes that we can safely drop some legacy support, and shift minimum supported version to 11 or so.</p>
+<p>Another wrinkle.  When/if we learn how, we want someday to publish an Apple-silicon native version, not relying on Rosetta emulater, for M1/M2 archs.  Hopefully this could be done with a "universal" binary package, of some sort.</p>
+<p>Perhaps we should today focus on the 10.15 build, and test on all possible MacOS versions we can get out hands on.  I will start some of that.  I have access to several MacOS versions.  To do that, we will need to adopt your Q4 suggestion above.  No problem, just more to maintain.....</p>
+
+
+
+<a name="320821843"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332168-Master%20-%205.8.0%20%20%28was%3A%20comms%29/topic/MacOS%20Build/near/320821843" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Dave Register <a href="https://leamas.github.io/zulip-archive/stream/332168-Master---5.2E8.2E0--.28was.3A-comms.29/topic/MacOS.20Build.html#320821843">(Jan 12 2023 at 00:14)</a>:</h4>
+<p>And to answer your questions, IMHO:</p>
+<ol>
+<li>Don't know.  Summer down there, could be awhile. We need to move forward from where we are.</li>
+<li>Traditionally, I have dropped the DMG production from the script at production release.  Agree there is no need for it when the PKG works.  OTOH, it is just one line in the script, and has never been seen to fail on OCPN project.</li>
+<li>I would not want to try and replicate the functions of the Packages app that builds the PKG.  There is a GUI involved, as with NSIS.  Might make sense to see if there is improved version of Packages available, with say file globbing support....</li>
+<li>Two templates: Agree, so at least both 10.15 and 11 builds will complete without error on GA, and work at runtime, too.</li>
+</ol>
+
+
+
+<hr><p>Last updated: Jan 12 2023 at 00:45 UTC</p>
 </html>
