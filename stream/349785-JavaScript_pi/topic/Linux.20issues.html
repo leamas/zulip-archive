@@ -91,5 +91,35 @@ The first test must have run OK so why did the 2nd fail?  Please examine the fil
 
 
 
-<hr><p>Last updated: Jan 16 2023 at 17:08 UTC</p>
+<a name="321687917"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/349785-JavaScript_pi/topic/Linux%20issues/near/321687917" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Tony Voss <a href="https://leamas.github.io/zulip-archive/stream/349785-JavaScript_pi/topic/Linux.20issues.html#321687917">(Jan 16 2023 at 17:20)</a>:</h4>
+<p><span class="user-mention silent" data-user-id="399559">Mike Rossiter</span> <a href="#narrow/stream/349785-JavaScript_pi/topic/Linux.20issues/near/321466921">said</a>:</p>
+<blockquote>
+<blockquote>
+<p>Does the script window have coloured lexing</p>
+</blockquote>
+<p>Yes, blue, red and black.</p>
+</blockquote>
+<p>Just building again at 17:13.<br>
+The code that does the colour printing is thus:</p>
+<div class="codehilite"><pre><span></span><code>void appendStyledText(wxString text, wxStyledTextCtrl* window, int colour){
+    // Append coloured text to window
+    int long beforeLength, afterLength;
+    beforeLength = window-&gt;GetTextLength(); // where we are before adding text
+    window-&gt;AppendText(text);
+    afterLength = window-&gt;GetTextLength(); // where we are after adding text
+    window-&gt;StartStyling((int)beforeLength,0);   // 2nd parameter included Linux still using wxWidgets v3.0.2
+    window-&gt;SetStyling((int)(afterLength-beforeLength), colour);
+    TRACE(24, wxString::Format(&quot;Styled text &#39;%s&#39; colour %i  start %li  end %li  length %i&quot;, text, colour,
+        beforeLength, afterLength, (int)(afterLength-beforeLength)));
+    }
+</code></pre></div>
+<p>Note I have a TRACE in.<br>
+Note too the <code>StartStyling</code> line.  It has a 2nd deprecated parameter which generates warnings from the compiler. <br>
+This we had to have to keep Linux happy.  Is that still the case?  Might this be the source of the problem Linux not printing in colour?<br>
+If still a problem, please let me have a copy of the trace when running the print test to compare with what I see.</p>
+
+
+
+<hr><p>Last updated: Jan 16 2023 at 17:27 UTC</p>
 </html>

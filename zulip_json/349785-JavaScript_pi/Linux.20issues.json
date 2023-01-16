@@ -52,5 +52,11 @@
         "id": 321466921,
         "sender_full_name": "Mike Rossiter",
         "timestamp": 1673779977
+    },
+    {
+        "content": "<p><span class=\"user-mention silent\" data-user-id=\"399559\">Mike Rossiter</span> <a href=\"#narrow/stream/349785-JavaScript_pi/topic/Linux.20issues/near/321466921\">said</a>:</p>\n<blockquote>\n<blockquote>\n<p>Does the script window have coloured lexing</p>\n</blockquote>\n<p>Yes, blue, red and black.</p>\n</blockquote>\n<p>Just building again at 17:13.<br>\nThe code that does the colour printing is thus:</p>\n<div class=\"codehilite\"><pre><span></span><code>void appendStyledText(wxString text, wxStyledTextCtrl* window, int colour){\n    // Append coloured text to window\n    int long beforeLength, afterLength;\n    beforeLength = window-&gt;GetTextLength(); // where we are before adding text\n    window-&gt;AppendText(text);\n    afterLength = window-&gt;GetTextLength(); // where we are after adding text\n    window-&gt;StartStyling((int)beforeLength,0);   // 2nd parameter included Linux still using wxWidgets v3.0.2\n    window-&gt;SetStyling((int)(afterLength-beforeLength), colour);\n    TRACE(24, wxString::Format(&quot;Styled text &#39;%s&#39; colour %i  start %li  end %li  length %i&quot;, text, colour,\n        beforeLength, afterLength, (int)(afterLength-beforeLength)));\n    }\n</code></pre></div>\n<p>Note I have a TRACE in.<br>\nNote too the <code>StartStyling</code> line.  It has a 2nd deprecated parameter which generates warnings from the compiler. <br>\nThis we had to have to keep Linux happy.  Is that still the case?  Might this be the source of the problem Linux not printing in colour?<br>\nIf still a problem, please let me have a copy of the trace when running the print test to compare with what I see.</p>",
+        "id": 321687917,
+        "sender_full_name": "Tony Voss",
+        "timestamp": 1673889637
     }
 ]
