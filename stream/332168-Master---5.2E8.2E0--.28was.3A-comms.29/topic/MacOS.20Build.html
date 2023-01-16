@@ -314,5 +314,21 @@ However, though MacOS  11 build also completed, the uploaded .pkg contained only
 
 
 
-<hr><p>Last updated: Jan 16 2023 at 22:08 UTC</p>
+<a name="321725288"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332168-Master%20-%205.8.0%20%20%28was%3A%20comms%29/topic/MacOS%20Build/near/321725288" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Dave Register <a href="https://leamas.github.io/zulip-archive/stream/332168-Master---5.2E8.2E0--.28was.3A-comms.29/topic/MacOS.20Build.html#321725288">(Jan 16 2023 at 22:16)</a>:</h4>
+<p>BTW, smoke test of Macos 11 build after latest patch (81ae..) loads/starts/runs on MacOS  11.7 and 12.1(M1).<br>
+Does not install on MacOS 10.14. "This app requires MacOS 10.15 or later".<br>
+Did not test on MacOS 10.15 yet.</p>
+<p>I'm pretty sure it will run on 10.14, if the metadata will allow installation.  Maybe even earlier 10,xx</p>
+
+
+
+<a name="321725912"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332168-Master%20-%205.8.0%20%20%28was%3A%20comms%29/topic/MacOS%20Build/near/321725912" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Alec Leamas <a href="https://leamas.github.io/zulip-archive/stream/332168-Master---5.2E8.2E0--.28was.3A-comms.29/topic/MacOS.20Build.html#321725912">(Jan 16 2023 at 22:22)</a>:</h4>
+<p>This is what I have talked about earlier. To force it as usable on anything lower than today the  pkgbuild <code>--min-os-version</code> option is required. This is only available on xcode 14.2. Practically, this means that it must be built on circleci in a very modern  builder, more or less monterey I guess. This is tested and works.</p>
+<p>Without this option, it seems like pkgbuild looks to the target of the bundled libraries and uses the lowest value which matches all. Not sure, but this is what it looks like. I have tried quite hard, but do not find any way around this. There are plenty of options to productbuild, but they seems to be  unable to override the value from pkgconfig.</p>
+
+
+
+<hr><p>Last updated: Jan 16 2023 at 22:28 UTC</p>
 </html>
