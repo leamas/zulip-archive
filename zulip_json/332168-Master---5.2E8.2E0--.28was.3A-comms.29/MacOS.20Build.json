@@ -184,5 +184,17 @@
         "id": 321718204,
         "sender_full_name": "Alec Leamas",
         "timestamp": 1673903368
+    },
+    {
+        "content": "<p><span class=\"user-mention\" data-user-id=\"517002\">@Dave Register</span>  Could you take a look at the liblzma.5.dylib  handling?</p>\n<p>As of now,  find_library()  locates \"somewhere\", probably in /usr/local/lib. If this is the one we should use we should probablye just remove this:</p>\n<div class=\"codehilite\"><pre><span></span><code>  install(CODE &quot;\n    include(BundleUtilities)\n    copy_resolved_item_into_bundle(\\&quot;${LIBLZMA_LIBRARIES}\\&quot; \\&quot;\\${CMAKE_INSTALL_PREFIX}/bin/OpenCPN.app/Contents/Frameworks\\&quot;)\n    &quot;\n    COMPONENT Runtime\n  )\n</code></pre></div>\n<p>Note that as written, the above just installs ${LIBLZMA_LIBRARIES} which is what find_library() located. That's what makes this redundant in this case, the libraries we link to will get bundled anyway.</p>\n<p>OTOH, if we should use some other  library for example in /opt/local we should handle it like we do with mpg123 i. e., force find_library() to look in the right place.  Also in this case the code above should be removed.</p>\n<p>I could do the dirty work here it  you want. The core question is which  liblzma  we should use, both when compiling and linking.  /usr/local/lib? /opt/local/something? something else?</p>",
+        "id": 321722443,
+        "sender_full_name": "Alec Leamas",
+        "timestamp": 1673905734
+    },
+    {
+        "content": "<p>I'll take a look tonight, more info tomorrow.</p>",
+        "id": 321723669,
+        "sender_full_name": "Dave Register",
+        "timestamp": 1673906414
     }
 ]
