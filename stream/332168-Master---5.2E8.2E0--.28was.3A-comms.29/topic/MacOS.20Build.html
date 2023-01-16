@@ -336,5 +336,46 @@ Did not test on MacOS 10.15 yet.</p>
 
 
 
-<hr><p>Last updated: Jan 16 2023 at 22:42 UTC</p>
+<a name="321729603"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332168-Master%20-%205.8.0%20%20%28was%3A%20comms%29/topic/MacOS%20Build/near/321729603" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Alec Leamas <a href="https://leamas.github.io/zulip-archive/stream/332168-Master---5.2E8.2E0--.28was.3A-comms.29/topic/MacOS.20Build.html#321729603">(Jan 16 2023 at 22:59)</a>:</h4>
+<p>OK, patch below makes it if you want to make a try. It builds on macos-12. I cannot see that this should be any difference from building at 11. The code we compile is governed by MACOSX_DEPLOYMENT_TARGET, and the bundled libraries are the same.</p>
+<div class="codehilite"><pre><span></span><code>commit 5d3b795978ef50cbbf5eb42b173043d721e392f8 (HEAD -&gt; master)
+Author: Alec Leamas &lt;leamas.alec@nowhere.net&gt;
+Date:   Mon Jan 16 23:31:56 2023 +0100
+
+    ci: macos: try to build on macos-12 for 10.10
+
+diff --git a/.github/workflows/MacOS.yaml b/.github/workflows/MacOS.yaml
+index 43ad8ecd8..855f4a6a9 100644
+--- a/.github/workflows/MacOS.yaml
++++ b/.github/workflows/MacOS.yaml
+@@ -31,9 +31,9 @@ jobs:
+           #   cmake_defines: -DCMAKE_CXX_STANDARD=11
+           #   use_homebrew: 1
+           - name: macOS 11 wxOSX
+-            runner: macos-11
++            runner: macos-12
+             pkg_mod: 11
+-            MACOSX_DEPLOYMENT_TARGET: 11.0
++            MACOSX_DEPLOYMENT_TARGET: 10.10
+           - name: macOS 10.15 wxOSX
+             runner: macos-10.15
+             pkg_mod: 10
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+index dc7791c2c..1fc79f781 100644
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -3015,6 +3015,7 @@ if (APPLE)
+       --root /tmp/opencpn/bin/OpenCPN.app
+       --identifier org.opencpn
+       --install-location /Applications/OpenCPN.app
++      --min-os-version 10.10
+       OpenCPN.app.pkg
+   )
+   add_dependencies(component-pkg show-bundled-libs pkg-tmp)
+</code></pre></div>
+
+
+
+<hr><p>Last updated: Jan 16 2023 at 23:08 UTC</p>
 </html>

@@ -214,5 +214,11 @@
         "id": 321727122,
         "sender_full_name": "Alec Leamas",
         "timestamp": 1673908412
+    },
+    {
+        "content": "<p>OK, patch below makes it if you want to make a try. It builds on macos-12. I cannot see that this should be any difference from building at 11. The code we compile is governed by MACOSX_DEPLOYMENT_TARGET, and the bundled libraries are the same.</p>\n<div class=\"codehilite\"><pre><span></span><code>commit 5d3b795978ef50cbbf5eb42b173043d721e392f8 (HEAD -&gt; master)\nAuthor: Alec Leamas &lt;leamas.alec@nowhere.net&gt;\nDate:   Mon Jan 16 23:31:56 2023 +0100\n\n    ci: macos: try to build on macos-12 for 10.10\n\ndiff --git a/.github/workflows/MacOS.yaml b/.github/workflows/MacOS.yaml\nindex 43ad8ecd8..855f4a6a9 100644\n--- a/.github/workflows/MacOS.yaml\n+++ b/.github/workflows/MacOS.yaml\n@@ -31,9 +31,9 @@ jobs:\n           #   cmake_defines: -DCMAKE_CXX_STANDARD=11\n           #   use_homebrew: 1\n           - name: macOS 11 wxOSX\n-            runner: macos-11\n+            runner: macos-12\n             pkg_mod: 11\n-            MACOSX_DEPLOYMENT_TARGET: 11.0\n+            MACOSX_DEPLOYMENT_TARGET: 10.10\n           - name: macOS 10.15 wxOSX\n             runner: macos-10.15\n             pkg_mod: 10\ndiff --git a/CMakeLists.txt b/CMakeLists.txt\nindex dc7791c2c..1fc79f781 100644\n--- a/CMakeLists.txt\n+++ b/CMakeLists.txt\n@@ -3015,6 +3015,7 @@ if (APPLE)\n       --root /tmp/opencpn/bin/OpenCPN.app\n       --identifier org.opencpn\n       --install-location /Applications/OpenCPN.app\n+      --min-os-version 10.10\n       OpenCPN.app.pkg\n   )\n   add_dependencies(component-pkg show-bundled-libs pkg-tmp)\n</code></pre></div>",
+        "id": 321729603,
+        "sender_full_name": "Alec Leamas",
+        "timestamp": 1673909954
     }
 ]
