@@ -413,5 +413,16 @@ Thoughts on all this?</p>
 
 
 
-<hr><p>Last updated: Jan 17 2023 at 08:44 UTC</p>
+<a name="321782586"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332168-Master%20-%205.8.0%20%20%28was%3A%20comms%29/topic/MacOS%20Build/near/321782586" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Alec Leamas <a href="https://leamas.github.io/zulip-archive/stream/332168-Master---5.2E8.2E0--.28was.3A-comms.29/topic/MacOS.20Build.html#321782586">(Jan 17 2023 at 09:08)</a>:</h4>
+<blockquote>
+<p>I suppose if we want to be more explicit, we could direct find_library to look in "/usr/local/opt/xz" for liblzma,</p>
+</blockquote>
+<p>I think we should direct find_library() to locate the correct version, and link to that. If fixup_bundle  does it's work properly it should then bundle the version we link to.</p>
+<p>A possible explanation to current mischief is that find_library() finds the system library, at least when it exists, and links to that. fixup_bundle then rightfully bundles this library rather than brew's.</p>
+<p>However, we should also use the correct header. Currently, it seems that  the header is selected more or less randomly.</p>
+
+
+
+<hr><p>Last updated: Jan 17 2023 at 09:08 UTC</p>
 </html>
