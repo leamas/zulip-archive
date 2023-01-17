@@ -481,5 +481,14 @@ index 24f687773..73b8eeb01 100644
 
 
 
-<hr><p>Last updated: Jan 17 2023 at 20:42 UTC</p>
+<a name="321925250"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332168-Master%20-%205.8.0%20%20%28was%3A%20comms%29/topic/MacOS%20Build/near/321925250" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Dave Register <a href="https://leamas.github.io/zulip-archive/stream/332168-Master---5.2E8.2E0--.28was.3A-comms.29/topic/MacOS.20Build.html#321925250">(Jan 17 2023 at 21:01)</a>:</h4>
+<p>I patched distro.plist, as suggested. Tested the resulting pkg built by MacOS 12 method on MacOS v10.14, real hardware.<br>
+It installs OK, as expected.  But we get the dreaded "(load command 0x80000034 is unknown)" message at runtime for libmpg123.dylib.  Also, many warnings on the build.  This is apparently a new linker directive, embedded in the library, that was introduced by Apple for MacOS 10.15.<br>
+I surmise that the Brew is the culprit here.  Brew detects that our build host is MacOS 12, and so installs the most recent version of libmpg123.dylib.  And it fails to load on pre-10.15 machines.<br>
+Sigh...Hmmmm...</p>
+
+
+
+<hr><p>Last updated: Jan 17 2023 at 21:07 UTC</p>
 </html>
