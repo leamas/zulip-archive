@@ -424,5 +424,40 @@ Thoughts on all this?</p>
 
 
 
-<hr><p>Last updated: Jan 17 2023 at 09:08 UTC</p>
+<a name="321784650"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332168-Master%20-%205.8.0%20%20%28was%3A%20comms%29/topic/MacOS%20Build/near/321784650" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Alec Leamas <a href="https://leamas.github.io/zulip-archive/stream/332168-Master---5.2E8.2E0--.28was.3A-comms.29/topic/MacOS.20Build.html#321784650">(Jan 17 2023 at 09:19)</a>:</h4>
+<blockquote>
+<p>Finally, I shifted all MacOS min versions to 10.13, which is 5 years old now. Seems like a reasonable deployment target.</p>
+</blockquote>
+<p>Right. However, I missed one part, the <em>buildosx/distro.xml</em> which basically is the productbuild setup. Here, there is also a 10.15 minimum which needs to be patched.</p>
+<p>It looks confusing, but see it this way: each package produced by pkgbuild has a minimum version, here defined by <code>--min-os-version</code>. productbuild is able to combine several pkgbuild packages to a single product package with more metadata. Doing so, productbuild will refuse to create a product with a too low version w r t the pkgbuild  packages but might very well raise it. </p>
+<p>So, pkgbuild defines what is possible. productbuild sets the final minimum version within the pkgbuild ramifications.</p>
+<p>Patch :</p>
+<div class="codehilite"><pre><span></span><code>diff --git a/buildosx/distro.plist b/buildosx/distro.plist
+index 24f687773..73b8eeb01 100644
+--- a/buildosx/distro.plist
++++ b/buildosx/distro.plist
+@@ -16,7 +16,7 @@
+         &lt;pkg-ref id=&quot;org.opencpn&quot;/&gt;
+     &lt;/choice&gt;
+     &lt;allowed-os-versions&gt;
+-        &lt;os-version min=&quot;10.15&quot;/&gt;
++        &lt;os-version min=&quot;10.13&quot;/&gt;
+     &lt;/allowed-os-versions&gt;
+     &lt;pkg-ref id=&quot;org.opencpn&quot; version=&quot;0&quot; onConclusion=&quot;none&quot;&gt;
+         OpenCPN.app.pkg
+</code></pre></div>
+
+
+
+<a name="321784972"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332168-Master%20-%205.8.0%20%20%28was%3A%20comms%29/topic/MacOS%20Build/near/321784972" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Alec Leamas <a href="https://leamas.github.io/zulip-archive/stream/332168-Master---5.2E8.2E0--.28was.3A-comms.29/topic/MacOS.20Build.html#321784972">(Jan 17 2023 at 09:20)</a>:</h4>
+<blockquote>
+<p>If fixup_bundle does it's work properly it should then bundle the version we link to.</p>
+</blockquote>
+<p>An interesting question is if fixup_bundle is able to resolve a tbd file...</p>
+
+
+
+<hr><p>Last updated: Jan 17 2023 at 09:27 UTC</p>
 </html>

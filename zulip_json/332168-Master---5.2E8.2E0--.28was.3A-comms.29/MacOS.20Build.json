@@ -244,5 +244,17 @@
         "id": 321782586,
         "sender_full_name": "Alec Leamas",
         "timestamp": 1673946481
+    },
+    {
+        "content": "<blockquote>\n<p>Finally, I shifted all MacOS min versions to 10.13, which is 5 years old now. Seems like a reasonable deployment target.</p>\n</blockquote>\n<p>Right. However, I missed one part, the <em>buildosx/distro.xml</em> which basically is the productbuild setup. Here, there is also a 10.15 minimum which needs to be patched.</p>\n<p>It looks confusing, but see it this way: each package produced by pkgbuild has a minimum version, here defined by <code>--min-os-version</code>. productbuild is able to combine several pkgbuild packages to a single product package with more metadata. Doing so, productbuild will refuse to create a product with a too low version w r t the pkgbuild  packages but might very well raise it. </p>\n<p>So, pkgbuild defines what is possible. productbuild sets the final minimum version within the pkgbuild ramifications.</p>\n<p>Patch :</p>\n<div class=\"codehilite\"><pre><span></span><code>diff --git a/buildosx/distro.plist b/buildosx/distro.plist\nindex 24f687773..73b8eeb01 100644\n--- a/buildosx/distro.plist\n+++ b/buildosx/distro.plist\n@@ -16,7 +16,7 @@\n         &lt;pkg-ref id=&quot;org.opencpn&quot;/&gt;\n     &lt;/choice&gt;\n     &lt;allowed-os-versions&gt;\n-        &lt;os-version min=&quot;10.15&quot;/&gt;\n+        &lt;os-version min=&quot;10.13&quot;/&gt;\n     &lt;/allowed-os-versions&gt;\n     &lt;pkg-ref id=&quot;org.opencpn&quot; version=&quot;0&quot; onConclusion=&quot;none&quot;&gt;\n         OpenCPN.app.pkg\n</code></pre></div>",
+        "id": 321784650,
+        "sender_full_name": "Alec Leamas",
+        "timestamp": 1673947157
+    },
+    {
+        "content": "<blockquote>\n<p>If fixup_bundle does it's work properly it should then bundle the version we link to.</p>\n</blockquote>\n<p>An interesting question is if fixup_bundle is able to resolve a tbd file...</p>",
+        "id": 321784972,
+        "sender_full_name": "Alec Leamas",
+        "timestamp": 1673947257
     }
 ]
