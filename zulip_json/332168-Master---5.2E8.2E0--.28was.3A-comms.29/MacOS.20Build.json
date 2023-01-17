@@ -220,5 +220,11 @@
         "id": 321729603,
         "sender_full_name": "Alec Leamas",
         "timestamp": 1673909954
+    },
+    {
+        "content": "<p>What I know so far on liblzma:<br>\n1.find_library() finds a .tbd  file, which generally points to a MacOS standard library in /usr/lib, or some such.  The \"tdb\" get resolved at compile and link time.  Mac uses TDB files so that their SDK does not need to contain verbatim copies of libraries known to be present in a base system.</p>\n<ol start=\"2\">\n<li>In the OCPN build script, we install a copy of liblzma.5.dylib in /usr/local/opt/xz, apparently as part of \"xz\" package installed by brew.</li>\n<li>In fixup_bundle, he for some reason prefers the copy in /usr/loca/opt/xz over the system library, and that is the one that ends up in the bundle.</li>\n<li>I do not know yet whether MacOS versions earlier than 10.15 have lzma as a standard library.  Waiting on build to check this.</li>\n</ol>\n<p>What I have done:<br>\nI removed the offending directive from CMakeLists.txt, since it did not seem to be doing anything useful anyway.<br>\nI also shifted MacOS 11 pkg build host to MacOS 12.<br>\nFinally, I shifted all MacOS min versions to 10.13, which is 5 years old now.  Seems like a reasonable deployment target.</p>\n<p>More as I know it.</p>",
+        "id": 321754184,
+        "sender_full_name": "Dave Register",
+        "timestamp": 1673931320
     }
 ]
