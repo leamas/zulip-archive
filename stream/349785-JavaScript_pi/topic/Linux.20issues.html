@@ -247,5 +247,44 @@ Going to try clientSize().</p>
 
 
 
-<hr><p>Last updated: Jan 17 2023 at 16:11 UTC</p>
+<a name="321870471"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/349785-JavaScript_pi/topic/Linux%20issues/near/321870471" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Mike Rossiter <a href="https://leamas.github.io/zulip-archive/stream/349785-JavaScript_pi/topic/Linux.20issues.html#321870471">(Jan 17 2023 at 16:23)</a>:</h4>
+<p>Progress, maybe?<br>
+In park() I used SetClientSize() iso SetSize. Parking works.  Using <em>44_parking.js</em> I get the consoles on top of each other.</p>
+
+
+
+<a name="321871000"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/349785-JavaScript_pi/topic/Linux%20issues/near/321871000" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Tony Voss <a href="https://leamas.github.io/zulip-archive/stream/349785-JavaScript_pi/topic/Linux.20issues.html#321871000">(Jan 17 2023 at 16:26)</a>:</h4>
+<p>There's a JS function to return relevant console details.  So, if in my console named "4", I run the script</p>
+<div class="codehilite"><pre><span></span><code>require(&quot;Consoles&quot;);
+print(JSON.stringify(consoleDetails(&quot;4&quot;),null,&quot;\t&quot;), &quot;\n&quot;);
+</code></pre></div>
+<p>I get the output</p>
+<div class="codehilite"><pre><span></span><code>{
+    &quot;name&quot;: &quot;4&quot;,
+    &quot;position&quot;: {
+        &quot;x&quot;: 513,
+        &quot;y&quot;: 198
+    },
+    &quot;size&quot;: {
+        &quot;x&quot;: 761,
+        &quot;y&quot;: 699
+    },
+    &quot;minSize&quot;: {
+        &quot;x&quot;: 90,
+        &quot;y&quot;: 29
+    },
+    &quot;clientSize&quot;: {
+        &quot;x&quot;: 761,
+        &quot;y&quot;: 671
+    }
+}
+</code></pre></div>
+<p>NB the reported position is <strong>relative to the frame</strong> and not the screen as returned by<code> GetPosition()</code><br>
+Source of this API in <code>optional.cpp</code> starting at line 28</p>
+
+
+
+<hr><p>Last updated: Jan 17 2023 at 16:37 UTC</p>
 </html>
