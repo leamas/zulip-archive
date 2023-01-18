@@ -1,0 +1,35 @@
+<html>
+<head><meta charset="utf-8"><title>MacOS X86  and Arm64 conflict · JavaScript_pi · Zulip Chat Archive</title></head>
+<h2>Stream: <a href="https://leamas.github.io/zulip-archive/stream/349785-JavaScript_pi/index.html">JavaScript_pi</a></h2>
+<h3>Topic: <a href="https://leamas.github.io/zulip-archive/stream/349785-JavaScript_pi/topic/MacOS.20X86.20.20and.20Arm64.20conflict.html">MacOS X86  and Arm64 conflict</a></h3>
+
+<hr>
+
+<base href="https://opencpn.zulipchat.com">
+
+<head><link href="https://leamas.github.io/zulip-archive/style.css" rel="stylesheet"></head>
+
+<a name="322045998"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/349785-JavaScript_pi/topic/MacOS%20X86%20%20and%20Arm64%20conflict/near/322045998" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Tony Voss <a href="https://leamas.github.io/zulip-archive/stream/349785-JavaScript_pi/topic/MacOS.20X86.20.20and.20Arm64.20conflict.html#322045998">(Jan 18 2023 at 12:59)</a>:</h4>
+<p>I have been messing with the new OCPN v5.7 Beta 3 which I ran on another Mac (Intel) to avoid conflicts.  Never mind about that now but somehow I have messed up my build script on my main machine (Apple Silicon and hence Arm64.<br>
+Now when I do a local build, it builds for Arm64 rather than X86.  And it fails to load into OCPN v5.6 which is X86.<br>
+Is there a switch in the build script or something?  Cannot see anything in <code>circleci-build-macos.sh</code></p>
+
+
+
+<a name="322048557"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/349785-JavaScript_pi/topic/MacOS%20X86%20%20and%20Arm64%20conflict/near/322048557" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Tony Voss <a href="https://leamas.github.io/zulip-archive/stream/349785-JavaScript_pi/topic/MacOS.20X86.20.20and.20Arm64.20conflict.html#322048557">(Jan 18 2023 at 13:12)</a>:</h4>
+<p>PS I had to update to the latest cMake.  Might that have spotted I am on an Arm64 machine and set up to build for that?</p>
+
+
+
+<a name="322049200"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/349785-JavaScript_pi/topic/MacOS%20X86%20%20and%20Arm64%20conflict/near/322049200" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Tony Voss <a href="https://leamas.github.io/zulip-archive/stream/349785-JavaScript_pi/topic/MacOS.20X86.20.20and.20Arm64.20conflict.html#322049200">(Jan 18 2023 at 13:15)</a>:</h4>
+<p>Found it.  I need to do this:<br>
+<code>set(CMAKE_OSX_ARCHITECTURES "x86_64")</code><br>
+Just need to find where it goes.</p>
+
+
+
+<hr><p>Last updated: Jan 18 2023 at 13:16 UTC</p>
+</html>
