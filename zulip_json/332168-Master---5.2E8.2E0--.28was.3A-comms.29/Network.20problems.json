@@ -490,5 +490,11 @@
         "id": 321514114,
         "sender_full_name": "Dave Register",
         "timestamp": 1673804495
+    },
+    {
+        "content": "<p>Some observations FWIW:<br>\nThe RPi400 is connected to can0 where POS and SAT are prio 0<br>\nIt's also connected to TCP stupan wher POS and SAT are prio1 and wind, depth and more are used by plugin Dashboard.</p>\n<p>Before the long timeout, detected by Wind history 40 seconds reset, other 10 seconds watchdog instruments are timed out several times. That's nothing new.<br>\nBut I saw all 10 sec instruments are timed out. Including the SAT data from can0! Although CanBus-can0 is not a IP network it's in some way still handled by the network driver, or?<br>\nI also noticed the long timeout is always released and network reconnected immediately when the 40 seconds Dashboard watchdog has counted down and the wind history is reset. That's kind of strange? Why is the data stream always reestablished just when the watchdog has timed out and not some arbitrary time after that? </p>\n<p>Could it still be something in OCPN and the data channel to Plugin Dashboard creating this all network halt or if it's about some filled up buffer function. Why any function in OCPN should react like this only with this specific 64 bit Debian kernel I can't imagine. It's just a thought based on what I noticed and described above. <br>\nYou can also notice I don't have the right words to discuss the technical and programmable details but my thoughts may be able to transfer to \"your\" language?</p>\n<p>Abstract questions:</p>\n<ul>\n<li>Why are all \"network\" data streams affected, also can0?</li>\n<li>Why are all \"network\" reestablished the same second Dashboard watchdog(s) has counted down?</li>\n</ul>",
+        "id": 322699732,
+        "sender_full_name": "Håkan Svensson",
+        "timestamp": 1674297715
     }
 ]
