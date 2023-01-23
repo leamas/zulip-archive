@@ -82,5 +82,11 @@
         "id": 323078285,
         "sender_full_name": "Mike Rossiter",
         "timestamp": 1674495189
+    },
+    {
+        "content": "<p><span class=\"user-mention\" data-user-id=\"399559\">@Mike Rossiter</span>  <span class=\"user-mention\" data-user-id=\"554731\">@Tony Voss</span> </p>\n<p>You are right: If the auto branch cannot be merged into master but later is accepted as PR it means the the local master branch  is not synced with the upstream master branch.</p>\n<p>Here, \"local\" is the master in your, mine or Tony's fork of OpenCPN/plugins. \"upstream\" is the master branch at OpenCPN/plugins.</p>\n<p>I would not recommend the workflow to submit the auto branch without first merging it with master. We also have new, still undocumented workflows needed to handle the \"frozen\" builds -- this is new in the 5.8.0 cycle.</p>\n<p>The workflow to make a PR is described in <a href=\"https://opencpn-manuals.github.io/main/AlternativeWorkflow/InstallConfigure/Catalog-Github-Integration.html#make-PR\">https://opencpn-manuals.github.io/main/AlternativeWorkflow/InstallConfigure/Catalog-Github-Integration.html#make-PR</a></p>\n<p>In particular, the steps to sync the local master with upstream is:</p>\n<div class=\"codehilite\"><pre><span></span><code>    $ git remote update upstream\n    $ git checkout master\n    $ git rebase upstream/master\n</code></pre></div>\n<p>After these steps, the local master is ok. Next step is to sync auto with the local master (and thus also upstream/master):</p>\n<div class=\"codehilite\"><pre><span></span><code>     $ git fetch origin auto:auto\n     $ git checkout auto\n     $ git rebase master\n</code></pre></div>\n<p>After these steps, auto is synced with both local master and upstream/master. It is now ready to be merged using:</p>\n<div class=\"codehilite\"><pre><span></span><code>    $ git checkout master\n    $ git merge --squash auto\n    $ git commit -m &quot;Merging auto branch into master&quot;\n</code></pre></div>\n<p>Now is the time to remove old builds while still keeping those with are frozen in place. For now, this is a manual step which needs some thought before doing the PR.</p>",
+        "id": 323081805,
+        "sender_full_name": "Alec Leamas",
+        "timestamp": 1674496175
     }
 ]

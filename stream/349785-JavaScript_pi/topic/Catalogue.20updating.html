@@ -140,5 +140,31 @@ I will clean the old versions out at the next update.</p>
 
 
 
-<hr><p>Last updated: Jan 23 2023 at 17:44 UTC</p>
+<a name="323081805"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/349785-JavaScript_pi/topic/Catalogue%20updating/near/323081805" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Alec Leamas <a href="https://leamas.github.io/zulip-archive/stream/349785-JavaScript_pi/topic/Catalogue.20updating.html#323081805">(Jan 23 2023 at 17:49)</a>:</h4>
+<p><span class="user-mention" data-user-id="399559">@Mike Rossiter</span>  <span class="user-mention" data-user-id="554731">@Tony Voss</span> </p>
+<p>You are right: If the auto branch cannot be merged into master but later is accepted as PR it means the the local master branch  is not synced with the upstream master branch.</p>
+<p>Here, "local" is the master in your, mine or Tony's fork of OpenCPN/plugins. "upstream" is the master branch at OpenCPN/plugins.</p>
+<p>I would not recommend the workflow to submit the auto branch without first merging it with master. We also have new, still undocumented workflows needed to handle the "frozen" builds -- this is new in the 5.8.0 cycle.</p>
+<p>The workflow to make a PR is described in <a href="https://opencpn-manuals.github.io/main/AlternativeWorkflow/InstallConfigure/Catalog-Github-Integration.html#make-PR">https://opencpn-manuals.github.io/main/AlternativeWorkflow/InstallConfigure/Catalog-Github-Integration.html#make-PR</a></p>
+<p>In particular, the steps to sync the local master with upstream is:</p>
+<div class="codehilite"><pre><span></span><code>    $ git remote update upstream
+    $ git checkout master
+    $ git rebase upstream/master
+</code></pre></div>
+<p>After these steps, the local master is ok. Next step is to sync auto with the local master (and thus also upstream/master):</p>
+<div class="codehilite"><pre><span></span><code>     $ git fetch origin auto:auto
+     $ git checkout auto
+     $ git rebase master
+</code></pre></div>
+<p>After these steps, auto is synced with both local master and upstream/master. It is now ready to be merged using:</p>
+<div class="codehilite"><pre><span></span><code>    $ git checkout master
+    $ git merge --squash auto
+    $ git commit -m &quot;Merging auto branch into master&quot;
+</code></pre></div>
+<p>Now is the time to remove old builds while still keeping those with are frozen in place. For now, this is a manual step which needs some thought before doing the PR.</p>
+
+
+
+<hr><p>Last updated: Jan 23 2023 at 18:30 UTC</p>
 </html>
