@@ -22,5 +22,26 @@ hm, yes, there is also the  problem that Cloudsmith will remove the untagged bui
 
 
 
-<hr><p>Last updated: Jan 23 2023 at 10:42 UTC</p>
+<a name="322988713"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332200-shipdriver/topic/frozen%20builds/near/322988713" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Mike Rossiter <a href="https://leamas.github.io/zulip-archive/stream/332200-shipdriver/topic/frozen.20builds.html#322988713">(Jan 23 2023 at 10:49)</a>:</h4>
+<blockquote>
+<p>the problem that Cloudsmith will remove the untagged builds</p>
+</blockquote>
+<p>But existing artifacts in beta or prod will always be tagged??? Isn't the issue the lifecyle of the Cloudsmith repo and the number of packages in the repo? Excess (old) wx3.0 packages being deleted.</p>
+<blockquote>
+<p>create a new branch with a fancy name like frozen? <br>
+ uploaded to a stable Cloudsmith repo where they won't be removed over time.</p>
+</blockquote>
+<p>We are still faced with the issue of the lifecycle. The Cloudsmith api allows deletion of an artifact. Can this be used to ensure that the number of packages is kept within the limit number?  Tackle the issue as one of Cloudsmith house-keeping. Manual deletion of packages could also be used.</p>
+<p>For the new ABI I have increased the major version number of a plugin other than ShipDriver by 1. It is easy to recognise the new versions in the metadata list. Leaving old wx3.0 versions when pruning is pretty simple, if you remember to do it!</p>
+<blockquote>
+<p>as a final step we could merge the frozen branch</p>
+</blockquote>
+<p>What repo is this a branch of? Sounds like OpenCPN/plugins, where we make the PR to the master branch. A backup here would be useful. </p>
+<p>In the actual plugin a branch with the old wx30 version is useful for backup builds. I need to do this for my plugins anyway.</p>
+<p>To fix my problem of missing wx30 metadata files. Can I find a commit of fork OpenCPN/plugins with the wx3.0 xml files for the relevant plugins. Copy the xml files from here to the latest fork OpenCPN/plugins directory and then make the PR? The artifacts will still be in Cloudsmith at this stage.</p>
+
+
+
+<hr><p>Last updated: Jan 23 2023 at 11:07 UTC</p>
 </html>
