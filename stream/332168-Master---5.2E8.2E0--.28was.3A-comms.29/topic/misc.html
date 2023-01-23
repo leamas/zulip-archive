@@ -2580,5 +2580,28 @@ Our issues relate to font scaling, mostly.  wx32 did not do a great job on Windo
 
 
 
-<hr><p>Last updated: Jan 23 2023 at 12:49 UTC</p>
+<a name="323014287"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332168-Master%20-%205.8.0%20%20%28was%3A%20comms%29/topic/misc/near/323014287" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Håkan Svensson <a href="https://leamas.github.io/zulip-archive/stream/332168-Master---5.2E8.2E0--.28was.3A-comms.29/topic/misc.html#323014287">(Jan 23 2023 at 13:04)</a>:</h4>
+<p><span class="user-mention" data-user-id="517002">@Dave Register</span> <br>
+Could we in some way adapt the functions below to respect Windows DPI scaling?<br>
+All set in pluginmanager.cpp<br>
+I see for example the "GetOCPNGUIToolScaleFactor_PlugIn" is used to scale images in Dashboard Preferences.<br>
+The idea is of course to get a general function instead of scaling every single item.<br>
+Håkan</p>
+<p>wxFont *OCPNGetFont(wxString TextElement, int default_size) {<br>
+  return FontMgr::Get().GetFont(TextElement, default_size);<br>
+}</p>
+<p>wxFont *GetOCPNScaledFont_PlugIn(wxString TextElement, int default_size) {<br>
+  return GetOCPNScaledFont(TextElement, default_size);<br>
+}</p>
+<p>double GetOCPNGUIToolScaleFactor_PlugIn(int GUIScaleFactor) {<br>
+  return g_Platform-&gt;GetToolbarScaleFactor(GUIScaleFactor);<br>
+}</p>
+<p>double GetOCPNGUIToolScaleFactor_PlugIn() {<br>
+  return g_Platform-&gt;GetToolbarScaleFactor(g_GUIScaleFactor);<br>
+}</p>
+
+
+
+<hr><p>Last updated: Jan 23 2023 at 13:17 UTC</p>
 </html>
