@@ -714,5 +714,47 @@ Linux RPi400 5.15.89-v8+ <a href="https://github.com/opencpn/OpenCPN/issues/1620
 
 
 
-<hr><p>Last updated: Jan 25 2023 at 14:27 UTC</p>
+<a name="323498994"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332168-Master%20-%205.8.0%20%20%28was%3A%20comms%29/topic/Network%20problems/near/323498994" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Håkan Svensson <a href="https://leamas.github.io/zulip-archive/stream/332168-Master---5.2E8.2E0--.28was.3A-comms.29/topic/Network.20problems.html#323498994">(Jan 25 2023 at 14:29)</a>:</h4>
+<p>More about the test to update the RPi4 to at what stage the network "Gap" appears.<br>
+The kernel as such, 5.1.5.89, was not causing the socket(?) to time out every 20 minutes.<br>
+Next step was to update to 64 bit OS, still on Buster:</p>
+<blockquote>
+<p>Linux RPi4 5.15.89-v8+ <a href="https://github.com/opencpn/OpenCPN/issues/1620">#1620</a> SMP PREEMPT Wed Jan 18 12:26:08 GMT 2023 aarch64 GNU/Linux</p>
+</blockquote>
+<p>OCPN though still say's it's armhf:</p>
+<blockquote>
+<p>wxWidgets version: wxWidgets 3.0.4 Linux 32 bit wxGTK<br>
+OCPN_OSDetail:  armhf ; Raspbian GNU/Linux ; 10 ; raspbian ; debian</p>
+</blockquote>
+<p>Still no socket "gaps" detected.<br>
+So then next step was to try BullsEye. Not succeed.<br>
+Since Bullseye is the last step to conclude what combination leads to the socket "gaps" I can't say for sure it's so since it's not verified.</p>
+<p>Debian 10 to 11:<br>
+I made a SD card backup copy. (Sadly, I  didn't tried this and that ignorance cost me a lot)<br>
+Followed advises on the Raspberry site I made a switch from Buster to Bullseye.<br>
+A long story made short: </p>
+<ul>
+<li>Python need an alias.</li>
+<li>wifi is not started after reboot although rfkill is cleaned.</li>
+<li>Anydesk doesn't work. (Known issue.)</li>
+<li>OCPN crashes although while starting he still log: "OSDetail:  armhf"<br>
+Using a fresh build with new dependencies dgb claim:<blockquote>
+<p>.... Opened 2 sockets for mDNS service<br>
+Service mDNS: opencpn-object-control-service.:8000<br>
+Hostname: RPi4<br>
+Sending announce<br>
+warning: JITed object file architecture armv8-a is not compatible with target architecture armv6.<br>
+[New Thread 0xd45b9a40 (LWP 13971)]<br>
+[Detaching after fork from child process 13979] <br>
+---Sigfault<br>
+So now I've to redo everything from a fresh Openplotter 64b image.  (-Do never touch a working system!!)<br>
+Hopefully I can copy all SignalK settings from the config files...</p>
+</blockquote>
+</li>
+</ul>
+
+
+
+<hr><p>Last updated: Jan 25 2023 at 14:42 UTC</p>
 </html>

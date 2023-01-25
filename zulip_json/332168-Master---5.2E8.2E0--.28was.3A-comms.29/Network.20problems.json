@@ -502,5 +502,11 @@
         "id": 323119746,
         "sender_full_name": "Håkan Svensson",
         "timestamp": 1674508653
+    },
+    {
+        "content": "<p>More about the test to update the RPi4 to at what stage the network \"Gap\" appears.<br>\nThe kernel as such, 5.1.5.89, was not causing the socket(?) to time out every 20 minutes.<br>\nNext step was to update to 64 bit OS, still on Buster:</p>\n<blockquote>\n<p>Linux RPi4 5.15.89-v8+ <a href=\"https://github.com/opencpn/OpenCPN/issues/1620\">#1620</a> SMP PREEMPT Wed Jan 18 12:26:08 GMT 2023 aarch64 GNU/Linux</p>\n</blockquote>\n<p>OCPN though still say's it's armhf:</p>\n<blockquote>\n<p>wxWidgets version: wxWidgets 3.0.4 Linux 32 bit wxGTK<br>\nOCPN_OSDetail:  armhf ; Raspbian GNU/Linux ; 10 ; raspbian ; debian</p>\n</blockquote>\n<p>Still no socket \"gaps\" detected.<br>\nSo then next step was to try BullsEye. Not succeed.<br>\nSince Bullseye is the last step to conclude what combination leads to the socket \"gaps\" I can't say for sure it's so since it's not verified.</p>\n<p>Debian 10 to 11:<br>\nI made a SD card backup copy. (Sadly, I  didn't tried this and that ignorance cost me a lot)<br>\nFollowed advises on the Raspberry site I made a switch from Buster to Bullseye.<br>\nA long story made short: </p>\n<ul>\n<li>Python need an alias.</li>\n<li>wifi is not started after reboot although rfkill is cleaned.</li>\n<li>Anydesk doesn't work. (Known issue.)</li>\n<li>OCPN crashes although while starting he still log: \"OSDetail:  armhf\"<br>\nUsing a fresh build with new dependencies dgb claim:<blockquote>\n<p>.... Opened 2 sockets for mDNS service<br>\nService mDNS: opencpn-object-control-service.:8000<br>\nHostname: RPi4<br>\nSending announce<br>\nwarning: JITed object file architecture armv8-a is not compatible with target architecture armv6.<br>\n[New Thread 0xd45b9a40 (LWP 13971)]<br>\n[Detaching after fork from child process 13979] <br>\n---Sigfault<br>\nSo now I've to redo everything from a fresh Openplotter 64b image.  (-Do never touch a working system!!)<br>\nHopefully I can copy all SignalK settings from the config files...</p>\n</blockquote>\n</li>\n</ul>",
+        "id": 323498994,
+        "sender_full_name": "Håkan Svensson",
+        "timestamp": 1674656958
     }
 ]
