@@ -128,5 +128,44 @@ If you look in my ShipDriver repo you will find an opencpn-libs folder. README.m
 
 
 
-<hr><p>Last updated: Jan 31 2023 at 12:15 UTC</p>
+<a name="324898350"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/349785-JavaScript_pi/topic/Building%20for%20later%20than%20OCPN%20v5.6/near/324898350" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Tony Voss <a href="https://leamas.github.io/zulip-archive/stream/349785-JavaScript_pi/topic/Building.20for.20later.20than.20OCPN.20v5.2E6.html#324898350">(Jan 31 2023 at 12:28)</a>:</h4>
+<p>I have managed to get to local build using the new sd3.1.4  and attempting to build for latest OCPN I have, which is  5.7.1+dd8acc0 (later than public beta 2 because that crashes on MacOS).<br>
+I am building on a M2 MacBook but testing on an X86.<br>
+First local build says it was x86 but when Plugin Manager tried to install, it said it was incompatible arm.  (The message flashes up too briefly to study).<br>
+I then patched <a href="http://circi-build-macos.sh">circi-build-macos.sh</a>  thus:</p>
+<div class="codehilite" data-code-language="CMake"><pre><span></span><code><span class="w">  </span><span class="err">-DCMAKE_BUILD_TYPE=Release</span><span class="w"> </span><span class="err">\</span>
+<span class="w">  </span><span class="err">-DCMAKE_INSTALL_PREFIX=</span><span class="w"> </span><span class="err">\</span>
+<span class="w">  </span><span class="err">-DCMAKE_OSX_DEPLOYMENT_TARGET=10.10</span><span class="w"> </span><span class="err">\</span>
+<span class="w">  </span><span class="err">-DOCPN_TARGET_TUPLE="darwin-wx32;10;x86_64"</span><span class="w"> </span><span class="err">\</span>
+<span class="w">  </span><span class="err">-DCMAKE_OSX_ARCHITECTURES=x86_64</span><span class="w"> </span><span class="err">\</span><span class="w">                </span><span class="err">***</span><span class="w"> </span><span class="err">Tony</span><span class="w"> </span><span class="err">added</span><span class="w"> </span><span class="err">this</span><span class="w"> </span><span class="err">line***</span>
+<span class="w">  </span><span class="err">..</span>
+</code></pre></div>
+<p>This time Plugin Manager accepted it and started to activate it.  Lots of stuff logged in OCPN log file ending with</p>
+<div class="codehilite"><pre><span></span><code>11:45:24.640    INFO plugin_loader.cpp:1394 PlugInManager:  /Users/Tony/Library/Application Support/OpenCPN/Contents/PlugIns/libJavaScript_pi.dylib
+11:45:24.640    INFO plugin_loader.cpp:1395         Plugin common name: javascript
+11:45:24.640    INFO plugin_loader.cpp:1397         API Version detected: 117
+11:45:24.640    INFO plugin_loader.cpp:1398         PlugIn Version detected: 2.0.0
+</code></pre></div>
+<p>whereupon OCPN crashed -  somewhere in wxWidgets - I think getting fonts.<br>
+So it looks like Plugin Manager got as far as interrogating the plugin  for its details</p>
+<p>Should I report this elsewhere or is this sufficient?</p>
+
+
+
+<a name="324900817"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/349785-JavaScript_pi/topic/Building%20for%20later%20than%20OCPN%20v5.6/near/324900817" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Mike Rossiter <a href="https://leamas.github.io/zulip-archive/stream/349785-JavaScript_pi/topic/Building.20for.20later.20than.20OCPN.20v5.2E6.html#324900817">(Jan 31 2023 at 12:40)</a>:</h4>
+<p>It might be worth updating to <em>sd3.2.2</em>. This will produce builds for all supported OS and may change other stuff which will allow the plugin to be loaded. Saw that Hakan did this for <em>ais-vd_pi</em>.</p>
+
+
+
+<a name="324901699"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/349785-JavaScript_pi/topic/Building%20for%20later%20than%20OCPN%20v5.6/near/324901699" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Alec Leamas <a href="https://leamas.github.io/zulip-archive/stream/349785-JavaScript_pi/topic/Building.20for.20later.20than.20OCPN.20v5.2E6.html#324901699">(Jan 31 2023 at 12:45)</a>:</h4>
+<p>That commit is unfortunately not the complete truth. TL;DR Use darwin-wx32.</p>
+<p>Background: We have since long moved to using wx315 on MacOS without changing the ABI name. That is, "no suffix" means wx315 on MAcOS.  OTOH, we now have also wx32 plugins, these are the only ones we build.  To make it possible for core opencpn to distinguish these  we use a API named ´darwin-wx32` for the new plugins.</p>
+<p>The complete truth is in the plugins project, in the file <em>ocpn-plugin.xsd</em>. Look for "xs:element name="target". Note that only the master branch is fully  updated; it is this branch which is used when validating.</p>
+
+
+
+<hr><p>Last updated: Jan 31 2023 at 12:50 UTC</p>
 </html>

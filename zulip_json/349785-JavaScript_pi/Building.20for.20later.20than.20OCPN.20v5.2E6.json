@@ -82,5 +82,23 @@
         "id": 324413788,
         "sender_full_name": "Alec Leamas",
         "timestamp": 1674988830
+    },
+    {
+        "content": "<p>I have managed to get to local build using the new sd3.1.4  and attempting to build for latest OCPN I have, which is  5.7.1+dd8acc0 (later than public beta 2 because that crashes on MacOS).<br>\nI am building on a M2 MacBook but testing on an X86.<br>\nFirst local build says it was x86 but when Plugin Manager tried to install, it said it was incompatible arm.  (The message flashes up too briefly to study).<br>\nI then patched <a href=\"http://circi-build-macos.sh\">circi-build-macos.sh</a>  thus:</p>\n<div class=\"codehilite\" data-code-language=\"CMake\"><pre><span></span><code><span class=\"w\">  </span><span class=\"err\">-DCMAKE_BUILD_TYPE=Release</span><span class=\"w\"> </span><span class=\"err\">\\</span>\n<span class=\"w\">  </span><span class=\"err\">-DCMAKE_INSTALL_PREFIX=</span><span class=\"w\"> </span><span class=\"err\">\\</span>\n<span class=\"w\">  </span><span class=\"err\">-DCMAKE_OSX_DEPLOYMENT_TARGET=10.10</span><span class=\"w\"> </span><span class=\"err\">\\</span>\n<span class=\"w\">  </span><span class=\"err\">-DOCPN_TARGET_TUPLE=\"darwin-wx32;10;x86_64\"</span><span class=\"w\"> </span><span class=\"err\">\\</span>\n<span class=\"w\">  </span><span class=\"err\">-DCMAKE_OSX_ARCHITECTURES=x86_64</span><span class=\"w\"> </span><span class=\"err\">\\</span><span class=\"w\">                </span><span class=\"err\">***</span><span class=\"w\"> </span><span class=\"err\">Tony</span><span class=\"w\"> </span><span class=\"err\">added</span><span class=\"w\"> </span><span class=\"err\">this</span><span class=\"w\"> </span><span class=\"err\">line***</span>\n<span class=\"w\">  </span><span class=\"err\">..</span>\n</code></pre></div>\n<p>This time Plugin Manager accepted it and started to activate it.  Lots of stuff logged in OCPN log file ending with</p>\n<div class=\"codehilite\"><pre><span></span><code>11:45:24.640    INFO plugin_loader.cpp:1394 PlugInManager:  /Users/Tony/Library/Application Support/OpenCPN/Contents/PlugIns/libJavaScript_pi.dylib\n11:45:24.640    INFO plugin_loader.cpp:1395         Plugin common name: javascript\n11:45:24.640    INFO plugin_loader.cpp:1397         API Version detected: 117\n11:45:24.640    INFO plugin_loader.cpp:1398         PlugIn Version detected: 2.0.0\n</code></pre></div>\n<p>whereupon OCPN crashed -  somewhere in wxWidgets - I think getting fonts.<br>\nSo it looks like Plugin Manager got as far as interrogating the plugin  for its details</p>\n<p>Should I report this elsewhere or is this sufficient?</p>",
+        "id": 324898350,
+        "sender_full_name": "Tony Voss",
+        "timestamp": 1675168092
+    },
+    {
+        "content": "<p>It might be worth updating to <em>sd3.2.2</em>. This will produce builds for all supported OS and may change other stuff which will allow the plugin to be loaded. Saw that Hakan did this for <em>ais-vd_pi</em>.</p>",
+        "id": 324900817,
+        "sender_full_name": "Mike Rossiter",
+        "timestamp": 1675168855
+    },
+    {
+        "content": "<p>That commit is unfortunately not the complete truth. TL;DR Use darwin-wx32.</p>\n<p>Background: We have since long moved to using wx315 on MacOS without changing the ABI name. That is, \"no suffix\" means wx315 on MAcOS.  OTOH, we now have also wx32 plugins, these are the only ones we build.  To make it possible for core opencpn to distinguish these  we use a API named ´darwin-wx32` for the new plugins.</p>\n<p>The complete truth is in the plugins project, in the file <em>ocpn-plugin.xsd</em>. Look for \"xs:element name=\"target\". Note that only the master branch is fully  updated; it is this branch which is used when validating.</p>",
+        "id": 324901699,
+        "sender_full_name": "Alec Leamas",
+        "timestamp": 1675169144
     }
 ]
