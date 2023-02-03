@@ -358,5 +358,33 @@ nothing to commit, working tree clean
 
 
 
-<hr><p>Last updated: Feb 03 2023 at 10:09 UTC</p>
+<a name="325591411"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/349785-JavaScript_pi/topic/Catalogue%20updating/near/325591411" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Mike Rossiter <a href="https://leamas.github.io/zulip-archive/stream/349785-JavaScript_pi/topic/Catalogue.20updating.html#325591411">(Feb 03 2023 at 10:22)</a>:</h4>
+<p>Templates sd3.1.x are for O5.6.2 <br>
+Templates sd3.2.x are for O 5.7/8 (wxWidgets 3.2.1)<br>
+<span class="user-mention" data-user-id="399510">@Alec Leamas</span> : <em>PluginSetup.cmake</em> for templates sd3.1.x uses:<br>
+<code>set(plugin_target "darwin-wx315")</code><br>
+In order for O5.6.2 to recognise MacOS plugins should a new release of sd3.1 be made with:<br>
+<code>set(plugin_target "darwin")</code></p>
+
+
+
+<a name="325591714"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/349785-JavaScript_pi/topic/Catalogue%20updating/near/325591714" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Alec Leamas <a href="https://leamas.github.io/zulip-archive/stream/349785-JavaScript_pi/topic/Catalogue.20updating.html#325591714">(Feb 03 2023 at 10:23)</a>:</h4>
+<blockquote>
+<p>In order for O5.6.2 to recognise MacOS plugins should a new release of sd3.1 be made with:<br>
+set(plugin_target "darwin")</p>
+</blockquote>
+<p>No, my bad. 5.6.2 actually recognizes darwin-wx315. OTOH 5.7/5.8 only recognizes -wx32</p>
+
+
+
+<a name="325592306"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/349785-JavaScript_pi/topic/Catalogue%20updating/near/325592306" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Alec Leamas <a href="https://leamas.github.io/zulip-archive/stream/349785-JavaScript_pi/topic/Catalogue.20updating.html#325592306">(Feb 03 2023 at 10:27)</a>:</h4>
+<p>One basic issue here is the checking done in opencpn/plugins. In a sane world we would have a beta version of ocpn-plugin.xsd which was used when validating the beta branch PRs and master version used when validating  master PRs.</p>
+<p>However, we now have a master ocpn-plugin.xsd which is used to validate  all sorts of PRs. This will fail, since the list of know ABI:s differs on different branches.</p>
+
+
+
+<hr><p>Last updated: Feb 03 2023 at 10:30 UTC</p>
 </html>
