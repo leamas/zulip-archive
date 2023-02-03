@@ -725,5 +725,29 @@ Test case:</p>
 
 
 
-<hr><p>Last updated: Feb 03 2023 at 12:48 UTC</p>
+<a name="325625579"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/349652-DataSharing/topic/Design%20and%20Route%20Sharing/near/325625579" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Håkan Svensson <a href="https://leamas.github.io/zulip-archive/stream/349652-DataSharing/topic/Design.20and.20Route.20Sharing.html#325625579">(Feb 03 2023 at 13:09)</a>:</h4>
+<p><span class="user-mention" data-user-id="517002">@Dave Register</span> <br>
+"Send To" respons  - No peers found.<br>
+Rpi400 and other can miss sometimes although the request is always sent. But I sometimes see long respons time. Longer than the time out.<br>
+Example here from WIN-HAS.<br>
+WIN (...1.67) used "Send To".<br>
+After time out the message "No OCPN peers detected" <br>
+Looking at the Wireshark log below we can see the request was sent. After 19 seconds the first answer was received and all the rest thereafter. No one was missing but all was late. So late the Send To function timed out and message "No peers"<br>
+How to handle this I don't know. We can't wait forever, can we?<br>
+Next time I tried Send To, after some minutes, all was answering within the time out limit.</p>
+<p>I have seen, on RPi400 only two peers are answering. Not WIN-HAS. Not either after both O was restarted.  I also manage to send a route to RPi400 from WIN-HAS. But also after that WIN-HAS didn't respond on a RPi400 request??<br>
+It's not easy to find a logic in this issue.</p>
+<blockquote>
+<div class="codehilite"><pre><span></span><code>3043  77.461638   192.168.1.67    224.0.0.251 MDNS    90  Standard query 0x0000 PTR opencpn-object-control-service, &quot;QU&quot; question.
+4106  98.316735   192.168.1.101   192.168.1.67    MDNS    147 Standard query response 0x0000 PTR opencpn-object-control-service, &quot;QU&quot; question PTR HAS-LENO.opencpn-object-control-service SRV 0 0 8000 HAS-LENO.local.
+4977  118.576120  192.168.1.154   192.168.1.67    MDNS    143 Standard query response 0x0000 PTR opencpn-object-control-service, &quot;QU&quot; question PTR RPi400.opencpn-object-control-service SRV 0 0 8000 RPi400.local.
+4978  118.577444  192.168.1.73    192.168.1.67    MDNS    139 Standard query response 0x0000 PTR opencpn-object-control-service, &quot;QU&quot; question PTR RPi4.opencpn-object-control-service SRV 0 0 8000 RPi4.local
+</code></pre></div>
+
+</blockquote>
+
+
+
+<hr><p>Last updated: Feb 03 2023 at 13:16 UTC</p>
 </html>
