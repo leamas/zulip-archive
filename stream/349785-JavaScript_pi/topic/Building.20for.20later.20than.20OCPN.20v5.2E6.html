@@ -221,5 +221,23 @@ On plugin activation it crashed  within plugin manager as before after logging</
 
 
 
-<hr><p>Last updated: Feb 04 2023 at 15:07 UTC</p>
+<a name="325844105"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/349785-JavaScript_pi/topic/Building%20for%20later%20than%20OCPN%20v5.6/near/325844105" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Tony Voss <a href="https://leamas.github.io/zulip-archive/stream/349785-JavaScript_pi/topic/Building.20for.20later.20than.20OCPN.20v5.2E6.html#325844105">(Feb 04 2023 at 15:26)</a>:</h4>
+<p><span class="user-mention" data-user-id="399559">@Mike Rossiter</span>  Now able to build JS plugin for OCPN 5.7 but it still crashes when being loaded.<br>
+Log shows</p>
+<div class="codehilite"><pre><span></span><code>PlugIns/libJavaScript_pi.dylib
+14:15:51.790    INFO plugin_loader.cpp:1395         Plugin common name: javascript
+14:15:51.790    INFO plugin_loader.cpp:1397         API Version detected: 118
+14:15:51.790    INFO plugin_loader.cpp:1398         PlugIn Version detected: 2.0.0
+</code></pre></div>
+<p>So PluginLoader has been able to construct the plugin and  interrogate the plugin OK but before it gets to call init() it crashes.  See log extract.<br>
+PluginLoader is in LoadPluginCandidate, which has called<br>
+<code>wxImage: :SaveFile(wxString const&amp;, wxString const&amp;)</code><br>
+I seem to recall you had issues with finding images/icons??  Any clues?<br>
+<a href="/user_uploads/33951/928hcsmrHxCb8nkSOyJjwItN/Screenshot-2023-02-04-at-15.19.10.png">Screenshot-2023-02-04-at-15.19.10.png</a></p>
+<div class="message_inline_image"><a href="/user_uploads/33951/928hcsmrHxCb8nkSOyJjwItN/Screenshot-2023-02-04-at-15.19.10.png" title="Screenshot-2023-02-04-at-15.19.10.png"><img src="/user_uploads/33951/928hcsmrHxCb8nkSOyJjwItN/Screenshot-2023-02-04-at-15.19.10.png"></a></div>
+
+
+
+<hr><p>Last updated: Feb 04 2023 at 15:26 UTC</p>
 </html>
