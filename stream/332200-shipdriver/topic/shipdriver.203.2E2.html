@@ -599,5 +599,29 @@ Corresponding tarballs found in ShipDriver/beta.</p>
 
 
 
-<hr><p>Last updated: Feb 04 2023 at 10:08 UTC</p>
+<a name="325798559"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332200-shipdriver/topic/shipdriver%203.2/near/325798559" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Tony Voss <a href="https://leamas.github.io/zulip-archive/stream/332200-shipdriver/topic/shipdriver.203.2E2.html#325798559">(Feb 04 2023 at 10:21)</a>:</h4>
+<p>Building plugin using sd3.2.2<br>
+If in Plugin.cmake I have <br>
+<code>set(PKG_API_LIB api-17)  #  A directory in libs/ e. g., api-17 or api-16</code><br>
+then <code>circleci-build-macos.sh</code> runs OK</p>
+<p>but if I have<br>
+<code>set(PKG_API_LIB api-18)  #  A directory in libs/ e. g., api-17 or api-16</code>.<br>
+then <code>circleci-build-macos.sh</code> fails with</p>
+<div class="codehilite"><pre><span></span><code>CMake Error at CMakeLists.txt:44 (target_link_libraries):
+  Target &quot;JavaScript_pi&quot; links to:
+
+    ocpn::api
+
+  but the target was not found.  Possible reasons include:
+
+    * There is a typo in the target name.
+    * A find_package call is missing for an IMPORTED target.
+    * An ALIAS target is missing.
+</code></pre></div>
+<p>Looks like the test at CMakeLists.txt line 41 <code>if (${PKG_NAME} MATCHES wx32)</code> is failing.</p>
+
+
+
+<hr><p>Last updated: Feb 04 2023 at 10:28 UTC</p>
 </html>

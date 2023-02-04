@@ -454,5 +454,11 @@
         "id": 316590763,
         "sender_full_name": "Alec Leamas",
         "timestamp": 1671371350
+    },
+    {
+        "content": "<p>Building plugin using sd3.2.2<br>\nIf in Plugin.cmake I have <br>\n<code>set(PKG_API_LIB api-17)  #  A directory in libs/ e. g., api-17 or api-16</code><br>\nthen <code>circleci-build-macos.sh</code> runs OK</p>\n<p>but if I have<br>\n<code>set(PKG_API_LIB api-18)  #  A directory in libs/ e. g., api-17 or api-16</code>.<br>\nthen <code>circleci-build-macos.sh</code> fails with</p>\n<div class=\"codehilite\"><pre><span></span><code>CMake Error at CMakeLists.txt:44 (target_link_libraries):\n  Target &quot;JavaScript_pi&quot; links to:\n\n    ocpn::api\n\n  but the target was not found.  Possible reasons include:\n\n    * There is a typo in the target name.\n    * A find_package call is missing for an IMPORTED target.\n    * An ALIAS target is missing.\n</code></pre></div>\n<p>Looks like the test at CMakeLists.txt line 41 <code>if (${PKG_NAME} MATCHES wx32)</code> is failing.</p>",
+        "id": 325798559,
+        "sender_full_name": "Tony Voss",
+        "timestamp": 1675506109
     }
 ]
