@@ -307,5 +307,36 @@ I am using Homebrew wxWidgets to compile the plugin. Wonder if that is the probl
 
 
 
-<hr><p>Last updated: Feb 05 2023 at 10:42 UTC</p>
+<a name="325938329"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/349785-JavaScript_pi/topic/Building%20for%20later%20than%20OCPN%20v5.6/near/325938329" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Mike Rossiter <a href="https://leamas.github.io/zulip-archive/stream/349785-JavaScript_pi/topic/Building.20for.20later.20than.20OCPN.20v5.2E6.html#325938329">(Feb 05 2023 at 10:43)</a>:</h4>
+<p>A private build of wxWidgets for the MacOS build of OpenCPN 5.7.1 is being used:<br>
+<a href="https://download.opencpn.org/s/Djqm4SXzYjF8nBw/download">https://download.opencpn.org/s/Djqm4SXzYjF8nBw/download</a><br>
+Is this wxWidgets 3.2.0 or 3.2.1?<br>
+We had this problem with Windows and resolved it by using official binaries for 3.2.1.<br>
+<span class="user-mention" data-user-id="399510">@Alec Leamas</span> : Help please!</p>
+
+
+
+<a name="325938948"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/349785-JavaScript_pi/topic/Building%20for%20later%20than%20OCPN%20v5.6/near/325938948" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Alec Leamas <a href="https://leamas.github.io/zulip-archive/stream/349785-JavaScript_pi/topic/Building.20for.20later.20than.20OCPN.20v5.2E6.html#325938948">(Feb 05 2023 at 10:49)</a>:</h4>
+<p>On my way out...</p>
+<p>We use a wxWidgets 3.2 built from source.  In main opencpn Dave has made a build which is downloaded as an anonymous binary.</p>
+<p>In shipdriver we rebuild from sources, but caches the result. Ww cannot use pre-built sources sonce the compilation  flags must match -- the flags we use are synchronized with Dave.</p>
+<p>You can see what't going on in the file  <em>cmake/MacosWxwidgets.cmake</em>. This build is cached in the circleci build environment and also reused when making local builds</p>
+
+
+
+<a name="325939143"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/349785-JavaScript_pi/topic/Building%20for%20later%20than%20OCPN%20v5.6/near/325939143" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Alec Leamas <a href="https://leamas.github.io/zulip-archive/stream/349785-JavaScript_pi/topic/Building.20for.20later.20than.20OCPN.20v5.2E6.html#325939143">(Feb 05 2023 at 10:50)</a>:</h4>
+<p>... I'm talking about 5.7 beta/5.8 now,  nothing else</p>
+
+
+
+<a name="325939671"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/349785-JavaScript_pi/topic/Building%20for%20later%20than%20OCPN%20v5.6/near/325939671" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Alec Leamas <a href="https://leamas.github.io/zulip-archive/stream/349785-JavaScript_pi/topic/Building.20for.20later.20than.20OCPN.20v5.2E6.html#325939671">(Feb 05 2023 at 10:54)</a>:</h4>
+<p>... and yes, this is tested. But, Dave has a habit of unannounced changes...</p>
+
+
+
+<hr><p>Last updated: Feb 05 2023 at 11:06 UTC</p>
 </html>
