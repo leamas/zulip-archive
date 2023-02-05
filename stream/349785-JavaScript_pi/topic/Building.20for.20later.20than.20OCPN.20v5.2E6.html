@@ -349,5 +349,15 @@ We had this problem with Windows and resolved it by using official binaries for 
 
 
 
-<hr><p>Last updated: Feb 05 2023 at 14:25 UTC</p>
+<a name="325967870"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/349785-JavaScript_pi/topic/Building%20for%20later%20than%20OCPN%20v5.6/near/325967870" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Mike Rossiter <a href="https://leamas.github.io/zulip-archive/stream/349785-JavaScript_pi/topic/Building.20for.20later.20than.20OCPN.20v5.2E6.html#325967870">(Feb 05 2023 at 14:29)</a>:</h4>
+<p>Finally compiled wxWidgets for MacOS using the same parameters as Dave. And then JavaScript_pi, which installed.<br>
+Used a modified: <em>cmake/MacosWxwidgets.cmake</em> as part of the build process.<br>
+If you already have wxWidgets installed the script normally finds and tries to use it, from usr/local/lib <code> ($(wxStatus) EQUAL 0 )</code><br>
+If you comment out "return ()" in <em>cmake/MacosWxwidgets.cmake</em> it assumes you will compile wxWidgets again. This results in an updated wxWidgets in usr/local/lib, compiled with Dave's parameters. Running <a href="http://circleci-build-macos.sh">circleci-build-macos.sh</a> then uses these wxWidgets and the build runs and the plugin installs/runs ok, for me. The icons blanked out problem remains.<br>
+This is a total hack, but similar to the game we played with Windows.</p>
+
+
+
+<hr><p>Last updated: Feb 05 2023 at 14:42 UTC</p>
 </html>
