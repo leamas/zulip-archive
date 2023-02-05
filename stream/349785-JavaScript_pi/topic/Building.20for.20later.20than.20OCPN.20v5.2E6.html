@@ -413,5 +413,28 @@ Checking back - I am definitely using sd3.2.2 but the build appears to be using 
 
 
 
-<hr><p>Last updated: Feb 05 2023 at 19:06 UTC</p>
+<a name="326002585"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/349785-JavaScript_pi/topic/Building%20for%20later%20than%20OCPN%20v5.6/near/326002585" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Alec Leamas <a href="https://leamas.github.io/zulip-archive/stream/349785-JavaScript_pi/topic/Building.20for.20later.20than.20OCPN.20v5.2E6.html#326002585">(Feb 05 2023 at 19:13)</a>:</h4>
+<blockquote>
+<p>If you comment out "return ()" in cmake/MacosWxwidgets.cmake it assumes you will compile wxWidgets again</p>
+</blockquote>
+<p>What that code does is to run the wx-config command. This is installed  when wxWidgets is installed, that it runs means there is a wxWidgets installation available. My thinking has been that either this should be used or removed. </p>
+<p>You seem to have a case which should run a recompilation even though there is a wxWidgets installation in place. This might be a bit hairy, I'm not  convinced that the installation routines removes the old libs before installing the new. The result <strong>might</strong> be that both the old system and the new are installed in  parallel. </p>
+<p>Needless to say, this seems risky. Wouldn't it be better to remove the existing wxWidgets installation first if it shouldn't be used?</p>
+
+
+
+<a name="326002641"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/349785-JavaScript_pi/topic/Building%20for%20later%20than%20OCPN%20v5.6/near/326002641" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Alec Leamas <a href="https://leamas.github.io/zulip-archive/stream/349785-JavaScript_pi/topic/Building.20for.20later.20than.20OCPN.20v5.2E6.html#326002641">(Feb 05 2023 at 19:13)</a>:</h4>
+<p>Another aspect is that the cmake code might need some comments...</p>
+
+
+
+<a name="326002873"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/349785-JavaScript_pi/topic/Building%20for%20later%20than%20OCPN%20v5.6/near/326002873" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Alec Leamas <a href="https://leamas.github.io/zulip-archive/stream/349785-JavaScript_pi/topic/Building.20for.20later.20than.20OCPN.20v5.2E6.html#326002873">(Feb 05 2023 at 19:16)</a>:</h4>
+<p><span class="user-mention" data-user-id="399559">@Mike Rossiter</span>  ^</p>
+
+
+
+<hr><p>Last updated: Feb 05 2023 at 19:23 UTC</p>
 </html>
