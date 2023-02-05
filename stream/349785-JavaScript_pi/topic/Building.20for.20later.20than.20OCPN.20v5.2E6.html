@@ -359,5 +359,59 @@ This is a total hack, but similar to the game we played with Windows.</p>
 
 
 
-<hr><p>Last updated: Feb 05 2023 at 17:42 UTC</p>
+<a name="325994567"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/349785-JavaScript_pi/topic/Building%20for%20later%20than%20OCPN%20v5.6/near/325994567" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Tony Voss <a href="https://leamas.github.io/zulip-archive/stream/349785-JavaScript_pi/topic/Building.20for.20later.20than.20OCPN.20v5.2E6.html#325994567">(Feb 05 2023 at 17:59)</a>:</h4>
+<p>Mike... did as you said and commented out that return() and re-ran <a href="http://circleci-build-macos.sh">circleci-build-macos.sh</a>.<br>
+On the make tarball thereafter it did a big compile and installed new libraries in /usr/local/lib<br>
+before erroring out with <br>
+<code>Undefined symbols for architecture arm64:</code><br>
+for a load of symbols including TIFF in their names.<br>
+Anyhow, I restored the return() statement and ran <a href="http://circleci-build-macos.sh">circleci-build-macos.sh</a>  again and then make tarball.<br>
+This appeared to work but the plugin crashed on load:</p>
+<div class="codehilite"><pre><span></span><code>libc++.1.dylib                      0x7ff812462f77 std::__1::basic_string&lt;wchar_t, std::__1::char_traits&lt;wchar_t&gt;, std::__1::allocator&lt;wchar_t&gt; &gt;::operator=(std::__1::basic_string&lt;wchar_t, std::__1::char_traits&lt;wchar_t&gt;, std::__1::allocator&lt;wchar_t&gt; &gt; const&amp;) + 9
+1   libwx_baseu-3.1.2.0.0.dylib            0x13672b4f8 wxArrayString::Add(wxString const&amp;, unsigned long) + 232
+2   libwx_osx_cocoau_core-3.1.2.0.0.dylib          0x13d42902c wxImage::SaveFile(wxString const&amp;, wxString const&amp;) const + 108
+3   OpenCPN                                0x1095bb256 PluginLoader::LoadPluginCandidate(wxString, bool) + 4454
+4   OpenCPN                                0x1095b7892 PluginLoader::LoadPlugInDirectory(wxString const&amp;, bool) + 1874
+5   OpenCPN                                0x1095b5264 PluginLoader::LoadAllPlugIns(bool) + 1268
+6   OpenCPN                                0x109376121 run_update_dialog(PluginListPanel*, PlugInContainer*, bool, char const*, bool) + 5505
+7   OpenCPN                                0x1093739ee pluginUtilHandler::OnPluginUtilAction(wxCommandEvent&amp;) + 206
+8   libwx_baseu-3.2.0.1.0.dylib            0x10a4ba4df wxEventHashTable::HandleEvent(wxEvent&amp;, wxEvtHandler*) + 367
+9   libwx_baseu-3.2.0.1.0.dylib            0x10a4bb23a wxEvtHandler::ProcessEventLocally(wxEvent&amp;) + 90
+</code></pre></div>
+<p>Now what is interesting here is that OCPN was called from libwx_baseu-3.2.0.1.0.dylib but when LoadPluginCandidate called wxImage::SaveFile, it used code from a wx3.1.2 dylib <span aria-label="oh no" class="emoji emoji-1f615" role="img" title="oh no">:oh_no:</span> <br>
+Checking back - I am definitely using sd3.2.2 but the build appears to be using wx3.1.2:</p>
+<div class="codehilite"><pre><span></span><code>Tony@Laing build-osx % make tarball
+[100%] Generating tarball-conf-stamp
+-- Cmake version: 3.25.1.
+-- Build uses 8 processors
+-- Building: tarball
+-- Building for target-release darwin-wx32-10
+-- Selected upload repository: o p e n c p n / j a v a s c r i p t - a l p h a
+&#39;wx-config&#39; &#39;--version&#39;
+3.1.2
+-- Found Gettext: /usr/local/opt/gettext/bin/msgmerge (found version &quot;0.21&quot;)
+-- Found OpenGL: /Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX13.1.sdk/System/Library/Frameworks/OpenGL.framework
+-- Found wxWidgets: -L/usr/local/lib;;;-framework IOKit;-framework Carbon;-framework Cocoa;-framework AudioToolbox;-framework System;-framework OpenGL;-lwx_baseu-3.1;-lwx_osx_cocoau_core-3.1;-lwx_baseu_net-3.1;-lwx_baseu_xml-3.1;-lwx_osx_cocoau_html-3.1;-lwx_osx_cocoau_stc-3.1;-lwx_osx_cocoau_aui-3.1;-lwx_osx_cocoau_gl-3.1 (found version &quot;3.1.2&quot;)
+-- Using bundled tinyxml
+-- Configuring done
+-- Generating done
+-- Build files have been written to: /Users/Tony/OpenCPN_project/JavaScript-project/JavaScript_pi/build-osx
+</code></pre></div>
+<p>and later</p>
+<div class="codehilite"><pre><span></span><code>fix-macos-libs.sh: Revised library paths:
+    @executable_path/../Frameworks//libwx_baseu-3.1.dylib (compatibility version 1.0.0, current version 1.0.0)
+    @executable_path/../Frameworks//libwx_osx_cocoau_core-3.1.dylib (compatibility version 1.0.0, current version 1.0.0)
+    @executable_path/../Frameworks//libwx_baseu_net-3.1.dylib (compatibility version 1.0.0, current version 1.0.0)
+    @executable_path/../Frameworks//libwx_baseu_xml-3.1.dylib (compatibility version 1.0.0, current version 1.0.0)
+    @executable_path/../Frameworks//libwx_osx_cocoau_html-3.1.dylib (compatibility version 1.0.0, current version 1.0.0)
+    @executable_path/../Frameworks//libwx_osx_cocoau_stc-3.1.dylib (compatibility version 1.0.0, current version 1.0.0)
+    @executable_path/../Frameworks//libwx_osx_cocoau_aui-3.1.dylib (compatibility version 1.0.0, current version 1.0.0)
+    @executable_path/../Frameworks//libwx_osx_cocoau_gl-3.1.dylib (compatibility version 1.0.0, current version 1.0.0)
+</code></pre></div>
+<p>'Nuff said.</p>
+
+
+
+<hr><p>Last updated: Feb 05 2023 at 18:09 UTC</p>
 </html>
