@@ -906,5 +906,58 @@ Can the 64b architecture destroy a data list in any way? (Badly initialized?) On
 
 
 
-<hr><p>Last updated: Feb 06 2023 at 21:42 UTC</p>
+<a name="326246470"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332168-Master%20-%205.8.0%20%20%28was%3A%20comms%29/topic/Network%20problems/near/326246470" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Håkan Svensson <a href="https://leamas.github.io/zulip-archive/stream/332168-Master---5.2E8.2E0--.28was.3A-comms.29/topic/Network.20problems.html#326246470">(Feb 06 2023 at 22:01)</a>:</h4>
+<p><span class="user-mention" data-user-id="517002">@Dave Register</span> <br>
+Now I need help to understand.<br>
+Pls have look at DB: wind_history.cpp  The value for WIND_RECORD_COUNT is defined to 3000.<br>
+That's used to size a couple of list for the history sample.<br>
+I've logged the population of the lists when the graph is reset caused by data stream "gaps".<br>
+All reset was done when about 2650-2700 records have been collected. <br>
+See log file snippet below. Look for "SampleCount"</p>
+<p>If I change the WIND_RECORD_COUNT size to 2500 no graph reset and we never disturb the OCPN TCP network stream. And no GPS WatchDog logs from comm_bridge.cpp.<br>
+This would in some way be related to arm64 but I can't imagine how. (And why not Win-64)<br>
+Should e.g. double m_ArrayWindHistory[WIND_RECORD_COUNT]  be changed to a "real" array to fit Debian-64?<br>
+And why???<br>
+I suppose you can test yourself on the RPi400 if needed.</p>
+<blockquote>
+<div class="codehilite"><pre><span></span><code>20:53:13.971 MESSAGE comm_bridge.cpp:181    ***GPS Watchdog timeout at Lat:58.2262   Lon: 11.7626
+</code></pre></div>
+
+<p>20:53:19.069 MESSAGE comm_bridge.cpp:181    ***GPS Watchdog timeout at Lat:58.2262   Lon: 11.7626<br>
+20:53:24.139 MESSAGE comm_bridge.cpp:181    ***GPS Watchdog timeout at Lat:58.2262   Lon: 11.7626<br>
+20:53:29.262 MESSAGE comm_bridge.cpp:181    ***GPS Watchdog timeout at Lat:58.2262   Lon: 11.7626<br>
+20:53:34.366 MESSAGE comm_bridge.cpp:181    ***GPS Watchdog timeout at Lat:58.2262   Lon: 11.7626<br>
+20:53:39.496 MESSAGE comm_bridge.cpp:181    ***GPS Watchdog timeout at Lat:58.2262   Lon: 11.7626<br>
+20:53:44.588 MESSAGE comm_bridge.cpp:181    ***GPS Watchdog timeout at Lat:58.2262   Lon: 11.7626<br>
+20:53:44.588 MESSAGE wind_history.cpp:192  <strong>*</strong> WD Reset m_SampleCount: 2680, Minute: 53<br>
+20:53:44.826 MESSAGE comm_drv_n0183_net.cpp:512 TCP NetworkDataStream connection established: TCP:192.168.1.73:10110<br>
+21:00:00.291 MESSAGE ocpn_frame.cpp:5593 LOGBOOK:  2023-02-06 20:00:00 UTC  GPS Lat   58.22621 Lon   11.76264 COG ----- SOG   0.00 kts<br>
+21:17:06.664 MESSAGE comm_drv_n0183_net.cpp:330     TCP NetworkDataStream watchdog timeout: TCP:192.168.1.73:10110<br>
+21:17:17.116 MESSAGE comm_drv_n0183_net.cpp:512 TCP NetworkDataStream connection established: TCP:192.168.1.73:10110<br>
+21:18:05.267 MESSAGE comm_drv_n0183_net.cpp:330     TCP NetworkDataStream watchdog timeout: TCP:192.168.1.73:10110<br>
+21:18:11.756 MESSAGE comm_drv_n0183_net.cpp:512 TCP NetworkDataStream connection established: TCP:192.168.1.73:10110<br>
+21:18:46.485 MESSAGE comm_drv_n0183_net.cpp:330     TCP NetworkDataStream watchdog timeout: TCP:192.168.1.73:10110<br>
+21:18:51.587 MESSAGE comm_bridge.cpp:181    ***GPS Watchdog timeout at Lat:58.2262   Lon: 11.7626<br>
+21:18:56.664 MESSAGE comm_bridge.cpp:181    ***GPS Watchdog timeout at Lat:58.2262   Lon: 11.7626<br>
+21:19:00.813 MESSAGE comm_drv_n0183_net.cpp:512 TCP NetworkDataStream connection established: TCP:192.168.1.73:10110<br>
+21:19:06.313 MESSAGE comm_drv_n0183_net.cpp:330     TCP NetworkDataStream watchdog timeout: TCP:192.168.1.73:10110<br>
+21:19:10.424 MESSAGE comm_bridge.cpp:181    ***GPS Watchdog timeout at Lat:58.2262   Lon: 11.7626<br>
+21:19:14.543 MESSAGE comm_drv_n0183_net.cpp:512 TCP NetworkDataStream connection established: TCP:192.168.1.73:10110<br>
+21:19:21.212 MESSAGE comm_drv_n0183_net.cpp:330     TCP NetworkDataStream watchdog timeout: TCP:192.168.1.73:10110<br>
+21:19:31.726 MESSAGE comm_bridge.cpp:181    ***GPS Watchdog timeout at Lat:58.2262   Lon: 11.7626<br>
+21:19:32.761 MESSAGE comm_drv_n0183_net.cpp:512 TCP NetworkDataStream connection established: TCP:192.168.1.73:10110<br>
+21:19:41.505 MESSAGE comm_drv_n0183_net.cpp:330     TCP NetworkDataStream watchdog timeout: TCP:192.168.1.73:10110<br>
+21:19:54.015 MESSAGE comm_bridge.cpp:181    ***GPS Watchdog timeout at Lat:58.2262   Lon: 11.7626<br>
+21:19:59.134 MESSAGE comm_bridge.cpp:181    ***GPS Watchdog timeout at Lat:58.2262   Lon: 11.7626<br>
+21:20:04.324 MESSAGE comm_bridge.cpp:181    ***GPS Watchdog timeout at Lat:58.2262   Lon: 11.7626<br>
+21:20:09.520 MESSAGE comm_bridge.cpp:181    ***GPS Watchdog timeout at Lat:58.2262   Lon: 11.7626<br>
+21:20:14.666 MESSAGE comm_bridge.cpp:181    ***GPS Watchdog timeout at Lat:58.2262   Lon: 11.7626<br>
+21:20:17.783 MESSAGE wind_history.cpp:192  <strong>*</strong> WD Reset m_SampleCount: 2663, Minute: 20<br>
+21:20:17.963 MESSAGE comm_drv_n0183_net.cpp:512 TCP NetworkDataStream connection established: TCP:192.168.1.73:10110</p>
+</blockquote>
+
+
+
+<hr><p>Last updated: Feb 06 2023 at 22:08 UTC</p>
 </html>
