@@ -892,5 +892,19 @@ No I have not searched for memory leaks. Not clear how to do that.</p>
 
 
 
-<hr><p>Last updated: Feb 06 2023 at 12:54 UTC</p>
+<a name="326120014"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332168-Master%20-%205.8.0%20%20%28was%3A%20comms%29/topic/Network%20problems/near/326120014" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Håkan Svensson <a href="https://leamas.github.io/zulip-archive/stream/332168-Master---5.2E8.2E0--.28was.3A-comms.29/topic/Network.20problems.html#326120014">(Feb 06 2023 at 13:15)</a>:</h4>
+<p>On the RPI400 arm64 an observation I did may need to be investigated:<br>
+If Dashboard are hid my means of click the Dashboard button in tools all instruments are kept updated "in background".<br>
+Also the wind history data lists[3000] are populated. <br>
+When instruments are displayed the history graph lists are reset due to the data stream "gap"  after ~20 minutes. That's about 2/3 of a full graph.<br>
+Now I noticed when Dashboard instruments are not shown the graph is actually filled up completely wo gaps. When Dashboard is shown by the tools button the graph is fully populated! But soon after start display the "gap" is present and all instrument are emptied by its 10 sec watchdog. Also the history graph after the 40 seconds WD. When also the 40 sec WD is reach all data are recovered and the stream flows again as before.</p>
+<p>My conclusion is something in the DB data collection from O multiplexer to DB wind history graph is filled up and block the data stream. <br>
+"Silly" questions:<br>
+Can a thread be blocked if data is not forwarded.<br>
+Can the 64b architecture destroy a data list in any way? (Badly initialized?) On Debian alike only?</p>
+
+
+
+<hr><p>Last updated: Feb 06 2023 at 13:23 UTC</p>
 </html>
