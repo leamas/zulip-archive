@@ -982,5 +982,15 @@ If that is correct, this looks like some kind of buffer overflow problem.</p>
 
 
 
-<hr><p>Last updated: Feb 07 2023 at 08:32 UTC</p>
+<a name="326306075"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332168-Master%20-%205.8.0%20%20%28was%3A%20comms%29/topic/Network%20problems/near/326306075" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Håkan Svensson <a href="https://leamas.github.io/zulip-archive/stream/332168-Master---5.2E8.2E0--.28was.3A-comms.29/topic/Network.20problems.html#326306075">(Feb 07 2023 at 08:35)</a>:</h4>
+<p>Thoughts: This would boil down to:<br>
+Instrument.cpp: OnPaint()  can possible halt on row 125 Draw() that's waiting for<br>
+either of four occasions where SampleCount &gt; 2600 matter: <br>
+Wind_history.cpp: 565, 589, 649 or 674.<br>
+Which of the instructions there can be "destroyed" related to Linux 64bits data format? I can't tell. More data format knowledge needed.</p>
+
+
+
+<hr><p>Last updated: Feb 07 2023 at 08:44 UTC</p>
 </html>
