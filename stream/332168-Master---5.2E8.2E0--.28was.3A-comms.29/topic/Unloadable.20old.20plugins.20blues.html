@@ -1,0 +1,221 @@
+<html>
+<head><meta charset="utf-8"><title>Unloadable old plugins blues · Master - 5.8.0  (was: comms) · Zulip Chat Archive</title></head>
+<h2>Stream: <a href="https://leamas.github.io/zulip-archive/stream/332168-Master---5.2E8.2E0--.28was.3A-comms.29/index.html">Master - 5.8.0  (was: comms)</a></h2>
+<h3>Topic: <a href="https://leamas.github.io/zulip-archive/stream/332168-Master---5.2E8.2E0--.28was.3A-comms.29/topic/Unloadable.20old.20plugins.20blues.html">Unloadable old plugins blues</a></h3>
+
+<hr>
+
+<base href="https://opencpn.zulipchat.com">
+
+<head><link href="https://leamas.github.io/zulip-archive/style.css" rel="stylesheet"></head>
+
+<a name="327719863"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332168-Master%20-%205.8.0%20%20%28was%3A%20comms%29/topic/Unloadable%20old%20plugins%20blues/near/327719863" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Alec Leamas <a href="https://leamas.github.io/zulip-archive/stream/332168-Master---5.2E8.2E0--.28was.3A-comms.29/topic/Unloadable.20old.20plugins.20blues.html#327719863">(Feb 14 2023 at 08:51)</a>:</h4>
+<p>Dave said:</p>
+<hr>
+<p>@Alec Leamas<br>
+On the "jailing" of unloadable plugins:<br>
+"The logic for now is to show the message once in each session i. e. once when opencpn is started. I think this is the right thing to do, user could either live with the message or uninstall the plugin."</p>
+<p>I am not in full agreement with this policy.<br>
+It is not nice when a plugin finds itself in the plugin directory without a metadata entry in the catalog. Could happen...<br>
+It is one thing for you or me to "uninstall a plugin". Quite another for a novice user to find the (possibly hidden e.g. Windows) plugin directory, and delete the offending .so or .dll file.<br>
+As running now, i it is unfriendly to novice users. I'd like to see the option in the message to actually delete the incompatible library file, and be done with it.</p>
+<hr>
+
+
+
+<a name="327720244"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332168-Master%20-%205.8.0%20%20%28was%3A%20comms%29/topic/Unloadable%20old%20plugins%20blues/near/327720244" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Alec Leamas <a href="https://leamas.github.io/zulip-archive/stream/332168-Master---5.2E8.2E0--.28was.3A-comms.29/topic/Unloadable.20old.20plugins.20blues.html#327720244">(Feb 14 2023 at 08:53)</a>:</h4>
+<p>Alec said:</p>
+<hr>
+<p>10:34 AM</p>
+<blockquote>
+<p>As running now, it is unfriendly to novice users.</p>
+</blockquote>
+<p>Agreed.</p>
+<blockquote>
+<p>It is not nice when a plugin finds itself in the plugin directory without a metadata entry in the catalog. Could happen...</p>
+</blockquote>
+<p>This is IMHO the core issue which becomes visible after removing this jailing stuff. It actually happens after something which should be supported: user first imports plugin -&gt; plugin data and metadata in place. And then updates the catalog.</p>
+<p>At this point the imported plugin files and installation data is still in place, but the metadata entry is lost. Overall an inconsistent state which breaks both logic and user experience.</p>
+<p>Other things like my kitchen ongoing today. Thoughts?</p>
+<hr>
+
+
+
+<a name="327720322"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332168-Master%20-%205.8.0%20%20%28was%3A%20comms%29/topic/Unloadable%20old%20plugins%20blues/near/327720322" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Alec Leamas <a href="https://leamas.github.io/zulip-archive/stream/332168-Master---5.2E8.2E0--.28was.3A-comms.29/topic/Unloadable.20old.20plugins.20blues.html#327720322">(Feb 14 2023 at 08:54)</a>:</h4>
+<p>Dave said:</p>
+<hr>
+<p>Sorry, I am not clearly following your scenario for breakage.<br>
+After importing a plugin from remote tarball, is the system left in an inconsistent state? I think not, but I may be naive.<br>
+So then how does it become broken when the catalog is updated, presumably with the same catalog entry as was imported?</p>
+<hr>
+
+
+
+<a name="327720516"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332168-Master%20-%205.8.0%20%20%28was%3A%20comms%29/topic/Unloadable%20old%20plugins%20blues/near/327720516" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Alec Leamas <a href="https://leamas.github.io/zulip-archive/stream/332168-Master---5.2E8.2E0--.28was.3A-comms.29/topic/Unloadable.20old.20plugins.20blues.html#327720516">(Feb 14 2023 at 08:54)</a>:</h4>
+<p>Alec said:</p>
+<hr>
+<p>11:11 AM<br>
+@Dave Register</p>
+<blockquote>
+<p>presumably with the same catalog entry as was imported?</p>
+</blockquote>
+<p>If we should clear this out, we cannot make any assumptions about whether the plugin imported is in the catalog, or if the catalog entry matches the imported plugin. Unfortunately, this is true even if the imported plugin and the catalog entry has the same name and version.</p>
+<p>Scenario, more details:</p>
+<p>User imports plugin foo version 1.1. This adds a new entry named "foo" version 1.1 to the catalog.<br>
+User installs plugin using the catalog entry. This creates the files plugindir/.../libfoo.so and plugindir/.../data with plugin contents. It also creates config_dir/plugins/install_data/foo.files which lists all files installed with this plugin.<br>
+User uninstalls plugin. The things involved are the catalog entry (GUI underpinnings) and foo.files which is used to find out what to remove. As a final step, also foo.files is removed<br>
+So far, all is well. However, if user instead of 3. updates the catalog, the existing catalog containing the imported metadata is replaced with a catalog without this imported metadata. The result is that the metadata in the catalog does not relate to the imported plugin in any way.</p>
+<p>If it's missing, there is no way for a user to remove the plugin. There just isn't any entry in the GUI which user can select to uninstall it, leaving files like <a href="http://libfoo.so">libfoo.so</a> without any GUI hooks to be removed and user lose.</p>
+<p>It there is an entry, it's unreliable. It was created for something else. I. e., it refers to what can be downloaded through the catalog download url, not the actually installed, imported plugin. For example, metadata added by a developer for testing purposes will not be visible.</p>
+<p>IMHO, this means that the state is inconsistent.</p>
+<hr>
+
+
+
+<a name="327720602"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332168-Master%20-%205.8.0%20%20%28was%3A%20comms%29/topic/Unloadable%20old%20plugins%20blues/near/327720602" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Alec Leamas <a href="https://leamas.github.io/zulip-archive/stream/332168-Master---5.2E8.2E0--.28was.3A-comms.29/topic/Unloadable.20old.20plugins.20blues.html#327720602">(Feb 14 2023 at 08:55)</a>:</h4>
+<p>Dave said:</p>
+<hr>
+<p>OK, I have the scenario in mind.<br>
+Thinking....</p>
+<hr>
+
+
+
+<a name="327720994"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332168-Master%20-%205.8.0%20%20%28was%3A%20comms%29/topic/Unloadable%20old%20plugins%20blues/near/327720994" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Alec Leamas <a href="https://leamas.github.io/zulip-archive/stream/332168-Master---5.2E8.2E0--.28was.3A-comms.29/topic/Unloadable.20old.20plugins.20blues.html#327720994">(Feb 14 2023 at 08:57)</a>:</h4>
+<p>Alec said: </p>
+<hr>
+<p>When I think about it, the only way to actually fix this is to keep the imported metadata until the imported plugin is removed. Which might mean that:</p>
+<ul>
+<li>Imported metadata is kept in a separate place in the config directory</li>
+<li>Imported metadata basically is immutable, removed when uninstalling only.</li>
+<li>The used catalog is the result of merging the downloaded catalog with the imported metadata. This could either be done when updating or when parsing -- to do it when updating and then be done with it seems like the best option. Importing is the same as updating in this context.</li>
+<li>Plugins which are imported are marked as such. This is needed when uninstalling, but would also make sense in the GUI as an icon.</li>
+<li>Importing a plugin with a given name should not be allowed if this plugin is already imported. Either the existing plugin is implicitly removed, or user is forced to remove it first. Since implicit remove is a Bad Thing, it's probably better if user has to remove the existing first.</li>
+</ul>
+<p>Trying to wrap my head around what it means if the imported plugin and the plugin in the catalog has the same name and version. No success.</p>
+<hr>
+
+
+
+<a name="327721160"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332168-Master%20-%205.8.0%20%20%28was%3A%20comms%29/topic/Unloadable%20old%20plugins%20blues/near/327721160" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Alec Leamas <a href="https://leamas.github.io/zulip-archive/stream/332168-Master---5.2E8.2E0--.28was.3A-comms.29/topic/Unloadable.20old.20plugins.20blues.html#327721160">(Feb 14 2023 at 08:58)</a>:</h4>
+<p>Dave said:</p>
+<hr>
+<p>I came to a variation of the same thing. Not sure how to "mark" the import. Maybe add a XML tag " on-the-fly", while importing?<br>
+Also, we can safely refuse to import a plugin if the same already exists in catalog (common name, target, and version). With UI message to that effect.<br>
+I like the idea of a subtly different icon in the UI for "imported" plugins.</p>
+<hr>
+
+
+
+<a name="327721292"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332168-Master%20-%205.8.0%20%20%28was%3A%20comms%29/topic/Unloadable%20old%20plugins%20blues/near/327721292" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Alec Leamas <a href="https://leamas.github.io/zulip-archive/stream/332168-Master---5.2E8.2E0--.28was.3A-comms.29/topic/Unloadable.20old.20plugins.20blues.html#327721292">(Feb 14 2023 at 08:58)</a>:</h4>
+<p>Alec said:</p>
+<hr>
+<p>We don't really need to mark the xml, we know that the xml is imported because it lives in a separate location. Marking should be done in PlugInContainer, perhaps by just adding a kind of status item in PluginStatus.</p>
+<p>However, this would mean that we cannot update an imported plugin. Might be better with a simple bool in PlugInContainer.</p>
+<blockquote>
+<p>Also, we can safely refuse to import a plugin if the same already exists in catalog (common name, target, and version).</p>
+</blockquote>
+<p>Can still mess up if we first import the the plugin (no collision with catalog) and then updates the catalog and the updated catalog contains something identical to the imported one. Which actually is an expected use case.</p>
+<p>11:30 PM</p>
+<hr>
+
+
+
+<a name="327721454"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332168-Master%20-%205.8.0%20%20%28was%3A%20comms%29/topic/Unloadable%20old%20plugins%20blues/near/327721454" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Alec Leamas <a href="https://leamas.github.io/zulip-archive/stream/332168-Master---5.2E8.2E0--.28was.3A-comms.29/topic/Unloadable.20old.20plugins.20blues.html#327721454">(Feb 14 2023 at 08:59)</a>:</h4>
+<p>Alec said:</p>
+<hr>
+<p>After a night's sleep I see two ways to handle conflicts (same name &amp; version) between the catalog and an imported plugin.</p>
+<p>One way would be to fully block all ways this could happen. This means blocking import of a plugin conflicting with the catalog as you said. It would also mean blocking a catalog update leading a conflict with a user message like "imported plugin foo must be uninstalled before catalog is updated" or so.</p>
+<p>Another way would be to tweak the version for the imported plugin. This could be done by adding an "epoch" to the version in the same ways as distributions. Adding an epoch would mean that the complete version 1.2.3 could bee 0:1.2.3-beta+deadbeef. Here, the new item is 0:, commonly named "epoch"</p>
+<p>The epoch would be 0 by default. This means that no existing code would be affected: version comparing, creating and parsing proceeds as always.</p>
+<p>However , we could set the epoch to 1 for plugins. Following the standard logic, epoch beats all other version components when comparing. That is, 1:0.0.0 is a later version than 0:1.1.1. This would mean that the plugin version would never be the same as in the catalog. It would also mean that an imported plugin always has a later version than the same plugin in the catalog.</p>
+<p>More text on the epoch thing, more to explain. However, I have no clear preference on the way to go here: blocking conflicts or live with them used a tweaked version. Perhaps there are other ways.</p>
+<hr>
+
+
+
+<a name="327721590"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332168-Master%20-%205.8.0%20%20%28was%3A%20comms%29/topic/Unloadable%20old%20plugins%20blues/near/327721590" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Alec Leamas <a href="https://leamas.github.io/zulip-archive/stream/332168-Master---5.2E8.2E0--.28was.3A-comms.29/topic/Unloadable.20old.20plugins.20blues.html#327721590">(Feb 14 2023 at 09:00)</a>:</h4>
+<p>Dave said:</p>
+<hr>
+<p>"t would also mean blocking a catalog update leading a conflict with a user message like "imported plugin foo must be uninstalled before catalog is updated" or so."<br>
+There is potentially another way here.<br>
+During catalog update, we parse each entry in the new catalog looking for conflicts with previously imported plugins. We know that a plugin is an import, since it is stored in a "special" location. If there is an exact conflict, we can drop the catalog update metadata for this plugin, and retain the imported plugin metadata. Result: logically still consistent.<br>
+This would be somewhat slower than normal, but only happens if there are actually any imported plugins to consider.</p>
+<hr>
+
+
+
+<a name="327721687"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332168-Master%20-%205.8.0%20%20%28was%3A%20comms%29/topic/Unloadable%20old%20plugins%20blues/near/327721687" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Alec Leamas <a href="https://leamas.github.io/zulip-archive/stream/332168-Master---5.2E8.2E0--.28was.3A-comms.29/topic/Unloadable.20old.20plugins.20blues.html#327721687">(Feb 14 2023 at 09:00)</a>:</h4>
+<p>Alec said:</p>
+<hr>
+<p>Right... but it would hide the possible update in the catalog. Might be worth it.</p>
+<p>On my way out, perhaps back later today, otherwise tomorrow.</p>
+<p>At a second thought: Wouldn't this be a new inconsistency, where the complete catalog isn't available? I</p>
+<hr>
+
+
+
+<a name="327721836"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332168-Master%20-%205.8.0%20%20%28was%3A%20comms%29/topic/Unloadable%20old%20plugins%20blues/near/327721836" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Alec Leamas <a href="https://leamas.github.io/zulip-archive/stream/332168-Master---5.2E8.2E0--.28was.3A-comms.29/topic/Unloadable.20old.20plugins.20blues.html#327721836">(Feb 14 2023 at 09:01)</a>:</h4>
+<p>Dave said:</p>
+<hr>
+<p>OK, then the completely automatic way is :</p>
+<p>If an incoming catalog plugin is equal to or later than an existing imported plugin, then quietly uninstall the imported plugin. This will leave the target plugin in an uninstalled state. Post user message to that effect. "Please reinstall "foo", updating imported version", or so.</p>
+<hr>
+
+
+
+<a name="327721897"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332168-Master%20-%205.8.0%20%20%28was%3A%20comms%29/topic/Unloadable%20old%20plugins%20blues/near/327721897" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Alec Leamas <a href="https://leamas.github.io/zulip-archive/stream/332168-Master---5.2E8.2E0--.28was.3A-comms.29/topic/Unloadable.20old.20plugins.20blues.html#327721897">(Feb 14 2023 at 09:01)</a>:</h4>
+<p>Alec said:</p>
+<hr>
+<p>If the catalog and the imported plugin has different versions we could just proceed as normal. It doesn't matter if the catalog entry is later then the imported plugin -- the catalog will have two entries, one for the imported plugin, one for the catalog version. The imported is most likely also installed, but not necessarily. But as long as the versions are different I see no problem.</p>
+<p>But if the versions are the same, you are right. This would then mean that we should uninstall the imported plugin if it is installed and then remove the imported metadata before updating the catalog. This is doable, reasonably simple and consistent. A user message like "imported plugin foo replaced by version from the catalog" or so might make sense.</p>
+<p>However, user would not be able to re-import the tarball since it has the same name+version (NVR) as the catalog entry. We must block this if we walk this path. This is a downside. The only way I can see avoiding this is tweaking the version, for example like described above.</p>
+<hr>
+
+
+
+<a name="327722074"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332168-Master%20-%205.8.0%20%20%28was%3A%20comms%29/topic/Unloadable%20old%20plugins%20blues/near/327722074" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Alec Leamas <a href="https://leamas.github.io/zulip-archive/stream/332168-Master---5.2E8.2E0--.28was.3A-comms.29/topic/Unloadable.20old.20plugins.20blues.html#327722074">(Feb 14 2023 at 09:02)</a>:</h4>
+<p>Dave said:</p>
+<hr>
+<p>Of course there is no accounting for users, but...<br>
+Why would a user want to import a plugin that has the same NVR as existing plugin? Seems OK to dis-allow this, with a message.</p>
+<hr>
+
+
+
+<a name="327722264"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332168-Master%20-%205.8.0%20%20%28was%3A%20comms%29/topic/Unloadable%20old%20plugins%20blues/near/327722264" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Alec Leamas <a href="https://leamas.github.io/zulip-archive/stream/332168-Master---5.2E8.2E0--.28was.3A-comms.29/topic/Unloadable.20old.20plugins.20blues.html#327722264">(Feb 14 2023 at 09:03)</a>:</h4>
+<p>Alec said:</p>
+<hr>
+<p>TL;DR probably.</p>
+<p>However, the use case:</p>
+<ul>
+<li>Developer creates a tarball, hands it to user for test</li>
+<li>User tests and is happy, reports back</li>
+<li>Developer makes some final changes and publishes using the same version.</li>
+<li>User updates, runs into problems, cannot verify if previous, imported version works.</li>
+</ul>
+<p>I. e., it's not only about users but also devs.</p>
+<p>The rabbit hole is deep. We have so far only defined "uninstalling" a plugin. Looking at this mess, it seems that we need to define a new operation "remove". This means removing the metadata, after first uninstalling and removing any tarballs in cache referenced by the metadata. This is necessary when importing an already imported plugin. Might be triggered by user or automatically, but nevertheless needed.</p>
+<p>We might allow importing a plugin present in the catalog by simply tweaking the version number. foo 1.0.0 becomes foo 1.0.0.1, the normal case. Corner case 1.0.0.1 becomes 1.0.0.2. The imported version is actually not that interesting, there is only one imported foo. Using the fourth digit this way also sorts OK: the imported version of 1.0.0 is an update of 1.0.0, but will be replaced with 1.0.1 when it's published in the catalog.</p>
+<p>In the first step, just blocking the import of a NVR present in catalog seems logical.</p>
+<hr>
+
+
+
+<hr><p>Last updated: Feb 14 2023 at 09:09 UTC</p>
+</html>
