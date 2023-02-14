@@ -232,5 +232,43 @@ In the case OCPN is disturbed by old plugin binaries not able to load we may inf
 
 
 
-<hr><p>Last updated: Feb 14 2023 at 21:42 UTC</p>
+<a name="327879823"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332168-Master%20-%205.8.0%20%20%28was%3A%20comms%29/topic/Unloadable%20old%20plugins%20blues/near/327879823" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Alec Leamas <a href="https://leamas.github.io/zulip-archive/stream/332168-Master---5.2E8.2E0--.28was.3A-comms.29/topic/Unloadable.20old.20plugins.20blues.html#327879823">(Feb 14 2023 at 21:45)</a>:</h4>
+<p>We need to  some conclusions here. Trying to summarize.</p>
+<p>Here is two, separate issues. One is that due to current design, users have unloadable plugin library files. We need a way to get rid of these.</p>
+<p>The other is that perfectly normal use of OpenCPN will lead to orphaned library files which cannot be removed by users.  The basic scenario is about imported plugins, which are installed with no metadata available after a catalog update. We need to make sure that this does not happen.</p>
+
+
+
+<a name="327880192"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332168-Master%20-%205.8.0%20%20%28was%3A%20comms%29/topic/Unloadable%20old%20plugins%20blues/near/327880192" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Alec Leamas <a href="https://leamas.github.io/zulip-archive/stream/332168-Master---5.2E8.2E0--.28was.3A-comms.29/topic/Unloadable.20old.20plugins.20blues.html#327880192">(Feb 14 2023 at 21:48)</a>:</h4>
+<p><strong>Handling existing bad plugins</strong></p>
+<p>When they are detected, user should be offered to remove them.  This means removing them both from the file system and the installation data. If possible, related data files and translations should also be removed i. e., the complete plugin, not just the library.</p>
+
+
+
+<a name="327881742"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332168-Master%20-%205.8.0%20%20%28was%3A%20comms%29/topic/Unloadable%20old%20plugins%20blues/near/327881742" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Alec Leamas <a href="https://leamas.github.io/zulip-archive/stream/332168-Master---5.2E8.2E0--.28was.3A-comms.29/topic/Unloadable.20old.20plugins.20blues.html#327881742">(Feb 14 2023 at 21:59)</a>:</h4>
+<p><strong>Handling lost metadata for imported plugins (user cannot uninstall them, or get's wrong info)</strong></p>
+<p>Like this:</p>
+<ul>
+<li>Imported metadata is saved in the configuration directory,  immutable  until the imported plugin is removed</li>
+<li>The effective catalog displayed for users is the result of merging the "real" catalog with imported plugins metadata.</li>
+<li>There can only be one imported version of a given plugin, user must remove existing version before importing again.</li>
+<li>A plugin with the same name and version (NVR) as a catalog entry cannot be imported.</li>
+<li>An update of the catalog which contains the same NVR as an imported plugin is blocked, user has to remove the imported plugin first.</li>
+<li>Imported plugins have a visible indication in the GUI showing their status.</li>
+</ul>
+<p>The constraints on catalog updates and imported plugins with a conflicting NVRs can probably be lifted at a later point. But, perhaps keeping it simple like this in a first round. It's still a lot of work.</p>
+<p>We will need a new "remove" operation for imported plugins. That is, not just uninstalling them but also removing the otherwise immutable, imported metadata.</p>
+
+
+
+<a name="327881771"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332168-Master%20-%205.8.0%20%20%28was%3A%20comms%29/topic/Unloadable%20old%20plugins%20blues/near/327881771" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Alec Leamas <a href="https://leamas.github.io/zulip-archive/stream/332168-Master---5.2E8.2E0--.28was.3A-comms.29/topic/Unloadable.20old.20plugins.20blues.html#327881771">(Feb 14 2023 at 21:59)</a>:</h4>
+<p><span class="user-mention" data-user-id="517002">@Dave Register</span>  <span class="user-mention" data-user-id="522486">@Håkan Svensson</span>  ^ Thoughts?</p>
+
+
+
+<hr><p>Last updated: Feb 14 2023 at 22:08 UTC</p>
 </html>

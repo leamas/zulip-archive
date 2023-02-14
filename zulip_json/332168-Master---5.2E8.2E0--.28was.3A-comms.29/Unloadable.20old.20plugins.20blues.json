@@ -100,5 +100,29 @@
         "id": 327867407,
         "sender_full_name": "Håkan Svensson",
         "timestamp": 1676406414
+    },
+    {
+        "content": "<p>We need to  some conclusions here. Trying to summarize.</p>\n<p>Here is two, separate issues. One is that due to current design, users have unloadable plugin library files. We need a way to get rid of these.</p>\n<p>The other is that perfectly normal use of OpenCPN will lead to orphaned library files which cannot be removed by users.  The basic scenario is about imported plugins, which are installed with no metadata available after a catalog update. We need to make sure that this does not happen.</p>",
+        "id": 327879823,
+        "sender_full_name": "Alec Leamas",
+        "timestamp": 1676411153
+    },
+    {
+        "content": "<p><strong>Handling existing bad plugins</strong></p>\n<p>When they are detected, user should be offered to remove them.  This means removing them both from the file system and the installation data. If possible, related data files and translations should also be removed i. e., the complete plugin, not just the library.</p>",
+        "id": 327880192,
+        "sender_full_name": "Alec Leamas",
+        "timestamp": 1676411314
+    },
+    {
+        "content": "<p><strong>Handling lost metadata for imported plugins (user cannot uninstall them, or get's wrong info)</strong></p>\n<p>Like this:</p>\n<ul>\n<li>Imported metadata is saved in the configuration directory,  immutable  until the imported plugin is removed</li>\n<li>The effective catalog displayed for users is the result of merging the \"real\" catalog with imported plugins metadata.</li>\n<li>There can only be one imported version of a given plugin, user must remove existing version before importing again.</li>\n<li>A plugin with the same name and version (NVR) as a catalog entry cannot be imported.</li>\n<li>An update of the catalog which contains the same NVR as an imported plugin is blocked, user has to remove the imported plugin first.</li>\n<li>Imported plugins have a visible indication in the GUI showing their status.</li>\n</ul>\n<p>The constraints on catalog updates and imported plugins with a conflicting NVRs can probably be lifted at a later point. But, perhaps keeping it simple like this in a first round. It's still a lot of work.</p>\n<p>We will need a new \"remove\" operation for imported plugins. That is, not just uninstalling them but also removing the otherwise immutable, imported metadata.</p>",
+        "id": 327881742,
+        "sender_full_name": "Alec Leamas",
+        "timestamp": 1676411967
+    },
+    {
+        "content": "<p><span class=\"user-mention\" data-user-id=\"517002\">@Dave Register</span>  <span class=\"user-mention\" data-user-id=\"522486\">@Håkan Svensson</span>  ^ Thoughts?</p>",
+        "id": 327881771,
+        "sender_full_name": "Alec Leamas",
+        "timestamp": 1676411982
     }
 ]
