@@ -97,5 +97,24 @@ Big issue is restoring the ability to compile for wxWidgets v3(Not Darwin)/3.1.5
 
 
 
-<hr><p>Last updated: Feb 14 2023 at 10:32 UTC</p>
+<a name="327740697"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332200-shipdriver/topic/api-17/ocpn_plugins.h.h/near/327740697" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Alec Leamas <a href="https://leamas.github.io/zulip-archive/stream/332200-shipdriver/topic/api-17.2Focpn_plugins.2Eh.2Eh.html#327740697">(Feb 14 2023 at 10:34)</a>:</h4>
+<p>I have pushed v3.2 and the sd3.2.3-beta1 tag. Time for tests</p>
+
+
+
+<a name="327742458"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332200-shipdriver/topic/api-17/ocpn_plugins.h.h/near/327742458" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Alec Leamas <a href="https://leamas.github.io/zulip-archive/stream/332200-shipdriver/topic/api-17.2Focpn_plugins.2Eh.2Eh.html#327742458">(Feb 14 2023 at 10:42)</a>:</h4>
+<p>BTW: A release branch like v3.2 is IMHO no place for various test commits. On the contrary, each and every commit in such a branch should</p>
+<ul>
+<li>already exist in master</li>
+<li>have a reference to a bug in the description</li>
+</ul>
+<p>I see that you have made some commits here,  for example some <a href="http://safe.directory">safe.directory</a> tests. The result is that the sd3.2.2 tag is no longer on the branch. This is no big deal,just somewhat annoying.</p>
+<p>I suggest that when you need to test things like we all do, use a separate branch for that. circle/config.yml is set up to build basically all branches, so when you push a branch  it will be built (the exception is a branch named "tmp"). This way, you can test things without cluttering the history.</p>
+<p>When done, make a clean change to master. Next step is to cherry-pick this change into v3.2. At some point I will show you how to do it, until then I can fix it. This way, we can keep the conservative approach we should to a release branch.</p>
+
+
+
+<hr><p>Last updated: Feb 14 2023 at 10:43 UTC</p>
 </html>
