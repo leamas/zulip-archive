@@ -214,5 +214,17 @@
         "id": 327948845,
         "sender_full_name": "Alec Leamas",
         "timestamp": 1676449929
+    },
+    {
+        "content": "<p>So, two cases to take care about. The first is about failed updates, failed imports and what not leading to incompatible plugin libraries. We know how to deal with it (new dialog, user can remove library preferably also making a proper uninstall fixing install_data)</p>\n<p>The other case is  about  making sure that ABI breaking updates of opencpn works in a sane way Could be:</p>\n<ol>\n<li>On startup, opencpn checks for installed plugins with  incompatible ABI:s (<del>in parallel thread, not delaying start up</del>  This test should be cached to not delay normal start up).  </li>\n<li>If such are found and the catalog is too old to have new, wx32 entries user get a chance to update the catalog  (modal dialog).</li>\n<li>All incompatible plugins are uninstalled.</li>\n<li>For plugins uninstalled, we look for compatible entries with same name in the catalog. If existing, this is installed. If there are multiple matches the one with highest version number is used. </li>\n<li>Possibly, a dialog informs user about update actions (\"The  following plugins have been updated\")</li>\n</ol>\n<p>This should make the normal update scenario work without  creating unloadable libraries.  It would actually work on downgrades as well.</p>",
+        "id": 327954149,
+        "sender_full_name": "Alec Leamas",
+        "timestamp": 1676451578
+    },
+    {
+        "content": "<p>Here is a race condition between the possible update and initial plugin loading to handle</p>",
+        "id": 327954628,
+        "sender_full_name": "Alec Leamas",
+        "timestamp": 1676451721
     }
 ]

@@ -405,5 +405,26 @@ But if we remove legacy plugins the old O will not work as before. Correct? Thou
 
 
 
-<hr><p>Last updated: Feb 15 2023 at 08:45 UTC</p>
+<a name="327954149"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332168-Master%20-%205.8.0%20%20%28was%3A%20comms%29/topic/Unloadable%20old%20plugins%20blues/near/327954149" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Alec Leamas <a href="https://leamas.github.io/zulip-archive/stream/332168-Master---5.2E8.2E0--.28was.3A-comms.29/topic/Unloadable.20old.20plugins.20blues.html#327954149">(Feb 15 2023 at 08:59)</a>:</h4>
+<p>So, two cases to take care about. The first is about failed updates, failed imports and what not leading to incompatible plugin libraries. We know how to deal with it (new dialog, user can remove library preferably also making a proper uninstall fixing install_data)</p>
+<p>The other case is  about  making sure that ABI breaking updates of opencpn works in a sane way Could be:</p>
+<ol>
+<li>On startup, opencpn checks for installed plugins with  incompatible ABI:s (<del>in parallel thread, not delaying start up</del>  This test should be cached to not delay normal start up).  </li>
+<li>If such are found and the catalog is too old to have new, wx32 entries user get a chance to update the catalog  (modal dialog).</li>
+<li>All incompatible plugins are uninstalled.</li>
+<li>For plugins uninstalled, we look for compatible entries with same name in the catalog. If existing, this is installed. If there are multiple matches the one with highest version number is used. </li>
+<li>Possibly, a dialog informs user about update actions ("The  following plugins have been updated")</li>
+</ol>
+<p>This should make the normal update scenario work without  creating unloadable libraries.  It would actually work on downgrades as well.</p>
+
+
+
+<a name="327954628"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332168-Master%20-%205.8.0%20%20%28was%3A%20comms%29/topic/Unloadable%20old%20plugins%20blues/near/327954628" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Alec Leamas <a href="https://leamas.github.io/zulip-archive/stream/332168-Master---5.2E8.2E0--.28was.3A-comms.29/topic/Unloadable.20old.20plugins.20blues.html#327954628">(Feb 15 2023 at 09:02)</a>:</h4>
+<p>Here is a race condition between the possible update and initial plugin loading to handle</p>
+
+
+
+<hr><p>Last updated: Feb 15 2023 at 09:09 UTC</p>
 </html>
