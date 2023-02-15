@@ -154,5 +154,47 @@
         "id": 327940947,
         "sender_full_name": "Alec Leamas",
         "timestamp": 1676446913
+    },
+    {
+        "content": "<blockquote>\n<p>I see no problem deleting all files and empty folders if deleting only files listed in xxx.files, e.g. weatherrouting.files.</p>\n</blockquote>\n<p>Part of the picture is keeping the installer consistent. The installer tracks installed files in <em>configuration directory/plugins/install_data</em>, and we need to make sure that this data matches the realities, otherwise all sorts of bad things might happen.  </p>\n<p>So, we need to remove all files listed for a plugin in <em>.../install_data</em> together with the data as such. That is, find the install_data for a given plugin, sort of an interesting exercise.</p>",
+        "id": 327941682,
+        "sender_full_name": "Alec Leamas",
+        "timestamp": 1676447239
+    },
+    {
+        "content": "<ul>\n<li>If install_data is found for a specific plugin then remove listed files.</li>\n<li>If install_data is not found, ore is useless, remove only what's disturbing O. I we leave some leftovers; no big trouble.  Won't brake disc space.</li>\n</ul>",
+        "id": 327942657,
+        "sender_full_name": "Håkan Svensson",
+        "timestamp": 1676447731
+    },
+    {
+        "content": "<p><span class=\"user-mention\" data-user-id=\"522486\">@Håkan Svensson</span>  yes</p>",
+        "id": 327942767,
+        "sender_full_name": "Alec Leamas",
+        "timestamp": 1676447765
+    },
+    {
+        "content": "<blockquote>\n<p>New catalog may not have entries for now legacy wx31 plugins, but has only wx32 target plugins.</p>\n</blockquote>\n<p><del>Which actually means that on update we should uninstall all plugins which are not present in the new catalog.</del></p>",
+        "id": 327943205,
+        "sender_full_name": "Alec Leamas",
+        "timestamp": 1676447957
+    },
+    {
+        "content": "<p>No... (sorry, thinking aloud). This would make us remove plugins where the catalog just is a regular update. What we should do on catalog updates  is to uninstall all installed plugins which does not have an matching ABI i. e., they fail the <code>isCompatible()</code> test. This happens on ABI breaks only, and we haven't really made a design for this.</p>\n<p>The imported case would a natural extension: uninstall plugins which does not exist at all in any version in the catalog on catalog update.</p>",
+        "id": 327944242,
+        "sender_full_name": "Alec Leamas",
+        "timestamp": 1676448317
+    },
+    {
+        "content": "<p>Agree on above.<br>\nA maybe late entrance Q:<br>\nFor now I can say to tester: Install O <a href=\"http://5.7.1.xxx\">5.7.1.xxx</a> for a test, no problem. You can always reinstall O 5.6.2 and all is fine.<br>\nBut if we remove legacy plugins the old O will not work as before. Correct? Thoughts?</p>",
+        "id": 327944951,
+        "sender_full_name": "Håkan Svensson",
+        "timestamp": 1676448523
+    },
+    {
+        "content": "<blockquote>\n<p>But if we remove legacy plugins the old O will not work as before. Correct? Thoughts?</p>\n</blockquote>\n<p>I think it will actually work. The catalog entries for the old version are still there. User would have to reinstall plugins, but nothing worse.</p>",
+        "id": 327945596,
+        "sender_full_name": "Alec Leamas",
+        "timestamp": 1676448734
     }
 ]

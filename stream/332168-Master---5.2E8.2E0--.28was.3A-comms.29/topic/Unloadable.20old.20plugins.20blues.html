@@ -320,5 +320,64 @@ If they disturb OCPN: delete the binaries and, if present, corresponding folder.
 
 
 
-<hr><p>Last updated: Feb 15 2023 at 07:42 UTC</p>
+<a name="327941682"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332168-Master%20-%205.8.0%20%20%28was%3A%20comms%29/topic/Unloadable%20old%20plugins%20blues/near/327941682" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Alec Leamas <a href="https://leamas.github.io/zulip-archive/stream/332168-Master---5.2E8.2E0--.28was.3A-comms.29/topic/Unloadable.20old.20plugins.20blues.html#327941682">(Feb 15 2023 at 07:47)</a>:</h4>
+<blockquote>
+<p>I see no problem deleting all files and empty folders if deleting only files listed in xxx.files, e.g. weatherrouting.files.</p>
+</blockquote>
+<p>Part of the picture is keeping the installer consistent. The installer tracks installed files in <em>configuration directory/plugins/install_data</em>, and we need to make sure that this data matches the realities, otherwise all sorts of bad things might happen.  </p>
+<p>So, we need to remove all files listed for a plugin in <em>.../install_data</em> together with the data as such. That is, find the install_data for a given plugin, sort of an interesting exercise.</p>
+
+
+
+<a name="327942657"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332168-Master%20-%205.8.0%20%20%28was%3A%20comms%29/topic/Unloadable%20old%20plugins%20blues/near/327942657" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Håkan Svensson <a href="https://leamas.github.io/zulip-archive/stream/332168-Master---5.2E8.2E0--.28was.3A-comms.29/topic/Unloadable.20old.20plugins.20blues.html#327942657">(Feb 15 2023 at 07:55)</a>:</h4>
+<ul>
+<li>If install_data is found for a specific plugin then remove listed files.</li>
+<li>If install_data is not found, ore is useless, remove only what's disturbing O. I we leave some leftovers; no big trouble.  Won't brake disc space.</li>
+</ul>
+
+
+
+<a name="327942767"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332168-Master%20-%205.8.0%20%20%28was%3A%20comms%29/topic/Unloadable%20old%20plugins%20blues/near/327942767" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Alec Leamas <a href="https://leamas.github.io/zulip-archive/stream/332168-Master---5.2E8.2E0--.28was.3A-comms.29/topic/Unloadable.20old.20plugins.20blues.html#327942767">(Feb 15 2023 at 07:56)</a>:</h4>
+<p><span class="user-mention" data-user-id="522486">@Håkan Svensson</span>  yes</p>
+
+
+
+<a name="327943205"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332168-Master%20-%205.8.0%20%20%28was%3A%20comms%29/topic/Unloadable%20old%20plugins%20blues/near/327943205" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Alec Leamas <a href="https://leamas.github.io/zulip-archive/stream/332168-Master---5.2E8.2E0--.28was.3A-comms.29/topic/Unloadable.20old.20plugins.20blues.html#327943205">(Feb 15 2023 at 07:59)</a>:</h4>
+<blockquote>
+<p>New catalog may not have entries for now legacy wx31 plugins, but has only wx32 target plugins.</p>
+</blockquote>
+<p><del>Which actually means that on update we should uninstall all plugins which are not present in the new catalog.</del></p>
+
+
+
+<a name="327944242"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332168-Master%20-%205.8.0%20%20%28was%3A%20comms%29/topic/Unloadable%20old%20plugins%20blues/near/327944242" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Alec Leamas <a href="https://leamas.github.io/zulip-archive/stream/332168-Master---5.2E8.2E0--.28was.3A-comms.29/topic/Unloadable.20old.20plugins.20blues.html#327944242">(Feb 15 2023 at 08:05)</a>:</h4>
+<p>No... (sorry, thinking aloud). This would make us remove plugins where the catalog just is a regular update. What we should do on catalog updates  is to uninstall all installed plugins which does not have an matching ABI i. e., they fail the <code>isCompatible()</code> test. This happens on ABI breaks only, and we haven't really made a design for this.</p>
+<p>The imported case would a natural extension: uninstall plugins which does not exist at all in any version in the catalog on catalog update.</p>
+
+
+
+<a name="327944951"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332168-Master%20-%205.8.0%20%20%28was%3A%20comms%29/topic/Unloadable%20old%20plugins%20blues/near/327944951" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Håkan Svensson <a href="https://leamas.github.io/zulip-archive/stream/332168-Master---5.2E8.2E0--.28was.3A-comms.29/topic/Unloadable.20old.20plugins.20blues.html#327944951">(Feb 15 2023 at 08:08)</a>:</h4>
+<p>Agree on above.<br>
+A maybe late entrance Q:<br>
+For now I can say to tester: Install O <a href="http://5.7.1.xxx">5.7.1.xxx</a> for a test, no problem. You can always reinstall O 5.6.2 and all is fine.<br>
+But if we remove legacy plugins the old O will not work as before. Correct? Thoughts?</p>
+
+
+
+<a name="327945596"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332168-Master%20-%205.8.0%20%20%28was%3A%20comms%29/topic/Unloadable%20old%20plugins%20blues/near/327945596" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Alec Leamas <a href="https://leamas.github.io/zulip-archive/stream/332168-Master---5.2E8.2E0--.28was.3A-comms.29/topic/Unloadable.20old.20plugins.20blues.html#327945596">(Feb 15 2023 at 08:12)</a>:</h4>
+<blockquote>
+<p>But if we remove legacy plugins the old O will not work as before. Correct? Thoughts?</p>
+</blockquote>
+<p>I think it will actually work. The catalog entries for the old version are still there. User would have to reinstall plugins, but nothing worse.</p>
+
+
+
+<hr><p>Last updated: Feb 15 2023 at 08:12 UTC</p>
 </html>
