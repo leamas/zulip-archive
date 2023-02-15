@@ -270,5 +270,26 @@ In the case OCPN is disturbed by old plugin binaries not able to load we may inf
 
 
 
-<hr><p>Last updated: Feb 14 2023 at 23:42 UTC</p>
+<a name="327902414"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332168-Master%20-%205.8.0%20%20%28was%3A%20comms%29/topic/Unloadable%20old%20plugins%20blues/near/327902414" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Dave Register <a href="https://leamas.github.io/zulip-archive/stream/332168-Master---5.2E8.2E0--.28was.3A-comms.29/topic/Unloadable.20old.20plugins.20blues.html#327902414">(Feb 15 2023 at 00:40)</a>:</h4>
+<p>The first question: <strong>Handling existing bad plugins.</strong><br>
+This is the most urgent thing to fix.  Will happen for virtually every Windows and Mac user updatng from O562 to O58.  Here is how:</p>
+<ol>
+<li>Before update, user has a bunch of plugins built for wx31, all in catalog.  All is well.</li>
+<li>User updates to O58, and immediately fetches new catalog.  </li>
+<li>New catalog may not have entries for now legacy wx31 plugins, but has only wx32 target plugins.</li>
+<li>OCPN tries valiantly to load any plugin found in the stipulated directory, even plugins with no metadata in the catalog.</li>
+<li>Result:  No surprise, the wx31 plugins will not load.  Also, the legacy plugin metadata is now gone.  So no reasonable way for user to delete from PIM.</li>
+</ol>
+
+
+
+<a name="327902838"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332168-Master%20-%205.8.0%20%20%28was%3A%20comms%29/topic/Unloadable%20old%20plugins%20blues/near/327902838" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Dave Register <a href="https://leamas.github.io/zulip-archive/stream/332168-Master---5.2E8.2E0--.28was.3A-comms.29/topic/Unloadable.20old.20plugins.20blues.html#327902838">(Feb 15 2023 at 00:44)</a>:</h4>
+<p>So, in this case we need to automatically use the manifest data to uninstall and remove completely the now useless wx31 plugins.<br>
+Full stop.  Let's work this out before extending to imports.</p>
+
+
+
+<hr><p>Last updated: Feb 15 2023 at 00:47 UTC</p>
 </html>
