@@ -334,5 +334,11 @@
         "id": 329438927,
         "sender_full_name": "Mike Rossiter",
         "timestamp": 1677075599
+    },
+    {
+        "content": "<p><span class=\"user-mention\" data-user-id=\"399559\">@Mike Rossiter</span>  thanks for all help! Currently making dinner for eight persons, so... </p>\n<p>So this happens in PluginNameCase, but unfortunately the stacktrace does not contain line numbers. If you have time,  could you try a patch like below to figure out where in PluginNameCase it happens?</p>\n<div class=\"codehilite\"><pre><span></span><code>diff --git a/src/plugin_handler.cpp b/src/plugin_handler.cpp\nindex b7230ceb0..0d628166b 100644\n--- a/src/plugin_handler.cpp\n+++ b/src/plugin_handler.cpp\n@@ -1135,22 +1135,29 @@ static std::string FindMatchingLibFile(std::regex name_re) {\n /** Best effort to return plugin name with correct case. */\n static std::string PluginNameCase(const std::string&amp; name) {\n   using namespace std;\n+wxLogDebug(&quot;PluginNameCase:1&quot;);\n   const string lc_name = ocpn::tolower(name);\n+wxLogDebug(&quot;PluginNameCase:2&quot;);\n   regex name_re(lc_name, regex_constants::icase | regex_constants::ECMAScript);\n+wxLogDebug(&quot;PluginNameCase:3&quot;);\n\n   // Look for matching plugin in list of installed and available.\n   // This often fails since the lists are not yet available when\n   // plugins are loaded, but is otherwise a safe bet.\n+wxLogDebug(&quot;PluginNameCase:4&quot;);\n   for (const auto&amp; plugin : PluginHandler::getInstance()-&gt;getInstalled()) {\n     if (ocpn::tolower(plugin.name) == lc_name) return plugin.name;\n   }\n+wxLogDebug(&quot;PluginNameCase:5&quot;);\n   for (const auto&amp; plugin : PluginHandler::getInstance()-&gt;getAvailable()) {\n     if (ocpn::tolower(plugin.name) == lc_name) return plugin.name;\n   }\n\n+wxLogDebug(&quot;PluginNameCase:6&quot;);\n   string match = FindMatchingDataDir(name_re);\n   if (match != &quot;&quot;) return match;\n\n+wxLogDebug(&quot;PluginNameCase:7&quot;);\n   match = FindMatchingLibFile(name_re);\n   return match != &quot;&quot; ? match : name;\n }\n</code></pre></div>",
+        "id": 329457858,
+        "sender_full_name": "Alec Leamas",
+        "timestamp": 1677079798
     }
 ]

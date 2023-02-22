@@ -570,5 +570,47 @@ Run 5.7.1 and OpenCPN crashes at start </p>
 
 
 
-<hr><p>Last updated: Feb 22 2023 at 15:29 UTC</p>
+<a name="329457858"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332168-Master%20-%205.8.0%20%20%28was%3A%20comms%29/topic/Unloadable%20old%20plugins%20blues/near/329457858" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Alec Leamas <a href="https://leamas.github.io/zulip-archive/stream/332168-Master---5.2E8.2E0--.28was.3A-comms.29/topic/Unloadable.20old.20plugins.20blues.html#329457858">(Feb 22 2023 at 15:29)</a>:</h4>
+<p><span class="user-mention" data-user-id="399559">@Mike Rossiter</span>  thanks for all help! Currently making dinner for eight persons, so... </p>
+<p>So this happens in PluginNameCase, but unfortunately the stacktrace does not contain line numbers. If you have time,  could you try a patch like below to figure out where in PluginNameCase it happens?</p>
+<div class="codehilite"><pre><span></span><code>diff --git a/src/plugin_handler.cpp b/src/plugin_handler.cpp
+index b7230ceb0..0d628166b 100644
+--- a/src/plugin_handler.cpp
++++ b/src/plugin_handler.cpp
+@@ -1135,22 +1135,29 @@ static std::string FindMatchingLibFile(std::regex name_re) {
+ /** Best effort to return plugin name with correct case. */
+ static std::string PluginNameCase(const std::string&amp; name) {
+   using namespace std;
++wxLogDebug(&quot;PluginNameCase:1&quot;);
+   const string lc_name = ocpn::tolower(name);
++wxLogDebug(&quot;PluginNameCase:2&quot;);
+   regex name_re(lc_name, regex_constants::icase | regex_constants::ECMAScript);
++wxLogDebug(&quot;PluginNameCase:3&quot;);
+
+   // Look for matching plugin in list of installed and available.
+   // This often fails since the lists are not yet available when
+   // plugins are loaded, but is otherwise a safe bet.
++wxLogDebug(&quot;PluginNameCase:4&quot;);
+   for (const auto&amp; plugin : PluginHandler::getInstance()-&gt;getInstalled()) {
+     if (ocpn::tolower(plugin.name) == lc_name) return plugin.name;
+   }
++wxLogDebug(&quot;PluginNameCase:5&quot;);
+   for (const auto&amp; plugin : PluginHandler::getInstance()-&gt;getAvailable()) {
+     if (ocpn::tolower(plugin.name) == lc_name) return plugin.name;
+   }
+
++wxLogDebug(&quot;PluginNameCase:6&quot;);
+   string match = FindMatchingDataDir(name_re);
+   if (match != &quot;&quot;) return match;
+
++wxLogDebug(&quot;PluginNameCase:7&quot;);
+   match = FindMatchingLibFile(name_re);
+   return match != &quot;&quot; ? match : name;
+ }
+</code></pre></div>
+
+
+
+<hr><p>Last updated: Feb 22 2023 at 15:43 UTC</p>
 </html>
