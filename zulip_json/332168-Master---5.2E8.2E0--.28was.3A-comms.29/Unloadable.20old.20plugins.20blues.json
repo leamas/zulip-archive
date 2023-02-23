@@ -364,5 +364,53 @@
         "id": 329656508,
         "sender_full_name": "Mike Rossiter",
         "timestamp": 1677141858
+    },
+    {
+        "content": "<p>Don't spend much time on it. If you have the time, it's probably better spent by adding the log statements above. That should give us a quick feedback on what's going on here. Slightly revised patch:</p>\n<div class=\"codehilite\"><pre><span></span><code>diff --git a/src/plugin_handler.cpp b/src/plugin_handler.cpp\nindex b7230ceb0..0d628166b 100644\n--- a/src/plugin_handler.cpp\n+++ b/src/plugin_handler.cpp\n@@ -1135,22 +1135,29 @@ static std::string FindMatchingLibFile(std::regex name_re) {\n /** Best effort to return plugin name with correct case. */\n static std::string PluginNameCase(const std::string&amp; name) {\n   using namespace std;\n+wxLogDebug(&quot;PluginNameCase: enter: %s&quot;, name.c_str());\n   const string lc_name = ocpn::tolower(name);\n+wxLogDebug(&quot;PluginNameCase:2&quot;);\n   regex name_re(lc_name, regex_constants::icase | regex_constants::ECMAScript);\n+wxLogDebug(&quot;PluginNameCase:3&quot;);\n\n   // Look for matching plugin in list of installed and available.\n   // This often fails since the lists are not yet available when\n   // plugins are loaded, but is otherwise a safe bet.\n+wxLogDebug(&quot;PluginNameCase:4&quot;);\n   for (const auto&amp; plugin : PluginHandler::getInstance()-&gt;getInstalled()) {\n     if (ocpn::tolower(plugin.name) == lc_name) return plugin.name;\n   }\n+wxLogDebug(&quot;PluginNameCase:5&quot;);\n   for (const auto&amp; plugin : PluginHandler::getInstance()-&gt;getAvailable()) {\n     if (ocpn::tolower(plugin.name) == lc_name) return plugin.name;\n   }\n\n+wxLogDebug(&quot;PluginNameCase:6&quot;);\n   string match = FindMatchingDataDir(name_re);\n   if (match != &quot;&quot;) return match;\n\n+wxLogDebug(&quot;PluginNameCase:7&quot;);\n   match = FindMatchingLibFile(name_re);\n   return match != &quot;&quot; ? match : name;\n }\n</code></pre></div>",
+        "id": 329657492,
+        "sender_full_name": "Alec Leamas",
+        "timestamp": 1677142201
+    },
+    {
+        "content": "<p>Think I have it ... line number 1158:<br>\nFAULTING_SOURCE_LINE_NUMBER:  1158</p>",
+        "id": 329657815,
+        "sender_full_name": "Mike Rossiter",
+        "timestamp": 1677142285
+    },
+    {
+        "content": "<p>Right... but in which file?</p>",
+        "id": 329657948,
+        "sender_full_name": "Alec Leamas",
+        "timestamp": 1677142308
+    },
+    {
+        "content": "<p><em>plugin_handler.cpp</em></p>",
+        "id": 329658574,
+        "sender_full_name": "Mike Rossiter",
+        "timestamp": 1677142459
+    },
+    {
+        "content": "<p>Yea, I figured... this is indeed a clue, but...</p>",
+        "id": 329658776,
+        "sender_full_name": "Alec Leamas",
+        "timestamp": 1677142514
+    },
+    {
+        "content": "<div class=\"codehilite\"><pre><span></span><code>STACK_COMMAND:  ~0s; .ecxr ; kb\n\nFAULTING_SOURCE_LINE:  D:\\Documents\\Github\\OpenCPN\\src\\plugin_handler.cpp\n\nFAULTING_SOURCE_FILE:  D:\\Documents\\Github\\OpenCPN\\src\\plugin_handler.cpp\n\nFAULTING_SOURCE_LINE_NUMBER:  1158\n\nSYMBOL_NAME:  opencpn!PluginNameCase+db5\n\nMODULE_NAME: opencpn\n\nIMAGE_NAME:  opencpn.exe\n\nFAILURE_BUCKET_ID:  NULL_POINTER_READ_c0000005_opencpn.exe!PluginNameCase\n\nOSPLATFORM_TYPE:  x86\n\nOSNAME:  Windows 10\n</code></pre></div>",
+        "id": 329658824,
+        "sender_full_name": "Mike Rossiter",
+        "timestamp": 1677142530
+    },
+    {
+        "content": "<p>Greta info, exactly what I looked for!</p>",
+        "id": 329658913,
+        "sender_full_name": "Alec Leamas",
+        "timestamp": 1677142555
+    },
+    {
+        "content": "<p>However, this is a comment line:</p>\n<div class=\"codehilite\"><pre><span></span><code>/**  map[key] = list-of-files given path to file containing paths. */\n</code></pre></div>\n<p>Questions:  what does these commands say?</p>\n<ul>\n<li><code>git branch</code></li>\n<li><code>git rev-parse HEAD</code></li>\n<li><code>git status</code></li>\n</ul>",
+        "id": 329659535,
+        "sender_full_name": "Alec Leamas",
+        "timestamp": 1677142743
     }
 ]
