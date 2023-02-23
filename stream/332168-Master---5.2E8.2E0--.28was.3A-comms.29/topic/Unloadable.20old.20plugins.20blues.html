@@ -861,5 +861,61 @@ index b7230ceb0..4a92eaa81 100644
 
 
 
-<hr><p>Last updated: Feb 23 2023 at 10:43 UTC</p>
+<a name="329684719"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332168-Master%20-%205.8.0%20%20%28was%3A%20comms%29/topic/Unloadable%20old%20plugins%20blues/near/329684719" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Alec Leamas <a href="https://leamas.github.io/zulip-archive/stream/332168-Master---5.2E8.2E0--.28was.3A-comms.29/topic/Unloadable.20old.20plugins.20blues.html#329684719">(Feb 23 2023 at 10:50)</a>:</h4>
+<blockquote>
+<p>1&gt;D:\Documents\Github\OpenCPN\src\plugin_handler.cpp(1133): warning C4715: 'FindMatchingLibFile': not all control paths return a value</p>
+</blockquote>
+<p>hm... That is probably the issue. Almost certainly fixed by this:</p>
+<div class="codehilite"><pre><span></span><code>iff --git a/src/plugin_handler.cpp b/src/plugin_handler.cpp
+index b7230ceb0..f5357f9e5 100644
+--- a/src/plugin_handler.cpp
++++ b/src/plugin_handler.cpp
+@@ -1130,6 +1130,7 @@ static std::string FindMatchingLibFile(std::regex name_re) {
+       cont = dir.GetNext(&amp;filename);
+     }
+   }
++  return &quot;&quot;;
+ }
+</code></pre></div>
+
+
+
+<a name="329686023"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332168-Master%20-%205.8.0%20%20%28was%3A%20comms%29/topic/Unloadable%20old%20plugins%20blues/near/329686023" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Mike Rossiter <a href="https://leamas.github.io/zulip-archive/stream/332168-Master---5.2E8.2E0--.28was.3A-comms.29/topic/Unloadable.20old.20plugins.20blues.html#329686023">(Feb 23 2023 at 10:57)</a>:</h4>
+<p>Yes ...  Also suggestion from VS2022:</p>
+<div class="codehilite"><pre><span></span><code>for (auto c : sm) ss &lt;&lt; c;
+        return ss.str();
+</code></pre></div>
+<p>Change to :</p>
+<div class="codehilite"><pre><span></span><code>for (auto &amp;c : sm) ss &lt;&lt; c;
+        return ss.str();
+</code></pre></div>
+
+
+
+<a name="329687083"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332168-Master%20-%205.8.0%20%20%28was%3A%20comms%29/topic/Unloadable%20old%20plugins%20blues/near/329687083" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Mike Rossiter <a href="https://leamas.github.io/zulip-archive/stream/332168-Master---5.2E8.2E0--.28was.3A-comms.29/topic/Unloadable.20old.20plugins.20blues.html#329687083">(Feb 23 2023 at 11:02)</a>:</h4>
+<p>Used the suggestion and your <code>return "";</code><br>
+Success - no crash.</p>
+
+
+
+<a name="329687739"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332168-Master%20-%205.8.0%20%20%28was%3A%20comms%29/topic/Unloadable%20old%20plugins%20blues/near/329687739" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Alec Leamas <a href="https://leamas.github.io/zulip-archive/stream/332168-Master---5.2E8.2E0--.28was.3A-comms.29/topic/Unloadable.20old.20plugins.20blues.html#329687739">(Feb 23 2023 at 11:05)</a>:</h4>
+<p>Many, many thanks!  Owe you a beer!</p>
+
+
+
+<a name="329688006"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332168-Master%20-%205.8.0%20%20%28was%3A%20comms%29/topic/Unloadable%20old%20plugins%20blues/near/329688006" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Alec Leamas <a href="https://leamas.github.io/zulip-archive/stream/332168-Master---5.2E8.2E0--.28was.3A-comms.29/topic/Unloadable.20old.20plugins.20blues.html#329688006">(Feb 23 2023 at 11:06)</a>:</h4>
+<blockquote>
+<p>for (auto c : sm) ss &lt;&lt; c;<br>
+        return ss.str();</p>
+</blockquote>
+<p>That's a worth-wile optimization, I'll include it.</p>
+
+
+
+<hr><p>Last updated: Feb 23 2023 at 11:08 UTC</p>
 </html>

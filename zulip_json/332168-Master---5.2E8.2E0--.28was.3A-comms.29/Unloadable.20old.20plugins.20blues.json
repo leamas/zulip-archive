@@ -454,5 +454,35 @@
         "id": 329676884,
         "sender_full_name": "Mike Rossiter",
         "timestamp": 1677147495
+    },
+    {
+        "content": "<blockquote>\n<p>1&gt;D:\\Documents\\Github\\OpenCPN\\src\\plugin_handler.cpp(1133): warning C4715: 'FindMatchingLibFile': not all control paths return a value</p>\n</blockquote>\n<p>hm... That is probably the issue. Almost certainly fixed by this:</p>\n<div class=\"codehilite\"><pre><span></span><code>iff --git a/src/plugin_handler.cpp b/src/plugin_handler.cpp\nindex b7230ceb0..f5357f9e5 100644\n--- a/src/plugin_handler.cpp\n+++ b/src/plugin_handler.cpp\n@@ -1130,6 +1130,7 @@ static std::string FindMatchingLibFile(std::regex name_re) {\n       cont = dir.GetNext(&amp;filename);\n     }\n   }\n+  return &quot;&quot;;\n }\n</code></pre></div>",
+        "id": 329684719,
+        "sender_full_name": "Alec Leamas",
+        "timestamp": 1677149428
+    },
+    {
+        "content": "<p>Yes ...  Also suggestion from VS2022:</p>\n<div class=\"codehilite\"><pre><span></span><code>for (auto c : sm) ss &lt;&lt; c;\n        return ss.str();\n</code></pre></div>\n<p>Change to :</p>\n<div class=\"codehilite\"><pre><span></span><code>for (auto &amp;c : sm) ss &lt;&lt; c;\n        return ss.str();\n</code></pre></div>",
+        "id": 329686023,
+        "sender_full_name": "Mike Rossiter",
+        "timestamp": 1677149840
+    },
+    {
+        "content": "<p>Used the suggestion and your <code>return \"\";</code><br>\nSuccess - no crash.</p>",
+        "id": 329687083,
+        "sender_full_name": "Mike Rossiter",
+        "timestamp": 1677150148
+    },
+    {
+        "content": "<p>Many, many thanks!  Owe you a beer!</p>",
+        "id": 329687739,
+        "sender_full_name": "Alec Leamas",
+        "timestamp": 1677150319
+    },
+    {
+        "content": "<blockquote>\n<p>for (auto c : sm) ss &lt;&lt; c;<br>\n        return ss.str();</p>\n</blockquote>\n<p>That's a worth-wile optimization, I'll include it.</p>",
+        "id": 329688006,
+        "sender_full_name": "Alec Leamas",
+        "timestamp": 1677150389
     }
 ]
