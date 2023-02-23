@@ -430,5 +430,17 @@
         "id": 329667774,
         "sender_full_name": "Mike Rossiter",
         "timestamp": 1677144911
+    },
+    {
+        "content": "<p>ah... The pot thickens.</p>\n<p>there is this code:</p>\n<div class=\"codehilite\"><pre><span></span><code>  string match = FindMatchingDataDir(name_re);\n  if (match != &quot;&quot;) return match;\n\n  match = FindMatchingLibFile(name_re);\n  return match != &quot;&quot; ? match : name;\n</code></pre></div>\n<p>name_re seems to be sound, it works in line above. Thinking...</p>",
+        "id": 329673583,
+        "sender_full_name": "Alec Leamas",
+        "timestamp": 1677146541
+    },
+    {
+        "content": "<p>Ok... if you have time. First, get rid of the printouts now when we know where it happens using <code>git checkout .</code> from the top directory. Verify using <code>git status</code>that there is no diff.</p>\n<p>Then, apply this patch. It is just to streamline to what worked in the two lines above while making sure that nothing bad happens to name_re:</p>\n<div class=\"codehilite\"><pre><span></span><code>iff --git a/src/plugin_handler.cpp b/src/plugin_handler.cpp\nindex b7230ceb0..4a92eaa81 100644\n--- a/src/plugin_handler.cpp\n+++ b/src/plugin_handler.cpp\n@@ -1085,7 +1085,7 @@ using PluginMap = std::unordered_map&lt;std::string, std::vector&lt;std::string&gt;&gt;;\n  * existing, but all plugins does not have a data directory.\n  * @return Matched directory name or &quot;&quot; if not found.\n  */\n-static std::string FindMatchingDataDir(std::regex name_re) {\n+static std::string FindMatchingDataDir(const std::regex&amp; name_re) {\n   using namespace std;\n   wxString data_dirs(g_BasePlatform-&gt;GetPluginDataPath());\n   wxStringTokenizer tokens(data_dirs, &quot;;&quot;);\n@@ -1113,7 +1113,7 @@ static std::string FindMatchingDataDir(std::regex name_re) {\n  * Look in library dirs for matching .dll/.so/.dylib and use matched name.\n  * @return matched part of found library name or &quot;&quot; if not found\n  */\n-static std::string FindMatchingLibFile(std::regex name_re) {\n+static std::string FindMatchingLibFile(const std::regex&amp; name_re) {\n   using namespace std;\n   for (const auto&amp; lib : PluginPaths::getInstance()-&gt;Libdirs()) {\n     wxDir dir(lib);\n@@ -1152,7 +1152,9 @@ static std::string PluginNameCase(const std::string&amp; name) {\n   if (match != &quot;&quot;) return match;\n\n   match = FindMatchingLibFile(name_re);\n-  return match != &quot;&quot; ? match : name;\n+  if (match != &quot;&quot;) return match;\n+\n+  return &quot;&quot;;\n</code></pre></div>\n<p>I'm worried we are facing some strange compiler (language?) issue here.</p>",
+        "id": 329674550,
+        "sender_full_name": "Alec Leamas",
+        "timestamp": 1677146845
     }
 ]
