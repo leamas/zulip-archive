@@ -940,5 +940,24 @@ This is the second plugin for removal.<br>
 
 
 
-<hr><p>Last updated: Feb 23 2023 at 17:42 UTC</p>
+<a name="329782008"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332168-Master%20-%205.8.0%20%20%28was%3A%20comms%29/topic/Unloadable%20old%20plugins%20blues/near/329782008" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Mike Rossiter <a href="https://leamas.github.io/zulip-archive/stream/332168-Master---5.2E8.2E0--.28was.3A-comms.29/topic/Unloadable.20old.20plugins.20blues.html#329782008">(Feb 23 2023 at 17:46)</a>:</h4>
+<p><em>plugin_loader.cpp</em><br>
+Line 214:</p>
+<div class="codehilite"><pre><span></span><code>if (deferred_notifies.size() &gt; 0) {
+       wxLogDebug(&quot;Dropping overflowed notification: %s&quot;, s.c_str());
+       return;
+    }
+</code></pre></div>
+<p>Line 228:</p>
+<div class="codehilite"><pre><span></span><code>if (deferred_notifies.size() &gt; 0) {
+       wxLogDebug(&quot;Dropping overflowed notification:  %s&quot;,  p-&gt;name.c_str());
+       return;
+    }
+</code></pre></div>
+<p>Remove these two sections and we get dialogs to remove each plugin, in turn.</p>
+
+
+
+<hr><p>Last updated: Feb 23 2023 at 18:11 UTC</p>
 </html>
