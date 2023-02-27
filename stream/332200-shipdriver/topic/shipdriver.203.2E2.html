@@ -667,5 +667,24 @@ Try adding that last line. It works for me. Alec will need to update opencpn-lib
 
 
 
-<hr><p>Last updated: Feb 27 2023 at 18:46 UTC</p>
+<a name="338425566"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332200-shipdriver/topic/shipdriver%203.2/near/338425566" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Tony Voss <a href="https://leamas.github.io/zulip-archive/stream/332200-shipdriver/topic/shipdriver.203.2E2.html#338425566">(Feb 27 2023 at 19:01)</a>:</h4>
+<p>Issues with sd3.2.2-beta1 as of 27th Feb 2023<br>
+The following issues when building for MacOS</p>
+<p><strong>Local build</strong></p>
+<ol>
+<li>Changed files in src are not being recompiled - cannot make changes!</li>
+<li>After updating to sd3.2.3-beta1, the resulting <code>circleci-build-macos.sh</code> file compiles at least some ARM code, resulting in an incompatible plugin error.  To fix this I have to patch the  <code>circleci-build-macos.sh</code>  file by adding <code>  -DCMAKE_OSX_ARCHITECTURES=x86_64 \</code></li>
+<li>After running <code>circleci-build-macos.sh</code> <em>make tarball</em> compiles lots more than it used to - like all of wxWidgets.</li>
+<li>The first <em>make tarball</em> fails with <code>Cannot locate wx-config tool</code>.  I have to run it a again, when it appears to work - but changed code is not compiled.</li>
+</ol>
+<p><strong>Remote build</strong></p>
+<ol>
+<li>Most platforms take about 3.5 minutes.</li>
+<li>MacOS takes always takes much much longer.  Just now almost 30 minutes.  It seems to be compiling everything including the kitchen sink, where it seems to be brewing  stuff.  Maybe I was just recompiling all this because of some update but MacOS always takes an inordinate amount of time.</li>
+</ol>
+
+
+
+<hr><p>Last updated: Feb 27 2023 at 19:07 UTC</p>
 </html>

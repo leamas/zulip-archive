@@ -496,5 +496,11 @@
         "id": 325841763,
         "sender_full_name": "Tony Voss",
         "timestamp": 1675523473
+    },
+    {
+        "content": "<p>Issues with sd3.2.2-beta1 as of 27th Feb 2023<br>\nThe following issues when building for MacOS</p>\n<p><strong>Local build</strong></p>\n<ol>\n<li>Changed files in src are not being recompiled - cannot make changes!</li>\n<li>After updating to sd3.2.3-beta1, the resulting <code>circleci-build-macos.sh</code> file compiles at least some ARM code, resulting in an incompatible plugin error.  To fix this I have to patch the  <code>circleci-build-macos.sh</code>  file by adding <code>  -DCMAKE_OSX_ARCHITECTURES=x86_64 \\</code></li>\n<li>After running <code>circleci-build-macos.sh</code> <em>make tarball</em> compiles lots more than it used to - like all of wxWidgets.</li>\n<li>The first <em>make tarball</em> fails with <code>Cannot locate wx-config tool</code>.  I have to run it a again, when it appears to work - but changed code is not compiled.</li>\n</ol>\n<p><strong>Remote build</strong></p>\n<ol>\n<li>Most platforms take about 3.5 minutes.</li>\n<li>MacOS takes always takes much much longer.  Just now almost 30 minutes.  It seems to be compiling everything including the kitchen sink, where it seems to be brewing  stuff.  Maybe I was just recompiling all this because of some update but MacOS always takes an inordinate amount of time.</li>\n</ol>",
+        "id": 338425566,
+        "sender_full_name": "Tony Voss",
+        "timestamp": 1677524504
     }
 ]
