@@ -250,5 +250,30 @@ It's not just version.h.  I have also edited <code>toolsDialogImp.cpp</code> but
 
 
 
-<hr><p>Last updated: Feb 28 2023 at 12:52 UTC</p>
+<a name="338579415"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/349785-JavaScript_pi/topic/Issues%20under%20OCPN%205.8/wx3.2/near/338579415" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Tony Voss <a href="https://leamas.github.io/zulip-archive/stream/349785-JavaScript_pi/topic/Issues.20under.20OCPN.205.2E8.2Fwx3.2E2.html#338579415">(Feb 28 2023 at 12:54)</a>:</h4>
+<p>Not convinced about this.<br>
+version.h is included from several places.  It is in the list in Plugin.cmake Changes should force a recompile of anything including it.<br>
+Quite separately from the version number/date issue, toolsDialogImp.cpp has been edited and thus should be recompiled, which it has not.  It should not have to include a header file to make that happen.<br>
+You can check whether toolsDialogImp.cpp has been recompiled by going to the JS tools &gt;  Diagnostics &gt; Dump<br>
+Near the top of the dump window 7th line there is a line starting <code>pJavaScript_pi-&gt;m_pconfig</code><br>
+With the latest source there should be an additional line after it <code>pJavaScript_pi-&gt;m_parent_window</code>, which there is not.<br>
+(BTW I anticipate this will show up as nullptr/zero, which I suspect is the source of the z-order problem.)</p>
+
+
+
+<a name="338581005"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/349785-JavaScript_pi/topic/Issues%20under%20OCPN%205.8/wx3.2/near/338581005" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Mike Rossiter <a href="https://leamas.github.io/zulip-archive/stream/349785-JavaScript_pi/topic/Issues.20under.20OCPN.205.2E8.2Fwx3.2E2.html#338581005">(Feb 28 2023 at 13:01)</a>:</h4>
+<p>On my build:<br>
+<code>pJavaScript_pi-&gt;m_parent_window      0x00099a64a0</code></p>
+
+
+
+<a name="338581348"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/349785-JavaScript_pi/topic/Issues%20under%20OCPN%205.8/wx3.2/near/338581348" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Mike Rossiter <a href="https://leamas.github.io/zulip-archive/stream/349785-JavaScript_pi/topic/Issues.20under.20OCPN.205.2E8.2Fwx3.2E2.html#338581348">(Feb 28 2023 at 13:03)</a>:</h4>
+<p>BBL. Need some exercise.</p>
+
+
+
+<hr><p>Last updated: Feb 28 2023 at 13:19 UTC</p>
 </html>
