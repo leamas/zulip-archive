@@ -1135,5 +1135,30 @@ Shall I accept the PR now?</p>
 
 
 
-<hr><p>Last updated: Feb 28 2023 at 10:32 UTC</p>
+<a name="338550861"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332168-Master%20-%205.8.0%20%20%28was%3A%20comms%29/topic/Unloadable%20old%20plugins%20blues/near/338550861" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Mike Rossiter <a href="https://leamas.github.io/zulip-archive/stream/332168-Master---5.2E8.2E0--.28was.3A-comms.29/topic/Unloadable.20old.20plugins.20blues.html#338550861">(Feb 28 2023 at 10:37)</a>:</h4>
+<p>No warning from the compiler in the plugins area when opencpn was rebuilt.</p>
+
+
+
+<a name="338551243"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332168-Master%20-%205.8.0%20%20%28was%3A%20comms%29/topic/Unloadable%20old%20plugins%20blues/near/338551243" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Alec Leamas <a href="https://leamas.github.io/zulip-archive/stream/332168-Master---5.2E8.2E0--.28was.3A-comms.29/topic/Unloadable.20old.20plugins.20blues.html#338551243">(Feb 28 2023 at 10:39)</a>:</h4>
+<p>Can you try this patch? It might be about silly windows restricted file access...</p>
+<div class="codehilite"><pre><span></span><code>diff --git a/src/plugin_handler.cpp b/src/plugin_handler.cpp
+index 03bf35024..461bb1913 100644
+--- a/src/plugin_handler.cpp
++++ b/src/plugin_handler.cpp
+@@ -1056,6 +1056,7 @@ bool PluginHandler::uninstall(const std::string plugin_name) {
+     files.getline(line, sizeof(line));
+     plug_paths.push_back(line);
+   }
++  files.close();
+   for (const auto&amp; p : plug_paths) {
+     if (isRegularFile(p.c_str())) {
+       int r = remove(p.c_str());
+</code></pre></div>
+
+
+
+<hr><p>Last updated: Feb 28 2023 at 10:44 UTC</p>
 </html>

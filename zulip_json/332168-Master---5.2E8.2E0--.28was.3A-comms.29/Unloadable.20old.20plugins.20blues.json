@@ -664,5 +664,17 @@
         "id": 338549434,
         "sender_full_name": "Mike Rossiter",
         "timestamp": 1677580234
+    },
+    {
+        "content": "<p>No warning from the compiler in the plugins area when opencpn was rebuilt.</p>",
+        "id": 338550861,
+        "sender_full_name": "Mike Rossiter",
+        "timestamp": 1677580654
+    },
+    {
+        "content": "<p>Can you try this patch? It might be about silly windows restricted file access...</p>\n<div class=\"codehilite\"><pre><span></span><code>diff --git a/src/plugin_handler.cpp b/src/plugin_handler.cpp\nindex 03bf35024..461bb1913 100644\n--- a/src/plugin_handler.cpp\n+++ b/src/plugin_handler.cpp\n@@ -1056,6 +1056,7 @@ bool PluginHandler::uninstall(const std::string plugin_name) {\n     files.getline(line, sizeof(line));\n     plug_paths.push_back(line);\n   }\n+  files.close();\n   for (const auto&amp; p : plug_paths) {\n     if (isRegularFile(p.c_str())) {\n       int r = remove(p.c_str());\n</code></pre></div>",
+        "id": 338551243,
+        "sender_full_name": "Alec Leamas",
+        "timestamp": 1677580783
     }
 ]
