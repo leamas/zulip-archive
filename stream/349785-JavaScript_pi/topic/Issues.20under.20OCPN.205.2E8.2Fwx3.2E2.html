@@ -225,5 +225,30 @@ There is no indication in the script log that it compiled any of the plugin sour
 
 
 
-<hr><p>Last updated: Feb 28 2023 at 12:17 UTC</p>
+<a name="338571563"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/349785-JavaScript_pi/topic/Issues%20under%20OCPN%205.8/wx3.2/near/338571563" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Mike Rossiter <a href="https://leamas.github.io/zulip-archive/stream/349785-JavaScript_pi/topic/Issues.20under.20OCPN.205.2E8.2Fwx3.2E2.html#338571563">(Feb 28 2023 at 12:19)</a>:</h4>
+<p>This gets messy. Those defines are made by <a href="http://config.in">config.in</a> from the root folder. This makes config.h which is used to compile the plugin. Playing with editing <a href="http://config.in">config.in</a> because I don't know another way yet.</p>
+
+
+
+<a name="338572617"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/349785-JavaScript_pi/topic/Issues%20under%20OCPN%205.8/wx3.2/near/338572617" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Tony Voss <a href="https://leamas.github.io/zulip-archive/stream/349785-JavaScript_pi/topic/Issues.20under.20OCPN.205.2E8.2Fwx3.2E2.html#338572617">(Feb 28 2023 at 12:24)</a>:</h4>
+<p>Editing version.h used to work while just changing the build and date.<br>
+It's not just version.h.  I have also edited <code>toolsDialogImp.cpp</code> but that does not get re-complied either.</p>
+
+
+
+<a name="338573019"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/349785-JavaScript_pi/topic/Issues%20under%20OCPN%205.8/wx3.2/near/338573019" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Mike Rossiter <a href="https://leamas.github.io/zulip-archive/stream/349785-JavaScript_pi/topic/Issues.20under.20OCPN.205.2E8.2Fwx3.2E2.html#338573019">(Feb 28 2023 at 12:26)</a>:</h4>
+<p>With my fork I added the defines needed (ex <em>version.h</em>) to <a href="http://config.in">config.in</a> and built again. This builds a <em>config.h</em> with all the correct defines.</p>
+
+
+
+<a name="338574506"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/349785-JavaScript_pi/topic/Issues%20under%20OCPN%205.8/wx3.2/near/338574506" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Mike Rossiter <a href="https://leamas.github.io/zulip-archive/stream/349785-JavaScript_pi/topic/Issues.20under.20OCPN.205.2E8.2Fwx3.2E2.html#338574506">(Feb 28 2023 at 12:34)</a>:</h4>
+<p>May need to use config.h as an include in <em>toolsDialogImp.h</em></p>
+
+
+
+<hr><p>Last updated: Feb 28 2023 at 12:52 UTC</p>
 </html>
