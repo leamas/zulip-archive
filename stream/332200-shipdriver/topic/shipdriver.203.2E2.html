@@ -783,5 +783,46 @@ NB the wxWidgets build is not being cached in <code>/usr/local/lib</code> so is 
 
 
 
-<hr><p>Last updated: Feb 28 2023 at 19:42 UTC</p>
+<a name="338678136"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332200-shipdriver/topic/shipdriver%203.2/near/338678136" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Alec Leamas <a href="https://leamas.github.io/zulip-archive/stream/332200-shipdriver/topic/shipdriver.203.2E2.html#338678136">(Feb 28 2023 at 19:50)</a>:</h4>
+<ol>
+<li>aarch64 is certainly no typo. It means the same thing as arm64, and is overall probably more used (arm64 is a debianism)</li>
+<li>compiling for x86 on arm64 hardware is by definition indeed to cross-compile.</li>
+<li>Should not really be about architecture. OCPN_NPROC is set in cmake/PluginOptions.cmake, and basically runs <code>sysctl</code> on MacOS to find out number of processors. If this fails, there should be explicit warnings.</li>
+<li><code>Cannot locate wx-config tool </code> This might be related to processor confusion. Basically, first run rebuilds wxWidgets from source and installs the binaries in the directory <em>cache</em>.  In next step, it tries to find <em>wx-config-tool</em> in <em>cache/</em> but this then seem to fail. This probably means that the wxWidgets build failed for some reason.</li>
+</ol>
+<p>Overall, we have so far just not thought that much about your  use case  (building on m1 for x86_64). I'm not surprised there are problems <span aria-label="sad" class="emoji emoji-2639" role="img" title="sad">:sad:</span></p>
+
+
+
+<a name="338680294"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332200-shipdriver/topic/shipdriver%203.2/near/338680294" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Alec Leamas <a href="https://leamas.github.io/zulip-archive/stream/332200-shipdriver/topic/shipdriver.203.2E2.html#338680294">(Feb 28 2023 at 20:01)</a>:</h4>
+<p>Looking into the log, here are two parts. The part  beginning with -- prefix is the overall shipdriver cmake configuration.  When the "checking" prefix arrives, we see the configuration of wxwidgets. In this there is</p>
+<div class="codehilite"><pre><span></span><code> checking build system type... aarch64-apple-darwin22.2.0
+  checking host system type... aarch64-apple-darwin22.2.0
+</code></pre></div>
+<p>It seems like the wxwidgets build is for aarch64 i. e. the host architecture. For this to work, we must somehow convince wxWidgets to cross-compile to x86_64.  This is autotools stuff, see <a href="https://www.gnu.org/software/autoconf/manual/autoconf-2.69/html_node/Hosts-and-Cross_002dCompilation.html">https://www.gnu.org/software/autoconf/manual/autoconf-2.69/html_node/Hosts-and-Cross_002dCompilation.html</a></p>
+
+
+
+<a name="338681408"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332200-shipdriver/topic/shipdriver%203.2/near/338681408" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Alec Leamas <a href="https://leamas.github.io/zulip-archive/stream/332200-shipdriver/topic/shipdriver.203.2E2.html#338681408">(Feb 28 2023 at 20:08)</a>:</h4>
+<p>Thinking aloud, might have to leave. This is about patching MacosWxwidgets, this part:</p>
+<div class="codehilite"><pre><span></span><code>execute_process(
+ COMMAND ./configure
+      --with-cxx=11
+      --with-macosx-version-min=10.10
+      --enable-unicode
+      --with-osx-cocoa
+      --enable-aui
+      --disable-debug
+      --with-opengl
+      --without-subdirs
+      --prefix=${cache_dir}
+</code></pre></div>
+<p>Adding correct --host and --target. However, this is not the same on the x86_64 hosts which still are more common so it probably needs some trickery</p>
+
+
+
+<hr><p>Last updated: Feb 28 2023 at 20:10 UTC</p>
 </html>
