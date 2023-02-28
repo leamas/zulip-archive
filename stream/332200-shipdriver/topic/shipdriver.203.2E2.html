@@ -752,5 +752,36 @@ Call Stack (most recent call first):<br>
 
 
 
-<hr><p>Last updated: Feb 28 2023 at 17:42 UTC</p>
+<a name="338654016"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332200-shipdriver/topic/shipdriver%203.2/near/338654016" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Tony Voss <a href="https://leamas.github.io/zulip-archive/stream/332200-shipdriver/topic/shipdriver.203.2E2.html#338654016">(Feb 28 2023 at 17:59)</a>:</h4>
+<p><span class="user-mention" data-user-id="399510">@Alec Leamas</span> <br>
+Yes I have that typo, although it is at line 86 for me.<br>
+I fixed it and re-ran <code>circleci-build-macos.sh</code><br>
+Note that I have my x86 patch in it, without which I get arm64 code in the tarball, which Plugin Loader rejects.<br>
+I still get the same errors on first making the tarball.<br>
+However, the terminal output makes interesting reading.  I attach it.  I have added line numbers so we can refer to it.</p>
+<ol>
+<li>Line 9: it appears to think it is building for  <code>aarch64-apple-darwin22.2.0</code>.  Might aarch be another typo?   In any event it should be building for x86. </li>
+<li>Line 10: Yes I am running on  Apple arm64 hardware.</li>
+<li>
+<p>Line 16: Cross-compiling no.  Is that correct?  We are supposed to be compiling for x86 on an arm64  machine.<br>
+4: It is instructive to  search the file for <em>Warnings</em>. Line 1323 and elsewhere warn we are building for arm but linking to x86.  Does not sound good.</p>
+</li>
+<li>
+<p>Line 395: Configured wxWidgets 3.2.1 for `aarch64-apple-darwin22.2.0'</p>
+</li>
+<li>Lines 416-419 _nproc error - perhaps because of processor type confusion?</li>
+<li>It then compiles all of wxWidgets again and as usual</li>
+<li>Line 437 et seq:  <code>Cannot locate wx-config tool</code> Perhaps not surprising, given the confusion?</li>
+<li>Line  1452: I rerun <code>make tarball</code> which does build an x86 tarball which does load into OpenCPN (although it has failed to compile my changed sources - that may be a separate issue.)</li>
+</ol>
+<p><strong>My take</strong><br>
+<code>circleci-build-macos.sh</code> includes <code>  -DOCPN_TARGET_TUPLE="darwin-wx32;10;x86_64" \</code> and I have added <code> -DCMAKE_OSX_ARCHITECTURES=x86_64 \</code><br>
+This does not seem sufficient to convince it to build everything for x86 but my additional patch is sufficient to get a loadable tarball with the second run.<br>
+NB the wxWidgets build is not being cached in <code>/usr/local/lib</code> so is rebuilt after each run of <code>`circleci-build-macos.sh</code>.</p>
+<p><a href="/user_uploads/33951/gLCwf7LI25rSLhbPJlsQwwmm/Terminal-Saved-Output.txt">Terminal-Saved-Output.txt</a></p>
+
+
+
+<hr><p>Last updated: Feb 28 2023 at 18:11 UTC</p>
 </html>
