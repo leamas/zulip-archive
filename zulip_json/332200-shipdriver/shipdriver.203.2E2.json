@@ -586,5 +586,11 @@
         "id": 338797999,
         "sender_full_name": "Alec Leamas",
         "timestamp": 1677667284
+    },
+    {
+        "content": "<blockquote>\n<p>math does not recognize sub-command _nproc</p>\n</blockquote>\n<p>This comes from this line:</p>\n<div class=\"codehilite\"><pre><span></span><code>math(_nproc ${OCPN_NPROC} * 2)    # Assuming two threads/cpu\n</code></pre></div>\n<p>It basically means that OCPN_NPROC is not set as it should, the command expands to <code>math(_nproc * 2)</code> which is gibberish.</p>\n<p>Assuming the typo is fixed (OPCN-&gt;OCPN) this then is about PluginOptions.cmake, but I don't see how this  could fail without any error messages (such messages should come early, PluginOptions is the first file included by CMakeLists).</p>\n<p>So:</p>\n<p>- Have you fixed the OPCN_NPROC typo?<br>\n  - If so, and the problem persists: what happens if you define CMAKE_BUILD_PARALLEL_LEVEL on the command line i. e., adds something like <code>-DCMAKE_BUILD_PARALLEL_LEVEL=2</code> to the cmake invocation?</p>",
+        "id": 338800498,
+        "sender_full_name": "Alec Leamas",
+        "timestamp": 1677667882
     }
 ]

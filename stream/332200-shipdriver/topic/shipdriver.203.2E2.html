@@ -864,5 +864,21 @@ My plugin builds OK on this platform.</p>
 
 
 
-<hr><p>Last updated: Mar 01 2023 at 10:44 UTC</p>
+<a name="338800498"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332200-shipdriver/topic/shipdriver%203.2/near/338800498" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Alec Leamas <a href="https://leamas.github.io/zulip-archive/stream/332200-shipdriver/topic/shipdriver.203.2E2.html#338800498">(Mar 01 2023 at 10:51)</a>:</h4>
+<blockquote>
+<p>math does not recognize sub-command _nproc</p>
+</blockquote>
+<p>This comes from this line:</p>
+<div class="codehilite"><pre><span></span><code>math(_nproc ${OCPN_NPROC} * 2)    # Assuming two threads/cpu
+</code></pre></div>
+<p>It basically means that OCPN_NPROC is not set as it should, the command expands to <code>math(_nproc * 2)</code> which is gibberish.</p>
+<p>Assuming the typo is fixed (OPCN-&gt;OCPN) this then is about PluginOptions.cmake, but I don't see how this  could fail without any error messages (such messages should come early, PluginOptions is the first file included by CMakeLists).</p>
+<p>So:</p>
+<p>- Have you fixed the OPCN_NPROC typo?<br>
+  - If so, and the problem persists: what happens if you define CMAKE_BUILD_PARALLEL_LEVEL on the command line i. e., adds something like <code>-DCMAKE_BUILD_PARALLEL_LEVEL=2</code> to the cmake invocation?</p>
+
+
+
+<hr><p>Last updated: Mar 01 2023 at 11:08 UTC</p>
 </html>
