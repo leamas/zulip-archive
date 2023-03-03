@@ -1081,5 +1081,48 @@ Indeed it is not.  Only place it is set is in Plugin.cmake:<br>
 
 
 
-<hr><p>Last updated: Mar 03 2023 at 12:49 UTC</p>
+<a name="339336982"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/349785-JavaScript_pi/topic/Building%20for%20later%20than%20OCPN%20v5.6/near/339336982" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Mike Rossiter <a href="https://leamas.github.io/zulip-archive/stream/349785-JavaScript_pi/topic/Building.20for.20later.20than.20OCPN.20v5.2E6.html#339336982">(Mar 03 2023 at 12:57)</a>:</h4>
+<p>This should be in <em>opencpn-libs/api-18/CMakeLists.txt</em> at line 16:<br>
+<code>add_library(ocpn::api ALIAS OCPN_API_WX32)</code></p>
+<p>May need to update opencpn-libs. You are at the bleeding edge I think.</p>
+
+
+
+<a name="339339674"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/349785-JavaScript_pi/topic/Building%20for%20later%20than%20OCPN%20v5.6/near/339339674" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Tony Voss <a href="https://leamas.github.io/zulip-archive/stream/349785-JavaScript_pi/topic/Building.20for.20later.20than.20OCPN.20v5.2E6.html#339339674">(Mar 03 2023 at 13:08)</a>:</h4>
+<p>Here's what is in that file for me:</p>
+<div class="codehilite"><pre><span></span><code> #
+ # Include API header and, on win32, link import libs. Set API_VERSION  and
+ # API_OCPN_MIN_VERSION
+ #
+cmake_minimum_required(VERSION 3.1)
+
+if (TARGET ocpn::api)
+  return ()
+endif ()
+
+set(API_VERSION &quot;1.18&quot; PARENT_SCOPE)
+set(API_OCPN_MIN_VERSION &quot;5.7.0&quot; PARENT_SCOPE)
+
+add_library(OCPN_API_WX32 INTERFACE)
+add_library(ocpn::api_wx32 ALIAS OCPN_API_WX32)
+target_include_directories(
+  OCPN_API_WX32
+    INTERFACE &quot;${CMAKE_CURRENT_SOURCE_DIR}&quot;
+)
+if (WIN32 AND MSVC)
+  target_link_libraries(
+    OCPN_API_WX32
+      INTERFACE &quot;${CMAKE_CURRENT_SOURCE_DIR}/msvc-wx32/opencpn.lib&quot;
+  )
+  # Assuming unicode build, required for mingw headers
+  target_compile_definitions(OCPN_API_WX32 INTERFACE -DUNICODE)
+endif ()
+</code></pre></div>
+<p>Do I still add as you say above?</p>
+
+
+
+<hr><p>Last updated: Mar 03 2023 at 13:17 UTC</p>
 </html>

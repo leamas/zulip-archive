@@ -652,5 +652,17 @@
         "id": 339334957,
         "sender_full_name": "Tony Voss",
         "timestamp": 1677847682
+    },
+    {
+        "content": "<p>This should be in <em>opencpn-libs/api-18/CMakeLists.txt</em> at line 16:<br>\n<code>add_library(ocpn::api ALIAS OCPN_API_WX32)</code></p>\n<p>May need to update opencpn-libs. You are at the bleeding edge I think.</p>",
+        "id": 339336982,
+        "sender_full_name": "Mike Rossiter",
+        "timestamp": 1677848265
+    },
+    {
+        "content": "<p>Here's what is in that file for me:</p>\n<div class=\"codehilite\"><pre><span></span><code> #\n # Include API header and, on win32, link import libs. Set API_VERSION  and\n # API_OCPN_MIN_VERSION\n #\ncmake_minimum_required(VERSION 3.1)\n\nif (TARGET ocpn::api)\n  return ()\nendif ()\n\nset(API_VERSION &quot;1.18&quot; PARENT_SCOPE)\nset(API_OCPN_MIN_VERSION &quot;5.7.0&quot; PARENT_SCOPE)\n\nadd_library(OCPN_API_WX32 INTERFACE)\nadd_library(ocpn::api_wx32 ALIAS OCPN_API_WX32)\ntarget_include_directories(\n  OCPN_API_WX32\n    INTERFACE &quot;${CMAKE_CURRENT_SOURCE_DIR}&quot;\n)\nif (WIN32 AND MSVC)\n  target_link_libraries(\n    OCPN_API_WX32\n      INTERFACE &quot;${CMAKE_CURRENT_SOURCE_DIR}/msvc-wx32/opencpn.lib&quot;\n  )\n  # Assuming unicode build, required for mingw headers\n  target_compile_definitions(OCPN_API_WX32 INTERFACE -DUNICODE)\nendif ()\n</code></pre></div>\n<p>Do I still add as you say above?</p>",
+        "id": 339339674,
+        "sender_full_name": "Tony Voss",
+        "timestamp": 1677848889
     }
 ]
