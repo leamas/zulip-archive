@@ -1030,5 +1030,56 @@ sd3.2.2-beta1</p>
 
 
 
-<hr><p>Last updated: Mar 03 2023 at 12:16 UTC</p>
+<a name="339331105"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/349785-JavaScript_pi/topic/Building%20for%20later%20than%20OCPN%20v5.6/near/339331105" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Mike Rossiter <a href="https://leamas.github.io/zulip-archive/stream/349785-JavaScript_pi/topic/Building.20for.20later.20than.20OCPN.20v5.2E6.html#339331105">(Mar 03 2023 at 12:29)</a>:</h4>
+<p>Android: Only way I can see is to remove the android sections in <em>.circleci/config.yml</em> each time the template is used:</p>
+<div class="codehilite"><pre><span></span><code>build-android-arm64:
+    docker:
+      - image: circleci/android:api-28-ndk
+    environment:
+      - OCPN_TARGET: android-aarch64
+      - CMAKE_BUILD_PARALLEL_LEVEL: 2
+    steps:
+      - checkout
+      - run: ci/circleci-build-android.sh
+      - run: ci/maybe-push-upload.sh
+
+  build-android-armhf:
+    docker:
+      - image: circleci/android:api-28-ndk
+    environment:
+      - OCPN_TARGET: android-armhf
+      - CMAKE_BUILD_PARALLEL_LEVEL: 2
+    steps:
+      - checkout
+      - run: ci/circleci-build-android.sh
+      - run: ci/maybe-push-upload.sh
+</code></pre></div>
+
+
+
+<a name="339334957"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/349785-JavaScript_pi/topic/Building%20for%20later%20than%20OCPN%20v5.6/near/339334957" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Tony Voss <a href="https://leamas.github.io/zulip-archive/stream/349785-JavaScript_pi/topic/Building.20for.20later.20than.20OCPN.20v5.2E6.html#339334957">(Mar 03 2023 at 12:48)</a>:</h4>
+<p>Have updated to sd3.2.3-beta1<br>
+Getting:</p>
+<blockquote>
+<p>CMake Error at CMakeLists.txt:44 (target_link_libraries):<br>
+Target "JavaScript_pi" links to:<br>
+ocpn::api<br>
+but the target was not found. </p>
+</blockquote>
+<p>CMakeLists.txt around line 44 has:<br>
+<code>if (${PKG_NAME} MATCHES wx32)
+  target_link_libraries(${CMAKE_PROJECT_NAME} ocpn::api_wx32)
+else ()
+  target_link_libraries(${CMAKE_PROJECT_NAME} ocpn::api)
+endif ()</code><br>
+So, clearly, <code>PKG_NAME</code> not being set to <code>wx32</code>.<br>
+Indeed it is not.  Only place it is set is in Plugin.cmake:<br>
+<code>set(PKG_NAME JavaScript_pi)</code></p>
+<p>I'm confused, and so is the script, I guess <span aria-label="face with spiral eyes" class="emoji emoji-1f635-200d-1f4ab" role="img" title="face with spiral eyes">:face_with_spiral_eyes:</span></p>
+
+
+
+<hr><p>Last updated: Mar 03 2023 at 12:49 UTC</p>
 </html>
