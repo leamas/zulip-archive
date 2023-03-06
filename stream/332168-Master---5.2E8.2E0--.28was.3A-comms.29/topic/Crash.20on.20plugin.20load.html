@@ -64,5 +64,72 @@ On the other hand. OpenCPN has been working fine until now..</p>
 
 
 
-<hr><p>Last updated: Mar 06 2023 at 21:42 UTC</p>
+<a name="339973170"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332168-Master%20-%205.8.0%20%20%28was%3A%20comms%29/topic/Crash%20on%20plugin%20load/near/339973170" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Håkan Svensson <a href="https://leamas.github.io/zulip-archive/stream/332168-Master---5.2E8.2E0--.28was.3A-comms.29/topic/Crash.20on.20plugin.20load.html#339973170">(Mar 06 2023 at 21:44)</a>:</h4>
+<p>I've did not, what I know, choose to use armhf.  I could very well use 64. of course. That was what I thought it should be when I updated to Bullseye.</p>
+
+
+
+<a name="339973375"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332168-Master%20-%205.8.0%20%20%28was%3A%20comms%29/topic/Crash%20on%20plugin%20load/near/339973375" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Alec Leamas <a href="https://leamas.github.io/zulip-archive/stream/332168-Master---5.2E8.2E0--.28was.3A-comms.29/topic/Crash.20on.20plugin.20load.html#339973375">(Mar 06 2023 at 21:45)</a>:</h4>
+<p>armhf is legacy, I see no need for it except perhaps as a specialized test case. But basically I'd say go for arn64. Just wanted to check</p>
+
+
+
+<a name="339973408"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332168-Master%20-%205.8.0%20%20%28was%3A%20comms%29/topic/Crash%20on%20plugin%20load/near/339973408" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Dave Register <a href="https://leamas.github.io/zulip-archive/stream/332168-Master---5.2E8.2E0--.28was.3A-comms.29/topic/Crash.20on.20plugin.20load.html#339973408">(Mar 06 2023 at 21:45)</a>:</h4>
+<p><span class="user-mention" data-user-id="522486">@Håkan Svensson</span> <br>
+Before giving up on this, I would try deleting the inbound plugisns, one-by-one, and see if there is one that induces the problem.  I suspect a memory corruption issue, that raises its head long after the corruption occurs.  The crash is occurring long after the plugins are loaded.<br>
+It is an interesting stress test for our build workflow, anyway.</p>
+
+
+
+<a name="339973614"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332168-Master%20-%205.8.0%20%20%28was%3A%20comms%29/topic/Crash%20on%20plugin%20load/near/339973614" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Alec Leamas <a href="https://leamas.github.io/zulip-archive/stream/332168-Master---5.2E8.2E0--.28was.3A-comms.29/topic/Crash.20on.20plugin.20load.html#339973614">(Mar 06 2023 at 21:47)</a>:</h4>
+<blockquote>
+<p>it is an interesting stress test for our build workflow, anyway.</p>
+</blockquote>
+<p>Sort of. But given the circumstances, it is a test of an unsupported workflow.</p>
+
+
+
+<a name="339973826"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332168-Master%20-%205.8.0%20%20%28was%3A%20comms%29/topic/Crash%20on%20plugin%20load/near/339973826" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Alec Leamas <a href="https://leamas.github.io/zulip-archive/stream/332168-Master---5.2E8.2E0--.28was.3A-comms.29/topic/Crash.20on.20plugin.20load.html#339973826">(Mar 06 2023 at 21:48)</a>:</h4>
+<p>One conclusion might be that we should warn users if they do this: runs armhf OpenCPN on a 64-bit arm OS.</p>
+
+
+
+<a name="339975603"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332168-Master%20-%205.8.0%20%20%28was%3A%20comms%29/topic/Crash%20on%20plugin%20load/near/339975603" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Håkan Svensson <a href="https://leamas.github.io/zulip-archive/stream/332168-Master---5.2E8.2E0--.28was.3A-comms.29/topic/Crash.20on.20plugin.20load.html#339975603">(Mar 06 2023 at 22:00)</a>:</h4>
+<p>So I've deleted all plugins found. - No crash</p>
+
+
+
+<a name="339975844"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332168-Master%20-%205.8.0%20%20%28was%3A%20comms%29/topic/Crash%20on%20plugin%20load/near/339975844" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Håkan Svensson <a href="https://leamas.github.io/zulip-archive/stream/332168-Master---5.2E8.2E0--.28was.3A-comms.29/topic/Crash.20on.20plugin.20load.html#339975844">(Mar 06 2023 at 22:01)</a>:</h4>
+<p><span class="user-mention" data-user-id="399510">@Alec Leamas</span> <br>
+" runs armhf OpenCPN on a 64-bit arm OS..."<br>
+But how can I convince cmake to not use armhf?</p>
+
+
+
+<a name="339976113"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332168-Master%20-%205.8.0%20%20%28was%3A%20comms%29/topic/Crash%20on%20plugin%20load/near/339976113" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Alec Leamas <a href="https://leamas.github.io/zulip-archive/stream/332168-Master---5.2E8.2E0--.28was.3A-comms.29/topic/Crash.20on.20plugin.20load.html#339976113">(Mar 06 2023 at 22:03)</a>:</h4>
+<p>You need to install the 64-bit compiler (and probably get rid of the armhf one). Seems not possible for reasons I don't really understand.</p>
+
+
+
+<a name="339976321"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332168-Master%20-%205.8.0%20%20%28was%3A%20comms%29/topic/Crash%20on%20plugin%20load/near/339976321" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Alec Leamas <a href="https://leamas.github.io/zulip-archive/stream/332168-Master---5.2E8.2E0--.28was.3A-comms.29/topic/Crash.20on.20plugin.20load.html#339976321">(Mar 06 2023 at 22:04)</a>:</h4>
+<p>[bed time...]</p>
+
+
+
+<a name="339976390"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332168-Master%20-%205.8.0%20%20%28was%3A%20comms%29/topic/Crash%20on%20plugin%20load/near/339976390" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Håkan Svensson <a href="https://leamas.github.io/zulip-archive/stream/332168-Master---5.2E8.2E0--.28was.3A-comms.29/topic/Crash.20on.20plugin.20load.html#339976390">(Mar 06 2023 at 22:05)</a>:</h4>
+<p>OK.. Thanks for your huge efforts. I hopefully learned a lot. A new image later on in other words.</p>
+
+
+
+<hr><p>Last updated: Mar 06 2023 at 22:09 UTC</p>
 </html>
