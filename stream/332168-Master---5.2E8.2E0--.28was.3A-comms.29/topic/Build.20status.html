@@ -1003,5 +1003,56 @@ warning: JITed object file architecture armv8-a is not compatible with target ar
 
 
 
-<hr><p>Last updated: Mar 06 2023 at 20:10 UTC</p>
+<a name="339959377"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332168-Master%20-%205.8.0%20%20%28was%3A%20comms%29/topic/Build%20status/near/339959377" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Håkan Svensson <a href="https://leamas.github.io/zulip-archive/stream/332168-Master---5.2E8.2E0--.28was.3A-comms.29/topic/Build.20status.html#339959377">(Mar 06 2023 at 20:12)</a>:</h4>
+<p>I'll first pull and build master. Take some time... Then test your patch. I'll be back.</p>
+
+
+
+<a name="339959600"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332168-Master%20-%205.8.0%20%20%28was%3A%20comms%29/topic/Build%20status/near/339959600" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Alec Leamas <a href="https://leamas.github.io/zulip-archive/stream/332168-Master---5.2E8.2E0--.28was.3A-comms.29/topic/Build.20status.html#339959600">(Mar 06 2023 at 20:14)</a>:</h4>
+<p>hm... JIT compilation? in which context, this is C++, right? </p>
+<p>Is this the same issue as here: <a href="https://github.com/AvaloniaUI/Avalonia/issues/7744">https://github.com/AvaloniaUI/Avalonia/issues/7744</a> ?</p>
+
+
+
+<a name="339960812"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332168-Master%20-%205.8.0%20%20%28was%3A%20comms%29/topic/Build%20status/near/339960812" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Håkan Svensson <a href="https://leamas.github.io/zulip-archive/stream/332168-Master---5.2E8.2E0--.28was.3A-comms.29/topic/Build.20status.html#339960812">(Mar 06 2023 at 20:20)</a>:</h4>
+<p>The JITed object... warnings comes five or six time after the "Sending announce". That's a part of the send to peer init.<br>
+These warning I've seen for month. No seg.fault out of this so not the same as your link.</p>
+
+
+
+<a name="339960964"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332168-Master%20-%205.8.0%20%20%28was%3A%20comms%29/topic/Build%20status/near/339960964" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Alec Leamas <a href="https://leamas.github.io/zulip-archive/stream/332168-Master---5.2E8.2E0--.28was.3A-comms.29/topic/Build.20status.html#339960964">(Mar 06 2023 at 20:21)</a>:</h4>
+<p>They anyway seems to point to a compiler problem, but it might be unrelated. Same messages on aarch64?</p>
+
+
+
+<a name="339961329"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332168-Master%20-%205.8.0%20%20%28was%3A%20comms%29/topic/Build%20status/near/339961329" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Håkan Svensson <a href="https://leamas.github.io/zulip-archive/stream/332168-Master---5.2E8.2E0--.28was.3A-comms.29/topic/Build.20status.html#339961329">(Mar 06 2023 at 20:23)</a>:</h4>
+<p>This armhf, aarch64 is a mismatch somewhere. See above..  <a href="#narrow/stream/332168-Master---5.2E8.2E0--.28was.3A-comms.29/topic/Build.20status/near/339707986">https://opencpn.zulipchat.com/#narrow/stream/332168-Master---5.2E8.2E0--.28was.3A-comms.29/topic/Build.20status/near/339707986</a></p>
+
+
+
+<a name="339961696"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332168-Master%20-%205.8.0%20%20%28was%3A%20comms%29/topic/Build%20status/near/339961696" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Håkan Svensson <a href="https://leamas.github.io/zulip-archive/stream/332168-Master---5.2E8.2E0--.28was.3A-comms.29/topic/Build.20status.html#339961696">(Mar 06 2023 at 20:25)</a>:</h4>
+<p>and here: <br>
+<a href="#narrow/stream/332168-Master---5.2E8.2E0--.28was.3A-comms.29/topic/Network.20problems/near/324403024">https://opencpn.zulipchat.com/#narrow/stream/332168-Master---5.2E8.2E0--.28was.3A-comms.29/topic/Network.20problems/near/324403024</a></p>
+
+
+
+<a name="339961780"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332168-Master%20-%205.8.0%20%20%28was%3A%20comms%29/topic/Build%20status/near/339961780" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Alec Leamas <a href="https://leamas.github.io/zulip-archive/stream/332168-Master---5.2E8.2E0--.28was.3A-comms.29/topic/Build.20status.html#339961780">(Mar 06 2023 at 20:26)</a>:</h4>
+<p>OK, from the beginning: what does <code>uname -a </code>say?</p>
+
+
+
+<a name="339962141"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332168-Master%20-%205.8.0%20%20%28was%3A%20comms%29/topic/Build%20status/near/339962141" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Håkan Svensson <a href="https://leamas.github.io/zulip-archive/stream/332168-Master---5.2E8.2E0--.28was.3A-comms.29/topic/Build.20status.html#339962141">(Mar 06 2023 at 20:28)</a>:</h4>
+<p>Linux RPi4 5.15.89-v8+ <a href="https://github.com/opencpn/OpenCPN/issues/1621">#1621</a> SMP PREEMPT Tue Jan 24 11:12:35 GMT 2023 aarch64 GNU/Linux</p>
+
+
+
+<hr><p>Last updated: Mar 06 2023 at 20:29 UTC</p>
 </html>
