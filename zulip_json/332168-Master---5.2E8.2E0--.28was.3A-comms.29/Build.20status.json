@@ -736,5 +736,59 @@
         "id": 339963878,
         "sender_full_name": "Alec Leamas",
         "timestamp": 1678135214
+    },
+    {
+        "content": "<p>I agree it's a messy system and should have started from scratch with proper image. But there is SignalK and the influxdb and grafana used for a lot data that I've have to set up again using a new image. So I'm lazy... :)</p>",
+        "id": 339964597,
+        "sender_full_name": "Håkan Svensson",
+        "timestamp": 1678135514
+    },
+    {
+        "content": "<p>So build is ready. Here's what cmake says:<br>\n-- cmake version: 3.18.4<br>\nDevice \"vcan0\" does not exist.<br>\n-- tests using vcan0 are NOT available: \"\"<br>\n-- *** Host Build Architecture is armhf<br>\n-- Setting C++11 standard via cmake standard mechanism<br>\n-- Default compiler options:</p>",
+        "id": 339965029,
+        "sender_full_name": "Håkan Svensson",
+        "timestamp": 1678135676
+    },
+    {
+        "content": "<p>No need to start from scratch overall in the system (Still consider this idea pushed by the OpenPlotter community more or less insane) . </p>\n<p>But you need to rebuild OpenCPN.  It takes some time on a RPi, but is doable if you have a Rpi-4 and some memory.</p>\n<p>My system data:</p>\n<div class=\"codehilite\"><pre><span></span><code>$ cat  /etc/debian_version\n11.6\n$ uname -a\nLinux raspberrypi 5.15.84-v8+ #1613 SMP PREEMPT Thu Jan 5 12:03:08 GMT 2023 aarch64 GNU/Linux\n$\n</code></pre></div>\n<p>Running a plain <code>cmake</code>  gives me  this log. <a href=\"/user_uploads/33951/LydheNscBYUlt_nErUjZhHpD/configure.log\">configure.log</a></p>\n<p>It takes an hour or two, builds a usable OpenCPN</p>",
+        "id": 339965471,
+        "sender_full_name": "Alec Leamas",
+        "timestamp": 1678135830
+    },
+    {
+        "content": "<p>BTW: while the compiler works I suggest that you take just a little time to understand <code>git bisect</code>. It really saves a lot of time when doing work like you did today. Lot's of tutorials out there for example <a href=\"https://initialcommit.com/blog/git-bisect\">here</a></p>",
+        "id": 339966165,
+        "sender_full_name": "Alec Leamas",
+        "timestamp": 1678136055
+    },
+    {
+        "content": "<p>Rebuild OCPN I've done many times from a clean build. All time with : -- *** Host Build Architecture is armhf\"<br>\nShould I try it again?</p>",
+        "id": 339966195,
+        "sender_full_name": "Håkan Svensson",
+        "timestamp": 1678136065
+    },
+    {
+        "content": "<p>Could you make a try like this:</p>\n<div class=\"codehilite\"><pre><span></span><code>$ cd OpenCPN\n$ mkdir build.new\n$ cd build.new\n$ cmake .. |  tee cmake.log\n</code></pre></div>\n<p>That will create a logfile  <em>cmake.log</em> similar to mine. Please attach it here  for investigation.</p>",
+        "id": 339966552,
+        "sender_full_name": "Alec Leamas",
+        "timestamp": 1678136215
+    },
+    {
+        "content": "<p>Also need output from the commands <code>cat /etc/debian_version</code> and <code>dpkg -l | grep gcc-10-base</code></p>",
+        "id": 339967142,
+        "sender_full_name": "Alec Leamas",
+        "timestamp": 1678136433
+    },
+    {
+        "content": "<p>log file attached.<br>\n<a href=\"/user_uploads/33951/hpL_fRmTydSjtkgTIuhb-3z5/cmake.log\">cmake.log</a></p>",
+        "id": 339967777,
+        "sender_full_name": "Håkan Svensson",
+        "timestamp": 1678136672
+    },
+    {
+        "content": "<p>cat /etc/debian_version<br>\n11.6<br>\npi@RPi4:~/builds/OpenCPN/build.new $ dpkg -l | grep gcc-10-base<br>\nii  gcc-10-base:armhf                     10.2.1-6+rpi1                     armhf        GCC, the GNU Compiler Collection (base package)</p>",
+        "id": 339968206,
+        "sender_full_name": "Håkan Svensson",
+        "timestamp": 1678136858
     }
 ]

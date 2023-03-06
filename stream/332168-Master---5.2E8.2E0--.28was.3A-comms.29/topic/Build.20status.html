@@ -1074,5 +1074,86 @@ These warning I've seen for month. No seg.fault out of this so not the same as y
 
 
 
-<hr><p>Last updated: Mar 06 2023 at 20:42 UTC</p>
+<a name="339964597"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332168-Master%20-%205.8.0%20%20%28was%3A%20comms%29/topic/Build%20status/near/339964597" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Håkan Svensson <a href="https://leamas.github.io/zulip-archive/stream/332168-Master---5.2E8.2E0--.28was.3A-comms.29/topic/Build.20status.html#339964597">(Mar 06 2023 at 20:45)</a>:</h4>
+<p>I agree it's a messy system and should have started from scratch with proper image. But there is SignalK and the influxdb and grafana used for a lot data that I've have to set up again using a new image. So I'm lazy... :)</p>
+
+
+
+<a name="339965029"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332168-Master%20-%205.8.0%20%20%28was%3A%20comms%29/topic/Build%20status/near/339965029" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Håkan Svensson <a href="https://leamas.github.io/zulip-archive/stream/332168-Master---5.2E8.2E0--.28was.3A-comms.29/topic/Build.20status.html#339965029">(Mar 06 2023 at 20:47)</a>:</h4>
+<p>So build is ready. Here's what cmake says:<br>
+-- cmake version: 3.18.4<br>
+Device "vcan0" does not exist.<br>
+-- tests using vcan0 are NOT available: ""<br>
+-- *** Host Build Architecture is armhf<br>
+-- Setting C++11 standard via cmake standard mechanism<br>
+-- Default compiler options:</p>
+
+
+
+<a name="339965471"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332168-Master%20-%205.8.0%20%20%28was%3A%20comms%29/topic/Build%20status/near/339965471" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Alec Leamas <a href="https://leamas.github.io/zulip-archive/stream/332168-Master---5.2E8.2E0--.28was.3A-comms.29/topic/Build.20status.html#339965471">(Mar 06 2023 at 20:50)</a>:</h4>
+<p>No need to start from scratch overall in the system (Still consider this idea pushed by the OpenPlotter community more or less insane) . </p>
+<p>But you need to rebuild OpenCPN.  It takes some time on a RPi, but is doable if you have a Rpi-4 and some memory.</p>
+<p>My system data:</p>
+<div class="codehilite"><pre><span></span><code>$ cat  /etc/debian_version
+11.6
+$ uname -a
+Linux raspberrypi 5.15.84-v8+ #1613 SMP PREEMPT Thu Jan 5 12:03:08 GMT 2023 aarch64 GNU/Linux
+$
+</code></pre></div>
+<p>Running a plain <code>cmake</code>  gives me  this log. <a href="/user_uploads/33951/LydheNscBYUlt_nErUjZhHpD/configure.log">configure.log</a></p>
+<p>It takes an hour or two, builds a usable OpenCPN</p>
+
+
+
+<a name="339966165"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332168-Master%20-%205.8.0%20%20%28was%3A%20comms%29/topic/Build%20status/near/339966165" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Alec Leamas <a href="https://leamas.github.io/zulip-archive/stream/332168-Master---5.2E8.2E0--.28was.3A-comms.29/topic/Build.20status.html#339966165">(Mar 06 2023 at 20:54)</a>:</h4>
+<p>BTW: while the compiler works I suggest that you take just a little time to understand <code>git bisect</code>. It really saves a lot of time when doing work like you did today. Lot's of tutorials out there for example <a href="https://initialcommit.com/blog/git-bisect">here</a></p>
+
+
+
+<a name="339966195"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332168-Master%20-%205.8.0%20%20%28was%3A%20comms%29/topic/Build%20status/near/339966195" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Håkan Svensson <a href="https://leamas.github.io/zulip-archive/stream/332168-Master---5.2E8.2E0--.28was.3A-comms.29/topic/Build.20status.html#339966195">(Mar 06 2023 at 20:54)</a>:</h4>
+<p>Rebuild OCPN I've done many times from a clean build. All time with : -- *** Host Build Architecture is armhf"<br>
+Should I try it again?</p>
+
+
+
+<a name="339966552"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332168-Master%20-%205.8.0%20%20%28was%3A%20comms%29/topic/Build%20status/near/339966552" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Alec Leamas <a href="https://leamas.github.io/zulip-archive/stream/332168-Master---5.2E8.2E0--.28was.3A-comms.29/topic/Build.20status.html#339966552">(Mar 06 2023 at 20:56)</a>:</h4>
+<p>Could you make a try like this:</p>
+<div class="codehilite"><pre><span></span><code>$ cd OpenCPN
+$ mkdir build.new
+$ cd build.new
+$ cmake .. |  tee cmake.log
+</code></pre></div>
+<p>That will create a logfile  <em>cmake.log</em> similar to mine. Please attach it here  for investigation.</p>
+
+
+
+<a name="339967142"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332168-Master%20-%205.8.0%20%20%28was%3A%20comms%29/topic/Build%20status/near/339967142" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Alec Leamas <a href="https://leamas.github.io/zulip-archive/stream/332168-Master---5.2E8.2E0--.28was.3A-comms.29/topic/Build.20status.html#339967142">(Mar 06 2023 at 21:00)</a>:</h4>
+<p>Also need output from the commands <code>cat /etc/debian_version</code> and <code>dpkg -l | grep gcc-10-base</code></p>
+
+
+
+<a name="339967777"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332168-Master%20-%205.8.0%20%20%28was%3A%20comms%29/topic/Build%20status/near/339967777" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Håkan Svensson <a href="https://leamas.github.io/zulip-archive/stream/332168-Master---5.2E8.2E0--.28was.3A-comms.29/topic/Build.20status.html#339967777">(Mar 06 2023 at 21:04)</a>:</h4>
+<p>log file attached.<br>
+<a href="/user_uploads/33951/hpL_fRmTydSjtkgTIuhb-3z5/cmake.log">cmake.log</a></p>
+
+
+
+<a name="339968206"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332168-Master%20-%205.8.0%20%20%28was%3A%20comms%29/topic/Build%20status/near/339968206" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Håkan Svensson <a href="https://leamas.github.io/zulip-archive/stream/332168-Master---5.2E8.2E0--.28was.3A-comms.29/topic/Build.20status.html#339968206">(Mar 06 2023 at 21:07)</a>:</h4>
+<p>cat /etc/debian_version<br>
+11.6<br>
+pi@RPi4:~/builds/OpenCPN/build.new $ dpkg -l | grep gcc-10-base<br>
+ii  gcc-10-base:armhf                     10.2.1-6+rpi1                     armhf        GCC, the GNU Compiler Collection (base package)</p>
+
+
+
+<hr><p>Last updated: Mar 06 2023 at 21:08 UTC</p>
 </html>
