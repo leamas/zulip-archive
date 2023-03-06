@@ -1155,5 +1155,57 @@ ii  gcc-10-base:armhf                     10.2.1-6+rpi1                     armh
 
 
 
-<hr><p>Last updated: Mar 06 2023 at 21:08 UTC</p>
+<a name="339969016"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332168-Master%20-%205.8.0%20%20%28was%3A%20comms%29/topic/Build%20status/near/339969016" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Alec Leamas <a href="https://leamas.github.io/zulip-archive/stream/332168-Master---5.2E8.2E0--.28was.3A-comms.29/topic/Build.20status.html#339969016">(Mar 06 2023 at 21:13)</a>:</h4>
+<p>I just  don't get this. You have a 64-bit OS, but the compiler is 32-bit and so is at least the libraries you link to . Perhaps the only solution is to make a clean install, but I don't understand how you could end up in this  configuration.</p>
+<p>Are there other settings besides those in OpenCPN you want to preserve?</p>
+
+
+
+<a name="339969467"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332168-Master%20-%205.8.0%20%20%28was%3A%20comms%29/topic/Build%20status/near/339969467" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Alec Leamas <a href="https://leamas.github.io/zulip-archive/stream/332168-Master---5.2E8.2E0--.28was.3A-comms.29/topic/Build.20status.html#339969467">(Mar 06 2023 at 21:17)</a>:</h4>
+<p>Wait.. new shot in the dark: what happens if you do <code>sudo apt install gcc-10:aarc64</code></p>
+
+
+
+<a name="339969933"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332168-Master%20-%205.8.0%20%20%28was%3A%20comms%29/topic/Build%20status/near/339969933" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Håkan Svensson <a href="https://leamas.github.io/zulip-archive/stream/332168-Master---5.2E8.2E0--.28was.3A-comms.29/topic/Build.20status.html#339969933">(Mar 06 2023 at 21:20)</a>:</h4>
+<p>udo apt install gcc-10:aarc64<br>
+Reading package lists... Done<br>
+Building dependency tree... Done<br>
+Reading state information... Done<br>
+E: Unable to locate package gcc-10:aarc64</p>
+
+
+
+<a name="339970004"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332168-Master%20-%205.8.0%20%20%28was%3A%20comms%29/topic/Build%20status/near/339970004" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Alec Leamas <a href="https://leamas.github.io/zulip-archive/stream/332168-Master---5.2E8.2E0--.28was.3A-comms.29/topic/Build.20status.html#339970004">(Mar 06 2023 at 21:20)</a>:</h4>
+<p>should be <code>gcc-10:aarch64</code></p>
+
+
+
+<a name="339970109"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332168-Master%20-%205.8.0%20%20%28was%3A%20comms%29/topic/Build%20status/near/339970109" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Alec Leamas <a href="https://leamas.github.io/zulip-archive/stream/332168-Master---5.2E8.2E0--.28was.3A-comms.29/topic/Build.20status.html#339970109">(Mar 06 2023 at 21:21)</a>:</h4>
+<p>No.... debian... should be <code>gcc-10:arm64</code></p>
+
+
+
+<a name="339970337"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332168-Master%20-%205.8.0%20%20%28was%3A%20comms%29/topic/Build%20status/near/339970337" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Håkan Svensson <a href="https://leamas.github.io/zulip-archive/stream/332168-Master---5.2E8.2E0--.28was.3A-comms.29/topic/Build.20status.html#339970337">(Mar 06 2023 at 21:23)</a>:</h4>
+<p>sudo apt install gcc-10:arm64<br>
+Reading package lists... Done<br>
+Building dependency tree... Done<br>
+Reading state information... Done<br>
+E: Unable to locate package gcc-10:arm64</p>
+
+
+
+<a name="339970509"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332168-Master%20-%205.8.0%20%20%28was%3A%20comms%29/topic/Build%20status/near/339970509" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Alec Leamas <a href="https://leamas.github.io/zulip-archive/stream/332168-Master---5.2E8.2E0--.28was.3A-comms.29/topic/Build.20status.html#339970509">(Mar 06 2023 at 21:24)</a>:</h4>
+<p>OK, I see no way to fix your system.  Sorry.</p>
+<p>To check the other route: are there any other settings besides those i OpenCPN you want to preserve?</p>
+
+
+
+<hr><p>Last updated: Mar 06 2023 at 21:25 UTC</p>
 </html>
