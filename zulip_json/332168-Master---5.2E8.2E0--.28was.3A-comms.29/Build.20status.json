@@ -610,5 +610,65 @@
         "id": 339954047,
         "sender_full_name": "Alec Leamas",
         "timestamp": 1678131710
+    },
+    {
+        "content": "<p>Safe mode  or not is the same.<br>\nOnly inbound plugins in the log file.<br>\nLast part of the log file:</p>\n<blockquote>\n<p>20:08:46.863 MESSAGE plugin_loader.cpp:256 Checking plugin candidate: /usr/lib/opencpn/libchartdldr_pi.so<br>\n20:08:46.863 MESSAGE plugin_loader.cpp:1109 Plugin is compatible by elf library scan: true<br>\n20:08:46.863 MESSAGE plugin_loader.cpp:1170 PluginLoader: Loading PlugIn: /usr/lib/opencpn/libchartdldr_pi.so<br>\n20:08:48.956 WARNING image.cpp:2707 Unknown image data format.<br>\n20:08:48.956 WARNING image.cpp:2707 Unknown image data format.<br>\n20:08:49.115 MESSAGE plugin_loader.cpp:319 Skipping not enabled candidate.<br>\n20:08:49.116 MESSAGE plugin_loader.cpp:256 Checking plugin candidate: /usr/lib/opencpn/libdashboard_pi.so<br>\n20:08:49.116 MESSAGE plugin_loader.cpp:236 Loading plugins from dir: /usr/local/lib/opencpn<br>\n20:08:49.116 MESSAGE plugin_loader.cpp:404 PluginLoader searching for PlugIns in location /usr/local/lib/opencpn<br>\n20:08:49.116 MESSAGE plugin_loader.cpp:442 Found 4 candidates<br>\n20:08:49.116 MESSAGE plugin_loader.cpp:256 Checking plugin candidate: /usr/local/lib/opencpn/libwmm_pi.so<br>\n20:08:49.117 MESSAGE plugin_loader.cpp:256 Checking plugin candidate: /usr/local/lib/opencpn/libgrib_pi.so<br>\n20:08:49.117 MESSAGE plugin_loader.cpp:256 Checking plugin candidate: /usr/local/lib/opencpn/libchartdldr_pi.so<br>\n20:08:49.117 MESSAGE plugin_loader.cpp:1109 Plugin is compatible by elf library scan: true<br>\n20:08:49.117 MESSAGE plugin_loader.cpp:1170 PluginLoader: Loading PlugIn: /usr/local/lib/opencpn/libchartdldr_pi.so<br>\n20:08:49.370 WARNING image.cpp:2707 Unknown image data format.<br>\n20:08:49.370 WARNING image.cpp:2707 Unknown image data format.<br>\n20:08:49.482 MESSAGE plugin_loader.cpp:319 Skipping not enabled candidate.</p>\n</blockquote>",
+        "id": 339955039,
+        "sender_full_name": "Håkan Svensson",
+        "timestamp": 1678132092
+    },
+    {
+        "content": "<p>OK. The difference between the two commits is that after the commit the plugin is loaded  before the test for being enabled or not .  In this case it is disabled,  so the loaded plugin is deleted. I presume that if chartdldr is enabled things should work or crash in another interesting way.</p>\n<p>Perhaps someting goes bad if a system plugin is deleted... \"pondering\"</p>",
+        "id": 339956045,
+        "sender_full_name": "Alec Leamas",
+        "timestamp": 1678132455
+    },
+    {
+        "content": "<p>Just a shot in the dark: What happens after applying this patch?</p>\n<div class=\"codehilite\"><pre><span></span><code>diff --git a/src/plugin_loader.cpp b/src/plugin_loader.cpp\nindex 6871586e9..f5b165b49 100644\n--- a/src/plugin_loader.cpp\n+++ b/src/plugin_loader.cpp\n@@ -331,7 +331,7 @@ bool PluginLoader::LoadPluginCandidate(wxString file_name, bool load_enabled) {\n   const auto path = std::string(&quot;/PlugIns/&quot;) + plugin_file.ToStdString();\n   ConfigVar&lt;bool&gt; enabled(path, &quot;bEnabled&quot;, TheBaseConfig());\n   if (load_enabled &amp;&amp; !enabled.Get(true)) {\n-    if (pic) delete pic;\n+    if (pic &amp;&amp; !IsSystemPlugin(file_name.ToStdString())) delete pic;\n     wxLogMessage(&quot;Skipping not enabled candidate.&quot;);\n     return true;\n   }\n</code></pre></div>",
+        "id": 339956610,
+        "sender_full_name": "Alec Leamas",
+        "timestamp": 1678132656
+    },
+    {
+        "content": "<p>What happens is that there is  a compile error. Wait...</p>",
+        "id": 339957355,
+        "sender_full_name": "Alec Leamas",
+        "timestamp": 1678132882
+    },
+    {
+        "content": "<p>A right paren was missing. Updated the patch</p>",
+        "id": 339957657,
+        "sender_full_name": "Alec Leamas",
+        "timestamp": 1678133003
+    },
+    {
+        "content": "<p>I'll wait..<br>\nOn my Rpi400 arm64 Bullseye. Everything is fine.<br>\nOn this RPi4 armhf Bullseye not.  ????</p>",
+        "id": 339957820,
+        "sender_full_name": "Håkan Svensson",
+        "timestamp": 1678133067
+    },
+    {
+        "content": "<p>Also some strange  debug message I don't understand..</p>\n<blockquote>\n<p>Sending announce<br>\nwarning: JITed object file architecture armv8-a is not compatible with target architecture armv6.</p>\n</blockquote>",
+        "id": 339958195,
+        "sender_full_name": "Håkan Svensson",
+        "timestamp": 1678133181
+    },
+    {
+        "content": "<p>Testing the patch still makes sense. The underlying idea is that  the <code>delete</code>somehow messes things up.</p>",
+        "id": 339958330,
+        "sender_full_name": "Alec Leamas",
+        "timestamp": 1678133224
+    },
+    {
+        "content": "<p>Ok I'll try. On checkout master I suppose?</p>",
+        "id": 339958474,
+        "sender_full_name": "Håkan Svensson",
+        "timestamp": 1678133279
+    },
+    {
+        "content": "<p>Yes</p>",
+        "id": 339958534,
+        "sender_full_name": "Alec Leamas",
+        "timestamp": 1678133286
     }
 ]
