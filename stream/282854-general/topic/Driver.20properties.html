@@ -53,5 +53,16 @@ Locating a desired port can be tricky.  I think it would be helpful if the 'User
 
 
 
-<hr><p>Last updated: Mar 08 2023 at 10:10 UTC</p>
+<a name="340320271"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/282854-general/topic/Driver%20properties/near/340320271" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Alec Leamas <a href="https://leamas.github.io/zulip-archive/stream/282854-general/topic/Driver.20properties.html#340320271">(Mar 08 2023 at 10:27)</a>:</h4>
+<blockquote>
+<p>As far as I am aware, there is nothing to stop a plugin sending and receiving data in some other protocol other than NMEA0183, NMEA200 or SignalK</p>
+</blockquote>
+<p>OTOH, the current API is heavily designed to match actual data sources and their drivers.  IMHO, Iít is probably not a good idea to hijack this for all sorts of general communication.</p>
+<p>But: what we could do is to expose the underlying observable machinery. Most if this is actually already in the API, the missing part is the different incarnations of Notify(). This allows sending of arbitrary data to a  key. Listeners can listen to a key, and receive the same data. See the <a href="https://leamas.fedorapeople.org/opencpn-api-docs/md__home_mk_src_OpenCPN_libs_observable_README.html#Introduction">API docs</a>  </p>
+<p>This is now an internal API, but could be exported in ocpn_plugin.h, probably using some facade types.</p>
+
+
+
+<hr><p>Last updated: Mar 08 2023 at 10:32 UTC</p>
 </html>
