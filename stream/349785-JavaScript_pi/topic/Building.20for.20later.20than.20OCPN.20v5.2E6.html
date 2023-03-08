@@ -1660,5 +1660,21 @@ Also MacOS recompiles loads including  wxWidgets even when run a second time fro
 
 
 
-<hr><p>Last updated: Mar 08 2023 at 20:09 UTC</p>
+<a name="340456063"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/349785-JavaScript_pi/topic/Building%20for%20later%20than%20OCPN%20v5.6/near/340456063" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Alec Leamas <a href="https://leamas.github.io/zulip-archive/stream/349785-JavaScript_pi/topic/Building.20for.20later.20than.20OCPN.20v5.2E6.html#340456063">(Mar 08 2023 at 20:14)</a>:</h4>
+<p>Windows is build on appveyor (which you need to setup), not circleci. Hence nothing about windows in that log.</p>
+<p>EDIT:  First thing to check is your cloudsmith repo: is there a windows build? If not, check the appveyor logs.</p>
+
+
+
+<a name="340458096"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/349785-JavaScript_pi/topic/Building%20for%20later%20than%20OCPN%20v5.6/near/340458096" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Alec Leamas <a href="https://leamas.github.io/zulip-archive/stream/349785-JavaScript_pi/topic/Building.20for.20later.20than.20OCPN.20v5.2E6.html#340458096">(Mar 08 2023 at 20:26)</a>:</h4>
+<p>Why your macos jobs rebuilds wxWidgets I just cannot understand. It does find the cache and installs it.  Have you made any changes to ci/circleci-build-macos.sh?</p>
+<p>If you hav'nt you might have a  broken cache for whatever reason, you have been doing all sorts of things here. One way might be to invalidate the cache, look into <em>build-deps/macos-cache-stamp</em> and  use that to invalidate the cache. The first build after that will not find any cache to download, look into the step "Restoring cache" in the log. OTOH, you will see it upload the new cache in the "Saving cache" step.</p>
+<p>Next build will find a cache, you will see that it is downloaded in the "Restore cache" step. At this point I don' see how it could start to build wxWidgets like today, it doesn't do that for anyone else. </p>
+<p>Still, I don't see everything...</p>
+
+
+
+<hr><p>Last updated: Mar 08 2023 at 20:29 UTC</p>
 </html>

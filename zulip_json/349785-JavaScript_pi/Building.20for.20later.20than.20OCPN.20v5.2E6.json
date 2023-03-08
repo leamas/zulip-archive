@@ -1012,5 +1012,17 @@
         "id": 340437851,
         "sender_full_name": "Tony Voss",
         "timestamp": 1678300685
+    },
+    {
+        "content": "<p>Windows is build on appveyor (which you need to setup), not circleci. Hence nothing about windows in that log.</p>\n<p>EDIT:  First thing to check is your cloudsmith repo: is there a windows build? If not, check the appveyor logs.</p>",
+        "id": 340456063,
+        "sender_full_name": "Alec Leamas",
+        "timestamp": 1678306459
+    },
+    {
+        "content": "<p>Why your macos jobs rebuilds wxWidgets I just cannot understand. It does find the cache and installs it.  Have you made any changes to ci/circleci-build-macos.sh?</p>\n<p>If you hav'nt you might have a  broken cache for whatever reason, you have been doing all sorts of things here. One way might be to invalidate the cache, look into <em>build-deps/macos-cache-stamp</em> and  use that to invalidate the cache. The first build after that will not find any cache to download, look into the step \"Restoring cache\" in the log. OTOH, you will see it upload the new cache in the \"Saving cache\" step.</p>\n<p>Next build will find a cache, you will see that it is downloaded in the \"Restore cache\" step. At this point I don' see how it could start to build wxWidgets like today, it doesn't do that for anyone else. </p>\n<p>Still, I don't see everything...</p>",
+        "id": 340458096,
+        "sender_full_name": "Alec Leamas",
+        "timestamp": 1678307209
     }
 ]
