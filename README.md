@@ -107,9 +107,10 @@ jobs:
       id: archive
       uses: zulip/zulip-archive@master
       with:
-        zulip_organization_url: ${{ secrets.zulip_organization_url }}
-        zulip_bot_email: ${{ secrets.zulip_bot_email }}
-        zulip_bot_key: ${{ secrets.zulip_bot_key }}
+        # zulip_organization_url: ${{ secrets.zulip_organization_url }}
+        # zulip_bot_email: ${{ secrets.zulip_bot_email }}
+        # zulip_bot_key: ${{ secrets.zulip_bot_key }}
+        zuliprc: ${{ secrets.zuliprc }}
         # Using the GitHub Token that is provided automatically by GitHub Actions
         # (no setup needed).
         github_token: ${{ secrets.GITHUB_TOKEN }}
