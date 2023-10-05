@@ -1,0 +1,49 @@
+<html>
+<head><meta charset="utf-8"><title>NMEA 2000 · general · Zulip Chat Archive</title></head>
+<h2>Stream: <a href="https://leamas.github.io/zulip-archive/stream/282854-general/index.html">general</a></h2>
+<h3>Topic: <a href="https://leamas.github.io/zulip-archive/stream/282854-general/topic/NMEA.202000.html">NMEA 2000</a></h3>
+
+<hr>
+
+<base href="https://opencpn.zulipchat.com">
+
+<head><link href="https://leamas.github.io/zulip-archive/style.css" rel="stylesheet"></head>
+
+<a name="340230605"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/282854-general/topic/NMEA%202000/near/340230605" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Kees Verruijt <a href="https://leamas.github.io/zulip-archive/stream/282854-general/topic/NMEA.202000.html#340230605">(Mar 07 2023 at 22:56)</a>:</h4>
+<p><span class="user-mention" data-user-id="517002">@Dave Register</span> you asked me via email whether I could look at the NMEA 2000 AutoPilot integration. What do I need to test this in terms of hardware and what should it be doing? Send a waypoint and XTE -- like a NMEA 0183 connection?</p>
+
+
+
+<a name="340249065"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/282854-general/topic/NMEA%202000/near/340249065" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Dave Register <a href="https://leamas.github.io/zulip-archive/stream/282854-general/topic/NMEA.202000.html#340249065">(Mar 08 2023 at 01:36)</a>:</h4>
+<p>Kees...<br>
+With this API, a plugin should be able to send arbitrary PGNs to the N2K bus.  Theoretically, then, we can build a plugin that emulates a commercial N2K autopilot.  Or there may be other ways to interface with N2K autopilots.<br>
+I think there is/was some discussion of a Raymarine Autopilot interface of some sort, but I lost the thread on that.  IIRC,  a plugin would synthesize the proper PGNs to allow the autopilot to follow a route created on OCPN.  And the PGNs are proprietary, so some RE required.<br>
+Am I on the right track?  If so, we can start a separate discussion about this.<br>
+<strong>The key point is this</strong>:  We do not necessarily need a Raymarine A/P plugin now.  But we do need to validate/prove that the API in O571 is functional and complete enough to build such a plugin, before we release O58x.  So some "proof of concept" work would be very useful assurance of that capability.</p>
+
+
+
+<a name="340286383"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/282854-general/topic/NMEA%202000/near/340286383" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Kees Verruijt <a href="https://leamas.github.io/zulip-archive/stream/282854-general/topic/NMEA.202000.html#340286383">(Mar 08 2023 at 07:38)</a>:</h4>
+<p>Ah okay, that makes sense.</p>
+
+
+
+<a name="347653947"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/282854-general/topic/NMEA%202000/near/347653947" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Kees Verruijt <a href="https://leamas.github.io/zulip-archive/stream/282854-general/topic/NMEA.202000.html#347653947">(Apr 07 2023 at 12:37)</a>:</h4>
+<p>Dave, I've now tested the write-to-NMEA2000 API for plugins, and I can confirm that it works fine! I can send normal and proprietary PGNs just fine. Tested on Debian 11 + macOS.  <span aria-label="+1" class="emoji emoji-1f44d" role="img" title="+1">:+1:</span></p>
+<p>I'm impressed with the level of detail in the NMEA2000 connection wizard on Linux, that even generates udev rules! I did have a fluke where the wx GUI elements were placed weirdly on Linux, but it is fine on macOS so it may be a wx issue. Leaving the settings windows and coming back it was fine, so it was no big deal. <span aria-label="+1" class="emoji emoji-1f44d" role="img" title="+1">:+1:</span> </p>
+<p>PS I did not test receiving NMEA2000 PGNs. Has someone else tested that or shall I do that?</p>
+
+
+
+<a name="347657085"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/282854-general/topic/NMEA%202000/near/347657085" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Kees Verruijt <a href="https://leamas.github.io/zulip-archive/stream/282854-general/topic/NMEA.202000.html#347657085">(Apr 07 2023 at 12:51)</a>:</h4>
+<p>BTW I tested with an Actisense NGT-1.</p>
+
+
+
+<hr><p>Last updated: Oct 05 2023 at 09:43 UTC</p>
+</html>

@@ -1,0 +1,326 @@
+[
+    {
+        "content": "<p><span class=\"user-mention\" data-user-id=\"399510\">@Alec Leamas</span> <br>\nI am preparing a PR to opencpn-libs to add more commonly used libraries to the current set.  This is part of an effort to harmonize all the plugins built using the \"TP\" template, to improve maintenance chores.<br>\nWould you prefer the PR to target \"main\", or \"devel\" branch?  I assume the plugins using opencpn-libs now are using \"main\" as their sub-module.  Correct me if wrong, or any other notes regarding your workflow.<br>\nThanks</p>",
+        "id": 389948607,
+        "sender_full_name": "Dave Register",
+        "timestamp": 1694206333
+    },
+    {
+        "content": "<p>Devel</p>",
+        "id": 389984806,
+        "sender_full_name": "Alec Leamas",
+        "timestamp": 1694229246
+    },
+    {
+        "content": "<p>OK, thanks</p>",
+        "id": 389990637,
+        "sender_full_name": "Dave Register",
+        "timestamp": 1694233598
+    },
+    {
+        "content": "<p>This makes opencpn-plugins a more central piece in the puzzle and not just a Shipdriver thing. This was my original plan, and I'm happy with it. In  this situation it makes sense to invite you and Pavel as maintainers to opencpn-libs for the same reasons that not only  you have permissions on OpenCPN.</p>\n<p>The model on opencpn-libs is basically that devel is the testing area while the master is the rolling release branch.  Hence I suggest that  all feel free to commit to devel. Still, I would appreciate  if I for now could be the one handling master as long as I'm in the project.</p>\n<p>OK?<br>\n<span class=\"user-mention\" data-user-id=\"517002\">@Dave Register</span>  <span class=\"user-mention\" data-user-id=\"573239\">@Pavel Kalian</span></p>",
+        "id": 390006919,
+        "sender_full_name": "Alec Leamas",
+        "timestamp": 1694245623
+    },
+    {
+        "content": "<p>OK.  I will Sandbox in Devel, discuss upstream to main as we move along.</p>",
+        "id": 390038376,
+        "sender_full_name": "Dave Register",
+        "timestamp": 1694268846
+    },
+    {
+        "content": "<p><span class=\"user-mention\" data-user-id=\"399510\">@Alec Leamas</span> <br>\nDetails:<br>\non Appveyor only, submodule update fails at build time.</p>\n<div class=\"codehilite\"><pre><span></span><code>git submodule update --init opencpn-libs\n\nSubmodule &#39;opencpn-libs&#39; (git@github.com:leamas/opencpn-libs.git) registered for path &#39;opencpn-libs&#39;\nCloning into &#39;C:/project/ocpn_project/opencpn-libs&#39;...\ngit@github.com: Permission denied (publickey).\nfatal: Could not read from remote repository.\nPlease make sure you have the correct access rights\nand the repository exists.\nfatal: clone of &#39;git@github.com:leamas/opencpn-libs.git&#39; into submodule path &#39;C:/project/ocpn_project/opencpn-libs&#39; failed\n</code></pre></div>\n\n<p>Ideas?</p>",
+        "id": 390433222,
+        "sender_full_name": "Dave Register",
+        "timestamp": 1694486564
+    },
+    {
+        "content": "<p>You ate using a git URL which requires a SSH key registered at GitHub. This is wrong in general for ci builds, use the https URL instead.</p>",
+        "id": 390452962,
+        "sender_full_name": "Alec Leamas",
+        "timestamp": 1694499954
+    },
+    {
+        "content": "<p><span class=\"user-mention\" data-user-id=\"399510\">@Alec Leamas</span> <br>\nYep, that's it.  Thanks<br>\nBut we have other problems with Appveyor.  Might need to drop VS2017 (and wx3.1) Windows builds.</p>",
+        "id": 390591234,
+        "sender_full_name": "Dave Register",
+        "timestamp": 1694550432
+    },
+    {
+        "content": "<p>what is it? Any logs?</p>",
+        "id": 390709470,
+        "sender_full_name": "Alec Leamas",
+        "timestamp": 1694607118
+    },
+    {
+        "content": "<p><span class=\"user-mention\" data-user-id=\"399510\">@Alec Leamas</span> <br>\nHere is one:<br>\n<a href=\"https://ci.appveyor.com/project/bdbcat/watchdog-pi/builds/48027882\">https://ci.appveyor.com/project/bdbcat/watchdog-pi/builds/48027882</a></p>\n<p>The problem is not directly related to opencpn-libs.  I think the VS2017 pre-load in Appveyor is missing some standard Windows header files.  <br>\nThere are some hack-y things that we could do, but really, the problem belongs to Appveyor.<br>\nWe are trying to get Appveyor's support line to take a look.</p>\n<p>Otherwise, I have added a few directories to opencpn-libs, tweaked a few header includes, and we have adapted now three TP plugins without serious problems.  When we get the matrix complete, I'll have some suggestions before merging devel to main.<br>\nThanks</p>",
+        "id": 390837782,
+        "sender_full_name": "Dave Register",
+        "timestamp": 1694659005
+    },
+    {
+        "content": "<p>This actually seems to be a bug in the SDK which ms does not intend to fix: <a href=\"https://developercommunity.visualstudio.com/t/file-winapifamilyh-is-missing-from-toolkit-folder/720522\">https://developercommunity.visualstudio.com/t/file-winapifamilyh-is-missing-from-toolkit-folder/720522</a>.</p>\n<p>OTOH, it shouldn't be that bad to bundle this header in case cmake can't locate it.  The natural place to do this would be the WindowsHeaders library. Let's say we add  a <em>WindowsHeaders/include-2017-compat</em> directory and put winapifamily.h there.<br>\nThen , in <em>WindowsHeaders CMakeLists.txt</em> add</p>\n<div class=\"codehilite\"><pre><span></span><code>check_include_file(winapifamily.h HAVE_WINAPIFAMILY_H)\nif (NOT HAVE_WINAPIFAMILY_H)\n  # Work around known VS2017 bug:\n  target_include_directories(\n     _windows_headers INTERFACE  ${CMAKE_CURRENT_SOURCE_DIR}/include-2017-compat\n  )\nendif ()\n</code></pre></div>",
+        "id": 390882073,
+        "sender_full_name": "Alec Leamas",
+        "timestamp": 1694680979
+    },
+    {
+        "content": "<p><span class=\"user-mention\" data-user-id=\"399510\">@Alec Leamas</span> <br>\nWe can try that.  I expect that there may be a flood of missing headers, some google suggests 8 files.  We shall see.</p>",
+        "id": 390936542,
+        "sender_full_name": "Dave Register",
+        "timestamp": 1694699942
+    },
+    {
+        "content": "<p>Another question is of course from which release Windows provides the  corresponding libraries....</p>",
+        "id": 390963986,
+        "sender_full_name": "Alec Leamas",
+        "timestamp": 1694704656
+    },
+    {
+        "content": "<p><span class=\"user-mention\" data-user-id=\"399510\">@Alec Leamas</span> <br>\nSome discussion:<br>\n<a href=\"https://github.com/rgleason/watchdog_pi/issues/66\">https://github.com/rgleason/watchdog_pi/issues/66</a></p>",
+        "id": 391325238,
+        "sender_full_name": "Dave Register",
+        "timestamp": 1694838785
+    },
+    {
+        "content": "<p>That discussion  is now closed.  As I see it, of all bad alternatives we have is keeping things as they are perhaps the least awful. That would then mean that we just dropped vs2017 builds for those plugins which does not work.</p>\n<p>What people seem to do is to download and install vs2017 as part of the CI build. Perhaps doable, perhaps not. But: is it worth it?</p>",
+        "id": 391376650,
+        "sender_full_name": "Alec Leamas",
+        "timestamp": 1694870040
+    },
+    {
+        "content": "<p><span class=\"user-mention\" data-user-id=\"399510\">@Alec Leamas</span> <br>\nAll...<br>\nThere is a very small error in opencpn-libs, in the file api-18/ocpn_plugin.h.   This error prevents using plugin API-118 on Android platforms.<br>\nThis error will be corrected shortly, and a new OpenCPN for Android will be published to correspond.<br>\nAlec, will you make the change to master, or shall I?</p>",
+        "id": 391601507,
+        "sender_full_name": "Dave Register",
+        "timestamp": 1695002589
+    },
+    {
+        "content": "<p>I think it's a bad idea that opencpn-libs would diverge from main opencpn in this case. Furthermore, in opencpn-libs master should never be ahead of devel. Hence I suggest we do this change like this:</p>\n<ol>\n<li>You update ocpn_plugin.h in main opencpn</li>\n<li>You update the devel branch with an exact copy from main opencpn. </li>\n<li>I cherry-pick the commit from devel to master.</li>\n</ol>",
+        "id": 391623295,
+        "sender_full_name": "Alec Leamas",
+        "timestamp": 1695015623
+    },
+    {
+        "content": "<p><span class=\"user-mention\" data-user-id=\"399510\">@Alec Leamas</span>  <br>\n Good plan.<br>\nI'll also cherry-pick back to v5.8.x for Android build.</p>",
+        "id": 391713176,
+        "sender_full_name": "Dave Register",
+        "timestamp": 1695047459
+    },
+    {
+        "content": "<p>OK. Ping me when devel is updated.</p>",
+        "id": 391714906,
+        "sender_full_name": "Alec Leamas",
+        "timestamp": 1695047983
+    },
+    {
+        "content": "<p><span class=\"user-mention\" data-user-id=\"399510\">@Alec Leamas</span> <br>\n\"devel\" updated.</p>",
+        "id": 391723621,
+        "sender_full_name": "Dave Register",
+        "timestamp": 1695050463
+    },
+    {
+        "content": "<p>Pushed to main, verbatim copy.</p>",
+        "id": 391724891,
+        "sender_full_name": "Alec Leamas",
+        "timestamp": 1695050830
+    },
+    {
+        "content": "<p><span class=\"user-mention\" data-user-id=\"399510\">@Alec Leamas</span>  Do I need to delete <em>opencpn-libs</em> and start over?</p>\n<div class=\"codehilite\"><pre><span></span><code>D:\\Documents\\Github\\shipdriver_pi&gt;git submodule update --remote --merge opencpn-libs\nAuto-merging api-18/ocpn_plugin.h\nCONFLICT (content): Merge conflict in api-18/ocpn_plugin.h\nAutomatic merge failed; fix conflicts and then commit the result.\nfatal: Unable to merge &#39;e1e9352eca09bf383dfa141c464dc611779a75fc&#39; in submodule path &#39;opencpn-libs&#39;\n</code></pre></div>",
+        "id": 391868455,
+        "sender_full_name": "Mike Rossiter",
+        "timestamp": 1695115538
+    },
+    {
+        "content": "<p>oops... No, you should not have to delete the submodule. Deleting it is actually a convoluted task , see  opencpn-libs/README.md</p>\n<p>This should basically be about selecting the right version. Something like this:</p>\n<div class=\"codehilite\"><pre><span></span><code>    $ cd opencpn-libs\n    $ git remote update origin\n    $ git checkout -f origin/main\n</code></pre></div>\n<p>There might be things to sort out first since you have  a failed merge, though. Perhaps <code>git merge --abort</code> can clean up the state first.</p>",
+        "id": 391870836,
+        "sender_full_name": "Alec Leamas",
+        "timestamp": 1695116275
+    },
+    {
+        "content": "<p>Thanks.  Fixed and commit made to ShipDriver master.</p>",
+        "id": 391875209,
+        "sender_full_name": "Mike Rossiter",
+        "timestamp": 1695117300
+    },
+    {
+        "content": "<p>BTW the Zulip standalone app is not loading for me this morning.</p>",
+        "id": 391875513,
+        "sender_full_name": "Mike Rossiter",
+        "timestamp": 1695117401
+    },
+    {
+        "content": "<p>Installed 5.10.2 and working again.</p>",
+        "id": 391877203,
+        "sender_full_name": "Mike Rossiter",
+        "timestamp": 1695117939
+    },
+    {
+        "content": "<blockquote>\n<p>. Fixed and commit made to ShipDriver master.</p>\n</blockquote>\n<p>Great to hear!</p>\n<blockquote>\n<p>BTW the Zulip standalone app is not loading for me this morning.</p>\n</blockquote>\n<p>I'm using Flatpak, so it's automatically updated ;)</p>",
+        "id": 391883341,
+        "sender_full_name": "Alec Leamas",
+        "timestamp": 1695120076
+    },
+    {
+        "content": "<p><span class=\"user-mention\" data-user-id=\"399510\">@Alec Leamas</span> <br>\nQuestion about submodule use.<br>\nIn our CCI scripts, we say:</p>\n<div class=\"codehilite\"><pre><span></span><code>$ git submodule update --init opencpn-libs\n</code></pre></div>\n\n<p>This does not pull the HEAD of the opencpn-libs/devel repo.  It seems to pull the commit of the repo that was HEAD at the time that opencpn-libs was added to the project.<br>\nTo fix this, we can then say:</p>\n<div class=\"codehilite\"><pre><span></span><code>$ git submodule update --remote --merge opencpn-libs\n</code></pre></div>\n\n<p>And this will pull the HEAD of the opencpn-libs repo.<br>\nThis is what we want. Seems to work.<br>\nBut is this best practice, when the submodule is a moving target, as opencpn-libs/devel is today?</p>",
+        "id": 392023917,
+        "sender_full_name": "Dave Register",
+        "timestamp": 1695173581
+    },
+    {
+        "content": "<p>More:<br>\nTurns out that flatpak builder is smart enough to update submodules in the source tree, without explicit direction.<br>\nAs a result, even if we do  \"git submodule update --remote --merge opencpn-libs\", the flatpak builder later does another \"git submodule update --init opencpn-libs\".  So the submodule fetch is not necessarily pointing at HEAD.<br>\nConclusion:  For flatpak, we need to explicitly update the submodule in the parent tree, every time the submodule changes.  Sigh...</p>",
+        "id": 392034921,
+        "sender_full_name": "Dave Register",
+        "timestamp": 1695179602
+    },
+    {
+        "content": "<blockquote>\n<p>But is this best practice, when the submodule is a moving target, as opencpn-libs/devel is today?</p>\n</blockquote>\n<p>Perhaps, perhaps not. </p>\n<p>In the shipdriver case, we use a specific commit as part of the template. This is locked when doing the final <code>git add opencpn-libs; git commit ...</code> which locks the version used. Updating opencpn-libs  happens when the template is updated. So far, I think this is a reasonable strategy.</p>",
+        "id": 392055379,
+        "sender_full_name": "Alec Leamas",
+        "timestamp": 1695193355
+    },
+    {
+        "content": "<p>For Flatpak, this should be no differerence. Whatever it pulls from the remote opencpn-libs repo, the version it actually uses is the one checked in into the plugin, normally defined by the template.</p>",
+        "id": 392055628,
+        "sender_full_name": "Alec Leamas",
+        "timestamp": 1695193495
+    },
+    {
+        "content": "<p>Added to this is the extra layer: plugins in production should use the opencpn-libs main branch which we only update when we are overall happy with the state of devel. Updating main is sort of making a new release, so to speak.</p>\n<p>Which raises the question: are we ready to merge devel into main?</p>",
+        "id": 392056130,
+        "sender_full_name": "Alec Leamas",
+        "timestamp": 1695193744
+    },
+    {
+        "content": "<p><span class=\"user-mention\" data-user-id=\"399510\">@Alec Leamas</span> <br>\nThanks for the discussion.<br>\nNot ready yet to merge devel.  I want to get Rick's entire array for plugins built from devel, then do a little cleanup.<br>\nI don't know if you have looked at devel commits.  They are a little rough, especially all the gl/glu stuff.  Needs some consolidation.</p>",
+        "id": 392125921,
+        "sender_full_name": "Dave Register",
+        "timestamp": 1695218979
+    },
+    {
+        "content": "<p>No, I havn't checked anything so far. However, as long as the end result is ok it's probably better to merge it as it is rather than rewriting (and thus rebasing the history. One alternative might be to squash all changes into a single commit when merging.</p>",
+        "id": 392131717,
+        "sender_full_name": "Alec Leamas",
+        "timestamp": 1695220669
+    },
+    {
+        "content": "<p><span class=\"user-mention\" data-user-id=\"399510\">@Alec Leamas</span> <br>\nre opencpn-libs:<br>\nAny particular reason we need  a core opencpn.pdb in the api-18/msvc-wx32 directory?  It is pretty heavy (43MB)...</p>",
+        "id": 392132294,
+        "sender_full_name": "Dave Register",
+        "timestamp": 1695220828
+    },
+    {
+        "content": "<p>It's the natural place to make it possible to debug and make usable coredumps. It could possible be replaced by code downloading it on demand, but this would require some work.</p>\n<p>I'm not that worried about  the weight of opencpn-libs. After all, it's a build dependency, not a runtime one.</p>",
+        "id": 392132860,
+        "sender_full_name": "Alec Leamas",
+        "timestamp": 1695221013
+    },
+    {
+        "content": "<p><span class=\"user-mention\" data-user-id=\"399510\">@Alec Leamas</span> <br>\nWe post production release pdb on github:<br>\n<a href=\"https://github.com/OpenCPN/OpenCPN/releases/download/Release_5.8.4/opencpn+627.1637c28f.pdb.tar.gz\">https://github.com/OpenCPN/OpenCPN/releases/download/Release_5.8.4/opencpn+627.1637c28f.pdb.tar.gz</a></p>\n<p>I am sensitive to Rick's situation, packaging and dealing with some 24 plugins at one time.<br>\nNot a big deal, just optimizing storage and workflow.</p>",
+        "id": 392133795,
+        "sender_full_name": "Dave Register",
+        "timestamp": 1695221313
+    },
+    {
+        "content": "<p><span class=\"user-mention silent\" data-user-id=\"517002\">Dave Register</span> <a href=\"#narrow/stream/332168-Master---5.2E8.2E0--.28was.3A-comms.29/topic/Common.20plugin.20library/near/392125921\">said</a>:</p>\n<blockquote>\n<p><span class=\"user-mention silent\" data-user-id=\"399510\">Alec Leamas</span> <br>\nThanks for the discussion.<br>\nNot ready yet to merge devel.  I want to get Rick's entire array for plugins built from devel, then do a little cleanup.<br>\nI don't know if you have looked at devel commits.  They are a little rough, especially all the gl/glu stuff.  Needs some consolidation.</p>\n</blockquote>\n<p>Definitely needs a squash merge.</p>",
+        "id": 392134114,
+        "sender_full_name": "Dave Register",
+        "timestamp": 1695221419
+    },
+    {
+        "content": "<p>I know, but just removing would be a step backwards on the road to usable coredumps.  Worth filing an issue, but my hands are full with other things right now...</p>",
+        "id": 392134352,
+        "sender_full_name": "Alec Leamas",
+        "timestamp": 1695221506
+    },
+    {
+        "content": "<blockquote>\n<p>Definitely needs a squash merge.</p>\n</blockquote>\n<p>OK</p>",
+        "id": 392134499,
+        "sender_full_name": "Alec Leamas",
+        "timestamp": 1695221541
+    },
+    {
+        "content": "<p><span class=\"user-mention\" data-user-id=\"399510\">@Alec Leamas</span> <br>\nOK, let it stand as-is for now.<br>\nWe need stability more than we need peep-hole optimization.</p>",
+        "id": 392135509,
+        "sender_full_name": "Dave Register",
+        "timestamp": 1695221849
+    },
+    {
+        "content": "<p><span class=\"user-mention\" data-user-id=\"399510\">@Alec Leamas</span> <br>\nGeneral (philosophical?) question.<br>\nopencpn-libs contains several static library builds that I have been constructing so as to build cleanly without reference to the calling source tree at all. Further, a library should not depend on definitions found in peer libaries, if at all possible. This is the general linux model for dependent libraries, and for one thing is a guaranteed method of reducing spaghetti-code.  Good.</p>\n<p>So, how shall we in general handle the cases where one of the static libraries depends on a header included in another library?<br>\nHere is a specific example that I am working now:<br>\n\"ocpn::glu_static\" library needs a definition found in  \"ocpn::api\".<br>\nShall we declare that libraries can be dependent upon peers?  Or shall we duplicate definitions as necessary?<br>\nWondering...</p>",
+        "id": 392732827,
+        "sender_full_name": "Dave Register",
+        "timestamp": 1695497802
+    },
+    {
+        "content": "<p>Sorry, a bit overloaded these days. I'll be back on other stuff.</p>\n<p>LIbraries depending on other libraries is no problem, and is indeed common in all operating systems. Practically, in a plugin scenario:</p>\n<ol>\n<li>Assume we have a library foo exporting the transitive target ocpn::foo</li>\n<li>Assume we have another library bar which depends on foo.</li>\n<li>In <em>bar/CMakeLists.txt</em> we add <code>target_link_libraries(bar PRIVATE ocpn::foo)</code></li>\n<li>If the plugin depends on foo it adds <code>target_link_libraries(plugin_name PRIVATE ocpn::bar)</code>  to it's own CMakelists.txt or Plugin.cmake.</li>\n</ol>\n<p>And that's it. Problem arises if there are circular dependencies or if the library depends on the plugin. The latter is a blocking error.</p>",
+        "id": 392858810,
+        "sender_full_name": "Alec Leamas",
+        "timestamp": 1695581790
+    },
+    {
+        "content": "<p><span class=\"user-mention\" data-user-id=\"399510\">@Alec Leamas</span> <br>\nOK.   There is a little bit of \"not pretty\" required to actually include and build foo in the cmake context of bar.<br>\nWe need a step 2.9:<br>\nin bar/CmakeLists.txt, add :  (assuming the source for foo is in opencpn-libs, and is a subdir called \"libfoo\".<br>\n    add_subdirectory(../libfoo)</p>\n<p>To my mind, this is not so pretty.</p>\n<p>Further, if the plugin itself links both foo and bar, there could be duplicated references to foo.  We must trust that the linker will sort this out.</p>\n<p>Maybe I make trouble where none exists.</p>",
+        "id": 392890995,
+        "sender_full_name": "Dave Register",
+        "timestamp": 1695608869
+    },
+    {
+        "content": "<p>Yes, <code>add_subdirectory(../libfoo)</code> isn't that pretty. One basic reason is that in the cmake community relative paths are frowned upon.</p>\n<p>IMHO, a better approach is to use </p>\n<div class=\"codehilite\"><pre><span></span><code>if (NOT TARGET ocpn::foo)\n  add_subdirectory(${CMAKE_SOURCE_DIR}/opencpn-libs/libfoo)\nendif ()\n</code></pre></div>\n<p>You cant really get around the fact that you need a path to the sources. The conditional gives the overall build a chance to fix things if the paths are different for some reason, though.</p>\n<p>The duplicated library references is not a problem, this is what linkers do. All reasonably sized builds have these kind of duplicates. </p>\n<p>The same is true for the duplicated <code>-I</code> and other compilation flags brought to the build by <code>target_link_libraries()</code> They are duplicated, but it doesn't matter.</p>",
+        "id": 392912946,
+        "sender_full_name": "Alec Leamas",
+        "timestamp": 1695619874
+    },
+    {
+        "content": "<p><span class=\"user-mention\" data-user-id=\"399510\">@Alec Leamas</span> <br>\nI don't like this much better:</p>\n<div class=\"codehilite\"><pre><span></span><code>add_subdirectory(${CMAKE_SOURCE_DIR}/opencpn-libs/libfoo)\n</code></pre></div>\n\n<p>Implies a full plugin build, where CMAKE_SOURCE_DIR is the plugin base.<br>\nBut that's what we have to work with, I suppose..</p>",
+        "id": 393018997,
+        "sender_full_name": "Dave Register",
+        "timestamp": 1695649706
+    },
+    {
+        "content": "<p>Using the conditional, the path is sort of a default or fallback path used if the main build, whatever that is, does not include the proper path. Assuming a plugin build as such a default is perhaps not that bad. </p>\n<p>It's definitely not ideal, but I don't see any alternative. Do you?</p>",
+        "id": 393019663,
+        "sender_full_name": "Alec Leamas",
+        "timestamp": 1695649874
+    },
+    {
+        "content": "<p><span class=\"user-mention\" data-user-id=\"399510\">@Alec Leamas</span> <br>\nWe can agree that this is generally not pretty, but no alternatives.  I'm content.</p>",
+        "id": 393020698,
+        "sender_full_name": "Dave Register",
+        "timestamp": 1695650127
+    },
+    {
+        "content": "<p><span class=\"user-mention\" data-user-id=\"399510\">@Alec Leamas</span> <br>\nTrying to come up with a script to completely remove a submodule from a plugin project.<br>\nSo far I have this:</p>\n<div class=\"codehilite\"><pre><span></span><code>$ git submodule deinit opencpn-libs\n$ git rm --cached opencpn-libs\n$ rm -rf .git/modules/opencpn-libs\n$ git add .\n$ git commit -m &quot;Remove opencpn-libs submodule.&quot;\n</code></pre></div>\n\n<p>Works OK, but leaves an invalid section in .gitmodules.<br>\nAny automatic way to fix that, short of manual edit?</p>\n<p>Rant:  Why is this so hard?  Seems like a \"normal\" git task.</p>",
+        "id": 394657702,
+        "sender_full_name": "Dave Register",
+        "timestamp": 1696346544
+    },
+    {
+        "content": "<p>It is actually extremely hard. Have you seen the note in opencpn-libs/README.md? Including the stackoverflow link?</p>",
+        "id": 394696633,
+        "sender_full_name": "Alec Leamas",
+        "timestamp": 1696361367
+    },
+    {
+        "content": "<blockquote>\n<p>Any automatic way to fix that, short of manual edit?</p>\n</blockquote>\n<p>well, any form of manual edit could be replaced with automated sed or ed driven by a script. Still, it's some work...</p>",
+        "id": 394696944,
+        "sender_full_name": "Alec Leamas",
+        "timestamp": 1696361484
+    },
+    {
+        "content": "<p><span class=\"user-mention\" data-user-id=\"399510\">@Alec Leamas</span> <br>\ngit-fu...<br>\nThe required commands are::</p>\n<div class=\"codehilite\"><pre><span></span><code>$ git config -f .gitmodules --remove-section submodule.opencpn-libs\n$ git add .gitmodules\n</code></pre></div>\n\n<p>So, my complete solution is (for posterity):</p>\n<div class=\"codehilite\"><pre><span></span><code>$ git submodule deinit -f opencpn-libs\n$ git rm --cached opencpn-libs\n$ rm -rf .git/modules/opencpn-libs\n$ git config -f .gitmodules --remove-section submodule.opencpn-libs\n$ git add .gitmodules\n$ git commit -m &quot;Remove opencpn-libs submodule.&quot;\n</code></pre></div>",
+        "id": 394702897,
+        "sender_full_name": "Dave Register",
+        "timestamp": 1696364275
+    },
+    {
+        "content": "<p>Ok, seems like you found the complete solution. Could you update README.md so we don't lose it?</p>",
+        "id": 394703091,
+        "sender_full_name": "Alec Leamas",
+        "timestamp": 1696364367
+    },
+    {
+        "content": "<p>Done, pushed to \"devel\"</p>",
+        "id": 394709908,
+        "sender_full_name": "Dave Register",
+        "timestamp": 1696366422
+    }
+]

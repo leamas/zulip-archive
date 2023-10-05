@@ -1,0 +1,1233 @@
+<html>
+<head><meta charset="utf-8"><title>Unloadable old plugins blues · Master - 5.8.0  (was: comms) · Zulip Chat Archive</title></head>
+<h2>Stream: <a href="https://leamas.github.io/zulip-archive/stream/332168-Master---5.2E8.2E0--.28was.3A-comms.29/index.html">Master - 5.8.0  (was: comms)</a></h2>
+<h3>Topic: <a href="https://leamas.github.io/zulip-archive/stream/332168-Master---5.2E8.2E0--.28was.3A-comms.29/topic/Unloadable.20old.20plugins.20blues.html">Unloadable old plugins blues</a></h3>
+
+<hr>
+
+<base href="https://opencpn.zulipchat.com">
+
+<head><link href="https://leamas.github.io/zulip-archive/style.css" rel="stylesheet"></head>
+
+<a name="327719863"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332168-Master%20-%205.8.0%20%20%28was%3A%20comms%29/topic/Unloadable%20old%20plugins%20blues/near/327719863" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Alec Leamas <a href="https://leamas.github.io/zulip-archive/stream/332168-Master---5.2E8.2E0--.28was.3A-comms.29/topic/Unloadable.20old.20plugins.20blues.html#327719863">(Feb 14 2023 at 08:51)</a>:</h4>
+<p>Dave said:</p>
+<hr>
+<p>@Alec Leamas<br>
+On the "jailing" of unloadable plugins:<br>
+"The logic for now is to show the message once in each session i. e. once when opencpn is started. I think this is the right thing to do, user could either live with the message or uninstall the plugin."</p>
+<p>I am not in full agreement with this policy.<br>
+It is not nice when a plugin finds itself in the plugin directory without a metadata entry in the catalog. Could happen...<br>
+It is one thing for you or me to "uninstall a plugin". Quite another for a novice user to find the (possibly hidden e.g. Windows) plugin directory, and delete the offending .so or .dll file.<br>
+As running now, i it is unfriendly to novice users. I'd like to see the option in the message to actually delete the incompatible library file, and be done with it.</p>
+<hr>
+
+
+
+<a name="327720244"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332168-Master%20-%205.8.0%20%20%28was%3A%20comms%29/topic/Unloadable%20old%20plugins%20blues/near/327720244" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Alec Leamas <a href="https://leamas.github.io/zulip-archive/stream/332168-Master---5.2E8.2E0--.28was.3A-comms.29/topic/Unloadable.20old.20plugins.20blues.html#327720244">(Feb 14 2023 at 08:53)</a>:</h4>
+<p>Alec said:</p>
+<hr>
+<p>10:34 AM</p>
+<blockquote>
+<p>As running now, it is unfriendly to novice users.</p>
+</blockquote>
+<p>Agreed.</p>
+<blockquote>
+<p>It is not nice when a plugin finds itself in the plugin directory without a metadata entry in the catalog. Could happen...</p>
+</blockquote>
+<p>This is IMHO the core issue which becomes visible after removing this jailing stuff. It actually happens after something which should be supported: user first imports plugin -&gt; plugin data and metadata in place. And then updates the catalog.</p>
+<p>At this point the imported plugin files and installation data is still in place, but the metadata entry is lost. Overall an inconsistent state which breaks both logic and user experience.</p>
+<p>Other things like my kitchen ongoing today. Thoughts?</p>
+<hr>
+
+
+
+<a name="327720322"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332168-Master%20-%205.8.0%20%20%28was%3A%20comms%29/topic/Unloadable%20old%20plugins%20blues/near/327720322" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Alec Leamas <a href="https://leamas.github.io/zulip-archive/stream/332168-Master---5.2E8.2E0--.28was.3A-comms.29/topic/Unloadable.20old.20plugins.20blues.html#327720322">(Feb 14 2023 at 08:54)</a>:</h4>
+<p>Dave said:</p>
+<hr>
+<p>Sorry, I am not clearly following your scenario for breakage.<br>
+After importing a plugin from remote tarball, is the system left in an inconsistent state? I think not, but I may be naive.<br>
+So then how does it become broken when the catalog is updated, presumably with the same catalog entry as was imported?</p>
+<hr>
+
+
+
+<a name="327720516"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332168-Master%20-%205.8.0%20%20%28was%3A%20comms%29/topic/Unloadable%20old%20plugins%20blues/near/327720516" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Alec Leamas <a href="https://leamas.github.io/zulip-archive/stream/332168-Master---5.2E8.2E0--.28was.3A-comms.29/topic/Unloadable.20old.20plugins.20blues.html#327720516">(Feb 14 2023 at 08:54)</a>:</h4>
+<p>Alec said:</p>
+<hr>
+<p>11:11 AM<br>
+@Dave Register</p>
+<blockquote>
+<p>presumably with the same catalog entry as was imported?</p>
+</blockquote>
+<p>If we should clear this out, we cannot make any assumptions about whether the plugin imported is in the catalog, or if the catalog entry matches the imported plugin. Unfortunately, this is true even if the imported plugin and the catalog entry has the same name and version.</p>
+<p>Scenario, more details:</p>
+<p>User imports plugin foo version 1.1. This adds a new entry named "foo" version 1.1 to the catalog.<br>
+User installs plugin using the catalog entry. This creates the files plugindir/.../libfoo.so and plugindir/.../data with plugin contents. It also creates config_dir/plugins/install_data/foo.files which lists all files installed with this plugin.<br>
+User uninstalls plugin. The things involved are the catalog entry (GUI underpinnings) and foo.files which is used to find out what to remove. As a final step, also foo.files is removed<br>
+So far, all is well. However, if user instead of 3. updates the catalog, the existing catalog containing the imported metadata is replaced with a catalog without this imported metadata. The result is that the metadata in the catalog does not relate to the imported plugin in any way.</p>
+<p>If it's missing, there is no way for a user to remove the plugin. There just isn't any entry in the GUI which user can select to uninstall it, leaving files like <a href="http://libfoo.so">libfoo.so</a> without any GUI hooks to be removed and user lose.</p>
+<p>It there is an entry, it's unreliable. It was created for something else. I. e., it refers to what can be downloaded through the catalog download url, not the actually installed, imported plugin. For example, metadata added by a developer for testing purposes will not be visible.</p>
+<p>IMHO, this means that the state is inconsistent.</p>
+<hr>
+
+
+
+<a name="327720602"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332168-Master%20-%205.8.0%20%20%28was%3A%20comms%29/topic/Unloadable%20old%20plugins%20blues/near/327720602" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Alec Leamas <a href="https://leamas.github.io/zulip-archive/stream/332168-Master---5.2E8.2E0--.28was.3A-comms.29/topic/Unloadable.20old.20plugins.20blues.html#327720602">(Feb 14 2023 at 08:55)</a>:</h4>
+<p>Dave said:</p>
+<hr>
+<p>OK, I have the scenario in mind.<br>
+Thinking....</p>
+<hr>
+
+
+
+<a name="327720994"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332168-Master%20-%205.8.0%20%20%28was%3A%20comms%29/topic/Unloadable%20old%20plugins%20blues/near/327720994" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Alec Leamas <a href="https://leamas.github.io/zulip-archive/stream/332168-Master---5.2E8.2E0--.28was.3A-comms.29/topic/Unloadable.20old.20plugins.20blues.html#327720994">(Feb 14 2023 at 08:57)</a>:</h4>
+<p>Alec said: </p>
+<hr>
+<p>When I think about it, the only way to actually fix this is to keep the imported metadata until the imported plugin is removed. Which might mean that:</p>
+<ul>
+<li>Imported metadata is kept in a separate place in the config directory</li>
+<li>Imported metadata basically is immutable, removed when uninstalling only.</li>
+<li>The used catalog is the result of merging the downloaded catalog with the imported metadata. This could either be done when updating or when parsing -- to do it when updating and then be done with it seems like the best option. Importing is the same as updating in this context.</li>
+<li>Plugins which are imported are marked as such. This is needed when uninstalling, but would also make sense in the GUI as an icon.</li>
+<li>Importing a plugin with a given name should not be allowed if this plugin is already imported. Either the existing plugin is implicitly removed, or user is forced to remove it first. Since implicit remove is a Bad Thing, it's probably better if user has to remove the existing first.</li>
+</ul>
+<p>Trying to wrap my head around what it means if the imported plugin and the plugin in the catalog has the same name and version. No success.</p>
+<hr>
+
+
+
+<a name="327721160"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332168-Master%20-%205.8.0%20%20%28was%3A%20comms%29/topic/Unloadable%20old%20plugins%20blues/near/327721160" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Alec Leamas <a href="https://leamas.github.io/zulip-archive/stream/332168-Master---5.2E8.2E0--.28was.3A-comms.29/topic/Unloadable.20old.20plugins.20blues.html#327721160">(Feb 14 2023 at 08:58)</a>:</h4>
+<p>Dave said:</p>
+<hr>
+<p>I came to a variation of the same thing. Not sure how to "mark" the import. Maybe add a XML tag " on-the-fly", while importing?<br>
+Also, we can safely refuse to import a plugin if the same already exists in catalog (common name, target, and version). With UI message to that effect.<br>
+I like the idea of a subtly different icon in the UI for "imported" plugins.</p>
+<hr>
+
+
+
+<a name="327721292"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332168-Master%20-%205.8.0%20%20%28was%3A%20comms%29/topic/Unloadable%20old%20plugins%20blues/near/327721292" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Alec Leamas <a href="https://leamas.github.io/zulip-archive/stream/332168-Master---5.2E8.2E0--.28was.3A-comms.29/topic/Unloadable.20old.20plugins.20blues.html#327721292">(Feb 14 2023 at 08:58)</a>:</h4>
+<p>Alec said:</p>
+<hr>
+<p>We don't really need to mark the xml, we know that the xml is imported because it lives in a separate location. Marking should be done in PlugInContainer, perhaps by just adding a kind of status item in PluginStatus.</p>
+<p>However, this would mean that we cannot update an imported plugin. Might be better with a simple bool in PlugInContainer.</p>
+<blockquote>
+<p>Also, we can safely refuse to import a plugin if the same already exists in catalog (common name, target, and version).</p>
+</blockquote>
+<p>Can still mess up if we first import the the plugin (no collision with catalog) and then updates the catalog and the updated catalog contains something identical to the imported one. Which actually is an expected use case.</p>
+<p>11:30 PM</p>
+<hr>
+
+
+
+<a name="327721454"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332168-Master%20-%205.8.0%20%20%28was%3A%20comms%29/topic/Unloadable%20old%20plugins%20blues/near/327721454" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Alec Leamas <a href="https://leamas.github.io/zulip-archive/stream/332168-Master---5.2E8.2E0--.28was.3A-comms.29/topic/Unloadable.20old.20plugins.20blues.html#327721454">(Feb 14 2023 at 08:59)</a>:</h4>
+<p>Alec said:</p>
+<hr>
+<p>After a night's sleep I see two ways to handle conflicts (same name &amp; version) between the catalog and an imported plugin.</p>
+<p>One way would be to fully block all ways this could happen. This means blocking import of a plugin conflicting with the catalog as you said. It would also mean blocking a catalog update leading a conflict with a user message like "imported plugin foo must be uninstalled before catalog is updated" or so.</p>
+<p>Another way would be to tweak the version for the imported plugin. This could be done by adding an "epoch" to the version in the same ways as distributions. Adding an epoch would mean that the complete version 1.2.3 could bee 0:1.2.3-beta+deadbeef. Here, the new item is 0:, commonly named "epoch"</p>
+<p>The epoch would be 0 by default. This means that no existing code would be affected: version comparing, creating and parsing proceeds as always.</p>
+<p>However , we could set the epoch to 1 for plugins. Following the standard logic, epoch beats all other version components when comparing. That is, 1:0.0.0 is a later version than 0:1.1.1. This would mean that the plugin version would never be the same as in the catalog. It would also mean that an imported plugin always has a later version than the same plugin in the catalog.</p>
+<p>More text on the epoch thing, more to explain. However, I have no clear preference on the way to go here: blocking conflicts or live with them used a tweaked version. Perhaps there are other ways.</p>
+<hr>
+
+
+
+<a name="327721590"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332168-Master%20-%205.8.0%20%20%28was%3A%20comms%29/topic/Unloadable%20old%20plugins%20blues/near/327721590" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Alec Leamas <a href="https://leamas.github.io/zulip-archive/stream/332168-Master---5.2E8.2E0--.28was.3A-comms.29/topic/Unloadable.20old.20plugins.20blues.html#327721590">(Feb 14 2023 at 09:00)</a>:</h4>
+<p>Dave said:</p>
+<hr>
+<p>"t would also mean blocking a catalog update leading a conflict with a user message like "imported plugin foo must be uninstalled before catalog is updated" or so."<br>
+There is potentially another way here.<br>
+During catalog update, we parse each entry in the new catalog looking for conflicts with previously imported plugins. We know that a plugin is an import, since it is stored in a "special" location. If there is an exact conflict, we can drop the catalog update metadata for this plugin, and retain the imported plugin metadata. Result: logically still consistent.<br>
+This would be somewhat slower than normal, but only happens if there are actually any imported plugins to consider.</p>
+<hr>
+
+
+
+<a name="327721687"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332168-Master%20-%205.8.0%20%20%28was%3A%20comms%29/topic/Unloadable%20old%20plugins%20blues/near/327721687" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Alec Leamas <a href="https://leamas.github.io/zulip-archive/stream/332168-Master---5.2E8.2E0--.28was.3A-comms.29/topic/Unloadable.20old.20plugins.20blues.html#327721687">(Feb 14 2023 at 09:00)</a>:</h4>
+<p>Alec said:</p>
+<hr>
+<p>Right... but it would hide the possible update in the catalog. Might be worth it.</p>
+<p>On my way out, perhaps back later today, otherwise tomorrow.</p>
+<p>At a second thought: Wouldn't this be a new inconsistency, where the complete catalog isn't available? I</p>
+<hr>
+
+
+
+<a name="327721836"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332168-Master%20-%205.8.0%20%20%28was%3A%20comms%29/topic/Unloadable%20old%20plugins%20blues/near/327721836" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Alec Leamas <a href="https://leamas.github.io/zulip-archive/stream/332168-Master---5.2E8.2E0--.28was.3A-comms.29/topic/Unloadable.20old.20plugins.20blues.html#327721836">(Feb 14 2023 at 09:01)</a>:</h4>
+<p>Dave said:</p>
+<hr>
+<p>OK, then the completely automatic way is :</p>
+<p>If an incoming catalog plugin is equal to or later than an existing imported plugin, then quietly uninstall the imported plugin. This will leave the target plugin in an uninstalled state. Post user message to that effect. "Please reinstall "foo", updating imported version", or so.</p>
+<hr>
+
+
+
+<a name="327721897"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332168-Master%20-%205.8.0%20%20%28was%3A%20comms%29/topic/Unloadable%20old%20plugins%20blues/near/327721897" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Alec Leamas <a href="https://leamas.github.io/zulip-archive/stream/332168-Master---5.2E8.2E0--.28was.3A-comms.29/topic/Unloadable.20old.20plugins.20blues.html#327721897">(Feb 14 2023 at 09:01)</a>:</h4>
+<p>Alec said:</p>
+<hr>
+<p>If the catalog and the imported plugin has different versions we could just proceed as normal. It doesn't matter if the catalog entry is later then the imported plugin -- the catalog will have two entries, one for the imported plugin, one for the catalog version. The imported is most likely also installed, but not necessarily. But as long as the versions are different I see no problem.</p>
+<p>But if the versions are the same, you are right. This would then mean that we should uninstall the imported plugin if it is installed and then remove the imported metadata before updating the catalog. This is doable, reasonably simple and consistent. A user message like "imported plugin foo replaced by version from the catalog" or so might make sense.</p>
+<p>However, user would not be able to re-import the tarball since it has the same name+version (NVR) as the catalog entry. We must block this if we walk this path. This is a downside. The only way I can see avoiding this is tweaking the version, for example like described above.</p>
+<hr>
+
+
+
+<a name="327722074"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332168-Master%20-%205.8.0%20%20%28was%3A%20comms%29/topic/Unloadable%20old%20plugins%20blues/near/327722074" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Alec Leamas <a href="https://leamas.github.io/zulip-archive/stream/332168-Master---5.2E8.2E0--.28was.3A-comms.29/topic/Unloadable.20old.20plugins.20blues.html#327722074">(Feb 14 2023 at 09:02)</a>:</h4>
+<p>Dave said:</p>
+<hr>
+<p>Of course there is no accounting for users, but...<br>
+Why would a user want to import a plugin that has the same NVR as existing plugin? Seems OK to dis-allow this, with a message.</p>
+<hr>
+
+
+
+<a name="327722264"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332168-Master%20-%205.8.0%20%20%28was%3A%20comms%29/topic/Unloadable%20old%20plugins%20blues/near/327722264" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Alec Leamas <a href="https://leamas.github.io/zulip-archive/stream/332168-Master---5.2E8.2E0--.28was.3A-comms.29/topic/Unloadable.20old.20plugins.20blues.html#327722264">(Feb 14 2023 at 09:03)</a>:</h4>
+<p>Alec said:</p>
+<hr>
+<p>TL;DR probably.</p>
+<p>However, the use case:</p>
+<ul>
+<li>Developer creates a tarball, hands it to user for test</li>
+<li>User tests and is happy, reports back</li>
+<li>Developer makes some final changes and publishes using the same version.</li>
+<li>User updates, runs into problems, cannot verify if previous, imported version works.</li>
+</ul>
+<p>I. e., it's not only about users but also devs.</p>
+<p>The rabbit hole is deep. We have so far only defined "uninstalling" a plugin. Looking at this mess, it seems that we need to define a new operation "remove". This means removing the metadata, after first uninstalling and removing any tarballs in cache referenced by the metadata. This is necessary when importing an already imported plugin. Might be triggered by user or automatically, but nevertheless needed.</p>
+<p>We might allow importing a plugin present in the catalog by simply tweaking the version number. foo 1.0.0 becomes foo 1.0.0.1, the normal case. Corner case 1.0.0.1 becomes 1.0.0.2. The imported version is actually not that interesting, there is only one imported foo. Using the fourth digit this way also sorts OK: the imported version of 1.0.0 is an update of 1.0.0, but will be replaced with 1.0.1 when it's published in the catalog.</p>
+<p>In the first step, just blocking the import of a NVR present in catalog seems logical.</p>
+<hr>
+
+
+
+<a name="327723489"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332168-Master%20-%205.8.0%20%20%28was%3A%20comms%29/topic/Unloadable%20old%20plugins%20blues/near/327723489" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Alec Leamas <a href="https://leamas.github.io/zulip-archive/stream/332168-Master---5.2E8.2E0--.28was.3A-comms.29/topic/Unloadable.20old.20plugins.20blues.html#327723489">(Feb 14 2023 at 09:10)</a>:</h4>
+<p>@Dave Register @Håkan Svensson above is a copy of the private messages between me and Dave on this. Let's keep further discussion here.</p>
+<p>We need to finish this. Seems that we are close, but not really there.</p>
+
+
+
+<a name="327867407"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332168-Master%20-%205.8.0%20%20%28was%3A%20comms%29/topic/Unloadable%20old%20plugins%20blues/near/327867407" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Håkan Svensson <a href="https://leamas.github.io/zulip-archive/stream/332168-Master---5.2E8.2E0--.28was.3A-comms.29/topic/Unloadable.20old.20plugins.20blues.html#327867407">(Feb 14 2023 at 20:26)</a>:</h4>
+<p>I've closed the issue about bad messages creating a hang in Win since the causing code is deleted.<br>
+A view from the issue is though copied here:<br>
+In the case OCPN is disturbed by old plugin binaries not able to load we may inform the user and offer to delete the files. Since a OCPN plugin package installer or the Plugin Manager using Catalog/Import has once installed the file(s) the same OCPN program would also take responsibility to delete them.</p>
+
+
+
+<a name="327879823"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332168-Master%20-%205.8.0%20%20%28was%3A%20comms%29/topic/Unloadable%20old%20plugins%20blues/near/327879823" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Alec Leamas <a href="https://leamas.github.io/zulip-archive/stream/332168-Master---5.2E8.2E0--.28was.3A-comms.29/topic/Unloadable.20old.20plugins.20blues.html#327879823">(Feb 14 2023 at 21:45)</a>:</h4>
+<p>We need to  some conclusions here. Trying to summarize.</p>
+<p>Here is two, separate issues. One is that due to current design, users have unloadable plugin library files. We need a way to get rid of these.</p>
+<p>The other is that perfectly normal use of OpenCPN will lead to orphaned library files which cannot be removed by users.  The basic scenario is about imported plugins, which are installed with no metadata available after a catalog update. We need to make sure that this does not happen.</p>
+
+
+
+<a name="327880192"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332168-Master%20-%205.8.0%20%20%28was%3A%20comms%29/topic/Unloadable%20old%20plugins%20blues/near/327880192" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Alec Leamas <a href="https://leamas.github.io/zulip-archive/stream/332168-Master---5.2E8.2E0--.28was.3A-comms.29/topic/Unloadable.20old.20plugins.20blues.html#327880192">(Feb 14 2023 at 21:48)</a>:</h4>
+<p><strong>Handling existing bad plugins</strong></p>
+<p>When they are detected, user should be offered to remove them.  This means removing them both from the file system and the installation data. If possible, related data files and translations should also be removed i. e., the complete plugin, not just the library.</p>
+
+
+
+<a name="327881742"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332168-Master%20-%205.8.0%20%20%28was%3A%20comms%29/topic/Unloadable%20old%20plugins%20blues/near/327881742" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Alec Leamas <a href="https://leamas.github.io/zulip-archive/stream/332168-Master---5.2E8.2E0--.28was.3A-comms.29/topic/Unloadable.20old.20plugins.20blues.html#327881742">(Feb 14 2023 at 21:59)</a>:</h4>
+<p><strong>Handling lost metadata for imported plugins (user cannot uninstall them, or get's wrong info)</strong></p>
+<p>Like this:</p>
+<ul>
+<li>Imported metadata is saved in the configuration directory,  immutable  until the imported plugin is removed</li>
+<li>The effective catalog displayed for users is the result of merging the "real" catalog with imported plugins metadata.</li>
+<li>There can only be one imported version of a given plugin, user must remove existing version before importing again.</li>
+<li>A plugin with the same name and version (NVR) as a catalog entry cannot be imported.</li>
+<li>An update of the catalog which contains the same NVR as an imported plugin is blocked, user has to remove the imported plugin first.</li>
+<li>Imported plugins have a visible indication in the GUI showing their status.</li>
+</ul>
+<p>The constraints on catalog updates and imported plugins with a conflicting NVRs can probably be lifted at a later point. But, perhaps keeping it simple like this in a first round. It's still a lot of work.</p>
+<p>We will need a new "remove" operation for imported plugins. That is, not just uninstalling them but also removing the otherwise immutable, imported metadata.</p>
+
+
+
+<a name="327881771"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332168-Master%20-%205.8.0%20%20%28was%3A%20comms%29/topic/Unloadable%20old%20plugins%20blues/near/327881771" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Alec Leamas <a href="https://leamas.github.io/zulip-archive/stream/332168-Master---5.2E8.2E0--.28was.3A-comms.29/topic/Unloadable.20old.20plugins.20blues.html#327881771">(Feb 14 2023 at 21:59)</a>:</h4>
+<p><span class="user-mention" data-user-id="517002">@Dave Register</span>  <span class="user-mention" data-user-id="522486">@Håkan Svensson</span>  ^ Thoughts?</p>
+
+
+
+<a name="327902414"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332168-Master%20-%205.8.0%20%20%28was%3A%20comms%29/topic/Unloadable%20old%20plugins%20blues/near/327902414" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Dave Register <a href="https://leamas.github.io/zulip-archive/stream/332168-Master---5.2E8.2E0--.28was.3A-comms.29/topic/Unloadable.20old.20plugins.20blues.html#327902414">(Feb 15 2023 at 00:40)</a>:</h4>
+<p>The first question: <strong>Handling existing bad plugins.</strong><br>
+This is the most urgent thing to fix.  Will happen for virtually every Windows and Mac user updating from O562 to O58.  Here is how:</p>
+<ol>
+<li>Before update, user has a bunch of plugins built for wx31, all in catalog.  All is well.</li>
+<li>User updates to O58, and immediately fetches new catalog.  </li>
+<li>New catalog may not have entries for now legacy wx31 plugins, but has only wx32 target plugins.</li>
+<li>OCPN tries valiantly to load any plugin found in the stipulated directory, even plugins with no metadata in the catalog.  Without metadata, there is no way to do target matching (e.g wx32).  So all O can do is try the load.</li>
+<li>Result:  No surprise, the wx31 plugins will not load.  Also, the legacy plugin metadata is now gone.  So no reasonable way for user to delete from PIM.</li>
+</ol>
+
+
+
+<a name="327902838"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332168-Master%20-%205.8.0%20%20%28was%3A%20comms%29/topic/Unloadable%20old%20plugins%20blues/near/327902838" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Dave Register <a href="https://leamas.github.io/zulip-archive/stream/332168-Master---5.2E8.2E0--.28was.3A-comms.29/topic/Unloadable.20old.20plugins.20blues.html#327902838">(Feb 15 2023 at 00:44)</a>:</h4>
+<p>So, in this case we need to automatically use the manifest data to uninstall and remove completely the now useless wx31 plugins.<br>
+Full stop.  Let's work this out before extending to imports.</p>
+
+
+
+<a name="327940426"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332168-Master%20-%205.8.0%20%20%28was%3A%20comms%29/topic/Unloadable%20old%20plugins%20blues/near/327940426" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Alec Leamas <a href="https://leamas.github.io/zulip-archive/stream/332168-Master---5.2E8.2E0--.28was.3A-comms.29/topic/Unloadable.20old.20plugins.20blues.html#327940426">(Feb 15 2023 at 07:38)</a>:</h4>
+<p>Fair enough. Who does what?</p>
+
+
+
+<a name="327940859"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332168-Master%20-%205.8.0%20%20%28was%3A%20comms%29/topic/Unloadable%20old%20plugins%20blues/near/327940859" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Håkan Svensson <a href="https://leamas.github.io/zulip-archive/stream/332168-Master---5.2E8.2E0--.28was.3A-comms.29/topic/Unloadable.20old.20plugins.20blues.html#327940859">(Feb 15 2023 at 07:41)</a>:</h4>
+<p>Good. A comment, maybe covered in your earlier discussion.</p>
+<blockquote>
+<p>Handling existing bad plugins.</p>
+</blockquote>
+<p>For plugins where binaries are in (Win) ..Users,,\AppData\Local\opencpn\plugins<br>
+I se no problem deleting all files and empty folders if deleting only files listed in xxx.files, e.g. weatherrouting.files.  <br>
+If for any case the "xxx.files" -file is not present we would not delete folders since user files may present that shall be used in the updated plugin. In the (rare) case xxx.files is missing we would delete only the binaries. The rest , like .mo files, will overwritten?</p>
+<p>For Plugins where binaries are in (Win) C:\Program Files (x86)\OpenCPN\plugins.<br>
+If they disturb OCPN: delete the binaries and, if present, corresponding folder.</p>
+
+
+
+<a name="327940947"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332168-Master%20-%205.8.0%20%20%28was%3A%20comms%29/topic/Unloadable%20old%20plugins%20blues/near/327940947" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Alec Leamas <a href="https://leamas.github.io/zulip-archive/stream/332168-Master---5.2E8.2E0--.28was.3A-comms.29/topic/Unloadable.20old.20plugins.20blues.html#327940947">(Feb 15 2023 at 07:41)</a>:</h4>
+<blockquote>
+<p>New catalog may not have entries for now legacy wx31 plugins, but has only wx32 target plugins.</p>
+</blockquote>
+<p>Yes... this is actually  the same case as with imported plugins. We remove metadata for installed plugins. Something in this model is really broken.</p>
+
+
+
+<a name="327941682"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332168-Master%20-%205.8.0%20%20%28was%3A%20comms%29/topic/Unloadable%20old%20plugins%20blues/near/327941682" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Alec Leamas <a href="https://leamas.github.io/zulip-archive/stream/332168-Master---5.2E8.2E0--.28was.3A-comms.29/topic/Unloadable.20old.20plugins.20blues.html#327941682">(Feb 15 2023 at 07:47)</a>:</h4>
+<blockquote>
+<p>I see no problem deleting all files and empty folders if deleting only files listed in xxx.files, e.g. weatherrouting.files.</p>
+</blockquote>
+<p>Part of the picture is keeping the installer consistent. The installer tracks installed files in <em>configuration directory/plugins/install_data</em>, and we need to make sure that this data matches the realities, otherwise all sorts of bad things might happen.  </p>
+<p>So, we need to remove all files listed for a plugin in <em>.../install_data</em> together with the data as such. That is, find the install_data for a given plugin, sort of an interesting exercise.</p>
+
+
+
+<a name="327942657"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332168-Master%20-%205.8.0%20%20%28was%3A%20comms%29/topic/Unloadable%20old%20plugins%20blues/near/327942657" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Håkan Svensson <a href="https://leamas.github.io/zulip-archive/stream/332168-Master---5.2E8.2E0--.28was.3A-comms.29/topic/Unloadable.20old.20plugins.20blues.html#327942657">(Feb 15 2023 at 07:55)</a>:</h4>
+<ul>
+<li>If install_data is found for a specific plugin then remove listed files.</li>
+<li>If install_data is not found, ore is useless, remove only what's disturbing O. I we leave some leftovers; no big trouble.  Won't brake disc space.</li>
+</ul>
+
+
+
+<a name="327942767"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332168-Master%20-%205.8.0%20%20%28was%3A%20comms%29/topic/Unloadable%20old%20plugins%20blues/near/327942767" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Alec Leamas <a href="https://leamas.github.io/zulip-archive/stream/332168-Master---5.2E8.2E0--.28was.3A-comms.29/topic/Unloadable.20old.20plugins.20blues.html#327942767">(Feb 15 2023 at 07:56)</a>:</h4>
+<p><span class="user-mention" data-user-id="522486">@Håkan Svensson</span>  yes</p>
+
+
+
+<a name="327943205"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332168-Master%20-%205.8.0%20%20%28was%3A%20comms%29/topic/Unloadable%20old%20plugins%20blues/near/327943205" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Alec Leamas <a href="https://leamas.github.io/zulip-archive/stream/332168-Master---5.2E8.2E0--.28was.3A-comms.29/topic/Unloadable.20old.20plugins.20blues.html#327943205">(Feb 15 2023 at 07:59)</a>:</h4>
+<blockquote>
+<p>New catalog may not have entries for now legacy wx31 plugins, but has only wx32 target plugins.</p>
+</blockquote>
+<p><del>Which actually means that on update we should uninstall all plugins which are not present in the new catalog.</del></p>
+
+
+
+<a name="327944242"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332168-Master%20-%205.8.0%20%20%28was%3A%20comms%29/topic/Unloadable%20old%20plugins%20blues/near/327944242" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Alec Leamas <a href="https://leamas.github.io/zulip-archive/stream/332168-Master---5.2E8.2E0--.28was.3A-comms.29/topic/Unloadable.20old.20plugins.20blues.html#327944242">(Feb 15 2023 at 08:05)</a>:</h4>
+<p>No... (sorry, thinking aloud). This would make us remove plugins where the catalog just is a regular update. What we should do on catalog updates  is to uninstall all installed plugins which does not have an matching ABI i. e., they fail the <code>isCompatible()</code> test. This happens on ABI breaks only, and we haven't really made a design for this.</p>
+<p>The imported case would a natural extension: uninstall plugins which does not exist at all in any version in the catalog on catalog update.</p>
+
+
+
+<a name="327944951"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332168-Master%20-%205.8.0%20%20%28was%3A%20comms%29/topic/Unloadable%20old%20plugins%20blues/near/327944951" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Håkan Svensson <a href="https://leamas.github.io/zulip-archive/stream/332168-Master---5.2E8.2E0--.28was.3A-comms.29/topic/Unloadable.20old.20plugins.20blues.html#327944951">(Feb 15 2023 at 08:08)</a>:</h4>
+<p>Agree on above.<br>
+A maybe late entrance Q:<br>
+For now I can say to tester: Install O <a href="http://5.7.1.xxx">5.7.1.xxx</a> for a test, no problem. You can always reinstall O 5.6.2 and all is fine.<br>
+But if we remove legacy plugins the old O will not work as before. Correct? Thoughts?</p>
+
+
+
+<a name="327945596"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332168-Master%20-%205.8.0%20%20%28was%3A%20comms%29/topic/Unloadable%20old%20plugins%20blues/near/327945596" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Alec Leamas <a href="https://leamas.github.io/zulip-archive/stream/332168-Master---5.2E8.2E0--.28was.3A-comms.29/topic/Unloadable.20old.20plugins.20blues.html#327945596">(Feb 15 2023 at 08:12)</a>:</h4>
+<blockquote>
+<p>But if we remove legacy plugins the old O will not work as before. Correct? Thoughts?</p>
+</blockquote>
+<p>I think it will actually work. The catalog entries for the old, legacy versions are still there. User would have to reinstall plugins, but nothing worse.</p>
+
+
+
+<a name="327946552"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332168-Master%20-%205.8.0%20%20%28was%3A%20comms%29/topic/Unloadable%20old%20plugins%20blues/near/327946552" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Håkan Svensson <a href="https://leamas.github.io/zulip-archive/stream/332168-Master---5.2E8.2E0--.28was.3A-comms.29/topic/Unloadable.20old.20plugins.20blues.html#327946552">(Feb 15 2023 at 08:17)</a>:</h4>
+<p>Yes good, if still present in Plugins metadata...   Leave it! Not that rat hole here  :)</p>
+
+
+
+<a name="327947584"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332168-Master%20-%205.8.0%20%20%28was%3A%20comms%29/topic/Unloadable%20old%20plugins%20blues/near/327947584" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Alec Leamas <a href="https://leamas.github.io/zulip-archive/stream/332168-Master---5.2E8.2E0--.28was.3A-comms.29/topic/Unloadable.20old.20plugins.20blues.html#327947584">(Feb 15 2023 at 08:24)</a>:</h4>
+<blockquote>
+<p>Yes good, if still present in Plugins metadata... Leave it! Not that rat hole here :)</p>
+</blockquote>
+<p>Not leave it installed. That would mean OpenCPN tries to load it, and new dialogs for user which will need to eventually blacklist or remove  it. Much simpler and cleaner to uninstall i. e., that the set of installed plugins  should be guaranteed to have the right ABI.  For users, re-installing plugins on OpenCPN   downgrades/upgrades over ABI breaking versions is not that much of a problem.</p>
+<p>If we put more effort on it, we could handle at least the normal upgrade situation by first uninstalling the wx31 version as incompatible and then try to locate the corresponding wx32 version and install that i. e., making an automatic update. That should work in almost all cases.</p>
+<p>With more work, it could work on downgrades as well.</p>
+
+
+
+<a name="327948845"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332168-Master%20-%205.8.0%20%20%28was%3A%20comms%29/topic/Unloadable%20old%20plugins%20blues/near/327948845" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Alec Leamas <a href="https://leamas.github.io/zulip-archive/stream/332168-Master---5.2E8.2E0--.28was.3A-comms.29/topic/Unloadable.20old.20plugins.20blues.html#327948845">(Feb 15 2023 at 08:32)</a>:</h4>
+<blockquote>
+<p>Not that rat hole here</p>
+</blockquote>
+<p>Alice in Wonderland entered a deep rabbit hole, no rats involved ;)</p>
+
+
+
+<a name="327954149"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332168-Master%20-%205.8.0%20%20%28was%3A%20comms%29/topic/Unloadable%20old%20plugins%20blues/near/327954149" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Alec Leamas <a href="https://leamas.github.io/zulip-archive/stream/332168-Master---5.2E8.2E0--.28was.3A-comms.29/topic/Unloadable.20old.20plugins.20blues.html#327954149">(Feb 15 2023 at 08:59)</a>:</h4>
+<p>So, two cases to take care about. The first is about failed updates, failed imports and what not leading to incompatible plugin libraries. We know how to deal with it (new dialog, user can remove library preferably also making a proper uninstall fixing install_data)</p>
+<p>The other case is  about  making sure that ABI breaking updates of opencpn works in a sane way Could be:</p>
+<ol>
+<li>On startup, opencpn checks for installed plugins with  incompatible ABI:s (<del>in parallel thread, not delaying start up</del>  This test should be cached to not delay normal start up).  </li>
+<li>If such are found and the catalog is too old to have new, wx32 entries user get a chance to update the catalog  (modal dialog).</li>
+<li>All incompatible plugins are uninstalled.</li>
+<li>For plugins uninstalled, we look for compatible entries with same name in the catalog. If existing, this is installed. If there are multiple matches the one with highest version number is used. </li>
+<li>Possibly, a dialog informs user about update actions ("The  following plugins have been updated")</li>
+</ol>
+<p>This should make the normal update scenario work without  creating unloadable libraries.  It would actually work on downgrades as well.</p>
+
+
+
+<a name="327954628"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332168-Master%20-%205.8.0%20%20%28was%3A%20comms%29/topic/Unloadable%20old%20plugins%20blues/near/327954628" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Alec Leamas <a href="https://leamas.github.io/zulip-archive/stream/332168-Master---5.2E8.2E0--.28was.3A-comms.29/topic/Unloadable.20old.20plugins.20blues.html#327954628">(Feb 15 2023 at 09:02)</a>:</h4>
+<p>Here is a race condition between the possible update and initial plugin loading to handle</p>
+
+
+
+<a name="327960191"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332168-Master%20-%205.8.0%20%20%28was%3A%20comms%29/topic/Unloadable%20old%20plugins%20blues/near/327960191" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Alec Leamas <a href="https://leamas.github.io/zulip-archive/stream/332168-Master---5.2E8.2E0--.28was.3A-comms.29/topic/Unloadable.20old.20plugins.20blues.html#327960191">(Feb 15 2023 at 09:31)</a>:</h4>
+<p><span class="user-mention" data-user-id="517002">@Dave Register</span>  OK? Who does what? </p>
+<p>I can start with the first dialog for already existing, unloadable libs if you don't want to do it yourself.</p>
+
+
+
+<a name="328038324"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332168-Master%20-%205.8.0%20%20%28was%3A%20comms%29/topic/Unloadable%20old%20plugins%20blues/near/328038324" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Dave Register <a href="https://leamas.github.io/zulip-archive/stream/332168-Master---5.2E8.2E0--.28was.3A-comms.29/topic/Unloadable.20old.20plugins.20blues.html#328038324">(Feb 15 2023 at 15:26)</a>:</h4>
+<p><span class="user-mention" data-user-id="399510">@Alec Leamas</span> <br>
+Please do.  I'm buried in regression bugs at the moment.</p>
+
+
+
+<a name="328747270"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332168-Master%20-%205.8.0%20%20%28was%3A%20comms%29/topic/Unloadable%20old%20plugins%20blues/near/328747270" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Dave Register <a href="https://leamas.github.io/zulip-archive/stream/332168-Master---5.2E8.2E0--.28was.3A-comms.29/topic/Unloadable.20old.20plugins.20blues.html#328747270">(Feb 19 2023 at 01:41)</a>:</h4>
+<p><span class="user-mention" data-user-id="399510">@Alec Leamas</span> <br>
+Any progress here?</p>
+
+
+
+<a name="328768148"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332168-Master%20-%205.8.0%20%20%28was%3A%20comms%29/topic/Unloadable%20old%20plugins%20blues/near/328768148" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Alec Leamas <a href="https://leamas.github.io/zulip-archive/stream/332168-Master---5.2E8.2E0--.28was.3A-comms.29/topic/Unloadable.20old.20plugins.20blues.html#328768148">(Feb 19 2023 at 07:19)</a>:</h4>
+<p>Working on it  estimated ETA mo- tu</p>
+
+
+
+<a name="329117757"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332168-Master%20-%205.8.0%20%20%28was%3A%20comms%29/topic/Unloadable%20old%20plugins%20blues/near/329117757" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Alec Leamas <a href="https://leamas.github.io/zulip-archive/stream/332168-Master---5.2E8.2E0--.28was.3A-comms.29/topic/Unloadable.20old.20plugins.20blues.html#329117757">(Feb 21 2023 at 07:13)</a>:</h4>
+<p>I have pushed a branch <em>unloadable-3011</em>  to my  opencpn clone, available at <a href="https://github.com/leamas/opencpn/tree/unloadable-3011">https://github.com/leamas/opencpn/tree/unloadable-3011</a>. I have done some basic testing, but would really appreciate help with more tests.</p>
+<p><span class="user-mention" data-user-id="522486">@Håkan Svensson</span>  Any chance you have some time for this?</p>
+
+
+
+<a name="329122546"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332168-Master%20-%205.8.0%20%20%28was%3A%20comms%29/topic/Unloadable%20old%20plugins%20blues/near/329122546" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Alec Leamas <a href="https://leamas.github.io/zulip-archive/stream/332168-Master---5.2E8.2E0--.28was.3A-comms.29/topic/Unloadable.20old.20plugins.20blues.html#329122546">(Feb 21 2023 at 07:40)</a>:</h4>
+<p>BTW: One way to build from that branch:</p>
+<div class="codehilite"><pre><span></span><code>   &gt;  git remote add leamas  https://github.com/leamas/OpenCPN.git
+   &gt;  git remote update leamas
+   &gt;  git fetch leamas unloadable-3011:unloadable-3011
+   &gt;  git checkout unloadable-3011
+</code></pre></div>
+<p>It's git, there are all sorts of other ways as well...</p>
+
+
+
+<a name="329289347"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332168-Master%20-%205.8.0%20%20%28was%3A%20comms%29/topic/Unloadable%20old%20plugins%20blues/near/329289347" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Håkan Svensson <a href="https://leamas.github.io/zulip-archive/stream/332168-Master---5.2E8.2E0--.28was.3A-comms.29/topic/Unloadable.20old.20plugins.20blues.html#329289347">(Feb 21 2023 at 20:52)</a>:</h4>
+<p><span class="user-mention" data-user-id="399510">@Alec Leamas</span> <br>
+Eventually home and saw this.<br>
+Built and run on W10 wo trouble. <br>
+I got a bunch of messages.  Now it was able to answer on the topmost and walk though the list. <br>
+Thought: Since there are no single choice to make for the user. Only a OK button on each message .  You could list all files for deletion on one message instead? That would make a better overview for what's ongoing and one OK only.</p>
+<p>The log is flooded with deletion errors. Some strange empty path like "ERROR filefn.cpp:1086 Directory '' couldn't...."<br>
+Log snippet for the uninstall sequence attached.</p>
+<p>Pluginmanager, imported files:<br>
+If related to this change: PM seems to not read correct plugin version for a imported plugin. See pict. below. o-charts is (imported)v .36 but reported as v.35!</p>
+<p><a href="/user_uploads/33951/1vdWO7ryDUZMO0tPvSvKnzA7/bild.png">bild.png</a> <br>
+<a href="/user_uploads/33951/1aLu5VH0tQCR3t710yac065j/bild.png">bild.png</a><br>
+<a href="/user_uploads/33951/FYsKEy1APvXDJZo1BLjYjhq7/opencpn_unloadable-3011.log">opencpn_unloadable-3011.log</a></p>
+<div class="message_inline_image"><a href="/user_uploads/33951/1vdWO7ryDUZMO0tPvSvKnzA7/bild.png" title="bild.png"><img src="/user_uploads/33951/1vdWO7ryDUZMO0tPvSvKnzA7/bild.png"></a></div><div class="message_inline_image"><a href="/user_uploads/33951/1aLu5VH0tQCR3t710yac065j/bild.png" title="bild.png"><img src="/user_uploads/33951/1aLu5VH0tQCR3t710yac065j/bild.png"></a></div>
+
+
+
+<a name="329366493"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332168-Master%20-%205.8.0%20%20%28was%3A%20comms%29/topic/Unloadable%20old%20plugins%20blues/near/329366493" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Alec Leamas <a href="https://leamas.github.io/zulip-archive/stream/332168-Master---5.2E8.2E0--.28was.3A-comms.29/topic/Unloadable.20old.20plugins.20blues.html#329366493">(Feb 22 2023 at 08:37)</a>:</h4>
+<p><span class="user-mention" data-user-id="522486">@Håkan Svensson</span>  Thanks!</p>
+<p>I will look into the flooded log, have an idea what it is about.</p>
+<p>As for collecting everything to a single dialog it is certainly possible. That said, I think I will make a PR first for two reasons. The first is that your use case is not that typical for most ordinary users which only have a small number of plugins installed. </p>
+<p>The other is that we need to get the basic changes to plugin_loader in place so they can get some more testing.  That is, make small steps.</p>
+
+
+
+<a name="329376720"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332168-Master%20-%205.8.0%20%20%28was%3A%20comms%29/topic/Unloadable%20old%20plugins%20blues/near/329376720" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Alec Leamas <a href="https://leamas.github.io/zulip-archive/stream/332168-Master---5.2E8.2E0--.28was.3A-comms.29/topic/Unloadable.20old.20plugins.20blues.html#329376720">(Feb 22 2023 at 09:32)</a>:</h4>
+<p><a href="https://github.com/OpenCPN/OpenCPN/pull/3024">https://github.com/OpenCPN/OpenCPN/pull/3024</a></p>
+
+
+
+<a name="329400226"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332168-Master%20-%205.8.0%20%20%28was%3A%20comms%29/topic/Unloadable%20old%20plugins%20blues/near/329400226" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Mike Rossiter <a href="https://leamas.github.io/zulip-archive/stream/332168-Master---5.2E8.2E0--.28was.3A-comms.29/topic/Unloadable.20old.20plugins.20blues.html#329400226">(Feb 22 2023 at 11:22)</a>:</h4>
+<p>Windows 10. Installed o-charts on my build of unloadable-3011. No plugins. Runs fine.<br>
+Move to 5.6.2 and re-install the version of o-charts for wx30. Close 5.6.2.<br>
+Run 5.7.1 and OpenCPN crashes at start </p>
+<p><a href="/user_uploads/33951/cUZFW7Dfbs1clz2ZP2BKu0H0/opencpn.log.o-charts.txt">opencpn.log.o-charts.txt</a> .</p>
+
+
+
+<a name="329401632"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332168-Master%20-%205.8.0%20%20%28was%3A%20comms%29/topic/Unloadable%20old%20plugins%20blues/near/329401632" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Mike Rossiter <a href="https://leamas.github.io/zulip-archive/stream/332168-Master---5.2E8.2E0--.28was.3A-comms.29/topic/Unloadable.20old.20plugins.20blues.html#329401632">(Feb 22 2023 at 11:28)</a>:</h4>
+<p>Debug log coming.</p>
+
+
+
+<a name="329402573"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332168-Master%20-%205.8.0%20%20%28was%3A%20comms%29/topic/Unloadable%20old%20plugins%20blues/near/329402573" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Mike Rossiter <a href="https://leamas.github.io/zulip-archive/stream/332168-Master---5.2E8.2E0--.28was.3A-comms.29/topic/Unloadable.20old.20plugins.20blues.html#329402573">(Feb 22 2023 at 11:33)</a>:</h4>
+<p><a href="/user_uploads/33951/uttLCmuloW4Z0JL3zydtX8W0/opencpn.debug.log">opencpn.debug.log</a></p>
+
+
+
+<a name="329415046"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332168-Master%20-%205.8.0%20%20%28was%3A%20comms%29/topic/Unloadable%20old%20plugins%20blues/near/329415046" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Håkan Svensson <a href="https://leamas.github.io/zulip-archive/stream/332168-Master---5.2E8.2E0--.28was.3A-comms.29/topic/Unloadable.20old.20plugins.20blues.html#329415046">(Feb 22 2023 at 12:31)</a>:</h4>
+<blockquote>
+<p>The first is that your use case is not that typical for most ordinary users which only have a small number of plugins installed</p>
+</blockquote>
+<p>I think my case is not typical but in the opposite direction. Most users on Win updating from 5.6.2 will have more plugins to update than me. Four plugins and more are not at all unusual. So I still see a list instead of single messages valuable for most users.</p>
+
+
+
+<a name="329416742"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332168-Master%20-%205.8.0%20%20%28was%3A%20comms%29/topic/Unloadable%20old%20plugins%20blues/near/329416742" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Alec Leamas <a href="https://leamas.github.io/zulip-archive/stream/332168-Master---5.2E8.2E0--.28was.3A-comms.29/topic/Unloadable.20old.20plugins.20blues.html#329416742">(Feb 22 2023 at 12:39)</a>:</h4>
+<p><span class="user-mention" data-user-id="399559">@Mike Rossiter</span> Thanks, good catch! No time now, will try to find som late today</p>
+
+
+
+<a name="329417328"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332168-Master%20-%205.8.0%20%20%28was%3A%20comms%29/topic/Unloadable%20old%20plugins%20blues/near/329417328" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Alec Leamas <a href="https://leamas.github.io/zulip-archive/stream/332168-Master---5.2E8.2E0--.28was.3A-comms.29/topic/Unloadable.20old.20plugins.20blues.html#329417328">(Feb 22 2023 at 12:42)</a>:</h4>
+<p><span class="user-mention" data-user-id="399559">@Mike Rossiter</span>  BTW, any chance you could post a stack trace?</p>
+
+
+
+<a name="329421200"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332168-Master%20-%205.8.0%20%20%28was%3A%20comms%29/topic/Unloadable%20old%20plugins%20blues/near/329421200" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Mike Rossiter <a href="https://leamas.github.io/zulip-archive/stream/332168-Master---5.2E8.2E0--.28was.3A-comms.29/topic/Unloadable.20old.20plugins.20blues.html#329421200">(Feb 22 2023 at 12:59)</a>:</h4>
+<blockquote>
+<p>post a stack trace?</p>
+</blockquote>
+<p>With a program that crashes on starting? Tried Process Explorer without success.</p>
+
+
+
+<a name="329437367"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332168-Master%20-%205.8.0%20%20%28was%3A%20comms%29/topic/Unloadable%20old%20plugins%20blues/near/329437367" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Mike Rossiter <a href="https://leamas.github.io/zulip-archive/stream/332168-Master---5.2E8.2E0--.28was.3A-comms.29/topic/Unloadable.20old.20plugins.20blues.html#329437367">(Feb 22 2023 at 14:13)</a>:</h4>
+<p>WinDbg:<br>
+<a href="/user_uploads/33951/bQfp5xfvnVz8PQPFI4gA7fyu/unloadable-3011.stack.txt">unloadable-3011.stack.txt</a></p>
+
+
+
+<a name="329438927"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332168-Master%20-%205.8.0%20%20%28was%3A%20comms%29/topic/Unloadable%20old%20plugins%20blues/near/329438927" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Mike Rossiter <a href="https://leamas.github.io/zulip-archive/stream/332168-Master---5.2E8.2E0--.28was.3A-comms.29/topic/Unloadable.20old.20plugins.20blues.html#329438927">(Feb 22 2023 at 14:19)</a>:</h4>
+<p>First was answering <em>yes</em> to safemode. This is with <em>no</em> - use plugins present.<br>
+<a href="/user_uploads/33951/7tSGWqfUX1spzqY1v_8rcIhY/unloadable-3011.stack2.txt">unloadable-3011.stack2.txt</a></p>
+
+
+
+<a name="329457858"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332168-Master%20-%205.8.0%20%20%28was%3A%20comms%29/topic/Unloadable%20old%20plugins%20blues/near/329457858" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Alec Leamas <a href="https://leamas.github.io/zulip-archive/stream/332168-Master---5.2E8.2E0--.28was.3A-comms.29/topic/Unloadable.20old.20plugins.20blues.html#329457858">(Feb 22 2023 at 15:29)</a>:</h4>
+<p><span class="user-mention" data-user-id="399559">@Mike Rossiter</span>  thanks for all help! Currently making dinner for eight persons, so... </p>
+<p>So this happens in PluginNameCase, but unfortunately the stacktrace does not contain line numbers. If you have time,  could you try a patch like below to figure out where in PluginNameCase it happens?</p>
+<div class="codehilite"><pre><span></span><code>diff --git a/src/plugin_handler.cpp b/src/plugin_handler.cpp
+index b7230ceb0..0d628166b 100644
+--- a/src/plugin_handler.cpp
++++ b/src/plugin_handler.cpp
+@@ -1135,22 +1135,29 @@ static std::string FindMatchingLibFile(std::regex name_re) {
+ /** Best effort to return plugin name with correct case. */
+ static std::string PluginNameCase(const std::string&amp; name) {
+   using namespace std;
++wxLogDebug(&quot;PluginNameCase:1&quot;);
+   const string lc_name = ocpn::tolower(name);
++wxLogDebug(&quot;PluginNameCase:2&quot;);
+   regex name_re(lc_name, regex_constants::icase | regex_constants::ECMAScript);
++wxLogDebug(&quot;PluginNameCase:3&quot;);
+
+   // Look for matching plugin in list of installed and available.
+   // This often fails since the lists are not yet available when
+   // plugins are loaded, but is otherwise a safe bet.
++wxLogDebug(&quot;PluginNameCase:4&quot;);
+   for (const auto&amp; plugin : PluginHandler::getInstance()-&gt;getInstalled()) {
+     if (ocpn::tolower(plugin.name) == lc_name) return plugin.name;
+   }
++wxLogDebug(&quot;PluginNameCase:5&quot;);
+   for (const auto&amp; plugin : PluginHandler::getInstance()-&gt;getAvailable()) {
+     if (ocpn::tolower(plugin.name) == lc_name) return plugin.name;
+   }
+
++wxLogDebug(&quot;PluginNameCase:6&quot;);
+   string match = FindMatchingDataDir(name_re);
+   if (match != &quot;&quot;) return match;
+
++wxLogDebug(&quot;PluginNameCase:7&quot;);
+   match = FindMatchingLibFile(name_re);
+   return match != &quot;&quot; ? match : name;
+ }
+</code></pre></div>
+
+
+
+<a name="329485198"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332168-Master%20-%205.8.0%20%20%28was%3A%20comms%29/topic/Unloadable%20old%20plugins%20blues/near/329485198" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Mike Rossiter <a href="https://leamas.github.io/zulip-archive/stream/332168-Master---5.2E8.2E0--.28was.3A-comms.29/topic/Unloadable.20old.20plugins.20blues.html#329485198">(Feb 22 2023 at 17:18)</a>:</h4>
+<p><span class="user-mention" data-user-id="399510">@Alec Leamas</span> <br>
+<a href="/user_uploads/33951/jr1oEjwebz63LRPSRENoBg1M/opencpn.3011.log">opencpn.3011.log</a></p>
+
+
+
+<a name="329491663"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332168-Master%20-%205.8.0%20%20%28was%3A%20comms%29/topic/Unloadable%20old%20plugins%20blues/near/329491663" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Mike Rossiter <a href="https://leamas.github.io/zulip-archive/stream/332168-Master---5.2E8.2E0--.28was.3A-comms.29/topic/Unloadable.20old.20plugins.20blues.html#329491663">(Feb 22 2023 at 17:45)</a>:</h4>
+<p>WinDbg stopped at the last line of this snippet in <em>xstring</em>.<br>
+<a href="/user_uploads/33951/FBzgcwjrX0Lt9oU1i6iAWh3l/3011.xtring.txt">3011.xtring.txt</a></p>
+
+
+
+<a name="329578525"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332168-Master%20-%205.8.0%20%20%28was%3A%20comms%29/topic/Unloadable%20old%20plugins%20blues/near/329578525" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Alec Leamas <a href="https://leamas.github.io/zulip-archive/stream/332168-Master---5.2E8.2E0--.28was.3A-comms.29/topic/Unloadable.20old.20plugins.20blues.html#329578525">(Feb 22 2023 at 20:19)</a>:</h4>
+<p><span class="user-mention" data-user-id="399559">@Mike Rossiter</span> </p>
+<p>Unfortunatley, this does not help that much, it's too deep down the stack. The real question is frame <a href="https://github.com/opencpn/OpenCPN/issues/3">#3</a>, the address is  <em>opencpn!PluginNameCase + 0x3f6</em>.  Have you any tools which convert this to a line number? Any decent debugger should be able to do that, for sure.</p>
+<p>If not, I will need to start up my windows biuld chain again.</p>
+
+
+
+<a name="329656508"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332168-Master%20-%205.8.0%20%20%28was%3A%20comms%29/topic/Unloadable%20old%20plugins%20blues/near/329656508" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Mike Rossiter <a href="https://leamas.github.io/zulip-archive/stream/332168-Master---5.2E8.2E0--.28was.3A-comms.29/topic/Unloadable.20old.20plugins.20blues.html#329656508">(Feb 23 2023 at 08:44)</a>:</h4>
+<p><span class="user-mention" data-user-id="399510">@Alec Leamas</span> Looking but not hopeful.</p>
+
+
+
+<a name="329657492"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332168-Master%20-%205.8.0%20%20%28was%3A%20comms%29/topic/Unloadable%20old%20plugins%20blues/near/329657492" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Alec Leamas <a href="https://leamas.github.io/zulip-archive/stream/332168-Master---5.2E8.2E0--.28was.3A-comms.29/topic/Unloadable.20old.20plugins.20blues.html#329657492">(Feb 23 2023 at 08:50)</a>:</h4>
+<p>Don't spend much time on it. If you have the time, it's probably better spent by adding the log statements above. That should give us a quick feedback on what's going on here. Slightly revised patch:</p>
+<div class="codehilite"><pre><span></span><code>diff --git a/src/plugin_handler.cpp b/src/plugin_handler.cpp
+index b7230ceb0..0d628166b 100644
+--- a/src/plugin_handler.cpp
++++ b/src/plugin_handler.cpp
+@@ -1135,22 +1135,29 @@ static std::string FindMatchingLibFile(std::regex name_re) {
+ /** Best effort to return plugin name with correct case. */
+ static std::string PluginNameCase(const std::string&amp; name) {
+   using namespace std;
++wxLogDebug(&quot;PluginNameCase: enter: %s&quot;, name.c_str());
+   const string lc_name = ocpn::tolower(name);
++wxLogDebug(&quot;PluginNameCase:2&quot;);
+   regex name_re(lc_name, regex_constants::icase | regex_constants::ECMAScript);
++wxLogDebug(&quot;PluginNameCase:3&quot;);
+
+   // Look for matching plugin in list of installed and available.
+   // This often fails since the lists are not yet available when
+   // plugins are loaded, but is otherwise a safe bet.
++wxLogDebug(&quot;PluginNameCase:4&quot;);
+   for (const auto&amp; plugin : PluginHandler::getInstance()-&gt;getInstalled()) {
+     if (ocpn::tolower(plugin.name) == lc_name) return plugin.name;
+   }
++wxLogDebug(&quot;PluginNameCase:5&quot;);
+   for (const auto&amp; plugin : PluginHandler::getInstance()-&gt;getAvailable()) {
+     if (ocpn::tolower(plugin.name) == lc_name) return plugin.name;
+   }
+
++wxLogDebug(&quot;PluginNameCase:6&quot;);
+   string match = FindMatchingDataDir(name_re);
+   if (match != &quot;&quot;) return match;
+
++wxLogDebug(&quot;PluginNameCase:7&quot;);
+   match = FindMatchingLibFile(name_re);
+   return match != &quot;&quot; ? match : name;
+ }
+</code></pre></div>
+
+
+
+<a name="329657815"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332168-Master%20-%205.8.0%20%20%28was%3A%20comms%29/topic/Unloadable%20old%20plugins%20blues/near/329657815" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Mike Rossiter <a href="https://leamas.github.io/zulip-archive/stream/332168-Master---5.2E8.2E0--.28was.3A-comms.29/topic/Unloadable.20old.20plugins.20blues.html#329657815">(Feb 23 2023 at 08:51)</a>:</h4>
+<p>Think I have it ... line number 1158:<br>
+FAULTING_SOURCE_LINE_NUMBER:  1158</p>
+
+
+
+<a name="329657948"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332168-Master%20-%205.8.0%20%20%28was%3A%20comms%29/topic/Unloadable%20old%20plugins%20blues/near/329657948" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Alec Leamas <a href="https://leamas.github.io/zulip-archive/stream/332168-Master---5.2E8.2E0--.28was.3A-comms.29/topic/Unloadable.20old.20plugins.20blues.html#329657948">(Feb 23 2023 at 08:51)</a>:</h4>
+<p>Right... but in which file?</p>
+
+
+
+<a name="329658574"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332168-Master%20-%205.8.0%20%20%28was%3A%20comms%29/topic/Unloadable%20old%20plugins%20blues/near/329658574" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Mike Rossiter <a href="https://leamas.github.io/zulip-archive/stream/332168-Master---5.2E8.2E0--.28was.3A-comms.29/topic/Unloadable.20old.20plugins.20blues.html#329658574">(Feb 23 2023 at 08:54)</a>:</h4>
+<p><em>plugin_handler.cpp</em></p>
+
+
+
+<a name="329658776"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332168-Master%20-%205.8.0%20%20%28was%3A%20comms%29/topic/Unloadable%20old%20plugins%20blues/near/329658776" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Alec Leamas <a href="https://leamas.github.io/zulip-archive/stream/332168-Master---5.2E8.2E0--.28was.3A-comms.29/topic/Unloadable.20old.20plugins.20blues.html#329658776">(Feb 23 2023 at 08:55)</a>:</h4>
+<p>Yea, I figured... this is indeed a clue, but...</p>
+
+
+
+<a name="329658824"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332168-Master%20-%205.8.0%20%20%28was%3A%20comms%29/topic/Unloadable%20old%20plugins%20blues/near/329658824" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Mike Rossiter <a href="https://leamas.github.io/zulip-archive/stream/332168-Master---5.2E8.2E0--.28was.3A-comms.29/topic/Unloadable.20old.20plugins.20blues.html#329658824">(Feb 23 2023 at 08:55)</a>:</h4>
+<div class="codehilite"><pre><span></span><code>STACK_COMMAND:  ~0s; .ecxr ; kb
+
+FAULTING_SOURCE_LINE:  D:\Documents\Github\OpenCPN\src\plugin_handler.cpp
+
+FAULTING_SOURCE_FILE:  D:\Documents\Github\OpenCPN\src\plugin_handler.cpp
+
+FAULTING_SOURCE_LINE_NUMBER:  1158
+
+SYMBOL_NAME:  opencpn!PluginNameCase+db5
+
+MODULE_NAME: opencpn
+
+IMAGE_NAME:  opencpn.exe
+
+FAILURE_BUCKET_ID:  NULL_POINTER_READ_c0000005_opencpn.exe!PluginNameCase
+
+OSPLATFORM_TYPE:  x86
+
+OSNAME:  Windows 10
+</code></pre></div>
+
+
+
+<a name="329658913"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332168-Master%20-%205.8.0%20%20%28was%3A%20comms%29/topic/Unloadable%20old%20plugins%20blues/near/329658913" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Alec Leamas <a href="https://leamas.github.io/zulip-archive/stream/332168-Master---5.2E8.2E0--.28was.3A-comms.29/topic/Unloadable.20old.20plugins.20blues.html#329658913">(Feb 23 2023 at 08:55)</a>:</h4>
+<p>Greta info, exactly what I looked for!</p>
+
+
+
+<a name="329659535"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332168-Master%20-%205.8.0%20%20%28was%3A%20comms%29/topic/Unloadable%20old%20plugins%20blues/near/329659535" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Alec Leamas <a href="https://leamas.github.io/zulip-archive/stream/332168-Master---5.2E8.2E0--.28was.3A-comms.29/topic/Unloadable.20old.20plugins.20blues.html#329659535">(Feb 23 2023 at 08:59)</a>:</h4>
+<p>However, this is a comment line:</p>
+<div class="codehilite"><pre><span></span><code>/**  map[key] = list-of-files given path to file containing paths. */
+</code></pre></div>
+<p>Questions:  what does these commands say?</p>
+<ul>
+<li><code>git branch</code></li>
+<li><code>git rev-parse HEAD</code></li>
+<li><code>git status</code></li>
+</ul>
+
+
+
+<a name="329665050"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332168-Master%20-%205.8.0%20%20%28was%3A%20comms%29/topic/Unloadable%20old%20plugins%20blues/near/329665050" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Alec Leamas <a href="https://leamas.github.io/zulip-archive/stream/332168-Master---5.2E8.2E0--.28was.3A-comms.29/topic/Unloadable.20old.20plugins.20blues.html#329665050">(Feb 23 2023 at 09:22)</a>:</h4>
+<p><span class="user-mention" data-user-id="399559">@Mike Rossiter</span>  i. e., plugin_handler.cpp:1158 is that comment line. Ping?</p>
+
+
+
+<a name="329666883"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332168-Master%20-%205.8.0%20%20%28was%3A%20comms%29/topic/Unloadable%20old%20plugins%20blues/near/329666883" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Mike Rossiter <a href="https://leamas.github.io/zulip-archive/stream/332168-Master---5.2E8.2E0--.28was.3A-comms.29/topic/Unloadable.20old.20plugins.20blues.html#329666883">(Feb 23 2023 at 09:31)</a>:</h4>
+<p>Sorry ... because of the patch edits:<br>
+1158:  <code>match = FindMatchingLibFile(name_re);</code></p>
+
+
+
+<a name="329667774"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332168-Master%20-%205.8.0%20%20%28was%3A%20comms%29/topic/Unloadable%20old%20plugins%20blues/near/329667774" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Mike Rossiter <a href="https://leamas.github.io/zulip-archive/stream/332168-Master---5.2E8.2E0--.28was.3A-comms.29/topic/Unloadable.20old.20plugins.20blues.html#329667774">(Feb 23 2023 at 09:35)</a>:</h4>
+<div class="codehilite"><pre><span></span><code>Mike@DESKTOP-0OLHJEQ MINGW64 /d/Documents/Github/OpenCPN (unloadable-3011)
+$ git branch
+  master
+* unloadable-3011
+
+Mike@DESKTOP-0OLHJEQ MINGW64 /d/Documents/Github/OpenCPN (unloadable-3011)
+$ git rev-parse HEAD
+df28c020691a3c35e58f163054650965d51ac98e
+
+Mike@DESKTOP-0OLHJEQ MINGW64 /d/Documents/Github/OpenCPN (unloadable-3011)
+$ git status
+Refresh index: 100% (4357/4357), done.
+On branch unloadable-3011
+Your branch is up to date with &#39;origin/unloadable-3011&#39;.
+
+Changes not staged for commit:
+  (use &quot;git add &lt;file&gt;...&quot; to update what will be committed)
+  (use &quot;git restore &lt;file&gt;...&quot; to discard changes in working directory)
+        modified:   src/plugin_handler.cpp
+
+Untracked files:
+  (use &quot;git add &lt;file&gt;...&quot; to include in what will be committed)
+        leamas.OpenCPN.bat
+
+no changes added to commit (use &quot;git add&quot; and/or &quot;git commit -a&quot;)
+</code></pre></div>
+
+
+
+<a name="329673583"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332168-Master%20-%205.8.0%20%20%28was%3A%20comms%29/topic/Unloadable%20old%20plugins%20blues/near/329673583" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Alec Leamas <a href="https://leamas.github.io/zulip-archive/stream/332168-Master---5.2E8.2E0--.28was.3A-comms.29/topic/Unloadable.20old.20plugins.20blues.html#329673583">(Feb 23 2023 at 10:02)</a>:</h4>
+<p>ah... The pot thickens.</p>
+<p>there is this code:</p>
+<div class="codehilite"><pre><span></span><code>  string match = FindMatchingDataDir(name_re);
+  if (match != &quot;&quot;) return match;
+
+  match = FindMatchingLibFile(name_re);
+  return match != &quot;&quot; ? match : name;
+</code></pre></div>
+<p>name_re seems to be sound, it works in line above. Thinking...</p>
+
+
+
+<a name="329674550"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332168-Master%20-%205.8.0%20%20%28was%3A%20comms%29/topic/Unloadable%20old%20plugins%20blues/near/329674550" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Alec Leamas <a href="https://leamas.github.io/zulip-archive/stream/332168-Master---5.2E8.2E0--.28was.3A-comms.29/topic/Unloadable.20old.20plugins.20blues.html#329674550">(Feb 23 2023 at 10:07)</a>:</h4>
+<p>Ok... if you have time. First, get rid of the printouts now when we know where it happens using <code>git checkout .</code> from the top directory. Verify using <code>git status</code>that there is no diff.</p>
+<p>Then, apply this patch. It is just to streamline to what worked in the two lines above while making sure that nothing bad happens to name_re:</p>
+<div class="codehilite"><pre><span></span><code>iff --git a/src/plugin_handler.cpp b/src/plugin_handler.cpp
+index b7230ceb0..4a92eaa81 100644
+--- a/src/plugin_handler.cpp
++++ b/src/plugin_handler.cpp
+@@ -1085,7 +1085,7 @@ using PluginMap = std::unordered_map&lt;std::string, std::vector&lt;std::string&gt;&gt;;
+  * existing, but all plugins does not have a data directory.
+  * @return Matched directory name or &quot;&quot; if not found.
+  */
+-static std::string FindMatchingDataDir(std::regex name_re) {
++static std::string FindMatchingDataDir(const std::regex&amp; name_re) {
+   using namespace std;
+   wxString data_dirs(g_BasePlatform-&gt;GetPluginDataPath());
+   wxStringTokenizer tokens(data_dirs, &quot;;&quot;);
+@@ -1113,7 +1113,7 @@ static std::string FindMatchingDataDir(std::regex name_re) {
+  * Look in library dirs for matching .dll/.so/.dylib and use matched name.
+  * @return matched part of found library name or &quot;&quot; if not found
+  */
+-static std::string FindMatchingLibFile(std::regex name_re) {
++static std::string FindMatchingLibFile(const std::regex&amp; name_re) {
+   using namespace std;
+   for (const auto&amp; lib : PluginPaths::getInstance()-&gt;Libdirs()) {
+     wxDir dir(lib);
+@@ -1152,7 +1152,9 @@ static std::string PluginNameCase(const std::string&amp; name) {
+   if (match != &quot;&quot;) return match;
+
+   match = FindMatchingLibFile(name_re);
+-  return match != &quot;&quot; ? match : name;
++  if (match != &quot;&quot;) return match;
++
++  return &quot;&quot;;
+</code></pre></div>
+<p>I'm worried we are facing some strange compiler (language?) issue here.</p>
+
+
+
+<a name="329676162"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332168-Master%20-%205.8.0%20%20%28was%3A%20comms%29/topic/Unloadable%20old%20plugins%20blues/near/329676162" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Mike Rossiter <a href="https://leamas.github.io/zulip-archive/stream/332168-Master---5.2E8.2E0--.28was.3A-comms.29/topic/Unloadable.20old.20plugins.20blues.html#329676162">(Feb 23 2023 at 10:14)</a>:</h4>
+<p>Working on this.</p>
+
+
+
+<a name="329676884"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332168-Master%20-%205.8.0%20%20%28was%3A%20comms%29/topic/Unloadable%20old%20plugins%20blues/near/329676884" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Mike Rossiter <a href="https://leamas.github.io/zulip-archive/stream/332168-Master---5.2E8.2E0--.28was.3A-comms.29/topic/Unloadable.20old.20plugins.20blues.html#329676884">(Feb 23 2023 at 10:18)</a>:</h4>
+<p><code>1&gt;D:\Documents\Github\OpenCPN\src\plugin_handler.cpp(1133): warning C4715: 'FindMatchingLibFile': not all control paths return a value</code></p>
+<p>Now to add the patch.</p>
+
+
+
+<a name="329684719"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332168-Master%20-%205.8.0%20%20%28was%3A%20comms%29/topic/Unloadable%20old%20plugins%20blues/near/329684719" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Alec Leamas <a href="https://leamas.github.io/zulip-archive/stream/332168-Master---5.2E8.2E0--.28was.3A-comms.29/topic/Unloadable.20old.20plugins.20blues.html#329684719">(Feb 23 2023 at 10:50)</a>:</h4>
+<blockquote>
+<p>1&gt;D:\Documents\Github\OpenCPN\src\plugin_handler.cpp(1133): warning C4715: 'FindMatchingLibFile': not all control paths return a value</p>
+</blockquote>
+<p>hm... That is probably the issue. Almost certainly fixed by this:</p>
+<div class="codehilite"><pre><span></span><code>iff --git a/src/plugin_handler.cpp b/src/plugin_handler.cpp
+index b7230ceb0..f5357f9e5 100644
+--- a/src/plugin_handler.cpp
++++ b/src/plugin_handler.cpp
+@@ -1130,6 +1130,7 @@ static std::string FindMatchingLibFile(std::regex name_re) {
+       cont = dir.GetNext(&amp;filename);
+     }
+   }
++  return &quot;&quot;;
+ }
+</code></pre></div>
+
+
+
+<a name="329686023"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332168-Master%20-%205.8.0%20%20%28was%3A%20comms%29/topic/Unloadable%20old%20plugins%20blues/near/329686023" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Mike Rossiter <a href="https://leamas.github.io/zulip-archive/stream/332168-Master---5.2E8.2E0--.28was.3A-comms.29/topic/Unloadable.20old.20plugins.20blues.html#329686023">(Feb 23 2023 at 10:57)</a>:</h4>
+<p>Yes ...  Also suggestion from VS2022:</p>
+<div class="codehilite"><pre><span></span><code>for (auto c : sm) ss &lt;&lt; c;
+        return ss.str();
+</code></pre></div>
+<p>Change to :</p>
+<div class="codehilite"><pre><span></span><code>for (auto &amp;c : sm) ss &lt;&lt; c;
+        return ss.str();
+</code></pre></div>
+
+
+
+<a name="329687083"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332168-Master%20-%205.8.0%20%20%28was%3A%20comms%29/topic/Unloadable%20old%20plugins%20blues/near/329687083" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Mike Rossiter <a href="https://leamas.github.io/zulip-archive/stream/332168-Master---5.2E8.2E0--.28was.3A-comms.29/topic/Unloadable.20old.20plugins.20blues.html#329687083">(Feb 23 2023 at 11:02)</a>:</h4>
+<p>Used the suggestion and your <code>return "";</code><br>
+Success - no crash.</p>
+
+
+
+<a name="329687739"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332168-Master%20-%205.8.0%20%20%28was%3A%20comms%29/topic/Unloadable%20old%20plugins%20blues/near/329687739" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Alec Leamas <a href="https://leamas.github.io/zulip-archive/stream/332168-Master---5.2E8.2E0--.28was.3A-comms.29/topic/Unloadable.20old.20plugins.20blues.html#329687739">(Feb 23 2023 at 11:05)</a>:</h4>
+<p>Many, many thanks!  Owe you a beer!</p>
+
+
+
+<a name="329688006"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332168-Master%20-%205.8.0%20%20%28was%3A%20comms%29/topic/Unloadable%20old%20plugins%20blues/near/329688006" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Alec Leamas <a href="https://leamas.github.io/zulip-archive/stream/332168-Master---5.2E8.2E0--.28was.3A-comms.29/topic/Unloadable.20old.20plugins.20blues.html#329688006">(Feb 23 2023 at 11:06)</a>:</h4>
+<blockquote>
+<p>for (auto c : sm) ss &lt;&lt; c;<br>
+        return ss.str();</p>
+</blockquote>
+<p>That's a worth-wile optimization, I'll include it.</p>
+
+
+
+<a name="329692521"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332168-Master%20-%205.8.0%20%20%28was%3A%20comms%29/topic/Unloadable%20old%20plugins%20blues/near/329692521" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Mike Rossiter <a href="https://leamas.github.io/zulip-archive/stream/332168-Master---5.2E8.2E0--.28was.3A-comms.29/topic/Unloadable.20old.20plugins.20blues.html#329692521">(Feb 23 2023 at 11:28)</a>:</h4>
+<p>Two plugins - o-charts andShipDriver.<br>
+Install the plugins. Close 5.6.2<br>
+Then start 5.7.1 - detects and removes o-charts.<br>
+it detects the incompatible ShipDriver plugin  (<em>opencpn.log</em>) but does not offer to remove it. Only happens when OpenCPN is restarted. Loop problem?</p>
+
+
+
+<a name="329702105"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332168-Master%20-%205.8.0%20%20%28was%3A%20comms%29/topic/Unloadable%20old%20plugins%20blues/near/329702105" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Alec Leamas <a href="https://leamas.github.io/zulip-archive/stream/332168-Master---5.2E8.2E0--.28was.3A-comms.29/topic/Unloadable.20old.20plugins.20blues.html#329702105">(Feb 23 2023 at 12:14)</a>:</h4>
+<p>I'll look into it later. Should not block the PR, but should be fixed.</p>
+
+
+
+<a name="329777954"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332168-Master%20-%205.8.0%20%20%28was%3A%20comms%29/topic/Unloadable%20old%20plugins%20blues/near/329777954" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Mike Rossiter <a href="https://leamas.github.io/zulip-archive/stream/332168-Master---5.2E8.2E0--.28was.3A-comms.29/topic/Unloadable.20old.20plugins.20blues.html#329777954">(Feb 23 2023 at 17:27)</a>:</h4>
+<p><code>Dropping overflowed notification: ShipDriver</code> showing in the debug log.<br>
+This is the second plugin for removal.<br>
+<a href="/user_uploads/33951/FAjcJ-8MqIARNC9EAu6o-izj/opencpn.overflow.log">opencpn.overflow.log</a></p>
+
+
+
+<a name="329782008"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332168-Master%20-%205.8.0%20%20%28was%3A%20comms%29/topic/Unloadable%20old%20plugins%20blues/near/329782008" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Mike Rossiter <a href="https://leamas.github.io/zulip-archive/stream/332168-Master---5.2E8.2E0--.28was.3A-comms.29/topic/Unloadable.20old.20plugins.20blues.html#329782008">(Feb 23 2023 at 17:46)</a>:</h4>
+<p><em>plugin_loader.cpp</em><br>
+Line 214:</p>
+<div class="codehilite"><pre><span></span><code>if (deferred_notifies.size() &gt; 0) {
+       wxLogDebug(&quot;Dropping overflowed notification: %s&quot;, s.c_str());
+       return;
+    }
+</code></pre></div>
+<p>Line 228:</p>
+<div class="codehilite"><pre><span></span><code>if (deferred_notifies.size() &gt; 0) {
+       wxLogDebug(&quot;Dropping overflowed notification:  %s&quot;,  p-&gt;name.c_str());
+       return;
+    }
+</code></pre></div>
+<p>Remove these two sections and we get dialogs to remove each plugin, in turn.</p>
+
+
+
+<a name="336489043"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332168-Master%20-%205.8.0%20%20%28was%3A%20comms%29/topic/Unloadable%20old%20plugins%20blues/near/336489043" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Håkan Svensson <a href="https://leamas.github.io/zulip-archive/stream/332168-Master---5.2E8.2E0--.28was.3A-comms.29/topic/Unloadable.20old.20plugins.20blues.html#336489043">(Feb 24 2023 at 13:57)</a>:</h4>
+<p>I saw in Crowdin quit a number of wxLogMessage marked for translation. <br>
+One example: Key: PlugInManager: Cannot load symbol create_pi:<br>
+#: src/plugin_loader.cpp:1236<br>
+We haven't so far translated log messages. That may be difficult to understand sending log file to developers?<br>
+I suggest to make all "wxLogMessage" not translatable?</p>
+
+
+
+<a name="336526937"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332168-Master%20-%205.8.0%20%20%28was%3A%20comms%29/topic/Unloadable%20old%20plugins%20blues/near/336526937" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Alec Leamas <a href="https://leamas.github.io/zulip-archive/stream/332168-Master---5.2E8.2E0--.28was.3A-comms.29/topic/Unloadable.20old.20plugins.20blues.html#336526937">(Feb 24 2023 at 16:25)</a>:</h4>
+<p>I basically agree, there should be no messages only used in he log which are translated. MIght be an oversight, or (some cases)  a message which is used both in the log and in the GUI</p>
+
+
+
+<a name="336561025"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332168-Master%20-%205.8.0%20%20%28was%3A%20comms%29/topic/Unloadable%20old%20plugins%20blues/near/336561025" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Håkan Svensson <a href="https://leamas.github.io/zulip-archive/stream/332168-Master---5.2E8.2E0--.28was.3A-comms.29/topic/Unloadable.20old.20plugins.20blues.html#336561025">(Feb 24 2023 at 19:01)</a>:</h4>
+<p>So if used in wxLogMessage  please don't make it being translated. What if you got a log file in Chinese to investigate?</p>
+
+
+
+<a name="337886832"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332168-Master%20-%205.8.0%20%20%28was%3A%20comms%29/topic/Unloadable%20old%20plugins%20blues/near/337886832" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Håkan Svensson <a href="https://leamas.github.io/zulip-archive/stream/332168-Master---5.2E8.2E0--.28was.3A-comms.29/topic/Unloadable.20old.20plugins.20blues.html#337886832">(Feb 24 2023 at 21:10)</a>:</h4>
+<blockquote>
+<p>or (some cases) a message which is used both in the log and in the GUI</p>
+</blockquote>
+<p>In that case I suggest you use two different text strings. One in English for the log and one translated for the user interface.</p>
+
+
+
+<a name="337893231"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332168-Master%20-%205.8.0%20%20%28was%3A%20comms%29/topic/Unloadable%20old%20plugins%20blues/near/337893231" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Alec Leamas <a href="https://leamas.github.io/zulip-archive/stream/332168-Master---5.2E8.2E0--.28was.3A-comms.29/topic/Unloadable.20old.20plugins.20blues.html#337893231">(Feb 24 2023 at 21:51)</a>:</h4>
+<p><span class="user-mention" data-user-id="399559">@Mike Rossiter</span>  This is a work around for otherwise colliding when trying to run two modal dialogs concurrently. It's about how the events are handled in the gui. Need to investigate further.</p>
+
+
+
+<a name="337946951"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332168-Master%20-%205.8.0%20%20%28was%3A%20comms%29/topic/Unloadable%20old%20plugins%20blues/near/337946951" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Alec Leamas <a href="https://leamas.github.io/zulip-archive/stream/332168-Master---5.2E8.2E0--.28was.3A-comms.29/topic/Unloadable.20old.20plugins.20blues.html#337946951">(Feb 25 2023 at 07:39)</a>:</h4>
+<p><span class="user-mention" data-user-id="522486">@Håkan Svensson</span>  Actually, walking your path with a common dialog for all load errors would resolve the race conditions behind <span class="user-mention" data-user-id="399559">@Mike Rossiter</span> 's observation. This is a major redesign,  but probably worth the effort.  I'll  try to find some time for  it.</p>
+
+
+
+<a name="337946967"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332168-Master%20-%205.8.0%20%20%28was%3A%20comms%29/topic/Unloadable%20old%20plugins%20blues/near/337946967" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Alec Leamas <a href="https://leamas.github.io/zulip-archive/stream/332168-Master---5.2E8.2E0--.28was.3A-comms.29/topic/Unloadable.20old.20plugins.20blues.html#337946967">(Feb 25 2023 at 07:39)</a>:</h4>
+<p><span class="user-mention" data-user-id="517002">@Dave Register</span> ^</p>
+
+
+
+<a name="338198878"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332168-Master%20-%205.8.0%20%20%28was%3A%20comms%29/topic/Unloadable%20old%20plugins%20blues/near/338198878" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Alec Leamas <a href="https://leamas.github.io/zulip-archive/stream/332168-Master---5.2E8.2E0--.28was.3A-comms.29/topic/Unloadable.20old.20plugins.20blues.html#338198878">(Feb 26 2023 at 19:57)</a>:</h4>
+<p><span class="user-mention" data-user-id="522486">@Håkan Svensson</span>  <span class="user-mention" data-user-id="399559">@Mike Rossiter</span> <span class="user-mention" data-user-id="517002">@Dave Register</span>  I have updated <a href="https://github.com/OpenCPN/OpenCPN/pull/3024">https://github.com/OpenCPN/OpenCPN/pull/3024</a> with a more or less complete rewrite of the handling of unloadable plugins. GUI-wise, here is now a single dialog with all reported errors and plugins/libs to remove (see below). It's still a bit rough, but should be testable.</p>
+<p><a href="/user_uploads/33951/74i_TpP2dEp4reWS-M7Dlo16/image.png">image.png</a></p>
+<div class="message_inline_image"><a href="/user_uploads/33951/74i_TpP2dEp4reWS-M7Dlo16/image.png" title="image.png"><img src="/user_uploads/33951/74i_TpP2dEp4reWS-M7Dlo16/image.png"></a></div>
+
+
+
+<a name="338231289"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332168-Master%20-%205.8.0%20%20%28was%3A%20comms%29/topic/Unloadable%20old%20plugins%20blues/near/338231289" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Dave Register <a href="https://leamas.github.io/zulip-archive/stream/332168-Master---5.2E8.2E0--.28was.3A-comms.29/topic/Unloadable.20old.20plugins.20blues.html#338231289">(Feb 27 2023 at 03:10)</a>:</h4>
+<p><span class="user-mention" data-user-id="399510">@Alec Leamas</span> <br>
+Shall I accept the PR now?</p>
+
+
+
+<a name="338261924"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332168-Master%20-%205.8.0%20%20%28was%3A%20comms%29/topic/Unloadable%20old%20plugins%20blues/near/338261924" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Tony Voss <a href="https://leamas.github.io/zulip-archive/stream/332168-Master---5.2E8.2E0--.28was.3A-comms.29/topic/Unloadable.20old.20plugins.20blues.html#338261924">(Feb 27 2023 at 08:14)</a>:</h4>
+<blockquote>
+<p>You might want to reinstall them after updating the catalog</p>
+</blockquote>
+<p>Small point but how about:<br>
+<em>You might want to install a newer version after updating the catalog.</em></p>
+
+
+
+<a name="338262522"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332168-Master%20-%205.8.0%20%20%28was%3A%20comms%29/topic/Unloadable%20old%20plugins%20blues/near/338262522" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Alec Leamas <a href="https://leamas.github.io/zulip-archive/stream/332168-Master---5.2E8.2E0--.28was.3A-comms.29/topic/Unloadable.20old.20plugins.20blues.html#338262522">(Feb 27 2023 at 08:17)</a>:</h4>
+<p>I have done the testing I can. However, both <span class="user-mention" data-user-id="522486">@Håkan Svensson</span>  and <span class="user-mention" data-user-id="399559">@Mike Rossiter</span>  have been able to find important issues. Let's at least give them time over today to see if they have time and test cases , their last finding was extremely useful. </p>
+<p>If nothing happens over the day here in Europe I suggest you merge late your time.</p>
+
+
+
+<a name="338264884"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332168-Master%20-%205.8.0%20%20%28was%3A%20comms%29/topic/Unloadable%20old%20plugins%20blues/near/338264884" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Håkan Svensson <a href="https://leamas.github.io/zulip-archive/stream/332168-Master---5.2E8.2E0--.28was.3A-comms.29/topic/Unloadable.20old.20plugins.20blues.html#338264884">(Feb 27 2023 at 08:30)</a>:</h4>
+<p>It's not working as expected in Win10. See comments on the PR <a href="https://github.com/opencpn/OpenCPN/issues/3024">#3024</a></p>
+
+
+
+<a name="338313298"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332168-Master%20-%205.8.0%20%20%28was%3A%20comms%29/topic/Unloadable%20old%20plugins%20blues/near/338313298" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Mike Rossiter <a href="https://leamas.github.io/zulip-archive/stream/332168-Master---5.2E8.2E0--.28was.3A-comms.29/topic/Unloadable.20old.20plugins.20blues.html#338313298">(Feb 27 2023 at 12:26)</a>:</h4>
+<p>Crash here as well. Win10. Using a fork of <em>leamas/unloadable-3011</em>. No edits.<br>
+<a href="/user_uploads/33951/DKhQEpL0u0gCM0uTVUnhkblj/unloadable-3011.stack3.txt">unloadable-3011.stack3.txt</a></p>
+
+
+
+<a name="338314137"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332168-Master%20-%205.8.0%20%20%28was%3A%20comms%29/topic/Unloadable%20old%20plugins%20blues/near/338314137" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Mike Rossiter <a href="https://leamas.github.io/zulip-archive/stream/332168-Master---5.2E8.2E0--.28was.3A-comms.29/topic/Unloadable.20old.20plugins.20blues.html#338314137">(Feb 27 2023 at 12:31)</a>:</h4>
+<p>Like <span class="user-mention" data-user-id="522486">@Håkan Svensson</span>  I see a deleted plugin remaining in the list (WeatherFax).</p>
+
+
+
+<a name="338315577"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332168-Master%20-%205.8.0%20%20%28was%3A%20comms%29/topic/Unloadable%20old%20plugins%20blues/near/338315577" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Mike Rossiter <a href="https://leamas.github.io/zulip-archive/stream/332168-Master---5.2E8.2E0--.28was.3A-comms.29/topic/Unloadable.20old.20plugins.20blues.html#338315577">(Feb 27 2023 at 12:38)</a>:</h4>
+<p>Due to <em>weatherfax.files</em> remaining in <em>install_data</em>?</p>
+
+
+
+<a name="338318466"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332168-Master%20-%205.8.0%20%20%28was%3A%20comms%29/topic/Unloadable%20old%20plugins%20blues/near/338318466" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Mike Rossiter <a href="https://leamas.github.io/zulip-archive/stream/332168-Master---5.2E8.2E0--.28was.3A-comms.29/topic/Unloadable.20old.20plugins.20blues.html#338318466">(Feb 27 2023 at 12:51)</a>:</h4>
+<p>WeatherFax has the same version number in both master catalogs - 5.6.2/5.7.1.</p>
+
+
+
+<a name="338394980"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332168-Master%20-%205.8.0%20%20%28was%3A%20comms%29/topic/Unloadable%20old%20plugins%20blues/near/338394980" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Alec Leamas <a href="https://leamas.github.io/zulip-archive/stream/332168-Master---5.2E8.2E0--.28was.3A-comms.29/topic/Unloadable.20old.20plugins.20blues.html#338394980">(Feb 27 2023 at 17:03)</a>:</h4>
+<p><span class="user-mention" data-user-id="399559">@Mike Rossiter</span>  Can you re-check after the latest changes?</p>
+
+
+
+<a name="338397483"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332168-Master%20-%205.8.0%20%20%28was%3A%20comms%29/topic/Unloadable%20old%20plugins%20blues/near/338397483" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Mike Rossiter <a href="https://leamas.github.io/zulip-archive/stream/332168-Master---5.2E8.2E0--.28was.3A-comms.29/topic/Unloadable.20old.20plugins.20blues.html#338397483">(Feb 27 2023 at 17:13)</a>:</h4>
+<p><span class="user-mention" data-user-id="399510">@Alec Leamas</span> : Will do.</p>
+
+
+
+<a name="338412524"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332168-Master%20-%205.8.0%20%20%28was%3A%20comms%29/topic/Unloadable%20old%20plugins%20blues/near/338412524" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Mike Rossiter <a href="https://leamas.github.io/zulip-archive/stream/332168-Master---5.2E8.2E0--.28was.3A-comms.29/topic/Unloadable.20old.20plugins.20blues.html#338412524">(Feb 27 2023 at 18:04)</a>:</h4>
+<p>Slightly different workflow. Using a parallel installation and moving between 5.6.2 and 5.7.1.</p>
+<p>No crashes with the latest 5.7.1 from <em>unloadable-3011</em> but WeatherFax remains in the list with the jigsaw icon after it is deleted in 5.7.1. Remains in the list after a restart.</p>
+<p>WeatherFax is the outlier cannot make it happen with Calculator, ais-vd or PhotoLayer.</p>
+
+
+
+<a name="338428898"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332168-Master%20-%205.8.0%20%20%28was%3A%20comms%29/topic/Unloadable%20old%20plugins%20blues/near/338428898" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Alec Leamas <a href="https://leamas.github.io/zulip-archive/stream/332168-Master---5.2E8.2E0--.28was.3A-comms.29/topic/Unloadable.20old.20plugins.20blues.html#338428898">(Feb 27 2023 at 19:17)</a>:</h4>
+<p>THanks! WIll try tp reproduce, but first need to make my bread...</p>
+
+
+
+<a name="338526468"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332168-Master%20-%205.8.0%20%20%28was%3A%20comms%29/topic/Unloadable%20old%20plugins%20blues/near/338526468" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Alec Leamas <a href="https://leamas.github.io/zulip-archive/stream/332168-Master---5.2E8.2E0--.28was.3A-comms.29/topic/Unloadable.20old.20plugins.20blues.html#338526468">(Feb 28 2023 at 08:35)</a>:</h4>
+<p><span class="user-mention" data-user-id="399559">@Mike Rossiter</span>   Sorry, cannot reproduce...  have you a weatherfax plugin for flatpak/22.08 available in some cloudsmith repo?</p>
+
+
+
+<a name="338526871"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332168-Master%20-%205.8.0%20%20%28was%3A%20comms%29/topic/Unloadable%20old%20plugins%20blues/near/338526871" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Alec Leamas <a href="https://leamas.github.io/zulip-archive/stream/332168-Master---5.2E8.2E0--.28was.3A-comms.29/topic/Unloadable.20old.20plugins.20blues.html#338526871">(Feb 28 2023 at 08:37)</a>:</h4>
+<p>Pushed some changes after discussion with Håkan, but I doubt these are related to the weatherfax problem. A helpful thing would be a <em>--loglevel debug</em> log from a run where you  (try to)  remove weatherfax. If you have time, that is.</p>
+
+
+
+<a name="338527986"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332168-Master%20-%205.8.0%20%20%28was%3A%20comms%29/topic/Unloadable%20old%20plugins%20blues/near/338527986" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Mike Rossiter <a href="https://leamas.github.io/zulip-archive/stream/332168-Master---5.2E8.2E0--.28was.3A-comms.29/topic/Unloadable.20old.20plugins.20blues.html#338527986">(Feb 28 2023 at 08:44)</a>:</h4>
+<p>Top of the list here?:<br>
+<a href="https://cloudsmith.io/~opencpn/repos/weatherfax-prod/packages/?q=flatpak">https://cloudsmith.io/~opencpn/repos/weatherfax-prod/packages/?q=flatpak</a></p>
+
+
+
+<a name="338530002"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332168-Master%20-%205.8.0%20%20%28was%3A%20comms%29/topic/Unloadable%20old%20plugins%20blues/near/338530002" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Mike Rossiter <a href="https://leamas.github.io/zulip-archive/stream/332168-Master---5.2E8.2E0--.28was.3A-comms.29/topic/Unloadable.20old.20plugins.20blues.html#338530002">(Feb 28 2023 at 08:56)</a>:</h4>
+<p>There is an unknown error against weatherfax and <em>weatherfax.files</em> remains in <em>plugins/install_data</em>. Tried to uninstall which resulted in extra debugging stuff as it check compatibility.<br>
+<a href="/user_uploads/33951/864PC59cB1nJ5CJpXKcrCR59/opencpn.weatherfax.log.txt">opencpn.weatherfax.log.txt</a></p>
+
+
+
+<a name="338548678"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332168-Master%20-%205.8.0%20%20%28was%3A%20comms%29/topic/Unloadable%20old%20plugins%20blues/near/338548678" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Alec Leamas <a href="https://leamas.github.io/zulip-archive/stream/332168-Master---5.2E8.2E0--.28was.3A-comms.29/topic/Unloadable.20old.20plugins.20blues.html#338548678">(Feb 28 2023 at 10:26)</a>:</h4>
+<p>hm... so, after that run, is the file <em>C:\ProgramData\opencpn\\plugins\install_data\weatherfax.files</em> still there?</p>
+
+
+
+<a name="338549434"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332168-Master%20-%205.8.0%20%20%28was%3A%20comms%29/topic/Unloadable%20old%20plugins%20blues/near/338549434" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Mike Rossiter <a href="https://leamas.github.io/zulip-archive/stream/332168-Master---5.2E8.2E0--.28was.3A-comms.29/topic/Unloadable.20old.20plugins.20blues.html#338549434">(Feb 28 2023 at 10:30)</a>:</h4>
+<p>Yes it is. Same happens with <em>ais-vd.files</em> but <em>ais-vd</em> is not shown in the list with a jigsaw icon.</p>
+
+
+
+<a name="338550861"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332168-Master%20-%205.8.0%20%20%28was%3A%20comms%29/topic/Unloadable%20old%20plugins%20blues/near/338550861" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Mike Rossiter <a href="https://leamas.github.io/zulip-archive/stream/332168-Master---5.2E8.2E0--.28was.3A-comms.29/topic/Unloadable.20old.20plugins.20blues.html#338550861">(Feb 28 2023 at 10:37)</a>:</h4>
+<p>No warning from the compiler in the plugins area when opencpn was rebuilt.</p>
+
+
+
+<a name="338551243"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332168-Master%20-%205.8.0%20%20%28was%3A%20comms%29/topic/Unloadable%20old%20plugins%20blues/near/338551243" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Alec Leamas <a href="https://leamas.github.io/zulip-archive/stream/332168-Master---5.2E8.2E0--.28was.3A-comms.29/topic/Unloadable.20old.20plugins.20blues.html#338551243">(Feb 28 2023 at 10:39)</a>:</h4>
+<p>Can you try this patch? It might be about silly windows restricted file access...</p>
+<div class="codehilite"><pre><span></span><code>diff --git a/src/plugin_handler.cpp b/src/plugin_handler.cpp
+index 03bf35024..461bb1913 100644
+--- a/src/plugin_handler.cpp
++++ b/src/plugin_handler.cpp
+@@ -1056,6 +1056,7 @@ bool PluginHandler::uninstall(const std::string plugin_name) {
+     files.getline(line, sizeof(line));
+     plug_paths.push_back(line);
+   }
++  files.close();
+   for (const auto&amp; p : plug_paths) {
+     if (isRegularFile(p.c_str())) {
+       int r = remove(p.c_str());
+</code></pre></div>
+
+
+
+<a name="338555450"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332168-Master%20-%205.8.0%20%20%28was%3A%20comms%29/topic/Unloadable%20old%20plugins%20blues/near/338555450" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Mike Rossiter <a href="https://leamas.github.io/zulip-archive/stream/332168-Master---5.2E8.2E0--.28was.3A-comms.29/topic/Unloadable.20old.20plugins.20blues.html#338555450">(Feb 28 2023 at 10:58)</a>:</h4>
+<p>That solved the issue. Many thanks.</p>
+
+
+
+<a name="338555565"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332168-Master%20-%205.8.0%20%20%28was%3A%20comms%29/topic/Unloadable%20old%20plugins%20blues/near/338555565" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Alec Leamas <a href="https://leamas.github.io/zulip-archive/stream/332168-Master---5.2E8.2E0--.28was.3A-comms.29/topic/Unloadable.20old.20plugins.20blues.html#338555565">(Feb 28 2023 at 10:59)</a>:</h4>
+<p>I actually owe you a beer... thanks for all testing!</p>
+
+
+
+<a name="340212539"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332168-Master%20-%205.8.0%20%20%28was%3A%20comms%29/topic/Unloadable%20old%20plugins%20blues/near/340212539" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Håkan Svensson <a href="https://leamas.github.io/zulip-archive/stream/332168-Master---5.2E8.2E0--.28was.3A-comms.29/topic/Unloadable.20old.20plugins.20blues.html#340212539">(Mar 07 2023 at 20:58)</a>:</h4>
+<p><span class="user-mention" data-user-id="517002">@Dave Register</span> <span class="user-mention" data-user-id="399510">@Alec Leamas</span> <br>
+I'm coming back to an old issue after visiting a friends Win10.<br>
+The unsupported plugin message was replayed every time he opened OCPN. Also if he all times answered OK on the "...will be removed" dialog.<br>
+I may understand what's it's all about but he didn't. See picture:<br>
+If old plugins in "Program files..." can't be removed we either have to change the message to "Please manually delete the listed files since OCPN can't remove files in a protected folder"  or don't message for files that not will be loaded and won't disturb.</p>
+<p><a href="/user_uploads/33951/oNutvXnq7AUZM83vOxPmplVm/bild.png">bild.png</a></p>
+<div class="message_inline_image"><a href="/user_uploads/33951/oNutvXnq7AUZM83vOxPmplVm/bild.png" title="bild.png"><img src="/user_uploads/33951/oNutvXnq7AUZM83vOxPmplVm/bild.png"></a></div>
+
+
+
+<a name="340220384"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332168-Master%20-%205.8.0%20%20%28was%3A%20comms%29/topic/Unloadable%20old%20plugins%20blues/near/340220384" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Dave Register <a href="https://leamas.github.io/zulip-archive/stream/332168-Master---5.2E8.2E0--.28was.3A-comms.29/topic/Unloadable.20old.20plugins.20blues.html#340220384">(Mar 07 2023 at 21:47)</a>:</h4>
+<p><span class="user-mention" data-user-id="522486">@Håkan Svensson</span> <br>
+I agree.  Unfriendly behavior.<br>
+This method to validate plugins should not be concerned about "old" plugins in "Program Files/...".  They are dormant, except for the 4 in-built plugins.<br>
+A simple thing to do is to check if offending "Program Files/..." plugins are in the list of four standard plugins.  If not, simply ignore them, since we cannot remove them inline without elevation to Admin permissions.<br>
+<span class="user-mention" data-user-id="399510">@Alec Leamas</span> <br>
+Any reason not to do this?</p>
+
+
+
+<a name="340220599"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332168-Master%20-%205.8.0%20%20%28was%3A%20comms%29/topic/Unloadable%20old%20plugins%20blues/near/340220599" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Alec Leamas <a href="https://leamas.github.io/zulip-archive/stream/332168-Master---5.2E8.2E0--.28was.3A-comms.29/topic/Unloadable.20old.20plugins.20blues.html#340220599">(Mar 07 2023 at 21:48)</a>:</h4>
+<p>no, just short of time</p>
+
+
+
+<a name="340220749"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332168-Master%20-%205.8.0%20%20%28was%3A%20comms%29/topic/Unloadable%20old%20plugins%20blues/near/340220749" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Alec Leamas <a href="https://leamas.github.io/zulip-archive/stream/332168-Master---5.2E8.2E0--.28was.3A-comms.29/topic/Unloadable.20old.20plugins.20blues.html#340220749">(Mar 07 2023 at 21:49)</a>:</h4>
+<p>however. it  will be clumsy code taking three platforms into consideration</p>
+
+
+
+<a name="340220905"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332168-Master%20-%205.8.0%20%20%28was%3A%20comms%29/topic/Unloadable%20old%20plugins%20blues/near/340220905" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Dave Register <a href="https://leamas.github.io/zulip-archive/stream/332168-Master---5.2E8.2E0--.28was.3A-comms.29/topic/Unloadable.20old.20plugins.20blues.html#340220905">(Mar 07 2023 at 21:50)</a>:</h4>
+<p>Yes.  Not so pretty.  OK, I'll take crack at it tonight.</p>
+
+
+
+<a name="340267940"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332168-Master%20-%205.8.0%20%20%28was%3A%20comms%29/topic/Unloadable%20old%20plugins%20blues/near/340267940" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Dave Register <a href="https://leamas.github.io/zulip-archive/stream/332168-Master---5.2E8.2E0--.28was.3A-comms.29/topic/Unloadable.20old.20plugins.20blues.html#340267940">(Mar 08 2023 at 04:53)</a>:</h4>
+<p><span class="user-mention" data-user-id="399510">@Alec Leamas</span> <br>
+I implemented as discussed.  Not so ugly after all, the parts were already built.<br>
+But in testing, I did discover what I think is a bug, and attempted correction in <a href="https://github.com/opencpn/OpenCPN/commit/b06d73f8943434a09934d91e4894df3a5075bef8">b06d73f8943434a09934d91e4894df3a5075bef8</a><br>
+Please review and comment.</p>
+
+
+
+<a name="340286924"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332168-Master%20-%205.8.0%20%20%28was%3A%20comms%29/topic/Unloadable%20old%20plugins%20blues/near/340286924" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Håkan Svensson <a href="https://leamas.github.io/zulip-archive/stream/332168-Master---5.2E8.2E0--.28was.3A-comms.29/topic/Unloadable.20old.20plugins.20blues.html#340286924">(Mar 08 2023 at 07:42)</a>:</h4>
+<p>Dated plugins in "C:\Program Files (x86)\OpenCPN\plugins" now nicely ignored. Both by messaging and loading functions. One row in the log file for anyone to use while house holding the disk.<br>
+Thanks.</p>
+
+
+
+<hr><p>Last updated: Oct 05 2023 at 09:43 UTC</p>
+</html>

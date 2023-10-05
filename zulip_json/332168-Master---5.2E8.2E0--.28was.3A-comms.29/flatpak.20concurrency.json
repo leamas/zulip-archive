@@ -1,0 +1,134 @@
+[
+    {
+        "content": "<p>We've been seeing spurious failures for flatpak plugin builds. The systems are vague, some file not being present. It fails once in every while. Dave has seen this on o-charts, and I've seen it in radar_pi.</p>",
+        "id": 350042633,
+        "sender_full_name": "Kees Verruijt",
+        "timestamp": 1681504917
+    },
+    {
+        "content": "<p>In my experience, this is generally caused by a missing dependency.</p>",
+        "id": 350042744,
+        "sender_full_name": "Kees Verruijt",
+        "timestamp": 1681504947
+    },
+    {
+        "content": "<p>indeed.  however, in this case is an internal cmake one, we have no target for ranlib, just a static ilbrary.</p>",
+        "id": 350043189,
+        "sender_full_name": "Alec Leamas",
+        "timestamp": 1681505116
+    },
+    {
+        "content": "<p>This topic was moved here from <a class=\"stream-topic\" data-stream-id=\"282854\" href=\"/#narrow/stream/282854-general/topic/flatpak.20concurrency\">#general &gt; flatpak concurrency</a> by <span class=\"user-mention silent\" data-user-id=\"399510\">Alec Leamas</span>.</p>",
+        "id": 350043601,
+        "sender_full_name": "Notification Bot",
+        "timestamp": 1681505282
+    },
+    {
+        "content": "<p><span class=\"user-mention\" data-user-id=\"493038\">@Kees Verruijt</span> Could you try to disable your concurrency patch i. e., enable parallel  jobs  and try this patch instead?</p>\n<div class=\"codehilite\"><pre><span></span><code>diff --git a/libs/nmea0183/CMakeLists.txt b/libs/nmea0183/CMakeLists.txt\nindex 26aa22f7..564ae521 100644\n--- a/libs/nmea0183/CMakeLists.txt\n+++ b/libs/nmea0183/CMakeLists.txt\n@@ -8,6 +8,8 @@ if (NOT CMAKE_MODULE_PATH)\n   set (CMAKE_MODULE_PATH ${CMAKE_CURRENT_SOURCE_DIR}/../../cmake)\n endif ()\n\n+set(CMAKE_RANLIB /bin/true)\n+\n SET(SRC\n   src/expid.cpp\n   src/hdg.cpp\n</code></pre></div>\n<p>Still not sure what this is all about, but as long it indeed is about the NMEA library it should work around this  particular issue.</p>",
+        "id": 350047405,
+        "sender_full_name": "Alec Leamas",
+        "timestamp": 1681506727
+    },
+    {
+        "content": "<p>One hint I saw this interesting bit of log:</p>\n<div class=\"codehilite\"><pre><span></span><code>[ 52%] Building CXX object libs/nmea0183/CMakeFiles/NMEA0183.dir/src/talkerid.cpp.o\n[ 52%] Building CXX object libs/nmea0183/CMakeFiles/NMEA0183.dir/src/talkerid.cpp.o\n[ 53%] Linking CXX static library libNMEA0183.a\n[ 53%] Linking CXX static library libNMEA0183.a\n</code></pre></div>\n<p>(when I removed the verbose stuff.) It's as if it is building libNMEA0183 twice, in parallel. This is of course a recipe for disaster...</p>",
+        "id": 350048279,
+        "sender_full_name": "Kees Verruijt",
+        "timestamp": 1681507095
+    },
+    {
+        "content": "<p>I'm trying to build flatpak locally, on a Ubuntu 22.04 arm64, but it's failing early on as if there is nothing to build (and then the next step says where's the SO file?)</p>",
+        "id": 350048482,
+        "sender_full_name": "Kees Verruijt",
+        "timestamp": 1681507196
+    },
+    {
+        "content": "<p>Another issue is that you seem to be using  an outdated version of the nmea0183 library. In particular, it contains a strange <code>target_link_libraries(NMEA0183)</code> which links the library to... what? </p>\n<p>The best would be if  you could update your libs/nmea0183 from opencpn-libs; the latter is in better shape.</p>",
+        "id": 350049393,
+        "sender_full_name": "Alec Leamas",
+        "timestamp": 1681507665
+    },
+    {
+        "content": "<blockquote>\n<p>I'm trying to build flatpak locally, on a Ubuntu 22.04 arm64, but it's failing early on as if there is nothing to build (and then the next step says where's the SO file?)</p>\n</blockquote>\n<p>Have you installed flatpak-builder?</p>",
+        "id": 350049776,
+        "sender_full_name": "Alec Leamas",
+        "timestamp": 1681507830
+    },
+    {
+        "content": "<p>... and the other build deps documented in <a href=\"https://opencpn-manuals.github.io/main/AlternativeWorkflow/Local-Build.html\">https://opencpn-manuals.github.io/main/AlternativeWorkflow/Local-Build.html</a>?</p>",
+        "id": 350049933,
+        "sender_full_name": "Alec Leamas",
+        "timestamp": 1681507903
+    },
+    {
+        "content": "<p>Yes, but I had to install the \"official flatpak PPA\"; the Ubuntu flatpak is insufficient. The \"alexlarsson\" PPA doesn't work with Ubuntu <br>\n22.04.</p>",
+        "id": 350051394,
+        "sender_full_name": "Kees Verruijt",
+        "timestamp": 1681508671
+    },
+    {
+        "content": "<blockquote>\n<p>\"Official Flatpak PPA\"</p>\n</blockquote>\n<p>What is that?</p>",
+        "id": 350166294,
+        "sender_full_name": "Alec Leamas",
+        "timestamp": 1681566758
+    },
+    {
+        "content": "<p><span class=\"user-mention\" data-user-id=\"493038\">@Kees Verruijt</span>  I understand that you are busy, no problems. Just to clarify, I'm waiting for input for my  question above.</p>\n<p>More important,  I'm also waiting for input  on what's happening after updating <em>libs/nmea0183</em> as described earlier, also above</p>",
+        "id": 350266130,
+        "sender_full_name": "Alec Leamas",
+        "timestamp": 1681630654
+    },
+    {
+        "content": "<p><span class=\"user-mention silent\" data-user-id=\"399510\">Alec Leamas</span> <a href=\"#narrow/stream/332168-Master---5.2E8.2E0--.28was.3A-comms.29/topic/flatpak.20concurrency/near/350166294\">said</a>:</p>\n<blockquote>\n<blockquote>\n<p>\"Official Flatpak PPA\"</p>\n</blockquote>\n<p>What is that?</p>\n</blockquote>\n<p>From <a href=\"http://flatpak.org\">flatpak.org</a>:</p>\n<p>the official Flatpak PPA is the recommended way to install Flatpak. To install it, run the following in a terminal:</p>\n<div class=\"codehilite\"><pre><span></span><code>   sudo add-apt-repository ppa:flatpak/stable\n   sudo apt update\n   sudo apt install flatpak\n</code></pre></div>",
+        "id": 350292733,
+        "sender_full_name": "Kees Verruijt",
+        "timestamp": 1681642496
+    },
+    {
+        "content": "<p>I have since found a workaround for the issue I had with the Ubuntu version: run <code>git config --global protocol.file.allow always</code>.</p>\n<p>Good morning/afternoon by the way! Back after a while. I'll be picking this back up today. I can now run builds in a loop until they fail. And one of the tests I'll be doing is removing the old NMEA0183 lib in radar_pi, for sure.</p>",
+        "id": 350293022,
+        "sender_full_name": "Kees Verruijt",
+        "timestamp": 1681642634
+    },
+    {
+        "content": "<p>On phone... The best test would be to update the version in libs/, and add the single line patch above</p>",
+        "id": 350315511,
+        "sender_full_name": "Alec Leamas",
+        "timestamp": 1681651568
+    },
+    {
+        "content": "<p>Intermediate results: swapping out ./libs/nmea0183 for ./ocpn-libs/nmea0183 doesn't change things. There are still 2 x builds of <code>nmea0183</code> and  <code>wxjson</code> when I do this. Classic race condition.</p>",
+        "id": 350320062,
+        "sender_full_name": "Kees Verruijt",
+        "timestamp": 1681653523
+    },
+    {
+        "content": "<blockquote>\n<p>Intermediate results: swapping out ./libs/nmea0183 for ./ocpn-libs/nmea0183 doesn't change things</p>\n</blockquote>\n<p>Even with the CMAKE_RANLIB patch from above?</p>",
+        "id": 350349398,
+        "sender_full_name": "Alec Leamas",
+        "timestamp": 1681668315
+    },
+    {
+        "content": "<p>I think the fix is quite simple...<br>\n<a href=\"https://github.com/opencpn-radar-pi/radar_pi/commit/b01a03b71c081b9a50849fafb4509c355a58a725\">https://github.com/opencpn-radar-pi/radar_pi/commit/b01a03b71c081b9a50849fafb4509c355a58a725</a></p>\n<p>My analysis is that building to a different target (flatpak -&gt; tarball) causes the (c)makefiles to be rebuilt halfway through the flatpak part of the build, causing all sorts of issues. On my local arm64 build the result is exactly the same (including test by import and deploy of the <code>.tar.gz</code> file) but it </p>\n<p>a) doesn't have double records showing the same thing being built twice <br>\nb) takes 40s instead of 1m10.</p>",
+        "id": 350354827,
+        "sender_full_name": "Kees Verruijt",
+        "timestamp": 1681671681
+    },
+    {
+        "content": "<p>BTW, the -j1/-j2 did not have any real effect on build times: the nested flatpak build part ignores this, and on my 4 core VM my Qemu process reliably uses 395 % both before any fixes and after = ergo the flatpak build properly picks up the # of CPUs.</p>",
+        "id": 350355217,
+        "sender_full_name": "Kees Verruijt",
+        "timestamp": 1681671914
+    },
+    {
+        "content": "<p>Please have a look yourself. I can generate PRs if you agree.</p>",
+        "id": 350355257,
+        "sender_full_name": "Kees Verruijt",
+        "timestamp": 1681671960
+    },
+    {
+        "content": "<p>The normal logs generated are \"too rich\" to notice, but during the build before this fix large parts were built twice. I zeroed in to this issue by _reducing_ the logging and switching the flatpak-builder part from <code>cmake</code>  to <code>cmake-ninja</code>.</p>",
+        "id": 350355733,
+        "sender_full_name": "Kees Verruijt",
+        "timestamp": 1681672312
+    }
+]

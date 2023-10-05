@@ -1,0 +1,430 @@
+<html>
+<head><meta charset="utf-8"><title>Plugins for Win wx3.2.1 · Master - 5.8.0  (was: comms) · Zulip Chat Archive</title></head>
+<h2>Stream: <a href="https://leamas.github.io/zulip-archive/stream/332168-Master---5.2E8.2E0--.28was.3A-comms.29/index.html">Master - 5.8.0  (was: comms)</a></h2>
+<h3>Topic: <a href="https://leamas.github.io/zulip-archive/stream/332168-Master---5.2E8.2E0--.28was.3A-comms.29/topic/Plugins.20for.20Win.20wx3.2E2.2E1.html">Plugins for Win wx3.2.1</a></h3>
+
+<hr>
+
+<base href="https://opencpn.zulipchat.com">
+
+<head><link href="https://leamas.github.io/zulip-archive/style.css" rel="stylesheet"></head>
+
+<a name="309175854"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332168-Master%20-%205.8.0%20%20%28was%3A%20comms%29/topic/Plugins%20for%20Win%20wx3.2.1/near/309175854" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Håkan Svensson <a href="https://leamas.github.io/zulip-archive/stream/332168-Master---5.2E8.2E0--.28was.3A-comms.29/topic/Plugins.20for.20Win.20wx3.2E2.2E1.html#309175854">(Nov 11 2022 at 11:44)</a>:</h4>
+<p>How should we handle plugins update to target "msvc-wx32".<br>
+Since the plugin itself has not changed, due to Win is changing to wx32, release of alpha or beta version would not be feasible. </p>
+<ul>
+<li>
+<p>One method would be to update plugin release master as usual but while update to "Plugins" the author should not delete previous metadata for the actual plugin version.  So as an example I would leave the present "ais-vd-1.8.0-msvc-10.0.14393.xml" together with the new "ais-vd-1.8.0-msvc-wx32-10.0.14393.xml". <br>
+With this I suppose we will not jeopardize for neither those updating the plugin for O 5.6.1 nor those updating for O 5.8.0 (beta 5.7.x) since Pluginmanager will be able to distinguish between the two versions. Correct?</p>
+</li>
+<li>
+<p>For now we have to manually update appveyor.yml and .\cmake\PluginSetup.cmake to fit wx 3.2.1 installation and tarball designation. That has to be done efter a possible "Update_Templates".  (Or can "Update_Templates" be adapted in due time?)<br>
+For now I've prepared ais-vd_pi as of o-charts_pi branch wx321.</p>
+</li>
+</ul>
+<p>Comments for a general decision and messaging plugin authors?</p>
+
+
+
+<a name="309186448"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332168-Master%20-%205.8.0%20%20%28was%3A%20comms%29/topic/Plugins%20for%20Win%20wx3.2.1/near/309186448" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Alec Leamas <a href="https://leamas.github.io/zulip-archive/stream/332168-Master---5.2E8.2E0--.28was.3A-comms.29/topic/Plugins.20for.20Win.20wx3.2E2.2E1.html#309186448">(Nov 11 2022 at 12:52)</a>:</h4>
+<p>The overall strategy should be to leave these questions to the plugin build chains testplugin and shipdriver. This way , the changes can be centralized. o-charts is a special case, most of the changes here will be  synchronized with shipdriver.</p>
+<p>During the alpha phase we could use the plugin beta catalog so we are free to work with this without affecting the stable plugins. No idea of <span class="user-mention" data-user-id="517002">@Dave Register</span> 's thoughts on this.  But at a later stage, your are right: it is perfectly ok to have multiple versions in the catalog, so we keep the old ones in place while starting the work with the new.</p>
+<p>The first step here is to file issues against shipdriver and tesplugin. We are almost there, but still need to sort out the MacOS version to build for, see <a href="https://github.com/OpenCPN/OpenCPN/discussions/2797">https://github.com/OpenCPN/OpenCPN/discussions/2797</a>.  Once the MacOS issue is sorted out, I will file  the bugs and the start  to work with shipdriver. </p>
+<p>Not sure what will happen with testplugin, havn't heard from Jon for a while.</p>
+
+
+
+<a name="309203590"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332168-Master%20-%205.8.0%20%20%28was%3A%20comms%29/topic/Plugins%20for%20Win%20wx3.2.1/near/309203590" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Dave Register <a href="https://leamas.github.io/zulip-archive/stream/332168-Master---5.2E8.2E0--.28was.3A-comms.29/topic/Plugins.20for.20Win.20wx3.2E2.2E1.html#309203590">(Nov 11 2022 at 14:33)</a>:</h4>
+<p>Let's use Beta catalog for now, at least thru Alpha testing.  For production, I see no reason not to keep legacy (mvsc and darwin-wx315) plugins in the catalog.  Up to the plugin authors whether they will back-port bug fixes to the legacy plugins over time.  My opinion is:  Only for critical bugs.  This will encourage users to update to O58 to get the best plugin experience.</p>
+
+
+
+<a name="309210055"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332168-Master%20-%205.8.0%20%20%28was%3A%20comms%29/topic/Plugins%20for%20Win%20wx3.2.1/near/309210055" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Håkan Svensson <a href="https://leamas.github.io/zulip-archive/stream/332168-Master---5.2E8.2E0--.28was.3A-comms.29/topic/Plugins.20for.20Win.20wx3.2E2.2E1.html#309210055">(Nov 11 2022 at 15:08)</a>:</h4>
+<p>Good. Beta catalog it will be. Thanks.<br>
+Could anyone else better English writer put this together this to the 5.8 discussion mentioned above for more general information?</p>
+<blockquote>
+<p>back-port bug fixes to the legacy plugins</p>
+</blockquote>
+<p>That was not my intention. Just to keep e.g. msvc as they are for those not yet updated O to 5.8. I concur the idea to force a O update by not update plugins for O 5.6</p>
+
+
+
+<a name="309236003"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332168-Master%20-%205.8.0%20%20%28was%3A%20comms%29/topic/Plugins%20for%20Win%20wx3.2.1/near/309236003" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Mike Rossiter <a href="https://leamas.github.io/zulip-archive/stream/332168-Master---5.2E8.2E0--.28was.3A-comms.29/topic/Plugins.20for.20Win.20wx3.2E2.2E1.html#309236003">(Nov 11 2022 at 17:42)</a>:</h4>
+<p><span class="user-mention" data-user-id="522486">@Håkan Svensson</span>  Do you have a repo in github to see what needs changing for O5.8? ais-vd? Need a version which does not use opencpn-libs git sub-module in the template.</p>
+
+
+
+<a name="309245539"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332168-Master%20-%205.8.0%20%20%28was%3A%20comms%29/topic/Plugins%20for%20Win%20wx3.2.1/near/309245539" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Håkan Svensson <a href="https://leamas.github.io/zulip-archive/stream/332168-Master---5.2E8.2E0--.28was.3A-comms.29/topic/Plugins.20for.20Win.20wx3.2E2.2E1.html#309245539">(Nov 11 2022 at 18:50)</a>:</h4>
+<p><span class="user-mention" data-user-id="399559">@Mike Rossiter</span> <br>
+ais-vd is not yet updated on Github just local. And the opencpn-lib is there.<br>
+For msvc changes I copied o-charts_pi branch wx321.  And I realize from Dave's note above  I may look more careful for Mac darwin-w315 changes as well.</p>
+
+
+
+<a name="309259633"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332168-Master%20-%205.8.0%20%20%28was%3A%20comms%29/topic/Plugins%20for%20Win%20wx3.2.1/near/309259633" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Dave Register <a href="https://leamas.github.io/zulip-archive/stream/332168-Master---5.2E8.2E0--.28was.3A-comms.29/topic/Plugins.20for.20Win.20wx3.2E2.2E1.html#309259633">(Nov 11 2022 at 20:56)</a>:</h4>
+<p><span class="user-mention" data-user-id="399559">@Mike Rossiter</span> <br>
+Not sure what you need.  Can I help?</p>
+
+
+
+<a name="309315483"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332168-Master%20-%205.8.0%20%20%28was%3A%20comms%29/topic/Plugins%20for%20Win%20wx3.2.1/near/309315483" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Mike Rossiter <a href="https://leamas.github.io/zulip-archive/stream/332168-Master---5.2E8.2E0--.28was.3A-comms.29/topic/Plugins.20for.20Win.20wx3.2E2.2E1.html#309315483">(Nov 12 2022 at 10:15)</a>:</h4>
+<p><span class="user-mention" data-user-id="517002">@Dave Register</span> I have compiled O5.7.1 and am trying to get ahead of plugin updates for wx3.2.1. These will probably have to wait for Alex to update the ShipDriver template but in the meantime I am testing some ideas. I think I can get the changes needed from o-charts_pi.</p>
+
+
+
+<a name="309332093"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332168-Master%20-%205.8.0%20%20%28was%3A%20comms%29/topic/Plugins%20for%20Win%20wx3.2.1/near/309332093" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Mike Rossiter <a href="https://leamas.github.io/zulip-archive/stream/332168-Master---5.2E8.2E0--.28was.3A-comms.29/topic/Plugins.20for.20Win.20wx3.2E2.2E1.html#309332093">(Nov 12 2022 at 12:31)</a>:</h4>
+<p><span class="user-mention" data-user-id="517002">@Dave Register</span>  Ok ... got there. Shipdriver repo: <a href="https://github.com/Rasbats/shipdriver_pi/tree/v3.0-msvc-wx32">https://github.com/Rasbats/shipdriver_pi/tree/v3.0-msvc-wx32</a></p>
+<p>Tarball is here: <a href="https://cloudsmith.io/~opencpn/repos/shipdriver-alpha/packages/">https://cloudsmith.io/~opencpn/repos/shipdriver-alpha/packages/</a></p>
+<p>Needed to reset the configuration files when doing a parallel install of the alpha in order that OpenCPN recognises the tarball.</p>
+
+
+
+<a name="312990210"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332168-Master%20-%205.8.0%20%20%28was%3A%20comms%29/topic/Plugins%20for%20Win%20wx3.2.1/near/312990210" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Dave Register <a href="https://leamas.github.io/zulip-archive/stream/332168-Master---5.2E8.2E0--.28was.3A-comms.29/topic/Plugins.20for.20Win.20wx3.2E2.2E1.html#312990210">(Nov 30 2022 at 05:40)</a>:</h4>
+<p>New point regarding plugin API detection.<br>
+Experimenting with Ubuntu Jammy, which is our first ubuntu target with wx32.<br>
+Looks to me like we will need to adapt core so that the os name definition used to match plugins will work sensibly.<br>
+For instance, we need to change the target tuple for jammy.<br>
+ from: "ubuntu-x86_64; 22.04; x86_64" <br>
+ to:  ubuntu-x86_64-wx32; 22.04; x86_64</p>
+<p>If we do not do this, then OCPN core thinks that existing plugins in the catalog targeting "ubuntu-x86_64; 22.04; x86_64" are compatible.  But they are not, since they are built with some wx30 version.<br>
+ Result:</p>
+<ol>
+<li>The plugin manager says the plugin is available.</li>
+<li>When selected plugin has bee downloaded and installed, the actual load fails.</li>
+<li>User consternation.</li>
+</ol>
+<p>So, questions:</p>
+<ol>
+<li>Will this break anything?</li>
+<li>Should we do this only for "ubuntu" hosts, and let the os version number accomplish the same thing on say, debian?</li>
+</ol>
+
+
+
+<a name="313016933"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332168-Master%20-%205.8.0%20%20%28was%3A%20comms%29/topic/Plugins%20for%20Win%20wx3.2.1/near/313016933" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Alec Leamas <a href="https://leamas.github.io/zulip-archive/stream/332168-Master---5.2E8.2E0--.28was.3A-comms.29/topic/Plugins.20for.20Win.20wx3.2E2.2E1.html#313016933">(Nov 30 2022 at 09:26)</a>:</h4>
+<p>This is actually a transition problem on Jammy which is the only version which has both ubuntu and ubuntu-wx32 plugins in play.  I cannot see that using ubuntu-wx32 should break anything.</p>
+<p>However, ubuntu-wx32 plugins is basically a corner case. When should these be available? We are moving to use debian plugins, for Jammy that is Debian-11. And here everything already is in place with <em>debian</em> and <em>debian-wx32</em></p>
+
+
+
+<a name="313071755"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332168-Master%20-%205.8.0%20%20%28was%3A%20comms%29/topic/Plugins%20for%20Win%20wx3.2.1/near/313071755" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Dave Register <a href="https://leamas.github.io/zulip-archive/stream/332168-Master---5.2E8.2E0--.28was.3A-comms.29/topic/Plugins.20for.20Win.20wx3.2E2.2E1.html#313071755">(Nov 30 2022 at 14:27)</a>:</h4>
+<p>Slept on it.</p>
+<ol>
+<li>If we all follow something like the sd templates, we will not be ever building new plugins for ubuntu at all.  </li>
+<li>Existing OCPN O562 users on jammy will  have the plugins currently in the catalog.</li>
+<li>OCPN 58 users on jammy will get wx32, and plugins satisfied by debian builds.</li>
+</ol>
+<p>It may be safer to do this in simple code:   if on ubuntu, and wx version =&gt; 3.2.x, then ignore plugins targeting "ubuntu-x"..<br>
+Thoughts?</p>
+
+
+
+<a name="313075771"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332168-Master%20-%205.8.0%20%20%28was%3A%20comms%29/topic/Plugins%20for%20Win%20wx3.2.1/near/313075771" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Alec Leamas <a href="https://leamas.github.io/zulip-archive/stream/332168-Master---5.2E8.2E0--.28was.3A-comms.29/topic/Plugins.20for.20Win.20wx3.2E2.2E1.html#313075771">(Nov 30 2022 at 14:44)</a>:</h4>
+<p>Seems basically fine. We could implement this by setting the target to <em>ubuntu-wx32</em>. If we don't build any such plugins the only available will be <em>debian-wx32</em>. </p>
+<p>It also keeps a loophole open (which I think is sound) for <em>ubuntu-wx32</em> plugins. This is what we would need to do if the Debian plugins does not work. I don't expect this to happen, but...</p>
+
+
+
+<a name="313078567"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332168-Master%20-%205.8.0%20%20%28was%3A%20comms%29/topic/Plugins%20for%20Win%20wx3.2.1/near/313078567" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Dave Register <a href="https://leamas.github.io/zulip-archive/stream/332168-Master---5.2E8.2E0--.28was.3A-comms.29/topic/Plugins.20for.20Win.20wx3.2E2.2E1.html#313078567">(Nov 30 2022 at 14:57)</a>:</h4>
+<p>This practical issue today is O58 on jammy with the existing catalog.  He incorrectly offers ubuntu plugins that don't work.<br>
+Best solution, with your comment, is to make core OCPN target as ubuntu-wx32.   And do not hard-code the IsCompatible() logic.<br>
+patch looks like this, in TargetSetup.cmake</p>
+<div class="codehilite"><pre><span></span><code>if (UNIX)
+  if (( wxWidgets_VERSION_STRING VERSION_GREATER &quot;3.1.0&quot;) AND (NOT APPLE))
+     set(PKG_TARGET &quot;${PKG_TARGET}-wx32&quot;)
+  endif()
+....
+</code></pre></div>
+
+
+
+<a name="313079989"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332168-Master%20-%205.8.0%20%20%28was%3A%20comms%29/topic/Plugins%20for%20Win%20wx3.2.1/near/313079989" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Alec Leamas <a href="https://leamas.github.io/zulip-archive/stream/332168-Master---5.2E8.2E0--.28was.3A-comms.29/topic/Plugins.20for.20Win.20wx3.2E2.2E1.html#313079989">(Nov 30 2022 at 15:04)</a>:</h4>
+<p>Yes, should do it. </p>
+<p>The alternative would be not patch at all and use <em>-DOCPN_TARGET_TUPLE=ubuntu-wx32;22.04;whatever</em>. Perhaps somewhat cleaner, no need to check specific versions in TargetSetup.</p>
+
+
+
+<a name="313082362"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332168-Master%20-%205.8.0%20%20%28was%3A%20comms%29/topic/Plugins%20for%20Win%20wx3.2.1/near/313082362" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Dave Register <a href="https://leamas.github.io/zulip-archive/stream/332168-Master---5.2E8.2E0--.28was.3A-comms.29/topic/Plugins.20for.20Win.20wx3.2E2.2E1.html#313082362">(Nov 30 2022 at 15:16)</a>:</h4>
+<p>Simpler .  Where best to do that?  I guess debian/rules for PPA build?  Or....</p>
+
+
+
+<a name="313083349"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332168-Master%20-%205.8.0%20%20%28was%3A%20comms%29/topic/Plugins%20for%20Win%20wx3.2.1/near/313083349" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Alec Leamas <a href="https://leamas.github.io/zulip-archive/stream/332168-Master---5.2E8.2E0--.28was.3A-comms.29/topic/Plugins.20for.20Win.20wx3.2E2.2E1.html#313083349">(Nov 30 2022 at 15:21)</a>:</h4>
+<p>Yes, d/rules is the right place when making a Debian package.</p>
+
+
+
+<a name="313084849"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332168-Master%20-%205.8.0%20%20%28was%3A%20comms%29/topic/Plugins%20for%20Win%20wx3.2.1/near/313084849" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Alec Leamas <a href="https://leamas.github.io/zulip-archive/stream/332168-Master---5.2E8.2E0--.28was.3A-comms.29/topic/Plugins.20for.20Win.20wx3.2E2.2E1.html#313084849">(Nov 30 2022 at 15:27)</a>:</h4>
+<p>... in which case you probably want to use something like $(DEB_TARGET_GNU_CPU). However, it's not clear-cut since we use x86_64 instead of  amd64 and arm64 instead of aarch64 so some tweaks are needed. The command <em>dpkg-architecture</em> gives some hints.</p>
+
+
+
+<a name="313093188"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332168-Master%20-%205.8.0%20%20%28was%3A%20comms%29/topic/Plugins%20for%20Win%20wx3.2.1/near/313093188" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Alec Leamas <a href="https://leamas.github.io/zulip-archive/stream/332168-Master---5.2E8.2E0--.28was.3A-comms.29/topic/Plugins.20for.20Win.20wx3.2E2.2E1.html#313093188">(Nov 30 2022 at 16:03)</a>:</h4>
+<p>I have more complete solutions for the arch problem available, let me know if you need it.</p>
+
+
+
+<a name="313103578"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332168-Master%20-%205.8.0%20%20%28was%3A%20comms%29/topic/Plugins%20for%20Win%20wx3.2.1/near/313103578" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Dave Register <a href="https://leamas.github.io/zulip-archive/stream/332168-Master---5.2E8.2E0--.28was.3A-comms.29/topic/Plugins.20for.20Win.20wx3.2E2.2E1.html#313103578">(Nov 30 2022 at 16:48)</a>:</h4>
+<p>Could use a little debian help on this.  Cannot see how to detect wx version from d/rules. Ideas?</p>
+
+
+
+<a name="313113430"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332168-Master%20-%205.8.0%20%20%28was%3A%20comms%29/topic/Plugins%20for%20Win%20wx3.2.1/near/313113430" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Alec Leamas <a href="https://leamas.github.io/zulip-archive/stream/332168-Master---5.2E8.2E0--.28was.3A-comms.29/topic/Plugins.20for.20Win.20wx3.2E2.2E1.html#313113430">(Nov 30 2022 at 17:32)</a>:</h4>
+<p>The Debian Way is to branch your PPA repo, with separate branches for wx32 and wx30. This way, there is nothing to detect in each branch.</p>
+
+
+
+<a name="313125691"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332168-Master%20-%205.8.0%20%20%28was%3A%20comms%29/topic/Plugins%20for%20Win%20wx3.2.1/near/313125691" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Dave Register <a href="https://leamas.github.io/zulip-archive/stream/332168-Master---5.2E8.2E0--.28was.3A-comms.29/topic/Plugins.20for.20Win.20wx3.2E2.2E1.html#313125691">(Nov 30 2022 at 18:29)</a>:</h4>
+<p>That might be tough.  I am using the PPA workflow to automatically clone OCPN from github, and then I manually trigger builds when I need one.  Rather not have to add a special wx32 branch to github.  Other ways?</p>
+
+
+
+<a name="313148320"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332168-Master%20-%205.8.0%20%20%28was%3A%20comms%29/topic/Plugins%20for%20Win%20wx3.2.1/near/313148320" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Alec Leamas <a href="https://leamas.github.io/zulip-archive/stream/332168-Master---5.2E8.2E0--.28was.3A-comms.29/topic/Plugins.20for.20Win.20wx3.2E2.2E1.html#313148320">(Nov 30 2022 at 20:25)</a>:</h4>
+<p>There is no need for  a special branch on github, what I'm talking about is the ppa sources i. e., the debian directory. The core problem is that you have the debian directory in the opencpn sources. </p>
+<p>Since you basically need <strong>some</strong> kind of change in the code to create either wx30 or wx32, I cannot see how this should work in current setup without branching or patching.   Things would be so much easier if you had what I have, a separate packaging-only repo which just imports the builds. Branching such a  repo is trivial.</p>
+<p>Need to sleep on this. Seems messy.</p>
+
+
+
+<a name="313241939"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332168-Master%20-%205.8.0%20%20%28was%3A%20comms%29/topic/Plugins%20for%20Win%20wx3.2.1/near/313241939" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Alec Leamas <a href="https://leamas.github.io/zulip-archive/stream/332168-Master---5.2E8.2E0--.28was.3A-comms.29/topic/Plugins.20for.20Win.20wx3.2E2.2E1.html#313241939">(Dec 01 2022 at 10:08)</a>:</h4>
+<p>I still think branching is the right thing to do combined with a separate packaging repo. With some git-fu  it should not be that complicated to use.  A sketch:</p>
+<ul>
+<li>Remove the debian/ directory from main opencpn repo.</li>
+<li>Create a separate  git repository named for example opencpn-ppa as a clone of opencpn.</li>
+<li>In the opencpn-ppa repo create two branches, say wx30 and wx32</li>
+<li>In each of the wx30 and wx32 branches setup a debian/ directory with correct rules, control, changelog and what not. </li>
+</ul>
+<p>When it's time to make a build this is done in opencpn-ppa. Assuming this has a remote named upstream which points to the  main opencpn repo it goes like:</p>
+<div class="codehilite"><pre><span></span><code>$ git remote update upstream
+$ git checkout wx32
+$ git merge upstream/master
+[ make wx32 build]
+
+$ git checkout wx30
+$ git merge upstream/master
+[make wx30 build]
+</code></pre></div>
+<p>... and that's it. There will be no conflicts, the ppa repo does not change anything but the debian/ directory, and upstream does not even know about this dir.  As I see it, this is a simple and clean way.</p>
+<p>Notes:</p>
+<ul>
+<li>The only thing maintained in opencpn-ppa is the debian/ directory.</li>
+<li>the wx30 and wx32 could technically live in the main opencpn repo. However, it often ends up in a mess. Been there, done that.</li>
+<li>The workflow means that any change in the sources (besides debian/) must be done either as a patch in the debian/ directory or in the main repo. This is  a sound rule anyway.</li>
+<li>When it's time to build for 24.04, this is just yet another branch in opencpn-ppa. This makes it possible to use a modified debian/ dir without touching the existing ones -- this is actually what you want.</li>
+</ul>
+
+
+
+<a name="313527688"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332168-Master%20-%205.8.0%20%20%28was%3A%20comms%29/topic/Plugins%20for%20Win%20wx3.2.1/near/313527688" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Dave Register <a href="https://leamas.github.io/zulip-archive/stream/332168-Master---5.2E8.2E0--.28was.3A-comms.29/topic/Plugins.20for.20Win.20wx3.2E2.2E1.html#313527688">(Dec 02 2022 at 15:44)</a>:</h4>
+<p>I have another strategy.<br>
+I know you don't care for run-time "hacks", but this one seems legitimate to me.  <br>
+On early init of OCPN, detect the following:  Host is "ubuntu", wx version is 32 or greater.<br>
+This will hit on jammy+, and nowhere else, I'm pretty sure.<br>
+If hit, append "-wx32" to PKG_TARGET, and set local environment.  Like this.</p>
+<div class="codehilite"><pre><span></span><code>  std::string target = PKG_TARGET;
+  if (ocpn::startswith(target, &quot;ubuntu&quot;)) {
+   int wxv = wxMAJOR_VERSION * 10 + wxMINOR_VERSION;
+    if(wxv &gt;= 32){
+      target += std::string(&quot;-wx32&quot;);
+      setenv(&quot;OPENCPN_COMPAT_TARGET&quot;, target.c_str(), 1);
+    }
+  }
+</code></pre></div>
+
+<p>Flame on....</p>
+
+
+
+<a name="313530368"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332168-Master%20-%205.8.0%20%20%28was%3A%20comms%29/topic/Plugins%20for%20Win%20wx3.2.1/near/313530368" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Dave Register <a href="https://leamas.github.io/zulip-archive/stream/332168-Master---5.2E8.2E0--.28was.3A-comms.29/topic/Plugins.20for.20Win.20wx3.2E2.2E1.html#313530368">(Dec 02 2022 at 15:56)</a>:</h4>
+<p>And another thing:<br>
+Why is the "is_debian_plugin_compatible()" method restricted to x86_64 ARCH?</p>
+
+
+
+<a name="313540891"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332168-Master%20-%205.8.0%20%20%28was%3A%20comms%29/topic/Plugins%20for%20Win%20wx3.2.1/near/313540891" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Alec Leamas <a href="https://leamas.github.io/zulip-archive/stream/332168-Master---5.2E8.2E0--.28was.3A-comms.29/topic/Plugins.20for.20Win.20wx3.2E2.2E1.html#313540891">(Dec 02 2022 at 16:45)</a>:</h4>
+<p>It should work as well, just a matter of overall philosophy I guess. </p>
+<p>However, I don't really understand why to make the complicated work-around  using OPENCPN_COMPAT_TARGET. Also, this will break the documented behavior of that variable since you override it. Better to do it directly in IsCompatible or, perhaps better, CompatOS::CompatOS after properly respecting a target set by user.</p>
+
+
+
+<a name="313541175"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332168-Master%20-%205.8.0%20%20%28was%3A%20comms%29/topic/Plugins%20for%20Win%20wx3.2.1/near/313541175" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Alec Leamas <a href="https://leamas.github.io/zulip-archive/stream/332168-Master---5.2E8.2E0--.28was.3A-comms.29/topic/Plugins.20for.20Win.20wx3.2E2.2E1.html#313541175">(Dec 02 2022 at 16:47)</a>:</h4>
+<blockquote>
+<p>Why is the "is_debian_plugin_compatible()" method restricted to x86_64 ARH</p>
+</blockquote>
+<p>It shouldn't be, it was written at a time arm was a special case. It is a bug which should be fixed.</p>
+
+
+
+<a name="313542683"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332168-Master%20-%205.8.0%20%20%28was%3A%20comms%29/topic/Plugins%20for%20Win%20wx3.2.1/near/313542683" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Alec Leamas <a href="https://leamas.github.io/zulip-archive/stream/332168-Master---5.2E8.2E0--.28was.3A-comms.29/topic/Plugins.20for.20Win.20wx3.2E2.2E1.html#313542683">(Dec 02 2022 at 16:54)</a>:</h4>
+<p>BTW:  If the reason for this is to avoid separate packaging branches I don't really think it's worth it.  To make a proper release you need at least a changelog. You also need to be prepared to have different control files. </p>
+<p>And it's not much of a price. After an initial setup it's just a question about doing <code>git merge</code> instead of <code>git clone</code> or <code>git pull</code></p>
+
+
+
+<a name="313544466"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332168-Master%20-%205.8.0%20%20%28was%3A%20comms%29/topic/Plugins%20for%20Win%20wx3.2.1/near/313544466" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Dave Register <a href="https://leamas.github.io/zulip-archive/stream/332168-Master---5.2E8.2E0--.28was.3A-comms.29/topic/Plugins.20for.20Win.20wx3.2E2.2E1.html#313544466">(Dec 02 2022 at 17:02)</a>:</h4>
+<p>"And it's not much of a price."  It is larger than that.  AFAICT, there is no ssh access to a PPA build stream.  Today, I use PPA tooling to clone from github master. Don't know how to do it otherwise, except by complex process of pushing a debian build instruction to PPA.  Been there, done that, too.  Mucho error prone. So my workflow would have more complicated steps, more opportunity for error.</p>
+
+
+
+<a name="313611491"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332168-Master%20-%205.8.0%20%20%28was%3A%20comms%29/topic/Plugins%20for%20Win%20wx3.2.1/near/313611491" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Alec Leamas <a href="https://leamas.github.io/zulip-archive/stream/332168-Master---5.2E8.2E0--.28was.3A-comms.29/topic/Plugins.20for.20Win.20wx3.2E2.2E1.html#313611491">(Dec 03 2022 at 00:06)</a>:</h4>
+<p>Well, the official packaging is there and can be used more ore less as-is. The maintenance cost for copying it is not high. But admittedly, using that means using a new set of tools.</p>
+<p>But in any case, you cannot have a common d/control for Jammy which links either to wx30 or wx32. Without  branching I guess your option is to first patch d/control to link from wx30 and build from that. And in next step patch d/control to use wx32 and build from that. All this happening in the main repo master branch.</p>
+<p>But in this scheme you could certainly patch d/rules as well, avoiding complicating isCompatible(). Or?</p>
+<p>Late here, but can not sleep until I got this written ;)</p>
+
+
+
+<a name="313698247"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332168-Master%20-%205.8.0%20%20%28was%3A%20comms%29/topic/Plugins%20for%20Win%20wx3.2.1/near/313698247" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Dave Register <a href="https://leamas.github.io/zulip-archive/stream/332168-Master---5.2E8.2E0--.28was.3A-comms.29/topic/Plugins.20for.20Win.20wx3.2E2.2E1.html#313698247">(Dec 03 2022 at 14:55)</a>:</h4>
+<p>I do now have a good d/control, builds bionic, focal, and jammy smoothly, with correct wx version.  So that is done.<br>
+I experimented with d/rules.  I'm not great at raw makefile syntax, so this soon became a rathole.<br>
+Finally,  I adopted CompatOS().  This led to some changes required in IsCompatible() and friends.  Introduced some ugliness that could benefit from additional eyes.<br>
+TODO:  Fix iIsCompatible() for ARMx ARCH, and test, test, test.</p>
+
+
+
+<a name="313787091"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332168-Master%20-%205.8.0%20%20%28was%3A%20comms%29/topic/Plugins%20for%20Win%20wx3.2.1/near/313787091" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Alec Leamas <a href="https://leamas.github.io/zulip-archive/stream/332168-Master---5.2E8.2E0--.28was.3A-comms.29/topic/Plugins.20for.20Win.20wx3.2E2.2E1.html#313787091">(Dec 04 2022 at 10:06)</a>:</h4>
+<p>I just cannot convince you about making a proper packaging, not this time. Perhaps next....  After all, being forced to make the type of hacks here to isCompatible with friends just to handle packaging i,  well, irritating. </p>
+<p>I can just hope that you will see the light one day ;) Let's close this thread</p>
+
+
+
+<a name="314243641"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332168-Master%20-%205.8.0%20%20%28was%3A%20comms%29/topic/Plugins%20for%20Win%20wx3.2.1/near/314243641" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Håkan Svensson <a href="https://leamas.github.io/zulip-archive/stream/332168-Master---5.2E8.2E0--.28was.3A-comms.29/topic/Plugins.20for.20Win.20wx3.2E2.2E1.html#314243641">(Dec 06 2022 at 14:04)</a>:</h4>
+<p>This topic may cover more then Win...<br>
+Info: For neither of my two RPis there are o-charts master plugin available. <br>
+The "Active settings" are <br>
+rasbian-armhf:10  <br>
+and <br>
+debian-arm64:11<br>
+<a href="/user_uploads/33951/SupAU2Mk2-PDO_t6Wklcb_-H/bild.png">bild.png</a><br>
+<a href="/user_uploads/33951/B-vutG03S5z9ogGNGxJhKIqK/bild.png">bild.png</a></p>
+<div class="message_inline_image"><a href="/user_uploads/33951/SupAU2Mk2-PDO_t6Wklcb_-H/bild.png" title="bild.png"><img src="/user_uploads/33951/SupAU2Mk2-PDO_t6Wklcb_-H/bild.png"></a></div><div class="message_inline_image"><a href="/user_uploads/33951/B-vutG03S5z9ogGNGxJhKIqK/bild.png" title="bild.png"><img src="/user_uploads/33951/B-vutG03S5z9ogGNGxJhKIqK/bild.png"></a></div>
+
+
+
+<a name="314252960"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332168-Master%20-%205.8.0%20%20%28was%3A%20comms%29/topic/Plugins%20for%20Win%20wx3.2.1/near/314252960" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Dave Register <a href="https://leamas.github.io/zulip-archive/stream/332168-Master---5.2E8.2E0--.28was.3A-comms.29/topic/Plugins.20for.20Win.20wx3.2E2.2E1.html#314252960">(Dec 06 2022 at 14:51)</a>:</h4>
+<p>Hakan...<br>
+o-charts for rPI not quite ready yet.  Soon....</p>
+
+
+
+<a name="314324274"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332168-Master%20-%205.8.0%20%20%28was%3A%20comms%29/topic/Plugins%20for%20Win%20wx3.2.1/near/314324274" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Håkan Svensson <a href="https://leamas.github.io/zulip-archive/stream/332168-Master---5.2E8.2E0--.28was.3A-comms.29/topic/Plugins.20for.20Win.20wx3.2E2.2E1.html#314324274">(Dec 06 2022 at 20:51)</a>:</h4>
+<p>No problem when it was a known issue.</p>
+
+
+
+<a name="315550168"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332168-Master%20-%205.8.0%20%20%28was%3A%20comms%29/topic/Plugins%20for%20Win%20wx3.2.1/near/315550168" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Håkan Svensson <a href="https://leamas.github.io/zulip-archive/stream/332168-Master---5.2E8.2E0--.28was.3A-comms.29/topic/Plugins.20for.20Win.20wx3.2E2.2E1.html#315550168">(Dec 13 2022 at 10:03)</a>:</h4>
+<p><span class="user-mention" data-user-id="517002">@Dave Register</span> <br>
+Win8/10<br>
+I updated master catalog and tried to install o-charts 2.0.0.13. -&gt; Bad checksum (nothing in log-file)<br>
+A local built tarball is though functional although still version 2.0.0.1</p>
+<p><a href="/user_uploads/33951/fxvqHAiMEAQt9hFZJqfBibaQ/bild.png">bild.png</a></p>
+<div class="message_inline_image"><a href="/user_uploads/33951/fxvqHAiMEAQt9hFZJqfBibaQ/bild.png" title="bild.png"><img src="/user_uploads/33951/fxvqHAiMEAQt9hFZJqfBibaQ/bild.png"></a></div>
+
+
+
+<a name="315649432"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332168-Master%20-%205.8.0%20%20%28was%3A%20comms%29/topic/Plugins%20for%20Win%20wx3.2.1/near/315649432" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Dave Register <a href="https://leamas.github.io/zulip-archive/stream/332168-Master---5.2E8.2E0--.28was.3A-comms.29/topic/Plugins.20for.20Win.20wx3.2E2.2E1.html#315649432">(Dec 13 2022 at 17:52)</a>:</h4>
+<p>Corrected now in plugin catalog master.</p>
+
+
+
+<a name="315655310"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332168-Master%20-%205.8.0%20%20%28was%3A%20comms%29/topic/Plugins%20for%20Win%20wx3.2.1/near/315655310" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Håkan Svensson <a href="https://leamas.github.io/zulip-archive/stream/332168-Master---5.2E8.2E0--.28was.3A-comms.29/topic/Plugins.20for.20Win.20wx3.2E2.2E1.html#315655310">(Dec 13 2022 at 18:20)</a>:</h4>
+<p>Yes now no checksum error.<br>
+It installs though with a crash.<br>
+        When resinstall during debug I get this:</p>
+<blockquote>
+<div class="codehilite"><pre><span></span><code>  libcrypto-3.dll!6118a300()  Unknown
+[Frames below may be incorrect and/or missing, no symbols loaded for libcrypto-3.dll]
+</code></pre></div>
+
+<p>opencpn.exe!ChartPlugInWrapper::~ChartPlugInWrapper() Line 5719 C++<br>
+    [External Code] <br>
+    opencpn.exe!ChartDB::DeleteCacheEntry(CacheEntry * pce, bool bDelTexture, const wxString &amp; msg) Line 262    C++<br>
+    opencpn.exe!ChartDB::PurgeCachePlugins() Line 297   C++<br>
+    opencpn.exe!PlugInManager::OnPluginDeactivate(const PlugInContainer * pic) Line 1408    C++<br>
+    [Inline Frame] opencpn.exe!PlugInManager::HandlePluginLoaderEvents::__l2::&lt;lambda_1090a8c84136849279c8a1e76c8ae10b&gt;::operator()(wxCommandEvent &amp;) Line 1216 C++<br>
+    opencpn.exe!wxEventFunctorFunctor&lt;wxEventTypeTag&lt;wxCommandEvent&gt;,&lt;lambda_1090a8c84136849279c8a1e76c8ae10b&gt;&gt;::operator()(wxEvtHandler * __formal, wxEvent &amp; event) Line 548  C++<br>
+    [External Code] <br>
+    opencpn.exe!PluginLoader::LoadPluginCandidate(wxString file_name, bool load_enabled) Line 340   C++<br>
+    opencpn.exe!PluginLoader::LoadPlugInDirectory(const wxString &amp; plugin_dir, bool load_enabled) Line 444  C++<br>
+    opencpn.exe!PluginLoader::LoadAllPlugIns(bool load_enabled) Line 234    C++<br>
+    opencpn.exe!LoadAllPlugIns(bool load_enabled) Line 546  C++<br>
+    opencpn.exe!run_update_dialog(PluginListPanel * parent, PlugInContainer * pic, bool uninstall, const char * name, bool b_forceEnable) Line 662  C++<br>
+    opencpn.exe!pluginUtilHandler::OnPluginUtilAction(wxCommandEvent &amp; event) Line 814  C++<br>
+    [External Code] <br>
+    opencpn.exe!MyFrame::DoOptionsDialog() Line 4405    C++<br>
+    opencpn.exe!MyFrame::DoSettings() Line 3282 C++<br>
+    opencpn.exe!MyFrame::OnToolLeftClick(wxCommandEvent &amp; event) Line 3146  C++<br>
+    [External Code] <br>
+    opencpn.exe!WinMain(HINSTANCE__ * hInstance, HINSTANCE__ * hPrevInstance, char * lpCmdLine, int nCmdShow) Line 953  C++</p>
+</blockquote>
+
+
+
+<a name="317346624"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332168-Master%20-%205.8.0%20%20%28was%3A%20comms%29/topic/Plugins%20for%20Win%20wx3.2.1/near/317346624" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Håkan Svensson <a href="https://leamas.github.io/zulip-archive/stream/332168-Master---5.2E8.2E0--.28was.3A-comms.29/topic/Plugins.20for.20Win.20wx3.2E2.2E1.html#317346624">(Dec 22 2022 at 11:52)</a>:</h4>
+<p>Test of Shipdriver sd3.2.1 for plugin ais_vd-pi:<br>
+The CI result as of this <a href="https://app.circleci.com/pipelines/github/Hakansv/ais-vd_pi/58/workflows/acdda38e-cb93-4ad5-b0e7-54c6e0e24911">link</a>. Is this list covering all non Windows system we want?<br>
+Win32 appveyor -&gt; Cloudsmith downloaded and tested positiv.<br>
+CS packages <a href="https://cloudsmith.io/~opencpn/repos/ais-vd-alpha/packages/">here</a>.</p>
+
+
+
+<a name="317400156"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332168-Master%20-%205.8.0%20%20%28was%3A%20comms%29/topic/Plugins%20for%20Win%20wx3.2.1/near/317400156" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Mike Rossiter <a href="https://leamas.github.io/zulip-archive/stream/332168-Master---5.2E8.2E0--.28was.3A-comms.29/topic/Plugins.20for.20Win.20wx3.2E2.2E1.html#317400156">(Dec 22 2022 at 16:09)</a>:</h4>
+<p>Looks good from here. We get a buster build but no Cloudsmith artefacts. Forgot the reason for this.</p>
+
+
+
+<a name="317703463"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332168-Master%20-%205.8.0%20%20%28was%3A%20comms%29/topic/Plugins%20for%20Win%20wx3.2.1/near/317703463" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Håkan Svensson <a href="https://leamas.github.io/zulip-archive/stream/332168-Master---5.2E8.2E0--.28was.3A-comms.29/topic/Plugins.20for.20Win.20wx3.2E2.2E1.html#317703463">(Dec 24 2022 at 10:46)</a>:</h4>
+<p>One possible inconsistency?<br>
+In CS we have e.g.: ais-vd-1.8-debian-A64-11-tarball <br>
+But when built on my RPi400 Pluginmanager calls for: debian-arm64:11<br>
+It diffs in "A64" instead of "arm64" and "64-11" instead of "64:11"<br>
+So where to solve that?<br>
+Is it in Pluginmanager, O core, or Shipdriver methods?</p>
+<p>Importing that tarball from CS is though working so maybe the catalog updated will work as well?</p>
+
+
+
+<hr><p>Last updated: Oct 05 2023 at 09:43 UTC</p>
+</html>

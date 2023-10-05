@@ -1,0 +1,79 @@
+<html>
+<head><meta charset="utf-8"><title>Observe/notify &amp; threads · DataSharing · Zulip Chat Archive</title></head>
+<h2>Stream: <a href="https://leamas.github.io/zulip-archive/stream/349652-DataSharing/index.html">DataSharing</a></h2>
+<h3>Topic: <a href="https://leamas.github.io/zulip-archive/stream/349652-DataSharing/topic/Observe.2Fnotify.20.26.20threads.html">Observe/notify &amp; threads</a></h3>
+
+<hr>
+
+<base href="https://opencpn.zulipchat.com">
+
+<head><link href="https://leamas.github.io/zulip-archive/style.css" rel="stylesheet"></head>
+
+<a name="303971566"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/349652-DataSharing/topic/Observe/notify%20%26%20threads/near/303971566" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Alec Leamas <a href="https://leamas.github.io/zulip-archive/stream/349652-DataSharing/topic/Observe.2Fnotify.20.26.20threads.html#303971566">(Oct 14 2022 at 06:43)</a>:</h4>
+<p>Generally, observable/notify is not thread safe, it is designed for things in the overall event loop.</p>
+<p>I need to review stuff with this perspective, there are some other things as well. Stay tuned.</p>
+
+
+
+<a name="304082215"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/349652-DataSharing/topic/Observe/notify%20%26%20threads/near/304082215" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Alec Leamas <a href="https://leamas.github.io/zulip-archive/stream/349652-DataSharing/topic/Observe.2Fnotify.20.26.20threads.html#304082215">(Oct 14 2022 at 17:24)</a>:</h4>
+<p>More on this: We basically have listen() and notify().  Both of these uses and/or modifies the list of listeners, so they need a mutex to work reliably if anything (typically notify()) happens in  a non-main thread.</p>
+<p>That said, the basic mechanism used in notify() is wxQueueEvent; this is mt-safe. We only need to guard the listener list.</p>
+<p>There should basically be no congestion on such a mutex, so the performance hit would be minimal. Thanks for listening ;)</p>
+
+
+
+<a name="305333601"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/349652-DataSharing/topic/Observe/notify%20%26%20threads/near/305333601" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Alec Leamas <a href="https://leamas.github.io/zulip-archive/stream/349652-DataSharing/topic/Observe.2Fnotify.20.26.20threads.html#305333601">(Oct 21 2022 at 11:43)</a>:</h4>
+<p>With the latest commits the multithreading issue should be resolved, observable is now thread-safe (to the best of my abilities...)</p>
+
+
+
+<a name="305415460"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/349652-DataSharing/topic/Observe/notify%20%26%20threads/near/305415460" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Håkan Svensson <a href="https://leamas.github.io/zulip-archive/stream/349652-DataSharing/topic/Observe.2Fnotify.20.26.20threads.html#305415460">(Oct 21 2022 at 18:09)</a>:</h4>
+<p>Alec..<br>
+I was probably not able to describe my point in a good manner since your answer for me is to another question.<br>
+What I was trying to say, in other words:<br>
+Why use a somewhat complicated way to transfer data to a single PC? For many years we have been able to transfer NMEA to any listener on the local net by UDP. Not complicated and works on every system. <br>
+I suppose also tracks info can use the same technique? Not necessarily by NMEA sentences, as Mike did it, but maybe some own serial protocol OCPN on both ends will understand.</p>
+
+
+
+<a name="305439131"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/349652-DataSharing/topic/Observe/notify%20%26%20threads/near/305439131" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Alec Leamas <a href="https://leamas.github.io/zulip-archive/stream/349652-DataSharing/topic/Observe.2Fnotify.20.26.20threads.html#305439131">(Oct 21 2022 at 20:40)</a>:</h4>
+<p>mDNS-SD is not really about transferring data, that could of course be done in any way, UDP or TCP.  We have decided to use the well-known htpp/https REST API for this.  However, this requires that you know who you are talking to i. e., the ip address of your peer.</p>
+<p>Enter the "service discovery" . This  is when cooperating systems (typically on single Ethernet) finds available services in an automated way. This is about all machines announcing what services they have available, and how machines finding the service they are interested in.  </p>
+<p>What we want here is to announce our capabilities such as being able to accept a route, and that other machines could find us. When we do this in a standardized way we are good network citizens, all sorts of sw will be aware of us -- this is a good thing. And of course, we get the benefits of a protocol, including implementation, which is known to work.</p>
+<p>In other words, we are starting to use well-known solutions instead of inventing our own wheel. It might be more complicated initially,  but I'm convinced that it will pay off over time. <span class="user-mention" data-user-id="554731">@Tony Voss</span>  has worded this better than me...</p>
+
+
+
+<a name="305439409"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/349652-DataSharing/topic/Observe/notify%20%26%20threads/near/305439409" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Alec Leamas <a href="https://leamas.github.io/zulip-archive/stream/349652-DataSharing/topic/Observe.2Fnotify.20.26.20threads.html#305439409">(Oct 21 2022 at 20:41)</a>:</h4>
+<p>BTW: the idea to send a UDP broadcast was the initial try here. It was turned down by some discussion partners, all of which  pointing to the benefits of using standardized solutions to well.known problems.</p>
+
+
+
+<a name="305463487"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/349652-DataSharing/topic/Observe/notify%20%26%20threads/near/305463487" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Håkan Svensson <a href="https://leamas.github.io/zulip-archive/stream/349652-DataSharing/topic/Observe.2Fnotify.20.26.20threads.html#305463487">(Oct 21 2022 at 23:49)</a>:</h4>
+<p>Alec..<br>
+Thanks for the description.<br>
+My discussion was initiated because this method is obviously not working well between different system?<br>
+And if it implies we must ask the users to tweak the Network card's Ipv4 properties I think we are making us trouble.</p>
+
+
+
+<a name="305495877"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/349652-DataSharing/topic/Observe/notify%20%26%20threads/near/305495877" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Alec Leamas <a href="https://leamas.github.io/zulip-archive/stream/349652-DataSharing/topic/Observe.2Fnotify.20.26.20threads.html#305495877">(Oct 22 2022 at 07:58)</a>:</h4>
+<p>Windows network stack is a well-known can of worms, indeed. Note that  <em>not working well between different systems</em> really is "problematic on Windows"</p>
+<p>As I understand it, mDNS is integrated in later windows versions (fully updated win10 and win11). What we see might be collisions with the system service.  The windows API seems (somewhat) documented <a href="https://learn.microsoft.com/en-us/uwp/api/Windows.Networking.ServiceDiscovery.Dnssd?redirectedfrom=MSDN&amp;view=winrt-22621">here</a></p>
+<p>Note that the API seems to have some 32-bit quirks: <a href="https://stackoverflow.com/questions/23624525">https://stackoverflow.com/questions/23624525</a></p>
+<p>Q: Should we  use the native Windows API on windows instead, at least on updated hosts which have it available? <br>
+Q: Can there be two processes (system mDNS, "our" mDNS)  listening to the same multicast port on a single host? (probably not)<br>
+Q Should we just disable the  Windows system service as described <a href="https://superuser.com/questions/1330027">here</a>?</p>
+
+
+
+<hr><p>Last updated: Oct 05 2023 at 09:43 UTC</p>
+</html>

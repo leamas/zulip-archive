@@ -1,0 +1,330 @@
+<html>
+<head><meta charset="utf-8"><title>Flatpak build · Master - 5.8.0  (was: comms) · Zulip Chat Archive</title></head>
+<h2>Stream: <a href="https://leamas.github.io/zulip-archive/stream/332168-Master---5.2E8.2E0--.28was.3A-comms.29/index.html">Master - 5.8.0  (was: comms)</a></h2>
+<h3>Topic: <a href="https://leamas.github.io/zulip-archive/stream/332168-Master---5.2E8.2E0--.28was.3A-comms.29/topic/Flatpak.20build.html">Flatpak build</a></h3>
+
+<hr>
+
+<base href="https://opencpn.zulipchat.com">
+
+<head><link href="https://leamas.github.io/zulip-archive/style.css" rel="stylesheet"></head>
+
+<a name="310606758"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332168-Master%20-%205.8.0%20%20%28was%3A%20comms%29/topic/Flatpak%20build/near/310606758" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Alec Leamas <a href="https://leamas.github.io/zulip-archive/stream/332168-Master---5.2E8.2E0--.28was.3A-comms.29/topic/Flatpak.20build.html#310606758">(Nov 17 2022 at 13:13)</a>:</h4>
+<p><span class="user-mention" data-user-id="517002">@Dave Register</span>   I have made a Flatpak build from V5.1.518_Beta.  Added two, build-related patches. When I start, the chart window is black. Both menus are ok as are for example the preferences dialog. But no chart.</p>
+<p>Any hints?</p>
+
+
+
+<a name="310607025"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332168-Master%20-%205.8.0%20%20%28was%3A%20comms%29/topic/Flatpak%20build/near/310607025" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Alec Leamas <a href="https://leamas.github.io/zulip-archive/stream/332168-Master---5.2E8.2E0--.28was.3A-comms.29/topic/Flatpak.20build.html#310607025">(Nov 17 2022 at 13:14)</a>:</h4>
+<p>BTW: google mail is down, so I don't get any emails at the moment.</p>
+
+
+
+<a name="310610759"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332168-Master%20-%205.8.0%20%20%28was%3A%20comms%29/topic/Flatpak%20build/near/310610759" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Alec Leamas <a href="https://leamas.github.io/zulip-archive/stream/332168-Master---5.2E8.2E0--.28was.3A-comms.29/topic/Flatpak.20build.html#310610759">(Nov 17 2022 at 13:37)</a>:</h4>
+<p>It's an OpenGL issue, almost sure. Running with -safe_mode all looks normal. </p>
+<p>I did add an OpenGL-related patch to make it build below. It cannot be this, can it? It produces a sleeve of warnings like</p>
+<div class="codehilite"><pre><span></span><code>In file included from /run/build/opencpn/src/glChartCanvas.cpp:220:
+/run/build/opencpn/include/GL/gl_private.h:451: warning: &quot;GLU_BEGIN&quot; redefined
+  451 | #define GLU_BEGIN                          GLU_TESS_BEGIN
+</code></pre></div>
+<p>Patch (FTBFS without it): </p>
+<div class="codehilite"><pre><span></span><code>diff --git a/src/glChartCanvas.cpp b/src/glChartCanvas.cpp
+index c9e4509eb..113ba1eb7 100644
+--- a/src/glChartCanvas.cpp
++++ b/src/glChartCanvas.cpp
+@@ -37,6 +37,8 @@
+ #include &lt;stdint.h&gt;
+ #include &lt;vector&gt;
+
++#include &lt;GL/gl_private.h&gt;  // this is a cut-down version of gl.h
++
+ #include &lt;wx/arrimpl.cpp&gt;
+ #include &lt;wx/brush.h&gt;
+ #include &lt;wx/colour.h&gt;
+</code></pre></div>
+
+
+
+<a name="310614292"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332168-Master%20-%205.8.0%20%20%28was%3A%20comms%29/topic/Flatpak%20build/near/310614292" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Alec Leamas <a href="https://leamas.github.io/zulip-archive/stream/332168-Master---5.2E8.2E0--.28was.3A-comms.29/topic/Flatpak.20build.html#310614292">(Nov 17 2022 at 13:57)</a>:</h4>
+<p>hm... I might have found something. This is a about  <code>glXGetProcAddress()</code> which is not available in <em>GL/gl.h</em>. It is in our bundled <em>gl_private.h</em>, but... using the header snippet from gl_private.h it compiles but does not link. That is <code>glXGetProcAddress</code> is not available in the sandbox.</p>
+<p>Leads me to  <a href="https://dri.freedesktop.org/wiki/glXGetProcAddressNeverReturnsNULL/">https://dri.freedesktop.org/wiki/glXGetProcAddressNeverReturnsNULL/</a> which is basically states that this is not unexpected. The rest is far above my paygrade.</p>
+
+
+
+<a name="310626593"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332168-Master%20-%205.8.0%20%20%28was%3A%20comms%29/topic/Flatpak%20build/near/310626593" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Dave Register <a href="https://leamas.github.io/zulip-archive/stream/332168-Master---5.2E8.2E0--.28was.3A-comms.29/topic/Flatpak.20build.html#310626593">(Nov 17 2022 at 15:02)</a>:</h4>
+<p>I'm a bit confused. V5.1.518_Beta?  Why this version?</p>
+
+
+
+<a name="310642688"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332168-Master%20-%205.8.0%20%20%28was%3A%20comms%29/topic/Flatpak%20build/near/310642688" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Alec Leamas <a href="https://leamas.github.io/zulip-archive/stream/332168-Master---5.2E8.2E0--.28was.3A-comms.29/topic/Flatpak.20build.html#310642688">(Nov 17 2022 at 16:08)</a>:</h4>
+<p>Better suggestion?</p>
+
+
+
+<a name="310642842"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332168-Master%20-%205.8.0%20%20%28was%3A%20comms%29/topic/Flatpak%20build/near/310642842" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Alec Leamas <a href="https://leamas.github.io/zulip-archive/stream/332168-Master---5.2E8.2E0--.28was.3A-comms.29/topic/Flatpak.20build.html#310642842">(Nov 17 2022 at 16:08)</a>:</h4>
+<p>Sorry... What is the tag to use?</p>
+
+
+
+<a name="310644852"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332168-Master%20-%205.8.0%20%20%28was%3A%20comms%29/topic/Flatpak%20build/near/310644852" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Dave Register <a href="https://leamas.github.io/zulip-archive/stream/332168-Master---5.2E8.2E0--.28was.3A-comms.29/topic/Flatpak.20build.html#310644852">(Nov 17 2022 at 16:18)</a>:</h4>
+<p>Why not build from master (HEAD)?</p>
+
+
+
+<a name="310649601"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332168-Master%20-%205.8.0%20%20%28was%3A%20comms%29/topic/Flatpak%20build/near/310649601" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Alec Leamas <a href="https://leamas.github.io/zulip-archive/stream/332168-Master---5.2E8.2E0--.28was.3A-comms.29/topic/Flatpak.20build.html#310649601">(Nov 17 2022 at 16:40)</a>:</h4>
+<p>Not reproducible, wont work. We need a tag, or a commit. What have you used for the last alpha?</p>
+
+
+
+<a name="310708488"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332168-Master%20-%205.8.0%20%20%28was%3A%20comms%29/topic/Flatpak%20build/near/310708488" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Dave Register <a href="https://leamas.github.io/zulip-archive/stream/332168-Master---5.2E8.2E0--.28was.3A-comms.29/topic/Flatpak.20build.html#310708488">(Nov 17 2022 at 22:09)</a>:</h4>
+<p>Have not been using tags  Probably should start.  But we can get commit from Cloudsmith file names..<br>
+Alpha Test #2 was at commit:<br>
+fe9f86768c9c1172175818c4f582c556bdb7c3a4<br>
+Useful?</p>
+
+
+
+<a name="310724253"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332168-Master%20-%205.8.0%20%20%28was%3A%20comms%29/topic/Flatpak%20build/near/310724253" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Alec Leamas <a href="https://leamas.github.io/zulip-archive/stream/332168-Master---5.2E8.2E0--.28was.3A-comms.29/topic/Flatpak.20build.html#310724253">(Nov 17 2022 at 23:59)</a>:</h4>
+<p>We need tags next time...</p>
+<p>Anyway, I have built from 022feb2ef7.  No patch needed to build, but the result is basically the same. That is , the chart canvas is blue-grey, no charts displayed. All menus looks ok. And everything looks good when using -safe_mode.</p>
+<p>I have pushed what I have to a branch <em>tmp</em> on <a href="https://github.com/flathub.org.openpcn.OpenCPN">https://github.com/flathub.org.openpcn.OpenCPN</a>. You can fetch that branch and then build and install locally as described in MAINTENANCE.md. If possible. would need some help here...</p>
+<p>BTW: They have changed the workflow for pushing changes to master and beta. Will update docs later.</p>
+
+
+
+<a name="310724504"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332168-Master%20-%205.8.0%20%20%28was%3A%20comms%29/topic/Flatpak%20build/near/310724504" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Alec Leamas <a href="https://leamas.github.io/zulip-archive/stream/332168-Master---5.2E8.2E0--.28was.3A-comms.29/topic/Flatpak.20build.html#310724504">(Nov 18 2022 at 00:00)</a>:</h4>
+<p><span class="user-mention" data-user-id="518981">@Github Bot</span>  #022feb2ef7</p>
+
+
+
+<a name="310724506"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332168-Master%20-%205.8.0%20%20%28was%3A%20comms%29/topic/Flatpak%20build/near/310724506" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Github Bot <a href="https://leamas.github.io/zulip-archive/stream/332168-Master---5.2E8.2E0--.28was.3A-comms.29/topic/Flatpak.20build.html#310724506">(Nov 18 2022 at 00:00)</a>:</h4>
+<p>** author: dsr at 2022-11-17T04:14:18Z<br>
+Define plugin API for comm driver access. #2<br>
+<a href="https://github.com/OpenCPN/OpenCPN/commit/022feb2ef7">https://github.com/OpenCPN/OpenCPN/commit/022feb2ef7</a></p>
+
+
+
+<a name="310744355"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332168-Master%20-%205.8.0%20%20%28was%3A%20comms%29/topic/Flatpak%20build/near/310744355" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Dave Register <a href="https://leamas.github.io/zulip-archive/stream/332168-Master---5.2E8.2E0--.28was.3A-comms.29/topic/Flatpak.20build.html#310744355">(Nov 18 2022 at 03:57)</a>:</h4>
+<p>Flatpak.<br>
+I followed the MAINTENANCE.md instructions, built locally. All seemed to build nicely. However, on run, I get an X11 fault.  Probably because I am still on Bionic (i know, I know, but there is never a good time...).</p>
+
+
+
+<a name="310744780"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332168-Master%20-%205.8.0%20%20%28was%3A%20comms%29/topic/Flatpak%20build/near/310744780" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Dave Register <a href="https://leamas.github.io/zulip-archive/stream/332168-Master---5.2E8.2E0--.28was.3A-comms.29/topic/Flatpak.20build.html#310744780">(Nov 18 2022 at 04:03)</a>:</h4>
+<p>I'll try the same on virtual focal.  But VBox OpenGL is not good, so this may not be productive.</p>
+
+
+
+<a name="310764713"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332168-Master%20-%205.8.0%20%20%28was%3A%20comms%29/topic/Flatpak%20build/near/310764713" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Alec Leamas <a href="https://leamas.github.io/zulip-archive/stream/332168-Master---5.2E8.2E0--.28was.3A-comms.29/topic/Flatpak.20build.html#310764713">(Nov 18 2022 at 07:54)</a>:</h4>
+<p>Perhaps we just see the see different symptoms from the same basic problem. Suspicious  about <code>glXGetProcAddress</code>, see above.</p>
+
+
+
+<a name="310775075"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332168-Master%20-%205.8.0%20%20%28was%3A%20comms%29/topic/Flatpak%20build/near/310775075" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Alec Leamas <a href="https://leamas.github.io/zulip-archive/stream/332168-Master---5.2E8.2E0--.28was.3A-comms.29/topic/Flatpak.20build.html#310775075">(Nov 18 2022 at 09:10)</a>:</h4>
+<p>More data points: On virtual (Vbox) Jammy, all looks OK. </p>
+<p>Building on jammy was a bit painful, had to rebuild otherwise uninstallable flatpak official packages (!) and also modify the glu manifest section. But it is built from the same sources, both packages and glu.</p>
+<p>Are we  using some corner-case OpenGL function which works on some platforms and not on others?</p>
+
+
+
+<a name="310780653"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332168-Master%20-%205.8.0%20%20%28was%3A%20comms%29/topic/Flatpak%20build/near/310780653" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Alec Leamas <a href="https://leamas.github.io/zulip-archive/stream/332168-Master---5.2E8.2E0--.28was.3A-comms.29/topic/Flatpak.20build.html#310780653">(Nov 18 2022 at 09:44)</a>:</h4>
+<p>Yet another data point: I switched graphics driver on my native Fedora box, from the open-source Nouveu to the closed-source Nvidia driver. In this configuration, once again all  looks ok.</p>
+
+
+
+<a name="310781132"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332168-Master%20-%205.8.0%20%20%28was%3A%20comms%29/topic/Flatpak%20build/near/310781132" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Alec Leamas <a href="https://leamas.github.io/zulip-archive/stream/332168-Master---5.2E8.2E0--.28was.3A-comms.29/topic/Flatpak.20build.html#310781132">(Nov 18 2022 at 09:47)</a>:</h4>
+<p>I will  merge the build to the flathub beta branch. It is needed for the plugin build chains, and we have no official promises for it at this point. </p>
+<p>We still need to sort out this issue though, many uses nvidia cards and many of those are using nouveau.</p>
+
+
+
+<a name="310784483"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332168-Master%20-%205.8.0%20%20%28was%3A%20comms%29/topic/Flatpak%20build/near/310784483" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Alec Leamas <a href="https://leamas.github.io/zulip-archive/stream/332168-Master---5.2E8.2E0--.28was.3A-comms.29/topic/Flatpak.20build.html#310784483">(Nov 18 2022 at 10:07)</a>:</h4>
+<p>Done. Testing can now be done from the beta branch: <a href="https://discourse.flathub.org/t/how-to-use-flathub-beta/2111">https://discourse.flathub.org/t/how-to-use-flathub-beta/2111</a></p>
+
+
+
+<a name="310850102"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332168-Master%20-%205.8.0%20%20%28was%3A%20comms%29/topic/Flatpak%20build/near/310850102" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Dave Register <a href="https://leamas.github.io/zulip-archive/stream/332168-Master---5.2E8.2E0--.28was.3A-comms.29/topic/Flatpak.20build.html#310850102">(Nov 18 2022 at 15:43)</a>:</h4>
+<p>Tested flatpak build of OCPN on fresh Jammy machine.  Looks fine.</p>
+
+
+
+<a name="310850431"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332168-Master%20-%205.8.0%20%20%28was%3A%20comms%29/topic/Flatpak%20build/near/310850431" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Dave Register <a href="https://leamas.github.io/zulip-archive/stream/332168-Master---5.2E8.2E0--.28was.3A-comms.29/topic/Flatpak.20build.html#310850431">(Nov 18 2022 at 15:45)</a>:</h4>
+<p>Have we concluded that there is an issue with Nouveu OpenGL drivers?  Or still a working theory?</p>
+
+
+
+<a name="310863408"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332168-Master%20-%205.8.0%20%20%28was%3A%20comms%29/topic/Flatpak%20build/near/310863408" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Alec Leamas <a href="https://leamas.github.io/zulip-archive/stream/332168-Master---5.2E8.2E0--.28was.3A-comms.29/topic/Flatpak.20build.html#310863408">(Nov 18 2022 at 16:43)</a>:</h4>
+<p>My theory, FWIW, is that we are doing something which is outside the OpenGL specs,  something which works on some drivers and does not work on others. "others" including nouveau and your Flatpak/bionic combo.</p>
+
+
+
+<a name="310863787"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332168-Master%20-%205.8.0%20%20%28was%3A%20comms%29/topic/Flatpak%20build/near/310863787" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Alec Leamas <a href="https://leamas.github.io/zulip-archive/stream/332168-Master---5.2E8.2E0--.28was.3A-comms.29/topic/Flatpak.20build.html#310863787">(Nov 18 2022 at 16:45)</a>:</h4>
+<p>My gut feeling basically based on link from above: <a href="https://dri.freedesktop.org/wiki/glXGetProcAddressNeverReturnsNULL/">https://dri.freedesktop.org/wiki/glXGetProcAddressNeverReturnsNULL/</a></p>
+
+
+
+<a name="310915281"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332168-Master%20-%205.8.0%20%20%28was%3A%20comms%29/topic/Flatpak%20build/near/310915281" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Dave Register <a href="https://leamas.github.io/zulip-archive/stream/332168-Master---5.2E8.2E0--.28was.3A-comms.29/topic/Flatpak.20build.html#310915281">(Nov 18 2022 at 20:30)</a>:</h4>
+<p>Flatpak:<br>
+After fiddling with local install on may machine, I cannot install the test version you build.  How to reset flatpak repo?</p>
+
+
+
+<a name="310922974"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332168-Master%20-%205.8.0%20%20%28was%3A%20comms%29/topic/Flatpak%20build/near/310922974" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Dave Register <a href="https://leamas.github.io/zulip-archive/stream/332168-Master---5.2E8.2E0--.28was.3A-comms.29/topic/Flatpak.20build.html#310922974">(Nov 18 2022 at 21:18)</a>:</h4>
+<p>Now I think OCPN Flatpak never did work right on Bionic.  Still does not work from latest Beta build, on this machine.<br>
+glXGetProcAddress:<br>
+If one uses glew (as we do on O58), then glew handles all this ProcAddr stuff quietly.  AFAIK, O58  does not ever call glXGetProcAddress directly from our source , except in GRIB plugin. That needs a  FIXME. Seems unlikely that nouveau does not play nice with glew.<br>
+Can you run OCPN 5.7.1 natively with nouveau, i.e. not flatpaked?</p>
+
+
+
+<a name="310936514"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332168-Master%20-%205.8.0%20%20%28was%3A%20comms%29/topic/Flatpak%20build/near/310936514" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Alec Leamas <a href="https://leamas.github.io/zulip-archive/stream/332168-Master---5.2E8.2E0--.28was.3A-comms.29/topic/Flatpak.20build.html#310936514">(Nov 18 2022 at 22:50)</a>:</h4>
+<blockquote>
+<p>Can you run OCPN 5.7.1 natively with nouveau, i.e. not flatpaked?</p>
+</blockquote>
+<p>That's something I should have tried for myself... No, same/similar problem: in this case black window + totally frozen, no menus. Must  be killed. Same situation after rebuilding tag Release_5.6.2.</p>
+<p>It was a good coincidence I ran without the nvidia driver for  a while after an update. Still, it's strange we haven't got any reports on this if it was the case for all nouveau  installations. I now tend to think that this might be a corner case, a combination of a  somewhat old graphics card and the driver. </p>
+<p>Since this is nothing new, we could perhaps leave it aside for now. If it was not a problem in 5.6.2 it is perhaps not in 5.8 either. Or?</p>
+<p>Re-installing nvidia driver and rebooting</p>
+
+
+
+<a name="310937252"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332168-Master%20-%205.8.0%20%20%28was%3A%20comms%29/topic/Flatpak%20build/near/310937252" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Alec Leamas <a href="https://leamas.github.io/zulip-archive/stream/332168-Master---5.2E8.2E0--.28was.3A-comms.29/topic/Flatpak.20build.html#310937252">(Nov 18 2022 at 22:55)</a>:</h4>
+<p>...back, and all is ok.</p>
+
+
+
+<a name="310946536"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332168-Master%20-%205.8.0%20%20%28was%3A%20comms%29/topic/Flatpak%20build/near/310946536" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Dave Register <a href="https://leamas.github.io/zulip-archive/stream/332168-Master---5.2E8.2E0--.28was.3A-comms.29/topic/Flatpak.20build.html#310946536">(Nov 19 2022 at 00:20)</a>:</h4>
+<p>Well, I have AMD/Radeon card, so no help here.  Let;s leave it aside for now.</p>
+
+
+
+<a name="316388934"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332168-Master%20-%205.8.0%20%20%28was%3A%20comms%29/topic/Flatpak%20build/near/316388934" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Pavel Kalian <a href="https://leamas.github.io/zulip-archive/stream/332168-Master---5.2E8.2E0--.28was.3A-comms.29/topic/Flatpak.20build.html#316388934">(Dec 17 2022 at 01:19)</a>:</h4>
+<p><span class="user-mention" data-user-id="399510">@Alec Leamas</span> Have you seen something like <a href="https://app.circleci.com/pipelines/github/nohal/nsk_pi/2/workflows/b95d9315-c773-4dfa-8ff1-78224dcd00da/jobs/18?invite=true#step-103-812">https://app.circleci.com/pipelines/github/nohal/nsk_pi/2/workflows/b95d9315-c773-4dfa-8ff1-78224dcd00da/jobs/18?invite=true#step-103-812</a> before? Just asking before I actually start to try to understand how the flatpak build works...</p>
+
+
+
+<a name="324998923"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332168-Master%20-%205.8.0%20%20%28was%3A%20comms%29/topic/Flatpak%20build/near/324998923" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Dave Register <a href="https://leamas.github.io/zulip-archive/stream/332168-Master---5.2E8.2E0--.28was.3A-comms.29/topic/Flatpak.20build.html#324998923">(Jan 31 2023 at 19:33)</a>:</h4>
+<p><span class="user-mention" data-user-id="399510">@Alec Leamas</span> <br>
+On RPI4/64/focal, here is what I see:</p>
+<div class="codehilite"><pre><span></span><code>ubuntu@ubuntu:~$ flatpak remotes
+Name         Options
+flathub      user
+flathub-beta user
+ubuntu@ubuntu:~$ flatpak uninstall --user org.opencpn.OpenCPN//stable 
+error: org.opencpn.OpenCPN/*unspecified*/stable not installed
+ubuntu@ubuntu:~$ flatpak install --user flathub org.opencpn.OpenCPN//stable 
+Looking for matches…
+error: Nothing matches org.opencpn.OpenCPN in remote flathub
+ubuntu@ubuntu:~$
+</code></pre></div>
+
+<p>??</p>
+
+
+
+<a name="324999313"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332168-Master%20-%205.8.0%20%20%28was%3A%20comms%29/topic/Flatpak%20build/near/324999313" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Alec Leamas <a href="https://leamas.github.io/zulip-archive/stream/332168-Master---5.2E8.2E0--.28was.3A-comms.29/topic/Flatpak.20build.html#324999313">(Jan 31 2023 at 19:35)</a>:</h4>
+<p>WTF...  what architecture are you on? aarch64?</p>
+
+
+
+<a name="325000701"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332168-Master%20-%205.8.0%20%20%28was%3A%20comms%29/topic/Flatpak%20build/near/325000701" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Dave Register <a href="https://leamas.github.io/zulip-archive/stream/332168-Master---5.2E8.2E0--.28was.3A-comms.29/topic/Flatpak.20build.html#325000701">(Jan 31 2023 at 19:42)</a>:</h4>
+<p>Yes, RPi4, aarch64<br>
+Linux ubuntu 5.4.0-1056-raspi <a href="https://github.com/opencpn/OpenCPN/issues/63">#63</a>-Ubuntu SMP PREEMPT Mon Mar 14 07:48:06 UTC 2022 aarch64 aarch64 aarch64 GNU/Linux</p>
+
+
+
+<a name="325001783"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332168-Master%20-%205.8.0%20%20%28was%3A%20comms%29/topic/Flatpak%20build/near/325001783" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Alec Leamas <a href="https://leamas.github.io/zulip-archive/stream/332168-Master---5.2E8.2E0--.28was.3A-comms.29/topic/Flatpak.20build.html#325001783">(Jan 31 2023 at 19:48)</a>:</h4>
+<p>We have  nothing on stable branch for aarch64, only  the beta stuff. My log on a raspbian64 machine:</p>
+<div class="codehilite"><pre><span></span><code>  $ sudo apt install flatpak
+  $ flatpak remote-add --user --if-not-exists flathub-beta https://flathub.org/beta-repo/flathub-beta.flatpakrepo
+  $ flatpak install  --user flathub org.freedesktop.Platform/aarch64/22.08
+  $ flatpak install --user flathub-beta org.opencpn.OpenCPN//beta
+</code></pre></div>
+
+
+
+<a name="325002515"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332168-Master%20-%205.8.0%20%20%28was%3A%20comms%29/topic/Flatpak%20build/near/325002515" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Alec Leamas <a href="https://leamas.github.io/zulip-archive/stream/332168-Master---5.2E8.2E0--.28was.3A-comms.29/topic/Flatpak.20build.html#325002515">(Jan 31 2023 at 19:52)</a>:</h4>
+<p>And starts just fine using <code>flatpak run org.opencpn.OpenCPN//beta</code>...</p>
+
+
+
+<a name="325004815"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332168-Master%20-%205.8.0%20%20%28was%3A%20comms%29/topic/Flatpak%20build/near/325004815" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Dave Register <a href="https://leamas.github.io/zulip-archive/stream/332168-Master---5.2E8.2E0--.28was.3A-comms.29/topic/Flatpak.20build.html#325004815">(Jan 31 2023 at 20:04)</a>:</h4>
+<div class="codehilite"><pre><span></span><code>ubuntu@ubuntu:~$ flatpak install  --user flathub org.freedesktop.Platform/aarch64/22.08
+Looking for matches…
+error: Nothing matches org.freedesktop.Platform in remote flathub
+</code></pre></div>
+
+
+
+<a name="325004884"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332168-Master%20-%205.8.0%20%20%28was%3A%20comms%29/topic/Flatpak%20build/near/325004884" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Dave Register <a href="https://leamas.github.io/zulip-archive/stream/332168-Master---5.2E8.2E0--.28was.3A-comms.29/topic/Flatpak.20build.html#325004884">(Jan 31 2023 at 20:04)</a>:</h4>
+<p>Seems I cannot access flathub at all?</p>
+
+
+
+<a name="325009038"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332168-Master%20-%205.8.0%20%20%28was%3A%20comms%29/topic/Flatpak%20build/near/325009038" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Alec Leamas <a href="https://leamas.github.io/zulip-archive/stream/332168-Master---5.2E8.2E0--.28was.3A-comms.29/topic/Flatpak.20build.html#325009038">(Jan 31 2023 at 20:26)</a>:</h4>
+<p>Is your flathub repo ok? Same result after <code>flatpak remote-delete --user  flathub</code>+ <code>flatpak remote-add --user flathub https://flathub.org/repo/flathub.flatpakrepo</code>?</p>
+
+
+
+<a name="325017959"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332168-Master%20-%205.8.0%20%20%28was%3A%20comms%29/topic/Flatpak%20build/near/325017959" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Alec Leamas <a href="https://leamas.github.io/zulip-archive/stream/332168-Master---5.2E8.2E0--.28was.3A-comms.29/topic/Flatpak.20build.html#325017959">(Jan 31 2023 at 21:19)</a>:</h4>
+<p><span class="user-mention" data-user-id="517002">@Dave Register</span> </p>
+<blockquote>
+<p>seems I cannot access flathub at all?</p>
+</blockquote>
+<p>Or is it our old friend <em>flatpak too old on ubuntu</em>? It was exactly these symptoms. In this case, fix by</p>
+<div class="codehilite"><pre><span></span><code>   $ sudo add-apt-repository -y ppa:alexlarsson/flatpak
+   $ sudo apt update
+   $ sudo apt install flatpak
+</code></pre></div>
+
+
+
+<a name="325054108"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332168-Master%20-%205.8.0%20%20%28was%3A%20comms%29/topic/Flatpak%20build/near/325054108" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Dave Register <a href="https://leamas.github.io/zulip-archive/stream/332168-Master---5.2E8.2E0--.28was.3A-comms.29/topic/Flatpak.20build.html#325054108">(Feb 01 2023 at 01:43)</a>:</h4>
+<p><span class="user-mention" data-user-id="399510">@Alec Leamas</span> <br>
+Oh, of course.  our old friend.  alexlarsson ppa did the trick.<br>
+Thanks</p>
+
+
+
+<hr><p>Last updated: Oct 05 2023 at 09:43 UTC</p>
+</html>

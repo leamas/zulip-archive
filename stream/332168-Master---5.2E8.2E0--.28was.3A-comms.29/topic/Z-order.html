@@ -1,0 +1,106 @@
+<html>
+<head><meta charset="utf-8"><title>Z-order · Master - 5.8.0  (was: comms) · Zulip Chat Archive</title></head>
+<h2>Stream: <a href="https://leamas.github.io/zulip-archive/stream/332168-Master---5.2E8.2E0--.28was.3A-comms.29/index.html">Master - 5.8.0  (was: comms)</a></h2>
+<h3>Topic: <a href="https://leamas.github.io/zulip-archive/stream/332168-Master---5.2E8.2E0--.28was.3A-comms.29/topic/Z-order.html">Z-order</a></h3>
+
+<hr>
+
+<base href="https://opencpn.zulipchat.com">
+
+<head><link href="https://leamas.github.io/zulip-archive/style.css" rel="stylesheet"></head>
+
+<a name="338334671"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332168-Master%20-%205.8.0%20%20%28was%3A%20comms%29/topic/Z-order/near/338334671" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Tony Voss <a href="https://leamas.github.io/zulip-archive/stream/332168-Master---5.2E8.2E0--.28was.3A-comms.29/topic/Z-order.html#338334671">(Feb 27 2023 at 14:02)</a>:</h4>
+<p>The JavaScript plugin utilises multiple non-modal windows which, under OCPN 5.6, stay on top of the main frame.  The plugin has  code to keep its window with focus on top of its others windows.</p>
+<p>Under OCPN 5.8 the main frame moves on top of everything else as soon as it comes into focus.  Even moving the cursor over the toolbar is sufficient - presumably because OCPN acts on this to pop up the toolbar item names.</p>
+<p><strong>Question:</strong> has something changed in OCPN 5.8 to bring it on top?  Otherwise it could be a change stemming from wx32. I need to know in order to know where to look.  It is a serious issue for the plugin.</p>
+
+
+
+<a name="338584353"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332168-Master%20-%205.8.0%20%20%28was%3A%20comms%29/topic/Z-order/near/338584353" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Pavel Kalian <a href="https://leamas.github.io/zulip-archive/stream/332168-Master---5.2E8.2E0--.28was.3A-comms.29/topic/Z-order.html#338584353">(Feb 28 2023 at 13:19)</a>:</h4>
+<p>z-order on macOS is total hell and wx is not doing a spectacular job there, are you using <code>wxFRAME_FLOAT_ON_PARENT</code> style for your windows?</p>
+
+
+
+<a name="338598497"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332168-Master%20-%205.8.0%20%20%28was%3A%20comms%29/topic/Z-order/near/338598497" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Tony Voss <a href="https://leamas.github.io/zulip-archive/stream/332168-Master---5.2E8.2E0--.28was.3A-comms.29/topic/Z-order.html#338598497">(Feb 28 2023 at 14:17)</a>:</h4>
+<p>I don't think it is me.<br>
+The same issue exists with at lease wmm plugin.   Open WMM via the toolbar and move the canvas around.  The WMM window fails to move with it, as it does under OCPN5.6.2 and easily gets covered by the frame.<br>
+Windows/dialogues are not being attached to the parent frame on MacOS but are under Windows Mike tells me.<br>
+I suspect that the API GetOCPNCanvasWindow(); is returning nullptr/zero, which would explain the behaviour.<br>
+I have implemented code to confirm this but am unable to compile it just yet because of sd template problems.</p>
+
+
+
+<a name="338603385"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332168-Master%20-%205.8.0%20%20%28was%3A%20comms%29/topic/Z-order/near/338603385" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Mike Rossiter <a href="https://leamas.github.io/zulip-archive/stream/332168-Master---5.2E8.2E0--.28was.3A-comms.29/topic/Z-order.html#338603385">(Feb 28 2023 at 14:37)</a>:</h4>
+<blockquote>
+<p>not being attached to the parent frame on MacOS but are under Windows Mike tells me</p>
+</blockquote>
+<p>Re-checked. Not attached to the parent frame on Windows as well.</p>
+
+
+
+<a name="338604418"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332168-Master%20-%205.8.0%20%20%28was%3A%20comms%29/topic/Z-order/near/338604418" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Mike Rossiter <a href="https://leamas.github.io/zulip-archive/stream/332168-Master---5.2E8.2E0--.28was.3A-comms.29/topic/Z-order.html#338604418">(Feb 28 2023 at 14:41)</a>:</h4>
+<p>Have not yet found a plugin that allows this.</p>
+
+
+
+<a name="338612845"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332168-Master%20-%205.8.0%20%20%28was%3A%20comms%29/topic/Z-order/near/338612845" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Pavel Kalian <a href="https://leamas.github.io/zulip-archive/stream/332168-Master---5.2E8.2E0--.28was.3A-comms.29/topic/Z-order.html#338612845">(Feb 28 2023 at 15:13)</a>:</h4>
+<p>I would say that on macOS at least, the non-modal windows not moving with the main window and losing focus is the normal behavior, at least that is what I see when I open eg. Safari or <a href="http://Mail.app">Mail.app</a> preferences window and give the main window focus. If other behavior is required, it must be implemented by the application. I have never noticed a problem with <code>GetOCPNCanvasWindow()</code> and actually quickly looking at the code don't see any way it could return NULL once the application is initialised.</p>
+
+
+
+<a name="338616993"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332168-Master%20-%205.8.0%20%20%28was%3A%20comms%29/topic/Z-order/near/338616993" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Tony Voss <a href="https://leamas.github.io/zulip-archive/stream/332168-Master---5.2E8.2E0--.28was.3A-comms.29/topic/Z-order.html#338616993">(Feb 28 2023 at 15:27)</a>:</h4>
+<p><span class="user-mention silent" data-user-id="573239">Pavel Kalian</span> <a href="#narrow/stream/332168-Master---5.2E8.2E0--.28was.3A-comms.29/topic/Z-order/near/338612845">said</a>:</p>
+<blockquote>
+<p>I would say that on macOS at least, the non-modal windows not moving with the main window and losing focus is the normal behavior, at least that is what I see when I open eg. Safari or <a href="http://Mail.app">Mail.app</a> preferences window and give the main window focus. </p>
+</blockquote>
+<p>Under OCPN5.6 and 5.6.2 dialogues and windows created using GetOCPNCanvasWindow() as parent follow the frame.  You can see this with wmm as an example.  Something has changed with OCPN5.7.1.</p>
+
+
+
+<a name="338618627"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332168-Master%20-%205.8.0%20%20%28was%3A%20comms%29/topic/Z-order/near/338618627" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Pavel Kalian <a href="https://leamas.github.io/zulip-archive/stream/332168-Master---5.2E8.2E0--.28was.3A-comms.29/topic/Z-order.html#338618627">(Feb 28 2023 at 15:34)</a>:</h4>
+<p>A lot changed in 5.7.1, most importantly we switched to wx3.2, which changed a lot from wx3.0...</p>
+
+
+
+<a name="338916986"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332168-Master%20-%205.8.0%20%20%28was%3A%20comms%29/topic/Z-order/near/338916986" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Tony Voss <a href="https://leamas.github.io/zulip-archive/stream/332168-Master---5.2E8.2E0--.28was.3A-comms.29/topic/Z-order.html#338916986">(Mar 01 2023 at 18:07)</a>:</h4>
+<p>I have raised this as a <a href="https://github.com/OpenCPN/OpenCPN/issues/3041">bug issue</a>.</p>
+
+
+
+<a name="338918607"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332168-Master%20-%205.8.0%20%20%28was%3A%20comms%29/topic/Z-order/near/338918607" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Pavel Kalian <a href="https://leamas.github.io/zulip-archive/stream/332168-Master---5.2E8.2E0--.28was.3A-comms.29/topic/Z-order.html#338918607">(Mar 01 2023 at 18:14)</a>:</h4>
+<p>And I again explained it is not a bug there...</p>
+
+
+
+<a name="338924374"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332168-Master%20-%205.8.0%20%20%28was%3A%20comms%29/topic/Z-order/near/338924374" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Tony Voss <a href="https://leamas.github.io/zulip-archive/stream/332168-Master---5.2E8.2E0--.28was.3A-comms.29/topic/Z-order.html#338924374">(Mar 01 2023 at 18:39)</a>:</h4>
+<p><span class="user-mention" data-user-id="573239">@Pavel Kalian</span>  You have explained in my bug report that this is the corrected behaviour.  I was not previously aware  of that and thought the change might have crept in unintended.  Thanks for the clarification.<br>
+Can you point me to relevant documentation on wxFLOAT_ON_PARENT ?  I have not found it in the wxWidgets reference pages nor anything helpful through a search.  I have tried adding it to a wxDialog style but it is reported as an undeclared identifier.</p>
+
+
+
+<a name="338926062"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332168-Master%20-%205.8.0%20%20%28was%3A%20comms%29/topic/Z-order/near/338926062" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Pavel Kalian <a href="https://leamas.github.io/zulip-archive/stream/332168-Master---5.2E8.2E0--.28was.3A-comms.29/topic/Z-order.html#338926062">(Mar 01 2023 at 18:46)</a>:</h4>
+<p>Sorry, it should be <code>wxFRAME_FLOAT_ON_PARENT</code>, the only relevant documentation i can think of is <a href="https://docs.wxwidgets.org/3.2/classwx_frame.html">https://docs.wxwidgets.org/3.2/classwx_frame.html</a>, but it is simply nothing but a style flag modifying the behavior of the window.</p>
+
+
+
+<a name="338935692"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332168-Master%20-%205.8.0%20%20%28was%3A%20comms%29/topic/Z-order/near/338935692" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Tony Voss <a href="https://leamas.github.io/zulip-archive/stream/332168-Master---5.2E8.2E0--.28was.3A-comms.29/topic/Z-order.html#338935692">(Mar 01 2023 at 19:27)</a>:</h4>
+<p>I think <code>wxFRAME_FLOAT_ON_PARENT</code> is relevent to frames only.  It is not available as a style for wxDialog.<br>
+Documention seems very scarce for such a significant change.</p>
+
+
+
+<hr><p>Last updated: Oct 05 2023 at 09:43 UTC</p>
+</html>

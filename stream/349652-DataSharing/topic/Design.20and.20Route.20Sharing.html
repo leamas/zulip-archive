@@ -1,0 +1,893 @@
+<html>
+<head><meta charset="utf-8"><title>Design and Route Sharing · DataSharing · Zulip Chat Archive</title></head>
+<h2>Stream: <a href="https://leamas.github.io/zulip-archive/stream/349652-DataSharing/index.html">DataSharing</a></h2>
+<h3>Topic: <a href="https://leamas.github.io/zulip-archive/stream/349652-DataSharing/topic/Design.20and.20Route.20Sharing.html">Design and Route Sharing</a></h3>
+
+<hr>
+
+<base href="https://opencpn.zulipchat.com">
+
+<head><link href="https://leamas.github.io/zulip-archive/style.css" rel="stylesheet"></head>
+
+<a name="303746376"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/349652-DataSharing/topic/Design%20and%20Route%20Sharing/near/303746376" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Dave Register <a href="https://leamas.github.io/zulip-archive/stream/349652-DataSharing/topic/Design.20and.20Route.20Sharing.html#303746376">(Oct 13 2022 at 01:39)</a>:</h4>
+<p>Hi there...<br>
+Time to start implementation of proposed data sharing facility planned for OCPN 58</p>
+
+
+
+<a name="303747253"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/349652-DataSharing/topic/Design%20and%20Route%20Sharing/near/303747253" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Dave Register <a href="https://leamas.github.io/zulip-archive/stream/349652-DataSharing/topic/Design.20and.20Route.20Sharing.html#303747253">(Oct 13 2022 at 01:54)</a>:</h4>
+<p>I have a design in mind, ready to share it here for comments, flames, etc.  Here are the key points:<br>
+Leaving Service discovery aside for a moment....</p>
+<p>Server side:</p>
+<ol>
+<li>OCPN will implement a RESTful server with HTTP(s) accessibility.</li>
+<li>A subset of the standard verbs (GET, PUT, POST) will be supported.</li>
+</ol>
+<p>Client side:</p>
+<ol>
+<li>OCPN curl library (well known, stable, used today on o-charts_pi) will be used to access the server.</li>
+</ol>
+<p>So, taking a simple task.  We wish to send a route from one instance of OCPN to another.  Assume the sender knows the ip address of the target (by Service discovery, separate topic).<br>
+One approach is simply to issue a PUT request to the server, instructing the server to accept an XML file describing the route, and store it to a  well-known data location on the server (e.g.$OCPNPrivateData/xfer).  When the server successfully receives and validates the XML file, he will merge the transferred XML file contents with existing navobj file, in exactly the same way an IMPORT operation does today. Update GUI on the server-side, and we are done. <br>
+Of course, there are details.  UUID collision comes to mind.  But leaving that aside also, are there comments on the strategy?  Are there any other reasonable peer-peer operations that could NOT be performed using a simple http RESTful server model?  Or do we need a more complex server with more precise verbs?</p>
+
+
+
+<a name="303747511"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/349652-DataSharing/topic/Design%20and%20Route%20Sharing/near/303747511" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Dave Register <a href="https://leamas.github.io/zulip-archive/stream/349652-DataSharing/topic/Design.20and.20Route.20Sharing.html#303747511">(Oct 13 2022 at 01:58)</a>:</h4>
+<p>Implementation details proposed:</p>
+<ol>
+<li>RESTful server will be implemented using "mongoose" library.  Seems a good fit, so far.  Compatible FOSS license.  And a quick smoke test shows that it works, at least on linux.</li>
+<li>I prefer not to use JSON payloads in this interface, since that would involve a round-trip conversion of our existing XML data structures to JSON, and back.  I see nothing to be gained here.</li>
+</ol>
+
+
+
+<a name="303747580"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/349652-DataSharing/topic/Design%20and%20Route%20Sharing/near/303747580" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Dave Register <a href="https://leamas.github.io/zulip-archive/stream/349652-DataSharing/topic/Design.20and.20Route.20Sharing.html#303747580">(Oct 13 2022 at 01:59)</a>:</h4>
+<p>Mongoose:<br>
+<a href="https://github.com/cesanta/mongoose">https://github.com/cesanta/mongoose</a></p>
+
+
+
+<a name="303748251"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/349652-DataSharing/topic/Design%20and%20Route%20Sharing/near/303748251" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Dave Register <a href="https://leamas.github.io/zulip-archive/stream/349652-DataSharing/topic/Design.20and.20Route.20Sharing.html#303748251">(Oct 13 2022 at 02:08)</a>:</h4>
+<p>I understand that users and devs will come at this problem from many backgrounds and viewpoints.  That's good.  So I am interested in some wide ranging discussions before we commit to a plan.<br>
+Bring on the flame....</p>
+
+
+
+<a name="303776688"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/349652-DataSharing/topic/Design%20and%20Route%20Sharing/near/303776688" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Alec Leamas <a href="https://leamas.github.io/zulip-archive/stream/349652-DataSharing/topic/Design.20and.20Route.20Sharing.html#303776688">(Oct 13 2022 at 08:02)</a>:</h4>
+<p>Overall, this seems like a good plan.</p>
+<blockquote>
+<p>One approach is simply to issue a PUT request to the server, instructing the server to accept an XML file describing the route,</p>
+</blockquote>
+<p>Why not just do a POST instead, with the XML file as content? Seems simpler and cleaner to me, no need to mess with out-of-protocol file transfers, locations etc.</p>
+<p>We should be careful to have ipv6 enabled while doing this in order to be prepared for Nmea OneNet.</p>
+
+
+
+<a name="303779826"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/349652-DataSharing/topic/Design%20and%20Route%20Sharing/near/303779826" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Alec Leamas <a href="https://leamas.github.io/zulip-archive/stream/349652-DataSharing/topic/Design.20and.20Route.20Sharing.html#303779826">(Oct 13 2022 at 08:25)</a>:</h4>
+<blockquote>
+<p>I prefer not to use JSON payloads in this interface</p>
+</blockquote>
+<p>Encoding XML files in json is of course madness. However, we should IMHO not rule out using json for other purposes.</p>
+
+
+
+<a name="303792998"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/349652-DataSharing/topic/Design%20and%20Route%20Sharing/near/303792998" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Mike Rossiter <a href="https://leamas.github.io/zulip-archive/stream/349652-DataSharing/topic/Design.20and.20Route.20Sharing.html#303792998">(Oct 13 2022 at 09:55)</a>:</h4>
+<p>Most probably a distraction but is it time to provide a schema for OpenCPN routes and waypoints? At the moment these XML files cannot be validated.</p>
+
+
+
+<a name="303795229"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/349652-DataSharing/topic/Design%20and%20Route%20Sharing/near/303795229" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Alec Leamas <a href="https://leamas.github.io/zulip-archive/stream/349652-DataSharing/topic/Design.20and.20Route.20Sharing.html#303795229">(Oct 13 2022 at 10:11)</a>:</h4>
+<p>Not a distraction at all.  Part of the design should IMHO be that XML used in the interface should have schemas and thus be possible to validate.</p>
+
+
+
+<a name="303838608"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/349652-DataSharing/topic/Design%20and%20Route%20Sharing/near/303838608" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Dave Register <a href="https://leamas.github.io/zulip-archive/stream/349652-DataSharing/topic/Design.20and.20Route.20Sharing.html#303838608">(Oct 13 2022 at 14:01)</a>:</h4>
+<p>Mike...<br>
+Would you like to take that on your plate?</p>
+
+
+
+<a name="303839211"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/349652-DataSharing/topic/Design%20and%20Route%20Sharing/near/303839211" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Alec Leamas <a href="https://leamas.github.io/zulip-archive/stream/349652-DataSharing/topic/Design.20and.20Route.20Sharing.html#303839211">(Oct 13 2022 at 14:04)</a>:</h4>
+<p><span class="user-mention" data-user-id="399559">@Mike Rossiter</span>  ^</p>
+
+
+
+<a name="303840792"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/349652-DataSharing/topic/Design%20and%20Route%20Sharing/near/303840792" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Mike Rossiter <a href="https://leamas.github.io/zulip-archive/stream/349652-DataSharing/topic/Design.20and.20Route.20Sharing.html#303840792">(Oct 13 2022 at 14:12)</a>:</h4>
+<p>Dave ... <br>
+I will try and find the schema that was prepared some time ago!</p>
+
+
+
+<a name="304291677"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/349652-DataSharing/topic/Design%20and%20Route%20Sharing/near/304291677" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Mike Rossiter <a href="https://leamas.github.io/zulip-archive/stream/349652-DataSharing/topic/Design.20and.20Route.20Sharing.html#304291677">(Oct 16 2022 at 10:31)</a>:</h4>
+<p><span class="user-mention" data-user-id="517002">@Dave Register</span> Now hosting the initial schema for test purposes.<br>
+<a href="http://mikerossiter.co.uk/site/OpenCPN/xmlschemas/opencpn_v1.xsd">http://mikerossiter.co.uk/site/OpenCPN/xmlschemas/opencpn_v1.xsd</a><br>
+I have edited route and waypoint gpx files to reference this schema. They validate ok. When <a href="http://opencpn.org">opencpn.org</a>  can host the schema I will look at the minor changes needed for the construction of valid gpx files.</p>
+
+
+
+<a name="304294223"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/349652-DataSharing/topic/Design%20and%20Route%20Sharing/near/304294223" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Alec Leamas <a href="https://leamas.github.io/zulip-archive/stream/349652-DataSharing/topic/Design.20and.20Route.20Sharing.html#304294223">(Oct 16 2022 at 10:58)</a>:</h4>
+<p>Hm... I presume that this schema reflects what we have today (?). </p>
+<p>One thing which strikes me is that there are no top level elements like <code>&lt;route&gt;</code> and/or <code>&lt;waypoint&gt;</code> which contains this stuff.  Certainly no XML guru, but such  toplevels are customary for a reason, I guess.</p>
+<p>Another thing is that it might make sense to use <em>xs</em> rather than <em>xsd</em> since this is what we already are using in the plugin definitions. No big deal, for sure.</p>
+
+
+
+<a name="304297857"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/349652-DataSharing/topic/Design%20and%20Route%20Sharing/near/304297857" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Mike Rossiter <a href="https://leamas.github.io/zulip-archive/stream/349652-DataSharing/topic/Design.20and.20Route.20Sharing.html#304297857">(Oct 16 2022 at 11:37)</a>:</h4>
+<blockquote>
+<p>One thing which strikes me is that there are no top level elements like &lt;route&gt; and/or &lt;waypoint&gt;</p>
+</blockquote>
+<p>These are covered by the topografix schema.</p>
+
+
+
+<a name="304299047"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/349652-DataSharing/topic/Design%20and%20Route%20Sharing/near/304299047" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Mike Rossiter <a href="https://leamas.github.io/zulip-archive/stream/349652-DataSharing/topic/Design.20and.20Route.20Sharing.html#304299047">(Oct 16 2022 at 11:48)</a>:</h4>
+<p>Agree ... xs would be more consistent. I will make an edit.</p>
+
+
+
+<a name="304367043"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/349652-DataSharing/topic/Design%20and%20Route%20Sharing/near/304367043" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Dave Register <a href="https://leamas.github.io/zulip-archive/stream/349652-DataSharing/topic/Design.20and.20Route.20Sharing.html#304367043">(Oct 17 2022 at 01:39)</a>:</h4>
+<p>Question for thought...<br>
+Making good progress on REST server implementation.  A question arises.<br>
+We will need some "user-space" naming scheme for OCPN instances, both for service discovery, as well as GUI elements.  For instance, in the prototype code now I have a dialog with string:<br>
+"someone has sent you a new route.\nAccept?"<br>
+Clearly we need something more than "someone".  And I don't think ip-address (alone) is enough for average users.<br>
+We have choices, as always.</p>
+<ol>
+<li>Autogenerate a name string, based on host type, and something (?) else..  Show the generated name in "help" dialog.</li>
+<li>Allow (require?) user to specify a desired instance name, according to some rules.  Name would be persistent for this device.  Somehow, we guarantee uniqueness, at least on the local net?</li>
+</ol>
+<p>Thoughts?<br>
+Dave</p>
+
+
+
+<a name="304368915"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/349652-DataSharing/topic/Design%20and%20Route%20Sharing/near/304368915" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Dave Register <a href="https://leamas.github.io/zulip-archive/stream/349652-DataSharing/topic/Design.20and.20Route.20Sharing.html#304368915">(Oct 17 2022 at 02:13)</a>:</h4>
+<p>Planning to use this for mDNS/Service Discovery support:<br>
+<a href="https://github.com/mjansson/mdns">https://github.com/mjansson/mdns</a></p>
+<p>Will implement as library with simple static methods.<br>
+Any thoughts?</p>
+
+
+
+<a name="304392599"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/349652-DataSharing/topic/Design%20and%20Route%20Sharing/near/304392599" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Håkan Svensson <a href="https://leamas.github.io/zulip-archive/stream/349652-DataSharing/topic/Design.20and.20Route.20Sharing.html#304392599">(Oct 17 2022 at 06:57)</a>:</h4>
+<p>"[Someone] has sent..."</p>
+<ol>
+<li>Thought: Use [hostname].  Would be a good first time use. Save to config. Show in "Help/About" and/or Options-&gt;User interface. Make it editable with rules.</li>
+</ol>
+
+
+
+<a name="304399272"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/349652-DataSharing/topic/Design%20and%20Route%20Sharing/near/304399272" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Alec Leamas <a href="https://leamas.github.io/zulip-archive/stream/349652-DataSharing/topic/Design.20and.20Route.20Sharing.html#304399272">(Oct 17 2022 at 07:45)</a>:</h4>
+<blockquote>
+<p>Planning to use this for mDNS/Service Discovery support:</p>
+</blockquote>
+<p>That one looks really good. Hopefully if can replace the current, problematic library as well.</p>
+
+
+
+<a name="304403894"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/349652-DataSharing/topic/Design%20and%20Route%20Sharing/near/304403894" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Alec Leamas <a href="https://leamas.github.io/zulip-archive/stream/349652-DataSharing/topic/Design.20and.20Route.20Sharing.html#304403894">(Oct 17 2022 at 08:16)</a>:</h4>
+<blockquote>
+<p>Allow (require?) user to specify a desired instance name</p>
+</blockquote>
+<p>This is IMHO the way to go, "specify" meaning configure. If  not configured let it default to IP address, this is what we have.</p>
+<p>In the long run this scheme with a dialog for each route will be cumbersome to use.  For that reason, we probably will need to add some mechanism to verify a client "once and for all".  This is the security question which we won't get around when implementing an API like this on  a  navigation device. Another topic...</p>
+
+
+
+<a name="304404690"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/349652-DataSharing/topic/Design%20and%20Route%20Sharing/near/304404690" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Alec Leamas <a href="https://leamas.github.io/zulip-archive/stream/349652-DataSharing/topic/Design.20and.20Route.20Sharing.html#304404690">(Oct 17 2022 at 08:21)</a>:</h4>
+<blockquote>
+<p>Thought: Use [hostname]. Would be a good first time use. </p>
+</blockquote>
+<p>Many (most?) users does not have a configured hostname.  </p>
+<p>In any case, this must be done on the client side, the OpenCPN server typically does not know the client hostname. So  hostname could perhaps be default id configured, but probably not more than that.</p>
+
+
+
+<a name="304596136"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/349652-DataSharing/topic/Design%20and%20Route%20Sharing/near/304596136" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Dave Register <a href="https://leamas.github.io/zulip-archive/stream/349652-DataSharing/topic/Design.20and.20Route.20Sharing.html#304596136">(Oct 18 2022 at 02:10)</a>:</h4>
+<p>Tech question, working on mDNS service discovery:<br>
+<strong>Does anyone know how to enable multicast UDP reception on Windows 10?</strong><br>
+I've checked with Wireshark, and nothing is received when probed by linux.  Conversely, multicast UDP is correctly sent by Windows. and seen by linux.</p>
+
+
+
+<a name="304615298"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/349652-DataSharing/topic/Design%20and%20Route%20Sharing/near/304615298" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Håkan Svensson <a href="https://leamas.github.io/zulip-archive/stream/349652-DataSharing/topic/Design.20and.20Route.20Sharing.html#304615298">(Oct 18 2022 at 06:06)</a>:</h4>
+<p>I'm not sure I understand it correct but FWIW on my local net I use to:<br>
+On my RPi I Tx to UDP 192.168.1.255 : 10112<br>
+On Win10 Rx UDP 0.0.0.0 : 10112</p>
+
+
+
+<a name="305034991"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/349652-DataSharing/topic/Design%20and%20Route%20Sharing/near/305034991" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Dave Register <a href="https://leamas.github.io/zulip-archive/stream/349652-DataSharing/topic/Design.20and.20Route.20Sharing.html#305034991">(Oct 19 2022 at 20:17)</a>:</h4>
+<p>I have merged the current state of REST server, mDNS discovery, and object sharing branch, into "master" branch.<br>
+This is for testing of basic plumbing and UI.<br>
+Notes:</p>
+<ol>
+<li>The code is rough and incomplete.  But the skeletons are sound, I think.  Additional objects (routepoints &amp; tracks) will be added easily.  Also, additional server endpoints for other control functions will be simple enough.</li>
+<li>The only operation available <strong>NOW</strong> is to send a single route to a peer instance of OCPN.  This is accessed by right-click on route, "Send to..."  You may modify the route on the source, re-send to the peer, and the route on the peer will be updated.  A dialog will require confirmation of overwrite of the original route.</li>
+<li>
+<p>To make this work with Win10, it is necessary to enable multicast UDP reception.  One easy way to do this is to change the ipv4 "metric" from "Auto" to "1".  See here:<br>
+<a href="https://wphosting.tv/how-to-set-the-network-adapter-order-priority-in-windows-10/">https://wphosting.tv/how-to-set-the-network-adapter-order-priority-in-windows-10/</a><br>
+You will need to Disable and Re-enable the connection after the change. Why this works, I cannot say.  Anyone?</p>
+</li>
+<li>
+<p>There is a noticeable time lag (~4 secs) on the operation.  Most of this comes from the peer discovery process.</p>
+</li>
+</ol>
+<p>There are two issues to discuss further:</p>
+<ol>
+<li>mDNS performance and caching policy.</li>
+<li>Security.</li>
+</ol>
+<p>More on these later.</p>
+
+
+
+<a name="305035230"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/349652-DataSharing/topic/Design%20and%20Route%20Sharing/near/305035230" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Dave Register <a href="https://leamas.github.io/zulip-archive/stream/349652-DataSharing/topic/Design.20and.20Route.20Sharing.html#305035230">(Oct 19 2022 at 20:18)</a>:</h4>
+<p>Data Sharing security:<br>
+Thoughts and concerns, anyone?</p>
+
+
+
+<a name="305037745"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/349652-DataSharing/topic/Design%20and%20Route%20Sharing/near/305037745" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Dave Register <a href="https://leamas.github.io/zulip-archive/stream/349652-DataSharing/topic/Design.20and.20Route.20Sharing.html#305037745">(Oct 19 2022 at 20:34)</a>:</h4>
+<p>mDNS performance.<br>
+Multicast network Discovery/DNS  is by definition a non-time-deterministic process. How it works in OCPN is this:</p>
+<ol>
+<li>A device/app requiring a specific service (e.g.OCPN REST server)ends a specific multicast query  onto the network.</li>
+<li>Server daemons on enabled clients respond with a unicast message to the requester, if the request is serviceable by that deamon.  The responses include the ip and other identifying data for the target server.</li>
+<li>The responses arrive at the requester in unspecified time and order.  The current code waits 4 seconds for all results to appear.</li>
+<li>The mDNS server daemon supporting the OCPN REST server is  integral with OCPN.  That means that if OCPN is not running on a system, it is not detected by the query/response logic.</li>
+</ol>
+<p>You will see from this logic that there is no "always running DNS server" in the mDNS architecture.  That is one of the advantages of the system.  It allows "ad-hoc" connections without any network-resident controller other than the source and destination.<br>
+You will also understand that absent any local caching of mDNS records, each operation to access an OCPN REST server on another device (e.g. to send a route) will require an mDNS discovery process to find the current ip of the target device.<br>
+With me so far?</p>
+<p>I invite comments from network experts here on the discussion.</p>
+
+
+
+<a name="305038360"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/349652-DataSharing/topic/Design%20and%20Route%20Sharing/near/305038360" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Alec Leamas <a href="https://leamas.github.io/zulip-archive/stream/349652-DataSharing/topic/Design.20and.20Route.20Sharing.html#305038360">(Oct 19 2022 at 20:38)</a>:</h4>
+<p>Security: As I said earlier I think we need a scheme to verify a client "once and for all". This is of course for general security reasons, but also usability since the alternative is a  cumbersome dialog for each action.</p>
+<p>Overall, we can assume that the two devices involved are physically close (in the same yacht...) at least when establishing a connection. The bluetooth-like pairing mechanism comes to mind here, server presents a number on it's gui which user enters into the client. This establishes a common secret which can be used to generate an API key which is known by both sides.</p>
+<p>This is then about the client adding the api key to the request, and server checking it. Requires encrypted https transport, but this is probably needed anyway. The certificate question is there, even if we are on a non-routable network.  There are other possibilities which does not require a certificate, but we should IMHO explore the "standard" https path first.</p>
+
+
+
+<a name="305063840"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/349652-DataSharing/topic/Design%20and%20Route%20Sharing/near/305063840" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Dave Register <a href="https://leamas.github.io/zulip-archive/stream/349652-DataSharing/topic/Design.20and.20Route.20Sharing.html#305063840">(Oct 20 2022 at 00:47)</a>:</h4>
+<p>Lets focus on <a href="https://.">https://.</a><br>
+There are hooks already in place within mongoose for https certificate support. I think we need a ".pem" file containing a certificate and key.  How do we build this certificate file?</p>
+
+
+
+<a name="305083627"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/349652-DataSharing/topic/Design%20and%20Route%20Sharing/near/305083627" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Håkan Svensson <a href="https://leamas.github.io/zulip-archive/stream/349652-DataSharing/topic/Design.20and.20Route.20Sharing.html#305083627">(Oct 20 2022 at 05:53)</a>:</h4>
+<p>A short test - more this evening.<br>
+All on the same wifi net.</p>
+<ul>
+<li>Rpi is detected by Win10 and a route transfer worked.</li>
+<li>Win10 is not detected by RPi.  (With or without Auto metric)</li>
+</ul>
+
+
+
+<a name="305101946"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/349652-DataSharing/topic/Design%20and%20Route%20Sharing/near/305101946" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Alec Leamas <a href="https://leamas.github.io/zulip-archive/stream/349652-DataSharing/topic/Design.20and.20Route.20Sharing.html#305101946">(Oct 20 2022 at 08:27)</a>:</h4>
+<p>https:  Last time I encountered this was when working with OpenVPN which contains a bundled copy of EasyRSA. It is packaged in Debian as easy-rsa.</p>
+<p>EasyRSA can be used create certificates for a certificate authority (CA) and one or more client certificate. Each certificate is a public file meant to be distributed and a secret file used to verify data. Two problems:</p>
+<ul>
+<li>The procedure to set up a CA and create  client certificates is utterly convoluted and bash i. e., nothing for end users.</li>
+<li>Creating the certificate centrally means distributing the secrets which obviously does not work.</li>
+</ul>
+<p>To walk this path we would somehow need to create a "initiate OpenCPN for remote use"step  which would create a CA and at least one client certificate for the OpenVPN server.  The client would then be required  to trust this certificate, it's about configuring  curl to accept the certificate.  All this is probably possible, but basically an error prone mess.</p>
+
+
+
+<a name="305183642"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/349652-DataSharing/topic/Design%20and%20Route%20Sharing/near/305183642" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Dave Register <a href="https://leamas.github.io/zulip-archive/stream/349652-DataSharing/topic/Design.20and.20Route.20Sharing.html#305183642">(Oct 20 2022 at 16:05)</a>:</h4>
+<p>Hakan...<br>
+Win10:  Did you stop and restart the Win10 network connection after changing metric?<br>
+Also, you may try adding a program exception (for OpenCPN) to the Win10 firewall.<br>
+<a href="https://www.dummies.com/article/technology/computers/pcs/how-to-allow-firewall-exceptions-on-your-windows-10-laptop-139433/">https://www.dummies.com/article/technology/computers/pcs/how-to-allow-firewall-exceptions-on-your-windows-10-laptop-139433/</a><br>
+I have not tried this myself</p>
+
+
+
+<a name="305185526"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/349652-DataSharing/topic/Design%20and%20Route%20Sharing/near/305185526" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Håkan Svensson <a href="https://leamas.github.io/zulip-archive/stream/349652-DataSharing/topic/Design.20and.20Route.20Sharing.html#305185526">(Oct 20 2022 at 16:14)</a>:</h4>
+<p>Dave..<br>
+The network was restarted after metric changes.<br>
+OpenCPN is allowed through both local and global firewall. The latter is also needed for radar plugin. And no problem to transfer data in or out the local network.<br>
+I'll set up another Win10 for further checks.</p>
+
+
+
+<a name="305189823"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/349652-DataSharing/topic/Design%20and%20Route%20Sharing/near/305189823" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Dave Register <a href="https://leamas.github.io/zulip-archive/stream/349652-DataSharing/topic/Design.20and.20Route.20Sharing.html#305189823">(Oct 20 2022 at 16:35)</a>:</h4>
+<p>The exception allowing multicast is  (or should be) exactly as required for radar_pi.  So you system should have been already allowed.</p>
+
+
+
+<a name="305194716"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/349652-DataSharing/topic/Design%20and%20Route%20Sharing/near/305194716" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Håkan Svensson <a href="https://leamas.github.io/zulip-archive/stream/349652-DataSharing/topic/Design.20and.20Route.20Sharing.html#305194716">(Oct 20 2022 at 16:57)</a>:</h4>
+<p>I now tried between two Win 10 without any Win detection. RPi is seen everywhere though.<br>
+But arp sees all IPs in both Win and Linux.<br>
+Can I Debug somewhere to see anything valuable?</p>
+
+
+
+<a name="305202688"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/349652-DataSharing/topic/Design%20and%20Route%20Sharing/near/305202688" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Håkan Svensson <a href="https://leamas.github.io/zulip-archive/stream/349652-DataSharing/topic/Design.20and.20Route.20Sharing.html#305202688">(Oct 20 2022 at 17:36)</a>:</h4>
+<p>Dave..<br>
+Some kind of partial progress I suppose.<br>
+After changes to the metric (1) option I restarted both Win PCs. On one of them two system was detected, see picture.<br>
+The HAS.WIN is a Win10 but when I select that and OK nothing is received on the HAS-WIN. <br>
+What's HAS-WIN {[2001} Instead of the IP address?</p>
+<p>The HAS-WIN PC itself does still not detect more than the RPi though.</p>
+<p><a href="/user_uploads/33951/Xu1uNYlsIRU-QH7LO-SDHSdB/bild.png">bild.png</a></p>
+<div class="message_inline_image"><a href="/user_uploads/33951/Xu1uNYlsIRU-QH7LO-SDHSdB/bild.png" title="bild.png"><img src="/user_uploads/33951/Xu1uNYlsIRU-QH7LO-SDHSdB/bild.png"></a></div>
+
+
+
+<a name="305230530"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/349652-DataSharing/topic/Design%20and%20Route%20Sharing/near/305230530" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Dave Register <a href="https://leamas.github.io/zulip-archive/stream/349652-DataSharing/topic/Design.20and.20Route.20Sharing.html#305230530">(Oct 20 2022 at 20:19)</a>:</h4>
+<p>The peers offered by the OCPN mDNS server should all contain the ip address in the label "{a.b.c.d} as does rpi.  Maybe some other DNS server is responding?<br>
+Time for Anydesk...</p>
+
+
+
+<a name="305296490"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/349652-DataSharing/topic/Design%20and%20Route%20Sharing/near/305296490" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Håkan Svensson <a href="https://leamas.github.io/zulip-archive/stream/349652-DataSharing/topic/Design.20and.20Route.20Sharing.html#305296490">(Oct 21 2022 at 07:45)</a>:</h4>
+<p>I've not been involved from start here but what's the reason to use multicast instead of broadcast UDP?<br>
+Do we really need to address a designated receiver on a small local net I suppose will be the situation for OCPN users.<br>
+Couldn't all connected OCPN instances instead have the option to react, or not, on broadcasted tracks?</p>
+
+
+
+<a name="305303433"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/349652-DataSharing/topic/Design%20and%20Route%20Sharing/near/305303433" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Håkan Svensson <a href="https://leamas.github.io/zulip-archive/stream/349652-DataSharing/topic/Design.20and.20Route.20Sharing.html#305303433">(Oct 21 2022 at 08:32)</a>:</h4>
+<p>Dave..<br>
+Any desk...sure. I'll send a mail when back from workshop. Cars!!!! :( <br>
+Meanwhile. Here's printf from my RPi. It was once detecting one out of two Win PCs. But it seems rather occasional?</p>
+<p><a href="/user_uploads/33951/2tIqMCz8pCsmOuiAOz11j_4z/printf.txt">printf.txt</a></p>
+
+
+
+<a name="305311521"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/349652-DataSharing/topic/Design%20and%20Route%20Sharing/near/305311521" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Alec Leamas <a href="https://leamas.github.io/zulip-archive/stream/349652-DataSharing/topic/Design.20and.20Route.20Sharing.html#305311521">(Oct 21 2022 at 09:22)</a>:</h4>
+<p><span class="user-mention" data-user-id="522486">@Håkan Svensson</span> </p>
+<blockquote>
+<p>what's the reason to use multicast instead of broadcast UDP?</p>
+</blockquote>
+<p>We are not inventing the mDNS protocol, we are using it.  See for example <a href="https://en.wikipedia.org/wiki/Multicast_DNS">https://en.wikipedia.org/wiki/Multicast_DNS</a>. The thinking is that it is better to use existing, reviewed and tested protocols rather than to invent them -- designing protocols is hard.</p>
+<p>We are BTW already using mDNS, there is an alternative library wxserverdisc which implements the same protocol since long. To be honest, I havn't digged into where it is (was?) used. Anyway, it's a not that well maintained piece of sw, hopefully the new library will replace it completely.</p>
+
+
+
+<a name="305313107"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/349652-DataSharing/topic/Design%20and%20Route%20Sharing/near/305313107" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Alec Leamas <a href="https://leamas.github.io/zulip-archive/stream/349652-DataSharing/topic/Design.20and.20Route.20Sharing.html#305313107">(Oct 21 2022 at 09:32)</a>:</h4>
+<p>In particular, look into DNS-SD in the Wikipedia article.</p>
+
+
+
+<a name="305536662"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/349652-DataSharing/topic/Design%20and%20Route%20Sharing/near/305536662" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Dave Register <a href="https://leamas.github.io/zulip-archive/stream/349652-DataSharing/topic/Design.20and.20Route.20Sharing.html#305536662">(Oct 22 2022 at 13:28)</a>:</h4>
+<p>How about this:</p>
+<ol>
+<li>It seems that we will need to generate a new certificate on each OCPN run-time instance, since we do not use a fixed domain with mDNS.  The system ip may change dynamically, based on the DHCP results, usually.  We need a dynamic SAN (subject-alternative-name)certificate?</li>
+<li>I have searched high and low to find a way to reliably generate certificates without full-blown OpenSLL help. No luck so far.  What would you think of bundling OpenSSL library (.dll) in Windows, and using system OpenSSL library in linux/Mac?  If we use a library, we can avoid forking CLI script processes, which is a pain, and usually become fragile over time.</li>
+</ol>
+
+
+
+<a name="305631662"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/349652-DataSharing/topic/Design%20and%20Route%20Sharing/near/305631662" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Alec Leamas <a href="https://leamas.github.io/zulip-archive/stream/349652-DataSharing/topic/Design.20and.20Route.20Sharing.html#305631662">(Oct 23 2022 at 07:37)</a>:</h4>
+<blockquote>
+<p>Howe about this?</p>
+</blockquote>
+<p>I have come to the same conclusion, not to to say I'm sure. </p>
+<p>There are alternatives. One would be to create a network service which issues certificates. This is probably the only way to get around the OpenSSL dependency on Windows. It breaks the idea of a self-contained OpenCPN application,though. But besides that, it would be an elegant solution.</p>
+<p>Another idea would be to use wireguard instead of https, basically running all connections through a VPN. Wireguard is much simpler to set up,  no signatures, just a key pair for each node. The main problem here is that  the wg server for Windows is not that mature (I think). An advantage would be that OpenCPN  would not really had to care about it, the use  of a VPN is basically transparent to the application.</p>
+<p>Other VPNs like OpenVPN tends to be based on the the same PKI infrastructure as https/OpenSSL, and is hence as bad to set up.</p>
+<p>If someone had more info on the wg Windows server this might change my mind. Until then, using the OpenSSL library  to issue certificates as you  propose seems like the best alternative.</p>
+<p>Dependency-wise, it's of course somewhat painful to depend on the OpenSSL library on Windows. However, at least on Linux all https servers depends on OpenSSL anyway, so it's not really a problem.  Not sure about macOS.  All in all, I don't see the added dependency as a major problem.</p>
+
+
+
+<a name="305632374"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/349652-DataSharing/topic/Design%20and%20Route%20Sharing/near/305632374" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Alec Leamas <a href="https://leamas.github.io/zulip-archive/stream/349652-DataSharing/topic/Design.20and.20Route.20Sharing.html#305632374">(Oct 23 2022 at 07:47)</a>:</h4>
+<p>There is an authentication dependency here. Using https does give us encryption but no authentication,  we need to implement something like pairing or so on top of that. Using a VPN avoids this need since we know the client so to speak.</p>
+
+
+
+<a name="305633058"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/349652-DataSharing/topic/Design%20and%20Route%20Sharing/near/305633058" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Alec Leamas <a href="https://leamas.github.io/zulip-archive/stream/349652-DataSharing/topic/Design.20and.20Route.20Sharing.html#305633058">(Oct 23 2022 at 07:57)</a>:</h4>
+<p>Looking more into the WIndows wg server. It actually looks quite OK. To just create the tunnel descriptions seems reasonable. Ergo:  there is IMHO a path of using wg  also on windows.  Don't really know what to think.</p>
+
+
+
+<a name="306002450"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/349652-DataSharing/topic/Design%20and%20Route%20Sharing/near/306002450" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Håkan Svensson <a href="https://leamas.github.io/zulip-archive/stream/349652-DataSharing/topic/Design.20and.20Route.20Sharing.html#306002450">(Oct 25 2022 at 10:58)</a>:</h4>
+<p>For info regarding Windows.<br>
+With the the last <a href="https://github.com/OpenCPN/OpenCPN/commit/b418d4c500f22f9c6c731aa95368e3abb4f9898c">commit</a> All my tested system, two Win10 one RPi, are now detected by "Send to.." with correct IP address. That's valid also if the reception host's address is changed. <br>
+Routes are well detected and functional. Also the "replace?" function when an already present route is again received works.<br>
+And, not less, on my Windows system, the "metric" is left at default "Auto". For any reason the earlier discussed method to change to "metric = 1" is according to my tests disturbing the route transfer function.<br>
+What's left to test are Windows versions before W10 like W7/8. I'll have a look in my drawers but if anyone else...</p>
+<p>A nice to have but not essential: <br>
+Some kind of receipt back to the sender when the transfer is detected and viewed on screen. It could be used to generate an error if the transfer didn't worked? <br>
+This is about system functionality only. Not if the user is accepting the new route or not.</p>
+
+
+
+<a name="306028646"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/349652-DataSharing/topic/Design%20and%20Route%20Sharing/near/306028646" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Alec Leamas <a href="https://leamas.github.io/zulip-archive/stream/349652-DataSharing/topic/Design.20and.20Route.20Sharing.html#306028646">(Oct 25 2022 at 13:29)</a>:</h4>
+<p>We have decided to drop at least W7 for next release, no need to test that. Have we ever supported W8?</p>
+
+
+
+<a name="306048597"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/349652-DataSharing/topic/Design%20and%20Route%20Sharing/near/306048597" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Håkan Svensson <a href="https://leamas.github.io/zulip-archive/stream/349652-DataSharing/topic/Design.20and.20Route.20Sharing.html#306048597">(Oct 25 2022 at 15:04)</a>:</h4>
+<p>Route sharing tested on W8 wo any issues. Also there are the users asked to confirm Firewall entrance like W10. Local is enough.<br>
+The W8 was nicely detected by other and detect others as well. Route transfer both ways wo issues.<br>
+Alex..<br>
+We have naturally supported all Win from XP to W11. No problem. In this matter the Win world is easy. One .exe file installation file for all.<br>
+Because some OpenGL related issues I understand we are close to exclude XP from our support list. But W7 wouldn't have the same issue and can remain. At least to my understanding?</p>
+
+
+
+<a name="306154779"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/349652-DataSharing/topic/Design%20and%20Route%20Sharing/near/306154779" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Dave Register <a href="https://leamas.github.io/zulip-archive/stream/349652-DataSharing/topic/Design.20and.20Route.20Sharing.html#306154779">(Oct 26 2022 at 02:15)</a>:</h4>
+<p>"We have decided to drop at least W7"<br>
+We have ?  News to me...  Quotation?<br>
+We are dropping XP, sure.</p>
+
+
+
+<a name="306155308"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/349652-DataSharing/topic/Design%20and%20Route%20Sharing/near/306155308" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Dave Register <a href="https://leamas.github.io/zulip-archive/stream/349652-DataSharing/topic/Design.20and.20Route.20Sharing.html#306155308">(Oct 26 2022 at 02:22)</a>:</h4>
+<p>"There is an authentication dependency here. Using https does give us encryption but no authentication"<br>
+So it seems.  After lots of googling, it seems that since both client and server are open-source, no amount of "magic" in the certificate can make us proof against determined MITM attacks.<br>
+As an alternative, I would like to see a "word sketch" of your concept for "pairing".<br>
+In other new:<br>
+Bundling OpenSSLv3 on Windows, and using it to created dynamic certs without CLI:  Solved.   Got it working now.  Traffic is definitely encrypted, by Wireshark verification.<br>
+But still no way using libcurl to authenticate server against conventional attack vectors.</p>
+
+
+
+<a name="306155437"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/349652-DataSharing/topic/Design%20and%20Route%20Sharing/near/306155437" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Dave Register <a href="https://leamas.github.io/zulip-archive/stream/349652-DataSharing/topic/Design.20and.20Route.20Sharing.html#306155437">(Oct 26 2022 at 02:25)</a>:</h4>
+<p>Windows multicast troubles:<br>
+It starts to seem that the problem with multicast on intel W10 platforms is confined to the WiFi connection only. Sometimes it works, sometimes not.  Always works on a wired connection.  There is some google juice on this....<br>
+<a href="https://superuser.com/questions/730288/why-do-some-wifi-routers-block-multicast-packets-going-from-wired-to-wireless">https://superuser.com/questions/730288/why-do-some-wifi-routers-block-multicast-packets-going-from-wired-to-wireless</a><br>
+Any confirmation?</p>
+
+
+
+<a name="306156048"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/349652-DataSharing/topic/Design%20and%20Route%20Sharing/near/306156048" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Dave Register <a href="https://leamas.github.io/zulip-archive/stream/349652-DataSharing/topic/Design.20and.20Route.20Sharing.html#306156048">(Oct 26 2022 at 02:37)</a>:</h4>
+<p>Some kind of receipt back to the sender when the transfer is detected and viewed on screen. It could be used to generate an error if the transfer didn't worked? <br>
+Yes, on my list.  We already have the structure for reporting some errors from the server.  For example, if a "Send To..." route is rejected by the destination, a message box is shown on the source device.<br>
+Do we need a message like: "Route successfully transferred." ? Probably a good idea...<br>
+Thoughts?</p>
+
+
+
+<a name="306170759"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/349652-DataSharing/topic/Design%20and%20Route%20Sharing/near/306170759" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Håkan Svensson <a href="https://leamas.github.io/zulip-archive/stream/349652-DataSharing/topic/Design.20and.20Route.20Sharing.html#306170759">(Oct 26 2022 at 06:05)</a>:</h4>
+<div class="codehilite"><pre><span></span><code>Do we need a message like: &quot;Route successfully transferred.&quot; ? Probably a good idea...
+</code></pre></div>
+
+<p>Agree. A self closing positiv receipt or a message only when failed? Maybe the latter. A user may expect a function to work but want to know about exceptional fail cases.</p>
+
+
+
+<a name="306191935"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/349652-DataSharing/topic/Design%20and%20Route%20Sharing/near/306191935" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Alec Leamas <a href="https://leamas.github.io/zulip-archive/stream/349652-DataSharing/topic/Design.20and.20Route.20Sharing.html#306191935">(Oct 26 2022 at 08:48)</a>:</h4>
+<p>Sorry, my bad. Somehow mixed up W7 with XP. Just disregard.</p>
+
+
+
+<a name="306192413"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/349652-DataSharing/topic/Design%20and%20Route%20Sharing/near/306192413" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Alec Leamas <a href="https://leamas.github.io/zulip-archive/stream/349652-DataSharing/topic/Design.20and.20Route.20Sharing.html#306192413">(Oct 26 2022 at 08:50)</a>:</h4>
+<blockquote>
+<p>A self closing positive receipt or a message only when failed? Maybe the latter</p>
+</blockquote>
+<p>IMHO, just the latter. There are good arguments against  feedback basically saying "Things worked as expected".</p>
+
+
+
+<a name="306192624"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/349652-DataSharing/topic/Design%20and%20Route%20Sharing/near/306192624" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Alec Leamas <a href="https://leamas.github.io/zulip-archive/stream/349652-DataSharing/topic/Design.20and.20Route.20Sharing.html#306192624">(Oct 26 2022 at 08:52)</a>:</h4>
+<p>I'm on the crash after modifying a route. However, limited time,  rebuilding my kitchen...</p>
+
+
+
+<a name="306343476"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/349652-DataSharing/topic/Design%20and%20Route%20Sharing/near/306343476" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Dave Register <a href="https://leamas.github.io/zulip-archive/stream/349652-DataSharing/topic/Design.20and.20Route.20Sharing.html#306343476">(Oct 26 2022 at 22:22)</a>:</h4>
+<p>I have merged the SSL/TLS certificate management and "https" support for Data Sharing to master branch.<br>
+There is a small change required for Windows build from source.  I have brought the build support bundle under version control, and it is now available on github as:</p>
+<p><a href="http://github.com/OpenCPN/OCPNWindowsCoreBuildSupport">github.com/OpenCPN/OCPNWindowsCoreBuildSupport</a></p>
+<p>Windows builders will need to download the latest repo Release file, and un-zip the embedded "buildwin" directory to the build machine's "buildwin" directory.<br>
+<a href="https://github.com/OpenCPN/OCPNWindowsCoreBuildSupport/archive/refs/tags/v0.1.zip">https://github.com/OpenCPN/OCPNWindowsCoreBuildSupport/archive/refs/tags/v0.1.zip</a></p>
+<p>The Appveyor.yml build script has been updated.  Please consult that script for more details on "OCPNWindowsCoreBuildSupport"</p>
+
+
+
+<a name="306380433"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/349652-DataSharing/topic/Design%20and%20Route%20Sharing/near/306380433" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Håkan Svensson <a href="https://leamas.github.io/zulip-archive/stream/349652-DataSharing/topic/Design.20and.20Route.20Sharing.html#306380433">(Oct 27 2022 at 06:08)</a>:</h4>
+<p>Dave..<br>
+A also had to tweak this to build: (VS2017)</p>
+<blockquote>
+<div class="codehilite"><pre><span></span><code>src/certificates.cpp
+</code></pre></div>
+
+<p>-35,9 +35,9 <br>
+#include &lt;openssl/x509v3.h&gt;<br>
+#ifdef __MSVC__<br>
+-#include "applink.c"<br>
++#include &lt;openssl/applink.c&gt;<br>
+ #endif</p>
+</blockquote>
+
+
+
+<a name="306384010"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/349652-DataSharing/topic/Design%20and%20Route%20Sharing/near/306384010" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Håkan Svensson <a href="https://leamas.github.io/zulip-archive/stream/349652-DataSharing/topic/Design.20and.20Route.20Sharing.html#306384010">(Oct 27 2022 at 06:41)</a>:</h4>
+<p>Dave..2<br>
+I created a package and installed on another PC.<br>
+It may be the Win package creator needs to include also:<br>
+libssl-3.dll and libcrypto-3.dll</p>
+
+
+
+<a name="306386190"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/349652-DataSharing/topic/Design%20and%20Route%20Sharing/near/306386190" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Håkan Svensson <a href="https://leamas.github.io/zulip-archive/stream/349652-DataSharing/topic/Design.20and.20Route.20Sharing.html#306386190">(Oct 27 2022 at 06:59)</a>:</h4>
+<p>...2<br>
+The two dll are listed in CMakeLists but commented out by "if (FALSE)" at row 1640?</p>
+
+
+
+<a name="306459167"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/349652-DataSharing/topic/Design%20and%20Route%20Sharing/near/306459167" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Dave Register <a href="https://leamas.github.io/zulip-archive/stream/349652-DataSharing/topic/Design.20and.20Route.20Sharing.html#306459167">(Oct 27 2022 at 14:14)</a>:</h4>
+<p>Hakan..<br>
+Fixed.  Thanks.</p>
+
+
+
+<a name="306459883"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/349652-DataSharing/topic/Design%20and%20Route%20Sharing/near/306459883" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Dave Register <a href="https://leamas.github.io/zulip-archive/stream/349652-DataSharing/topic/Design.20and.20Route.20Sharing.html#306459883">(Oct 27 2022 at 14:18)</a>:</h4>
+<p><span class="user-mention" data-user-id="399510">@Alec Leamas</span> <br>
+ping....<br>
+"As an alternative, I would like to see a "word sketch" of your concept for "pairing".</p>
+
+
+
+<a name="306461650"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/349652-DataSharing/topic/Design%20and%20Route%20Sharing/near/306461650" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Alec Leamas <a href="https://leamas.github.io/zulip-archive/stream/349652-DataSharing/topic/Design.20and.20Route.20Sharing.html#306461650">(Oct 27 2022 at 14:28)</a>:</h4>
+<p>It's not really an alternative, it still requires a secure transport. That said</p>
+<ul>
+<li>The client (PC used to create routes...) is initially "unpaired".</li>
+<li>When an unpaired device tries to connect, the server displays a message like "Connect from ..., use 1234 to pair".</li>
+<li>At the same time, the client displays a dialog which expects the random number 1234 in an text entry box.</li>
+<li>EDIT: User reads the random number from server and inputs it in the client dialog.</li>
+<li>The client and the server now have a shared secret. This can be  used to establish an API key, a much larger random number sequence. Server stores it, with reference to the client computer.</li>
+<li>The client attaches the api key to each and every https operation.</li>
+</ul>
+<p>This scheme is simple and efficient, but if we transfer the API key unencrypted  using http we lose. We should probably let user user "name" the client as well when pairing.</p>
+
+
+
+<a name="306492439"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/349652-DataSharing/topic/Design%20and%20Route%20Sharing/near/306492439" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Håkan Svensson <a href="https://leamas.github.io/zulip-archive/stream/349652-DataSharing/topic/Design.20and.20Route.20Sharing.html#306492439">(Oct 27 2022 at 16:48)</a>:</h4>
+<p>Dave..<br>
+Win builds fixed. Thanks.<br>
+Some quick notes wo further investigations:<br>
+On Windows.</p>
+<ul>
+<li>All connected OCPN system are detected. See picture 1.</li>
+<li>The client respons is there.  But the "Send to.. dialog" is halted until any reaction from peer wo any "awaiting respons" message.  Not intentional I suppose? Once peer has done "OK" the dialog is closed. But not before that.</li>
+<li>If peer rejects, "Cancel", the object a nice message is shown. See picture 2.</li>
+<li>Neither of [ ] "Always accept objects from this source" nor [ ] "Always replace objects from this source" has any impact on next "Send to.."<br>
+<a href="/user_uploads/33951/6pQDrxxiMKUmw82QyqM3rpT6/bild.png">bild.png</a> <br>
+<a href="/user_uploads/33951/fC8hBdQf5B0QQ1xRtZfXqUfq/bild.png">bild.png</a><div class="message_inline_image"><a href="/user_uploads/33951/6pQDrxxiMKUmw82QyqM3rpT6/bild.png" title="bild.png"><img src="/user_uploads/33951/6pQDrxxiMKUmw82QyqM3rpT6/bild.png"></a></div><div class="message_inline_image"><a href="/user_uploads/33951/fC8hBdQf5B0QQ1xRtZfXqUfq/bild.png" title="bild.png"><img src="/user_uploads/33951/fC8hBdQf5B0QQ1xRtZfXqUfq/bild.png"></a></div></li>
+</ul>
+
+
+
+<a name="306529611"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/349652-DataSharing/topic/Design%20and%20Route%20Sharing/near/306529611" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Dave Register <a href="https://leamas.github.io/zulip-archive/stream/349652-DataSharing/topic/Design.20and.20Route.20Sharing.html#306529611">(Oct 27 2022 at 20:05)</a>:</h4>
+<p><span class="user-mention" data-user-id="399510">@Alec Leamas</span> <br>
+OK, I get it.  By alternative, I mean as an alternative to traditional "authentication by certificate."<br>
+We do something similar with o-charts server. Thinking on it.....<br>
+Thanks</p>
+
+
+
+<a name="313025773"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/349652-DataSharing/topic/Design%20and%20Route%20Sharing/near/313025773" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Håkan Svensson <a href="https://leamas.github.io/zulip-archive/stream/349652-DataSharing/topic/Design.20and.20Route.20Sharing.html#313025773">(Nov 30 2022 at 10:21)</a>:</h4>
+<p><strong>Route replace issue</strong><br>
+A replaced route is not replaced it's copied "above" the old.</p>
+<ul>
+<li>Create a route on PC1. Send to PC2.</li>
+<li>Now exist as a copy on PC2</li>
+<li>Change the route on PC1 by moving one WP. Send to PC2</li>
+<li>Now both the old and the moved WP are shown on PC2. In fact it's two routes upon each others.</li>
+<li>Reverse the route on PC1 and send to and accept on PC2.</li>
+<li>Now two routes upon each other on PC2</li>
+</ul>
+<p>Expected behavior:<br>
+ When a replaced route is accepted the old would be edited or deleted.</p>
+
+
+
+<a name="315941507"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/349652-DataSharing/topic/Design%20and%20Route%20Sharing/near/315941507" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Dave Register <a href="https://leamas.github.io/zulip-archive/stream/349652-DataSharing/topic/Design.20and.20Route.20Sharing.html#315941507">(Dec 15 2022 at 00:40)</a>:</h4>
+<p>Corrected in github now,</p>
+
+
+
+<a name="316036856"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/349652-DataSharing/topic/Design%20and%20Route%20Sharing/near/316036856" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Håkan Svensson <a href="https://leamas.github.io/zulip-archive/stream/349652-DataSharing/topic/Design.20and.20Route.20Sharing.html#316036856">(Dec 15 2022 at 13:12)</a>:</h4>
+<p>Correction to route replace issue is confirmed.<br>
+Thanks</p>
+
+
+
+<a name="324614006"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/349652-DataSharing/topic/Design%20and%20Route%20Sharing/near/324614006" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Håkan Svensson <a href="https://leamas.github.io/zulip-archive/stream/349652-DataSharing/topic/Design.20and.20Route.20Sharing.html#324614006">(Jan 30 2023 at 14:04)</a>:</h4>
+<p><span class="user-mention" data-user-id="517002">@Dave Register</span> <br>
+I've problem now to get the "Send to" function to find other O instances.  Both to/from Win and Rpi. <br>
+Rpi400 can sometimes be found from one of the two Win's connected but Win is very seldom found.<br>
+Do you experience the same?<br>
+The Rpi says:<br>
+Message like: "No other instansens found"</p>
+<blockquote>
+<p>Local IPv4 address: 192.168.1.154<br>
+Local IPv6 address: 2001:2042:7c05:3000:91fd:d496:9ec7:8864<br>
+Opened 2 sockets for mDNS query<br>
+Sending mDNS query : opencpn-object-control-service PTR<br>
+Query PTR opencpn-object-control-service.<br>
+Reading mDNS query replies<br>
+  --&gt; answer RPi400.opencpn-object-control-service. (unicast)<br>
+192.168.1.154:5353 : answer opencpn-object-control-service. PTR RPi400.opencpn-object-control-service. rclass 0x1 ttl 10 length 9<br>
+Query PTR opencpn-object-control-service.<br>
+  --&gt; answer RPi400.opencpn-object-control-service. (unicast)<br>
+Read 4 records<br>
+Closed sockets</p>
+</blockquote>
+
+
+
+<a name="324818940"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/349652-DataSharing/topic/Design%20and%20Route%20Sharing/near/324818940" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Dave Register <a href="https://leamas.github.io/zulip-archive/stream/349652-DataSharing/topic/Design.20and.20Route.20Sharing.html#324818940">(Jan 31 2023 at 03:04)</a>:</h4>
+<p><span class="user-mention" data-user-id="522486">@Håkan Svensson</span> <br>
+On RPi4, bullseye/64.<br>
+No problem.  Windows detected reliably to/from.</p>
+
+
+
+<a name="324830229"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/349652-DataSharing/topic/Design%20and%20Route%20Sharing/near/324830229" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Håkan Svensson <a href="https://leamas.github.io/zulip-archive/stream/349652-DataSharing/topic/Design.20and.20Route.20Sharing.html#324830229">(Jan 31 2023 at 05:27)</a>:</h4>
+<p>OK, thanks for testing.<br>
+After I have restarted "everything" all was again detected.  Bad Monday?</p>
+
+
+
+<a name="325140923"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/349652-DataSharing/topic/Design%20and%20Route%20Sharing/near/325140923" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Håkan Svensson <a href="https://leamas.github.io/zulip-archive/stream/349652-DataSharing/topic/Design.20and.20Route.20Sharing.html#325140923">(Feb 01 2023 at 12:17)</a>:</h4>
+<p>The trouble to locate RPi400 seems more than bad Monday. What we partly saw yesterday is still present.<br>
+My two Win does always find each others. Occasionally one of the Win also detects RPi400.<br>
+RPi400 have hard to find the other. If one Win has seen RPi400 and send a route the Rpi400 can later also find the Win that has sent. But not the other.<br>
+More network trouble with the RPi400. I mean more than the 20 minutes "gaps"?</p>
+
+
+
+<a name="325597083"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/349652-DataSharing/topic/Design%20and%20Route%20Sharing/near/325597083" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Håkan Svensson <a href="https://leamas.github.io/zulip-archive/stream/349652-DataSharing/topic/Design.20and.20Route.20Sharing.html#325597083">(Feb 03 2023 at 10:51)</a>:</h4>
+<p><span class="user-mention" data-user-id="517002">@Dave Register</span> <br>
+Late test issue. sorry.<br>
+We may need a general timeout for the Send To function.<br>
+Test case:</p>
+<ul>
+<li>Send To from e.g. RPi to a Win</li>
+<li>Since it's a already existing route and no general accept Rpi is waiting for a respons from Win.</li>
+<li>The Win's network connection failed, or a PC shut down, during this wait for respons.</li>
+<li>Now RPi is waiting forever and eventually "Peer is not responding.."  - Wait - Quit. If "Quit" O shuts down.</li>
+<li>We may need a timeout: "No peer respons! Stop waiting?" And then nicely shut the Send To function instead of OCPN itself.</li>
+</ul>
+
+
+
+<a name="325625579"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/349652-DataSharing/topic/Design%20and%20Route%20Sharing/near/325625579" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Håkan Svensson <a href="https://leamas.github.io/zulip-archive/stream/349652-DataSharing/topic/Design.20and.20Route.20Sharing.html#325625579">(Feb 03 2023 at 13:09)</a>:</h4>
+<p><span class="user-mention" data-user-id="517002">@Dave Register</span> <br>
+"Send To" respons  - No peers found.<br>
+Rpi400 and other can miss sometimes although the request is always sent. But I sometimes see long respons time. Longer than the time out.<br>
+Example here from WIN-HAS.<br>
+WIN (...1.67) used "Send To".<br>
+After time out the message "No OCPN peers detected" <br>
+Looking at the Wireshark log below we can see the request was sent. After 19 seconds the first answer was received and all the rest thereafter. No one was missing but all was late. So late the Send To function timed out and message "No peers"<br>
+How to handle this I don't know. We can't wait forever, can we?<br>
+Next time I tried Send To, after some minutes, all was answering within the time out limit.</p>
+<p>I have seen, on RPi400 only two peers are answering. Not WIN-HAS. Not either after both O was restarted.  I also manage to send a route to RPi400 from WIN-HAS. But also after that WIN-HAS didn't respond on a RPi400 request??<br>
+It's not easy to find a logic in this issue.</p>
+<blockquote>
+<div class="codehilite"><pre><span></span><code>3043  77.461638   192.168.1.67    224.0.0.251 MDNS    90  Standard query 0x0000 PTR opencpn-object-control-service, &quot;QU&quot; question.
+4106  98.316735   192.168.1.101   192.168.1.67    MDNS    147 Standard query response 0x0000 PTR opencpn-object-control-service, &quot;QU&quot; question PTR HAS-LENO.opencpn-object-control-service SRV 0 0 8000 HAS-LENO.local.
+4977  118.576120  192.168.1.154   192.168.1.67    MDNS    143 Standard query response 0x0000 PTR opencpn-object-control-service, &quot;QU&quot; question PTR RPi400.opencpn-object-control-service SRV 0 0 8000 RPi400.local.
+4978  118.577444  192.168.1.73    192.168.1.67    MDNS    139 Standard query response 0x0000 PTR opencpn-object-control-service, &quot;QU&quot; question PTR RPi4.opencpn-object-control-service SRV 0 0 8000 RPi4.local
+</code></pre></div>
+
+</blockquote>
+
+
+
+<a name="325629772"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/349652-DataSharing/topic/Design%20and%20Route%20Sharing/near/325629772" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Håkan Svensson <a href="https://leamas.github.io/zulip-archive/stream/349652-DataSharing/topic/Design.20and.20Route.20Sharing.html#325629772">(Feb 03 2023 at 13:28)</a>:</h4>
+<p>From RPi400 (...1.154):<br>
+Here one peer (..1.101) answered in due time and was also listed. The other two was obviously not listed. To late.</p>
+<blockquote>
+<div class="codehilite"><pre><span></span><code> 5301 202.620279421   192.168.1.154   224.0.0.251 MDNS    90  Standard query 0x0000 PTR opencpn-object-control-service, &quot;QU&quot; question
+ 5307 202.686669729   192.168.1.101   192.168.1.154   MDNS    147 Standard query response 0x0000 PTR opencpn-object-control-service, &quot;QU&quot; question PTR HAS-LENO.opencpn-object-control-service SRV 0 0 8000 HAS-LENO.local
+ 6599 220.996783174   192.168.1.73    192.168.1.154   MDNS    139 Standard query response 0x0000 PTR opencpn-object-control-service, &quot;QU&quot; question PTR RPi4.opencpn-object-control-service SRV 0 0 8000 RPi4.local
+ 6600 220.996865543   192.168.1.154   192.168.1.73    ICMP    167 Destination unreachable (Port unreachable)
+ 6601 220.999214893   192.168.1.67    192.168.1.154   MDNS    145 Standard query response 0x0000 PTR opencpn-object-control-service, &quot;QU&quot; question PTR HAS-WIN.opencpn-object-control-service SRV 0 0 8000 HAS-WIN.local
+ 6602 220.999237949   192.168.1.154   192.168.1.67    ICMP    173 Destination unreachable (Port unreachable)
+</code></pre></div>
+
+</blockquote>
+
+
+
+<a name="325654784"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/349652-DataSharing/topic/Design%20and%20Route%20Sharing/near/325654784" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Dave Register <a href="https://leamas.github.io/zulip-archive/stream/349652-DataSharing/topic/Design.20and.20Route.20Sharing.html#325654784">(Feb 03 2023 at 15:13)</a>:</h4>
+<p><span class="user-mention" data-user-id="522486">@Håkan Svensson</span> <br>
+General timeout:  Yes, we need that.  I'll take a look.<br>
+Slow response:  Maybe we should implement some sort of caching of responses.  So if a response is late, we get a timeout.  But the next SendTo... will likely find the target in the cache and not even need to query.  In this case, the General Timeout may be triggered, if the target is really not there.  Also, we could put a time aging on the cache.  That is, cache is invalidated after say 2 minutes?<br>
+Just ideas...</p>
+
+
+
+<a name="325697944"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/349652-DataSharing/topic/Design%20and%20Route%20Sharing/near/325697944" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Håkan Svensson <a href="https://leamas.github.io/zulip-archive/stream/349652-DataSharing/topic/Design.20and.20Route.20Sharing.html#325697944">(Feb 03 2023 at 18:26)</a>:</h4>
+<p>I've no further ideas. But isn't it strange the respons time can sometimes be so long? Normal within the same second but occasionally ~20 seconds. Why is the peer waiting and for what?</p>
+
+
+
+<a name="325728836"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/349652-DataSharing/topic/Design%20and%20Route%20Sharing/near/325728836" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Håkan Svensson <a href="https://leamas.github.io/zulip-archive/stream/349652-DataSharing/topic/Design.20and.20Route.20Sharing.html#325728836">(Feb 03 2023 at 21:38)</a>:</h4>
+<p>Dave..<br>
+Rather often, but not all time, I saw a respons of "No peers.." I waited a minute and tried again. Then all three was there.<br>
+Maybe complete the a message with ... "Please try again in 1 minute...."   or A button to automat it?  :-)</p>
+
+
+
+<a name="325755317"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/349652-DataSharing/topic/Design%20and%20Route%20Sharing/near/325755317" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Dave Register <a href="https://leamas.github.io/zulip-archive/stream/349652-DataSharing/topic/Design.20and.20Route.20Sharing.html#325755317">(Feb 04 2023 at 01:54)</a>:</h4>
+<p><span class="user-mention" data-user-id="522486">@Håkan Svensson</span> <br>
+I pushed an improvement to SendTo... UI.</p>
+<ol>
+<li>Verify OCPN mdns cache is active, and useful.</li>
+<li>Reduce mdns query timeout to 2 secs.</li>
+<li>Added "Scan" button to dialog, to easily try again if your desired peer is not on the list yet.</li>
+</ol>
+<p>I did not yet implement a global timeout for "dead" peers.  That will be next.</p>
+
+
+
+<a name="325820018"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/349652-DataSharing/topic/Design%20and%20Route%20Sharing/near/325820018" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Håkan Svensson <a href="https://leamas.github.io/zulip-archive/stream/349652-DataSharing/topic/Design.20and.20Route.20Sharing.html#325820018">(Feb 04 2023 at 12:37)</a>:</h4>
+<p><span class="user-mention" data-user-id="517002">@Dave Register</span> </p>
+<ul>
+<li>The new "Scan" button is fine. Maybe change text to "Scan again" to not confuse and give the impression it needs to be clicked all time?  </li>
+<li>Also is an empty list now shown when no peers are received. I think that's fine and understandable in combination with the "Scan again" button.</li>
+<li>Reply function. It's still strange why we sometimes have a long delay. Is it anything within OCPN or some network buffer function? </li>
+<li>Nevertheless; we already have a spinning cursor all time using the Send To function so we may add some extra seconds? Study the pictures below. In the first we are for any strange reason missing one peer. IP ...1.154 although it was received within 4 seconds.  At next request all was received in one second and also all three are listed. </li>
+</ul>
+<p><a href="/user_uploads/33951/qQbkU6-iaix6xq5nlpJcu4E5/bild.png">bild.png</a> <br>
+<a href="/user_uploads/33951/ewPhJLBK9mErxxpRPfpp9wb4/bild.png">bild.png</a></p>
+<div class="message_inline_image"><a href="/user_uploads/33951/qQbkU6-iaix6xq5nlpJcu4E5/bild.png" title="bild.png"><img src="/user_uploads/33951/qQbkU6-iaix6xq5nlpJcu4E5/bild.png"></a></div><div class="message_inline_image"><a href="/user_uploads/33951/ewPhJLBK9mErxxpRPfpp9wb4/bild.png" title="bild.png"><img src="/user_uploads/33951/ewPhJLBK9mErxxpRPfpp9wb4/bild.png"></a></div>
+
+
+
+<a name="325836956"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/349652-DataSharing/topic/Design%20and%20Route%20Sharing/near/325836956" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Dave Register <a href="https://leamas.github.io/zulip-archive/stream/349652-DataSharing/topic/Design.20and.20Route.20Sharing.html#325836956">(Feb 04 2023 at 14:36)</a>:</h4>
+<p><span class="user-mention" data-user-id="522486">@Håkan Svensson</span> <br>
+You could experiment with adding more seconds.  This is now a parameter for <br>
+void FindAllOCPNServers(size_t timeout_secs)<br>
+Currently using 2 seconds, for nice user effect.  But maybe 4 is OK?<br>
+Why the delay?  Now need to determine if this is system effect, of OCPN stall.  Seems "odd" that all three peers in your pictures are all delayed about the same time, but they are completely different systems (win/linux).  This makes me think that it is somehow OCPN that is stalling.</p>
+
+
+
+<a name="325845734"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/349652-DataSharing/topic/Design%20and%20Route%20Sharing/near/325845734" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Håkan Svensson <a href="https://leamas.github.io/zulip-archive/stream/349652-DataSharing/topic/Design.20and.20Route.20Sharing.html#325845734">(Feb 04 2023 at 15:36)</a>:</h4>
+<p><span class="user-mention" data-user-id="517002">@Dave Register</span> <br>
+For a test I extended the timeout_secs to 5 sec on a Win and a RPi.<br>
+That makes it of course more reliabel. <br>
+On the RPi400 the first two attempts from a O start can had a delay of 12-15 sec and 15-22 sec respectively. <br>
+The third was 1-3 sec to receive all three peers and then the list was populated.<br>
+The nasty thing is it's not repeatable all times. It often happens all replies are in one second also after O start.<br>
+Another note: If I resend the request several times just after the last good all replies are within one second. <br>
+If I wait say some minutes and test again the delays  &gt;10 seconds are often there again. But not always?</p>
+<p>Can I in some way test if "OCPN is stalling" ?<br>
+You don't see the same ever?</p>
+
+
+
+<a name="340538310"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/349652-DataSharing/topic/Design%20and%20Route%20Sharing/near/340538310" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Håkan Svensson <a href="https://leamas.github.io/zulip-archive/stream/349652-DataSharing/topic/Design.20and.20Route.20Sharing.html#340538310">(Mar 09 2023 at 08:21)</a>:</h4>
+<p><span class="user-mention" data-user-id="517002">@Dave Register</span>  <br>
+The send to detection is not yet reliably on my wifi net.  I've been "quite" about this basically to await CF comments. Not much talk about that. We may push for the new feature and ask for tests?<br>
+Today I wanted to test the server dialog PIN "m_pText1" size on the RPi400. It's to small but leave that for now.<br>
+Here WIN-HAS and RPi400 are involved as example. Wireshark, WS, on both.<br>
+Click send to on WIN-HAS. <br>
+WS on WIN-HAS sees the QU question. WS on RPi400 not. Can be repeated several times.<br>
+Click send to on RPi400<br>
+WS on RPi400 sees the QU question. WS on WIN-HAS not. Can be repeated several times.</p>
+<p>Sometimes after 30 - 120 seconds the QU question is seen by WS on  the server and the O server sends a direct  QU response. That is also seen by client WS.  Obviously to late to be detected by O client.</p>
+<p>My conclusion is that the wifi router in some way delay the mdns QU question? Is this anything you can reproduce or have seen any notes about? You once mentioned some possible wifi obstacles in this matter.<br>
+If so is there anything we can do when sending the client question to force it through the wifi router in due time? Prioritized question?</p>
+
+
+
+<a name="340906373"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/349652-DataSharing/topic/Design%20and%20Route%20Sharing/near/340906373" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Dave Register <a href="https://leamas.github.io/zulip-archive/stream/349652-DataSharing/topic/Design.20and.20Route.20Sharing.html#340906373">(Mar 10 2023 at 16:20)</a>:</h4>
+<p><span class="user-mention" data-user-id="522486">@Håkan Svensson</span> <br>
+"Sometimes after 30 - 120 seconds the QU question is seen by WS on the server and the O server sends a direct QU response. That is also seen by client WS. Obviously to late to be detected by O client."<br>
+When this happens. does the next send request from the client show the correct IP in the selection list?  It should be cached, I think.</p>
+
+
+
+<a name="340919031"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/349652-DataSharing/topic/Design%20and%20Route%20Sharing/near/340919031" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Dave Register <a href="https://leamas.github.io/zulip-archive/stream/349652-DataSharing/topic/Design.20and.20Route.20Sharing.html#340919031">(Mar 10 2023 at 17:11)</a>:</h4>
+<p>Testing more here.  Full load network, all running at same time:  linux (wired),  plus RPi4, two W10's, and MacOS, all on WiFi.<br>
+Results:<br>
+ Problems seem confined to W10 machines.  Sometimes works, sometimes not.  Retries usually allow detection, may take some tries.<br>
+For non-WIN devices, WiFi or not, always works first time.</p>
+<p>Interesting reading here:<br>
+<a href="https://superuser.com/questions/730288/why-do-some-wifi-routers-block-multicast-packets-going-from-wired-to-wireless">https://superuser.com/questions/730288/why-do-some-wifi-routers-block-multicast-packets-going-from-wired-to-wireless</a></p>
+
+
+
+<a name="340929554"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/349652-DataSharing/topic/Design%20and%20Route%20Sharing/near/340929554" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Håkan Svensson <a href="https://leamas.github.io/zulip-archive/stream/349652-DataSharing/topic/Design.20and.20Route.20Sharing.html#340929554">(Mar 10 2023 at 17:59)</a>:</h4>
+<p><span class="user-mention" data-user-id="517002">@Dave Register</span> </p>
+<blockquote>
+<p>When this happens. does the next send request from the client show the correct IP in the selection list? It should be cached, I think.<br>
+No, I've tried several times after each others. No change. The mdns QU query is not detected by Wireshark on the server. So this is not Win or RPi related. It's the router I suppose since WS don't detect it.<br>
+I saw the page you linked to but I'm not sure I fully understand it. Some note about another address?<br>
+I can't test much more during this weekend. I'm occupied by a OCPN class in Stockholm. But a short Send To test by the wlan at the room for the class wasn't working.</p>
+</blockquote>
+
+
+
+<hr><p>Last updated: Oct 05 2023 at 09:43 UTC</p>
+</html>

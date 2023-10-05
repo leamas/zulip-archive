@@ -1,0 +1,320 @@
+[
+    {
+        "content": "<p>We (well, really I) seems to have a mess when it comes to n0183 types.  As of now, Dave just removes the talker id and uses only message type. On the other hand I have used  the complete id (talker id + message, 5 chars). Needless to say, this is not compatible.</p>\n<p>Furthermore, none of these approaches is IMHO right. My is wrong since listeners are not really interested in the talker ID. Dave's is wrong since it throws away the talker id, an item which might be needed in a later stage for example when prioritizing.</p>\n<p>I''l make a stab  on this in the message definition and CTOR.</p>",
+        "id": 294262176,
+        "sender_full_name": "Alec Leamas",
+        "timestamp": 1660914782
+    },
+    {
+        "content": "<p><span class=\"user-mention\" data-user-id=\"517002\">@Dave Register</span>  Pushed first  iteration of these changes. Still some rough corners, but should basically be OK.</p>\n<p>One change in  comm_bridge.cpp which I cannot see through. Would be glad if you reviewed that change.</p>\n<p>Commit under way.</p>",
+        "id": 294278699,
+        "sender_full_name": "Alec Leamas",
+        "timestamp": 1660919631
+    },
+    {
+        "content": "<p><span class=\"user-mention\" data-user-id=\"518981\">@Github Bot</span>  #007fc0f54</p>",
+        "id": 294278984,
+        "sender_full_name": "Alec Leamas",
+        "timestamp": 1660919714
+    },
+    {
+        "content": "<p>** author: Alec Leamas at 2022-08-19T14:30:42Z<br>\nnavmsg.h and what not: Handle updates nmea0183 talker id changes.<br>\n<a href=\"https://github.com/OpenCPN/OpenCPN/commit/007fc0f54\">https://github.com/OpenCPN/OpenCPN/commit/007fc0f54</a></p>",
+        "id": 294278987,
+        "sender_full_name": "Github Bot",
+        "timestamp": 1660919714
+    },
+    {
+        "content": "<p>For N0183 the talker normally bare no information about transferred data so no need to use that. But O knows it since the NMEA parser is collecting it. Since it can change or has arbitrary treatment from different device producers it's nothing to rely on.<br>\nThe NMEA0183 standard has though now made a deviation for the GGA and GSV messages. If GGA use talker GN to construct GNGGA the GN part tells \"Number of satellites in use\" is a combination of several satellite system and talker GP says only one system is used. <br>\nFor GSV the talker \"GP\" is the status for the GPS system and \"GA\" the Glonass system and so on. See for example the Dashboard gps.cpp based on: <a href=\"https://www.nmea.org/Assets/20190515%20nmea%200183%20gsv%20sentence%20corrections.pdf\">The GSV part here.</a></p>",
+        "id": 294286160,
+        "sender_full_name": "Håkan Svensson",
+        "timestamp": 1660921924
+    },
+    {
+        "content": "<p>My point is not how or if it should be used, just that we should not throw it away when sending upwards in the stack. This is now fixed, first iteration, there are  'type' and 'talker' fields instead of a single 'id'.   This is a necessary first step to make any conclusions like those you describe.</p>",
+        "id": 294286816,
+        "sender_full_name": "Alec Leamas",
+        "timestamp": 1660922148
+    },
+    {
+        "content": "<p><span class=\"user-mention\" data-user-id=\"399510\">@Alec Leamas</span> <br>\nYour latest commit OK, with minor tweaks to serial driver and CommBridge.<br>\n\"this identifier\" is used to detect and prioritize between, for example, position data from both XXRMC and AIVDO.  Or, between GPRMC and IIRMC.  So it needs to have the Talker embedded in the string.</p>",
+        "id": 294335003,
+        "sender_full_name": "Dave Register",
+        "timestamp": 1660931652
+    },
+    {
+        "content": "<p>More:<br>\nThe latest changes have broken the ability to listen to \"all\" N0183 messages.  We still need that for legacy plugin support.<br>\nThoughts?</p>",
+        "id": 294336106,
+        "sender_full_name": "Dave Register",
+        "timestamp": 1660932001
+    },
+    {
+        "content": "<p>You did want my thoughts yesterday, dinner party here, wine...</p>\n<p>Sorry, I missed this usecase. One thought is that there is no test for this. If there  was, it would not  have happened.</p>\n<p>When it comes to solution, IIRC we used \"\" as message type when handling the \"all n0183\" messages stream. I think it would be better to use an id which was still  a  legal three character string such as \"ALL\" (\"ANY\" or even \"***\"  should also work).  Sticking to the basic rules would make these kind of regressions less likely.</p>\n<p>For consistency, I also suggest that we keep the talker id when sending to \"ALL\" i. e,  \"GPGGA\" -&gt; \"GPALL\"</p>\n<p>To implement, the solution would be to add a new Nmea0183Msg constructor like <code>Nmea0183Msg(const Nmea0183Msg&amp; other,  const std:.string&amp; t)</code> which creates a new message copy with a new type.</p>\n<p>Would this be OK?</p>\n<p>Alternatives includes  giving some special meaning to using (\"\", \"\") as  talker/message and make it possible to listen to \"\". However, it seems more convoluted to me.</p>",
+        "id": 294406771,
+        "sender_full_name": "Alec Leamas",
+        "timestamp": 1660983105
+    },
+    {
+        "content": "<p>Sounds good to me.  Not sure why we need a new copy CTOR, though seems logical for completeness of the class.  I await your patch.</p>",
+        "id": 294441634,
+        "sender_full_name": "Dave Register",
+        "timestamp": 1661002070
+    },
+    {
+        "content": "<p>The CTOR is just for convenience, it's hard to modify . I have pushed the new CTOR, but don't find the places where the notify/listen is applied. Basically, we should now have on the sending, notify side:</p>\n<div class=\"codehilite\"><pre><span></span><code>-    auto msg_all = std::make_unique&lt;const Nmea0183Msg&gt;(&quot;&quot;, full_sentence,\n+    auto msg_all = std::make_unique&lt;const Nmea0183Msg&gt;(&quot;ALL&quot;, full_sentence,\n</code></pre></div>\n<p>And on the receiving, listening side something like (after declaring  listener_all0183 and EVT_ALL_N0183):</p>\n<div class=\"codehilite\"><pre><span></span><code>Nmea0183Msg n0183_msg_VTG(&quot;VTG&quot;);\n listener_N0183_VTG = msgbus.GetListener(EVT_N0183_VTG, this, n0183_msg_VTG);\nlistener_all0183 = msgbus.GetListener(EVT_ALL_N0183, this, Nmea0183Msg(n0183_msg_VTG, &quot;ALL&quot;));\n</code></pre></div>\n<p>Sorry, just no time to read the code more thoroughly  now,  more dinners ahead,  so this is what I have. If you can wait I can apply the necessary changes tomorrow.</p>",
+        "id": 294447721,
+        "sender_full_name": "Alec Leamas",
+        "timestamp": 1661005290
+    },
+    {
+        "content": "<p>OK, I'll give that a try.<br>\nHave fun.</p>",
+        "id": 294450412,
+        "sender_full_name": "Dave Register",
+        "timestamp": 1661006791
+    },
+    {
+        "content": "<p>I fiddled about.  I found that the first argument in Nmea0183Msg CTOR really want to be 5 characters.</p>",
+        "id": 294503979,
+        "sender_full_name": "Dave Register",
+        "timestamp": 1661052907
+    },
+    {
+        "content": "<p>So I tried:</p>\n<div class=\"codehilite\"><pre><span></span><code>auto msg_all = std::make_unique&lt;const Nmea0183Msg&gt;(&quot;XXALL&quot;, full_sentence,.....\n</code></pre></div>\n\n<p>And in the listener:</p>\n<div class=\"codehilite\"><pre><span></span><code>listener_all0183 = msgbus.GetListener(EVT_ALL_N0183, this, Nmea0183Msg(n0183_msg_VTG, &quot;XXALL&quot;));\n</code></pre></div>\n\n<p>and it worked.</p>",
+        "id": 294504051,
+        "sender_full_name": "Dave Register",
+        "timestamp": 1661052986
+    },
+    {
+        "content": "<p>So, from my view, this is all right now, if a little obtuse.</p>",
+        "id": 294504172,
+        "sender_full_name": "Dave Register",
+        "timestamp": 1661053143
+    },
+    {
+        "content": "<p>hm... yes, the thought occurred to me later, despite that  I actually should be thinking about other things at that point.</p>\n<blockquote>\n<p>if a little obtuse.</p>\n</blockquote>\n<p>too obtuse IMO. Will try to make a fix.</p>",
+        "id": 294514656,
+        "sender_full_name": "Alec Leamas",
+        "timestamp": 1661065949
+    },
+    {
+        "content": "<p>On Win VS2017<br>\nCurrent comm code builds wo error but running debug crash here:</p>\n<blockquote>\n<div class=\"codehilite\"><pre><span></span><code>  [Inline Frame] opencpn.exe!std::_Ptr_base&lt;NavAddr&gt;::_Copy_construct_from(const std::shared_ptr&lt;NavAddr&gt; &amp;) Line 1079    C++\n[Inline Frame] opencpn.exe!std::shared_ptr&lt;NavAddr&gt;::{ctor}(const std::shared_ptr&lt;NavAddr&gt; &amp;) Line 1335 C++\n[Inline Frame] opencpn.exe!Nmea0183Msg::{ctor}(const Nmea0183Msg &amp;) Line 195    C++\nopencpn.exe!std::make_unique&lt;Nmea0183Msg const ,Nmea0183Msg const &amp;,char const (&amp;)[4],0&gt;(const Nmea0183Msg &amp;  _Args_0&gt;, const char[4] &amp; &lt;_Args_1&gt;) Line 2539    C++\nopencpn.exe!CommDriverN0183Serial::handle_N0183_MSG(CommDriverN0183SerialEvent &amp; event) Line 311    C++\n[External Code] \n[Frames below may be incorrect and/or missing, no symbols loaded for wxbase312u_vc_custom.dll]  Unknown\nopencpn.exe!WinMain(HINSTANCE__ * hInstance, HINSTANCE__ * hPrevInstance, char * __formal, int nCmdShow) Line 943   C++\n[External Code]\n</code></pre></div>\n\n</blockquote>\n<p><a href=\"/user_uploads/33951/rVuSoRuVdwZUoJDH2s4ij2e2/bild.png\">bild.png</a></p>\n<div class=\"message_inline_image\"><a href=\"/user_uploads/33951/rVuSoRuVdwZUoJDH2s4ij2e2/bild.png\" title=\"bild.png\"><img src=\"/user_uploads/33951/rVuSoRuVdwZUoJDH2s4ij2e2/bild.png\"></a></div>",
+        "id": 294579095,
+        "sender_full_name": "Håkan Svensson",
+        "timestamp": 1661111506
+    },
+    {
+        "content": "<p><span class=\"user-mention\" data-user-id=\"522486\">@Håkan Svensson</span>     hm... seems like  a recent problem.  Could you possibly make a bisect to find the failing commit?</p>",
+        "id": 294582332,
+        "sender_full_name": "Alec Leamas",
+        "timestamp": 1661114730
+    },
+    {
+        "content": "<p>No, wait... line 311 is a recent change, I know when it happened.</p>",
+        "id": 294582487,
+        "sender_full_name": "Alec Leamas",
+        "timestamp": 1661114901
+    },
+    {
+        "content": "<p>OK, I have  test case, and have found a bug. Will push a fix. However, this bug should not make it crash...</p>",
+        "id": 294584770,
+        "sender_full_name": "Alec Leamas",
+        "timestamp": 1661117402
+    },
+    {
+        "content": "<p>Pushed changes to the very line where the  crash occurred. However, the crash is probably still there, I cannot see how the changes I have done would fix a  crash.</p>",
+        "id": 294587402,
+        "sender_full_name": "Alec Leamas",
+        "timestamp": 1661120867
+    },
+    {
+        "content": "<p><span class=\"user-mention\" data-user-id=\"399510\">@Alec Leamas</span>  <br>\nSorry, the Nmea0183Msg copy constructor with type change (pluginmanager \"ALL\")causes a crash on linux.  Don't know why.  Too many smart pointers for me to follow.</p>",
+        "id": 294590857,
+        "sender_full_name": "Dave Register",
+        "timestamp": 1661125815
+    },
+    {
+        "content": "<p><span class=\"user-mention\" data-user-id=\"517002\">@Dave Register</span>  <span class=\"user-mention\" data-user-id=\"522486\">@Håkan Svensson</span>  As I understand it you are both reporting the same thing .</p>\n<p>I pushed some changes late yesterday. <span class=\"user-mention\" data-user-id=\"517002\">@Dave Register</span> : Did you test against master @0c37a7267?<br>\n<span class=\"user-mention\" data-user-id=\"522486\">@Håkan Svensson</span> Does problem persist even with the latest changes?</p>\n<p>I have a working test case in tests.cpp around line 161 and 405. If this persists (which I think it does) we need to figure out the difference.</p>",
+        "id": 294606224,
+        "sender_full_name": "Alec Leamas",
+        "timestamp": 1661145183
+    },
+    {
+        "content": "<p><span class=\"user-mention\" data-user-id=\"522486\">@Håkan Svensson</span>  Currently, it won't fail since Dave has commented out the failing line. Could you please try the following patch against  current master @5a3476de3 and report back?</p>\n<div class=\"codehilite\"><pre><span></span><code>diff --git a/src/comm_drv_n0183_serial.cpp b/src/comm_drv_n0183_serial.cpp\nindex 72fd090f8..99439342c 100644\n--- a/src/comm_drv_n0183_serial.cpp\n+++ b/src/comm_drv_n0183_serial.cpp\n@@ -308,9 +308,8 @@ void CommDriverN0183Serial::handle_N0183_MSG(\n\n     // Also notify for &quot;all&quot; N0183 messages, to support plugin API using\n     // original talker id\n-    // FIXME\n-    //auto msg_all = std::make_unique&lt;const Nmea0183Msg&gt;(*msg, &quot;ALL&quot;);\n-    //m_listener.Notify(std::move(msg_all));\n+    auto msg_all = std::make_shared&lt;const Nmea0183Msg&gt;(*msg, &quot;ALL&quot;);\n+    m_listener.Notify(std::move(msg_all));\n   }\n }\n</code></pre></div>",
+        "id": 294609486,
+        "sender_full_name": "Alec Leamas",
+        "timestamp": 1661147498
+    },
+    {
+        "content": "<p>First:<br>\nBuilt with latest commits.<br>\nThe debug hang/crash is now gone and O is running again.</p>",
+        "id": 294609981,
+        "sender_full_name": "Håkan Svensson",
+        "timestamp": 1661147843
+    },
+    {
+        "content": "<blockquote>\n<p>The debug hang/crash is now gone and O is running again.</p>\n</blockquote>\n<p>Yes, but this is because Dave has completely disabled the listening to ALL. This just a temporary work-around, it must be handled in another way.  To that end, could you test the patch?</p>",
+        "id": 294610447,
+        "sender_full_name": "Alec Leamas",
+        "timestamp": 1661148166
+    },
+    {
+        "content": "<p>Second:<br>\nWith the change of the diff above the debug run hangs at:</p>\n<blockquote>\n<p>[Inline Frame] opencpn.exe!std::_Ptr_base&lt;NavAddr&gt;::_Copy_construct_from(const std::shared_ptr&lt;NavAddr&gt; &amp;) Line 1079    C++<br>\n    [Inline Frame] opencpn.exe!std::shared_ptr&lt;NavAddr&gt;::{ctor}(const std::shared_ptr&lt;NavAddr&gt; &amp;) Line 1335 C++<br>\n    [Inline Frame] opencpn.exe!Nmea0183Msg::{ctor}(const Nmea0183Msg &amp;) Line 195    C++<br>\n    [Inline Frame] opencpn.exe!std::_Ref_count_obj&lt;Nmea0183Msg const &gt;::{ctor}(const Nmea0183Msg &amp;) Line 1801   C++<br>\n    opencpn.exe!std::make_shared&lt;Nmea0183Msg const ,Nmea0183Msg const &amp;,char const (&amp;)[4]&gt;(const Nmea0183Msg &amp; &lt;_Args_0&gt;, const char[4] &amp; &lt;_Args_1&gt;) Line 1866  C++<br>\n    opencpn.exe!CommDriverN0183Serial::handle_N0183_MSG(CommDriverN0183SerialEvent &amp; event) Line 314    C++<br>\n    [External Code] <br>\n    [Frames below may be incorrect and/or missing, no symbols loaded for wxbase312u_vc_custom.dll]  Unknown<br>\n    opencpn.exe!WinMain(HINSTANCE__ * hInstance, HINSTANCE__ * hPrevInstance, char * __formal, int nCmdShow) Line 945   C++<br>\n    [External Code] </p>\n</blockquote>\n<p>If I again comment out the two lines the debug runs wo hangs.</p>",
+        "id": 294610514,
+        "sender_full_name": "Håkan Svensson",
+        "timestamp": 1661148232
+    },
+    {
+        "content": "<p>OK. Back to the drawing board. The question is: What is the difference with the test case?</p>",
+        "id": 294611845,
+        "sender_full_name": "Alec Leamas",
+        "timestamp": 1661149142
+    },
+    {
+        "content": "<p>OK, here is a new patch, unfortunately  a bit bigger. Could you possibly...</p>\n<div class=\"codehilite\"><pre><span></span><code>commit 4bef446bc02731362052a917abf12eb0bad6d6fc\nAuthor: Alec Leamas &lt;leamas.alec@nowhere.net&gt;\nDate:   Mon Aug 22 07:45:08 2022 +0200\n\n    tests: testing &quot;ALL&quot; n0183 messages: make_unique -&gt; make_shared.\n\ndiff --git a/include/comm_navmsg.h b/include/comm_navmsg.h\nindex 0264a850b..d02b8ae76 100644\n--- a/include/comm_navmsg.h\n+++ b/include/comm_navmsg.h\n@@ -191,9 +191,9 @@ public:\n   Nmea0183Msg(const std::string&amp; id)\n      : Nmea0183Msg(id.size() &lt;= 3 ? std::string(&quot;??&quot;) + id : id, &quot;&quot;,\n                    std::make_shared&lt;NavAddr&gt;(NavAddrNone())) {}\n-  Nmea0183Msg(const Nmea0183Msg&amp; other, const std::string&amp; t)\n-     : NavMsg(NavAddr::Bus::N0183, other.source), talker(other.talker),\n-       type(t), payload(other.payload) {}\n+  Nmea0183Msg(std::shared_ptr&lt;const Nmea0183Msg&gt; other, const std::string&amp; t)\n+     : NavMsg(NavAddr::Bus::N0183, other-&gt;source), talker(other-&gt;talker),\n+       type(t), payload(other-&gt;payload) {}\n\n   std::string key() const { return std::string(&quot;n0183-&quot;) + type; };\n\ndiff --git a/src/comm_drv_n0183_serial.cpp b/src/comm_drv_n0183_serial.cpp\nindex 72fd090f8..5259a8b2b 100644\n--- a/src/comm_drv_n0183_serial.cpp\n+++ b/src/comm_drv_n0183_serial.cpp\n@@ -302,15 +302,15 @@ void CommDriverN0183Serial::handle_N0183_MSG(\n     // We notify based on full message, including the Talker ID\n     identifier = full_sentence.substr(1, 5);\n\n-    auto msg = std::make_unique&lt;const Nmea0183Msg&gt;(identifier, full_sentence,\n+    auto msg = std::make_shared&lt;const Nmea0183Msg&gt;(identifier, full_sentence,\n                                                    GetAddress());\n     m_listener.Notify(std::move(msg));\n\n     // Also notify for &quot;all&quot; N0183 messages, to support plugin API using\n     // original talker id\n     // FIXME\n-    //auto msg_all = std::make_unique&lt;const Nmea0183Msg&gt;(*msg, &quot;ALL&quot;);\n-    //m_listener.Notify(std::move(msg_all));\n+    auto msg_all = std::make_shared&lt;const Nmea0183Msg&gt;(msg, &quot;ALL&quot;);\n+    m_listener.Notify(std::move(msg_all));\n   }\n }\n\ndiff --git a/test/tests.cpp b/test/tests.cpp\nindex 55f17195b..5d46682fb 100644\n--- a/test/tests.cpp\n+++ b/test/tests.cpp\n@@ -165,9 +165,9 @@ class All0183App: public wxAppConsole {\n     Source() {\n       std::string payload(&quot;payload data&quot;);\n       std::string id(&quot;GPGGA&quot;);\n-      auto msg1 = std::make_unique&lt;Nmea0183Msg&gt;(id, payload,\n+      auto msg1 = std::make_shared&lt;Nmea0183Msg&gt;(id, payload,\n                                                 shared_navaddr_none);\n-      auto msg_all = std::make_unique&lt;const Nmea0183Msg&gt;(*msg1, &quot;ALL&quot;);\n+      auto msg_all = std::make_shared&lt;const Nmea0183Msg&gt;(msg1, &quot;ALL&quot;);\n       NavMsgBus::GetInstance().Notify(std::move(msg_all));\n     }\n   };\n</code></pre></div>",
+        "id": 294612959,
+        "sender_full_name": "Alec Leamas",
+        "timestamp": 1661149808
+    },
+    {
+        "content": "<p>Network connection crash...<br>\nWhen I tried to compare the Look ahead mode above I connected \"my\" network TCP instead.<br>\nThat connection now made O to crash.<br>\nWhile debugging the same it hangs here:</p>\n<blockquote>\n<div class=\"codehilite\"><pre><span></span><code>      KernelBase.dll!75faca42()   Unknown\n[Frames below may be incorrect and/or missing, no symbols loaded for KernelBase.dll]    Unknown\n[External Code] \nopencpn.exe!Nmea0183Msg::Nmea0183Msg(const std::basic_string&lt;char,std::char_traits&lt;char&gt;,std::allocator&lt;char&gt; &gt; &amp; id, const std::basic_string&lt;char,std::char_traits&lt;char&gt;,std::allocator&lt;char&gt; &gt; &amp; _payload, std::shared_ptr&lt;NavAddr&gt; src) Line 187 C++\n[External Code] \nopencpn.exe!CommDriverN0183Net::handle_N0183_MSG(CommDriverN0183NetEvent &amp; event) Line 171  C++\n[External Code] \nopencpn.exe!PluginLoader::LoadPluginCandidate(wxString file_name, bool load_enabled) Line 340   C++\nopencpn.exe!PluginLoader::LoadPlugInDirectory(const wxString &amp; plugin_dir, bool load_enabled) Line 444  C++\nopencpn.exe!PluginLoader::LoadAllPlugIns(bool load_enabled) Line 234    C++\nopencpn.exe!MyFrame::OnInitTimer(wxTimerEvent &amp; event) Line 5163    C++\n[External Code] \nopencpn.exe!WinMain(HINSTANCE__ * hInstance, HINSTANCE__ * hPrevInstance, char * __formal, int nCmdShow) Line 945   C++\n[External Code]\n</code></pre></div>\n\n</blockquote>\n<p><a href=\"/user_uploads/33951/fYLLRCse4Cb3OSCtGosQUfBw/bild.png\">bild.png</a></p>\n<div class=\"message_inline_image\"><a href=\"/user_uploads/33951/fYLLRCse4Cb3OSCtGosQUfBw/bild.png\" title=\"bild.png\"><img src=\"/user_uploads/33951/fYLLRCse4Cb3OSCtGosQUfBw/bild.png\"></a></div>",
+        "id": 294648530,
+        "sender_full_name": "Håkan Svensson",
+        "timestamp": 1661165149
+    },
+    {
+        "content": "<p>This is actually the same crash. EDITED</p>\n<p>One problem is the use of <code>make_unique</code>.  The compiler implicitly converts it to a <code>shared_ptr</code>when invoking <code>Notify()</code>. However, it seems that this conversion in some situations casues loss of the correct destructor.  So, we should  apply this patch: </p>\n<div class=\"codehilite\"><pre><span></span><code>diff --git a/src/comm_drv_n0183_net.cpp b/src/comm_drv_n0183_net.cpp\nindex 6d3a32728..357e9cdd0 100644\n--- a/src/comm_drv_n0183_net.cpp\n+++ b/src/comm_drv_n0183_net.cpp\n@@ -164,11 +164,11 @@ void CommDriverN0183Net::handle_N0183_MSG(CommDriverN0183NetEvent&amp; event) {\n     // We notify based on Mnemonic only, ignoring the Talker ID\n     identifier = full_sentence.substr(3, 3);\n\n-    auto msg = std::make_unique&lt;const Nmea0183Msg&gt;(identifier, full_sentence, GetAddress());\n+    auto msg = std::make_shared&lt;const Nmea0183Msg&gt;(identifier, full_sentence, GetAddress());\n     m_listener.Notify(std::move(msg));\n\n     // Also notify for &quot;all&quot; N0183 messages, to support plugin API\n-    auto msg_all = std::make_unique&lt;const Nmea0183Msg&gt;(&quot;&quot;, full_sentence, GetAddress());\n+    auto msg_all = std::make_shared&lt;const Nmea0183Msg&gt;(&quot;&quot;, full_sentence, GetAddress());\n     m_listener.Notify(std::move(msg_all));\n   }\n }\n</code></pre></div>\n<p>However, I doubt this is the root cause, a cause which I just don't see right now. However, there is a patch pending above which needs some testing to push things forward.</p>",
+        "id": 294662245,
+        "sender_full_name": "Alec Leamas",
+        "timestamp": 1661170337
+    },
+    {
+        "content": "<p>Pushed a fix for <code>uniquie_ptr</code>-&gt; <code>shared_ptr</code>according to above</p>",
+        "id": 294667167,
+        "sender_full_name": "Alec Leamas",
+        "timestamp": 1661172151
+    },
+    {
+        "content": "<p>I have pushed the patch in need of testing above to a \"comm-n0183-id\" temporary branch.</p>",
+        "id": 294670650,
+        "sender_full_name": "Alec Leamas",
+        "timestamp": 1661173305
+    },
+    {
+        "content": "<p>Here is the stack trace, \"comm\" branch.<br>\n<a href=\"/user_uploads/33951/5uADMX6MaQEoeJ9Dz5PcgTHM/comm.jpeg\">comm.jpeg</a></p>\n<div class=\"message_inline_image\"><a href=\"/user_uploads/33951/5uADMX6MaQEoeJ9Dz5PcgTHM/comm.jpeg\" title=\"comm.jpeg\"><img src=\"/user_uploads/33951/5uADMX6MaQEoeJ9Dz5PcgTHM/comm.jpeg\"></a></div>",
+        "id": 294671942,
+        "sender_full_name": "Dave Register",
+        "timestamp": 1661173660
+    },
+    {
+        "content": "<p>Problem sees to do with copying the NavAddr field.</p>",
+        "id": 294672314,
+        "sender_full_name": "Dave Register",
+        "timestamp": 1661173758
+    },
+    {
+        "content": "<p>I pulled before starting today, so this build already has the \"make_shared\" patch</p>",
+        "id": 294672738,
+        "sender_full_name": "Dave Register",
+        "timestamp": 1661173894
+    },
+    {
+        "content": "<p>hm.. a bit narrow, that trace... </p>\n<blockquote>\n<p>Problem sees to do with copying the NavAddr field.</p>\n</blockquote>\n<p>Anyway, that thought has already occurred to me. But in which way? And why does the unit test work, whichever variant I use?</p>",
+        "id": 294681432,
+        "sender_full_name": "Alec Leamas",
+        "timestamp": 1661176849
+    },
+    {
+        "content": "<p>I have tried to use also GetAddress() in the unit test, but still cannot reproduce the error.</p>\n<p><span class=\"user-mention\" data-user-id=\"517002\">@Dave Register</span>  Could you make a smoke test with the  \"comm-n0183-id\" branch, which contains yet another permutation of the CTOR?</p>",
+        "id": 294704823,
+        "sender_full_name": "Alec Leamas",
+        "timestamp": 1661180335
+    },
+    {
+        "content": "<p><span class=\"user-mention\" data-user-id=\"517002\">@Dave Register</span>  No, that branch is still broken. Please stay tuned...</p>",
+        "id": 294705607,
+        "sender_full_name": "Alec Leamas",
+        "timestamp": 1661180528
+    },
+    {
+        "content": "<p><span class=\"user-mention\" data-user-id=\"517002\">@Dave Register</span>  Pushed a new version of \"comm-n0183-id\" branch The source (NavAddr) field is now const, and with some luck we should get a better stack trace, one statement per line... Could you possibly test?</p>",
+        "id": 294710922,
+        "sender_full_name": "Alec Leamas",
+        "timestamp": 1661182177
+    },
+    {
+        "content": "<p>On \"comm-n0183-id\"<br>\n<a href=\"/user_uploads/33951/XDYrX4KsM6YvYk_OpWb0Xcu2/comm1.jpeg\">comm1.jpeg</a> <br>\n same fail.  Wider stack trace attached.</p>\n<div class=\"message_inline_image\"><a href=\"/user_uploads/33951/XDYrX4KsM6YvYk_OpWb0Xcu2/comm1.jpeg\" title=\"comm1.jpeg\"><img src=\"/user_uploads/33951/XDYrX4KsM6YvYk_OpWb0Xcu2/comm1.jpeg\"></a></div>",
+        "id": 294735711,
+        "sender_full_name": "Dave Register",
+        "timestamp": 1661189710
+    },
+    {
+        "content": "<p>Looking in comm-n0183-id@73a5f81d line 312 in comm_drv_n0183_serial.cpp is commented out. I assume that you uncommented it.</p>\n<p>The plot thickens. Need to sleep on it. It seems pretty clear where it happens, but what? And why?</p>",
+        "id": 294748786,
+        "sender_full_name": "Alec Leamas",
+        "timestamp": 1661194584
+    },
+    {
+        "content": "<p>BTW: Thanks!</p>",
+        "id": 294748811,
+        "sender_full_name": "Alec Leamas",
+        "timestamp": 1661194596
+    },
+    {
+        "content": "<p>Hm... a compiler issue? The stacktrace indicates gcc version 7, 2017. I use gcc 12,  2022.  This should explain why I cannot reproduce the error. </p>\n<p>gcc 7 means bionic, right? Is this the platform we should develop on? If we should support two versions on Ubuntu it would be Jammy and Focal...</p>",
+        "id": 294750126,
+        "sender_full_name": "Alec Leamas",
+        "timestamp": 1661195112
+    },
+    {
+        "content": "<p>I'll fire up some VM:s and check, very late or tomorrow.</p>",
+        "id": 294750319,
+        "sender_full_name": "Alec Leamas",
+        "timestamp": 1661195182
+    },
+    {
+        "content": "<p>FWIW, Bionic is still in LTS.</p>",
+        "id": 294754274,
+        "sender_full_name": "Dave Register",
+        "timestamp": 1661196720
+    },
+    {
+        "content": "<p>Built on Focal(virtual), same error.<br>\nBreakthrough:<br>\nIf I change the notify code to:</p>\n<div class=\"codehilite\"><pre><span></span><code>// We notify based on full message, including the Talker ID\nidentifier = full_sentence.substr(1, 5);\n\nauto msg = std::make_shared&lt;const Nmea0183Msg&gt;(identifier, full_sentence,\n                                               GetAddress());\n\n// Also notify for &quot;all&quot; N0183 messages, to support plugin API using\n// original talker id\nauto msg_all = std::make_shared&lt;const Nmea0183Msg&gt;(*msg, &quot;ALL&quot;);\n\nm_listener.Notify(std::move(msg));\nm_listener.Notify(std::move(msg_all));\n</code></pre></div>\n\n<p>then it works.  All is well, the listener gets notified correctly, everybody happy. <br>\n I do not understand what std::move() does, exactly.  But after the first std::move(msg), evidently the \"msg\" is no longer valid.  So using it in the next copy constructor (for msg_all) fails, in some way.</p>",
+        "id": 294799021,
+        "sender_full_name": "Dave Register",
+        "timestamp": 1661226861
+    },
+    {
+        "content": "<blockquote>\n<p>But after the first std::move(msg), evidently the \"msg\" is no longer valid. So using it in the next copy constructor (for msg_all) fails, in some way.</p>\n</blockquote>\n<p>I also found it. This as as specified, any pointer is invalid after std::move. Using std::move on a shared pointer is not really necessary, it can just be assigned. However, if you know that the pointer wont be used any more std::move is much faster than just assigning (which involves thread-safe reference counter updates). </p>\n<p>Anything in the message chain is IMHO performance sensitive, so it does makes sense to use it. But then you need to know what you are doing.  I should have spotted this much, much earlier. Sorry.</p>\n<p>Made an update to comm-n0183-id-fix branch. I'm pretty sure that this works, but given the history of this problem it's probably better if you make a smoke test before merging it.</p>",
+        "id": 294824554,
+        "sender_full_name": "Alec Leamas",
+        "timestamp": 1661243790
+    },
+    {
+        "content": "<p>Testing now.  Some trouble.  I'll track it down.</p>",
+        "id": 294894235,
+        "sender_full_name": "Dave Register",
+        "timestamp": 1661269225
+    },
+    {
+        "content": "<p>Damned...</p>",
+        "id": 294903271,
+        "sender_full_name": "Alec Leamas",
+        "timestamp": 1661271852
+    },
+    {
+        "content": "<p>Sorry, false alarm.  Troubles in the serial drivers.  Fixed, and committed.<br>\nI think the comm msg interface is now in good shape.</p>",
+        "id": 294931373,
+        "sender_full_name": "Dave Register",
+        "timestamp": 1661282180
+    },
+    {
+        "content": "<p>Nice. Working on making ais_decoder testable. On phone now, more later</p>",
+        "id": 294934666,
+        "sender_full_name": "Alec Leamas",
+        "timestamp": 1661283492
+    },
+    {
+        "content": "<p>I can't follow the changes made but FWIW On Win built by VS2017:</p>\n<p>\"Network connection crash...\" reported above is solved. I can use a network TCP connection again.</p>\n<p>The also earlier reported O crash when changing from a serial N2K connection to a serial N0183 still remains though.<br>\n<a href=\"/user_uploads/33951/5I6oIhRM5iDN2CPc1Ph-3pJE/bild.png\">bild.png</a></p>\n<div class=\"message_inline_image\"><a href=\"/user_uploads/33951/5I6oIhRM5iDN2CPc1Ph-3pJE/bild.png\" title=\"bild.png\"><img src=\"/user_uploads/33951/5I6oIhRM5iDN2CPc1Ph-3pJE/bild.png\"></a></div>",
+        "id": 295695911,
+        "sender_full_name": "Håkan Svensson",
+        "timestamp": 1661685249
+    }
+]

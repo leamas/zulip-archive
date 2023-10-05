@@ -1,0 +1,230 @@
+[
+    {
+        "content": "<p>I no longer have access to our previous exchanges over this on Slack.</p>\n<p>I have the new v2.0.0 build in the production repository.  Do I need to do anything so the catalogue gets updated?  Or maybe that happens routinely?<br>\nThe catalogue still <strong>shows</strong> v1.1b but it actually loads v2.0 2022:11:12 alpha  - somehow it got hold of that <span aria-label=\"face with raised eyebrow\" class=\"emoji emoji-1f928\" role=\"img\" title=\"face with raised eyebrow\">:face_with_raised_eyebrow:</span> </p>\n<p>Also I have a very minor tweak to the plugin description on the OpenCPN manuals page.  I have made the update in the manuals page of the plugin repository but maybe something ha to happen for that to get pulled into the OpenCPN manual?</p>",
+        "id": 322985265,
+        "sender_full_name": "Tony Voss",
+        "timestamp": 1674469865
+    },
+    {
+        "content": "<p>Sorry. Nothing routine here:<br>\n<a href=\"https://opencpn-manuals.github.io/main/AlternativeWorkflow/InstallConfigure/Catalog-Github-Integration.html\">https://opencpn-manuals.github.io/main/AlternativeWorkflow/InstallConfigure/Catalog-Github-Integration.html</a><br>\nEasiest way of deleting your old auto branch in your fork of OpenCPN/plugins is to use the web page of your fork. Delete the auto branch using the branches page.<br>\nSynch with Dave's Master branch using the <em>Synch Fork</em> button.<br>\nCompile the JS plugin with a new tag.<br>\nNew metadata files are made in the fork OpenCPN/plugins folder (auto branch).<br>\nUse terminal to merge these with the master branch.<br>\nMake the PR for Dave to add the metadata files to the catalog.</p>\n<p>I can update the manual. Just a matter of running a script. (Alec and  Rick can also do this).</p>",
+        "id": 322991906,
+        "sender_full_name": "Mike Rossiter",
+        "timestamp": 1674471941
+    },
+    {
+        "content": "<p>Manual updated. Please can you check your changes were made.</p>",
+        "id": 322999125,
+        "sender_full_name": "Mike Rossiter",
+        "timestamp": 1674474226
+    },
+    {
+        "content": "<p>Forgot to mention: Before you make the final PR for the catalog you need to remove old metadata xml files for the previous verson of the plugin.</p>",
+        "id": 323028785,
+        "sender_full_name": "Mike Rossiter",
+        "timestamp": 1674482953
+    },
+    {
+        "content": "<p><span class=\"user-mention silent\" data-user-id=\"399559\">Mike Rossiter</span> <a href=\"#narrow/stream/349785-JavaScript_pi/topic/Catalogue.20updating/near/323028785\">said</a>:</p>\n<blockquote>\n<p>Forgot to mention: Before you make the final PR for the catalog you need to remove old metadata xml files for the previous verson of the plugin.</p>\n</blockquote>\n<p>From where?  The repository?  Don't see why as the auto branch points to the correct metadata.  And removing before the catalogue has been updated might clobber anyone updating the catlogue before the PR has been completed.</p>",
+        "id": 323050593,
+        "sender_full_name": "Tony Voss",
+        "timestamp": 1674488081
+    },
+    {
+        "content": "<p>PR does checks. Looks like problem with wx315?</p>\n<div class=\"codehilite\" data-code-language=\"processing\"><pre><span></span><code>76\nmetadata/javascript-v2.0.0d-darwin-wx315-10.13.6.xml:20: element target: Schemas validity error : Element 'target': [facet'enumeration'] The value 'darwin-wx315' is not an element of the set {'all', 'android-arm64', 'android-arm64-v8a', 'android-armeabi-v7a', 'android-armhf', 'darwin', 'darwin-arm64', 'darwin-wx32', 'debian-armhf', 'debian-wx32-armhf', 'debian-gtk3-armhf', 'debian-x86_64', 'debian-wx32-x86_64', 'debian-arm64', 'debian-wx32-arm64', 'flatpak-aarch64', 'flatpak-x86_64', 'mingw', 'mingw-x86_64', 'msvc', 'msvc-64', 'msvc-wx32', 'raspbian-armhf', 'ubuntu-armhf', 'ubuntu-gtk3-armhf', 'ubuntu-gtk3-x86_64', 'ubuntu-x86_64'}.\n77\nmetadata/javascript-v2.0.0d-darwin-wx315-10.13.6.xml fails to validate\n</code></pre></div>",
+        "id": 323053596,
+        "sender_full_name": "Tony Voss",
+        "timestamp": 1674488856
+    },
+    {
+        "content": "<div class=\"codehilite\" data-code-language=\"delete\"><pre><span></span><code>Synch with Dave's Master branch using the Synch Fork button.\nCompile the JS plugin with a new tag.\nNew metadata files are made in the fork OpenCPN/plugins folder (auto branch).\n</code></pre></div>\n<p>Seems like after deleting the old auto branch to clear it, I have to create a new auto branch, else build fails.</p>",
+        "id": 323055314,
+        "sender_full_name": "Tony Voss",
+        "timestamp": 1674489317
+    },
+    {
+        "content": "<p><span class=\"user-mention silent\" data-user-id=\"399559\">Mike Rossiter</span> <a href=\"#narrow/stream/349785-JavaScript_pi/topic/Catalogue.20updating/near/322999125\">said</a>:</p>\n<blockquote>\n<p>Manual updated. Please can you check your changes were made.</p>\n</blockquote>\n<p>Not updated.<br>\n<a href=\"https://github.com/antipole2/JavaScript_pi/blob/master/manual/modules/ROOT/pages/index.adoc\">My manual page in JS repository</a><br>\n<a href=\"https://opencpn-manuals.github.io/plugins/javascript/0.1/index.html\">OCPN pJavaScript page</a></p>",
+        "id": 323057183,
+        "sender_full_name": "Tony Voss",
+        "timestamp": 1674489783
+    },
+    {
+        "content": "<p><span class=\"user-mention silent\" data-user-id=\"554731\">Tony Voss</span> <a href=\"#narrow/stream/349785-JavaScript_pi/topic/Catalogue.20updating/near/323050593\">said</a>:</p>\n<blockquote>\n<p><span class=\"user-mention silent\" data-user-id=\"399559\">Mike Rossiter</span> <a href=\"#narrow/stream/349785-JavaScript_pi/topic/Catalogue.20updating/near/323028785\">said</a>:</p>\n<blockquote>\n<p>Forgot to mention: Before you make the final PR for the catalog you need to remove old metadata xml files for the previous verson of the plugin.</p>\n</blockquote>\n<p>From where?  The repository?  Don't see why as the auto branch points to the correct metadata.  And removing before the catalogue has been updated might clobber anyone updating the catlogue before the PR has been completed.</p>\n</blockquote>\n<p>Ah yes - I remember - section 3.2 in the guide</p>",
+        "id": 323059048,
+        "sender_full_name": "Tony Voss",
+        "timestamp": 1674490245
+    },
+    {
+        "content": "<blockquote>\n<p>Not updated.</p>\n</blockquote>\n<p>Latest commit 4 days ago is in the manual online now. Do you need to delete the browser cache and reload?</p>",
+        "id": 323071557,
+        "sender_full_name": "Mike Rossiter",
+        "timestamp": 1674493366
+    },
+    {
+        "content": "<blockquote>\n<p>From where? The repository? Don't see why as the auto branch points to the correct metadata. And removing before the catalogue has been updated might clobber anyone updating the catlogue before the PR has been completed.</p>\n</blockquote>\n<p>Apologies. I forgot to say that a new auto branch in the fork (made from master) was needed before compiling the prod release again. You are removing the old metadata files from the master branch of the fork OpenCPN/plugins as a final step before the PR. It changes nothing in the catalog until the PR is accepted. I have had many tantrums with the workflow as well.</p>",
+        "id": 323074004,
+        "sender_full_name": "Mike Rossiter",
+        "timestamp": 1674494019
+    },
+    {
+        "content": "<p>Despite the error saying the PR had failed and was not completed, I have just got a message saying it had been merged into master.  I had not deleted the old version files.<br>\nUpdated the plugin catalog and reinstalled the plugin and it offered me both versions - I can choose which to install!<br>\nI will clean the old versions out at the next update.</p>",
+        "id": 323075839,
+        "sender_full_name": "Tony Voss",
+        "timestamp": 1674494498
+    },
+    {
+        "content": "<p>By the way, I never got around to merging autoi back into Master.  I just did a PR on auto branch and it seems to have worked.</p>",
+        "id": 323076208,
+        "sender_full_name": "Tony Voss",
+        "timestamp": 1674494606
+    },
+    {
+        "content": "<p>This means that the master branch of the fork is out of step with the upstream master. Leave it a day or two and when you make the PR from auto you could be overwriting files made by another user for another plugin, if you have not deleted/remade the auto branch. </p>\n<p><span class=\"user-mention\" data-user-id=\"399510\">@Alec Leamas</span> : Is there another reason for the merge? Rick has also missed out the merge in the past and made the PR from auto.</p>",
+        "id": 323078285,
+        "sender_full_name": "Mike Rossiter",
+        "timestamp": 1674495189
+    },
+    {
+        "content": "<p><span class=\"user-mention\" data-user-id=\"399559\">@Mike Rossiter</span>  <span class=\"user-mention\" data-user-id=\"554731\">@Tony Voss</span> </p>\n<p>You are right: If the auto branch cannot be merged into master but later is accepted as PR it means the the local master branch  is not synced with the upstream master branch.</p>\n<p>Here, \"local\" is the master in your, mine or Tony's fork of OpenCPN/plugins. \"upstream\" is the master branch at OpenCPN/plugins.</p>\n<p>I would not recommend the workflow to submit the auto branch without first merging it with master. We also have new, still undocumented workflows needed to handle the \"frozen\" builds -- this is new in the 5.8.0 cycle.</p>\n<p>The workflow to make a PR is described in <a href=\"https://opencpn-manuals.github.io/main/AlternativeWorkflow/InstallConfigure/Catalog-Github-Integration.html#make-PR\">https://opencpn-manuals.github.io/main/AlternativeWorkflow/InstallConfigure/Catalog-Github-Integration.html#make-PR</a></p>\n<p>In particular, the steps to sync the local master with upstream is:</p>\n<div class=\"codehilite\"><pre><span></span><code>    $ git remote update upstream\n    $ git checkout master\n    $ git rebase upstream/master\n</code></pre></div>\n<p>After these steps, the local master is ok. Next step is to sync auto with the local master (and thus also upstream/master):</p>\n<div class=\"codehilite\"><pre><span></span><code>     $ git fetch origin auto:auto\n     $ git checkout auto\n     $ git rebase master\n</code></pre></div>\n<p>After these steps, auto is synced with both local master and upstream/master. It is now ready to be merged using:</p>\n<div class=\"codehilite\"><pre><span></span><code>    $ git checkout master\n    $ git merge --squash auto\n    $ git commit -m &quot;Merging auto branch into master&quot;\n</code></pre></div>\n<p>Now is the time to remove old builds while still keeping those with are frozen in place. For now, this is a manual step which needs some thought before doing the PR.</p>",
+        "id": 323081805,
+        "sender_full_name": "Alec Leamas",
+        "timestamp": 1674496175
+    },
+    {
+        "content": "<p>Been having lots of grief with this process - me being not well versed in github.<br>\nNow found problems arose because the location of the manual page has been moved and url validation failing.  Fixed that.</p>\n<p>Following Alec's recipe</p>\n<div class=\"codehilite\"><pre><span></span><code>$ git merge --squash auto\n$ git commit -m &quot;Merging auto branch into master&quot;\n</code></pre></div>\n<p>All looks OK but does not update my Master plugins/metadata on remote.<br>\nI have to do a <code>git push</code>, which also triggers the checking even if I am not ready for that.<br>\nAlec doesn't mention that.  Am I missing something?  Or is Alec assuming I will know that?</p>",
+        "id": 324720475,
+        "sender_full_name": "Tony Voss",
+        "timestamp": 1675095680
+    },
+    {
+        "content": "<p>Not easy until you do it a few times. No worry about the catalog as you are not making a PR.</p>\n<blockquote>\n<p>I have to do a git push, which also triggers the checking</p>\n</blockquote>\n<p>The instructions assume people know that  <code>git push</code> follows <code>git commit</code> . This  should update your master branch of the plugins fork.</p>\n<p>Many times I have had to delete the fork. Make a new fork of OpenCPN/plugins and go through the build process again. </p>\n<p>You won't see the metadata change on your Mac unless you checkout master and pull the changes. This  can be done using Github Desktop.  You should see changes to the metadata if you look at the OpenCPN/plugins repo  fork online.</p>",
+        "id": 324739690,
+        "sender_full_name": "Mike Rossiter",
+        "timestamp": 1675100762
+    },
+    {
+        "content": "<blockquote>\n<p>This can be done using Github Desktop. You should see changes to the metadata if you look at the OpenCPN/plugins repo fork online.</p>\n</blockquote>\n<p>Or, simpler in my view</p>\n<div class=\"codehilite\"><pre><span></span><code>    $ git checkout master\n    $ git remote update origin\n    $ git rebase origin/master\n</code></pre></div>\n<p>which does the same as <code>git pull</code>but allows you to use <code>git rebase --abort</code> if anything goes wrong.</p>",
+        "id": 324740281,
+        "sender_full_name": "Alec Leamas",
+        "timestamp": 1675100923
+    },
+    {
+        "content": "<p>My PR for Javascriptv2.0.1d back to OCPN Master is still open after 24hrs.  It passed the URL checks this time but still reports an xmllint error.  Might that be why it has not been closed?  Have run Alec's recipe   to check it (3.3) and there is no output, which I think means it was found OK.  Don't think that is within my control?  Can someone advise please?</p>",
+        "id": 324882654,
+        "sender_full_name": "Tony Voss",
+        "timestamp": 1675163411
+    },
+    {
+        "content": "<p>I think the problem is with the Darwin target name (<em>darwin-wx315</em>). This name is not in the .xsd. Now uses <em>darwin</em>.<br>\nCommit here removed darwin-wx315:<br>\n<a href=\"https://github.com/OpenCPN/plugins/commit/cf1c447ae2d117d588a532304dd454c1df94082b\">https://github.com/OpenCPN/plugins/commit/cf1c447ae2d117d588a532304dd454c1df94082b</a><br>\n<span class=\"user-mention\" data-user-id=\"399510\">@Alec Leamas</span> Does Tony need to move to another update-template or should <em>darwin-wx315</em> be restored?</p>",
+        "id": 324892333,
+        "sender_full_name": "Mike Rossiter",
+        "timestamp": 1675166318
+    },
+    {
+        "content": "<p>Tony is using template <em>sd3.1.4</em> at the moment.</p>",
+        "id": 324893173,
+        "sender_full_name": "Mike Rossiter",
+        "timestamp": 1675166550
+    },
+    {
+        "content": "<p><span class=\"user-mention silent\" data-user-id=\"399559\">Mike Rossiter</span> <a href=\"#narrow/stream/349785-JavaScript_pi/topic/Catalogue.20updating/near/324892333\">said</a>:</p>\n<blockquote>\n<p>Commit here removed darwin-wx315:</p>\n</blockquote>\n<p>What do I need to do to take advantage of your fix Mike?  Update script?  Rebuild?</p>",
+        "id": 324901104,
+        "sender_full_name": "Tony Voss",
+        "timestamp": 1675168944
+    },
+    {
+        "content": "<p>Let's wait.<br>\n<span class=\"user-mention\" data-user-id=\"399510\">@Alec Leamas</span>  Tony is building with sd3.1.4 which produces a target of darwin-wx315.  This is for OpenCPN 5.6.2. This target name is not recognised by ocpn-plugin.xsd.</p>",
+        "id": 324903126,
+        "sender_full_name": "Mike Rossiter",
+        "timestamp": 1675169576
+    },
+    {
+        "content": "<p>Sorry both - I am getting confused... between Mike and Alec's proposals.   Oh dear!  Trying to do two things at once.<br>\n(1) Re-catalogue JS v2.0.1 for OCPNv5.6.1.  Have the xml files ready but the PR fails on lint.<br>\nAs of now, Darwin xml  has <code>  &lt;target&gt;darwin-wx315&lt;/target&gt;</code> <br>\nShould I edit it to <code>  &lt;target&gt;darwin&lt;/target&gt;</code> ?</p>\n<p>(2) Am trying to use the new build system to build for OCPNv5.7<br>\nHere I have just updated templates to sd3.2.2 as advised by Mike<br>\nOnly doing local builds for now, so XML not an issue at the mo.</p>",
+        "id": 324909618,
+        "sender_full_name": "Tony Voss",
+        "timestamp": 1675171308
+    },
+    {
+        "content": "<p>Yes ... two things going on, which may be linked.<br>\n(1) Build for OpenCPN 5.6.2 - target <em>darwin-wx315</em> not recognised. <br>\n(2) Building for OpenCPN 5.7/8 - no artifacts will be built for <em>darwin-wx315</em> or <em>darwin</em>. Only <em>darwin-wx32</em> artifacts.<br>\nIn this beta stage we should be able to build for both OpenCPN 5.6.2 and 5.7/8 and PR for either should be accepted.<br>\nRaising an issue at OpenCPN/plugins.</p>",
+        "id": 324921183,
+        "sender_full_name": "Mike Rossiter",
+        "timestamp": 1675174051
+    },
+    {
+        "content": "<p>Issue raised here:<br>\n<a href=\"https://github.com/OpenCPN/plugins/issues/815\">https://github.com/OpenCPN/plugins/issues/815</a></p>",
+        "id": 324921272,
+        "sender_full_name": "Mike Rossiter",
+        "timestamp": 1675174078
+    },
+    {
+        "content": "<blockquote>\n<p>Should I edit it to   &lt;target&gt;darwin&lt;/target&gt; ?</p>\n</blockquote>\n<p>Yes</p>\n<blockquote>\n<p>Am trying to use the new build system to build for OCPNv5.7</p>\n</blockquote>\n<p>Right. Just beware that you really should use the 5.7 beta with these plugins (they are built using wxWidgets 3.2 which is what the 5.7 beta does, but not 5.6.2). If you are walking this path, <strong>don't</strong> make the edit above.</p>",
+        "id": 324997533,
+        "sender_full_name": "Alec Leamas",
+        "timestamp": 1675193182
+    },
+    {
+        "content": "<p><span class=\"user-mention\" data-user-id=\"399559\">@Mike Rossiter</span>   I am totally stuck trying to build v2.0.1   for OCPNv5.2 (wx3.1) using the 'old' build system.  I am patching the Darwin xml file to change the target to just &lt;target&gt;darwin&lt;/target&gt; but I think something else is amiss.  The PRs back to  OCPN stall with a conflict and now when I start the process with</p>\n<div class=\"codehilite\"><pre><span></span><code>git remote update upstream\ngit checkout master\n</code></pre></div>\n<p>that fails with<br>\n<code>error: Committing is not possible because you have unmerged files.</code></p>\n<p>I have got into a complete mess and cannot untangle it.  I have wasted <strong>days</strong> on this.  I think the best way to proceed might be to pull from OpenCPN/plugins abandoning the mess on my fork and starting again. Is there a way I can do that? to force my fork back to what is on OpenCPN/plugins?</p>",
+        "id": 325152884,
+        "sender_full_name": "Tony Voss",
+        "timestamp": 1675256819
+    },
+    {
+        "content": "<p>Been there many times. I ended up deleting the fork of OpenCPN/plugins, the repo in your Github. Then go to OpenCPN/plugins and make a new fork. Everything is then up to date with the upstream!</p>",
+        "id": 325204959,
+        "sender_full_name": "Mike Rossiter",
+        "timestamp": 1675269205
+    },
+    {
+        "content": "<p>Another failure and wasted day.  Started with fresh OCPN/plugins but always get stuck with  conflict in <code> ocpn-plugins.xml</code> when trying to rebase.  I do not know what has gone wrong but something is twisted - possibly because I edited &lt;target&gt; to darwin or something else is broken.<br>\nI have had it.  I must start other things like cruise planning.<br>\nSorry for the rant but I have had it </p>\n<div class=\"codehilite\"><pre><span></span><code>git status\ninteractive rebase in progress; onto 1e163127\nLast commands done (15 commands done):\n   pick 5a38c993 Removing obsolete metadata\n   pick 37f27b52 Update ocpn-plugins.xml\n  (see more in file .git/rebase-merge/done)\nNext commands to do (13 remaining commands):\n   pick ec79c3e8 Change Darwin target from darwin-wx315 to darwin\n   pick 89abb5c0 ae74893: flatpak-x86_64: v2.0.1 build e\n  (use &quot;git rebase --edit-todo&quot; to view and edit)\nYou are currently rebasing branch &#39;auto&#39; on &#39;1e163127&#39;.\n  (all conflicts fixed: run &quot;git rebase --continue&quot;)\n\nnothing to commit, working tree clean\n</code></pre></div>",
+        "id": 325247369,
+        "sender_full_name": "Tony Voss",
+        "timestamp": 1675279048
+    },
+    {
+        "content": "<p>Tony: what timezone are you in? Perhaps we could arrange a session where we resolve this ..</p>",
+        "id": 325282525,
+        "sender_full_name": "Alec Leamas",
+        "timestamp": 1675291056
+    },
+    {
+        "content": "<p>This topic was moved here from <a class=\"stream-topic\" data-stream-id=\"349785\" href=\"/#narrow/stream/349785-JavaScript_pi/topic/.28no.20topic.29\">#JavaScript_pi &gt; (no topic)</a> by <span class=\"user-mention silent\" data-user-id=\"399510\">Alec Leamas</span>.</p>",
+        "id": 325282981,
+        "sender_full_name": "Notification Bot",
+        "timestamp": 1675291202
+    },
+    {
+        "content": "<p>Alec: The problem seems to stem from the withdrawal of the target <em>darwin-wx315</em>.  This target may be needed by other plugin updates for 5.6.2. Would it not be simpler just to reinstate the target in <em>ocpn-plugin.xsd</em>?</p>",
+        "id": 325356522,
+        "sender_full_name": "Mike Rossiter",
+        "timestamp": 1675332430
+    },
+    {
+        "content": "<p>NO, not that simple. In the end, it's a question about what main opencpn accepts, hardcoded facts.  And darwin-wx315 is not on that list.</p>\n<p>This ABI is basically a mistake, we should have named it wx32 from the beginning. But we didn't. Shit happens.</p>",
+        "id": 325510322,
+        "sender_full_name": "Alec Leamas",
+        "timestamp": 1675377045
+    },
+    {
+        "content": "<p><span class=\"user-mention\" data-user-id=\"399559\">@Mike Rossiter</span>  ^ Sorry for late reply</p>",
+        "id": 325510426,
+        "sender_full_name": "Alec Leamas",
+        "timestamp": 1675377093
+    },
+    {
+        "content": "<p>Templates sd3.1.x are for O5.6.2 <br>\nTemplates sd3.2.x are for O 5.7/8 (wxWidgets 3.2.1)<br>\n<span class=\"user-mention\" data-user-id=\"399510\">@Alec Leamas</span> : <em>PluginSetup.cmake</em> for templates sd3.1.x uses:<br>\n<code>set(plugin_target \"darwin-wx315\")</code><br>\nIn order for O5.6.2 to recognise MacOS plugins should a new release of sd3.1 be made with:<br>\n<code>set(plugin_target \"darwin\")</code></p>",
+        "id": 325591411,
+        "sender_full_name": "Mike Rossiter",
+        "timestamp": 1675419731
+    },
+    {
+        "content": "<blockquote>\n<p>In order for O5.6.2 to recognise MacOS plugins should a new release of sd3.1 be made with:<br>\nset(plugin_target \"darwin\")</p>\n</blockquote>\n<p>No, my bad. 5.6.2 actually recognizes darwin-wx315. OTOH 5.7/5.8 only recognizes -wx32</p>",
+        "id": 325591714,
+        "sender_full_name": "Alec Leamas",
+        "timestamp": 1675419836
+    },
+    {
+        "content": "<p>One basic issue here is the checking done in opencpn/plugins. In a sane world we would have a beta version of ocpn-plugin.xsd which was used when validating the beta branch PRs and master version used when validating  master PRs.</p>\n<p>However, we now have a master ocpn-plugin.xsd which is used to validate  all sorts of PRs. This will fail, since the list of know ABI:s differs on different branches.</p>",
+        "id": 325592306,
+        "sender_full_name": "Alec Leamas",
+        "timestamp": 1675420040
+    }
+]

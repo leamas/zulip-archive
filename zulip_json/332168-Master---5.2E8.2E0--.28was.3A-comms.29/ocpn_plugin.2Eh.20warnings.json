@@ -1,0 +1,158 @@
+[
+    {
+        "content": "<p><span class=\"user-mention\" data-user-id=\"399510\">@Alec Leamas</span> <br>\n<span class=\"user-mention\" data-user-id=\"573239\">@Pavel Kalian</span> <br>\nPavel...<br>\nWill you remind us what this was all about:<br>\n<a href=\"https://github.com/opencpn/OpenCPN/commit/d5e4ee43610cb60b45a034019d5c60cb210b587b\">d5e4ee43610cb60b45a034019d5c60cb210b587b</a><br>\n    \"Implement API 1.18 adding plugin overlay rendering in multiple phases of the rendering pipeline\"</p>",
+        "id": 384142429,
+        "sender_full_name": "Dave Register",
+        "timestamp": 1691810493
+    },
+    {
+        "content": "<p><span class=\"user-mention silent\" data-user-id=\"517002\">Dave Register</span> <a href=\"#narrow/stream/332168-Master---5.2E8.2E0--.28was.3A-comms.29/topic/Network.20problems/near/384142429\">said</a>:</p>\n<blockquote>\n<p><span class=\"user-mention silent\" data-user-id=\"399510\">Alec Leamas</span> <br>\n<span class=\"user-mention silent\" data-user-id=\"573239\">Pavel Kalian</span> <br>\nPavel...<br>\nWill you remind us what this was all about:<br>\n<a href=\"https://github.com/opencpn/OpenCPN/commit/d5e4ee43610cb60b45a034019d5c60cb210b587b\">d5e4ee43610cb60b45a034019d5c60cb210b587b</a><br>\n    \"Implement API 1.18 adding plugin overlay rendering in multiple phases of the rendering pipeline\"</p>\n</blockquote>\n<p>This made DashboardSK possible, we do not want ships etc. drawn above the instruments.</p>",
+        "id": 384158213,
+        "sender_full_name": "Pavel Kalian",
+        "timestamp": 1691819163
+    },
+    {
+        "content": "<p>OK, I can sort out the   RenderGLOverlayMultiCanvas() and RenderOverlay()  mess  with patch  below.  It 's basically about splitting the  signature  with a  default  value  to two. This is as I understand it  perfectly safe, but would preferably need a review. However,  this is not the end of this sad story.</p>\n<div class=\"codehilite\"><pre><span></span><code>diff -U2 ../opencpn-libs/api-18/ocpn_plugin.h ../libs/api-18/ocpn_plugin.h\n--- ../opencpn-libs/api-18/ocpn_plugin.h    2023-08-12 09:35:26.194704390 +0200\n+++ ../libs/api-18/ocpn_plugin.h    2023-08-12 10:14:42.633269994 +0200\n@@ -590,5 +590,11 @@\n   /// \\return true if overlay was rendered, false otherwise\n   virtual bool RenderGLOverlayMultiCanvas(wxGLContext *pcontext,\n-                                          PlugIn_ViewPort *vp, int canvasIndex, int priority = -1);\n+                                          PlugIn_ViewPort *vp, int canvas_ix,\n+                                          int priority);\n+  virtual bool RenderGLOverlayMultiCanvas(wxGLContext *pcontext,\n+                                          PlugIn_ViewPort *vp,\n+                                          int canvas_ix) override {\n+    return RenderGLOverlayMultiCanvas(pcontext, vp, canvas_ix, -1);\n+  }\n   /// Render plugin overlay over chart canvas in non-OpenGL mode\n   ///\n@@ -600,5 +606,10 @@\n   /// \\return true if overlay was rendered, false otherwise\n   virtual bool RenderOverlayMultiCanvas(wxDC &amp;dc, PlugIn_ViewPort *vp,\n-                                        int canvasIndex, int priority = -1);\n+                                        int canvasIndex, int priority);\n+\n+  bool RenderOverlayMultiCanvas(wxDC &amp;dc, PlugIn_ViewPort *vp,\n+                                int canvas_ix) {\n+    return RenderOverlayMultiCanvas(dc, vp, canvas_ix, -1); }\n+\n };\n //------------------------------------------------------------------\n</code></pre></div>",
+        "id": 384186233,
+        "sender_full_name": "Alec Leamas",
+        "timestamp": 1691828538
+    },
+    {
+        "content": "<p>Remaining problem is RenderOverlay.  Here the compiler says</p>\n<div class=\"codehilite\"><pre><span></span><code>libs/api-18/ocpn_plugin.h:427:16: warning: ‘virtual bool opencpn_plugin::RenderOverlay(wxDC*, PlugIn_ViewPort*)’ was hidden [-Woverloaded-virtual=]\n  427 |   virtual bool RenderOverlay(wxDC *dc, PlugIn_ViewPort *vp);\n      |                ^~~~~~~~~~~~~\nlibs/api-18/ocpn_plugin.h:460:8: note:   by ‘bool opencpn_plugin_16::RenderOverlay(wxDC&amp;, PlugIn_ViewPort*)’\n  460 |   bool RenderOverlay(wxDC &amp;dc, PlugIn_ViewPort *vp);\n      |        ^~~~~~~~~~~~~\n</code></pre></div>\n<p>That is,</p>\n<ul>\n<li>opencpn_plugin uses <code>RenderOverlay(wxMemoryDC *pmdc, ...)</code></li>\n<li>opencpn_plugin_16 uses <code>RenderOverlay(wxDC &amp;dc, ...)</code></li>\n<li>opencpn_plugin_17 and opencpn_plugin_18  alse uses <code> </code>RenderOverlay(wxDC &amp;dc, ...)`</li>\n</ul>\n<p>The net effect is that  a main opencpn compiled before API 116 expects a <code>wxMemoryDC*</code> pointer argument whereas newer versions expects a wxDC&amp; reference. As I  understand it, this breaks the API compatibility promise.</p>\n<p>OTOH, plugins compiled before API 116 are unusable anyway due to the wx32 ABI break, and it seems pretty safe to assume that anything usable on current OpenCPN is compiled against at least API 116. Which means it might be possible to break the API in order to sort this out.</p>\n<p>\"Confused\"</p>",
+        "id": 384190169,
+        "sender_full_name": "Alec Leamas",
+        "timestamp": 1691829565
+    },
+    {
+        "content": "<p><span class=\"user-mention\" data-user-id=\"399510\">@Alec Leamas</span> <br>\nAFAICT, the only plugins that use either of these methods today are GRIB and the much newer DashboardSK.<br>\nGRIB is of course no problem, since it builds and ships with whatever the latest core plugin API might be. Easily patched if necessary.<br>\nDashboardSK builds against API118, since it requires the extended method (with priority parameter).<br>\nNet:  I think the signature change to this method (patch above) is safe.  And there is nothing needed to be done now about the ABI break between 116 and 118, since there is no third-party plugin that needs to tolerate that ABI break in this particular method.</p>",
+        "id": 384282056,
+        "sender_full_name": "Dave Register",
+        "timestamp": 1691850999
+    },
+    {
+        "content": "<p><span class=\"user-mention\" data-user-id=\"399510\">@Alec Leamas</span> <br>\nCorrection:<br>\n\"... there is nothing needed to be done now about the ABI break between <strong>pre-116</strong> and 118...\"</p>",
+        "id": 384291768,
+        "sender_full_name": "Dave Register",
+        "timestamp": 1691853161
+    },
+    {
+        "content": "<p>6 messages were moved here from <a class=\"stream-topic\" data-stream-id=\"332168\" href=\"/#narrow/stream/332168-Master---5.2E8.2E0--.28was.3A-comms.29/topic/Network.20problems\">#Master - 5.8.0  (was: comms) &gt; Network problems</a> by <span class=\"user-mention silent\" data-user-id=\"399510\">Alec Leamas</span>.</p>",
+        "id": 384299396,
+        "sender_full_name": "Notification Bot",
+        "timestamp": 1691854979
+    },
+    {
+        "content": "<p><span class=\"user-mention\" data-user-id=\"399510\">@Alec Leamas</span> <br>\nOn ocpn_plugin.h and friends:<br>\nThe trouble is this:</p>\n<div class=\"codehilite\"><pre><span></span><code>opencpn_plugin uses RenderOverlay(wxMemoryDC *pmdc, ...)\nopencpn_plugin_16 uses RenderOverlay(wxDC &amp;dc, ...)\nopencpn_plugin_17 and opencpn_plugin_18 alse uses  RenderOverlay(wxDC &amp;dc, ...)`\n</code></pre></div>\n\n<p>As I now think about it, this is OK as-is.  Confusing, but not inconsistent.<br>\nYes, it is true that the API changed at API 16.  We dropped one class interface method, and added another.  However, both methods are implemented in core OCPN, in their respective base classes. So a plugin will use the one that matches, depending on the API version it chooses to follow.<br>\nThere is one breakage to think about.  If an older plugin (pre-116) wishes to upgrade to say API-118 to take advantage of newer functions in later APIs, the author will need to adapt to the newer RenderOverlay(...) method signature, if indeed the plugin actually overrides this function in it implementation.  This scenario has not happened yet, but could, in principle.</p>",
+        "id": 384608598,
+        "sender_full_name": "Dave Register",
+        "timestamp": 1691973099
+    },
+    {
+        "content": "<p>Actually, disregard the \"one breakage to think about\" clause.<br>\nSince API-116+ class inherits from pre-116 class, than all previous (pre-116) methods are still available in the base class, and may be overridden if desired.  So the suggested upgrade will be no problem for the linker.</p>",
+        "id": 384611683,
+        "sender_full_name": "Dave Register",
+        "timestamp": 1691974069
+    },
+    {
+        "content": "<p>Indeed. However, the compiler is unhappy since it thinks that  116+ classes overrides the base class wxMemoryDC argument. And this can not really be, since they have different signatures.  I. e., what should  the argument be, or be converted to.</p>\n<p>I see two paths: One is to just remove the base class code. That would mean that there was no linkage from main OpenCPN to the plugin in this case. Might work, but the RTTI runtime inheritance info might break, dunno. Will investigate.</p>\n<p>The other path is to just silence the warning, adding a comment...</p>",
+        "id": 384663304,
+        "sender_full_name": "Alec Leamas",
+        "timestamp": 1691994184
+    },
+    {
+        "content": "<p>I expect that all declared methods in the base class must be implemented in order for RTTI to be satisfied during the plugin derived class llnk step.</p>",
+        "id": 384790323,
+        "sender_full_name": "Dave Register",
+        "timestamp": 1692021858
+    },
+    {
+        "content": "<p>Just so we can compare notes, what plugin compilation is generating the RenderOverlay() \"hidden\" warning?  I'm not seeing it in normal builds.</p>",
+        "id": 384850383,
+        "sender_full_name": "Dave Register",
+        "timestamp": 1692033379
+    },
+    {
+        "content": "<p>Here: <a href=\"/user_uploads/33951/jqdQq9xjYC0_HQ0LouTsN1Pk/build.log\">build.log</a></p>",
+        "id": 385135319,
+        "sender_full_name": "Alec Leamas",
+        "timestamp": 1692108594
+    },
+    {
+        "content": "<blockquote>\n<p>I expect that all declared methods in the base class must be implemented in order for RTTI to be satisfied</p>\n</blockquote>\n<p>Definitely. However, the question is really the other way around: Is it ok that the plugin ABI implements  a method not listed in the header, and thus not is required by main OpenCPN? I plan to  look into this, preferably later...</p>",
+        "id": 385137229,
+        "sender_full_name": "Alec Leamas",
+        "timestamp": 1692108974
+    },
+    {
+        "content": "<p><span class=\"user-mention\" data-user-id=\"399510\">@Alec Leamas</span> <br>\nAfter some reading and fiddling, I think we can best resolve this by employing a \"using\" directive in three offending class declarations:<br>\nWe need this only in 116, 117, and 118.  119, and later, all derive from 118, so they are covered.</p>\n<p>TBH, I am not completely clear on the effect of these declarations.  It seems like some sort of prompt to clang to \"pay attention to the signatures\".  I observe that gcc knows what to do without fuss.  There is some google juice on this deviation (or\"bug\") in clang.<br>\nAnyway, I see that adding the three declarations seems to resolve the clang warning.  That is a good thing.</p>\n<p>Thoughts?</p>\n<div class=\"codehilite\"><pre><span></span><code>class DECL_EXP opencpn_plugin_16 : public opencpn_plugin\n {\n   public:\n         opencpn_plugin_16(void *pmgr);\n         virtual ~opencpn_plugin_16();\n\n         using opencpn_plugin::RenderOverlay;\n         virtual bool RenderOverlay(wxDC &amp;dc, PlugIn_ViewPort *vp);\n\n         virtual void SetPluginMessage(wxString &amp;message_id, wxString &amp;message_body);\n\n };\n\nclass DECL_EXP opencpn_plugin_17 : public opencpn_plugin\n{\n   public:\n         opencpn_plugin_17(void *pmgr);\n         virtual ~opencpn_plugin_17();\n\n         using opencpn_plugin::RenderOverlay;\n         virtual bool RenderOverlay(wxDC &amp;dc, PlugIn_ViewPort *vp);\n         virtual bool RenderGLOverlay(wxGLContext *pcontext, PlugIn_ViewPort *vp);\n\n         virtual void SetPluginMessage(wxString &amp;message_id, wxString &amp;message_body);\n\n};\n\nclass DECL_EXP opencpn_plugin_18 : public opencpn_plugin\n{\n  public:\n        opencpn_plugin_18(void *pmgr);\n        virtual ~opencpn_plugin_18();\n\n        using opencpn_plugin::RenderOverlay;\n        virtual bool RenderOverlay(wxDC &amp;dc, PlugIn_ViewPort *vp);\n        virtual bool RenderGLOverlay(wxGLContext *pcontext, PlugIn_ViewPort *vp);\n\n        virtual void SetPluginMessage(wxString &amp;message_id, wxString &amp;message_body);\n        virtual void SetPositionFixEx(PlugIn_Position_Fix_Ex &amp;pfix);\n\n};\n</code></pre></div>",
+        "id": 385578374,
+        "sender_full_name": "Dave Register",
+        "timestamp": 1692238456
+    },
+    {
+        "content": "<p>Yes, you are right, this seems to be the correct fix.</p>\n<blockquote>\n<p>TBH, I am not completely clear on the effect of these declarations</p>\n</blockquote>\n<p><a href=\"https://en.cppreference.com/w/cpp/language/using_declaration\">https://en.cppreference.com/w/cpp/language/using_declaration</a> says,<br>\nsection \"In namespace and block scope\"</p>\n<div class=\"codehilite\"><pre><span></span><code>Using-declarations can be used to introduce namespace members into other\nnamespaces and block scopes, or to introduce base class members into derived\nclass definitions, or to introduce enumerators into namespaces, block,\nand class scopes (since C++20).\n</code></pre></div>\n<p>In our case, that means that we resolve the ambiguity for the compiler and makes both <code>RenderOverlay(wxMemoryDC *pmdc,  ...);</code>and <code>RenderOverlay(wxDC &amp;dc, ...)</code>  available, which is more or less what we intended. The example in the link is pretty clear.</p>\n<p>c++ is anything but simple. But, we do learn ;)</p>",
+        "id": 385607739,
+        "sender_full_name": "Alec Leamas",
+        "timestamp": 1692254732
+    },
+    {
+        "content": "<p>Might add that this C++ learning has been, and is, a bumpy road for me.</p>",
+        "id": 385609612,
+        "sender_full_name": "Alec Leamas",
+        "timestamp": 1692255333
+    },
+    {
+        "content": "<p>Curious question, somewhat OT: Why does a plugin like <code>opencpn_plugin_18</code> (API 1.18) derive from the base  <code>opencpn_plugin</code> instead of previous one, <code>opencpn_plugin_17</code> in this case? </p>\n<p>To me, it seems natural to carry all enhancements so far to next version...</p>",
+        "id": 385622216,
+        "sender_full_name": "Alec Leamas",
+        "timestamp": 1692260057
+    },
+    {
+        "content": "<p><span class=\"user-mention\" data-user-id=\"399510\">@Alec Leamas</span> <br>\nAnswer to curious question:<br>\nThis is very old code, written while I was still learning the usefulness of polymorphism.<br>\nI learned, and switched methods at 119.<br>\nSome of this stuff comes slow to an old embedded C and assembler coder.</p>",
+        "id": 385716289,
+        "sender_full_name": "Dave Register",
+        "timestamp": 1692291367
+    },
+    {
+        "content": "<p><span class=\"user-mention silent\" data-user-id=\"399510\">Alec Leamas</span> <a href=\"#narrow/stream/332168-Master---5.2E8.2E0--.28was.3A-comms.29/topic/ocpn_plugin.2Eh.20warnings/near/385622216\">said</a>:</p>\n<blockquote>\n<p>Curious question, somewhat OT: Why does a plugin like <code>opencpn_plugin_18</code> (API 1.18) derive from the base  <code>opencpn_plugin</code> instead of previous one, <code>opencpn_plugin_17</code> in this case? </p>\n<p>To me, it seems natural to carry all enhancements so far to next version...</p>\n</blockquote>\n<p>That was a LONG time ago, I don't think anybody remembers.</p>",
+        "id": 385716493,
+        "sender_full_name": "Pavel Kalian",
+        "timestamp": 1692291448
+    },
+    {
+        "content": "<p><span class=\"user-mention\" data-user-id=\"517002\">@Dave Register</span>  The ocpn_plugin.h is currently unusable, see <a href=\"https://github.com/Rasbats/shipdriver_pi/issues/552\">https://github.com/Rasbats/shipdriver_pi/issues/552</a> which is about using the last iteration.The MSCV linker is, well, \"interesting\"...</p>\n<p>I'll see what I can do.</p>",
+        "id": 387735828,
+        "sender_full_name": "Alec Leamas",
+        "timestamp": 1693248302
+    },
+    {
+        "content": "<p><span class=\"user-mention\" data-user-id=\"399510\">@Alec Leamas</span> <br>\nI think we have a solution, just has not been implemented yet.  IIRC, we need to add \"using\" directive.</p>",
+        "id": 387742524,
+        "sender_full_name": "Dave Register",
+        "timestamp": 1693250878
+    },
+    {
+        "content": "<p>Nope, that's what's in current master, and seemingly MSCV cannot handle this. I'm on it, later.</p>",
+        "id": 387746532,
+        "sender_full_name": "Alec Leamas",
+        "timestamp": 1693252551
+    },
+    {
+        "content": "<p>3 messages were moved here from <a class=\"stream-topic\" data-stream-id=\"332168\" href=\"/#narrow/stream/332168-Master---5.2E8.2E0--.28was.3A-comms.29/topic/Headless.20strategy\">#Master - 5.8.0  (was: comms) &gt; Headless strategy</a> by <span class=\"user-mention silent\" data-user-id=\"399510\">Alec Leamas</span>.</p>",
+        "id": 387864367,
+        "sender_full_name": "Notification Bot",
+        "timestamp": 1693309272
+    },
+    {
+        "content": "<p>The core fix needed  is : </p>\n<div class=\"codehilite\"><pre><span></span><code>+#ifdef _MSC_VER\n+  virtual bool RenderOverlayMultiCanvas(wxDC &amp;dc, PlugIn_ViewPort *vp,\n+                                        int canvasIndex, int priority = -1);\n+#else\n   bool RenderOverlayMultiCanvas(wxDC &amp;dc, PlugIn_ViewPort *vp, int canvas_ix,\n                                 int priority);\n   bool RenderOverlayMultiCanvas(wxDC &amp;dc, PlugIn_ViewPort *vp,\n                                 int canvas_ix) override {\n-    return RenderOverlayMultiCanvas(dc, vp, canvas_ix, -1); }\n+    return RenderOverlayMultiCanvas(dc, vp, canvas_ix, -1);\n+  }\n+#endif\n</code></pre></div>\n<p>Once again this is about the msvc linker being brain dead while the gnu and clang linkers have some minimal intelligence. I will make a PR.</p>\n<p>The PR is somewhat hard to read due to a lot of documentation changes caused by comments  with long lines &gt; 80 chars. To document methods is good, to do it using lines &lt; 8o chars even better.</p>",
+        "id": 387865149,
+        "sender_full_name": "Alec Leamas",
+        "timestamp": 1693309554
+    },
+    {
+        "content": "<p><a href=\"https://github.com/OpenCPN/OpenCPN/pull/3414\">https://github.com/OpenCPN/OpenCPN/pull/3414</a></p>",
+        "id": 387903383,
+        "sender_full_name": "Alec Leamas",
+        "timestamp": 1693321973
+    }
+]

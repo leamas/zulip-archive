@@ -1,0 +1,338 @@
+[
+    {
+        "content": "<p><span class=\"user-mention\" data-user-id=\"522729\">@Dan Dickey</span> </p>\n<p>Running current version of  <em>winConfig.bat</em>. It build everythging OK, and I can start the sln file using VS. In VS, I can rebuild the project.</p>\n<p>However, when I try to start a debugging session the build target is not found (below). The reason seems to be that it looks in <em>build\\Debug\\ALL_BUILD</em> while the actual path produced by the build is <em>build\\Win32\\Debug\\ALL_BUILD</em>.</p>\n<p>Thoughts?<br>\n<a href=\"/user_uploads/33951/KjzPirbvkE9xq5qbTzbB6RzI/image.png\">image.png</a></p>\n<div class=\"message_inline_image\"><a href=\"/user_uploads/33951/KjzPirbvkE9xq5qbTzbB6RzI/image.png\" title=\"image.png\"><img src=\"/user_uploads/33951/KjzPirbvkE9xq5qbTzbB6RzI/image.png\"></a></div>",
+        "id": 362380611,
+        "sender_full_name": "Alec Leamas",
+        "timestamp": 1685521408
+    },
+    {
+        "content": "<p>VS 22,  recently updated to 17.4</p>",
+        "id": 362380862,
+        "sender_full_name": "Alec Leamas",
+        "timestamp": 1685521459
+    },
+    {
+        "content": "<p><span class=\"user-mention\" data-user-id=\"522486\">@Håkan Svensson</span>  perhaps you have some clue how to work around this?</p>",
+        "id": 362386538,
+        "sender_full_name": "Alec Leamas",
+        "timestamp": 1685522854
+    },
+    {
+        "content": "<p>Have been traveling for few days. Will look into it ASAP.</p>",
+        "id": 362406823,
+        "sender_full_name": "Dan Dickey",
+        "timestamp": 1685527773
+    },
+    {
+        "content": "<p>Is the startup project set to “opencpn” or to “ALL_BUILD”?</p>",
+        "id": 362407217,
+        "sender_full_name": "Dan Dickey",
+        "timestamp": 1685527865
+    },
+    {
+        "content": "<p>Sorry I have not come to a stage where I use that bat-file in my ordinary environment.  I use to build for RealWithDebInfo and have copied all that may possible be needed to .\\build\\RealWithDebInfo. That includes external plugin's .dll I may need to debug.</p>",
+        "id": 362431334,
+        "sender_full_name": "Håkan Svensson",
+        "timestamp": 1685533640
+    },
+    {
+        "content": "<p><span class=\"user-mention silent\" data-user-id=\"399510\">Alec Leamas</span> <a href=\"#narrow/stream/332168-Master---5.2E8.2E0--.28was.3A-comms.29/topic/New.20.20windows.20build.20-.20localWinbuild/near/362380611\">said</a>:</p>\n<blockquote>\n<p><span class=\"user-mention silent\" data-user-id=\"522729\">Dan Dickey</span> </p>\n<p>Running current version of  <em>winConfig.bat</em>. It build everythging OK, and I can start the sln file using VS. In VS, I can rebuild the project.</p>\n<p>However, when I try to start a debugging session the build target is not found (below). The reason seems to be that it looks in <em>build\\Debug\\ALL_BUILD</em> while the actual path produced by the build is <em>build\\Win32\\Debug\\ALL_BUILD</em>.</p>\n<p>Thoughts?</p>\n</blockquote>\n<p>I don't see any reason it should ever build into a 'Win32' folder name.  There is no such configuration as 'Win32'.  Are you sure you are using the most recent commit (<a href=\"https://github.com/transmitterdan/OpenCPN/commit/996b8c34c05d453282f75a179ff900396334318c\">https://github.com/transmitterdan/OpenCPN/commit/996b8c34c05d453282f75a179ff900396334318c</a>)?</p>",
+        "id": 362454530,
+        "sender_full_name": "Dan Dickey",
+        "timestamp": 1685539035
+    },
+    {
+        "content": "<p>(bAck from town)</p>\n<p>Yes, it's the right commit. </p>\n<p>I can see that the support files (downloaded dlls etc) are in <em>build\\debug</em>  so it rather seem to be about VS. Could I have made some setting? Is the recent update messing up things?</p>",
+        "id": 362455454,
+        "sender_full_name": "Alec Leamas",
+        "timestamp": 1685539242
+    },
+    {
+        "content": "<p>I'll restart my windows machine, there are updates pending. It could not become worse, can it?</p>",
+        "id": 362456986,
+        "sender_full_name": "Alec Leamas",
+        "timestamp": 1685539588
+    },
+    {
+        "content": "<p>Rebuilding after windows update...</p>",
+        "id": 362458147,
+        "sender_full_name": "Alec Leamas",
+        "timestamp": 1685539856
+    },
+    {
+        "content": "<p><span class=\"user-mention silent\" data-user-id=\"399510\">Alec Leamas</span> <a href=\"#narrow/stream/332168-Master---5.2E8.2E0--.28was.3A-comms.29/topic/New.20.20windows.20build.20-.20localWinbuild/near/362455454\">said</a>:</p>\n<blockquote>\n<p>(bAck from town)</p>\n<p>Yes, it's the right commit. </p>\n</blockquote>\n<p>Ok, I think I see the problem.  Digging...</p>",
+        "id": 362458236,
+        "sender_full_name": "Dan Dickey",
+        "timestamp": 1685539874
+    },
+    {
+        "content": "<p><span class=\"user-mention silent\" data-user-id=\"399510\">Alec Leamas</span> <a href=\"#narrow/stream/332168-Master---5.2E8.2E0--.28was.3A-comms.29/topic/New.20.20windows.20build.20-.20localWinbuild/near/362455454\">said</a>:</p>\n<blockquote>\n<p>I can see that the support files (downloaded dlls etc) are in <em>build\\debug</em>  so it rather seem to be about VS. Could I have made some setting? Is the recent update messing up things?</p>\n</blockquote>\n<p>What exact command lines are you using to rebuild?  I just tried a build from scratch and it worked ok for me.</p>",
+        "id": 362460042,
+        "sender_full_name": "Dan Dickey",
+        "timestamp": 1685540252
+    },
+    {
+        "content": "<p>Can you take a screen shot of this in VS?  How does it compare?<br>\n<a href=\"/user_uploads/33951/XM6S39PpWTSrXjek6shXz8nR/image.png\">image.png</a></p>\n<div class=\"message_inline_image\"><a href=\"/user_uploads/33951/XM6S39PpWTSrXjek6shXz8nR/image.png\" title=\"image.png\"><img src=\"/user_uploads/33951/XM6S39PpWTSrXjek6shXz8nR/image.png\"></a></div>",
+        "id": 362460892,
+        "sender_full_name": "Dan Dickey",
+        "timestamp": 1685540424
+    },
+    {
+        "content": "<p><code>&gt; buildwin\\winConfig.bat --rebuild --debug</code></p>",
+        "id": 362460976,
+        "sender_full_name": "Alec Leamas",
+        "timestamp": 1685540448
+    },
+    {
+        "content": "<p><a href=\"/user_uploads/33951/GD4GVBmLRwodcaJwkba_5b26/image.png\">image.png</a></p>\n<div class=\"message_inline_image\"><a href=\"/user_uploads/33951/GD4GVBmLRwodcaJwkba_5b26/image.png\" title=\"image.png\"><img src=\"/user_uploads/33951/GD4GVBmLRwodcaJwkba_5b26/image.png\"></a></div>",
+        "id": 362461475,
+        "sender_full_name": "Alec Leamas",
+        "timestamp": 1685540571
+    },
+    {
+        "content": "<p><span class=\"user-mention silent\" data-user-id=\"399510\">Alec Leamas</span> <a href=\"#narrow/stream/332168-Master---5.2E8.2E0--.28was.3A-comms.29/topic/New.20.20windows.20build.20-.20localWinbuild/near/362461475\">said</a>:</p>\n<blockquote>\n<p><a href=\"/user_uploads/33951/GD4GVBmLRwodcaJwkba_5b26/image.png\">image.png</a></p>\n</blockquote>\n<p>What about the 'Debugging' section?</p>",
+        "id": 362461771,
+        "sender_full_name": "Dan Dickey",
+        "timestamp": 1685540640
+    },
+    {
+        "content": "<p>Sorry, just noticed. Here:<br>\n<a href=\"/user_uploads/33951/7oWTVFiitJT-RwXuHl8i6ewS/image.png\">image.png</a></p>\n<div class=\"message_inline_image\"><a href=\"/user_uploads/33951/7oWTVFiitJT-RwXuHl8i6ewS/image.png\" title=\"image.png\"><img src=\"/user_uploads/33951/7oWTVFiitJT-RwXuHl8i6ewS/image.png\"></a></div>",
+        "id": 362461932,
+        "sender_full_name": "Alec Leamas",
+        "timestamp": 1685540665
+    },
+    {
+        "content": "<p><span class=\"user-mention silent\" data-user-id=\"399510\">Alec Leamas</span> <a href=\"#narrow/stream/332168-Master---5.2E8.2E0--.28was.3A-comms.29/topic/New.20.20windows.20build.20-.20localWinbuild/near/362461932\">said</a>:</p>\n<blockquote>\n<p>Sorry, just noticed. Here:</p>\n</blockquote>\n<p>Looks right. I will try to reproduce using your exact command line options.</p>",
+        "id": 362462295,
+        "sender_full_name": "Dan Dickey",
+        "timestamp": 1685540748
+    },
+    {
+        "content": "<p>MY gut feeling is that this is about my environment, in particular the VS setup. I have basically not used it, but still. Are you aware of any way to reset VS to \"factory settings\" so to speak?</p>",
+        "id": 362462701,
+        "sender_full_name": "Alec Leamas",
+        "timestamp": 1685540832
+    },
+    {
+        "content": "<p><span class=\"user-mention silent\" data-user-id=\"399510\">Alec Leamas</span> <a href=\"#narrow/stream/332168-Master---5.2E8.2E0--.28was.3A-comms.29/topic/New.20.20windows.20build.20-.20localWinbuild/near/362462701\">said</a>:</p>\n<blockquote>\n<p>MY gut feeling is that this is about my environment, in particular the VS setup. I have basically not used it, but still. Are you aware of any way to reset VS to \"factory settings\" so to speak?</p>\n</blockquote>\n<p>I was pretty sure that --rebuild will reset everything back to \"factory\" as regards debugging and building.  I tried to convince CMake to setup all the VS project options correctly when making an initial build or using --rebuild.</p>\n<p>It could be you have some environment variables set that 'override' what I told CMake to do.</p>",
+        "id": 362463506,
+        "sender_full_name": "Dan Dickey",
+        "timestamp": 1685541007
+    },
+    {
+        "content": "<p>Attaching the environment...<br>\n<a href=\"/user_uploads/33951/PBsmpdLDO9Xm96nsCumVU9cB/slask\">slask</a></p>",
+        "id": 362464670,
+        "sender_full_name": "Alec Leamas",
+        "timestamp": 1685541255
+    },
+    {
+        "content": "<p>(slask is basically Swedish for \"foo\", sorry...\")</p>",
+        "id": 362464925,
+        "sender_full_name": "Alec Leamas",
+        "timestamp": 1685541316
+    },
+    {
+        "content": "<p><span class=\"user-mention silent\" data-user-id=\"399510\">Alec Leamas</span> <a href=\"#narrow/stream/332168-Master---5.2E8.2E0--.28was.3A-comms.29/topic/New.20.20windows.20build.20-.20localWinbuild/near/362464670\">said</a>:</p>\n<blockquote>\n<p>Attaching the environment...<br>\n<a href=\"/user_uploads/33951/PBsmpdLDO9Xm96nsCumVU9cB/slask\">slask</a></p>\n</blockquote>\n<p>Something's not right there.  It should look more like this:<br>\n<a href=\"/user_uploads/33951/TdnnmQ-77SG4snbn00U-qkxR/env.txt\">env.txt</a></p>\n<p>In yours I don't see all the VS variables that should be set automatically when you open the VS command prompt.</p>",
+        "id": 362465456,
+        "sender_full_name": "Dan Dickey",
+        "timestamp": 1685541432
+    },
+    {
+        "content": "<p>OK, my env was before running the build. (still a linux guy, it's hard to grasp that a script can change the environment)<br>\nHere is the one after the build:<br>\n<a href=\"/user_uploads/33951/nGluMS0cRLZTwvoVBXmciIHs/slisk\">slisk</a></p>",
+        "id": 362466367,
+        "sender_full_name": "Alec Leamas",
+        "timestamp": 1685541621
+    },
+    {
+        "content": "<p><span class=\"user-mention silent\" data-user-id=\"399510\">Alec Leamas</span> <a href=\"#narrow/stream/332168-Master---5.2E8.2E0--.28was.3A-comms.29/topic/New.20.20windows.20build.20-.20localWinbuild/near/362466367\">said</a>:</p>\n<blockquote>\n<p>OK, my env was before running the build. (still a linux guy, it's hard to grasp that a script can change the environment)<br>\nHere is the one after the build:<br>\n<a href=\"/user_uploads/33951/nGluMS0cRLZTwvoVBXmciIHs/slisk\">slisk</a></p>\n</blockquote>\n<p>The VC environment variable should exist before running the build.  Exactly what command prompt are you opening?  The one I open is:</p>\n<div class=\"codehilite\"><pre><span></span><code>C:\\ProgramData\\Microsoft\\Windows\\Start Menu\\Programs\\Visual Studio 2022\\Visual Studio Tools\\Developer Command Prompt for VS 2022.lnk\n</code></pre></div>",
+        "id": 362473775,
+        "sender_full_name": "Dan Dickey",
+        "timestamp": 1685543081
+    },
+    {
+        "content": "<p>I open using the bottom-left launcher, but I guess it invoke the same. </p>\n<p>Now invoking it from a command window using \"your\" path. It looks like the welcome message is the same as the one issued when  I start using the launcher.</p>\n<p>There is no \"VC\" environment variable, but several VC* ones</p>",
+        "id": 362475462,
+        "sender_full_name": "Alec Leamas",
+        "timestamp": 1685543435
+    },
+    {
+        "content": "<p>For example: <code>VSCMD_VER=17.4.1</code></p>",
+        "id": 362476025,
+        "sender_full_name": "Alec Leamas",
+        "timestamp": 1685543538
+    },
+    {
+        "content": "<p>New data point: Using the fast track gives the same problem.</p>\n<p>Which version of VS-22 are you on?</p>",
+        "id": 362495924,
+        "sender_full_name": "Alec Leamas",
+        "timestamp": 1685547600
+    },
+    {
+        "content": "<p>I think the Win32 prefix is related to this thing, available as \"Configuration Manager\" , drop-downs in the second line's  Debug and  Win32 boxes. Do you also have this one, showing the same thing?</p>\n<p><a href=\"/user_uploads/33951/XIC-nPiCH-gvNTRHRQS-FPNU/image.png\">image.png</a></p>\n<div class=\"message_inline_image\"><a href=\"/user_uploads/33951/XIC-nPiCH-gvNTRHRQS-FPNU/image.png\" title=\"image.png\"><img src=\"/user_uploads/33951/XIC-nPiCH-gvNTRHRQS-FPNU/image.png\"></a></div>",
+        "id": 362497672,
+        "sender_full_name": "Alec Leamas",
+        "timestamp": 1685547959
+    },
+    {
+        "content": "<p>i. e., available from here:<br>\n<a href=\"/user_uploads/33951/G4UDsO8kYad48WINdLj9kKgt/image.png\">image.png</a></p>\n<div class=\"message_inline_image\"><a href=\"/user_uploads/33951/G4UDsO8kYad48WINdLj9kKgt/image.png\" title=\"image.png\"><img src=\"/user_uploads/33951/G4UDsO8kYad48WINdLj9kKgt/image.png\"></a></div>",
+        "id": 362499329,
+        "sender_full_name": "Alec Leamas",
+        "timestamp": 1685548313
+    },
+    {
+        "content": "<p><span class=\"user-mention\" data-user-id=\"522729\">@Dan Dickey</span> Ping? Would be nice to know if you have the same configuration setup as I.</p>",
+        "id": 362543190,
+        "sender_full_name": "Alec Leamas",
+        "timestamp": 1685558607
+    },
+    {
+        "content": "<p><span class=\"user-mention silent\" data-user-id=\"399510\">Alec Leamas</span> <a href=\"#narrow/stream/332168-Master---5.2E8.2E0--.28was.3A-comms.29/topic/New.20.20windows.20build.20-.20localWinbuild/near/362543190\">said</a>:</p>\n<blockquote>\n<p><span class=\"user-mention silent\" data-user-id=\"522729\">Dan Dickey</span> Ping? Would be nice to know if you have the same configuration setup as I.</p>\n</blockquote>\n<p>I am on VS2022 V17.6.2. I believe it is the latest.</p>\n<p>Yes, the Win32 folder relates to the \"Platform Type\" which is controlled from CMake \"-A\" option.  But it should never try to execute anything from that folder.  It should always execute from a folder based on the \"Configuration\" not on the \"Platform\".  I recall reading somewhere there is a way to build multiple platform types so maybe that is what your system is trying to do.  When you open the \"Configuration Manager\" of VS2022 how many solution \"Platforms\" do you see in the drop-down list?  If you see more than just \"Win32\" that may be a clue.</p>",
+        "id": 362546078,
+        "sender_full_name": "Dan Dickey",
+        "timestamp": 1685559364
+    },
+    {
+        "content": "<p><a href=\"/user_uploads/33951/XmiC1P4bXjSagrN1BbT3pZsi/image.png\">image.png</a></p>\n<div class=\"message_inline_image\"><a href=\"/user_uploads/33951/XmiC1P4bXjSagrN1BbT3pZsi/image.png\" title=\"image.png\"><img src=\"/user_uploads/33951/XmiC1P4bXjSagrN1BbT3pZsi/image.png\"></a></div>",
+        "id": 362546666,
+        "sender_full_name": "Dan Dickey",
+        "timestamp": 1685559520
+    },
+    {
+        "content": "<p>Now also on 17.6.2.  And, exactly as you, I have only one alternative WIn32 (sorry for  delay)</p>",
+        "id": 362550706,
+        "sender_full_name": "Alec Leamas",
+        "timestamp": 1685560623
+    },
+    {
+        "content": "<p>Basically, it looks like VS is broken. It compiles stuff into <em>win32\\debug</em> but looks for the artifacts in <em>debug</em>. I wonder if it's possible to reset all settings to \"factory state\" (turning to google)</p>",
+        "id": 362551825,
+        "sender_full_name": "Alec Leamas",
+        "timestamp": 1685560950
+    },
+    {
+        "content": "<p>Found Tools | Import /Export  settings | Reset all settings. Trying that, now rebuilding.</p>",
+        "id": 362552331,
+        "sender_full_name": "Alec Leamas",
+        "timestamp": 1685561105
+    },
+    {
+        "content": "<p>Out of disk space. New build ahead</p>",
+        "id": 362555044,
+        "sender_full_name": "Alec Leamas",
+        "timestamp": 1685561902
+    },
+    {
+        "content": "<p>Same result. Build artifacts are stored in <em>Win32\\Debug</em> but VS tries to run program in <em>Debug</em>.</p>",
+        "id": 362562439,
+        "sender_full_name": "Alec Leamas",
+        "timestamp": 1685564134
+    },
+    {
+        "content": "<p>Making progress, but still problems. And time for bed. More news tomorrow. Thanks for all support so far!</p>",
+        "id": 362567572,
+        "sender_full_name": "Alec Leamas",
+        "timestamp": 1685565713
+    },
+    {
+        "content": "<p><span class=\"user-mention\" data-user-id=\"522729\">@Dan Dickey</span> </p>\n<p>Cannot sleep. Worked around other problems, not  really sure what made things work better. Remaining problem now is that the wrong libraries seems to be copied to the build areas like <em>Debug</em> and <em>RelWithDebInfo</em>.</p>\n<p>As for <em>Debug</em> the libraries should be named ...wx32ud_...  However, the actual libraries are ...wx32u_... i. e., they are not the debug ones.</p>\n<p>When it comes to <em>RelWithDebInfo</em> these libraries should be substantially larger than the normal ones due to the bundled debug info. However, they are not and VS does not find any debug info for <em>RelWithDebInfo</em>.</p>\n<p>In short, it seems that the same, default libraries are copied to all four configurations. At least for the debugging libs they are actually built, but does not seem to end up in the right place.  </p>\n<p>Attaching the build log. Thoughts?</p>\n<p>Command: <code>buildwin\\winConfig.bat --rebuild &gt;build.log 2&gt;&amp;1</code><br>\n<a href=\"/user_uploads/33951/zb2nf7woisMuDzUUhN2oPvuf/build.log\">build.log</a></p>",
+        "id": 362583911,
+        "sender_full_name": "Alec Leamas",
+        "timestamp": 1685571211
+    },
+    {
+        "content": "<p>More: If I manually copies the missing ...32ud... files from <em>cache\\</em> to <em>\\build\\Debug</em>  the libraries are fine. However, the main opencpn seems to be compiled without debugging symbols, VS does not find any.</p>\n<p>All this is basically so I should be able to get a stacktrace from a windows-only crash which haunts me. It is not that easy.,</p>",
+        "id": 362587318,
+        "sender_full_name": "Alec Leamas",
+        "timestamp": 1685572461
+    },
+    {
+        "content": "<p><span class=\"user-mention silent\" data-user-id=\"399510\">Alec Leamas</span> <a href=\"#narrow/stream/332168-Master---5.2E8.2E0--.28was.3A-comms.29/topic/New.20.20windows.20build.20-.20localWinbuild/near/362587318\">said</a>:</p>\n<blockquote>\n<p>More: If I manually copies the missing ...32ud... files from <em>cache\\</em> to <em>\\build\\Debug</em>  the libraries are fine. However, the main opencpn seems to be compiled without debugging symbols, VS does not find any.</p>\n<p>All this is basically so I should be able to get a stacktrace from a windows-only crash which haunts me. It is not that easy.,</p>\n</blockquote>\n<p>RelWithDebInfo is not a debug build.  So, winConfig configures that to use the non-debug wxWidgets dlls.  However, the 'Debug' build configuration is a pure debug build and it uses the wxWidgets debug dlls.</p>\n<p>I will study the build log file and come back to you.</p>",
+        "id": 362601175,
+        "sender_full_name": "Dan Dickey",
+        "timestamp": 1685580041
+    },
+    {
+        "content": "<p>Studying the log files is interesting.  It's as if the script you are running is not the same as the one I am running.  Please compare (I used <code>diff -a --strip-trailing-cr blah.bat blahblah.bat</code>) the attached winConfig.bat to the one you extracted from my git repo.  They should be identical.  If they are not, then somehow when I pull the latest from the git repo I get something different than what you pull. <br>\n<a href=\"/user_uploads/33951/DSquA2xoLg-gI-cAi18-24-n/winConfig.bat\">winConfig.bat</a></p>",
+        "id": 362625019,
+        "sender_full_name": "Dan Dickey",
+        "timestamp": 1685594568
+    },
+    {
+        "content": "<p>Good morning...</p>\n<p>There are probably more than one thing lurking around here, many of  which on my side. My windows skills being what they are,  I do embarrasing mistakes. Sorry for that.</p>\n<p>Background:  I'm doing this since I have a PR which works fine on the Linux side but crashes on Windows. Basically I need a stack trace from that crash. But it would also be the time when I finally got something more than the CLI usable on Windows.</p>\n<p>Hence, we have two different forks we need to merge. I have not done this properly earlier, my little brain produced the not so bright idea that using the <em>buildwin</em> directory from yor branch should be enough. Of course, it isn't and my earlier failures are thus not really usable. So, making a fresh start.</p>\n<p>I have rebased localBuildwin on my local branch tmp.  Doing so, I have ditched your changes to <em>src</em> and <em>include</em> since they collide with things I do. The resulting diff stat against localWInBuild below. This time I think I got it right, changes to sources should not be part of the drama here.</p>\n<p>I can now start the Debug build in VS, and generate the crash I want a trace from. However, VS still complains about missing debug info. The libraries are fine, but core OpenCPN seems to be generated without debug info.</p>\n<p>Rebuilding the Debug configuration does not help. Rebuilding after adding a hardcoded \"<code>set(CMAKE_BUILD_TYPE Debug)</code>to CMakeLists.txt does not help either.</p>\n<p>Some data points: The remote 'dan' is pointing to your repo. Note that the script is indeed as of dan/localWinBuild</p>\n<div class=\"codehilite\"><pre><span></span><code>&gt; git rev-parse dan/localWInBuild\na40fc4ef266dfcb6ebea4732745887e285db8e9d\n\nN&gt;git diff --stat dan/localWinBuild\n .gitignore               |    6 +-\n include/catalog_parser.h |   18 +-\n include/plugin_handler.h |   22 +-\n include/plugin_loader.h  |  169 ++++---\n include/pluginmanager.h  |   24 +-\n src/catalog_handler.cpp  |   39 +-\n src/catalog_parser.cpp   |  164 +++---\n src/download_mgr.cpp     |    5 +-\n src/glChartCanvas.cpp    |    0\n src/ocpn_frame.cpp       |    2 +-\n src/options.cpp          |   76 ++-\n src/plugin_handler.cpp   |   75 ++-\n src/plugin_loader.cpp    |  877 ++++++++++++++++----------------\n src/pluginmanager.cpp    | 1235 ++++++++++------------------------------------\n src/udev_rule_mgr.cpp    |    7 +-\n src/update_mgr.cpp       |    5 +-\n test/tests.cpp           |    4 +-\n 17 files changed, 1063 insertions(+), 1665 deletions(-)\n</code></pre></div>",
+        "id": 362644087,
+        "sender_full_name": "Alec Leamas",
+        "timestamp": 1685602139
+    },
+    {
+        "content": "<p>If this branch is accessible to me I am happy to try to build it here and see what I can figure out.  It should not be too hard to fix this but I need to see it build I think.</p>",
+        "id": 362688177,
+        "sender_full_name": "Dan Dickey",
+        "timestamp": 1685612388
+    },
+    {
+        "content": "<p>In my repo <a href=\"https://github.com/leamas/OpenCPN.git\">https://github.com/leamas/OpenCPN.git</a> as the branch <em>dan-build</em></p>",
+        "id": 362717165,
+        "sender_full_name": "Alec Leamas",
+        "timestamp": 1685618428
+    },
+    {
+        "content": "<p>In that branch, Options | Plugins  leads to a crash. It's the stack trace from that crash which is my immediate target.</p>",
+        "id": 362718125,
+        "sender_full_name": "Alec Leamas",
+        "timestamp": 1685618652
+    },
+    {
+        "content": "<p>I was able to fix my immediate problems without full stack traces. That said, I'm still interested in getting my windows environment in better shape, in particular using debug builds.</p>\n<p>I  see a great value in the locaWinBuild branch, and is looking forward to have it merged. I have some input regarding this if/when you are interested</p>",
+        "id": 362748602,
+        "sender_full_name": "Alec Leamas",
+        "timestamp": 1685624962
+    },
+    {
+        "content": "<p>It's still a WIP.  I welcome any comments/suggestions as I work through some recently created bugs.</p>",
+        "id": 362970973,
+        "sender_full_name": "Dan Dickey",
+        "timestamp": 1685695546
+    },
+    {
+        "content": "<p>At a glance: </p>\n<ul>\n<li>It's too big, you should probably split it onto two; one for the dll checking and one for the build stuff. I guess you are aware of that, though.</li>\n<li>You have added execute permissions on some source files, these should be 644. I guess windows does not make it that obvious.</li>\n</ul>",
+        "id": 362997196,
+        "sender_full_name": "Alec Leamas",
+        "timestamp": 1685701320
+    },
+    {
+        "content": "<p><span class=\"user-mention silent\" data-user-id=\"399510\">Alec Leamas</span> <a href=\"#narrow/stream/332168-Master---5.2E8.2E0--.28was.3A-comms.29/topic/New.20.20windows.20build.20-.20localWinbuild/near/362997196\">said</a>:</p>\n<blockquote>\n<p>At a glance: </p>\n<ul>\n<li>It's too big, you should probably split it onto two; one for the dll checking and one for the build stuff. I guess you are aware of that, though.</li>\n<li>You have added execute permissions on some source files, these should be 644. I guess windows does not make it that obvious.</li>\n</ul>\n</blockquote>\n<p>You are saying winConfig.bat is \"too big\"?  If so, that's a bit philosophical.  A good part of it is the utility subroutines at the end.  It's a pain to move those to a separate file.  Each one would have to be in its own file.</p>\n<p>I don't know how it changed the permissions on source files.  I didn't do that intentionally.</p>",
+        "id": 363018607,
+        "sender_full_name": "Dan Dickey",
+        "timestamp": 1685706194
+    },
+    {
+        "content": "<p>Windows keeps messing up the permissions making everything executable all the time, that is a PITA...</p>",
+        "id": 363039887,
+        "sender_full_name": "Pavel Kalian",
+        "timestamp": 1685710554
+    },
+    {
+        "content": "<p>it should be possible to handle this in a git hook...</p>",
+        "id": 363094250,
+        "sender_full_name": "Alec Leamas",
+        "timestamp": 1685721155
+    },
+    {
+        "content": "<blockquote>\n<p>You are saying winConfig.bat is \"too big\"? </p>\n</blockquote>\n<p>No, no... I'm saying that the delta between the localWinBuild branch and master might be  too big, and that it would be much easier (necessary?) to split it into two PRs, one for the  build stuff  and one for the dll checking.</p>",
+        "id": 363095104,
+        "sender_full_name": "Alec Leamas",
+        "timestamp": 1685721330
+    },
+    {
+        "content": "<p>Ok, I'll look at breaking into multiple PR's.  I intend to rebase to master first. But I need to ensure that each PR is \"buildable\" so as to not break 'git bisect'.</p>",
+        "id": 363122914,
+        "sender_full_name": "Dan Dickey",
+        "timestamp": 1685727576
+    },
+    {
+        "content": "<p>MIght be worth it. I have a similar situation in <a href=\"https://github.com/opencpn/OpenCPN/issues/3106\">#3106</a>.  In this case, I am submitting in piece by piece. The first is merged, next in queue is  <a href=\"https://github.com/opencpn/OpenCPN/issues/3198\">#3198</a></p>",
+        "id": 363145808,
+        "sender_full_name": "Alec Leamas",
+        "timestamp": 1685733785
+    }
+]

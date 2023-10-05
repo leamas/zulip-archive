@@ -1,0 +1,290 @@
+[
+    {
+        "content": "<p>Message test does not work. Fails to find <em>71_message_test.js</em>. Need to restart <em>001_main.js</em></p>",
+        "id": 321147844,
+        "sender_full_name": "Mike Rossiter",
+        "timestamp": 1673612754
+    },
+    {
+        "content": "<p>Let's have a separate topic for these</p>",
+        "id": 321155593,
+        "sender_full_name": "Tony Voss",
+        "timestamp": 1673614974
+    },
+    {
+        "content": "<p>Linus: parkConsole() ... It moves the console to the left of the screen but without shrinking!</p>",
+        "id": 321155748,
+        "sender_full_name": "Mike Rossiter",
+        "timestamp": 1673615021
+    },
+    {
+        "content": "<p>A message was moved here from <a class=\"stream-topic\" data-stream-id=\"349785\" href=\"/#narrow/stream/349785-JavaScript_pi/topic/Parking\">#JavaScript_pi &gt; Parking</a> by <span class=\"user-mention silent\" data-user-id=\"554731\">Tony Voss</span>.</p>",
+        "id": 321155831,
+        "sender_full_name": "Notification Bot",
+        "timestamp": 1673615042
+    },
+    {
+        "content": "<p>Printing does not produce a coloured text.</p>\n<p>12:31 PM<br>\nDialogue - same issue with no ability to see buttons at the base of the dialogue.</p>\n<p>12:32 PM<br>\nHad to run tests individually because of the problem with the message test.</p>",
+        "id": 321156085,
+        "sender_full_name": "Mike Rossiter",
+        "timestamp": 1673615117
+    },
+    {
+        "content": "<p><span class=\"user-mention silent\" data-user-id=\"399559\">Mike Rossiter</span> <a href=\"#narrow/stream/349785-JavaScript_pi/topic/Linux.20issues/near/321155748\">said</a>:</p>\n<blockquote>\n<p>Linus: parkConsole() ... It moves the console to the left of the screen but without shrinking!</p>\n</blockquote>\n<p>To suppress the result so the console stays minimised, it should be:</p>\n<p>consolePark(); scriptResult(\"\");</p>",
+        "id": 321156518,
+        "sender_full_name": "Tony Voss",
+        "timestamp": 1673615226
+    },
+    {
+        "content": "<p><span class=\"user-mention silent\" data-user-id=\"399559\">Mike Rossiter</span> <a href=\"#narrow/stream/349785-JavaScript_pi/topic/Linux.20issues/near/321147844\">said</a>:</p>\n<blockquote>\n<p>Message test does not work. Fails to find <em>71_message_test.js</em>. Need to restart <em>001_main.js</em></p>\n</blockquote>\n<p>If it didn't find the file, you should have got an error like this example from MacOS:</p>\n<blockquote>\n<p>Error: Console Test - File path /Users/Tony/Documents/JavaScript-project/JavaScript_pi/Tests_scripts/Nonexistent.js not found<br>\nThe first test must have run OK so why did the 2nd fail?  Please examine the file string in the error message carefully.</p>\n</blockquote>",
+        "id": 321158836,
+        "sender_full_name": "Tony Voss",
+        "timestamp": 1673615891
+    },
+    {
+        "content": "<p><span class=\"user-mention silent\" data-user-id=\"399559\">Mike Rossiter</span> <a href=\"#narrow/stream/349785-JavaScript_pi/topic/Parking/near/321148920\">said</a>:</p>\n<blockquote>\n<p>Dialogue - same issue with no ability to see buttons at the base of the dialogue.</p>\n</blockquote>\n<p>On MacOS I can enlarge the dialogue by dragging down.  Can you enlarge it to show the buttons?</p>",
+        "id": 321159507,
+        "sender_full_name": "Tony Voss",
+        "timestamp": 1673616100
+    },
+    {
+        "content": "<p><span class=\"user-mention silent\" data-user-id=\"399559\">Mike Rossiter</span> <a href=\"#narrow/stream/349785-JavaScript_pi/topic/Linux.20issues/near/321156085\">said</a>:</p>\n<blockquote>\n<p>Printing does not produce a coloured text.</p>\n</blockquote>\n<p>Does the script window have coloured lexing (strings in red etc) or is there no colour in both windows?</p>",
+        "id": 321395347,
+        "sender_full_name": "Tony Voss",
+        "timestamp": 1673721104
+    },
+    {
+        "content": "<blockquote>\n<p>Does the script window have coloured lexing</p>\n</blockquote>\n<p>Yes, blue, red and black.</p>",
+        "id": 321466921,
+        "sender_full_name": "Mike Rossiter",
+        "timestamp": 1673779977
+    },
+    {
+        "content": "<p><span class=\"user-mention silent\" data-user-id=\"399559\">Mike Rossiter</span> <a href=\"#narrow/stream/349785-JavaScript_pi/topic/Linux.20issues/near/321466921\">said</a>:</p>\n<blockquote>\n<blockquote>\n<p>Does the script window have coloured lexing</p>\n</blockquote>\n<p>Yes, blue, red and black.</p>\n</blockquote>\n<p>Just building again at 17:13.<br>\nThe code that does the colour printing is thus:</p>\n<div class=\"codehilite\"><pre><span></span><code>void appendStyledText(wxString text, wxStyledTextCtrl* window, int colour){\n    // Append coloured text to window\n    int long beforeLength, afterLength;\n    beforeLength = window-&gt;GetTextLength(); // where we are before adding text\n    window-&gt;AppendText(text);\n    afterLength = window-&gt;GetTextLength(); // where we are after adding text\n    window-&gt;StartStyling((int)beforeLength,0);   // 2nd parameter included Linux still using wxWidgets v3.0.2\n    window-&gt;SetStyling((int)(afterLength-beforeLength), colour);\n    TRACE(24, wxString::Format(&quot;Styled text &#39;%s&#39; colour %i  start %li  end %li  length %i&quot;, text, colour,\n        beforeLength, afterLength, (int)(afterLength-beforeLength)));\n    }\n</code></pre></div>\n<p>Note I have a TRACE in.<br>\nNote too the <code>StartStyling</code> line.  It has a 2nd deprecated parameter which generates warnings from the compiler. <br>\nThis we had to have to keep Linux happy.  Is that still the case?  Might this be the source of the problem Linux not printing in colour?<br>\nIf still a problem, please let me have a copy of the trace when running the print test to compare with what I see.</p>",
+        "id": 321687917,
+        "sender_full_name": "Tony Voss",
+        "timestamp": 1673889637
+    },
+    {
+        "content": "<p><a href=\"/user_uploads/33951/P6x--fQih1JbxwOAf5B14WB-/javascript_trace.txt\">javascript_trace.txt</a></p>",
+        "id": 321690678,
+        "sender_full_name": "Mike Rossiter",
+        "timestamp": 1673890729
+    },
+    {
+        "content": "<p>Parking still not working for me with Ubuntu 20.04. Would gtk be causing a problem. Ubuntu uses gtk only from 20.04.</p>",
+        "id": 321692629,
+        "sender_full_name": "Mike Rossiter",
+        "timestamp": 1673891570
+    },
+    {
+        "content": "<p><span class=\"user-mention silent\" data-user-id=\"399559\">Mike Rossiter</span> <a href=\"#narrow/stream/349785-JavaScript_pi/topic/Linux.20issues/near/321692629\">said</a>:</p>\n<blockquote>\n<p>Parking still not working for me with Ubuntu 20.04. Would gtk be causing a problem. Ubuntu uses gtk only from 20.04.</p>\n</blockquote>\n<p>I haven't a clue.  Never been near gtk and have no Linux system.  It may be a big ask, but can you narrow it down?  What bit does not work?  Test on a fresh console  - not one that might already be parked under previous version.  Parking is now nicely contained in the console <code>park() </code>and <code>isParked()</code> methods.<br>\nIf parking a console via its park button does nothing at all, most likely is that <code>isParked()</code> is returning true when it should not.  Function is only 5 lines long.  There is a TRACE statement in park() level 25.<br>\nIn hope,T ony</p>",
+        "id": 321694992,
+        "sender_full_name": "Tony Voss",
+        "timestamp": 1673892534
+    },
+    {
+        "content": "<p><span class=\"user-mention silent\" data-user-id=\"399559\">Mike Rossiter</span> <a href=\"#narrow/stream/349785-JavaScript_pi/topic/Linux.20issues/near/321690678\">said</a>:</p>\n<blockquote>\n<p><a href=\"/user_uploads/33951/P6x--fQih1JbxwOAf5B14WB-/javascript_trace.txt\">javascript_trace.txt</a></p>\n</blockquote>\n<p>Trace output identical with what I get.<br>\nSince the script is lexed into colours OK, we know that styled text does work under this Linux, so it must be how the print coloured is implemented. Am mindful of that deprecated extra parameter on StartStyling.  Maybe remove it now if Linux no longer requires it?</p>",
+        "id": 321698506,
+        "sender_full_name": "Tony Voss",
+        "timestamp": 1673893992
+    },
+    {
+        "content": "<p><span class=\"user-mention silent\" data-user-id=\"554731\">Tony Voss</span> <a href=\"#narrow/stream/349785-JavaScript_pi/topic/Linux.20issues/near/321159507\">said</a>:</p>\n<blockquote>\n<p><span class=\"user-mention silent\" data-user-id=\"399559\">Mike Rossiter</span> <a href=\"#narrow/stream/349785-JavaScript_pi/topic/Parking/near/321148920\">said</a>:</p>\n<blockquote>\n<p>Dialogue - same issue with no ability to see buttons at the base of the dialogue.</p>\n</blockquote>\n<p>On MacOS I can enlarge the dialogue by dragging down.  Can you enlarge it to show the buttons?</p>\n</blockquote>\n<p>Any news on this query?</p>",
+        "id": 321698845,
+        "sender_full_name": "Tony Voss",
+        "timestamp": 1673894131
+    },
+    {
+        "content": "<p>Testing this morning.</p>",
+        "id": 321782908,
+        "sender_full_name": "Mike Rossiter",
+        "timestamp": 1673946601
+    },
+    {
+        "content": "<blockquote>\n<p>Dialogue - same issue with no ability to see buttons</p>\n</blockquote>\n<p>My display on the laptop s 16:9. Unable to show a dialogue of the size wanted. No scrollbar to help. Remove a few entries and I can see the buttons.</p>\n<blockquote>\n<p>Parking - can you narrow it down? </p>\n</blockquote>\n<p>No luck so far.</p>\n<blockquote>\n<p>Printing: It has a 2nd deprecated parameter which generates warnings from the compiler.</p>\n</blockquote>\n<p>Unable to compile for Ubuntu without the second parameter.</p>",
+        "id": 321820701,
+        "sender_full_name": "Mike Rossiter",
+        "timestamp": 1673959248
+    },
+    {
+        "content": "<p><span class=\"user-mention silent\" data-user-id=\"399559\">Mike Rossiter</span> <a href=\"#narrow/stream/349785-JavaScript_pi/topic/Linux.20issues/near/321820701\">said</a>:</p>\n<blockquote>\n<blockquote>\n<p>Dialogue - same issue with no ability to see buttons</p>\n</blockquote>\n<p>My display on the laptop s 16:9. Unable to show a dialogue of the size wanted. No scrollbar to help. Remove a few entries and I can see the buttons.</p>\n</blockquote>\n<p>What do you mean by 16:9?  Are you saying your display is too small to show the whole dialogue?</p>",
+        "id": 321823287,
+        "sender_full_name": "Tony Voss",
+        "timestamp": 1673960088
+    },
+    {
+        "content": "<blockquote>\n<p>Are you saying your display is too small </p>\n</blockquote>\n<p>Correct.</p>",
+        "id": 321823432,
+        "sender_full_name": "Mike Rossiter",
+        "timestamp": 1673960127
+    },
+    {
+        "content": "<p><span class=\"user-mention silent\" data-user-id=\"399559\">Mike Rossiter</span> <a href=\"#narrow/stream/349785-JavaScript_pi/topic/Linux.20issues/near/321823432\">said</a>:</p>\n<blockquote>\n<blockquote>\n<p>Are you saying your display is too small </p>\n</blockquote>\n<p>Correct.</p>\n</blockquote>\n<p>Maybe we don't try and address that?</p>",
+        "id": 321832879,
+        "sender_full_name": "Tony Voss",
+        "timestamp": 1673963034
+    },
+    {
+        "content": "<blockquote>\n<p>Maybe we don't try and address that?</p>\n</blockquote>\n<p>Agree with leaving as is.</p>",
+        "id": 321860580,
+        "sender_full_name": "Mike Rossiter",
+        "timestamp": 1673970093
+    },
+    {
+        "content": "<blockquote>\n<p>Parking - can you narrow it down?</p>\n</blockquote>\n<p><a href=\"https://forums.wxwidgets.org/viewtopic.php?t=47598\">https://forums.wxwidgets.org/viewtopic.php?t=47598</a><br>\nGoing to try clientSize().</p>",
+        "id": 321865410,
+        "sender_full_name": "Mike Rossiter",
+        "timestamp": 1673971284
+    },
+    {
+        "content": "<p>Progress, maybe?<br>\nIn park() I used SetClientSize() iso SetSize. Parking works.  Using <em>44_parking.js</em> I get the consoles on top of each other.</p>",
+        "id": 321870471,
+        "sender_full_name": "Mike Rossiter",
+        "timestamp": 1673972610
+    },
+    {
+        "content": "<p>There's a JS function to return relevant console details.  So, if in my console named \"4\", I run the script</p>\n<div class=\"codehilite\"><pre><span></span><code>require(&quot;Consoles&quot;);\nprint(JSON.stringify(consoleDetails(&quot;4&quot;),null,&quot;\\t&quot;), &quot;\\n&quot;);\n</code></pre></div>\n<p>I get the output</p>\n<div class=\"codehilite\"><pre><span></span><code>{\n    &quot;name&quot;: &quot;4&quot;,\n    &quot;position&quot;: {\n        &quot;x&quot;: 513,\n        &quot;y&quot;: 198\n    },\n    &quot;size&quot;: {\n        &quot;x&quot;: 761,\n        &quot;y&quot;: 699\n    },\n    &quot;minSize&quot;: {\n        &quot;x&quot;: 90,\n        &quot;y&quot;: 29\n    },\n    &quot;clientSize&quot;: {\n        &quot;x&quot;: 761,\n        &quot;y&quot;: 671\n    }\n}\n</code></pre></div>\n<p>NB the reported position is <strong>relative to the frame</strong> and not the screen as returned by<code> GetPosition()</code><br>\nSource of this API in <code>optional.cpp</code> starting at line 28</p>",
+        "id": 321871000,
+        "sender_full_name": "Tony Voss",
+        "timestamp": 1673972760
+    },
+    {
+        "content": "<p>I get a similar set of figures with my amended version of JS.</p>",
+        "id": 321873853,
+        "sender_full_name": "Mike Rossiter",
+        "timestamp": 1673973567
+    },
+    {
+        "content": "<p>If consoles are parking on top of each other,  <code>isParked()</code> for the previously parked console is returning false.<br>\nCould be because you messed with the sizing/positioning.  See <code>isParked()</code>.</p>",
+        "id": 321874262,
+        "sender_full_name": "Tony Voss",
+        "timestamp": 1673973665
+    },
+    {
+        "content": "<p>It is possible that if you set the size of a console smaller than the system likes, GetSize will return something different from what you set it as.<br>\nSuggest you use the Parking tool in the tools to set the parking parameters right for your platform.</p>",
+        "id": 321875748,
+        "sender_full_name": "Tony Voss",
+        "timestamp": 1673974087
+    },
+    {
+        "content": "<p>My mistake. I restarted OpenCPN and the consoles are spread correctly.</p>",
+        "id": 321875830,
+        "sender_full_name": "Mike Rossiter",
+        "timestamp": 1673974111
+    },
+    {
+        "content": "<p>Worth using the tools to customise the parking parameters for that platform and then revealing them so they can be configured as the platform defaults.</p>",
+        "id": 321876379,
+        "sender_full_name": "Tony Voss",
+        "timestamp": 1673974256
+    },
+    {
+        "content": "<p><em>Printing: \" post on X11 with GTK3 the decorations are not available until the window is fully realized.\"</em><br>\nLooking at this one to see if it helps the colours.</p>",
+        "id": 321876524,
+        "sender_full_name": "Mike Rossiter",
+        "timestamp": 1673974288
+    },
+    {
+        "content": "<blockquote>\n<p>Worth using the tools to customise the parking parameters</p>\n</blockquote>\n<p>Your MacOS parameters work for Ubuntu:<br>\n#define CONSOLE_MIN_HEIGHT 29<br>\n#define CONSOLE_STUB 77<br>\n#define PARK_LEVEL 25<br>\n#define PARK_FIRST_X 3<br>\n#define PARK_SEP 6<br>\nHave you tested SetClientSize() iso SetSize() to see if it causes problems? No problems on Windows.</p>",
+        "id": 321889351,
+        "sender_full_name": "Mike Rossiter",
+        "timestamp": 1673977697
+    },
+    {
+        "content": "<blockquote>\n<p>Printing: \" post on X11 with GTK3 the decorations are not available until the window is fully realized.\"</p>\n</blockquote>\n<p>Wrong ... it is StartStyling. Second parameter is a bitmask. Needs to be 255 for wx3.0 (Ubuntu). Tested and this works.</p>",
+        "id": 321892720,
+        "sender_full_name": "Mike Rossiter",
+        "timestamp": 1673978604
+    },
+    {
+        "content": "<p>Printing ... Second parameter of StartStyling() is ignored in Windows (wx3.1.2) 255 does not harm the styling.</p>",
+        "id": 321894187,
+        "sender_full_name": "Mike Rossiter",
+        "timestamp": 1673979046
+    },
+    {
+        "content": "<p>Let me summarise where I think we are at with Linux...<br>\n1 Parking parameters can be same as for Mac<br>\n2 Need mask of 255 as 2nd parameter in StartStyling<br>\n3 Tall dialogues exceed your small screen  hiding the bottom buttons - propose not to do anything about that<br>\n4 You said something about needing to use  SetClientSize() instead of SetSize.  That is not good when we are working out where to place the window itself.  I hope that is no longer an issue?<br>\nSo I think we are all go for Linux apart from 4 ?  Is that so?</p>",
+        "id": 321912892,
+        "sender_full_name": "Tony Voss",
+        "timestamp": 1673984838
+    },
+    {
+        "content": "<blockquote>\n<p>2 Need mask of 255 as 2nd parameter in StartStyling</p>\n</blockquote>\n<p>Found info here:<br>\n<a href=\"https://forums.wxwidgets.org/viewtopic.php?t=43834&amp;start=15\">https://forums.wxwidgets.org/viewtopic.php?t=43834&amp;start=15</a></p>\n<blockquote>\n<p>SetClientSize() instead of SetSize. That is not good when we are working out where to place the window itself</p>\n</blockquote>\n<p>Have not used SetClientSize() in the constructor for the console itself. Used in the following:<br>\nsetConsoleMinSize()<br>\npark()<br>\nonChangeName()</p>",
+        "id": 322018854,
+        "sender_full_name": "Mike Rossiter",
+        "timestamp": 1674038298
+    },
+    {
+        "content": "<p>Please can you explain for me why you are using  SetClientSize() instead of SetSize() ?  What is wrong with SetSize()?</p>",
+        "id": 322047654,
+        "sender_full_name": "Tony Voss",
+        "timestamp": 1674047223
+    },
+    {
+        "content": "<p><a href=\"https://forums.wxwidgets.org/viewtopic.php?t=47598\">https://forums.wxwidgets.org/viewtopic.php?t=47598</a></p>\n<p>Ubuntu is using the X11 windowing system. (Not that I understand this stuff)</p>",
+        "id": 322060719,
+        "sender_full_name": "Mike Rossiter",
+        "timestamp": 1674050863
+    },
+    {
+        "content": "<p>So I think it best to use SetClientSize just in the Ubuntu case.  What is the compiler flag for this that I can use in a conditional compilation , equivalent to <code>#ifdef __WXMSW__</code> for Windows ?<br>\nAnd do you just have a straight swap of replacing SetSize with SetClientSize?</p>",
+        "id": 322069295,
+        "sender_full_name": "Tony Voss",
+        "timestamp": 1674052975
+    },
+    {
+        "content": "<p>My understanding is that the problem =s with Linux arise because the size of the window (client size + 'decorations') is not known until the window is substantiated.<br>\nAt present setMinSize() is called within the constructor and, hence, before the window can be substantiated.<br>\nHow about I move the call outside the constructor?  I think GetSize should work then?<br>\nNot too difficult to do.<br>\nWorth a try?</p>",
+        "id": 322310662,
+        "sender_full_name": "Tony Voss",
+        "timestamp": 1674142488
+    },
+    {
+        "content": "<p>OK done.  Have commented out Linux conditional stuff for now with //- so can find it again, should I need to reinstate.<br>\nNote that the dump tool in Tools diagnostic panel dumps lots of useful info about each console.  Have just added GetSize and GetMinSize so you can see what those functions return for each console.<br>\nBuilding now.</p>",
+        "id": 322335510,
+        "sender_full_name": "Tony Voss",
+        "timestamp": 1674149151
+    },
+    {
+        "content": "<p>Parking works 99%. In the test console \"1\" appears under the dialogue iso in line with the other consoles.</p>\n<p>Did you remove the parameter 255 from StartStyling(). Colours have gone from the print test in Ubuntu.</p>",
+        "id": 322340270,
+        "sender_full_name": "Mike Rossiter",
+        "timestamp": 1674150467
+    },
+    {
+        "content": "<p>Whoops - never put the 255 in may sources.  Have done so now.<br>\n99% is big improvement.<br>\nA screenshot of the console \"1\" issue please and a console dump taken with the problem showing, which will detail all the consoles and their states for me.</p>",
+        "id": 322344835,
+        "sender_full_name": "Tony Voss",
+        "timestamp": 1674151668
+    },
+    {
+        "content": "<p>StartStyling() ... src/JSExtensions.cpp ... Line 55<br>\nStill showing 0 iso 255</p>",
+        "id": 322358418,
+        "sender_full_name": "Mike Rossiter",
+        "timestamp": 1674155549
+    },
+    {
+        "content": "<p>Have not pushed yet, so you will not have 255 yet.</p>",
+        "id": 322360072,
+        "sender_full_name": "Tony Voss",
+        "timestamp": 1674156098
+    },
+    {
+        "content": "<p>Waiting until I have studied the ‘1’ console issue</p>",
+        "id": 322360214,
+        "sender_full_name": "Tony Voss",
+        "timestamp": 1674156144
+    },
+    {
+        "content": "<blockquote>\n<p>In the test console \"1\" appears under the dialogue</p>\n</blockquote>\n<p>Unable to reproduce this now. Parking works correctly but the minimum height needs reducing, say height 25, even though the tool still say 38.</p>\n<p>I have increased the number of packages that can be held in Cloudsmith javascript-alpha to 100. 20 meant that we had some 1.1 packages in the list meaning I lost your 2.0 ones for Ubuntu Focal.</p>",
+        "id": 322493349,
+        "sender_full_name": "Mike Rossiter",
+        "timestamp": 1674215712
+    },
+    {
+        "content": "<p>So I have reduced default console min height to 20L for Linux and will remove all the conditional compiling for Linux that I put in.  The parking will be handled exactly as for the other platforms now that I have moved stuff out of the constructor.<br>\nThank for adjusting the repository.<br>\nI have a simple addition for the Tools and will build final alpha with that.</p>",
+        "id": 322512874,
+        "sender_full_name": "Tony Voss",
+        "timestamp": 1674221337
+    }
+]

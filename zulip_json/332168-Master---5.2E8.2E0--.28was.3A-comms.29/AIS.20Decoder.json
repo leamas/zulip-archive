@@ -1,0 +1,224 @@
+[
+    {
+        "content": "<p><span class=\"user-mention\" data-user-id=\"399510\">@Alec Leamas</span>  <br>\n I am working to convince myself that AIVDO is always a single-part message, only one fragment.  If that is so, then the DecodeSingleVDO() method could be static, and the class could be singleton.<br>\nMore:  If AIVDO is multipart, the additional information is not used by O core in any way.  So, safe to ignore AIVDO if multipart?</p>\n<p>Thoughts?</p>",
+        "id": 297400638,
+        "sender_full_name": "Dave Register",
+        "timestamp": 1662475390
+    },
+    {
+        "content": "<blockquote>\n<p>safe to ignore AIVDO if multipart?</p>\n</blockquote>\n<p>Basically a question above my pay grade. However,state  required to parse multipart messages  could be part of  <code>AisDecodeCtx ctx</code>, right?</p>\n<blockquote>\n<p>and the class could be singleton.</p>\n</blockquote>\n<p>A stateless class does IMHO not need to be a singleton, it could be instantiated when required.</p>",
+        "id": 297418187,
+        "sender_full_name": "Alec Leamas",
+        "timestamp": 1662475758
+    },
+    {
+        "content": "<blockquote>\n<p>A stateless class does IMHO not need to be a singleton,</p>\n</blockquote>\n<p>Actually, a stateless class is not really required, we could use free functions instead to simplify.</p>",
+        "id": 297419054,
+        "sender_full_name": "Alec Leamas",
+        "timestamp": 1662475991
+    },
+    {
+        "content": "<p>I have never seen, in all the VDR recording I have stored, a multipart AIVDO.<br>\nIf we assume that AIVDO is only single part, and add an ASSERT to verify, then Beta testing might surface a case.<br>\nWithout state requirement, then DecodeSingleVDO() could be a simple function in comm_decoder.</p>\n<p>More:  DecodeSingleVDO() can be significantly simplified, in any case.  <br>\nSo, if we keep it as a class, I can instantiate as needed in comm_bridge, on the stack.  No need for persistent global.<br>\nOr we move it to comm_decoder as simple function.</p>\n<p>Should the function be moved to comm_decoder?  How does this affect testing?</p>",
+        "id": 297432475,
+        "sender_full_name": "Dave Register",
+        "timestamp": 1662479160
+    },
+    {
+        "content": "<blockquote>\n<p>Should the function be moved to comm_decoder? How does this affect testing?</p>\n</blockquote>\n<p>It actually works anyway, AIS_Decoder is part of the testing scenario.  That said, I think i makes sense to make a difference between  the stateful AIS_decoder and  stateless underpinnings like this function -- it's basically sort of ais_utils or so. Personally, I like small, well defined interfaces and ais_msg_decoder has this (the class should be dropped, or the functions should be static). So I still prefer a separate file like in comm-ais.</p>\n<p>Having it in comm_decoder would  IMHO expand that interface in a unlucky way.  Adding functions this way is how well-defined stuff rottens.</p>",
+        "id": 297437474,
+        "sender_full_name": "Alec Leamas",
+        "timestamp": 1662480643
+    },
+    {
+        "content": "<p>OK, I'll make a comm-ais pair, with static (or classless) interface, in comm branch.</p>",
+        "id": 297455274,
+        "sender_full_name": "Dave Register",
+        "timestamp": 1662486360
+    },
+    {
+        "content": "<p>correction:  comm_ais.h/cpp</p>",
+        "id": 297457838,
+        "sender_full_name": "Dave Register",
+        "timestamp": 1662487138
+    },
+    {
+        "content": "<p><span class=\"user-mention silent\" data-user-id=\"517002\">Dave Register</span> <a href=\"#narrow/stream/332168-comms/topic/AIS.20Decoder/near/297400638\">said</a>:</p>\n<blockquote>\n<p><span class=\"user-mention silent\" data-user-id=\"399510\">Alec Leamas</span>  <br>\n I am working to convince myself that AIVDO is always a single-part message, only one fragment.  If that is so, then the DecodeSingleVDO() method could be static, and the class could be singleton.<br>\nMore:  If AIVDO is multipart, the additional information is not used by O core in any way.  So, safe to ignore AIVDO if multipart?</p>\n<p>Thoughts?</p>\n</blockquote>\n<p>I'm not sure I understand the discussion but AIVDO is possible to use in the MMSI properties function:<br>\n<a href=\"/user_uploads/33951/3LuXt-HVclv2zj_fxSDXplXh/bild.png\">bild.png</a></p>\n<div class=\"message_inline_image\"><a href=\"/user_uploads/33951/3LuXt-HVclv2zj_fxSDXplXh/bild.png\" title=\"bild.png\"><img src=\"/user_uploads/33951/3LuXt-HVclv2zj_fxSDXplXh/bild.png\"></a></div>",
+        "id": 297463257,
+        "sender_full_name": "Håkan Svensson",
+        "timestamp": 1662488940
+    },
+    {
+        "content": "<p>Hakan...<br>\nWe are working on plumbing to simplify the class structure, allowing for better testability.  Essentially, we want to be able to decode AIVDO in a cli (non-GUI) environment.  This change will allow us to do that.<br>\nI think the point you raise will be OK, but will test.</p>",
+        "id": 297465469,
+        "sender_full_name": "Dave Register",
+        "timestamp": 1662489805
+    },
+    {
+        "content": "<p>And comm_ais done, smoke tested, and pushed.<br>\nAlec, you probably want to review CMakeLists.txt, especially \"UNITTEST_SRC\"</p>",
+        "id": 297465777,
+        "sender_full_name": "Dave Register",
+        "timestamp": 1662489909
+    },
+    {
+        "content": "<p>By the way, the VDR plugin is now connected to the NavMsgBus, so it works.</p>",
+        "id": 297467110,
+        "sender_full_name": "Dave Register",
+        "timestamp": 1662490425
+    },
+    {
+        "content": "<p>Hm...  AIS test still fails. The global target list g_pAIS is empty after processing one  AIVDO message.</p>\n<p>Looking at the code in CommBridge::HandleN0183_AIVDO I'm a little confused. As I understand it, an AIVDO message is data about an AIS target. However, it seems that this data is used  to update the global \"own ship\" items like gLat, gLon, etc.</p>\n<p>What am I missing?</p>",
+        "id": 297567197,
+        "sender_full_name": "Alec Leamas",
+        "timestamp": 1662549162
+    },
+    {
+        "content": "<p>AIVDO is a message generated by an AIS transponder to be used locally.  It is effectively a position report for \"ownship\" as generated by the transponder's internal GPS receiver.  I always  remember that the \"O\" in AIVDO stands for \"ownship\".  AIVDM is a message describing a remote target.</p>",
+        "id": 297588200,
+        "sender_full_name": "Dave Register",
+        "timestamp": 1662556953
+    },
+    {
+        "content": "<p>Right, my bad.  So the test should be fixed, will do. Next step would be to add a test for AIVDM which doesn't seem to be implemented.</p>",
+        "id": 297599587,
+        "sender_full_name": "Alec Leamas",
+        "timestamp": 1662559860
+    },
+    {
+        "content": "<p>BTW: thanks!</p>",
+        "id": 297599622,
+        "sender_full_name": "Alec Leamas",
+        "timestamp": 1662559872
+    },
+    {
+        "content": "<p>We do not need AIVDM in core OCPN basic nav info.  Could it be a GUI feature, only?  All we do with targets is show/query on GUI interface.</p>",
+        "id": 297604009,
+        "sender_full_name": "Dave Register",
+        "timestamp": 1662561384
+    },
+    {
+        "content": "<p>Basically, the comm part updates g_pAIS, right? I could look at it, using the alternative approach we have discussed, just to see where it takes us?</p>",
+        "id": 297604891,
+        "sender_full_name": "Alec Leamas",
+        "timestamp": 1662561712
+    },
+    {
+        "content": "<p>\"Decode and handle AIVDM\"<br>\nCan you not send an AIVDM message to AIS_Decoder, and get a target in the global target list?</p>",
+        "id": 297650386,
+        "sender_full_name": "Dave Register",
+        "timestamp": 1662575672
+    },
+    {
+        "content": "<p>Let me  try some paths tomorrow, I need to tinker with the code and think.</p>",
+        "id": 297650824,
+        "sender_full_name": "Alec Leamas",
+        "timestamp": 1662575827
+    },
+    {
+        "content": "<p><span class=\"user-mention\" data-user-id=\"399510\">@Alec Leamas</span> <br>\nNow we come to AIS targets received by n2k.  No N0183 AIVDM. The decode is quite simple, we have it available in the n2k decoder library.<br>\nquestions are:  Where to decode? And how to inject the decoded target data into the global target list?<br>\nMy thoughts, as you might expect: listen in comm_bridge for n2k message from driver.  Decode there. Define some sort of AIS target message, notify on it, and have AIS_decoder listen for it.  Something like BasicNavMsg.<br>\nOther ideas?  And would this be testable?</p>\n<p>I do not have n2k AIS receiver.  But Hakan is going to borrow one to capture some logs.</p>",
+        "id": 298195201,
+        "sender_full_name": "Dave Register",
+        "timestamp": 1662862310
+    },
+    {
+        "content": "<p>hm... yes. Building on what we have it seems reasonable. </p>\n<p>I'm heading to refactor ais_decoder::Decode, but this is a very bumpy road before I get here, if ever. Obviosly, it does two things: Decodes the message, and updates the global state. GIven that the global state should be the same after receiving via N2K or N0183  the lastpart should be a common thing, broken out from monstrous Decode() function.</p>\n<p>I have had the same idea: An AppMsg reflecting AIS target info. But to be consistent, this should be sent also when receiving via N0183.  We should really have:</p>\n<p>drivers (0183, N2k)  -&gt; Decode(0183, N2k) -&gt; Update state(common part). </p>\n<p>But this means indeed refactoring current ais_decoder into two parts. It would also mean that the N2k decoding takes part in some separate lib, but this is of course a simple fact anyway.</p>\n<p>AisDecoder is testable, so it should be fine from that POV. I just cannot fathom there are GUI deps in the N2k library...</p>",
+        "id": 298232455,
+        "sender_full_name": "Alec Leamas",
+        "timestamp": 1662892065
+    },
+    {
+        "content": "<p>Sidenote: comm_bridge is perhaps, and should be kept as,  handling own ship data only. If so, it might make sense to rename it (own_ship_decoder?). Names matters.</p>\n<p>The exception is the priority stuff, but this could definitely be split out.</p>",
+        "id": 298244572,
+        "sender_full_name": "Alec Leamas",
+        "timestamp": 1662899302
+    },
+    {
+        "content": "<p>I took a read through ais_decoder::Decode().  Does not look awful to me (relatively speaking), should be possible to adapt to n2k interface.  Of of course, Decode() definitely needs refactor, making smaller functional methods instead of a giant embedded switch-type thing.<br>\nAnyway, I'll take a crack at adapting to common interface method, so I can proceed with n2k AIS work.</p>",
+        "id": 298256406,
+        "sender_full_name": "Dave Register",
+        "timestamp": 1662906156
+    },
+    {
+        "content": "<blockquote>\n<p>Of of course, Decode() definitely needs refactor, m</p>\n</blockquote>\n<p>Indeed, that's the awful part. Just too long.</p>",
+        "id": 298257916,
+        "sender_full_name": "Alec Leamas",
+        "timestamp": 1662907075
+    },
+    {
+        "content": "<p>I took a shot at n2k AIS processing.<br>\nPlease have a look, and see if you agree with my approach.  If so, I will continue with more messages.</p>",
+        "id": 298404100,
+        "sender_full_name": "Dave Register",
+        "timestamp": 1662996421
+    },
+    {
+        "content": "<p>I split out the \"updates the global state\" part into a common method called \"CommitAISTarget()\".  Gets called by both n2k and n0183 decoders.</p>",
+        "id": 298405896,
+        "sender_full_name": "Dave Register",
+        "timestamp": 1662996905
+    },
+    {
+        "content": "<p>NO time right now,  will try tomorrow.</p>",
+        "id": 298434962,
+        "sender_full_name": "Alec Leamas",
+        "timestamp": 1663005930
+    },
+    {
+        "content": "<p>Dave..<br>\nFor info: Using my TCP or SignalK server; No Atons shown after last commit.</p>",
+        "id": 298500149,
+        "sender_full_name": "Håkan Svensson",
+        "timestamp": 1663030232
+    },
+    {
+        "content": "<p>Class A targets only, to start.</p>",
+        "id": 298502223,
+        "sender_full_name": "Dave Register",
+        "timestamp": 1663032269
+    },
+    {
+        "content": "<p>OK, but since class B is shown for N0183 TCP and SK I thought the class A comment was for coming N2K only.</p>",
+        "id": 298516286,
+        "sender_full_name": "Håkan Svensson",
+        "timestamp": 1663047313
+    },
+    {
+        "content": "<p>OK, I misread your comment (too fast).  I will check on TCP feed.  This is known to have ATONS reported by AIS?</p>",
+        "id": 298581121,
+        "sender_full_name": "Dave Register",
+        "timestamp": 1663074713
+    },
+    {
+        "content": "<p>Yes there are several. (And the server is now up again if you tried)<br>\nStrange, my RPi using today's code does show Atons.<br>\nMy Win O though won't fully start for the moment. It hangs after having received AIS from the TCP server. The ship icon is positioned and heading predictor arrow is there but ship symbol is still grey and GNSS icon is red. Cursor is all time \"busy\". I'll rebuild from scratch and try again.</p>",
+        "id": 298585384,
+        "sender_full_name": "Håkan Svensson",
+        "timestamp": 1663076113
+    },
+    {
+        "content": "<p>On linux, your TCP feed, I see at least one ATON,  \"Klaveskar SW\", off Goeteborg.</p>",
+        "id": 298588599,
+        "sender_full_name": "Dave Register",
+        "timestamp": 1663077068
+    },
+    {
+        "content": "<p>Yes, RPi is fine.<br>\nOn Win all is normal when using serial N0183 via YDNU-02 and N2k.<br>\nOnce switching to network TCP or SignalK O is irresponsible/extremely slow. <br>\nStarting up with TCP the log \"hangs\" here:</p>\n<blockquote>\n<p>15:38:01.291 MESSAGE ocpn_frame.cpp:5031 OnInitTimer...3<br>\n15:38:40.658 MESSAGE ocpn_frame.cpp:5031 OnInitTimer...4</p>\n</blockquote>\n<p>???  Don't understand and neither where to debug.</p>",
+        "id": 298592577,
+        "sender_full_name": "Håkan Svensson",
+        "timestamp": 1663077831
+    },
+    {
+        "content": "<p>Hmm. Saw some background messages in VS looking for Win symbol dll's. Never seen before. I may rebuilt from scratch.</p>",
+        "id": 298593653,
+        "sender_full_name": "Håkan Svensson",
+        "timestamp": 1663078145
+    },
+    {
+        "content": "<p>Forget my complains about slow Win. My bad. My test OCPN on the server was stressing SK to send close to 5000 deltas/sec. OCPN is forgiven trying to swallow that. Sorry to disturb you. <br>\nAnd now Atons are there on Win as well. I'll try not being so eager reporting? Phuu..</p>",
+        "id": 298606125,
+        "sender_full_name": "Håkan Svensson",
+        "timestamp": 1663081535
+    },
+    {
+        "content": "<p>Also Class A own ship detection is working. Had the opportunity to test a A transceiver.  TOD:task list cleared.<br>\nA Class A candump uploaded to  N2K recording. Unfortunately not meny targets received. I'm located in a dip with mountains around.</p>",
+        "id": 302646100,
+        "sender_full_name": "Håkan Svensson",
+        "timestamp": 1665061202
+    }
+]

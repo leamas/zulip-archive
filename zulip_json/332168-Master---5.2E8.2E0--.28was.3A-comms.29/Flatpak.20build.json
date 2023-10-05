@@ -1,0 +1,242 @@
+[
+    {
+        "content": "<p><span class=\"user-mention\" data-user-id=\"517002\">@Dave Register</span>   I have made a Flatpak build from V5.1.518_Beta.  Added two, build-related patches. When I start, the chart window is black. Both menus are ok as are for example the preferences dialog. But no chart.</p>\n<p>Any hints?</p>",
+        "id": 310606758,
+        "sender_full_name": "Alec Leamas",
+        "timestamp": 1668690800
+    },
+    {
+        "content": "<p>BTW: google mail is down, so I don't get any emails at the moment.</p>",
+        "id": 310607025,
+        "sender_full_name": "Alec Leamas",
+        "timestamp": 1668690885
+    },
+    {
+        "content": "<p>It's an OpenGL issue, almost sure. Running with -safe_mode all looks normal. </p>\n<p>I did add an OpenGL-related patch to make it build below. It cannot be this, can it? It produces a sleeve of warnings like</p>\n<div class=\"codehilite\"><pre><span></span><code>In file included from /run/build/opencpn/src/glChartCanvas.cpp:220:\n/run/build/opencpn/include/GL/gl_private.h:451: warning: &quot;GLU_BEGIN&quot; redefined\n  451 | #define GLU_BEGIN                          GLU_TESS_BEGIN\n</code></pre></div>\n<p>Patch (FTBFS without it): </p>\n<div class=\"codehilite\"><pre><span></span><code>diff --git a/src/glChartCanvas.cpp b/src/glChartCanvas.cpp\nindex c9e4509eb..113ba1eb7 100644\n--- a/src/glChartCanvas.cpp\n+++ b/src/glChartCanvas.cpp\n@@ -37,6 +37,8 @@\n #include &lt;stdint.h&gt;\n #include &lt;vector&gt;\n\n+#include &lt;GL/gl_private.h&gt;  // this is a cut-down version of gl.h\n+\n #include &lt;wx/arrimpl.cpp&gt;\n #include &lt;wx/brush.h&gt;\n #include &lt;wx/colour.h&gt;\n</code></pre></div>",
+        "id": 310610759,
+        "sender_full_name": "Alec Leamas",
+        "timestamp": 1668692225
+    },
+    {
+        "content": "<p>hm... I might have found something. This is a about  <code>glXGetProcAddress()</code> which is not available in <em>GL/gl.h</em>. It is in our bundled <em>gl_private.h</em>, but... using the header snippet from gl_private.h it compiles but does not link. That is <code>glXGetProcAddress</code> is not available in the sandbox.</p>\n<p>Leads me to  <a href=\"https://dri.freedesktop.org/wiki/glXGetProcAddressNeverReturnsNULL/\">https://dri.freedesktop.org/wiki/glXGetProcAddressNeverReturnsNULL/</a> which is basically states that this is not unexpected. The rest is far above my paygrade.</p>",
+        "id": 310614292,
+        "sender_full_name": "Alec Leamas",
+        "timestamp": 1668693472
+    },
+    {
+        "content": "<p>I'm a bit confused. V5.1.518_Beta?  Why this version?</p>",
+        "id": 310626593,
+        "sender_full_name": "Dave Register",
+        "timestamp": 1668697328
+    },
+    {
+        "content": "<p>Better suggestion?</p>",
+        "id": 310642688,
+        "sender_full_name": "Alec Leamas",
+        "timestamp": 1668701289
+    },
+    {
+        "content": "<p>Sorry... What is the tag to use?</p>",
+        "id": 310642842,
+        "sender_full_name": "Alec Leamas",
+        "timestamp": 1668701329
+    },
+    {
+        "content": "<p>Why not build from master (HEAD)?</p>",
+        "id": 310644852,
+        "sender_full_name": "Dave Register",
+        "timestamp": 1668701892
+    },
+    {
+        "content": "<p>Not reproducible, wont work. We need a tag, or a commit. What have you used for the last alpha?</p>",
+        "id": 310649601,
+        "sender_full_name": "Alec Leamas",
+        "timestamp": 1668703258
+    },
+    {
+        "content": "<p>Have not been using tags  Probably should start.  But we can get commit from Cloudsmith file names..<br>\nAlpha Test #2 was at commit:<br>\nfe9f86768c9c1172175818c4f582c556bdb7c3a4<br>\nUseful?</p>",
+        "id": 310708488,
+        "sender_full_name": "Dave Register",
+        "timestamp": 1668722958
+    },
+    {
+        "content": "<p>We need tags next time...</p>\n<p>Anyway, I have built from 022feb2ef7.  No patch needed to build, but the result is basically the same. That is , the chart canvas is blue-grey, no charts displayed. All menus looks ok. And everything looks good when using -safe_mode.</p>\n<p>I have pushed what I have to a branch <em>tmp</em> on <a href=\"https://github.com/flathub.org.openpcn.OpenCPN\">https://github.com/flathub.org.openpcn.OpenCPN</a>. You can fetch that branch and then build and install locally as described in MAINTENANCE.md. If possible. would need some help here...</p>\n<p>BTW: They have changed the workflow for pushing changes to master and beta. Will update docs later.</p>",
+        "id": 310724253,
+        "sender_full_name": "Alec Leamas",
+        "timestamp": 1668729554
+    },
+    {
+        "content": "<p><span class=\"user-mention\" data-user-id=\"518981\">@Github Bot</span>  #022feb2ef7</p>",
+        "id": 310724504,
+        "sender_full_name": "Alec Leamas",
+        "timestamp": 1668729612
+    },
+    {
+        "content": "<p>** author: dsr at 2022-11-17T04:14:18Z<br>\nDefine plugin API for comm driver access. #2<br>\n<a href=\"https://github.com/OpenCPN/OpenCPN/commit/022feb2ef7\">https://github.com/OpenCPN/OpenCPN/commit/022feb2ef7</a></p>",
+        "id": 310724506,
+        "sender_full_name": "Github Bot",
+        "timestamp": 1668729612
+    },
+    {
+        "content": "<p>Flatpak.<br>\nI followed the MAINTENANCE.md instructions, built locally. All seemed to build nicely. However, on run, I get an X11 fault.  Probably because I am still on Bionic (i know, I know, but there is never a good time...).</p>",
+        "id": 310744355,
+        "sender_full_name": "Dave Register",
+        "timestamp": 1668743874
+    },
+    {
+        "content": "<p>I'll try the same on virtual focal.  But VBox OpenGL is not good, so this may not be productive.</p>",
+        "id": 310744780,
+        "sender_full_name": "Dave Register",
+        "timestamp": 1668744192
+    },
+    {
+        "content": "<p>Perhaps we just see the see different symptoms from the same basic problem. Suspicious  about <code>glXGetProcAddress</code>, see above.</p>",
+        "id": 310764713,
+        "sender_full_name": "Alec Leamas",
+        "timestamp": 1668758045
+    },
+    {
+        "content": "<p>More data points: On virtual (Vbox) Jammy, all looks OK. </p>\n<p>Building on jammy was a bit painful, had to rebuild otherwise uninstallable flatpak official packages (!) and also modify the glu manifest section. But it is built from the same sources, both packages and glu.</p>\n<p>Are we  using some corner-case OpenGL function which works on some platforms and not on others?</p>",
+        "id": 310775075,
+        "sender_full_name": "Alec Leamas",
+        "timestamp": 1668762604
+    },
+    {
+        "content": "<p>Yet another data point: I switched graphics driver on my native Fedora box, from the open-source Nouveu to the closed-source Nvidia driver. In this configuration, once again all  looks ok.</p>",
+        "id": 310780653,
+        "sender_full_name": "Alec Leamas",
+        "timestamp": 1668764686
+    },
+    {
+        "content": "<p>I will  merge the build to the flathub beta branch. It is needed for the plugin build chains, and we have no official promises for it at this point. </p>\n<p>We still need to sort out this issue though, many uses nvidia cards and many of those are using nouveau.</p>",
+        "id": 310781132,
+        "sender_full_name": "Alec Leamas",
+        "timestamp": 1668764878
+    },
+    {
+        "content": "<p>Done. Testing can now be done from the beta branch: <a href=\"https://discourse.flathub.org/t/how-to-use-flathub-beta/2111\">https://discourse.flathub.org/t/how-to-use-flathub-beta/2111</a></p>",
+        "id": 310784483,
+        "sender_full_name": "Alec Leamas",
+        "timestamp": 1668766022
+    },
+    {
+        "content": "<p>Tested flatpak build of OCPN on fresh Jammy machine.  Looks fine.</p>",
+        "id": 310850102,
+        "sender_full_name": "Dave Register",
+        "timestamp": 1668786233
+    },
+    {
+        "content": "<p>Have we concluded that there is an issue with Nouveu OpenGL drivers?  Or still a working theory?</p>",
+        "id": 310850431,
+        "sender_full_name": "Dave Register",
+        "timestamp": 1668786311
+    },
+    {
+        "content": "<p>My theory, FWIW, is that we are doing something which is outside the OpenGL specs,  something which works on some drivers and does not work on others. \"others\" including nouveau and your Flatpak/bionic combo.</p>",
+        "id": 310863408,
+        "sender_full_name": "Alec Leamas",
+        "timestamp": 1668789814
+    },
+    {
+        "content": "<p>My gut feeling basically based on link from above: <a href=\"https://dri.freedesktop.org/wiki/glXGetProcAddressNeverReturnsNULL/\">https://dri.freedesktop.org/wiki/glXGetProcAddressNeverReturnsNULL/</a></p>",
+        "id": 310863787,
+        "sender_full_name": "Alec Leamas",
+        "timestamp": 1668789930
+    },
+    {
+        "content": "<p>Flatpak:<br>\nAfter fiddling with local install on may machine, I cannot install the test version you build.  How to reset flatpak repo?</p>",
+        "id": 310915281,
+        "sender_full_name": "Dave Register",
+        "timestamp": 1668803440
+    },
+    {
+        "content": "<p>Now I think OCPN Flatpak never did work right on Bionic.  Still does not work from latest Beta build, on this machine.<br>\nglXGetProcAddress:<br>\nIf one uses glew (as we do on O58), then glew handles all this ProcAddr stuff quietly.  AFAIK, O58  does not ever call glXGetProcAddress directly from our source , except in GRIB plugin. That needs a  FIXME. Seems unlikely that nouveau does not play nice with glew.<br>\nCan you run OCPN 5.7.1 natively with nouveau, i.e. not flatpaked?</p>",
+        "id": 310922974,
+        "sender_full_name": "Dave Register",
+        "timestamp": 1668806318
+    },
+    {
+        "content": "<blockquote>\n<p>Can you run OCPN 5.7.1 natively with nouveau, i.e. not flatpaked?</p>\n</blockquote>\n<p>That's something I should have tried for myself... No, same/similar problem: in this case black window + totally frozen, no menus. Must  be killed. Same situation after rebuilding tag Release_5.6.2.</p>\n<p>It was a good coincidence I ran without the nvidia driver for  a while after an update. Still, it's strange we haven't got any reports on this if it was the case for all nouveau  installations. I now tend to think that this might be a corner case, a combination of a  somewhat old graphics card and the driver. </p>\n<p>Since this is nothing new, we could perhaps leave it aside for now. If it was not a problem in 5.6.2 it is perhaps not in 5.8 either. Or?</p>\n<p>Re-installing nvidia driver and rebooting</p>",
+        "id": 310936514,
+        "sender_full_name": "Alec Leamas",
+        "timestamp": 1668811802
+    },
+    {
+        "content": "<p>...back, and all is ok.</p>",
+        "id": 310937252,
+        "sender_full_name": "Alec Leamas",
+        "timestamp": 1668812134
+    },
+    {
+        "content": "<p>Well, I have AMD/Radeon card, so no help here.  Let;s leave it aside for now.</p>",
+        "id": 310946536,
+        "sender_full_name": "Dave Register",
+        "timestamp": 1668817249
+    },
+    {
+        "content": "<p><span class=\"user-mention\" data-user-id=\"399510\">@Alec Leamas</span> Have you seen something like <a href=\"https://app.circleci.com/pipelines/github/nohal/nsk_pi/2/workflows/b95d9315-c773-4dfa-8ff1-78224dcd00da/jobs/18?invite=true#step-103-812\">https://app.circleci.com/pipelines/github/nohal/nsk_pi/2/workflows/b95d9315-c773-4dfa-8ff1-78224dcd00da/jobs/18?invite=true#step-103-812</a> before? Just asking before I actually start to try to understand how the flatpak build works...</p>",
+        "id": 316388934,
+        "sender_full_name": "Pavel Kalian",
+        "timestamp": 1671239979
+    },
+    {
+        "content": "<p><span class=\"user-mention\" data-user-id=\"399510\">@Alec Leamas</span> <br>\nOn RPI4/64/focal, here is what I see:</p>\n<div class=\"codehilite\"><pre><span></span><code>ubuntu@ubuntu:~$ flatpak remotes\nName         Options\nflathub      user\nflathub-beta user\nubuntu@ubuntu:~$ flatpak uninstall --user org.opencpn.OpenCPN//stable \nerror: org.opencpn.OpenCPN/*unspecified*/stable not installed\nubuntu@ubuntu:~$ flatpak install --user flathub org.opencpn.OpenCPN//stable \nLooking for matches…\nerror: Nothing matches org.opencpn.OpenCPN in remote flathub\nubuntu@ubuntu:~$\n</code></pre></div>\n\n<p>??</p>",
+        "id": 324998923,
+        "sender_full_name": "Dave Register",
+        "timestamp": 1675193593
+    },
+    {
+        "content": "<p>WTF...  what architecture are you on? aarch64?</p>",
+        "id": 324999313,
+        "sender_full_name": "Alec Leamas",
+        "timestamp": 1675193723
+    },
+    {
+        "content": "<p>Yes, RPi4, aarch64<br>\nLinux ubuntu 5.4.0-1056-raspi <a href=\"https://github.com/opencpn/OpenCPN/issues/63\">#63</a>-Ubuntu SMP PREEMPT Mon Mar 14 07:48:06 UTC 2022 aarch64 aarch64 aarch64 GNU/Linux</p>",
+        "id": 325000701,
+        "sender_full_name": "Dave Register",
+        "timestamp": 1675194151
+    },
+    {
+        "content": "<p>We have  nothing on stable branch for aarch64, only  the beta stuff. My log on a raspbian64 machine:</p>\n<div class=\"codehilite\"><pre><span></span><code>  $ sudo apt install flatpak\n  $ flatpak remote-add --user --if-not-exists flathub-beta https://flathub.org/beta-repo/flathub-beta.flatpakrepo\n  $ flatpak install  --user flathub org.freedesktop.Platform/aarch64/22.08\n  $ flatpak install --user flathub-beta org.opencpn.OpenCPN//beta\n</code></pre></div>",
+        "id": 325001783,
+        "sender_full_name": "Alec Leamas",
+        "timestamp": 1675194537
+    },
+    {
+        "content": "<p>And starts just fine using <code>flatpak run org.opencpn.OpenCPN//beta</code>...</p>",
+        "id": 325002515,
+        "sender_full_name": "Alec Leamas",
+        "timestamp": 1675194777
+    },
+    {
+        "content": "<div class=\"codehilite\"><pre><span></span><code>ubuntu@ubuntu:~$ flatpak install  --user flathub org.freedesktop.Platform/aarch64/22.08\nLooking for matches…\nerror: Nothing matches org.freedesktop.Platform in remote flathub\n</code></pre></div>",
+        "id": 325004815,
+        "sender_full_name": "Dave Register",
+        "timestamp": 1675195451
+    },
+    {
+        "content": "<p>Seems I cannot access flathub at all?</p>",
+        "id": 325004884,
+        "sender_full_name": "Dave Register",
+        "timestamp": 1675195478
+    },
+    {
+        "content": "<p>Is your flathub repo ok? Same result after <code>flatpak remote-delete --user  flathub</code>+ <code>flatpak remote-add --user flathub https://flathub.org/repo/flathub.flatpakrepo</code>?</p>",
+        "id": 325009038,
+        "sender_full_name": "Alec Leamas",
+        "timestamp": 1675196816
+    },
+    {
+        "content": "<p><span class=\"user-mention\" data-user-id=\"517002\">@Dave Register</span> </p>\n<blockquote>\n<p>seems I cannot access flathub at all?</p>\n</blockquote>\n<p>Or is it our old friend <em>flatpak too old on ubuntu</em>? It was exactly these symptoms. In this case, fix by</p>\n<div class=\"codehilite\"><pre><span></span><code>   $ sudo add-apt-repository -y ppa:alexlarsson/flatpak\n   $ sudo apt update\n   $ sudo apt install flatpak\n</code></pre></div>",
+        "id": 325017959,
+        "sender_full_name": "Alec Leamas",
+        "timestamp": 1675199972
+    },
+    {
+        "content": "<p><span class=\"user-mention\" data-user-id=\"399510\">@Alec Leamas</span> <br>\nOh, of course.  our old friend.  alexlarsson ppa did the trick.<br>\nThanks</p>",
+        "id": 325054108,
+        "sender_full_name": "Dave Register",
+        "timestamp": 1675215812
+    }
+]

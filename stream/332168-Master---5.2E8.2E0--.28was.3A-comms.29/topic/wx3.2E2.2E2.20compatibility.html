@@ -1,0 +1,815 @@
+<html>
+<head><meta charset="utf-8"><title>wx3.2.2 compatibility · Master - 5.8.0  (was: comms) · Zulip Chat Archive</title></head>
+<h2>Stream: <a href="https://leamas.github.io/zulip-archive/stream/332168-Master---5.2E8.2E0--.28was.3A-comms.29/index.html">Master - 5.8.0  (was: comms)</a></h2>
+<h3>Topic: <a href="https://leamas.github.io/zulip-archive/stream/332168-Master---5.2E8.2E0--.28was.3A-comms.29/topic/wx3.2E2.2E2.20compatibility.html">wx3.2.2 compatibility</a></h3>
+
+<hr>
+
+<base href="https://opencpn.zulipchat.com">
+
+<head><link href="https://leamas.github.io/zulip-archive/style.css" rel="stylesheet"></head>
+
+<a name="347886784"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332168-Master%20-%205.8.0%20%20%28was%3A%20comms%29/topic/wx3.2.2%20compatibility/near/347886784" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Kees Verruijt <a href="https://leamas.github.io/zulip-archive/stream/332168-Master---5.2E8.2E0--.28was.3A-comms.29/topic/wx3.2E2.2E2.20compatibility.html#347886784">(Apr 08 2023 at 15:36)</a>:</h4>
+<p>We've just found out that when O is compiled with wx3.2.2 that plugins built with wx3.2.1 no longer work, at least <code>radar_pi</code> on Linux. See <a href="https://github.com/opencpn-radar-pi/radar_pi/issues/225">https://github.com/opencpn-radar-pi/radar_pi/issues/225</a></p>
+
+
+
+<a name="347887225"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332168-Master%20-%205.8.0%20%20%28was%3A%20comms%29/topic/wx3.2.2%20compatibility/near/347887225" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Kees Verruijt <a href="https://leamas.github.io/zulip-archive/stream/332168-Master---5.2E8.2E0--.28was.3A-comms.29/topic/wx3.2E2.2E2.20compatibility.html#347887225">(Apr 08 2023 at 15:40)</a>:</h4>
+<p><span class="user-mention" data-user-id="517002">@Dave Register</span> suggests going back to wx3.2.1 -- short term that is the easiest solution, but there are a number of fixes that might make sense to have. From the release notes for wx3.2.2:</p>
+<blockquote>
+<p>Better window resizing on DPI change in wxMSW.<br>
+Fix using native icons returned by wxArtProvider.<br>
+Fix menu items using custom font in high DPI.<br>
+High resolution icons support in wxGenericTreeCtrl and wxGenericListCtrl.</p>
+</blockquote>
+<p>Do we build with wx3.2.2 on Windows? Does the same problem happen there?</p>
+
+
+
+<a name="347887666"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332168-Master%20-%205.8.0%20%20%28was%3A%20comms%29/topic/wx3.2.2%20compatibility/near/347887666" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Pavel Kalian <a href="https://leamas.github.io/zulip-archive/stream/332168-Master---5.2E8.2E0--.28was.3A-comms.29/topic/wx3.2E2.2E2.20compatibility.html#347887666">(Apr 08 2023 at 15:43)</a>:</h4>
+<p>Yes, the least intrusive solution probably is to build the core app against 3.2.1, but I'm a bit affraid that we will get stuck with it then. AFAICT at the moment, there is no problem on any other platform.<br>
+What is interesting is that radar_pi is the only affected, although my plugins also link against the OpenGL libs and draw on the canvas, so the symbols should be there.</p>
+
+
+
+<a name="347887931"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332168-Master%20-%205.8.0%20%20%28was%3A%20comms%29/topic/wx3.2.2%20compatibility/near/347887931" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Kees Verruijt <a href="https://leamas.github.io/zulip-archive/stream/332168-Master---5.2E8.2E0--.28was.3A-comms.29/topic/wx3.2E2.2E2.20compatibility.html#347887931">(Apr 08 2023 at 15:45)</a>:</h4>
+<p>Checking macOS now. AFAICS that was already using wx3.2.2 for O, checking radar_pi plugin now.</p>
+
+
+
+<a name="347888475"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332168-Master%20-%205.8.0%20%20%28was%3A%20comms%29/topic/wx3.2.2%20compatibility/near/347888475" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Dave Register <a href="https://leamas.github.io/zulip-archive/stream/332168-Master---5.2E8.2E0--.28was.3A-comms.29/topic/wx3.2E2.2E2.20compatibility.html#347888475">(Apr 08 2023 at 15:49)</a>:</h4>
+<p>Windows and Mac bundle wx3.2.2  <br>
+We particularly needed: Fix menu items using custom font in high DPI.</p>
+
+
+
+<a name="347888638"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332168-Master%20-%205.8.0%20%20%28was%3A%20comms%29/topic/wx3.2.2%20compatibility/near/347888638" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Kees Verruijt <a href="https://leamas.github.io/zulip-archive/stream/332168-Master---5.2E8.2E0--.28was.3A-comms.29/topic/wx3.2E2.2E2.20compatibility.html#347888638">(Apr 08 2023 at 15:50)</a>:</h4>
+<p>MacOS seems fine. Both O and plugin have a dependency on <code>__ZNK12wxWindowBase15IsShownOnScreenEv</code>. Note how this is WindowBase, not GLCanvasEGL15.</p>
+
+
+
+<a name="347888652"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332168-Master%20-%205.8.0%20%20%28was%3A%20comms%29/topic/wx3.2.2%20compatibility/near/347888652" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Dave Register <a href="https://leamas.github.io/zulip-archive/stream/332168-Master---5.2E8.2E0--.28was.3A-comms.29/topic/wx3.2E2.2E2.20compatibility.html#347888652">(Apr 08 2023 at 15:50)</a>:</h4>
+<p><span class="user-mention" data-user-id="493038">@Kees Verruijt</span> <br>
+For info, if we build radar_pi against wx322 on linux, does this resolve the load problem?</p>
+
+
+
+<a name="347888767"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332168-Master%20-%205.8.0%20%20%28was%3A%20comms%29/topic/wx3.2.2%20compatibility/near/347888767" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Kees Verruijt <a href="https://leamas.github.io/zulip-archive/stream/332168-Master---5.2E8.2E0--.28was.3A-comms.29/topic/wx3.2E2.2E2.20compatibility.html#347888767">(Apr 08 2023 at 15:51)</a>:</h4>
+<p>I'll check that with a local build.</p>
+
+
+
+<a name="347889229"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332168-Master%20-%205.8.0%20%20%28was%3A%20comms%29/topic/wx3.2.2%20compatibility/near/347889229" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Dave Register <a href="https://leamas.github.io/zulip-archive/stream/332168-Master---5.2E8.2E0--.28was.3A-comms.29/topic/wx3.2E2.2E2.20compatibility.html#347889229">(Apr 08 2023 at 15:54)</a>:</h4>
+<p>Echoing Nohal, my o-charts_pi builds against wx321, and works OK.</p>
+
+
+
+<a name="347891358"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332168-Master%20-%205.8.0%20%20%28was%3A%20comms%29/topic/wx3.2.2%20compatibility/near/347891358" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Kees Verruijt <a href="https://leamas.github.io/zulip-archive/stream/332168-Master---5.2E8.2E0--.28was.3A-comms.29/topic/wx3.2E2.2E2.20compatibility.html#347891358">(Apr 08 2023 at 16:12)</a>:</h4>
+<p>Maybe if we build radar_pi against 3.2.2 it works against 3.2.1 as well.<br>
+I fear I started a local build of O that hasn't pulled in the proper wx version. A quick pointer to how the O build pulls in a particular wx version would be helpful. All I see in <code>ci/generic-build-debian.sh</code> is <code>sudo apt-get install -q devscripts equivs</code> and <code>if [[ "$EXTRA_BUILD_OPTS" == *OCPN_FORCE_GTK3=ON* ]]; then
+    sudo update-alternatives --set wx-config \
+        /usr/lib/*-linux-*/wx/config/gtk3-unicode-3.0
+fi</code></p>
+
+
+
+<a name="347891388"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332168-Master%20-%205.8.0%20%20%28was%3A%20comms%29/topic/wx3.2.2%20compatibility/near/347891388" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Pavel Kalian <a href="https://leamas.github.io/zulip-archive/stream/332168-Master---5.2E8.2E0--.28was.3A-comms.29/topic/wx3.2E2.2E2.20compatibility.html#347891388">(Apr 08 2023 at 16:12)</a>:</h4>
+<p>The ABI between the two wx packages sure changed - running the opencpn binary from <a href="https://launchpad.net/~opencpn/+archive/ubuntu/opencpn/+files/opencpn_5.7.5+325505d71~ubuntu22.04.1_amd64.deb">https://launchpad.net/~opencpn/+archive/ubuntu/opencpn/+files/opencpn_5.7.5+325505d71~ubuntu22.04.1_amd64.deb</a> on system with wx from <a href="https://launchpad.net/~bdbcat/+archive/ubuntu/opencpn/+sourcepub/14159268/+listing-archive-extra">https://launchpad.net/~bdbcat/+archive/ubuntu/opencpn/+sourcepub/14159268/+listing-archive-extra</a> results in exactly the same missing symbol as reported for radar_pi.</p>
+
+
+
+<a name="347892073"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332168-Master%20-%205.8.0%20%20%28was%3A%20comms%29/topic/wx3.2.2%20compatibility/near/347892073" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Dave Register <a href="https://leamas.github.io/zulip-archive/stream/332168-Master---5.2E8.2E0--.28was.3A-comms.29/topic/wx3.2E2.2E2.20compatibility.html#347892073">(Apr 08 2023 at 16:18)</a>:</h4>
+<p>FWIW, none of the reported "fixes" present in wx322 seem to affect us in any way on linux builds.  So this suggests the "safe" move is to revert to wx321 on PPA builds.<br>
+But I want to hear from <span class="user-mention" data-user-id="399510">@Alec Leamas</span>  before deciding, as relates to native debian builds.</p>
+
+
+
+<a name="347892538"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332168-Master%20-%205.8.0%20%20%28was%3A%20comms%29/topic/wx3.2.2%20compatibility/near/347892538" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Pavel Kalian <a href="https://leamas.github.io/zulip-archive/stream/332168-Master---5.2E8.2E0--.28was.3A-comms.29/topic/wx3.2E2.2E2.20compatibility.html#347892538">(Apr 08 2023 at 16:22)</a>:</h4>
+<p>Looking at the launchpad build logs, there is a difference in the 3.2.1 and 3.2.2 build, the later added <code>--disable-glcanvasegl</code> to <code>dh_auto_configure</code> parameters.</p>
+
+
+
+<a name="347897807"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332168-Master%20-%205.8.0%20%20%28was%3A%20comms%29/topic/wx3.2.2%20compatibility/near/347897807" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Dave Register <a href="https://leamas.github.io/zulip-archive/stream/332168-Master---5.2E8.2E0--.28was.3A-comms.29/topic/wx3.2E2.2E2.20compatibility.html#347897807">(Apr 08 2023 at 17:08)</a>:</h4>
+<p>More clue:<br>
+AFIK, radar_pi is the only plugin that constructs a private wxglCanvas (for PPI).</p>
+
+
+
+<a name="347909765"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332168-Master%20-%205.8.0%20%20%28was%3A%20comms%29/topic/wx3.2.2%20compatibility/near/347909765" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Kees Verruijt <a href="https://leamas.github.io/zulip-archive/stream/332168-Master---5.2E8.2E0--.28was.3A-comms.29/topic/wx3.2E2.2E2.20compatibility.html#347909765">(Apr 08 2023 at 19:16)</a>:</h4>
+<p>It looks as if the compatibility <em>does</em> work the other way. I installed a Bookworm and Sid debian VM and in Sid there is an O 5.6.2 package (maintained by Alec) built against wxWidgets 3.2.2 and this installs the beta radar_pi plugin built against 3.2.1 just fine.</p>
+
+
+
+<a name="347912051"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332168-Master%20-%205.8.0%20%20%28was%3A%20comms%29/topic/wx3.2.2%20compatibility/near/347912051" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Kees Verruijt <a href="https://leamas.github.io/zulip-archive/stream/332168-Master---5.2E8.2E0--.28was.3A-comms.29/topic/wx3.2E2.2E2.20compatibility.html#347912051">(Apr 08 2023 at 19:45)</a>:</h4>
+<p>And yes, if I use a plugin built against 3.2.2 (on Debian Sid) this works against Dave's 5.7.5 Ubuntu PPN build. The external symbols required are:</p>
+<div class="codehilite"><pre><span></span><code>    $ nm libradar_pi.so | grep IsShownOnScreen
+                 U _ZNK12wxWindowBase15IsShownOnScreenEv@WXU_3.2
+                 U _ZNK13wxGLCanvasX1115IsShownOnScreenEv@WXU_3.2
+</code></pre></div>
+
+
+
+<a name="347912485"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332168-Master%20-%205.8.0%20%20%28was%3A%20comms%29/topic/wx3.2.2%20compatibility/near/347912485" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Kees Verruijt <a href="https://leamas.github.io/zulip-archive/stream/332168-Master---5.2E8.2E0--.28was.3A-comms.29/topic/wx3.2E2.2E2.20compatibility.html#347912485">(Apr 08 2023 at 19:51)</a>:</h4>
+<p>Maybe, just maybe, this means that there is something we can do on the plugin side so it is compatible with both 3.2.1 and 3.2.2. Longer term this might be needed anyway on Debian: if Debian Sid uses 3.2.2 and older versions use 3.2.1 then we are up shit creek as the catalog system doesn't make a difference between the two. Unless we change that.</p>
+
+
+
+<a name="347918701"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332168-Master%20-%205.8.0%20%20%28was%3A%20comms%29/topic/wx3.2.2%20compatibility/near/347918701" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Kees Verruijt <a href="https://leamas.github.io/zulip-archive/stream/332168-Master---5.2E8.2E0--.28was.3A-comms.29/topic/wx3.2E2.2E2.20compatibility.html#347918701">(Apr 08 2023 at 21:11)</a>:</h4>
+<p><span class="user-mention" data-user-id="573239">@Pavel Kalian</span> was right: the problem is EGL vs GLX. The default compilation path for wx is to use EGL, as that is "the future of OpenGL" (<a href="https://wiki.archlinux.org/title/User:CodingKoopa/Direct_Rendering_Infrastructure">https://wiki.archlinux.org/title/User:CodingKoopa/Direct_Rendering_Infrastructure</a> and <a href="https://www.reddit.com/r/opengl/comments/11q0oz/what_is_the_difference_between_eglglxogl_and_gles/">https://www.reddit.com/r/opengl/comments/11q0oz/what_is_the_difference_between_eglglxogl_and_gles/</a> ).</p>
+<p>Debian has chosen to go with GLX instead of EGL for wx 3.2.2: <a href="https://bugs.debian.org/cgi-bin/bugreport.cgi?bug=1024147">https://bugs.debian.org/cgi-bin/bugreport.cgi?bug=1024147</a></p>
+<p>So we are now in a bad place whatever way we go:</p>
+<ul>
+<li>the wx 3.2.2 libraries that come with Debian Sid are compiled with <code>--disable-glcanvasegl</code>. Indeed if I compile the plugin on Sid I get a dependency on <code>_ZNK13wxGLCanvasX1115IsShownOnScreenEv@WXU_3.2</code>. Not sure where <span class="user-mention" data-user-id="517002">@Dave Register</span>  got his wx 3.2.2 for Ubuntu 22.04, but according to the changelog for Ubuntu they just pull Debian: <a href="http://changelogs.ubuntu.com/changelogs/pool/universe/w/wxwidgets3.2/wxwidgets3.2_3.2.2+dfsg-2build1/changelog">http://changelogs.ubuntu.com/changelogs/pool/universe/w/wxwidgets3.2/wxwidgets3.2_3.2.2+dfsg-2build1/changelog</a> </li>
+<li>the wx 3.2.1 libraries compiled by Alec that most plugins are compiled agains _do_ use EGL (because he probably used the default compiler flags...)</li>
+</ul>
+<p>So ... if we want to stand a chance of supporting O and radar_pi in the O 5.8 timeframe on Debian/Ubuntu, we need to recompile the plugin to use <code>--disable-glcanvasegl</code> (and keep the O production PPA as it is.)</p>
+<p>In other words, in my opinion, the O "production" PPA is correct and we need to fix the plugins to use <code>--disable-glcanvasegl</code> as well.</p>
+
+
+
+<a name="347938190"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332168-Master%20-%205.8.0%20%20%28was%3A%20comms%29/topic/wx3.2.2%20compatibility/near/347938190" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Dave Register <a href="https://leamas.github.io/zulip-archive/stream/332168-Master---5.2E8.2E0--.28was.3A-comms.29/topic/wx3.2E2.2E2.20compatibility.html#347938190">(Apr 09 2023 at 01:01)</a>:</h4>
+<p>Info...<br>
+The wx322 build on OCPN Production PPA is a simple copy from <span class="user-mention" data-user-id="399510">@Alec Leamas</span>  PPA.  I know he recently rebuilt (two days ago), but not sure of the build configuration used.<br>
+The thought process was: "Let's use the most recent upstreams of wx32 for OCPN production, since we are assured of ABI compatibility between wx321 and 322."<br>
+Ouch....</p>
+
+
+
+<a name="347942152"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332168-Master%20-%205.8.0%20%20%28was%3A%20comms%29/topic/wx3.2.2%20compatibility/near/347942152" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Dave Register <a href="https://leamas.github.io/zulip-archive/stream/332168-Master---5.2E8.2E0--.28was.3A-comms.29/topic/wx3.2E2.2E2.20compatibility.html#347942152">(Apr 09 2023 at 01:51)</a>:</h4>
+<p>Kees...<br>
+I think you are on the right track.  If we rebuilt radar_pi for wx322 with --disable-glcanvasegl, and OCPN production is built against the same wx322, then we would be OK on ubuntu 22.04, and Sid.  I think that this will be only two configs in the plugin matrix (Jammy and Debian 12), so not terribly intrusive.  Some conditionals in the plugin template, I guess...<br>
+AFAICT, no other plugins are affected, since none other than radar_pi create a private glCanvas, where the EGL stuff is hit.<br>
+Could we try that?</p>
+
+
+
+<a name="347949714"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332168-Master%20-%205.8.0%20%20%28was%3A%20comms%29/topic/wx3.2.2%20compatibility/near/347949714" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Pavel Kalian <a href="https://leamas.github.io/zulip-archive/stream/332168-Master---5.2E8.2E0--.28was.3A-comms.29/topic/wx3.2E2.2E2.20compatibility.html#347949714">(Apr 09 2023 at 03:37)</a>:</h4>
+<p>To rebuild the plugins against the 3.2.2 ABI libs the easiest solution would be to upload the 3.2.2 debs to Alec's cloudsmith repo, then all that's needed is changing one line in the CI scripts for the plugins.</p>
+
+
+
+<a name="347965626"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332168-Master%20-%205.8.0%20%20%28was%3A%20comms%29/topic/wx3.2.2%20compatibility/near/347965626" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Alec Leamas <a href="https://leamas.github.io/zulip-archive/stream/332168-Master---5.2E8.2E0--.28was.3A-comms.29/topic/wx3.2E2.2E2.20compatibility.html#347965626">(Apr 09 2023 at 06:40)</a>:</h4>
+<p>I share Kees' analysis, it looks  sound also to me.</p>
+<blockquote>
+<p>The wx322 build on OCPN Production PPA is a simple copy from @Alec Leamas PPA. </p>
+</blockquote>
+<p>My PPA build was actually a late evening exercise  with the sole purpose to support Dave.  I really just had to bump the  version, but felt that I should update to latest available while I was on it. </p>
+<blockquote>
+<p>and in Sid there is an O 5.6.2 package (maintained by Alec) built against wxWidgets 3.2.2</p>
+</blockquote>
+<p>Note that  when I submitted it was built against 3.2.1. Over time Debian has upgraded to 3.2.2. </p>
+<p>However, the testing/bookworm branch is now frozen and should not receive any new versions. If there is a need they might cherry-pick patches from 3.2.3+, but that should be it.   </p>
+<blockquote>
+<p>To rebuild the plugins against the 3.2.2 ABI libs the easiest solution would be to upload the 3.2.2 debs to Alec's cloudsmith repo</p>
+</blockquote>
+<p>The sources are available in <a href="https://gitlab.com/leamas/wxwidgets3.2">https://gitlab.com/leamas/wxwidgets3.2</a>, the <em>ubuntu-jammy</em> branch. I can easily  rebuild those for x86_64. With some effort (move to new SD card with more space) I can also rebuild aarch64. However, no way to fix armhf builds. I anyone else can make builds, please speak up so we can coordinate.</p>
+<p>The sources is basically the official Debian 3.2.2  source package with minimal changes to build on Jammy.</p>
+
+
+
+<a name="347968260"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332168-Master%20-%205.8.0%20%20%28was%3A%20comms%29/topic/wx3.2.2%20compatibility/near/347968260" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Alec Leamas <a href="https://leamas.github.io/zulip-archive/stream/332168-Master---5.2E8.2E0--.28was.3A-comms.29/topic/wx3.2E2.2E2.20compatibility.html#347968260">(Apr 09 2023 at 07:03)</a>:</h4>
+<p>Attaching the debdiff  against Debian source package. The bulk of the changes are about dropping the media and docs package which I could not build on Jammy  (at least in the -docs case it should be possible to fix, I think). <a href="/user_uploads/33951/zYg9QAyZhgyuCXS3TVNBJXfh/debdiff.txt">debdiff.txt</a></p>
+
+
+
+<a name="347981485"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332168-Master%20-%205.8.0%20%20%28was%3A%20comms%29/topic/wx3.2.2%20compatibility/near/347981485" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Kees Verruijt <a href="https://leamas.github.io/zulip-archive/stream/332168-Master---5.2E8.2E0--.28was.3A-comms.29/topic/wx3.2E2.2E2.20compatibility.html#347981485">(Apr 09 2023 at 08:41)</a>:</h4>
+<p>Slept on it, and one alternative is that I find out why this dependency is there in the first place, as the plugin doesn't make any <code>IsShownOnScreen</code> calls.</p>
+
+
+
+<a name="348010124"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332168-Master%20-%205.8.0%20%20%28was%3A%20comms%29/topic/wx3.2.2%20compatibility/near/348010124" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Kees Verruijt <a href="https://leamas.github.io/zulip-archive/stream/332168-Master---5.2E8.2E0--.28was.3A-comms.29/topic/wx3.2E2.2E2.20compatibility.html#348010124">(Apr 09 2023 at 11:25)</a>:</h4>
+<p>I hadn't realised, and probably the wx people didn't either, that just adding a class based on <code>wxGLCanvas</code> seems to already bring in this dependency, because this is a virtual function override. I see no simple way to avoid this.</p>
+<p>I will update the plugin manually to use wx3.2.2 without EGL.</p>
+
+
+
+<a name="348052781"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332168-Master%20-%205.8.0%20%20%28was%3A%20comms%29/topic/wx3.2.2%20compatibility/near/348052781" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Kees Verruijt <a href="https://leamas.github.io/zulip-archive/stream/332168-Master---5.2E8.2E0--.28was.3A-comms.29/topic/wx3.2E2.2E2.20compatibility.html#348052781">(Apr 09 2023 at 15:29)</a>:</h4>
+<p>Bummer, I just don't see how I can build this in a simple manner. The plugin uses the shipdriver templates, and thus builds debian-wx32;11;x86_64 on Debian 11. I can't load the wxWidgets .deb packages that Alec built for OpenCPN's PPA, as these Ubuntu .debs cannot be loaded (unsupported zstd compression) on Debian Bullseye.</p>
+<p>Any ideas? If I build this on Ubuntu it's hardly a Debian 11 package anymore. </p>
+<p>What is the point of the debian-wx32;11 release anyway if nobody can use it on Debian as there are no wx3.2.2 libraries available from deb repos?</p>
+
+
+
+<a name="348058047"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332168-Master%20-%205.8.0%20%20%28was%3A%20comms%29/topic/wx3.2.2%20compatibility/near/348058047" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Dave Register <a href="https://leamas.github.io/zulip-archive/stream/332168-Master---5.2E8.2E0--.28was.3A-comms.29/topic/wx3.2E2.2E2.20compatibility.html#348058047">(Apr 09 2023 at 16:04)</a>:</h4>
+<p>Kees..<br>
+Have not looked closely at radar_pi, but...<br>
+Would it be possible to derive your PPI canvas from wxglCanvas, and "stub-in" the missing functions somehow?<br>
+This thinking blue sky...</p>
+
+
+
+<a name="348070797"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332168-Master%20-%205.8.0%20%20%28was%3A%20comms%29/topic/wx3.2.2%20compatibility/near/348070797" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Kees Verruijt <a href="https://leamas.github.io/zulip-archive/stream/332168-Master---5.2E8.2E0--.28was.3A-comms.29/topic/wx3.2E2.2E2.20compatibility.html#348070797">(Apr 09 2023 at 17:38)</a>:</h4>
+<p>Dave, I tried that for a few hours but I got nowhere. Not helped by my ignorance on how C++  virtual methods map to compiled code. Or .deb packaging, for that matter. <br>
+I am now trying to build wx3.2.2 from the debian source package, in Debian 11.</p>
+
+
+
+<a name="348077270"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332168-Master%20-%205.8.0%20%20%28was%3A%20comms%29/topic/wx3.2.2%20compatibility/near/348077270" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Dave Register <a href="https://leamas.github.io/zulip-archive/stream/332168-Master---5.2E8.2E0--.28was.3A-comms.29/topic/wx3.2E2.2E2.20compatibility.html#348077270">(Apr 09 2023 at 18:30)</a>:</h4>
+<p><span class="user-mention" data-user-id="399510">@Alec Leamas</span> <br>
+For info to all:<br>
+O58 Release is ready pending resolution of the radar_pi wx32 conundrum.<br>
+Do we consider resolution of this problem blocking to O58?<br>
+My opinion:  We resolve it now, or we will need to resolve it later when more distros begin offering wx322 in their default repos.  So we should consider the wx322 build in OCPN Prod repo(-disable-glcanvasegl) as the golden target.<br>
+Thoughts, all?</p>
+
+
+
+<a name="348085541"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332168-Master%20-%205.8.0%20%20%28was%3A%20comms%29/topic/wx3.2.2%20compatibility/near/348085541" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Kees Verruijt <a href="https://leamas.github.io/zulip-archive/stream/332168-Master---5.2E8.2E0--.28was.3A-comms.29/topic/wx3.2E2.2E2.20compatibility.html#348085541">(Apr 09 2023 at 19:51)</a>:</h4>
+<p><span class="user-mention" data-user-id="517002">@Dave Register</span> yes, I think all -wx32 targets should use the wx 3.2.2 (GLX) dependency. Not sure but I think this only applies to debian-wx32;11;{arm64,armhf,amd64}.</p>
+<p>I have just successfully built <code>amd64</code> and will now create VMs for <code>armhf</code> and <code>arm64</code> so I can rebuild wx from source there as well. <span class="user-mention" data-user-id="399510">@Alec Leamas</span> once I have rebuilt those, shall we store them on your cloudsmith repo and update the shipdriver templates? Or point to a different cloudsmith repo?</p>
+
+
+
+<a name="348088531"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332168-Master%20-%205.8.0%20%20%28was%3A%20comms%29/topic/wx3.2.2%20compatibility/near/348088531" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Dave Register <a href="https://leamas.github.io/zulip-archive/stream/332168-Master---5.2E8.2E0--.28was.3A-comms.29/topic/wx3.2E2.2E2.20compatibility.html#348088531">(Apr 09 2023 at 20:24)</a>:</h4>
+<p>To be clear, what have you built?  wx322, I think.  What config options?<br>
+And how shall you use them?</p>
+
+
+
+<a name="348090100"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332168-Master%20-%205.8.0%20%20%28was%3A%20comms%29/topic/wx3.2.2%20compatibility/near/348090100" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Alec Leamas <a href="https://leamas.github.io/zulip-archive/stream/332168-Master---5.2E8.2E0--.28was.3A-comms.29/topic/wx3.2E2.2E2.20compatibility.html#348090100">(Apr 09 2023 at 20:41)</a>:</h4>
+<p>No problem to use the cloudsmith repo. However, the sources are really important...</p>
+
+
+
+<a name="348090232"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332168-Master%20-%205.8.0%20%20%28was%3A%20comms%29/topic/wx3.2.2%20compatibility/near/348090232" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Alec Leamas <a href="https://leamas.github.io/zulip-archive/stream/332168-Master---5.2E8.2E0--.28was.3A-comms.29/topic/wx3.2E2.2E2.20compatibility.html#348090232">(Apr 09 2023 at 20:42)</a>:</h4>
+<p>More time tomorrow, late here now..</p>
+
+
+
+<a name="348090346"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332168-Master%20-%205.8.0%20%20%28was%3A%20comms%29/topic/wx3.2.2%20compatibility/near/348090346" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Alec Leamas <a href="https://leamas.github.io/zulip-archive/stream/332168-Master---5.2E8.2E0--.28was.3A-comms.29/topic/wx3.2E2.2E2.20compatibility.html#348090346">(Apr 09 2023 at 20:44)</a>:</h4>
+<p>Let me know what you have done until tomorrow. If you are not done, I can help with a build or two</p>
+
+
+
+<a name="348133309"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332168-Master%20-%205.8.0%20%20%28was%3A%20comms%29/topic/wx3.2.2%20compatibility/near/348133309" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Alec Leamas <a href="https://leamas.github.io/zulip-archive/stream/332168-Master---5.2E8.2E0--.28was.3A-comms.29/topic/wx3.2E2.2E2.20compatibility.html#348133309">(Apr 10 2023 at 04:49)</a>:</h4>
+<p><span class="user-mention" data-user-id="493038">@Kees Verruijt</span>  ^</p>
+
+
+
+<a name="348152718"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332168-Master%20-%205.8.0%20%20%28was%3A%20comms%29/topic/wx3.2.2%20compatibility/near/348152718" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Håkan Svensson <a href="https://leamas.github.io/zulip-archive/stream/332168-Master---5.2E8.2E0--.28was.3A-comms.29/topic/wx3.2E2.2E2.20compatibility.html#348152718">(Apr 10 2023 at 07:30)</a>:</h4>
+<div class="codehilite"><pre><span></span><code>&gt;Do we consider resolution of this problem blocking to O58?
+</code></pre></div>
+
+<p>Although most of the Linux stuff here is above my head it seems all is related to radar_pi and not O so the O5.8 release would continue?</p>
+
+
+
+<a name="348160873"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332168-Master%20-%205.8.0%20%20%28was%3A%20comms%29/topic/wx3.2.2%20compatibility/near/348160873" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Alec Leamas <a href="https://leamas.github.io/zulip-archive/stream/332168-Master---5.2E8.2E0--.28was.3A-comms.29/topic/wx3.2E2.2E2.20compatibility.html#348160873">(Apr 10 2023 at 08:24)</a>:</h4>
+<p>Not that simple. The solution means upgrading the wxWidgwets package used, and such an update would affect all plugins. The update  is already done on the  OpenCPN side, and for things to stay consistent we need to</p>
+<ol>
+<li>Make sure that  wxwidgets 3.2.1 is replaced with 3.2.2 in OpenCPN (done) and all plugins (work to do).</li>
+<li>Radar_pi must be  updated to match 3.2.2</li>
+</ol>
+<p>Part of the issue is that  that upcoming Debian packages also will use  3.2.2. Since  3.2.2 and 3.2.1  are  supposed to be binnary compatible they have the same SONAME which basically makes  it impossible to use  3.2.1 on a Debian system without going  back to static linkage; we most definitely don't want to do that.</p>
+
+
+
+<a name="348181542"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332168-Master%20-%205.8.0%20%20%28was%3A%20comms%29/topic/wx3.2.2%20compatibility/near/348181542" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Kees Verruijt <a href="https://leamas.github.io/zulip-archive/stream/332168-Master---5.2E8.2E0--.28was.3A-comms.29/topic/wx3.2E2.2E2.20compatibility.html#348181542">(Apr 10 2023 at 10:25)</a>:</h4>
+<p><span class="user-mention silent" data-user-id="399510">Alec Leamas</span> <a href="#narrow/stream/332168-Master---5.2E8.2E0--.28was.3A-comms.29/topic/wx3.2E2.2E2.20compatibility/near/348160873">said</a>:</p>
+<blockquote>
+<p>Part of the issue is that  that upcoming Debian packages also will use  3.2.2. Since  3.2.2 and 3.2.1  are  supposed to be binnary compatible they have the same SONAME which basically makes  it impossible to use  3.2.1 on a Debian system without going  back to static linkage; we most definitely don't want to do that.</p>
+</blockquote>
+<p>Actually, the SONAME for wx 3.2.1 changed from 3.2-0 to 3.2-1 halfway through when the GLX/EGL change was made and the ABI changed:</p>
+<blockquote>
+<p>wxwidgets3.2 (3.2.1+dfsg-2) experimental; urgency=medium</p>
+<p>[ Debian Janitor ]</p>
+<p>* Remove constraints unnecessary since buster (oldstable):<br>
+    + Build-Depends: Drop versioned constraint on dpkg-dev and g++.</p>
+<p>[ Scott Talbert ]</p>
+<p>* Rebuild with wxGLCanvas using GLX (changes ABI) (Closes: <a href="https://github.com/opencpn/OpenCPN/issues/1024147">#1024147</a>)<br>
+  * Reintroduce patch to force X11 when wxGLCanvas is used<br>
+  * Move gl library to its own binary package</p>
+</blockquote>
+<p>so I think as long as we make O and the plugins depend on 3.2-1 it will work. (In practice we will ask for wx 3.2.2 with SO 3.2-1).</p>
+
+
+
+<a name="348182618"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332168-Master%20-%205.8.0%20%20%28was%3A%20comms%29/topic/wx3.2.2%20compatibility/near/348182618" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Kees Verruijt <a href="https://leamas.github.io/zulip-archive/stream/332168-Master---5.2E8.2E0--.28was.3A-comms.29/topic/wx3.2E2.2E2.20compatibility.html#348182618">(Apr 10 2023 at 10:32)</a>:</h4>
+<p>My builds are extremely simple, just use the current Debian source package. When building this on Debian 11.6 I get zero errors (unlike your experience). The script to build is:</p>
+<div class="codehilite"><pre><span></span><code>echo &quot;deb-src http://deb.debian.org/debian sid main&quot; | sudo bash -c &#39;cat &gt;&gt; /etc/apt/sources.list&#39;
+sudo apt-get update
+sudo apt-get -y upgrade
+sudo apt-get -y install devscripts dpkg-dev make
+sudo apt-get -y build-dep wxwidgets3.2/sid
+export EMAIL=&#39;kees@verruijt.net&#39;
+apt-get source wxwidgets3.2/sid
+cd wx*/
+dch --bpo
+sudo debuild -b -uc -us
+</code></pre></div>
+<p>This gives me packages <code>libwxbase3.2-1_3.2.2+dfsg-2~bpo11+1_arm64.deb</code> etc.</p>
+
+
+
+<a name="348184477"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332168-Master%20-%205.8.0%20%20%28was%3A%20comms%29/topic/wx3.2.2%20compatibility/near/348184477" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Kees Verruijt <a href="https://leamas.github.io/zulip-archive/stream/332168-Master---5.2E8.2E0--.28was.3A-comms.29/topic/wx3.2E2.2E2.20compatibility.html#348184477">(Apr 10 2023 at 10:43)</a>:</h4>
+<p>amd64 and arm64 are done, armhf is running on a 4 core AmpereOne Oracle Cloud system running qemu tcg, so slooooow.... We can easily snapshot the source package, of course, if you think this is needed.</p>
+
+
+
+<a name="348184733"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332168-Master%20-%205.8.0%20%20%28was%3A%20comms%29/topic/wx3.2.2%20compatibility/near/348184733" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Kees Verruijt <a href="https://leamas.github.io/zulip-archive/stream/332168-Master---5.2E8.2E0--.28was.3A-comms.29/topic/wx3.2E2.2E2.20compatibility.html#348184733">(Apr 10 2023 at 10:45)</a>:</h4>
+<p>I found out that my Mac M1 can't run armhf directly, it needs to run through qemu tcg as well, as the M1 doesn't have armhf instructions. I had hoped that the Ampere would, but I can't get nested KVM working there.</p>
+
+
+
+<a name="348184820"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332168-Master%20-%205.8.0%20%20%28was%3A%20comms%29/topic/wx3.2.2%20compatibility/near/348184820" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Kees Verruijt <a href="https://leamas.github.io/zulip-archive/stream/332168-Master---5.2E8.2E0--.28was.3A-comms.29/topic/wx3.2E2.2E2.20compatibility.html#348184820">(Apr 10 2023 at 10:45)</a>:</h4>
+<p>Will try to put clean Debian 11.6 on a RPi3b that I had around...</p>
+
+
+
+<a name="348195574"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332168-Master%20-%205.8.0%20%20%28was%3A%20comms%29/topic/wx3.2.2%20compatibility/near/348195574" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Alec Leamas <a href="https://leamas.github.io/zulip-archive/stream/332168-Master---5.2E8.2E0--.28was.3A-comms.29/topic/wx3.2E2.2E2.20compatibility.html#348195574">(Apr 10 2023 at 11:44)</a>:</h4>
+<p>Duplicated work here... I have a new cloudsmith repository at <a href="https://cloudsmith.io/~alec-leamas/repos/wxwidgets3-2/packages/">https://cloudsmith.io/~alec-leamas/repos/wxwidgets3-2/packages/</a>. There is x86_64/amd64  and armhf packages in place.  The source package is  in  <a href="https://cloudsmith.io/~alec-leamas/repos/wxwidgets32-src/packages/">https://cloudsmith.io/~alec-leamas/repos/wxwidgets32-src/packages/</a></p>
+<p>aarch64 build is under way. There is by the way no need  to create full-fledged VM:s to make the cross build,  a simple  docker continer + qemu  does the job just fine</p>
+
+
+
+<a name="348201592"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332168-Master%20-%205.8.0%20%20%28was%3A%20comms%29/topic/wx3.2.2%20compatibility/near/348201592" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Kees Verruijt <a href="https://leamas.github.io/zulip-archive/stream/332168-Master---5.2E8.2E0--.28was.3A-comms.29/topic/wx3.2E2.2E2.20compatibility.html#348201592">(Apr 10 2023 at 12:15)</a>:</h4>
+<p>Hmm but have you fixed the SONAME in these so that they are no longer identical to the older 3.2.1 release? From the opencpn ppa that installs 5.7.5:</p>
+<div class="codehilite"><pre><span></span><code>$ ldd /usr/bin/opencpn | grep libwx_baseu_net
+    libwx_baseu_net-3.2.so.0 =&gt; /lib/x86_64-linux-gnu/libwx_baseu_net-3.2.so.0 (0x00007f50efdbf000)
+</code></pre></div>
+<p>where that same library in the packages I built have <code>so.0.2.0</code>:</p>
+<div class="codehilite"><pre><span></span><code>$ ls /usr/lib/x86_64-linux-gnu/libwx_baseu_net*
+/usr/lib/x86_64-linux-gnu/libwx_baseu_net-3.2.so.0.2.0
+</code></pre></div>
+
+
+
+<a name="348201781"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332168-Master%20-%205.8.0%20%20%28was%3A%20comms%29/topic/wx3.2.2%20compatibility/near/348201781" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Kees Verruijt <a href="https://leamas.github.io/zulip-archive/stream/332168-Master---5.2E8.2E0--.28was.3A-comms.29/topic/wx3.2E2.2E2.20compatibility.html#348201781">(Apr 10 2023 at 12:16)</a>:</h4>
+<p>So the current build of O is not good enough: it still refers to <code>3.2.so.0</code> where it should be <code>3.2.so.0.2.0</code>.</p>
+
+
+
+<a name="348202968"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332168-Master%20-%205.8.0%20%20%28was%3A%20comms%29/topic/wx3.2.2%20compatibility/near/348202968" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Kees Verruijt <a href="https://leamas.github.io/zulip-archive/stream/332168-Master---5.2E8.2E0--.28was.3A-comms.29/topic/wx3.2E2.2E2.20compatibility.html#348202968">(Apr 10 2023 at 12:21)</a>:</h4>
+<p><span class="user-mention silent" data-user-id="399510">Alec Leamas</span> <a href="#narrow/stream/332168-Master---5.2E8.2E0--.28was.3A-comms.29/topic/wx3.2E2.2E2.20compatibility/near/348195574">said</a>:</p>
+<blockquote>
+<p>Duplicated work here... I have a new cloudsmith repository at <a href="https://cloudsmith.io/~alec-leamas/repos/wxwidgets3-2/packages/">https://cloudsmith.io/~alec-leamas/repos/wxwidgets3-2/packages/</a>. There is x86_64/amd64  and armhf packages in place.  The source package is  in  <a href="https://cloudsmith.io/~alec-leamas/repos/wxwidgets32-src/packages/">https://cloudsmith.io/~alec-leamas/repos/wxwidgets32-src/packages/</a></p>
+</blockquote>
+<p>Well, you said you werent able to build. So I started on this, but happy to use your version. I see this has the updated SONAME so all good.</p>
+
+
+
+<a name="348203128"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332168-Master%20-%205.8.0%20%20%28was%3A%20comms%29/topic/wx3.2.2%20compatibility/near/348203128" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Kees Verruijt <a href="https://leamas.github.io/zulip-archive/stream/332168-Master---5.2E8.2E0--.28was.3A-comms.29/topic/wx3.2E2.2E2.20compatibility.html#348203128">(Apr 10 2023 at 12:21)</a>:</h4>
+<p>Shall I update the radar_pi ci files or shall I wait for a SD template update?</p>
+
+
+
+<a name="348216968"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332168-Master%20-%205.8.0%20%20%28was%3A%20comms%29/topic/wx3.2.2%20compatibility/near/348216968" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Alec Leamas <a href="https://leamas.github.io/zulip-archive/stream/332168-Master---5.2E8.2E0--.28was.3A-comms.29/topic/wx3.2E2.2E2.20compatibility.html#348216968">(Apr 10 2023 at 13:27)</a>:</h4>
+<blockquote>
+<p>Hmm but have you fixed the SONAME in these so that they are no longer identical to the older 3.2.1 release?</p>
+</blockquote>
+<p>Actually not even considered it. The official, Debain truth is that 3.2.2  is  binary   compatible with  3.2.1. We know this is not true, but I don't think  it matters. We  are pulling the 3.2.1 and 3.2.2  packages from testing a. k. a.  Bookworm. Once  bookworm is released, the package will  be locked to 3.2.2 (it is locked down already since  bookworm is frozen)</p>
+<p>OTOH, when  we  use packagess from testing we must be prepared to follow Debian  if  the package is updated.  Which is what we are doing.</p>
+<p>Bottom line: There will  be no 3.2.1 package in any released Debian  or Ubuntu version, only 3.2.2</p>
+
+
+
+<a name="348217137"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332168-Master%20-%205.8.0%20%20%28was%3A%20comms%29/topic/wx3.2.2%20compatibility/near/348217137" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Alec Leamas <a href="https://leamas.github.io/zulip-archive/stream/332168-Master---5.2E8.2E0--.28was.3A-comms.29/topic/wx3.2E2.2E2.20compatibility.html#348217137">(Apr 10 2023 at 13:28)</a>:</h4>
+<blockquote>
+<p>Shall I update the radar_pi ci files or shall I wait for a SD template update?</p>
+</blockquote>
+<p>I would really appreciate if you could do a test.</p>
+
+
+
+<a name="348217789"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332168-Master%20-%205.8.0%20%20%28was%3A%20comms%29/topic/wx3.2.2%20compatibility/near/348217789" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Alec Leamas <a href="https://leamas.github.io/zulip-archive/stream/332168-Master---5.2E8.2E0--.28was.3A-comms.29/topic/wx3.2E2.2E2.20compatibility.html#348217789">(Apr 10 2023 at 13:32)</a>:</h4>
+<p>I have uploaded also the aaarch64/arm64  packages, the thing now should be complete.</p>
+
+
+
+<a name="348223394"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332168-Master%20-%205.8.0%20%20%28was%3A%20comms%29/topic/wx3.2.2%20compatibility/near/348223394" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Kees Verruijt <a href="https://leamas.github.io/zulip-archive/stream/332168-Master---5.2E8.2E0--.28was.3A-comms.29/topic/wx3.2E2.2E2.20compatibility.html#348223394">(Apr 10 2023 at 14:00)</a>:</h4>
+<p>OK, with your packages I was able to build radar_pi on circleCI (and locally). I did have to remove the "patch" in <a href="http://circleci-build-debian.sh">circleci-build-debian.sh</a>, not sure if this is still needed? The comment says this would not be needed in wx 3.2.3 ... but the patch did not take so I removed it (I have not looked at what it is trying to do and thus also not whether it is still relevant.)</p>
+<p>With the build radar_pi it now refuses to load with O 5.7.1 (good) and loads fine with O 5.7.5 (also good). I tested just AMD64 so far, but the principle is therefore sound. I will now build plugin for and test arm64 + armhf as well. See, I'd new those VMs would come in handy :-)</p>
+
+
+
+<a name="348223856"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332168-Master%20-%205.8.0%20%20%28was%3A%20comms%29/topic/wx3.2.2%20compatibility/near/348223856" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Kees Verruijt <a href="https://leamas.github.io/zulip-archive/stream/332168-Master---5.2E8.2E0--.28was.3A-comms.29/topic/wx3.2E2.2E2.20compatibility.html#348223856">(Apr 10 2023 at 14:02)</a>:</h4>
+<p>Oh, one note, I did not see any wxsvg files in your new repo -- now radar_pi doesn't need those, but some other plugin might?</p>
+
+
+
+<a name="348226133"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332168-Master%20-%205.8.0%20%20%28was%3A%20comms%29/topic/wx3.2.2%20compatibility/near/348226133" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Pavel Kalian <a href="https://leamas.github.io/zulip-archive/stream/332168-Master---5.2E8.2E0--.28was.3A-comms.29/topic/wx3.2E2.2E2.20compatibility.html#348226133">(Apr 10 2023 at 14:11)</a>:</h4>
+<p>wxsvg should not be needed anymore, unless used directly by the plugin. With wx3.2 we switched all the API calls processing SVG to use <code>wxBitmapBundle</code>.</p>
+
+
+
+<a name="348228333"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332168-Master%20-%205.8.0%20%20%28was%3A%20comms%29/topic/wx3.2.2%20compatibility/near/348228333" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Dave Register <a href="https://leamas.github.io/zulip-archive/stream/332168-Master---5.2E8.2E0--.28was.3A-comms.29/topic/wx3.2E2.2E2.20compatibility.html#348228333">(Apr 10 2023 at 14:20)</a>:</h4>
+<p>As a practical matter, we can say that any plugin that does not create a private wxglCanvas does load and run correctly on wx3.2.1.  IOW, the ABI break affects only wxglCanvas.  So there is no super urgency to rebuild all plugins before O58 release.  Only radar_pi.</p>
+
+
+
+<a name="348229237"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332168-Master%20-%205.8.0%20%20%28was%3A%20comms%29/topic/wx3.2.2%20compatibility/near/348229237" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Dave Register <a href="https://leamas.github.io/zulip-archive/stream/332168-Master---5.2E8.2E0--.28was.3A-comms.29/topic/wx3.2E2.2E2.20compatibility.html#348229237">(Apr 10 2023 at 14:23)</a>:</h4>
+<p>We will need new plugin builds all around for Bookworm, I think.</p>
+
+
+
+<a name="348233336"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332168-Master%20-%205.8.0%20%20%28was%3A%20comms%29/topic/wx3.2.2%20compatibility/near/348233336" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Dave Register <a href="https://leamas.github.io/zulip-archive/stream/332168-Master---5.2E8.2E0--.28was.3A-comms.29/topic/wx3.2E2.2E2.20compatibility.html#348233336">(Apr 10 2023 at 14:39)</a>:</h4>
+<p><span class="user-mention" data-user-id="399510">@Alec Leamas</span> <br>
+Do we need to update the wx322 build used in the PPA for O58 production?  SONAMES correct?</p>
+
+
+
+<a name="348236158"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332168-Master%20-%205.8.0%20%20%28was%3A%20comms%29/topic/wx3.2.2%20compatibility/near/348236158" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Alec Leamas <a href="https://leamas.github.io/zulip-archive/stream/332168-Master---5.2E8.2E0--.28was.3A-comms.29/topic/wx3.2E2.2E2.20compatibility.html#348236158">(Apr 10 2023 at 14:50)</a>:</h4>
+<p>I would prefer to. Although I <em>think</em> it will work as-is it is <br>
+needleesly complicated with a too large diff against the official 3.2.2 <br>
+(ths was caused by my jammy VM being broken + the fact that I did this <br>
+build in a late evening).</p>
+<p>New build underqay, it will show uo in my PPA Real Soon (tm).</p>
+<p>--a</p>
+
+
+
+<a name="348239240"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332168-Master%20-%205.8.0%20%20%28was%3A%20comms%29/topic/wx3.2.2%20compatibility/near/348239240" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Alec Leamas <a href="https://leamas.github.io/zulip-archive/stream/332168-Master---5.2E8.2E0--.28was.3A-comms.29/topic/wx3.2E2.2E2.20compatibility.html#348239240">(Apr 10 2023 at 15:04)</a>:</h4>
+<p>uploaded, build ongoing</p>
+
+
+
+<a name="348240951"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332168-Master%20-%205.8.0%20%20%28was%3A%20comms%29/topic/wx3.2.2%20compatibility/near/348240951" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Kees Verruijt <a href="https://leamas.github.io/zulip-archive/stream/332168-Master---5.2E8.2E0--.28was.3A-comms.29/topic/wx3.2E2.2E2.20compatibility.html#348240951">(Apr 10 2023 at 15:12)</a>:</h4>
+<p>I'm starting to like flatpak more and more :-)</p>
+
+
+
+<a name="348246823"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332168-Master%20-%205.8.0%20%20%28was%3A%20comms%29/topic/wx3.2.2%20compatibility/near/348246823" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Alec Leamas <a href="https://leamas.github.io/zulip-archive/stream/332168-Master---5.2E8.2E0--.28was.3A-comms.29/topic/wx3.2E2.2E2.20compatibility.html#348246823">(Apr 10 2023 at 15:37)</a>:</h4>
+<blockquote>
+<p>I'm starting to like flatpak more and more :-)</p>
+</blockquote>
+<p>Yes, it does win over time. If we started with a clean sheet, the best solution would probably have been to use Flatpak for all Linux builds except 32bit armhf, which is targeting boards with less memory.</p>
+<p>But then again, we don't start with a clean sheet, we have a legacy.</p>
+
+
+
+<a name="348248419"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332168-Master%20-%205.8.0%20%20%28was%3A%20comms%29/topic/wx3.2.2%20compatibility/near/348248419" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Dave Register <a href="https://leamas.github.io/zulip-archive/stream/332168-Master---5.2E8.2E0--.28was.3A-comms.29/topic/wx3.2E2.2E2.20compatibility.html#348248419">(Apr 10 2023 at 15:44)</a>:</h4>
+<p><span class="user-mention" data-user-id="399510">@Alec Leamas</span> <br>
+I will try a different strategy this time.  Instead of copying your packages to my PPA, I will inform my PPA to use your PPA (~leamas-alec/ubuntu/wxwidgets) to satisfy dependencies.  We'll see how that works...</p>
+
+
+
+<a name="348248610"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332168-Master%20-%205.8.0%20%20%28was%3A%20comms%29/topic/wx3.2.2%20compatibility/near/348248610" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Dave Register <a href="https://leamas.github.io/zulip-archive/stream/332168-Master---5.2E8.2E0--.28was.3A-comms.29/topic/wx3.2E2.2E2.20compatibility.html#348248610">(Apr 10 2023 at 15:46)</a>:</h4>
+<p>Waiting for your PPA to publish...</p>
+
+
+
+<a name="348250079"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332168-Master%20-%205.8.0%20%20%28was%3A%20comms%29/topic/wx3.2.2%20compatibility/near/348250079" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Kees Verruijt <a href="https://leamas.github.io/zulip-archive/stream/332168-Master---5.2E8.2E0--.28was.3A-comms.29/topic/wx3.2E2.2E2.20compatibility.html#348250079">(Apr 10 2023 at 15:53)</a>:</h4>
+<p>OK, on ubuntu 22.04 arm64 the radar_pi plugin works as well with O 5.7.5, but ... that O build has compatibility set to <code>ubuntu-wx32-arm64:11</code> so I had to enable CatalogExpert then set the Compatibility to <code>debian-wx32-arm64:11</code> before I could load the .tar.gz file.</p>
+<p>I think this because the Ubuntu/Debian match code doesn't care for the <code>-wx32</code> bit on the end of the <code>ubuntu</code> value. We can publish this as a known bug, or do we want to fix this in O 5.8?</p>
+
+
+
+<a name="348250553"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332168-Master%20-%205.8.0%20%20%28was%3A%20comms%29/topic/wx3.2.2%20compatibility/near/348250553" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Kees Verruijt <a href="https://leamas.github.io/zulip-archive/stream/332168-Master---5.2E8.2E0--.28was.3A-comms.29/topic/wx3.2E2.2E2.20compatibility.html#348250553">(Apr 10 2023 at 15:56)</a>:</h4>
+<p>BTW, the fact that the 5.7.5 release still says 5.7.1 in the window title (but correctly says 5.7.5 in the About window) is a build artifact that won't carry over to 5.8?</p>
+
+
+
+<a name="348258711"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332168-Master%20-%205.8.0%20%20%28was%3A%20comms%29/topic/wx3.2.2%20compatibility/near/348258711" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Dave Register <a href="https://leamas.github.io/zulip-archive/stream/332168-Master---5.2E8.2E0--.28was.3A-comms.29/topic/wx3.2E2.2E2.20compatibility.html#348258711">(Apr 10 2023 at 16:36)</a>:</h4>
+<p>"won't carry over to 5.8?"<br>
+Correct.  Prod PPA is in flux, testing user install process via dpkg.  Some tweaks still required for final release.</p>
+
+
+
+<a name="348264076"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332168-Master%20-%205.8.0%20%20%28was%3A%20comms%29/topic/wx3.2.2%20compatibility/near/348264076" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Alec Leamas <a href="https://leamas.github.io/zulip-archive/stream/332168-Master---5.2E8.2E0--.28was.3A-comms.29/topic/wx3.2E2.2E2.20compatibility.html#348264076">(Apr 10 2023 at 17:04)</a>:</h4>
+<blockquote>
+<p>so I had to enable CatalogExpert then set the Compatibility to debian-wx32-arm64:11 before I could load the .tar.gz file.</p>
+</blockquote>
+<p>If so, this is a bug. If Opencpn does not find  a ubuntu- plugin it shall fall back to using debian automatically. Stay tuned...</p>
+
+
+
+<a name="348264601"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332168-Master%20-%205.8.0%20%20%28was%3A%20comms%29/topic/wx3.2.2%20compatibility/near/348264601" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Alec Leamas <a href="https://leamas.github.io/zulip-archive/stream/332168-Master---5.2E8.2E0--.28was.3A-comms.29/topic/wx3.2E2.2E2.20compatibility.html#348264601">(Apr 10 2023 at 17:06)</a>:</h4>
+<p><span class="user-mention" data-user-id="517002">@Dave Register</span>  The nug is in plugin_handler around line 221:</p>
+<div class="codehilite"><pre><span></span><code> bool is_debian_plugin_compatible(const Plugin&amp; plugin) const {
+    if (!ocpn::startswith(m_abi, &quot;ubuntu&quot;)) return false;
+    static const std::vector&lt;std::string&gt; compat_versions = {
+        // clang-format: off
+        &quot;debian-x86_64;11;ubuntu-gtk3-x86_64;20.04&quot;,
+        &quot;debian-wx32-x86_64;11;ubuntu-wx32-x86_64;22.04&quot;,
+        &quot;debian-x86_64;12;ubuntu-x86_64;23.04&quot;,
+        &quot;debian-x86_64;12;ubuntu-x86_64;23.10&quot;,
+        &quot;debian-x86_64;12;ubuntu-x86_64;24.04&quot;,
+        &quot;debian-x86_64;sid;ubuntu-x86_64;24.04&quot;};  // clang-format: on
+</code></pre></div>
+<p>we just care about x86_64, not aarch64 or armhf. That table needs a sleeve of new entries</p>
+
+
+
+<a name="348266245"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332168-Master%20-%205.8.0%20%20%28was%3A%20comms%29/topic/wx3.2.2%20compatibility/near/348266245" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Alec Leamas <a href="https://leamas.github.io/zulip-archive/stream/332168-Master---5.2E8.2E0--.28was.3A-comms.29/topic/wx3.2E2.2E2.20compatibility.html#348266245">(Apr 10 2023 at 17:15)</a>:</h4>
+<p>something like this, of course untested:</p>
+<div class="codehilite"><pre><span></span><code>diff --git a/src/plugin_handler.cpp b/src/plugin_handler.cpp
+index 833af2766..1826a841b 100644
+--- a/src/plugin_handler.cpp
++++ b/src/plugin_handler.cpp
+@@ -220,7 +220,23 @@ class Host {
+         &quot;debian-x86_64;12;ubuntu-x86_64;23.04&quot;,
+         &quot;debian-x86_64;12;ubuntu-x86_64;23.10&quot;,
+         &quot;debian-x86_64;12;ubuntu-x86_64;24.04&quot;,
+-        &quot;debian-x86_64;sid;ubuntu-x86_64;24.04&quot;};  // clang-format: on
++        &quot;debian-x86_64;sid;ubuntu-x86_64;24.04&quot;,
++
++        &quot;debian-arm64;11;ubuntu-gtk3-arm64;20.04&quot;,
++        &quot;debian-wx32-arm64;11;ubuntu-wx32-arm64;22.04&quot;,
++        &quot;debian-arm64;12;ubuntu-arm64;23.04&quot;,
++        &quot;debian-arm64;12;ubuntu-arm64;23.10&quot;,
++        &quot;debian-arm64;12;ubuntu-arm64;24.04&quot;,
++        &quot;debian-arm64;sid;ubuntu-arm64;24.04&quot;,
++
++        &quot;debian-armhf;11;ubuntu-gtk3-armhf;20.04&quot;,
++        &quot;debian-wx32-armhf;11;ubuntu-wx32-armhf;22.04&quot;,
++        &quot;debian-armhf;12;ubuntu-armhf;23.04&quot;,
++        &quot;debian-armhf;12;ubuntu-armhf;23.10&quot;,
++        &quot;debian-armhf;12;ubuntu-armhf;24.04&quot;,
++        &quot;debian-armhf;sid;ubuntu-armhf;24.04&quot;}; //clang-format: on
++
++
+</code></pre></div>
+<p>Some unit tests here would have been nice...</p>
+
+
+
+<a name="348298752"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332168-Master%20-%205.8.0%20%20%28was%3A%20comms%29/topic/wx3.2.2%20compatibility/near/348298752" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Dave Register <a href="https://leamas.github.io/zulip-archive/stream/332168-Master---5.2E8.2E0--.28was.3A-comms.29/topic/wx3.2E2.2E2.20compatibility.html#348298752">(Apr 10 2023 at 20:26)</a>:</h4>
+<p><span class="user-mention" data-user-id="399510">@Alec Leamas</span> <br>
+Done, in build now. Thanks</p>
+
+
+
+<a name="348343254"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332168-Master%20-%205.8.0%20%20%28was%3A%20comms%29/topic/wx3.2.2%20compatibility/near/348343254" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Dave Register <a href="https://leamas.github.io/zulip-archive/stream/332168-Master---5.2E8.2E0--.28was.3A-comms.29/topic/wx3.2E2.2E2.20compatibility.html#348343254">(Apr 11 2023 at 03:19)</a>:</h4>
+<p><span class="user-mention" data-user-id="399510">@Alec Leamas</span> <br>
+re:<br>
+<em>I will try a different strategy this time. Instead of copying your packages to my PPA, I will inform my PPA to use your PPA (~leamas-alec/ubuntu/wxwidgets) to satisfy dependencies. We'll see how that works...</em></p>
+<p>Results:  Not great for our use case.  The resulting build requires wx322 libs, which are only available in your PPA.  So a user would need to add your PPA to her apt sources.list.  Not ideal.<br>
+So I have reverted to a simple copy from your PPA to OCPN Prod PPA.  Works as expected.  Required wx322 olibs available from the same PPA that contains OCPN package itself.</p>
+
+
+
+<a name="348343677"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332168-Master%20-%205.8.0%20%20%28was%3A%20comms%29/topic/wx3.2.2%20compatibility/near/348343677" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Dave Register <a href="https://leamas.github.io/zulip-archive/stream/332168-Master---5.2E8.2E0--.28was.3A-comms.29/topic/wx3.2E2.2E2.20compatibility.html#348343677">(Apr 11 2023 at 03:24)</a>:</h4>
+<p><span class="user-mention" data-user-id="493038">@Kees Verruijt</span> <br>
+OCPN 5.7.10 available in Production PPA.  Includes late patch for ubuntu=&gt;debian matching. AFAIK, this is functionally equivalent to the pending release of O58.  Only change required is id strings.<br>
+If you could post links for radar_pi tarballs, or simply update the Beta catalog by pr, I can test on u22.04/x86 and Bullseye/Arm64.</p>
+
+
+
+<a name="348364877"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332168-Master%20-%205.8.0%20%20%28was%3A%20comms%29/topic/wx3.2.2%20compatibility/near/348364877" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Alec Leamas <a href="https://leamas.github.io/zulip-archive/stream/332168-Master---5.2E8.2E0--.28was.3A-comms.29/topic/wx3.2E2.2E2.20compatibility.html#348364877">(Apr 11 2023 at 06:22)</a>:</h4>
+<p><span class="user-mention" data-user-id="517002">@Dave Register</span>  right. Took some time off after spending too many hours building packages. The only important thing is that it works. We don't expect to maintain this that much, but perhaps Debian will add some patches. We will need to keep an eye on what's happening in debian, in particular before the Bookworm release.</p>
+<blockquote>
+<p>We will need new plugin builds all around for Bookworm, I think.</p>
+</blockquote>
+<p>Indeed. TP will have to sort out things before that, though: <a href="https://github.com/jongough/testplugin_pi/issues/299">https://github.com/jongough/testplugin_pi/issues/299</a></p>
+
+
+
+<a name="348375343"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332168-Master%20-%205.8.0%20%20%28was%3A%20comms%29/topic/wx3.2.2%20compatibility/near/348375343" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Kees Verruijt <a href="https://leamas.github.io/zulip-archive/stream/332168-Master---5.2E8.2E0--.28was.3A-comms.29/topic/wx3.2E2.2E2.20compatibility.html#348375343">(Apr 11 2023 at 07:20)</a>:</h4>
+<p><span class="user-mention" data-user-id="517002">@Dave Register</span> I am on board now to fix one last request for radar_pi, adding an extra control for HALO, before I will prepare a PR for Beta and master plugin catalogs. In the mean time you can use whatever is latest on <a href="https://cloudsmith.io/~opencpn-radar-pi/repos/opencpn-radar-pi-unstable/packages/">https://cloudsmith.io/~opencpn-radar-pi/repos/opencpn-radar-pi-unstable/packages/</a></p>
+
+
+
+<a name="348442711"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332168-Master%20-%205.8.0%20%20%28was%3A%20comms%29/topic/wx3.2.2%20compatibility/near/348442711" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Kees Verruijt <a href="https://leamas.github.io/zulip-archive/stream/332168-Master---5.2E8.2E0--.28was.3A-comms.29/topic/wx3.2E2.2E2.20compatibility.html#348442711">(Apr 11 2023 at 12:09)</a>:</h4>
+<p>A PR has just been made to merge radar_pi beta into the Beta catalog.</p>
+
+
+
+<a name="348443273"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332168-Master%20-%205.8.0%20%20%28was%3A%20comms%29/topic/wx3.2.2%20compatibility/near/348443273" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Kees Verruijt <a href="https://leamas.github.io/zulip-archive/stream/332168-Master---5.2E8.2E0--.28was.3A-comms.29/topic/wx3.2E2.2E2.20compatibility.html#348443273">(Apr 11 2023 at 12:12)</a>:</h4>
+<p><span class="user-mention" data-user-id="399510">@Alec Leamas</span> I had to tweak a few files in <code>.circleci/</code> and <code>ci/</code> to get the proper target set for Debian-wx32-A32, see <a href="/user_uploads/33951/nxRDcVDDn4tfyXaV-9t4qhuX/ci-fix.diff">ci-fix.diff</a> -- I think these are relevant for the SD templates.</p>
+
+
+
+<a name="348443596"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332168-Master%20-%205.8.0%20%20%28was%3A%20comms%29/topic/wx3.2.2%20compatibility/near/348443596" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Kees Verruijt <a href="https://leamas.github.io/zulip-archive/stream/332168-Master---5.2E8.2E0--.28was.3A-comms.29/topic/wx3.2E2.2E2.20compatibility.html#348443596">(Apr 11 2023 at 12:13)</a>:</h4>
+<p>Note that those tweaks fix old issues in the ci code, not new ones caused by the wx3.2.1-&gt;wx3.2.2 transition.</p>
+
+
+
+<a name="348444461"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332168-Master%20-%205.8.0%20%20%28was%3A%20comms%29/topic/wx3.2.2%20compatibility/near/348444461" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Alec Leamas <a href="https://leamas.github.io/zulip-archive/stream/332168-Master---5.2E8.2E0--.28was.3A-comms.29/topic/wx3.2E2.2E2.20compatibility.html#348444461">(Apr 11 2023 at 12:16)</a>:</h4>
+<p>Yes... I'll have a look. These parts are actually a mess,  using  both OCPN_WX_ABI and OCPN_TARGET_TUPLE makes things more complicated than they should be. Thanks for heads-up!</p>
+
+
+
+<a name="348444716"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332168-Master%20-%205.8.0%20%20%28was%3A%20comms%29/topic/wx3.2.2%20compatibility/near/348444716" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Alec Leamas <a href="https://leamas.github.io/zulip-archive/stream/332168-Master---5.2E8.2E0--.28was.3A-comms.29/topic/wx3.2E2.2E2.20compatibility.html#348444716">(Apr 11 2023 at 12:17)</a>:</h4>
+<p>BTW: What was the exact error you had to fix? Symptoms?</p>
+
+
+
+<a name="348446011"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332168-Master%20-%205.8.0%20%20%28was%3A%20comms%29/topic/wx3.2.2%20compatibility/near/348446011" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Alec Leamas <a href="https://leamas.github.io/zulip-archive/stream/332168-Master---5.2E8.2E0--.28was.3A-comms.29/topic/wx3.2E2.2E2.20compatibility.html#348446011">(Apr 11 2023 at 12:22)</a>:</h4>
+<p>That is, I can follow that you fix the broken  TARGET_TUPLE, and that is an important fix. However, what is this about  OCPN_WX_ABI_OPT, ending up in a -D=wx32 option? "confused"</p>
+
+
+
+<a name="348447614"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332168-Master%20-%205.8.0%20%20%28was%3A%20comms%29/topic/wx3.2.2%20compatibility/near/348447614" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Alec Leamas <a href="https://leamas.github.io/zulip-archive/stream/332168-Master---5.2E8.2E0--.28was.3A-comms.29/topic/wx3.2E2.2E2.20compatibility.html#348447614">(Apr 11 2023 at 12:30)</a>:</h4>
+<p><a href="https://github.com/Rasbats/shipdriver_pi/issues/511">https://github.com/Rasbats/shipdriver_pi/issues/511</a></p>
+
+
+
+<a name="348468907"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332168-Master%20-%205.8.0%20%20%28was%3A%20comms%29/topic/wx3.2.2%20compatibility/near/348468907" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Kees Verruijt <a href="https://leamas.github.io/zulip-archive/stream/332168-Master---5.2E8.2E0--.28was.3A-comms.29/topic/wx3.2E2.2E2.20compatibility.html#348468907">(Apr 11 2023 at 13:55)</a>:</h4>
+<p>Hey, I didn't invent this <span aria-label="wink" class="emoji emoji-1f609" role="img" title="wink">:wink:</span> just copied it from <code>ci/circleci-build-debian.sh</code> which is what is used for <code>x86_64</code>.</p>
+<p>Setting BUILD_WX32 results in a <code>-DOCPN_WX_ABI=wx32</code> passed to cmake, which results in <code>set(_wx_abi ".${OCPN_WX_ABI}")</code> being set to wx32, and this in turns results in <code>pkg_displayname</code> and <code>pkg_tarname</code> gaining <code>.wx32</code>. It's also messing slightly with flatpak package name. </p>
+<p>The result is still messy, as the list of my .xml files shows:</p>
+<div class="codehilite"><pre><span></span><code>Radar-v5.5.0-beta2-darwin-wx32-10.xml
+Radar-v5.5.0-beta2-debian-11.xml
+Radar-v5.5.0-beta2-debian-12.xml
+Radar-v5.5.0-beta2-debian-A32-11.xml
+Radar-v5.5.0-beta2-debian-A32-12.xml
+Radar-v5.5.0-beta2-debian-A64-11.xml
+Radar-v5.5.0-beta2-debian-A64-12.xml
+Radar-v5.5.0-beta2-debian-wx32-A64-11.xml
+Radar-v5.5.0-beta2-debian-wx32.wx32-11.xml
+Radar-v5.5.0-beta2-debian-wx32.wx32-A32-11.xml
+Radar-v5.5.0-beta2-flatpak-22.08.xml
+Radar-v5.5.0-beta2-flatpak-A64-22.08.xml
+Radar-v5.5.0-beta2-msvc-wx32-10.xml
+</code></pre></div>
+<p>Note how the A32 and x86_64 (no arch in name) both have wx32 in the package name <em>twice</em>. </p>
+<p>Could it be that this OCPN_WX_ABI_OPT was used more in the past? At the moment it's only used in <code>./cmake/Metadata.cmake</code> to fiddle with package and tar names. I think the better approach is to use only OCPN_TARGET_TUPLE. As a fail-safe the CMake files could verify that a tuple including -wx32 is indeed using wx3.2.</p>
+<p>What do you prefer? Fixing this yourself in SD or me preparing a change in <code>radar_pi</code>? A simple fix would be to remove the double <code>.wx32</code> name from the filenames, but I would prefer to make a better fix so we don't have this confusion/double code at all.</p>
+
+
+
+<a name="348469936"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332168-Master%20-%205.8.0%20%20%28was%3A%20comms%29/topic/wx3.2.2%20compatibility/near/348469936" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Kees Verruijt <a href="https://leamas.github.io/zulip-archive/stream/332168-Master---5.2E8.2E0--.28was.3A-comms.29/topic/wx3.2E2.2E2.20compatibility.html#348469936">(Apr 11 2023 at 13:59)</a>:</h4>
+<p><span class="user-mention silent" data-user-id="399510">Alec Leamas</span> <a href="#narrow/stream/332168-Master---5.2E8.2E0--.28was.3A-comms.29/topic/wx3.2E2.2E2.20compatibility/near/348444716">said</a>:</p>
+<blockquote>
+<p>BTW: What was the exact error you had to fix? Symptoms?</p>
+</blockquote>
+<p>There was only one uploaded version of Debian;11;armhf and it was a race between the non-wx32 and the wx32 version to see which one ended up in cloudsmith (the last one won...)</p>
+
+
+
+<a name="348470548"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332168-Master%20-%205.8.0%20%20%28was%3A%20comms%29/topic/wx3.2.2%20compatibility/near/348470548" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Alec Leamas <a href="https://leamas.github.io/zulip-archive/stream/332168-Master---5.2E8.2E0--.28was.3A-comms.29/topic/wx3.2E2.2E2.20compatibility.html#348470548">(Apr 11 2023 at 14:00)</a>:</h4>
+<blockquote>
+<p>I think the better approach is to use only OCPN_TARGET_TUPLE</p>
+</blockquote>
+<p>Agreed. We are seing differences between the current 3.2 barnch and the shipdriver master branch. The basic message is that at least in master this is solved, and we should use explicit OCPN_TARGET_TUPLE for all debian builds.</p>
+<blockquote>
+<p>As a fail-safe the CMake files could verify that a tuple including -wx32 is indeed using wx3.2.</p>
+</blockquote>
+<p>Actually, we should probably issue a warning or perhaps even just fail if the OCPN_TARGET_TUPLE is missing. And deprecate  the whole OCPN_WX_ABI_OPT thing.</p>
+
+
+
+<a name="348471296"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332168-Master%20-%205.8.0%20%20%28was%3A%20comms%29/topic/wx3.2.2%20compatibility/near/348471296" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Kees Verruijt <a href="https://leamas.github.io/zulip-archive/stream/332168-Master---5.2E8.2E0--.28was.3A-comms.29/topic/wx3.2E2.2E2.20compatibility.html#348471296">(Apr 11 2023 at 14:03)</a>:</h4>
+<p>OK goal clear, who will do this? I could try working on a fork of SD to make the code changes cleaner, but I'd like some hints then what your workflow is (possibly trivial.)</p>
+
+
+
+<a name="348471636"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332168-Master%20-%205.8.0%20%20%28was%3A%20comms%29/topic/wx3.2.2%20compatibility/near/348471636" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Kees Verruijt <a href="https://leamas.github.io/zulip-archive/stream/332168-Master---5.2E8.2E0--.28was.3A-comms.29/topic/wx3.2E2.2E2.20compatibility.html#348471636">(Apr 11 2023 at 14:04)</a>:</h4>
+<p>(instead of me working further on radar_pi and then you needing to cherry-pick back to SD)</p>
+
+
+
+<a name="348471850"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332168-Master%20-%205.8.0%20%20%28was%3A%20comms%29/topic/wx3.2.2%20compatibility/near/348471850" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Kees Verruijt <a href="https://leamas.github.io/zulip-archive/stream/332168-Master---5.2E8.2E0--.28was.3A-comms.29/topic/wx3.2E2.2E2.20compatibility.html#348471850">(Apr 11 2023 at 14:05)</a>:</h4>
+<p>I can then immediately test this on radar_pi, and I've got time so happy to do this.</p>
+
+
+
+<a name="348480483"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332168-Master%20-%205.8.0%20%20%28was%3A%20comms%29/topic/wx3.2.2%20compatibility/near/348480483" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Dave Register <a href="https://leamas.github.io/zulip-archive/stream/332168-Master---5.2E8.2E0--.28was.3A-comms.29/topic/wx3.2E2.2E2.20compatibility.html#348480483">(Apr 11 2023 at 14:36)</a>:</h4>
+<p><span class="user-mention" data-user-id="493038">@Kees Verruijt</span> </p>
+<ol>
+<li>Merged your Beta pr.  Checksum errors on trying to install radar_pi.</li>
+<li>Imported tarballs, 5.5.0-beta, git commit 297bdc0.  Works fine on ubuntu 22.04/x86 and Rpi/Bullseye/A64.</li>
+</ol>
+
+
+
+<a name="348780892"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332168-Master%20-%205.8.0%20%20%28was%3A%20comms%29/topic/wx3.2.2%20compatibility/near/348780892" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Kees Verruijt <a href="https://leamas.github.io/zulip-archive/stream/332168-Master---5.2E8.2E0--.28was.3A-comms.29/topic/wx3.2E2.2E2.20compatibility.html#348780892">(Apr 12 2023 at 16:32)</a>:</h4>
+<p>Thanks, Dave.Saw that this morning and verified the plugin on MacOS and Ubuntu 22.04. Unfortunately Douwe found a small but irritating display issue so I will push a Beta4 soon.</p>
+<p>We are now 100% complete on HALO features; the last command missing that I added yesterday is allow setting of the Doppler Speed Threshold.</p>
+<p>I was developing + testing this on board yesterday, when I saw a huge doppler-highlighted raincloud coming near very quickly, so I jumped off and hurried back home where the log fire was burning (it's still quite cold here). If I hadn't, I would have probably caught that display issue (that only shows up with a working radar).</p>
+
+
+
+<a name="348826883"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332168-Master%20-%205.8.0%20%20%28was%3A%20comms%29/topic/wx3.2.2%20compatibility/near/348826883" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Kees Verruijt <a href="https://leamas.github.io/zulip-archive/stream/332168-Master---5.2E8.2E0--.28was.3A-comms.29/topic/wx3.2E2.2E2.20compatibility.html#348826883">(Apr 12 2023 at 20:27)</a>:</h4>
+<p><span class="user-mention" data-user-id="517002">@Dave Register</span> thanks for the Beta merge. I found a few issues with the <code>pre-commit</code> hook checker; so I created another pull request. You may want to take a closer look at this since it is not a metadata file update. Also, I guess this needs to go to master as well.</p>
+
+
+
+<a name="348828006"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332168-Master%20-%205.8.0%20%20%28was%3A%20comms%29/topic/wx3.2.2%20compatibility/near/348828006" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Dave Register <a href="https://leamas.github.io/zulip-archive/stream/332168-Master---5.2E8.2E0--.28was.3A-comms.29/topic/wx3.2E2.2E2.20compatibility.html#348828006">(Apr 12 2023 at 20:33)</a>:</h4>
+<p><span class="user-mention" data-user-id="493038">@Kees Verruijt</span> <br>
+I'll hold this in my queue for a few days, pending O58 release.<br>
+Thanks</p>
+
+
+
+<a name="348828102"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332168-Master%20-%205.8.0%20%20%28was%3A%20comms%29/topic/wx3.2.2%20compatibility/near/348828102" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Kees Verruijt <a href="https://leamas.github.io/zulip-archive/stream/332168-Master---5.2E8.2E0--.28was.3A-comms.29/topic/wx3.2E2.2E2.20compatibility.html#348828102">(Apr 12 2023 at 20:34)</a>:</h4>
+<p>Yes, that's fine. Just wanted to give you the heads up.</p>
+
+
+
+<a name="349059084"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332168-Master%20-%205.8.0%20%20%28was%3A%20comms%29/topic/wx3.2.2%20compatibility/near/349059084" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Kees Verruijt <a href="https://leamas.github.io/zulip-archive/stream/332168-Master---5.2E8.2E0--.28was.3A-comms.29/topic/wx3.2E2.2E2.20compatibility.html#349059084">(Apr 13 2023 at 09:52)</a>:</h4>
+<p>Whoaaa, I just had another checksum difference (now caught by pre-commit hook). Unfortunately, this time on Windows so I can't ssh in to appveyor. Rebuilding now to see if that  fixes it. Nope it doesn't.<br>
+For now, I don't have time for a few days so I manually fixed the .xml file to contain the proper checksum.</p>
+
+
+
+<a name="350204811"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332168-Master%20-%205.8.0%20%20%28was%3A%20comms%29/topic/wx3.2.2%20compatibility/near/350204811" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Håkan Svensson <a href="https://leamas.github.io/zulip-archive/stream/332168-Master---5.2E8.2E0--.28was.3A-comms.29/topic/wx3.2E2.2E2.20compatibility.html#350204811">(Apr 15 2023 at 18:54)</a>:</h4>
+<p><span class="user-mention" data-user-id="493038">@Kees Verruijt</span>  <span class="user-mention" data-user-id="517002">@Dave Register</span> </p>
+<div class="codehilite"><pre><span></span><code>&gt;I&#39;ll hold this in my queue for a few days, pending O58 release.
+</code></pre></div>
+
+<p>So, where are we on getting radar_pi to master. I understand the actual PR to Plugins is overdue by now. Could we release a fresh metadata update for working system at least?</p>
+
+
+
+<a name="350214647"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332168-Master%20-%205.8.0%20%20%28was%3A%20comms%29/topic/wx3.2.2%20compatibility/near/350214647" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Dave Register <a href="https://leamas.github.io/zulip-archive/stream/332168-Master---5.2E8.2E0--.28was.3A-comms.29/topic/wx3.2E2.2E2.20compatibility.html#350214647">(Apr 15 2023 at 20:52)</a>:</h4>
+<p>Done.</p>
+
+
+
+<a name="350220677"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332168-Master%20-%205.8.0%20%20%28was%3A%20comms%29/topic/wx3.2.2%20compatibility/near/350220677" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Kees Verruijt <a href="https://leamas.github.io/zulip-archive/stream/332168-Master---5.2E8.2E0--.28was.3A-comms.29/topic/wx3.2E2.2E2.20compatibility.html#350220677">(Apr 15 2023 at 22:14)</a>:</h4>
+<p><span class="user-mention silent" data-user-id="517002">Dave Register</span> <a href="#narrow/stream/332168-Master---5.2E8.2E0--.28was.3A-comms.29/topic/wx3.2E2.2E2.20compatibility/near/350214647">said</a>:</p>
+<blockquote>
+<p>Done.</p>
+</blockquote>
+<p>Thanks. We had complaints on CF.</p>
+
+
+
+<hr><p>Last updated: Oct 05 2023 at 09:43 UTC</p>
+</html>

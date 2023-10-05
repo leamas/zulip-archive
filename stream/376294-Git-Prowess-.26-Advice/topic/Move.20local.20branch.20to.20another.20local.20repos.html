@@ -1,0 +1,74 @@
+<html>
+<head><meta charset="utf-8"><title>Move local branch to another local repos · Git Prowess &amp; Advice · Zulip Chat Archive</title></head>
+<h2>Stream: <a href="https://leamas.github.io/zulip-archive/stream/376294-Git-Prowess-.26-Advice/index.html">Git Prowess &amp; Advice</a></h2>
+<h3>Topic: <a href="https://leamas.github.io/zulip-archive/stream/376294-Git-Prowess-.26-Advice/topic/Move.20local.20branch.20to.20another.20local.20repos.html">Move local branch to another local repos</a></h3>
+
+<hr>
+
+<base href="https://opencpn.zulipchat.com">
+
+<head><link href="https://leamas.github.io/zulip-archive/style.css" rel="stylesheet"></head>
+
+<a name="341147386"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/376294-Git%20Prowess%20%26%20Advice/topic/Move%20local%20branch%20to%20another%20local%20repos/near/341147386" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Notification Bot <a href="https://leamas.github.io/zulip-archive/stream/376294-Git-Prowess-.26-Advice/topic/Move.20local.20branch.20to.20another.20local.20repos.html#341147386">(Mar 11 2023 at 15:42)</a>:</h4>
+<p><strong>Public</strong> stream created by <span class="user-mention silent" data-user-id="399865">Rick Gleason</span>. <strong>Description:</strong></p>
+<blockquote>
+<p><em>No description.</em></p>
+</blockquote>
+
+
+
+<a name="341151721"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/376294-Git%20Prowess%20%26%20Advice/topic/Move%20local%20branch%20to%20another%20local%20repos/near/341151721" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Rick Gleason <a href="https://leamas.github.io/zulip-archive/stream/376294-Git-Prowess-.26-Advice/topic/Move.20local.20branch.20to.20another.20local.20repos.html#341151721">(Mar 11 2023 at 16:11)</a>:</h4>
+<p>I have a particular git problem associated with watchdog_pi. My repos and Sean's have diverged. My repos has a rudder alarm (I removed the old pypilot alarm), and Seans has current pypilot alarm.  I have tried to merge these two repos several different ways (with conflicts resolved) and it has failed.  I have a local repos watchdog_pi which is cloned from my remote repos of the same name.</p>
+<p>Then I cloned sean's repos locally to "<em>watchdog-sean</em>" and now have it working with Bdbcat's help. I cannot directly push to Sean's repos.  From  local <em>watchdog-sean</em> (master branch), I would like to create a duplicate branch  <em>pypilot-sean</em>.</p>
+<p>git checkout -b  <em>pypilot-sean</em></p>
+<p>The remotes are   C:\Users\fcgle\source\watchdog-sean&gt;git remote -v<br>
+  origin  <a href="https://github.com/seandepagnier/watchdog_pi">https://github.com/seandepagnier/watchdog_pi</a> (fetch)<br>
+  origin  <a href="https://github.com/seandepagnier/watchdog_pi">https://github.com/seandepagnier/watchdog_pi</a> (push)</p>
+<p>In local <em>watchdog-sean</em>   I would like to change them as follows:</p>
+<p>git remote rename origin upstream<br>
+  git remote add origin git@github.com:rgleason/watchdog_pi.git   #to use ssh</p>
+<p>Then I would like to push the branch <em>pypilot-sean</em>  up to a new identical branch in my remote <em>watchdog_pi</em> repos.</p>
+<p>From local <em>watchdog-sean</em></p>
+<p>git push origin <em>pypilot-sean</em>:<em>pypilot-sean</em> </p>
+<p>Is it acceptable to have two local repositories push to the same remote repository but different branches?<br>
+Will this work?  and not screw up my local and remote "<em>watchdog_pi</em>"</p>
+<p>If so, I would then pull bring the branch <em>pypilot-sean</em> down to my local <em>watchdog_pi</em> repos<br>
+and delete my local repos <em>watchdog-sean</em>  and continue work.</p>
+
+
+
+<a name="341200302"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/376294-Git%20Prowess%20%26%20Advice/topic/Move%20local%20branch%20to%20another%20local%20repos/near/341200302" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Rick Gleason <a href="https://leamas.github.io/zulip-archive/stream/376294-Git-Prowess-.26-Advice/topic/Move.20local.20branch.20to.20another.20local.20repos.html#341200302">(Mar 12 2023 at 00:24)</a>:</h4>
+<p>Not quite the same <br>
+push to new repo from existing repos branch.<br>
+<a href="https://medium.com/fuzzy-code/git-push-to-new-repo-from-existing-repos-branch-acb8bef3f7be">https://medium.com/fuzzy-code/git-push-to-new-repo-from-existing-repos-branch-acb8bef3f7be</a></p>
+
+
+
+<a name="341247942"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/376294-Git%20Prowess%20%26%20Advice/topic/Move%20local%20branch%20to%20another%20local%20repos/near/341247942" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Alec Leamas <a href="https://leamas.github.io/zulip-archive/stream/376294-Git-Prowess-.26-Advice/topic/Move.20local.20branch.20to.20another.20local.20repos.html#341247942">(Mar 12 2023 at 09:43)</a>:</h4>
+<p>First, we need to sort out   the terminology. You need to use the correct definitions if you should be able to google or use GPT to find some answers</p>
+<blockquote>
+<p>. My repos and Sean's have diverged. My repos has a rudder alarm (I removed the old pypilot alarm), and Seans has current pypilot alarm. I have tried to merge these two repos several different ways (with conflicts resolved) and it has failed. I have a local repos watchdog_pi which is cloned from my remote repos of the same name.</p>
+</blockquote>
+<p>No, this is about branches, not repos. You have a branch called master with a  rudder alarm, Sean has another branch also called master with a pypilot alarm. You want to merge these branches.</p>
+<p>If things are setup in a sane way you have two remotes. One is called <em>upstream</em> and is created using Sean's repo url. You also have another one caled <em>origin</em> which is created using  your own repo url.</p>
+<p>Hence, the name of Sean's master branch is <em>upstream/master</em>, and your own branch is origin/master. Note that hese are the branches on the remotes.</p>
+<p>All work should be done in a single clone, the one which is cloned from <em>origin</em>. Here you could just do <code>git fetch upstream master:master-sean</code>. This will create a new branch <em>master-sean</em> n your repo which is Sean's branch. With this in place toy do things like merge (probably a bad idea), rebase (better idea) and finally push your work to  a new branch at origin, a branch which could be used as a sane PR to Sean's repo.</p>
+
+
+
+<a name="346428562"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/376294-Git%20Prowess%20%26%20Advice/topic/Move%20local%20branch%20to%20another%20local%20repos/near/346428562" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Rick Gleason <a href="https://leamas.github.io/zulip-archive/stream/376294-Git-Prowess-.26-Advice/topic/Move.20local.20branch.20to.20another.20local.20repos.html#346428562">(Apr 03 2023 at 00:09)</a>:</h4>
+<p>Alec, I had not seen your response:   This is exactly what I have:<br>
+"If things are setup in a sane way you have two remotes. One is called upstream and is created using Sean's repo url. You also have another one caled origin which is created using your own repo url.<br>
+Hence, the name of Sean's master branch is upstream/master, and your own branch is origin/master. Note that hese are the branches on the remotes."</p>
+<p>The problem is that once conflicts are resolved, it does not work.  But it has been awhile, and I need to get back to this at some point and resolve it.  Yes, I've tried this.  It has been awhile and I need to review the work and get back into it.  Thanks for your help. Let me think about this and get back into it.</p>
+<p>"All work should be done in a single clone, the one which is cloned from origin. Here you could just do git fetch upstream master:master-sean. This will create a new branch master-sean n your repo which is Sean's branch. With this in place toy do things like merge (probably a bad idea), rebase (better idea) and finally push your work to a new branch at origin, a branch which could be used as a sane PR to Sean's repo."</p>
+
+
+
+<hr><p>Last updated: Oct 05 2023 at 09:43 UTC</p>
+</html>

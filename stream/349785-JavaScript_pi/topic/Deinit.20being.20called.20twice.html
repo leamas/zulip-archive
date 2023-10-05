@@ -1,0 +1,39 @@
+<html>
+<head><meta charset="utf-8"><title>Deinit being called twice · JavaScript_pi · Zulip Chat Archive</title></head>
+<h2>Stream: <a href="https://leamas.github.io/zulip-archive/stream/349785-JavaScript_pi/index.html">JavaScript_pi</a></h2>
+<h3>Topic: <a href="https://leamas.github.io/zulip-archive/stream/349785-JavaScript_pi/topic/Deinit.20being.20called.20twice.html">Deinit being called twice</a></h3>
+
+<hr>
+
+<base href="https://opencpn.zulipchat.com">
+
+<head><link href="https://leamas.github.io/zulip-archive/style.css" rel="stylesheet"></head>
+
+<a name="323078199"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/349785-JavaScript_pi/topic/Deinit%20being%20called%20twice/near/323078199" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Tony Voss <a href="https://leamas.github.io/zulip-archive/stream/349785-JavaScript_pi/topic/Deinit.20being.20called.20twice.html#323078199">(Jan 23 2023 at 17:32)</a>:</h4>
+<p>A few times it seems deinit is called more than once and that crashed OCPN.<br>
+In  the v2.0.0 just published, I have put a check in to avoid trying to delete stuff that was deleted by the first call, but I have just had another crash.<br>
+I winder how deinit gets called more than once.  I suspect that when you click on the plugin entry in the options panel, the plugin manager activates the plugin enough to see the details and, when you move away from there it deactivates.  This may be how the  extra deinit happens.<br>
+A work around would be to keep a flag recording initialisation and turn it off on deinit and avoid deiniting if it is false.</p>
+
+
+
+<a name="323082070"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/349785-JavaScript_pi/topic/Deinit%20being%20called%20twice/near/323082070" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Mike Rossiter <a href="https://leamas.github.io/zulip-archive/stream/349785-JavaScript_pi/topic/Deinit.20being.20called.20twice.html#323082070">(Jan 23 2023 at 17:50)</a>:</h4>
+<p>Notice you have your <em>SaveConfig()</em>  at the start of <em>Deinit().</em> For ShipDriver it is at the end of the <em>Deinit()</em> function. Just guessing at things that may cause a problem.</p>
+
+
+
+<a name="323086960"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/349785-JavaScript_pi/topic/Deinit%20being%20called%20twice/near/323086960" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Tony Voss <a href="https://leamas.github.io/zulip-archive/stream/349785-JavaScript_pi/topic/Deinit.20being.20called.20twice.html#323086960">(Jan 23 2023 at 18:16)</a>:</h4>
+<p><span class="user-mention silent" data-user-id="399559">Mike Rossiter</span> <a href="#narrow/stream/349785-JavaScript_pi/topic/Deinit.20being.20called.20twice/near/323082070">said</a>:</p>
+<blockquote>
+<p>Notice you have your <em>SaveConfig()</em>  at the start of <em>Deinit().</em> For ShipDriver it is at the end of the <em>Deinit()</em> function. Just guessing at things that may cause a problem.</p>
+</blockquote>
+<p>Mmmm... cannot see that causing the problem.<br>
+By the way, if you have used the tool to set custom parking parameters, it does a SaveConfig() in an attempt to secure the changes and not lose them should there be an untidy end later.  Not sure whether that helps as the config may only get written out to disc when OCPN quits.  But I had not been anywhere near that when the latest deinit crashed.</p>
+
+
+
+<hr><p>Last updated: Oct 05 2023 at 09:43 UTC</p>
+</html>

@@ -1,0 +1,68 @@
+<html>
+<head><meta charset="utf-8"><title>Driver properties · general · Zulip Chat Archive</title></head>
+<h2>Stream: <a href="https://leamas.github.io/zulip-archive/stream/282854-general/index.html">general</a></h2>
+<h3>Topic: <a href="https://leamas.github.io/zulip-archive/stream/282854-general/topic/Driver.20properties.html">Driver properties</a></h3>
+
+<hr>
+
+<base href="https://opencpn.zulipchat.com">
+
+<head><link href="https://leamas.github.io/zulip-archive/style.css" rel="stylesheet"></head>
+
+<a name="340309725"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/282854-general/topic/Driver%20properties/near/340309725" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Tony Voss <a href="https://leamas.github.io/zulip-archive/stream/282854-general/topic/Driver.20properties.html#340309725">(Mar 08 2023 at 09:44)</a>:</h4>
+<p>I am developing access to the drivers from JavaScript and am coming up with some thoughts.  Hope it is OK to air them here...<br>
+I have this JavaScript (need my plugin v2.2 in development):</p>
+<div class="codehilite" data-code-language="JavaScript"><pre><span></span><code><span class="nx">require</span><span class="p">(</span><span class="s2">"Drivers"</span><span class="p">);</span>
+
+<span class="nx">handles</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nx">OCPNgetActiveDriverHandles</span><span class="p">();</span>
+<span class="k">for</span><span class="w"> </span><span class="p">(</span><span class="nx">i</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mf">0</span><span class="p">;</span><span class="w"> </span><span class="nx">i</span><span class="w"> </span><span class="o">&lt;</span><span class="w"> </span><span class="nx">handles</span><span class="p">.</span><span class="nx">length</span><span class="p">;</span><span class="w"> </span><span class="nx">i</span><span class="o">++</span><span class="p">){</span>
+<span class="w">    </span><span class="nx">attributes</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nx">OCPNgetDriverAttributes</span><span class="p">(</span><span class="nx">handles</span><span class="p">[</span><span class="nx">i</span><span class="p">]);</span>
+<span class="w">    </span><span class="nx">printUnderlined</span><span class="p">(</span><span class="s2">"\n"</span><span class="p">,</span><span class="w"> </span><span class="nx">handles</span><span class="p">[</span><span class="nx">i</span><span class="p">],</span><span class="w"> </span><span class="s2">"\n"</span><span class="p">);</span>
+<span class="w">    </span><span class="nx">print</span><span class="p">(</span><span class="nx">attributes</span><span class="p">,</span><span class="w"> </span><span class="s2">"\n"</span><span class="p">);</span>
+<span class="w">    </span><span class="p">}</span>
+</code></pre></div>
+<p>and I get, on my system (underlined text does not show as such),</p>
+<div class="codehilite"><pre><span></span><code>nmea0183!@!TCP:192.168.1.162:60001
+{&quot;protocol&quot;:&quot;nmea0183&quot;}
+
+nmea0183!@!TCP:0.0.0.0:60002
+{&quot;protocol&quot;:&quot;nmea0183&quot;}
+
+nmea0183!@!TCP:192.168.1.162:60005
+{&quot;protocol&quot;:&quot;nmea0183&quot;}
+
+nmea0183!@!UDP:0.0.0.0:60003
+{&quot;protocol&quot;:&quot;nmea0183&quot;}
+
+nmea0183!@!/dev/cu.Bluetooth-Incoming-Port
+{&quot;protocol&quot;:&quot;nmea0183&quot;}
+
+nmea2000!@!/dev/cu.Bluetooth-Incoming-Port
+{&quot;protocol&quot;:&quot;nmea2000&quot;}
+
+SignalK!@!Signal K:0.0.0.0:10110
+{&quot;protocol&quot;:&quot;SignalK&quot;}
+</code></pre></div>
+<p><strong>Thought 1</strong><br>
+As far as I am aware, there is nothing to stop a plugin sending and receiving data in some other protocol other than NMEA0183, NMEA200 or SignalK.  I could, for example, exchange data with some propriety unsupported device.  Or I might communicate with another computer in JSON.  OCPN will (and should) ignore these.  So should we be able to specify other protocols, either as 'other' or 'other' plus a field in which to enter it?</p>
+<p><strong>Thought 2</strong><br>
+For network connections, OCPN has a Direction setting.  As far as I am aware, this is how OCPN uses it but not a restriction on traffic on that connection.  For serial ports, the direction is more significant.  The direction is recorded in the handle but we are told to treat the handle as opaque and not use the content.  Should the direction be available as an attribute?</p>
+<p><strong>Thought 3</strong><br>
+Locating a desired port can be tricky.  I think it would be helpful if the 'User comment' were available as an attribute.  This could be used to find the required driver.</p>
+
+
+
+<a name="340320271"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/282854-general/topic/Driver%20properties/near/340320271" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Alec Leamas <a href="https://leamas.github.io/zulip-archive/stream/282854-general/topic/Driver.20properties.html#340320271">(Mar 08 2023 at 10:27)</a>:</h4>
+<blockquote>
+<p>As far as I am aware, there is nothing to stop a plugin sending and receiving data in some other protocol other than NMEA0183, NMEA200 or SignalK</p>
+</blockquote>
+<p>OTOH, the current API is heavily designed to match actual data sources and their drivers.  IMHO, Iít is probably not a good idea to hijack this for all sorts of general communication.</p>
+<p>But: what we could do is to expose the underlying observable machinery. Most if this is actually already in the API, the missing part is the different incarnations of Notify(). This allows sending of arbitrary data to a  key. Listeners can listen to a key, and receive the same data. See the <a href="https://leamas.fedorapeople.org/opencpn-api-docs/md__home_mk_src_OpenCPN_libs_observable_README.html#Introduction">API docs</a>  </p>
+<p>This is now an internal API, but could be exported in ocpn_plugin.h, probably using some facade types.</p>
+
+
+
+<hr><p>Last updated: Oct 05 2023 at 09:43 UTC</p>
+</html>

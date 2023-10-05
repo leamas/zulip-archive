@@ -1,0 +1,26 @@
+[
+    {
+        "content": "<p>The new messaging architecture allows for the creation of a message-specify method to handle a given message, e.g. through the NMEA0183Id and NMEA2000id.<br>\nThis makes for clean code if you know what messages you want to handle.</p>\n<p>But it does not (I think) make it possible to examine all traffic, when you might want to look at what is being sent on an NMEA network.<br>\nFor example, there is a JavaScript <a href=\"https://github.com/antipole2/JavaScripts-shared/blob/main/MessageNMEAsampling/MessageNMEAsampling.adoc\">MessageNMEAsampling</a> that examines all NMEA0183 received over the old mechanism and catalogues it.</p>\n<p>Is this possible with the new architecture?  Or does it require, perhaps, a special NMEA0183Id to receive anything?</p>\n<p><strong>NMEA2000</strong><br>\nI have heard of users wanting to receive all manner of NMEA2000 messages (engine revs, fuel gauges etc. etc.). This has, rightly, been turned own as irrelevant for a navigation program.  It would lead to severe bloat.<br>\nBut it could be possible for users to meet such requirements via JavaScript in which they could do their own thing.<br>\nI hope to find time to look at decoding non-OCPN-supported PGNs.</p>\n<p>But like with NMEA0183, it would be useful to be able to receive and catalogue all NMEA2000 traffic.<br>\nIs it possible to receive any NMEA2000 message?  Or does it require a special NMEA2000id for this purpose?</p>\n<p><strong>SignalK</strong><br>\nMight the same issue arise for SignalK?  I am not familiar enough with it to know.</p>\n<p>Do the above requirements need additions to the present capabilities? I could raise RFEs in the light of input here.</p>",
+        "id": 353261988,
+        "sender_full_name": "Tony Voss",
+        "timestamp": 1682597932
+    },
+    {
+        "content": "<blockquote>\n<p>Is this possible with the new architecture?</p>\n</blockquote>\n<p>For N2k? No.</p>\n<blockquote>\n<p>Or does it require, perhaps, a special NMEA0183Id to receive anything?</p>\n</blockquote>\n<p>It is not just about a new id to receive anything. It would also mean that each and every driver needs to be patched to notify also this new id. I don't see this happening unless there is a really strong need.</p>",
+        "id": 353731289,
+        "sender_full_name": "Alec Leamas",
+        "timestamp": 1682671476
+    },
+    {
+        "content": "<p>For 0183 it might be possible, but  in this case it's perhaps easier to just use the \"old\" API.</p>",
+        "id": 353731848,
+        "sender_full_name": "Alec Leamas",
+        "timestamp": 1682671545
+    },
+    {
+        "content": "<p>signalK is a different beast. Also in the new API there is just a single id, so a plugin will receive all messages</p>",
+        "id": 353753060,
+        "sender_full_name": "Alec Leamas",
+        "timestamp": 1682674291
+    }
+]

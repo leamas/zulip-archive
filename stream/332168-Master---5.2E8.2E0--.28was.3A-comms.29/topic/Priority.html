@@ -1,0 +1,657 @@
+<html>
+<head><meta charset="utf-8"><title>Priority · Master - 5.8.0  (was: comms) · Zulip Chat Archive</title></head>
+<h2>Stream: <a href="https://leamas.github.io/zulip-archive/stream/332168-Master---5.2E8.2E0--.28was.3A-comms.29/index.html">Master - 5.8.0  (was: comms)</a></h2>
+<h3>Topic: <a href="https://leamas.github.io/zulip-archive/stream/332168-Master---5.2E8.2E0--.28was.3A-comms.29/topic/Priority.html">Priority</a></h3>
+
+<hr>
+
+<base href="https://opencpn.zulipchat.com">
+
+<head><link href="https://leamas.github.io/zulip-archive/style.css" rel="stylesheet"></head>
+
+<a name="293823721"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332168-Master%20-%205.8.0%20%20%28was%3A%20comms%29/topic/Priority/near/293823721" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Dave Register <a href="https://leamas.github.io/zulip-archive/stream/332168-Master---5.2E8.2E0--.28was.3A-comms.29/topic/Priority.html#293823721">(Aug 17 2022 at 01:06)</a>:</h4>
+<p>All legacy N0183 messages now handled.  Still no sK, coming next.<br>
+Proof of concept in place for automatic priority logic. Lots of console printf on linux tracking priority logic, if you can construct a test scenario.<br>
+I am testing with a serial (local) GPS source, and Hakan's TCP server.  Both running at the same time.  Of course, without prioritization, the ownship jumps across the Atlantic every second.  </p>
+<p>With automatic priority determination, the local serial port comes up first (quicker than making the TCP connection), and so is selected as highest priority source.  And so I am home in North America.  TCP messages from Sweden are decoded and dropped.  If I then unplug the serial line (simulating device failure), then I jump to Sweden, according to the TCP source.  Replug the serial line, and I pop back home.  Basic functionality is OK.  No doubt some edge-cases not handled well.  Needs significant testing, and verification, and code review.</p>
+
+
+
+<a name="293825549"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332168-Master%20-%205.8.0%20%20%28was%3A%20comms%29/topic/Priority/near/293825549" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Dave Register <a href="https://leamas.github.io/zulip-archive/stream/332168-Master---5.2E8.2E0--.28was.3A-comms.29/topic/Priority.html#293825549">(Aug 17 2022 at 01:41)</a>:</h4>
+<p>And of course, this approach can be abandoned entirely in favor of an observable event solution, if that seems better.  Food for thought, anyway.</p>
+
+
+
+<a name="293837865"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332168-Master%20-%205.8.0%20%20%28was%3A%20comms%29/topic/Priority/near/293837865" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Håkan Svensson <a href="https://leamas.github.io/zulip-archive/stream/332168-Master---5.2E8.2E0--.28was.3A-comms.29/topic/Priority.html#293837865">(Aug 17 2022 at 05:35)</a>:</h4>
+<blockquote>
+<p>Current "comm" branch is still WIP. GGA is not yet processed. Probably coming tonight</p>
+</blockquote>
+<p>For info does my server not provide GGA as you may have noticed, only GSV.</p>
+
+
+
+<a name="293846599"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332168-Master%20-%205.8.0%20%20%28was%3A%20comms%29/topic/Priority/near/293846599" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Håkan Svensson <a href="https://leamas.github.io/zulip-archive/stream/332168-Master---5.2E8.2E0--.28was.3A-comms.29/topic/Priority.html#293846599">(Aug 17 2022 at 07:17)</a>:</h4>
+<p>Dave..<br>
+For info I tested two IP conns. My TCP server and a local UDP feed with different positions.<br>
+The one first established after O start was also here the first priority so no "jumping". The watchdog also worked as expected.</p>
+
+
+
+<a name="294106722"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332168-Master%20-%205.8.0%20%20%28was%3A%20comms%29/topic/Priority/near/294106722" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Håkan Svensson <a href="https://leamas.github.io/zulip-archive/stream/332168-Master---5.2E8.2E0--.28was.3A-comms.29/topic/Priority.html#294106722">(Aug 18 2022 at 15:10)</a>:</h4>
+<p>Now I've the YDNU-02 connected.<br>
+The first test was to connect it in the YDs' Auto mode and a serial N0183 connection in O.  - Nothing seen.<br>
+If I use O in real 5.6.1 version it's working as expected. See a Debug copy of what's received attached. <br>
+Q:</p>
+<ol>
+<li>Can I debug it in some way?</li>
+<li>How can I proceed to test it N2K mode? <br>
+<a href="/user_uploads/33951/-w4fFb70mIBY9SGlMNu5_KNy/YDNU-02NM.txt">YDNU-02NM.txt</a></li>
+</ol>
+
+
+
+<a name="294117259"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332168-Master%20-%205.8.0%20%20%28was%3A%20comms%29/topic/Priority/near/294117259" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Alec Leamas <a href="https://leamas.github.io/zulip-archive/stream/332168-Master---5.2E8.2E0--.28was.3A-comms.29/topic/Priority.html#294117259">(Aug 18 2022 at 16:04)</a>:</h4>
+<p>Debugging: I have tthe task to enhance the test suite to cover also this on my TODO list. Some day...</p>
+<p>N2K:  Similar thing here: we need static, simple test cases first. Ability to replay n2k logs, etc...</p>
+
+
+
+<a name="294118059"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332168-Master%20-%205.8.0%20%20%28was%3A%20comms%29/topic/Priority/near/294118059" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Alec Leamas <a href="https://leamas.github.io/zulip-archive/stream/332168-Master---5.2E8.2E0--.28was.3A-comms.29/topic/Priority.html#294118059">(Aug 18 2022 at 16:08)</a>:</h4>
+<p>That is, there is really no n2k functionality in place yet. Nothing to test...</p>
+
+
+
+<a name="294125620"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332168-Master%20-%205.8.0%20%20%28was%3A%20comms%29/topic/Priority/near/294125620" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Håkan Svensson <a href="https://leamas.github.io/zulip-archive/stream/332168-Master---5.2E8.2E0--.28was.3A-comms.29/topic/Priority.html#294125620">(Aug 18 2022 at 16:46)</a>:</h4>
+<p>This first test was only a serial N0183 connection.<br>
+Now I tried "my usual" test on another COM port and it didn't worked either.<br>
+<span class="user-mention" data-user-id="517002">@Dave Register</span>    Didn't you earlier succeed to use a N0183 COM port, or is my memory weak again?<br>
+/H</p>
+
+
+
+<a name="294152196"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332168-Master%20-%205.8.0%20%20%28was%3A%20comms%29/topic/Priority/near/294152196" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Dave Register <a href="https://leamas.github.io/zulip-archive/stream/332168-Master---5.2E8.2E0--.28was.3A-comms.29/topic/Priority.html#294152196">(Aug 18 2022 at 19:08)</a>:</h4>
+<p>I'm here, but soon out for early dinner.  Back on tonight, lots to do.</p>
+
+
+
+<a name="294194664"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332168-Master%20-%205.8.0%20%20%28was%3A%20comms%29/topic/Priority/near/294194664" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Dave Register <a href="https://leamas.github.io/zulip-archive/stream/332168-Master---5.2E8.2E0--.28was.3A-comms.29/topic/Priority.html#294194664">(Aug 19 2022 at 02:15)</a>:</h4>
+<p>Hakan...<br>
+N0183/Serial for Windows was not well tested by me.  Corrected now.</p>
+
+
+
+<a name="294198502"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332168-Master%20-%205.8.0%20%20%28was%3A%20comms%29/topic/Priority/near/294198502" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Dave Register <a href="https://leamas.github.io/zulip-archive/stream/332168-Master---5.2E8.2E0--.28was.3A-comms.29/topic/Priority.html#294198502">(Aug 19 2022 at 03:30)</a>:</h4>
+<p>Working on N2K for Windows, should have something soon.  Also integrating N2K into the priority scheme.<br>
+What N2K devices do you have for test?</p>
+
+
+
+<a name="294199975"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332168-Master%20-%205.8.0%20%20%28was%3A%20comms%29/topic/Priority/near/294199975" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Dave Register <a href="https://leamas.github.io/zulip-archive/stream/332168-Master---5.2E8.2E0--.28was.3A-comms.29/topic/Priority.html#294199975">(Aug 19 2022 at 04:03)</a>:</h4>
+<p>I think the issue with YDNU-02 relates to initial mode set. "Auto"mode is preferred.  In this mode, we need to send a few bytes to the device to switch it to "N2K" mode, which is said to be compatible with Actisense format.  It also disables any N2k-N0183 translations, which is good. The switch to "N2K" mode will be done in the driver, just after the serial port is opened.<br>
+I assume you have the online user manual for the YDNU?<br>
+<a href="https://www.manualslib.com/manual/1249459/Yacht-Devices-Ydnu-02rm.html?page=50#manual">https://www.manualslib.com/manual/1249459/Yacht-Devices-Ydnu-02rm.html?page=50#manual</a></p>
+
+
+
+<a name="294200261"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332168-Master%20-%205.8.0%20%20%28was%3A%20comms%29/topic/Priority/near/294200261" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Dave Register <a href="https://leamas.github.io/zulip-archive/stream/332168-Master---5.2E8.2E0--.28was.3A-comms.29/topic/Priority.html#294200261">(Aug 19 2022 at 04:08)</a>:</h4>
+<p><span class="user-mention" data-user-id="399510">@Alec Leamas</span>   Working on linux O/S provided socketCAN interface.  This will be what is required for many of the various rPi "hat" devices.<br>
+Nice feature of this interface is that it supports a "virtual" mode, allowing very easy CLI invoked replay of raw N2K logs.  So some of the testing will be easier on linux, at least.  No such beast on Windows, I'm afraid.</p>
+
+
+
+<a name="294217101"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332168-Master%20-%205.8.0%20%20%28was%3A%20comms%29/topic/Priority/near/294217101" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Håkan Svensson <a href="https://leamas.github.io/zulip-archive/stream/332168-Master---5.2E8.2E0--.28was.3A-comms.29/topic/Priority.html#294217101">(Aug 19 2022 at 07:51)</a>:</h4>
+<p>Dave..<br>
+I've the YDNU-02NM. And the manual as well. I've also updated the firmware to latest 1.40<br>
+It's connected to a Simrad GS-25, heading and GNSS receiver.</p>
+<p>It's now set in the prefererad Auto mode but manually switching to Raw or N2K mode is no problem but as you say the switch to 0183 or N2K would be done by O dependent on connection type. Just say if I for test should switch it manually.</p>
+
+
+
+<a name="294227833"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332168-Master%20-%205.8.0%20%20%28was%3A%20comms%29/topic/Priority/near/294227833" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Håkan Svensson <a href="https://leamas.github.io/zulip-archive/stream/332168-Master---5.2E8.2E0--.28was.3A-comms.29/topic/Priority.html#294227833">(Aug 19 2022 at 09:21)</a>:</h4>
+<p>The serial N0183 connection is now working with the YDNU-02 in Auto mode. Very good!</p>
+<p>Some prioritization observations: (Note: Not issues or claims. Just thoughts for info.)</p>
+<ul>
+<li>Watchdog switching between N0183 and IP-TCP connections is not yet finalized?</li>
+<li>I saw position data from IP-TCP but "number of satellites" from the N0183 node. Parsing of GGA/GSV would be done from the same source/node as position?</li>
+</ul>
+<p>Unfortunately seems the GGA from my YDNU-02 does not contain  a count of "satellites in use". the field says "00". Let's see if I can discuss this with Yacht Device.</p>
+
+
+
+<a name="294343342"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332168-Master%20-%205.8.0%20%20%28was%3A%20comms%29/topic/Priority/near/294343342" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Dave Register <a href="https://leamas.github.io/zulip-archive/stream/332168-Master---5.2E8.2E0--.28was.3A-comms.29/topic/Priority.html#294343342">(Aug 19 2022 at 18:47)</a>:</h4>
+<p><span class="user-mention" data-user-id="522486">@Håkan Svensson</span> <br>
+The YDNU-02 is working for me on Windows, in N2K mode.</p>
+<ol>
+<li>Manually set YDNU mode to N2K</li>
+<li>
+<p>Set the Settings-&gt;Connections serial port to protocal  "NMEA2000".<br>
+Two points, also:</p>
+</li>
+<li>
+<p>PGN providing heading data is not yet implemented.  Position and velocity are implemented.</p>
+</li>
+<li>N2K does not yet participate in priority negotiation.  So please test with only one connection enabled.<br>
+Please let me know how this goes before I move further.</li>
+</ol>
+
+
+
+<a name="294353647"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332168-Master%20-%205.8.0%20%20%28was%3A%20comms%29/topic/Priority/near/294353647" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Håkan Svensson <a href="https://leamas.github.io/zulip-archive/stream/332168-Master---5.2E8.2E0--.28was.3A-comms.29/topic/Priority.html#294353647">(Aug 19 2022 at 19:59)</a>:</h4>
+<p><span class="user-mention" data-user-id="517002">@Dave Register</span> <br>
+Yes it works. I get position COG and SOG.<br>
+Two observations:</p>
+<ol>
+<li>
+<p>In options-&gt;Connections. If I change something and click "OK" it works but if I click "Apply" O crashes in:<br>
+opencpn.exe!CommDriverN2KSerialThread::Entry() Line 632 C++  See attached pict.1</p>
+</li>
+<li>
+<p>The scaled vector ship symbol is destroyed. The GPS point is moved. See pict 2, 3</p>
+</li>
+</ol>
+<p><a href="/user_uploads/33951/y6egWzsr50IHfAF1w4njxaYM/bild.png">bild.png</a> <br>
+<a href="/user_uploads/33951/ZKFIpJwl2u8VudDf0sdbFM9K/bild.png">bild.png</a> <br>
+<a href="/user_uploads/33951/IRNCv3GMVklcWrReHk3p1Ow9/bild.png">bild.png</a></p>
+<div class="message_inline_image"><a href="/user_uploads/33951/y6egWzsr50IHfAF1w4njxaYM/bild.png" title="bild.png"><img src="/user_uploads/33951/y6egWzsr50IHfAF1w4njxaYM/bild.png"></a></div><div class="message_inline_image"><a href="/user_uploads/33951/ZKFIpJwl2u8VudDf0sdbFM9K/bild.png" title="bild.png"><img src="/user_uploads/33951/ZKFIpJwl2u8VudDf0sdbFM9K/bild.png"></a></div><div class="message_inline_image"><a href="/user_uploads/33951/IRNCv3GMVklcWrReHk3p1Ow9/bild.png" title="bild.png"><img src="/user_uploads/33951/IRNCv3GMVklcWrReHk3p1Ow9/bild.png"></a></div>
+
+
+
+<a name="294354935"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332168-Master%20-%205.8.0%20%20%28was%3A%20comms%29/topic/Priority/near/294354935" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Håkan Svensson <a href="https://leamas.github.io/zulip-archive/stream/332168-Master---5.2E8.2E0--.28was.3A-comms.29/topic/Priority.html#294354935">(Aug 19 2022 at 20:07)</a>:</h4>
+<p>Q: The value for baud rate is irrelevant I suppose? I didn't changed from default 4800. Should we in this case change the default to 250k to not puzzle users?</p>
+
+
+
+<a name="294358049"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332168-Master%20-%205.8.0%20%20%28was%3A%20comms%29/topic/Priority/near/294358049" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Håkan Svensson <a href="https://leamas.github.io/zulip-archive/stream/332168-Master---5.2E8.2E0--.28was.3A-comms.29/topic/Priority.html#294358049">(Aug 19 2022 at 20:29)</a>:</h4>
+<p>The crash..<br>
+If I change baud rate and click "OK" O again crash here:</p>
+<blockquote>
+<p>opencpn.exe!CommDriverN2KSerialThread::Entry() Line 587 C++</p>
+</blockquote>
+
+
+
+<a name="294359094"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332168-Master%20-%205.8.0%20%20%28was%3A%20comms%29/topic/Priority/near/294359094" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Dave Register <a href="https://leamas.github.io/zulip-archive/stream/332168-Master---5.2E8.2E0--.28was.3A-comms.29/topic/Priority.html#294359094">(Aug 19 2022 at 20:37)</a>:</h4>
+<p>OK, great. Thanks for the confirmation.  Next I will add Heading PGN, make YDNU auto switch to N2K mode, and finish priority logic for N2K.  Should be ready overnight.</p>
+
+
+
+<a name="294359309"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332168-Master%20-%205.8.0%20%20%28was%3A%20comms%29/topic/Priority/near/294359309" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Dave Register <a href="https://leamas.github.io/zulip-archive/stream/332168-Master---5.2E8.2E0--.28was.3A-comms.29/topic/Priority.html#294359309">(Aug 19 2022 at 20:39)</a>:</h4>
+<p>I think baud rate is irrelevant.  I will probably just remove it from setting dialog, when N2K is selected.</p>
+
+
+
+<a name="294381904"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332168-Master%20-%205.8.0%20%20%28was%3A%20comms%29/topic/Priority/near/294381904" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Dave Register <a href="https://leamas.github.io/zulip-archive/stream/332168-Master---5.2E8.2E0--.28was.3A-comms.29/topic/Priority.html#294381904">(Aug 20 2022 at 01:16)</a>:</h4>
+<p>I have added PGN for Heading, enabled auto-switch  to "N2K" mode for YDNU gateway, and enabled message priority handling for N2K.  Heading PGN (127250) is untested, as I have no N2K heading sensor.<br>
+Also corrected fault on driver change/shutdown.<br>
+Good Luck.</p>
+
+
+
+<a name="294402432"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332168-Master%20-%205.8.0%20%20%28was%3A%20comms%29/topic/Priority/near/294402432" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Håkan Svensson <a href="https://leamas.github.io/zulip-archive/stream/332168-Master---5.2E8.2E0--.28was.3A-comms.29/topic/Priority.html#294402432">(Aug 20 2022 at 07:16)</a>:</h4>
+<p>Dave..<br>
+The command to get the YDNU-02 to switch to N2K mode is working. As well as back to N0183 mode when needed.</p>
+<p>Heading:<br>
+What I can see is heading data not used in a proper way. The ship is not orientated according to the heading neither by N0183 nor N2K data.<br>
+(To compare I also used N0183 in a O v5.6.1 and there it's working so no problem with the received data)</p>
+<p>Debug of "comm_decoder.cpp" while the Simrad compass was in the same position.<br>
+In N2K connection I received:<br>
+DecodePGN127250(.....<br>
+  temp_data.gHdt = Heading = 3.3643000000000001 (Radians!!)</p>
+<p>In N0183 connection I received:<br>
+DecodeHDT(....<br>
+  temp_data.gHdt = m_NMEA0183.Hdt.DegreesTrue = 196.40000000000001</p>
+<p>BTW:<br>
+I still get O crash on Options-&gt;Apply on a N0183 connection at &gt;    opencpn.exe!CommDriverN0183SerialThread::Entry() Line 488   C++</p>
+
+
+
+<a name="294409543"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332168-Master%20-%205.8.0%20%20%28was%3A%20comms%29/topic/Priority/near/294409543" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Håkan Svensson <a href="https://leamas.github.io/zulip-archive/stream/332168-Master---5.2E8.2E0--.28was.3A-comms.29/topic/Priority.html#294409543">(Aug 20 2022 at 08:40)</a>:</h4>
+<p>Dave..<br>
+For info about the heading....<br>
+My bad about the improper ship symbol heading orientation.<br>
+If adapt the N2K PGN 172350 decoding to radians:<br>
+  temp_data.gHdt = Heading * 180. / M_PI;<br>
+The ship's heading is correct.</p>
+<p>What happened before was I switched from N2K connection to N0183 "on the fly" and then was the 3.3 radians value from N2K not updated to 129° from N0183. If I restart O in between the shift of connection all is good. So it was about the prioritization logic.</p>
+<p>BTW:<br>
+My Simrad device is not healthy. Position is correct but COG is corrupt. (Maybe that's why I got it?)<br>
+Debug N0183....<br>
+m_NMEA0183.Rmc.SpeedOverGroundKnots = 0.0000000000000000<br>
+m_NMEA0183.Rmc.TrackMadeGoodDegreesTrue = -nan(ind)<br>
+Debug N2K...<br>
+if (ParseN2kPGN129026(v, SID, ref, COG, SOG)) {<br>
+    temp_data.gCog = COG *180. / M_PI;  &gt;&gt;&gt; COG = -1000000000.0000000<br>
+    temp_data.gSog = SOG;  &gt;&gt;&gt;  SOG = 0.0000000000000000</p>
+
+
+
+<a name="294410901"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332168-Master%20-%205.8.0%20%20%28was%3A%20comms%29/topic/Priority/near/294410901" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Håkan Svensson <a href="https://leamas.github.io/zulip-archive/stream/332168-Master---5.2E8.2E0--.28was.3A-comms.29/topic/Priority.html#294410901">(Aug 20 2022 at 08:56)</a>:</h4>
+<p>Dave...again<br>
+Of course the same goes for the variation, so PGN decoder would read:</p>
+<blockquote>
+<p>if (ParseN2kPGN127250(v, SID, Heading, Deviation, Variation, ref)){<br>
+    temp_data.gHdt = Heading * 180. / M_PI;<br>
+    temp_data.gVar = Variation * 180. / M_PI;<br>
+    return true;<br>
+  }</p>
+</blockquote>
+
+
+
+<a name="294414041"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332168-Master%20-%205.8.0%20%20%28was%3A%20comms%29/topic/Priority/near/294414041" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Håkan Svensson <a href="https://leamas.github.io/zulip-archive/stream/332168-Master---5.2E8.2E0--.28was.3A-comms.29/topic/Priority.html#294414041">(Aug 20 2022 at 09:25)</a>:</h4>
+<p>More info - discussion:<br>
+From PGN 127250 I've the following reading:<br>
+SID: SID = 0 '\0'  <br>
+Deviation: -1000000000.0000000<br>
+ref: N2khr_magnetic (1)</p>
+<p>The "ref" value (1) would indicate the Heading is true?<br>
+If "ref"  not equals "1" and variation equals "0" or null would that indicate hdm instead of hdt? If so we would let WMM adjust it?</p>
+
+
+
+<a name="294442316"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332168-Master%20-%205.8.0%20%20%28was%3A%20comms%29/topic/Priority/near/294442316" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Dave Register <a href="https://leamas.github.io/zulip-archive/stream/332168-Master---5.2E8.2E0--.28was.3A-comms.29/topic/Priority.html#294442316">(Aug 20 2022 at 13:33)</a>:</h4>
+<p>I'll fix the missing rad-&gt;degrees conversion.<br>
+On the COG corruption:  I suppose if we see a ridiculous value (i.e. abs(COG) &gt; 360), we judge it invalid.  <br>
+Is COG correct when moving (SOG &gt; 0)?</p>
+
+
+
+<a name="294442814"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332168-Master%20-%205.8.0%20%20%28was%3A%20comms%29/topic/Priority/near/294442814" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Håkan Svensson <a href="https://leamas.github.io/zulip-archive/stream/332168-Master---5.2E8.2E0--.28was.3A-comms.29/topic/Priority.html#294442814">(Aug 20 2022 at 13:38)</a>:</h4>
+<p>No I get no COG from the device and how I move the antenna no SOG either. But I assume if he has no COG he don't transfer any SOG either.</p>
+
+
+
+<a name="294445984"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332168-Master%20-%205.8.0%20%20%28was%3A%20comms%29/topic/Priority/near/294445984" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Dave Register <a href="https://leamas.github.io/zulip-archive/stream/332168-Master---5.2E8.2E0--.28was.3A-comms.29/topic/Priority.html#294445984">(Aug 20 2022 at 14:06)</a>:</h4>
+<p>So here we have a real case:  We know that SOG/COG from this device is unreliable.  Should we:</p>
+<ol>
+<li>Try to automatically detect (by invalid values), and simply ignore the data?</li>
+<li>Or is this a case where we need to filter PGNs to eliminate the bad one?  This requires a UI...<br>
+Thoughts?</li>
+</ol>
+
+
+
+<a name="294448600"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332168-Master%20-%205.8.0%20%20%28was%3A%20comms%29/topic/Priority/near/294448600" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Alec Leamas <a href="https://leamas.github.io/zulip-archive/stream/332168-Master---5.2E8.2E0--.28was.3A-comms.29/topic/Priority.html#294448600">(Aug 20 2022 at 14:30)</a>:</h4>
+<p>MIddle ground for now could be to do some intelligent logging. We should IMHO not  throw away messages fully automated.  After all, it could be a device which just not is working properly, something user should be informed about.  </p>
+<p>So, when illegal input is discovered we should inform user about it, but only once. Once this is done, just let remove things which are invalid. </p>
+<p>As for the user interface I think it would be an advantage if we could postpone this until we have more details on what should be handled.</p>
+
+
+
+<a name="294448657"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332168-Master%20-%205.8.0%20%20%28was%3A%20comms%29/topic/Priority/near/294448657" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Alec Leamas <a href="https://leamas.github.io/zulip-archive/stream/332168-Master---5.2E8.2E0--.28was.3A-comms.29/topic/Priority.html#294448657">(Aug 20 2022 at 14:30)</a>:</h4>
+<p>Bye for now...</p>
+
+
+
+<a name="294453146"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332168-Master%20-%205.8.0%20%20%28was%3A%20comms%29/topic/Priority/near/294453146" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Håkan Svensson <a href="https://leamas.github.io/zulip-archive/stream/332168-Master---5.2E8.2E0--.28was.3A-comms.29/topic/Priority.html#294453146">(Aug 20 2022 at 15:12)</a>:</h4>
+<p>Thoughts....<br>
+1.<br>
+Not reliable COG, and therefor also SOG, we should ignore, What else could we do?<br>
+If we from the same source get position we could use that. At least if this is the only source providing position.<br>
+If we get both position and velocity from another source we may prioritize that one instead?<br>
+2.<br>
+If it's the only position we may use it.<br>
+A UI showing all sources and what we get from each and where the user can set priority would of course be the ultimate solution. That will be similar to for example the TimeZero system.</p>
+
+
+
+<a name="294503919"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332168-Master%20-%205.8.0%20%20%28was%3A%20comms%29/topic/Priority/near/294503919" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Dave Register <a href="https://leamas.github.io/zulip-archive/stream/332168-Master---5.2E8.2E0--.28was.3A-comms.29/topic/Priority.html#294503919">(Aug 21 2022 at 03:33)</a>:</h4>
+<p>I did correct the rad-&gt;degrees conversion.<br>
+I am suspicious that the value "-1000000000.0000000" is special, in some way.  Maybe signals "invalid data"  from PGN generally.  If so, we can have a common method for notifying the user, and logging such error events. I have asked Timo for more information.</p>
+
+
+
+<a name="294514992"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332168-Master%20-%205.8.0%20%20%28was%3A%20comms%29/topic/Priority/near/294514992" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Håkan Svensson <a href="https://leamas.github.io/zulip-archive/stream/332168-Master---5.2E8.2E0--.28was.3A-comms.29/topic/Priority.html#294514992">(Aug 21 2022 at 07:18)</a>:</h4>
+<p>The value "-1000000000.0000000" seems like a "nan", agree.</p>
+
+
+
+<a name="294522201"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332168-Master%20-%205.8.0%20%20%28was%3A%20comms%29/topic/Priority/near/294522201" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Håkan Svensson <a href="https://leamas.github.io/zulip-archive/stream/332168-Master---5.2E8.2E0--.28was.3A-comms.29/topic/Priority.html#294522201">(Aug 21 2022 at 09:03)</a>:</h4>
+<p>Considerations...<br>
+1.<br>
+The YDNU-02 has different modes that can be controlled by us during establish of a connection like N2K. For now we send the "set N2K" when opening a serial NMEA2000 type of connection. For a NMEA0183 type of connection we send nothing and thus assuming the device is in AUTO mode. The AUTO mode will fall back to N0183 if nothing is "said". <br>
+What if the user has set the device to RAW/N2K. Do we need to send "set N0183 mode" for a serial NMEA0183 connection? </p>
+<p>2.<br>
+In my case the YDNU-02 device is connected to COM3.<br>
+What if is the user enable two connections; One NMEA0183 on COM3 and one NMEA2000 on COM3.<br>
+When I tried O crashes here: </p>
+<blockquote>
+<p>opencpn.exe!CommDriverN2KSerialThread::Entry() Line 673<br>
+    at c:\builds\ocpn\opencpn\src\comm_drv_n2k_serial.cpp(673)</p>
+</blockquote>
+<p>We may take precaution to hinder two or more enabled connections for the same serial source to avoid crashes? When saved to config a manual tweak to the config file is needed to solve it.</p>
+
+
+
+<a name="294522902"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332168-Master%20-%205.8.0%20%20%28was%3A%20comms%29/topic/Priority/near/294522902" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Alec Leamas <a href="https://leamas.github.io/zulip-archive/stream/332168-Master---5.2E8.2E0--.28was.3A-comms.29/topic/Priority.html#294522902">(Aug 21 2022 at 09:13)</a>:</h4>
+<blockquote>
+<p>We may take precaution to hinder two or more enabled connections for the same serial source</p>
+</blockquote>
+<p>Yes. </p>
+<p>On windows it will probably crash since the OS only allows one open connection to a given device.</p>
+<p>Linux/MacOS is even  worse since the OS won't give any error if a device is opened multiple times.  But of course it will not work, the input will be randomly distributed between the different drivers giving all sorts of interesting errors.</p>
+
+
+
+<a name="294522921"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332168-Master%20-%205.8.0%20%20%28was%3A%20comms%29/topic/Priority/near/294522921" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Håkan Svensson <a href="https://leamas.github.io/zulip-archive/stream/332168-Master---5.2E8.2E0--.28was.3A-comms.29/topic/Priority.html#294522921">(Aug 21 2022 at 09:13)</a>:</h4>
+<p>Heading priorities..<br>
+If I switch from a N2K connection on COM3 (YDNU-02) to a N0183 connection or vice versa the heading is not updated with the new data. I assume the heading priority is not "released" (no watchdog?) but still stick to the first connection. <br>
+If I restart O the correct heading is detected.</p>
+
+
+
+<a name="294523046"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332168-Master%20-%205.8.0%20%20%28was%3A%20comms%29/topic/Priority/near/294523046" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Alec Leamas <a href="https://leamas.github.io/zulip-archive/stream/332168-Master---5.2E8.2E0--.28was.3A-comms.29/topic/Priority.html#294523046">(Aug 21 2022 at 09:15)</a>:</h4>
+<p>So, a driver needs to reserve a port as long as it uses it. Should not be that hard. However, we must also ensure that it  does release  the port when  it should, which might be harder.</p>
+
+
+
+<a name="294523424"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332168-Master%20-%205.8.0%20%20%28was%3A%20comms%29/topic/Priority/near/294523424" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Håkan Svensson <a href="https://leamas.github.io/zulip-archive/stream/332168-Master---5.2E8.2E0--.28was.3A-comms.29/topic/Priority.html#294523424">(Aug 21 2022 at 09:21)</a>:</h4>
+<p>Serial ports..<br>
+Or simply hinder enabling in the connections UI if the same port is already enabled?</p>
+
+
+
+<a name="294523597"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332168-Master%20-%205.8.0%20%20%28was%3A%20comms%29/topic/Priority/near/294523597" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Alec Leamas <a href="https://leamas.github.io/zulip-archive/stream/332168-Master---5.2E8.2E0--.28was.3A-comms.29/topic/Priority.html#294523597">(Aug 21 2022 at 09:23)</a>:</h4>
+<p>Something like that.  But this needs underpinning code, it's not the sort of decisions to be made in a GUI part.</p>
+
+
+
+<a name="294523893"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332168-Master%20-%205.8.0%20%20%28was%3A%20comms%29/topic/Priority/near/294523893" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Håkan Svensson <a href="https://leamas.github.io/zulip-archive/stream/332168-Master---5.2E8.2E0--.28was.3A-comms.29/topic/Priority.html#294523893">(Aug 21 2022 at 09:28)</a>:</h4>
+<p>Maybe but we need to inform the user now using the GUI about the "silly" attempt.</p>
+
+
+
+<a name="294524838"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332168-Master%20-%205.8.0%20%20%28was%3A%20comms%29/topic/Priority/near/294524838" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Alec Leamas <a href="https://leamas.github.io/zulip-archive/stream/332168-Master---5.2E8.2E0--.28was.3A-comms.29/topic/Priority.html#294524838">(Aug 21 2022 at 09:41)</a>:</h4>
+<p>No, let's not divert into this, keeping focus on  the core.  The longer we can postpone UI stuff, the better. Nothing is worse than UI:s which are amended and amended over time  without overall thoughts. Thoughts which I think we  are just not  able to do right now. </p>
+<p>That is, for now we assume experienced testers ;)</p>
+
+
+
+<a name="294524931"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332168-Master%20-%205.8.0%20%20%28was%3A%20comms%29/topic/Priority/near/294524931" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Alec Leamas <a href="https://leamas.github.io/zulip-archive/stream/332168-Master---5.2E8.2E0--.28was.3A-comms.29/topic/Priority.html#294524931">(Aug 21 2022 at 09:42)</a>:</h4>
+<p>Might certainly qualify for a  bullet inn the Alpha Release Notes, though.</p>
+
+
+
+<a name="294550086"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332168-Master%20-%205.8.0%20%20%28was%3A%20comms%29/topic/Priority/near/294550086" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Dave Register <a href="https://leamas.github.io/zulip-archive/stream/332168-Master---5.2E8.2E0--.28was.3A-comms.29/topic/Priority.html#294550086">(Aug 21 2022 at 14:24)</a>:</h4>
+<p>" What if the user has set the device to RAW/N2K. Do we need to send "set N0183 mode" for a serial NMEA0183 connection? <br>
+My opinion is "No".  YDNU-02 in NMEA translate mode is not our business.  We cannot detect this condition.  Clearly, we will need some very specific documentation for the various N2K adapters we will support.  General notion for YDNU-02:  Leave it in Auto mode.</p>
+
+
+
+<a name="294550282"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332168-Master%20-%205.8.0%20%20%28was%3A%20comms%29/topic/Priority/near/294550282" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Dave Register <a href="https://leamas.github.io/zulip-archive/stream/332168-Master---5.2E8.2E0--.28was.3A-comms.29/topic/Priority.html#294550282">(Aug 21 2022 at 14:26)</a>:</h4>
+<p>"If I switch from a N2K connection on COM3 (YDNU-02) to a N0183 connection..."<br>
+Do you mean both connections us YDNU?, or is the N0183 connection a separate serial line?</p>
+
+
+
+<a name="294550515"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332168-Master%20-%205.8.0%20%20%28was%3A%20comms%29/topic/Priority/near/294550515" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Dave Register <a href="https://leamas.github.io/zulip-archive/stream/332168-Master---5.2E8.2E0--.28was.3A-comms.29/topic/Priority.html#294550515">(Aug 21 2022 at 14:29)</a>:</h4>
+<p>Timo responds on "-1e9" value.  This come from the N2K parser library, and does indicate "unavailable data".  I will improve the detection and handling of this condition.<br>
+Aside:  What could be wrong with your Simrad device?  Lat/Lon OK, but calculated Cog/Sog not provided.  Strange...</p>
+
+
+
+<a name="294550739"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332168-Master%20-%205.8.0%20%20%28was%3A%20comms%29/topic/Priority/near/294550739" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Dave Register <a href="https://leamas.github.io/zulip-archive/stream/332168-Master---5.2E8.2E0--.28was.3A-comms.29/topic/Priority.html#294550739">(Aug 21 2022 at 14:31)</a>:</h4>
+<p>"So, a driver needs to reserve a port as long as it uses it."<br>
+Maybe a job for the registry?</p>
+
+
+
+<a name="294551675"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332168-Master%20-%205.8.0%20%20%28was%3A%20comms%29/topic/Priority/near/294551675" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Dave Register <a href="https://leamas.github.io/zulip-archive/stream/332168-Master---5.2E8.2E0--.28was.3A-comms.29/topic/Priority.html#294551675">(Aug 21 2022 at 14:40)</a>:</h4>
+<p>More on registry:  Maybe we need a method where the driver factory asks the registry if a particular serial port is " not occupied" before instantiating any serial driver?</p>
+
+
+
+<a name="294555843"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332168-Master%20-%205.8.0%20%20%28was%3A%20comms%29/topic/Priority/near/294555843" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Håkan Svensson <a href="https://leamas.github.io/zulip-archive/stream/332168-Master---5.2E8.2E0--.28was.3A-comms.29/topic/Priority.html#294555843">(Aug 21 2022 at 15:27)</a>:</h4>
+<blockquote>
+<p>we will need some very specific documentation for the various N2K adapters</p>
+</blockquote>
+<p>If I understand the YDNU-02 manual correct these command, like to set N2K, is general for YD and Actisense. To set it in N0183 mode it's just to send some dummy like $XXGGA. But I can agree to your "No".</p>
+<blockquote>
+<p>Do you mean both connections us YDNU?, or is the N0183 connection a separate serial line?</p>
+</blockquote>
+<p>Sorry, I was unclear. I mean both connections was made for the same COM3 port. One N2K and one N0183. My consideration was about to hinder both to be enabled at the same time.</p>
+<blockquote>
+<p>What could be wrong with your Simrad device? Lat/Lon OK, but calculated Cog/Sog not provided. Strange...</p>
+</blockquote>
+<p>Yes, but I assume something with the calculation or other damage. There's a reason why this device was once replaced from the ship it was mounted? (And I couldn't find any service program to investigate it.)</p>
+
+
+
+<a name="294613062"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332168-Master%20-%205.8.0%20%20%28was%3A%20comms%29/topic/Priority/near/294613062" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Håkan Svensson <a href="https://leamas.github.io/zulip-archive/stream/332168-Master---5.2E8.2E0--.28was.3A-comms.29/topic/Priority.html#294613062">(Aug 22 2022 at 06:31)</a>:</h4>
+<p>Testing today's commits:<br>
+O crash:<br>
+I have a N2K connection to YDNU on port COM3 running and disable that using "OK".<br>
+Then, in options, I enable a N0183 connection to the same port COM3 and click "OK" O still crashes here:</p>
+<blockquote>
+<div class="codehilite"><pre><span></span><code>  opencpn.exe!CommDriverN0183SerialThread::Entry() Line 488   C++
+[External Code] 
+[Frames below may be incorrect and/or missing, no symbols loaded for wxbase312u_vc_custom.dll]  Unknown
+</code></pre></div>
+
+</blockquote>
+<p><a href="/user_uploads/33951/YjLzfL6uGnPb9ODhGUa080zI/bild.png">bild.png</a></p>
+<div class="message_inline_image"><a href="/user_uploads/33951/YjLzfL6uGnPb9ODhGUa080zI/bild.png" title="bild.png"><img src="/user_uploads/33951/YjLzfL6uGnPb9ODhGUa080zI/bild.png"></a></div>
+
+
+
+<a name="294630206"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332168-Master%20-%205.8.0%20%20%28was%3A%20comms%29/topic/Priority/near/294630206" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Håkan Svensson <a href="https://leamas.github.io/zulip-archive/stream/332168-Master---5.2E8.2E0--.28was.3A-comms.29/topic/Priority.html#294630206">(Aug 22 2022 at 08:46)</a>:</h4>
+<p>Dave..<br>
+I made performance with my Simrad device. After having leaved the harbor I've visited the last days I went out and made a compass calibration by turning 2.5 turns directly after power on. The calibration was not really OK but now it reports both GOG and SOG. <br>
+So now we at least have learned how a bad value is reported and can continue as normal. <br>
+The bad heading degrees I've to investigate more but now under sail and have to back later.</p>
+
+
+
+<a name="294823867"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332168-Master%20-%205.8.0%20%20%28was%3A%20comms%29/topic/Priority/near/294823867" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Håkan Svensson <a href="https://leamas.github.io/zulip-archive/stream/332168-Master---5.2E8.2E0--.28was.3A-comms.29/topic/Priority.html#294823867">(Aug 23 2022 at 08:30)</a>:</h4>
+<p>Dave..<br>
+Now when my Simrad GS25 is also reporting COG I noticed an intressant detail:<br>
+When I make no speed, moored, the COG is reported as "-1e9". As soon the ship is moving a relevant value is sent. I've to study more to identify the threshold. (Could this be a way to simply say: N/A? "0.0" can of course not be used as for SOG)<br>
+This may imply we can't use the "-1e9" value as a generally bad or unusable connection as discussed above.</p>
+<p>Do you see the same from your N2K GNSS receiver?</p>
+
+
+
+<a name="294825333"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332168-Master%20-%205.8.0%20%20%28was%3A%20comms%29/topic/Priority/near/294825333" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Alec Leamas <a href="https://leamas.github.io/zulip-archive/stream/332168-Master---5.2E8.2E0--.28was.3A-comms.29/topic/Priority.html#294825333">(Aug 23 2022 at 08:42)</a>:</h4>
+<p><span class="user-mention" data-user-id="522486">@Håkan Svensson</span>   Generally, comparing float/double numbers to fixed values is a bad idea. Floating point arithmetic  (almost) always has some errors, it's  just not exact.  That is, any comparison to a constant like 0.0 (or 0) should be done like <code>abs(value - 0.0) &lt; PRECISION</code>, where <code>PRECISION</code> is a constant which often can be defined once and for all.</p>
+
+
+
+<a name="294827559"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332168-Master%20-%205.8.0%20%20%28was%3A%20comms%29/topic/Priority/near/294827559" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Alec Leamas <a href="https://leamas.github.io/zulip-archive/stream/332168-Master---5.2E8.2E0--.28was.3A-comms.29/topic/Priority.html#294827559">(Aug 23 2022 at 08:59)</a>:</h4>
+<p>Arrg... -1e9... that's not a rounding error.  Sorry.</p>
+
+
+
+<a name="295176116"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332168-Master%20-%205.8.0%20%20%28was%3A%20comms%29/topic/Priority/near/295176116" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Håkan Svensson <a href="https://leamas.github.io/zulip-archive/stream/332168-Master---5.2E8.2E0--.28was.3A-comms.29/topic/Priority.html#295176116">(Aug 25 2022 at 07:36)</a>:</h4>
+<p>FWIW: More info about the "-1e9" value from the Simrad device.<br>
+I've tracked what's happening with COG and SOG from "not moving" to "moving" and my conclusion is the -1e9 value is a way to report "nan" or "---".  If you study the sequence below where I'm moored, move a little bit and finally cast off also the SOG says "-1e9" while COG is established but obviously not yet ackurat.  <br>
+Here I've logged COG and SOG when any value is changed:</p>
+<blockquote>
+<p>08:13:28.104 MESSAGE comm_decoder.cpp:282  <strong>*</strong> YDNU-02: COG: -1000000000.000000, SOG: 0.000000<br>
+08:14:23.004 MESSAGE comm_decoder.cpp:282  <strong>*</strong> YDNU-02: COG: 0.011500, SOG: 0.060000<br>
+08:14:23.203 MESSAGE comm_decoder.cpp:282  <strong>*</strong> YDNU-02: COG: -1000000000.000000, SOG: 0.000000<br>
+08:28:31.546 MESSAGE comm_decoder.cpp:282  <strong>*</strong> YDNU-02: COG: 6.553200, SOG: -1000000000.000000<br>
+08:28:31.597 MESSAGE comm_decoder.cpp:282  <strong>*</strong> YDNU-02: COG: -1000000000.000000, SOG: 0.000000<br>
+08:57:02.287 MESSAGE comm_decoder.cpp:282  <strong>*</strong> YDNU-02: COG: 1.548900, SOG: 0.220000<br>
+08:57:02.287 MESSAGE comm_decoder.cpp:282  <strong>*</strong> YDNU-02: COG: 1.556800, SOG: 0.220000<br>
+08:57:02.488 MESSAGE comm_decoder.cpp:282  <strong>*</strong> YDNU-02: COG: 1.561100, SOG: 0.220000<br>
+08:57:02.489 MESSAGE comm_decoder.cpp:282  <strong>*</strong> YDNU-02: COG: 1.565500, SOG: 0.230000<br>
+08:57:02.687 MESSAGE comm_decoder.cpp:282  <strong>*</strong> YDNU-02: COG: 1.573400, SOG: 0.240000</p>
+</blockquote>
+
+
+
+<a name="298973636"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332168-Master%20-%205.8.0%20%20%28was%3A%20comms%29/topic/Priority/near/298973636" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Håkan Svensson <a href="https://leamas.github.io/zulip-archive/stream/332168-Master---5.2E8.2E0--.28was.3A-comms.29/topic/Priority.html#298973636">(Sep 15 2022 at 13:53)</a>:</h4>
+<p>I've not made any priority for the N2K GNSS Status data in Dashboard.<br>
+Not yet sure how to handle that.<br>
+For a reliable handling we may need a flag from O core what source used for position  and Dashboard would use the same source for GNSS data.  <br>
+Thoughts?</p>
+
+
+
+<a name="298988890"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332168-Master%20-%205.8.0%20%20%28was%3A%20comms%29/topic/Priority/near/298988890" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Dave Register <a href="https://leamas.github.io/zulip-archive/stream/332168-Master---5.2E8.2E0--.28was.3A-comms.29/topic/Priority.html#298988890">(Sep 15 2022 at 15:01)</a>:</h4>
+<p>Since we are changing the plugin API rather significantly, we could add such information.  I will investigate.  Add to ToDo List?</p>
+
+
+
+<a name="299004357"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332168-Master%20-%205.8.0%20%20%28was%3A%20comms%29/topic/Priority/near/299004357" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Håkan Svensson <a href="https://leamas.github.io/zulip-archive/stream/332168-Master---5.2E8.2E0--.28was.3A-comms.29/topic/Priority.html#299004357">(Sep 15 2022 at 16:15)</a>:</h4>
+<p>Added to TODO: "Position source flag to Dashboard"</p>
+
+
+
+<a name="304017601"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332168-Master%20-%205.8.0%20%20%28was%3A%20comms%29/topic/Priority/near/304017601" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Håkan Svensson <a href="https://leamas.github.io/zulip-archive/stream/332168-Master---5.2E8.2E0--.28was.3A-comms.29/topic/Priority.html#304017601">(Oct 14 2022 at 12:14)</a>:</h4>
+<p>For info I've in a  ship installed a "MiniPlex-3USB(-N2K)" from <a href="http://www.shipmodul.com/products.html">Shipmodul</a> Impressive! There are plenty of valuable settings and opportunities to combine, filter and priority incoming data. Both N0183 and N2k. This <a href="https://www.shipmodul.com/downloads/manuals/MiniPlex-3_3.14_EN.pdf">manual</a> describes it all.<br>
+It's a waste read but would inspire our priority logic and possible GUI.</p>
+
+
+
+<a name="307070915"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332168-Master%20-%205.8.0%20%20%28was%3A%20comms%29/topic/Priority/near/307070915" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Håkan Svensson <a href="https://leamas.github.io/zulip-archive/stream/332168-Master---5.2E8.2E0--.28was.3A-comms.29/topic/Priority.html#307070915">(Oct 31 2022 at 10:18)</a>:</h4>
+<p>I move to this topic to discuss the new priority implementation:</p>
+<p>Amazing! A good start. I like the dialog.<br>
+On Win10<br>
+First a general discussion about priority expressions so we're talking the same "language":<br>
+If I say one connection has prio 2 and another prio 3. Whome is the first choise for OCPN?<br>
+In other words; is OCPN priority hierarchy from "top/highest" to lower 0,1,2,3 or 3,2,1,0<br>
+Or is the priority order 0, 1, 2, 3  or 3, 2, 1, 0?<br>
+(Should we use the designation "0"?)<br>
+Another expression: If I move a source Up in the list it will get higher priority. Do we call the top most posiotion prio 1?<br>
+There are all kinds of understanding about this out there so we better nail it between us to be able to explain for others.</p>
+<p>Now to first prio test.<br>
+The first test scenario here is two serial TCP connections, a) and b), where the positions are quit different. <br>
+Maybe not a real case but easy to follow what's happening.<br>
+a) is the first detected so prio 1.<br>
+Initial notes:</p>
+<p>Function:</p>
+<ul>
+<li>All sources are there. Good.</li>
+<li>If I change for example the position source, a)RMC &gt; b)AIVDO the ship's position is not stable changed. (I saw one trace but very short)</li>
+<li>If I change sources for all Pos, Velo and Sat from source a) to source b) nothing is changed and when return to "Adjust comm..." dialog the last change is not saved</li>
+<li>[Settings/CommPriority] in the config file is not changed.</li>
+<li>It may be since I'm for a test using sources with totally different positions you make some relevancy check and don't allow this change of priority! Is it so? I haven't checked.</li>
+</ul>
+<p>UI:</p>
+<ul>
+<li>The dialog form is nice and clear.</li>
+<li>Please make the dialog size adjustable or the priority list window adapted to text length. See below picture.</li>
+<li>The checkbox to open the dialog is still checked after dialog OK-close. When disable/deselect the checkbox the dialog is again opened. Would it be feasible to change to a click button instead of a checkbox?</li>
+<li>When I select one row to move up/down the row is moved but after one "move" the row is deselected and the view is up-most again.<br>
+The expected function is the actual row would still be selected so one could follow the row movements up/down.<br>
+Compare Dashboard preferences "Instruments" Up/Down.</li>
+</ul>
+<p>General discussion:</p>
+<ul>
+<li>What happens if one source priority is printed to config  [Settings/CommPriority] and that source is not available upon next OCPN start?</li>
+<li>Now we can set individual priority for each of Pos, Velo, Var and Sat. So in theory we can select Pos from one source and Velo/Sat from another.  That seems not feasible? If used we can present a position from a receiver using 3 satellites but report satellites count from another receiver using 12 satellites? <br>
+Would we instead package Pos/Velo/Var/Sat to one prio row and select from which of available sources to select or move up/down?<br>
+Hmm.. Not easy. Thoughts and discussion please.</li>
+</ul>
+<p>This was the initial test only. You have produced a very good start! I think we have a job to do to finalize this. Amazing! :)</p>
+<p><a href="/user_uploads/33951/mD2yaSeaSAI87uu0iGO5OBog/bild.png">bild.png</a></p>
+<div class="message_inline_image"><a href="/user_uploads/33951/mD2yaSeaSAI87uu0iGO5OBog/bild.png" title="bild.png"><img src="/user_uploads/33951/mD2yaSeaSAI87uu0iGO5OBog/bild.png"></a></div>
+
+
+
+<a name="307120468"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332168-Master%20-%205.8.0%20%20%28was%3A%20comms%29/topic/Priority/near/307120468" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Dave Register <a href="https://leamas.github.io/zulip-archive/stream/332168-Master---5.2E8.2E0--.28was.3A-comms.29/topic/Priority.html#307120468">(Oct 31 2022 at 14:22)</a>:</h4>
+<p>Priority 0 is highest.</p>
+
+
+
+<a name="307162920"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332168-Master%20-%205.8.0%20%20%28was%3A%20comms%29/topic/Priority/near/307162920" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Håkan Svensson <a href="https://leamas.github.io/zulip-archive/stream/332168-Master---5.2E8.2E0--.28was.3A-comms.29/topic/Priority.html#307162920">(Oct 31 2022 at 17:35)</a>:</h4>
+<p>Ok good!</p>
+
+
+
+<a name="307184562"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332168-Master%20-%205.8.0%20%20%28was%3A%20comms%29/topic/Priority/near/307184562" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Håkan Svensson <a href="https://leamas.github.io/zulip-archive/stream/332168-Master---5.2E8.2E0--.28was.3A-comms.29/topic/Priority.html#307184562">(Oct 31 2022 at 19:26)</a>:</h4>
+<p>Dave..<br>
+The priority logic is not good when sources are changed.<br>
+Here I disabled all previous serial connections and enabled a Signalk connection instead.<br>
+The now not active sources are still in the priority window and for example heading is not passed to the ship symbol. It should have pointed in the track direction. Not north.<br>
+<a href="/user_uploads/33951/3ni3GjdVR1E_jbPRkDviD0yX/bild.png">bild.png</a></p>
+<div class="message_inline_image"><a href="/user_uploads/33951/3ni3GjdVR1E_jbPRkDviD0yX/bild.png" title="bild.png"><img src="/user_uploads/33951/3ni3GjdVR1E_jbPRkDviD0yX/bild.png"></a></div>
+
+
+
+<a name="315872511"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332168-Master%20-%205.8.0%20%20%28was%3A%20comms%29/topic/Priority/near/315872511" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Dave Register <a href="https://leamas.github.io/zulip-archive/stream/332168-Master---5.2E8.2E0--.28was.3A-comms.29/topic/Priority.html#315872511">(Dec 14 2022 at 17:25)</a>:</h4>
+<p>Talking about the priority "categories", of Pos, Vel, Var, and Sats.<br>
+I'm not sure why, in fact, that anyone would want to use data from two different sources at one time, say Pos and Vel.  I am usually thinking like:</p>
+<ol>
+<li>initial startup data source selection automatically, when multiple sources are available, and..</li>
+<li>fail-over scenarios, where the primary nav data source goes off line</li>
+</ol>
+<p>I welcome comment on other use cases.</p>
+
+
+
+<a name="317319265"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332168-Master%20-%205.8.0%20%20%28was%3A%20comms%29/topic/Priority/near/317319265" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Håkan Svensson <a href="https://leamas.github.io/zulip-archive/stream/332168-Master---5.2E8.2E0--.28was.3A-comms.29/topic/Priority.html#317319265">(Dec 22 2022 at 09:32)</a>:</h4>
+<p>Window: Adjust Comm Priorities O crash when collapse a list<br>
+Open the window from Options-&gt;Connections<br>
+Click one of the "-" or arrows to collapse either of the lists -&gt; O Crash</p>
+
+
+
+<hr><p>Last updated: Oct 05 2023 at 09:43 UTC</p>
+</html>

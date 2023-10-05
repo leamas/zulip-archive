@@ -1,0 +1,20 @@
+[
+    {
+        "content": "<p>I have partly recovered, and made test shot which untangles many, many dependencies.  It is not in a state which can be merged, the history is a joke. To be useful one would need to merge this in small pieces. It's a bit hard, since everything depends on everything until done, but probably doable.</p>\n<p>Some bits and pieces:</p>\n<ul>\n<li>The route/waypoint database which now is in navutils is separated so it can be used without depending on the complete navutils mess.</li>\n<li>Track, Route, RoutePoint and  RouteMan have been splitted in to a gui part + core, thus making it possible to use the core elements without importing gui deps.</li>\n<li>Call from lower layers to dialogs have been handled using EventVar, std::function and, sparingly, evil #ifdefs.</li>\n<li>Various functions in navutil , OCPNPlatform have been  moved out of the guid deps part.</li>\n</ul>\n<p>I do think these are important and good steps. Will try to create some  sane merge candidates later. For now, pushing the branch comm_deps which is the current status. It compiles and links cleanly, opencpn-cmd \"seems\" to work. The last test fails  due to test code problems, otherwise OK.</p>",
+        "id": 299007920,
+        "sender_full_name": "Alec Leamas",
+        "timestamp": 1663259672
+    },
+    {
+        "content": "<p>OK, huge amount of work here.  Thanks for tackling this.  I would not have the energy to redo 10 years of code and creeping bit-rot...<br>\nIs it safe for me to work on comm_n0183_output.cpp/h while you work on comm_deps branch?</p>",
+        "id": 299039979,
+        "sender_full_name": "Dave Register",
+        "timestamp": 1663270989
+    },
+    {
+        "content": "<p>Yes, so was my plan. I will try to merge this piece by piece, trying to not break that many eggs...</p>",
+        "id": 299053038,
+        "sender_full_name": "Alec Leamas",
+        "timestamp": 1663276597
+    }
+]

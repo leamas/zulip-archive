@@ -1,0 +1,194 @@
+[
+    {
+        "content": "<p>Dave has made a small change to ocpn_plugins.h to accommodate a wish of mine.<br>\nFor now I have edited my copy in opencpn-libs/api-18.<br>\nBut what has to happen so it becomes permanent?  Is it sufficient to reinstall shipdriver 3.2 or is more needed?</p>",
+        "id": 344692961,
+        "sender_full_name": "Tony Voss",
+        "timestamp": 1679850629
+    },
+    {
+        "content": "<p>I mell merge your PR later, thanks, busy now.</p>\n<p>Until we have a new release of Shipdriver you will have to update opencpn-libs to latest commit. </p>\n<p>However, I think the best option for you right now is to create a new directory <em>libs</em> if it does not exist already. Then copy api-18 from <em>opencpn-libs</em> to  <em>libs</em> and change the reference in Plugin.cmake. This way, you have a local copy for the time being. When there is a new shipdriver release move things back again.</p>\n<p>Of course, this works iff the version you have in libs is the same as in the opencpn-libs PR</p>",
+        "id": 344851738,
+        "sender_full_name": "Alec Leamas",
+        "timestamp": 1679920847
+    },
+    {
+        "content": "<p><span class=\"user-mention\" data-user-id=\"399510\">@Alec Leamas</span>  I have put a duplicate api-18 into libs as you advise.  But my Plugin.cmake file refers only to libs and not to opncpn-libs.  It must workout to use ocpn-libs somewhere else?</p>",
+        "id": 344914328,
+        "sender_full_name": "Tony Voss",
+        "timestamp": 1679934654
+    },
+    {
+        "content": "<p>No, it's not mandatory in any way. opencpn-libs is just a centralized way to maintain dependencies, plugins are free to use whatever deps they want . The catch is that if you have a local copy you must  maintain it yourself. But then again, since you are ahead of opencpn-libs it makes sense in this case.</p>",
+        "id": 344923042,
+        "sender_full_name": "Alec Leamas",
+        "timestamp": 1679936855
+    },
+    {
+        "content": "<p>Sorry Alex - I do not understand.  I have the updated ocpn_plugins.h in</p>\n<ol>\n<li>ocpn-libs/api18 (my fork) </li>\n<li>libs/api-18</li>\n</ol>\n<p>The Plugins.cmake file only refers to libs/api-18 not ocpn-libs.<br>\nI can build locally OK.<br>\nBut remote builds load from ocpn-libs/api-18 and not my fork, so the remote builds fail.</p>",
+        "id": 344932611,
+        "sender_full_name": "Tony Voss",
+        "timestamp": 1679939674
+    },
+    {
+        "content": "<p>Just restore opencpn-libs, you don't use it but might run into trouble when the builder tries to  checkout a non-existent commit.</p>",
+        "id": 344936155,
+        "sender_full_name": "Alec Leamas",
+        "timestamp": 1679940801
+    },
+    {
+        "content": "<p>Restored main branch but it is still using ocpn-libs and hence failing because of the old .h file.</p>\n<div class=\"codehilite\"><pre><span></span><code>+ &#39;[&#39; -f /Users/distiller/.config/local-build.rc &#39;]&#39;\n+ git submodule update --init opencpn-libs\nSubmodule &#39;opencpn-libs&#39; (https://github.com/leamas/opencpn-libs.git) registered for path &#39;opencpn-libs&#39;\nCloning into &#39;/Users/distiller/project/opencpn-libs&#39;...\n</code></pre></div>",
+        "id": 345052293,
+        "sender_full_name": "Tony Voss",
+        "timestamp": 1679989785
+    },
+    {
+        "content": "<p>You have not restored  opencpn-libs. You need to read up on git submodules.</p>\n<p>Then (only then) do something like:</p>\n<div class=\"codehilite\"><pre><span></span><code>$ cd opencpn-libs\n$ git checkout -b tmp \n$ git remote update origin\n$ git fetch -f origin master:master\n$ git checkout master\n$ cd ..\n$ git add opencpn-libs\n$ git commit -m &quot; opencpn-libs: restore master branch&quot;\n</code></pre></div>\n\n<p>I. e., checkout the remote master  branch, a branch which is available also for the builder.</p>",
+        "id": 345062197,
+        "sender_full_name": "Alec Leamas",
+        "timestamp": 1679992640
+    },
+    {
+        "content": "<div class=\"codehilite\"><pre><span></span><code>% cd /Users/tony/JavaScript_pi/opencpn-libs\n% git checkout -b tmp\nSwitched to a new branch &#39;tmp&#39;\n% git remote update origin\nFetching origin\n% git fetch -f origin master:master\nfatal: couldn&#39;t find remote ref master\n</code></pre></div>\n<p>Alec...  I think we are just trying to get me back to where we started before I forked?<br>\nIf so, can I not just reinstall Shipdriver?  I think it sets up the sub-module correctly?<br>\nI still need to use the .h file from libs not ocpn-libs where I put it on your instruction</p>",
+        "id": 345127729,
+        "sender_full_name": "Tony Voss",
+        "timestamp": 1680009024
+    },
+    {
+        "content": "<p>No, re-installinng will not help you here, you really must get opencpn-libs in order again. </p>\n<p>My bad, there is no branch \"master\", it's named \"main\". So using <code>git fetch -f origin main:main; git checkout main</code> should  do the trick</p>",
+        "id": 345138162,
+        "sender_full_name": "Alec Leamas",
+        "timestamp": 1680011198
+    },
+    {
+        "content": "<p>OK - looks like I am back with the correct sub-module.<br>\nBut remote builds use the ocpn-libs and not libs, so my compile fails because the extra couple of lines in the .h file are missed.  I see no place in my Plugins.cmake file to change that.  It includes the line:<br>\n<code>set(PKG_API_LIB api-18)  #  A directory in libs/ e. g., api-17 or api-16</code><br>\nbut no reference to ocpn-libs</p>",
+        "id": 345162777,
+        "sender_full_name": "Tony Voss",
+        "timestamp": 1680016221
+    },
+    {
+        "content": "<p><span class=\"user-mention\" data-user-id=\"399510\">@Alec Leamas</span> : Need to put the latest (v3.2  branch) version into the catalog. What tag  should I use to put it into Cloudsmith prod? <em>sd3.2.4-beta1</em>?</p>",
+        "id": 347351981,
+        "sender_full_name": "Mike Rossiter",
+        "timestamp": 1680774185
+    },
+    {
+        "content": "<p>hang on...</p>",
+        "id": 347353171,
+        "sender_full_name": "Alec Leamas",
+        "timestamp": 1680774480
+    },
+    {
+        "content": "<p>Current v.3.2 branch is tagged with <em>sd3.2.3</em>.  The way to find out is </p>\n<div class=\"codehilite\"><pre><span></span><code>    $ git checkout v3.2.1\n    $ git log --oneline  -12\n    5f15a0c4 (HEAD -&gt; v3.2, tag: sd3.2.3, upstream/v3.2) Changelog: 3.2.3 release\n    e1a3141d Changelog update\n    [snip]\n    318eca5a (tag: sd3.2.3-beta1, tag: sd3.2.1-beta1) Changelog: Initial 3.2.3-beta1 TBD entry\n</code></pre></div>\n<p>That is, v3.2 is currently at <code>5f15a0c4</code> which is tagged as <em>sd3.2.3</em>  i. e. it is published as sd3.2.3. Why not just stick to that?</p>",
+        "id": 347355937,
+        "sender_full_name": "Alec Leamas",
+        "timestamp": 1680775153
+    },
+    {
+        "content": "<p>But if I use sd3.2.3 as the tag it will tell me that has already been used when making new artifacts for the catalog.</p>",
+        "id": 347357283,
+        "sender_full_name": "Mike Rossiter",
+        "timestamp": 1680775462
+    },
+    {
+        "content": "<p>Oops... <code>git checkout v3.2.1</code> should be <code>git checkout v3.2</code>. Sorry.</p>",
+        "id": 347357480,
+        "sender_full_name": "Alec Leamas",
+        "timestamp": 1680775507
+    },
+    {
+        "content": "<blockquote>\n<p>But if I use sd3.2.3 as the tag it will tell me that has already been used when making new artifacts for the catalog.</p>\n</blockquote>\n<p>But if you have, why not use them?</p>",
+        "id": 347357664,
+        "sender_full_name": "Alec Leamas",
+        "timestamp": 1680775550
+    },
+    {
+        "content": "<p>I see them in plugins/auto branch but I am wary of merging them with the master branch. Auto was not made from the latest upstream master.</p>",
+        "id": 347359075,
+        "sender_full_name": "Mike Rossiter",
+        "timestamp": 1680775886
+    },
+    {
+        "content": "<p>What about deleting all metadata files apart from ShipDriver in plugins auto branch and then squashing that into master?</p>",
+        "id": 347359678,
+        "sender_full_name": "Mike Rossiter",
+        "timestamp": 1680776030
+    },
+    {
+        "content": "<p>Sounds good to me.</p>",
+        "id": 347359805,
+        "sender_full_name": "Alec Leamas",
+        "timestamp": 1680776052
+    },
+    {
+        "content": "<p>I can take a look at the PR before Dave wakes up...</p>",
+        "id": 347359902,
+        "sender_full_name": "Alec Leamas",
+        "timestamp": 1680776077
+    },
+    {
+        "content": "<p>wait....</p>",
+        "id": 347360023,
+        "sender_full_name": "Alec Leamas",
+        "timestamp": 1680776105
+    },
+    {
+        "content": "<p>No. If you delete all other files the deletions will be forwarded in the PR. This is not a good idea. Instead, working in the plugins clone:</p>\n<p>- Make sure you have the correct shipdriver metadata files in place.<br>\n  - Update the remote: <code>git remote update upstream</code><br>\n  - And then rebase you branch on upstream: <code>git rebase upstream/master</code></p>\n<p>If that fails,  you could add the files manually to upstream/master. Let me know if you need to do this.</p>",
+        "id": 347361219,
+        "sender_full_name": "Alec Leamas",
+        "timestamp": 1680776380
+    },
+    {
+        "content": "<p>Before you do that, it might make sense to save your auto branch. One simple way is to tag it: <code>git tag auto-bak auto</code>. This creates a tag <em>auto-bak</em> whcih will be the original auto branch. You might need that...</p>",
+        "id": 347362303,
+        "sender_full_name": "Alec Leamas",
+        "timestamp": 1680776594
+    },
+    {
+        "content": "<p>Need lunch. Just in case you need it, another way assuming that the metadata files lives in the auto branch:</p>\n<div class=\"codehilite\"><pre><span></span><code>    $ git remote update upstream\n    $ git checkout auto\n    ... Check the exact shidpriver files you want to have in master, like metadata/ShipDriver-3.2-android-armhf-A32-16.xml. Should be a quite long list of files.\n    $ git fetch -f upstream master:master\n    $ git checkout master\n</code></pre></div>\n<p>Now you have an updated copy of  the master branch and a list of files you want to add from the auto branch. Each file is added/updated using commands like</p>\n<div class=\"codehilite\"><pre><span></span><code>    git checkout auto metadata/ShipDriver-3.2-android-armhf-A32-16.xml\n</code></pre></div>\n<p>Here, you have exact control, but also a lot of work...</p>",
+        "id": 347364477,
+        "sender_full_name": "Alec Leamas",
+        "timestamp": 1680777044
+    },
+    {
+        "content": "<p>First method seems to have worked. PR made and validated.</p>",
+        "id": 347367827,
+        "sender_full_name": "Mike Rossiter",
+        "timestamp": 1680777913
+    },
+    {
+        "content": "<p>back. great!</p>",
+        "id": 347372050,
+        "sender_full_name": "Alec Leamas",
+        "timestamp": 1680778982
+    },
+    {
+        "content": "<p><span class=\"user-mention\" data-user-id=\"399510\">@Alec Leamas</span> : Is there anything you want to add to the ShipDriver template (tag sd3.2.3 at present) before I go ahead with publishing a number of plugins.  I would like to avoid too many roundtrips (obviously).</p>",
+        "id": 349865554,
+        "sender_full_name": "Mike Rossiter",
+        "timestamp": 1681485331
+    },
+    {
+        "content": "<p>Dinner party here. Yes we we need to cherrypick one or two commits more . Will do late today or early tomorrow</p>",
+        "id": 349985867,
+        "sender_full_name": "Alec Leamas",
+        "timestamp": 1681487142
+    },
+    {
+        "content": "<p>Thanks. Enjoy your evening.</p>",
+        "id": 349987646,
+        "sender_full_name": "Mike Rossiter",
+        "timestamp": 1681487609
+    },
+    {
+        "content": "<p><a href=\"https://github.com/Rasbats/shipdriver_pi/pull/515\">https://github.com/Rasbats/shipdriver_pi/pull/515</a></p>",
+        "id": 350021307,
+        "sender_full_name": "Alec Leamas",
+        "timestamp": 1681496918
+    },
+    {
+        "content": "<p>I have prepared a release in v3.2. Can we talk before you push the button? In particular, don't forget to update Changelog...</p>",
+        "id": 350021714,
+        "sender_full_name": "Alec Leamas",
+        "timestamp": 1681497053
+    }
+]

@@ -1,0 +1,191 @@
+<html>
+<head><meta charset="utf-8"><title>API 1.18: android build · Master - 5.8.0  (was: comms) · Zulip Chat Archive</title></head>
+<h2>Stream: <a href="https://leamas.github.io/zulip-archive/stream/332168-Master---5.2E8.2E0--.28was.3A-comms.29/index.html">Master - 5.8.0  (was: comms)</a></h2>
+<h3>Topic: <a href="https://leamas.github.io/zulip-archive/stream/332168-Master---5.2E8.2E0--.28was.3A-comms.29/topic/API.201.2E18.3A.20android.20build.html">API 1.18: android build</a></h3>
+
+<hr>
+
+<base href="https://opencpn.zulipchat.com">
+
+<head><link href="https://leamas.github.io/zulip-archive/style.css" rel="stylesheet"></head>
+
+<a name="388710017"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332168-Master%20-%205.8.0%20%20%28was%3A%20comms%29/topic/API%201.18%3A%20android%20build/near/388710017" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Alec Leamas <a href="https://leamas.github.io/zulip-archive/stream/332168-Master---5.2E8.2E0--.28was.3A-comms.29/topic/API.201.2E18.3A.20android.20build.html#388710017">(Sep 02 2023 at 16:37)</a>:</h4>
+<p><span class="user-mention" data-user-id="517002">@Dave Register</span> </p>
+<p>I'm currently on <a href="https://github.com/Rasbats/shipdriver_pi/issues/551">https://github.com/Rasbats/shipdriver_pi/issues/551</a>. I think I have fixed the primary problem, it's basically just about a changed symlink.  However, I get linkage errors below.</p>
+<p>I presume that this is about the new symbols in 1.18 not being available in the  download at <a href="https://github.com/bdbcat/OCPNAndroidCommon/archive/master.zip">https://github.com/bdbcat/OCPNAndroidCommon/archive/master.zip</a> which we use. Basically, I think it needs to be updated. </p>
+<p>However, updating this is above my paygrade. Could you possibly...</p>
+<div class="codehilite"><pre><span></span><code>ld: error: undefined symbol: opencpn_plugin_118::opencpn_plugin_118(void*)
+&gt;&gt;&gt; referenced by ShipDriver_pi.cpp:105 (/home/circleci/project/src/ShipDriver_pi.cpp:105)
+&gt;&gt;&gt;               CMakeFiles/ShipDriver_pi.dir/src/ShipDriver_pi.cpp.o:(ShipDriver_pi::ShipDriver_pi(void*))
+&gt;&gt;&gt; did you mean: opencpn_plugin_110::opencpn_plugin_110(void*)
+&gt;&gt;&gt; defined in: /home/circleci/project/cache/OCPNAndroidCommon-master/opencpn/API-117/libarm64/libgorp.so
+
+ld: error: undefined symbol: wxMessageBoxCaptionStr
+&gt;&gt;&gt; referenced by ShipDriver_pi.cpp:373 (/home/circleci/project/src/ShipDriver_pi.cpp:373)
+&gt;&gt;&gt;               CMakeFiles/ShipDriver_pi.dir/src/ShipDriver_pi.cpp.o:(ShipDriver_pi::SaveConfig())
+&gt;&gt;&gt; referenced by ShipDriver_pi.cpp:373 (/home/circleci/project/src/ShipDriver_pi.cpp:373)
+&gt;&gt;&gt;               CMakeFiles/ShipDriver_pi.dir/src/ShipDriver_pi.cpp.o:(ShipDriver_pi::SaveConfig())
+&gt;&gt;&gt; referenced by ShipDrivergui_impl.cpp:260 (/home/circleci/project/src/ShipDrivergui_impl.cpp:260)
+&gt;&gt;&gt;               CMakeFiles/ShipDriver_pi.dir/src/ShipDrivergui_impl.cpp.o:(Dlg::SetStop())
+&gt;&gt;&gt; referenced 43 more times
+
+ld: error: undefined symbol: opencpn_plugin_118::RenderGLOverlayMultiCanvas(wxGLContext*, PlugIn_ViewPort*, int, int)
+&gt;&gt;&gt; referenced by ocpn_plugin.h:610 (/home/circleci/project/opencpn-libs/api-18/ocpn_plugin.h:610)
+&gt;&gt;&gt;               CMakeFiles/ShipDriver_pi.dir/src/ShipDriver_pi.cpp.o:(opencpn_plugin_118::RenderGLOverlayMultiCanvas(wxGLContext*, PlugIn_ViewPort*, int))
+
+ld: error: undefined symbol: opencpn_plugin_118::RenderOverlayMultiCanvas(wxDC&amp;, PlugIn_ViewPort*, int, int)
+&gt;&gt;&gt; referenced by ocpn_plugin.h:632 (/home/circleci/project/opencpn-libs/api-18/ocpn_plugin.h:632)
+&gt;&gt;&gt;               CMakeFiles/ShipDriver_pi.dir/src/ShipDriver_pi.cpp.o:(opencpn_plugin_118::RenderOverlayMultiCanvas(wxDC&amp;, PlugIn_ViewPort*, int))
+
+ld: error: undefined symbol: PlugIn_Waypoint_Ex::~PlugIn_Waypoint_Ex()
+&gt;&gt;&gt; referenced by ShipDrivergui_impl.cpp:45 (/home/circleci/project/src/ShipDrivergui_impl.cpp:45)
+&gt;&gt;&gt;               CMakeFiles/ShipDriver_pi.dir/src/ShipDrivergui_impl.cpp.o:(wxPlugin_WaypointExListNode::DeleteData())
+
+ld: error: undefined symbol: GetRouteGUIDArray()
+&gt;&gt;&gt; referenced by ShipDrivergui_impl.cpp:2097 (/home/circleci/project/src/ShipDrivergui_impl.cpp:2097)
+&gt;&gt;&gt;               CMakeFiles/ShipDriver_pi.dir/src/ShipDrivergui_impl.cpp.o:(Dlg::OnFollow(wxCommandEvent&amp;))
+
+ld: error: undefined symbol: GetRouteEx_Plugin(wxString const&amp;)
+&gt;&gt;&gt; referenced by ShipDrivergui_impl.cpp:2099 (/home/circleci/project/src/ShipDrivergui_impl.cpp:2099)
+&gt;&gt;&gt;               CMakeFiles/ShipDriver_pi.dir/src/ShipDrivergui_impl.cpp.o:(Dlg::OnFollow(wxCommandEvent&amp;))
+&gt;&gt;&gt; referenced by ShipDrivergui_impl.cpp:2172 (/home/circleci/project/src/ShipDrivergui_impl.cpp:2172)
+&gt;&gt;&gt;               CMakeFiles/ShipDriver_pi.dir/src/ShipDrivergui_impl.cpp.o:(Dlg::OnFollow(wxCommandEvent&amp;))
+
+ld: error: undefined symbol: PlugIn_Route_Ex::~PlugIn_Route_Ex()
+&gt;&gt;&gt; referenced by memory:2427 (/opt/android/ndk/toolchains/llvm/prebuilt/linux-x86_64/bin/../sysroot/usr/include/c++/v1/memory:2427)
+&gt;&gt;&gt;               CMakeFiles/ShipDriver_pi.dir/src/ShipDrivergui_impl.cpp.o:(std::__ndk1::default_delete&lt;PlugIn_Route_Ex&gt;::operator()(PlugIn_Route_Ex*) const)
+clang++: error: linker command failed with exit code 1 (use -v to see invocation
+</code></pre></div>
+
+
+
+<a name="388722831"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332168-Master%20-%205.8.0%20%20%28was%3A%20comms%29/topic/API%201.18%3A%20android%20build/near/388722831" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Dave Register <a href="https://leamas.github.io/zulip-archive/stream/332168-Master---5.2E8.2E0--.28was.3A-comms.29/topic/API.201.2E18.3A.20android.20build.html#388722831">(Sep 02 2023 at 19:41)</a>:</h4>
+<p><span class="user-mention" data-user-id="399510">@Alec Leamas</span> <br>
+These are built-time errors, or run-time errors?</p>
+
+
+
+<a name="388722952"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332168-Master%20-%205.8.0%20%20%28was%3A%20comms%29/topic/API%201.18%3A%20android%20build/near/388722952" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Alec Leamas <a href="https://leamas.github.io/zulip-archive/stream/332168-Master---5.2E8.2E0--.28was.3A-comms.29/topic/API.201.2E18.3A.20android.20build.html#388722952">(Sep 02 2023 at 19:43)</a>:</h4>
+<p>Build time</p>
+
+
+
+<a name="388724782"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332168-Master%20-%205.8.0%20%20%28was%3A%20comms%29/topic/API%201.18%3A%20android%20build/near/388724782" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Dave Register <a href="https://leamas.github.io/zulip-archive/stream/332168-Master---5.2E8.2E0--.28was.3A-comms.29/topic/API.201.2E18.3A.20android.20build.html#388724782">(Sep 02 2023 at 20:08)</a>:</h4>
+<p><span class="user-mention" data-user-id="399510">@Alec Leamas</span> <br>
+Sure I can update this.<br>
+But I am feeling a little stupid at the moment.  Why does a plugin build (under linux) actually need to link against OpenCPN core at build-time?  We know it does under Windows, since Windows linker is primitive.  But on linux, ld takes care of the run-time linkage, since the signatures were available at build time from the header.<br>
+Of course, I might expect a plugin built for API 118 to fail to load at runtime.  That is a separate problem.<br>
+But why link at build-time?<br>
+Have I dropped a bit somewhere?</p>
+
+
+
+<a name="388725844"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332168-Master%20-%205.8.0%20%20%28was%3A%20comms%29/topic/API%201.18%3A%20android%20build/near/388725844" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Alec Leamas <a href="https://leamas.github.io/zulip-archive/stream/332168-Master---5.2E8.2E0--.28was.3A-comms.29/topic/API.201.2E18.3A.20android.20build.html#388725844">(Sep 02 2023 at 20:18)</a>:</h4>
+<p>This is Android, not Linux</p>
+
+
+
+<a name="388725987"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332168-Master%20-%205.8.0%20%20%28was%3A%20comms%29/topic/API%201.18%3A%20android%20build/near/388725987" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Alec Leamas <a href="https://leamas.github.io/zulip-archive/stream/332168-Master---5.2E8.2E0--.28was.3A-comms.29/topic/API.201.2E18.3A.20android.20build.html#388725987">(Sep 02 2023 at 20:20)</a>:</h4>
+<p>On phone... Complete build here: <a href="https://app.circleci.com/pipelines/github/leamas/shipdriver_pi/1867/workflows/a696698b-34f9-4b5d-a022-dea565b3947c/jobs/19806">https://app.circleci.com/pipelines/github/leamas/shipdriver_pi/1867/workflows/a696698b-34f9-4b5d-a022-dea565b3947c/jobs/19806</a></p>
+
+
+
+<a name="388767144"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332168-Master%20-%205.8.0%20%20%28was%3A%20comms%29/topic/API%201.18%3A%20android%20build/near/388767144" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Dave Register <a href="https://leamas.github.io/zulip-archive/stream/332168-Master---5.2E8.2E0--.28was.3A-comms.29/topic/API.201.2E18.3A.20android.20build.html#388767144">(Sep 03 2023 at 02:33)</a>:</h4>
+<p><span class="user-mention" data-user-id="399510">@Alec Leamas</span> <br>
+OCPNAndroidCommon updated to API 118.<br>
+You will need to update your CI script which downloads the library contents from "API-117" to "API-118".</p>
+<p>Regarding my "feeling stupid":  please disregard, but I may have more to say about this later.<br>
+And for reference, Android dlopen() and friends are linux derived, as are the clang tools.</p>
+<p>Here is later:<br>
+In linux, when building a dynamic library(call it target lib), why does the linker need to load all of the dependent libraries of target lib?  They do not become part of the target library.  And all of the required entry points are defined in header files, signature included.<br>
+Is there no way to tell the linker that this target library will be "dlopen()-ed", and many, (or all) of its dependents are already loaded in the core image that calls dlopen() ?  So dlopen() can just look around in the existing core symtab to perform the linkage...<br>
+Curious...</p>
+
+
+
+<a name="388793619"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332168-Master%20-%205.8.0%20%20%28was%3A%20comms%29/topic/API%201.18%3A%20android%20build/near/388793619" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Alec Leamas <a href="https://leamas.github.io/zulip-archive/stream/332168-Master---5.2E8.2E0--.28was.3A-comms.29/topic/API.201.2E18.3A.20android.20build.html#388793619">(Sep 03 2023 at 07:41)</a>:</h4>
+<p>Good question, and an opportunity to structure my thoughts.  My knowledge is sketchy at best. If you  google this you will  certainly find answers better than mine.</p>
+<p>The libraries are needed at build time for at least three reasons. The first is about the simple fact that a header does not guarantee that there is any actual code  implementing it. That is, if  ocpn_plugin.h defines a method which is not used by main opencpn this will compile just fine. If a plugin references it this will also compile, but give a runtime linker error.</p>
+<p>The second reason is that to create a proper runtime link the linker needs information only available in the library, notably the SONAME. There is no way to deduce this from the header. </p>
+<p>And, to create this link the linker needs to find the library at build time, before the runtime link exists. This is the reason for how library names looks. Take for example zlib at Fedora. The runtime library package contains <code>/usr/lib64/libz.so.1</code> and <code>/usr/lib64/libz.so.1.2.13</code>. At build time, the linker has no way to locate select the correct library version. However, zlib-devel contains <code>/usr/lib64/libz.so</code> which can be found at build  time. After finding the build time symlink, the linker can obtain the library SONAME  and thus generate code which resolves the versioned library names in runtime.</p>
+<p>Somewhere when compiling plugins we accept undefined references. This is just a work around for  the poor overall opencpn design. For many reasons it would be better if we split  opencpn into two parts, an application binary file and a shared runtime lib. What plugins would link against is then the runtime library. This would make it far easier to catch missing deps already when building.  Windows actually does the right thing here by automatically generating a lib file.</p>
+
+
+
+<a name="389214484"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332168-Master%20-%205.8.0%20%20%28was%3A%20comms%29/topic/API%201.18%3A%20android%20build/near/389214484" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Dave Register <a href="https://leamas.github.io/zulip-archive/stream/332168-Master---5.2E8.2E0--.28was.3A-comms.29/topic/API.201.2E18.3A.20android.20build.html#389214484">(Sep 05 2023 at 15:13)</a>:</h4>
+<p><span class="user-mention" data-user-id="399510">@Alec Leamas</span> <br>
+OK, good description.<br>
+To me, it seems mostly about the SONAME, which specifies the expected resolved name of the dependency at runtime.  Makes sense.</p>
+<p>In the case of "dlopen()" at runtime, (e.g. OCPN plugins) we are told that a module already in place will be reused, and not reloaded. Take for example <a href="http://zlib.so">zlib.so</a>.  It is needed by OCPN core, so it is already in memory, linked.  What happens if a plugin also needs zlib?  It must be true that an already loaded dependency contains some metadata that describes  its SONAME, or else the dlopen() call scans the dependency library from disk to determine this.</p>
+<p>Linking is hard...</p>
+<p>Thanks<br>
+Dave</p>
+
+
+
+<a name="389217384"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332168-Master%20-%205.8.0%20%20%28was%3A%20comms%29/topic/API%201.18%3A%20android%20build/near/389217384" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Alec Leamas <a href="https://leamas.github.io/zulip-archive/stream/332168-Master---5.2E8.2E0--.28was.3A-comms.29/topic/API.201.2E18.3A.20android.20build.html#389217384">(Sep 05 2023 at 15:23)</a>:</h4>
+<p>The output from <code>ldd some-plugin.so</code> tells us how dependencies are resolved. This reveals that plugins does not load general libraries from opencpn, it uses what it found when linking. Looking at the one and only plugin I have on Fedora for test purposes is has &gt; 100 runtime depencies, none  of them actually opencpn.</p>
+<p>This also means that since these libraries already are loaded, they can be used as-is. This is the very idea of a shared lib, right? Several apps (or plugins) shares a common library in memory.</p>
+<p>From another point of view: when the plugin is linked everything available in the system is used. The opencpn symbols are undefined, and we have to accept it since the is no opencpn-commons library or so, having some wishful thoughts that the missing opencpn symbols will be resolved in runtime.</p>
+
+
+
+<a name="389220871"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332168-Master%20-%205.8.0%20%20%28was%3A%20comms%29/topic/API%201.18%3A%20android%20build/near/389220871" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Alec Leamas <a href="https://leamas.github.io/zulip-archive/stream/332168-Master---5.2E8.2E0--.28was.3A-comms.29/topic/API.201.2E18.3A.20android.20build.html#389220871">(Sep 05 2023 at 15:37)</a>:</h4>
+<p>hm... we already have the api-shim.cpp which basically is empty function bodies for all of ocpn-plugin.h. The only dependency for that is base_platform. Together, these only depends on wxWidgets and other general stuff.</p>
+<p>This means it should be possible to compile api_shim.cpp to a shared library, a library which could be made available together with ocpn_plugin.h to in the same way as the windows automatically generated .lib file. Which eventually means we could compile plugins without accepting any unresolved references, catching errors in build time instead of runtime.</p>
+<p>All those ideas...</p>
+
+
+
+<a name="389804530"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332168-Master%20-%205.8.0%20%20%28was%3A%20comms%29/topic/API%201.18%3A%20android%20build/near/389804530" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Dave Register <a href="https://leamas.github.io/zulip-archive/stream/332168-Master---5.2E8.2E0--.28was.3A-comms.29/topic/API.201.2E18.3A.20android.20build.html#389804530">(Sep 08 2023 at 04:01)</a>:</h4>
+<p><span class="user-mention" data-user-id="399510">@Alec Leamas</span> <br>
+Thinking some more, we actually already have a version of your concept operational in Android, if by accident.  The main "App" is a Java native app running on Android OS.  All of the OCPN core support comes in as a solib, (<a href="http://libgorp.so">libgorp.so</a>) which is brought into the image by a dlopen() call during initialization of the Android App..<br>
+And this is precisely why you saw the build time link errors when the OCPN library need an update to API118.  So, we caught link errors at build time, which is a good thing.<br>
+Incidentally, this is also why the plugins for Android need a SONAME definition for the OCPN core library.  The Android plugin is a .so library linking against, among other things, the OCPN core library, which is also an Android solib.</p>
+<p>So, the SONAME of "<a href="http://libgorp.so">libgorp.so</a>" requirement for plugins is exclusive to Android builds.  This really clears up my thinking on this difference between plugin linux and Android builds.</p>
+
+
+
+<a name="389819107"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332168-Master%20-%205.8.0%20%20%28was%3A%20comms%29/topic/API%201.18%3A%20android%20build/near/389819107" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Alec Leamas <a href="https://leamas.github.io/zulip-archive/stream/332168-Master---5.2E8.2E0--.28was.3A-comms.29/topic/API.201.2E18.3A.20android.20build.html#389819107">(Sep 08 2023 at 06:33)</a>:</h4>
+<p>Well, thanks for sharing that, it certainly explains more about the Android situation. </p>
+<p>If I ever look into creating that library based on api_shim we certainly need to coordinate the SONAME, having different names for different platforms makes no sense.</p>
+<blockquote>
+<p>So, we caught link errors at build time, which is a good thing.</p>
+</blockquote>
+<p>Indeed</p>
+
+
+
+<a name="391725247"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332168-Master%20-%205.8.0%20%20%28was%3A%20comms%29/topic/API%201.18%3A%20android%20build/near/391725247" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Alec Leamas <a href="https://leamas.github.io/zulip-archive/stream/332168-Master---5.2E8.2E0--.28was.3A-comms.29/topic/API.201.2E18.3A.20android.20build.html#391725247">(Sep 18 2023 at 15:28)</a>:</h4>
+<p>Next question is when we are ready to merge all of devel into main...</p>
+
+
+
+<a name="391725439"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332168-Master%20-%205.8.0%20%20%28was%3A%20comms%29/topic/API%201.18%3A%20android%20build/near/391725439" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Notification Bot <a href="https://leamas.github.io/zulip-archive/stream/332168-Master---5.2E8.2E0--.28was.3A-comms.29/topic/API.201.2E18.3A.20android.20build.html#391725439">(Sep 18 2023 at 15:29)</a>:</h4>
+<p><a href="#narrow/stream/332168-Master---5.2E8.2E0--.28was.3A-comms.29/topic/API.201.2E18.3A.20android.20build/near/391725247">A message</a> was moved here from <a class="stream-topic" data-stream-id="361980" href="/#narrow/stream/361980-opencpn-commits/topic/OpenCPN.20.2F.20master">#opencpn-commits &gt; OpenCPN / master</a> by <span class="user-mention silent" data-user-id="399510">Alec Leamas</span>.</p>
+
+
+
+<a name="391929013"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332168-Master%20-%205.8.0%20%20%28was%3A%20comms%29/topic/API%201.18%3A%20android%20build/near/391929013" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Mike Rossiter <a href="https://leamas.github.io/zulip-archive/stream/332168-Master---5.2E8.2E0--.28was.3A-comms.29/topic/API.201.2E18.3A.20android.20build.html#391929013">(Sep 19 2023 at 14:47)</a>:</h4>
+<p>ShipDriver v3.3.3 running on tablet with Android OS 13 works fine. This plugin uses API 118.</p>
+
+
+
+<hr><p>Last updated: Oct 05 2023 at 09:43 UTC</p>
+</html>

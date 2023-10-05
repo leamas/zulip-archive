@@ -1,0 +1,218 @@
+<html>
+<head><meta charset="utf-8"><title>Building on m1/arm Macs · shipdriver · Zulip Chat Archive</title></head>
+<h2>Stream: <a href="https://leamas.github.io/zulip-archive/stream/332200-shipdriver/index.html">shipdriver</a></h2>
+<h3>Topic: <a href="https://leamas.github.io/zulip-archive/stream/332200-shipdriver/topic/Building.20on.20m1.2Farm.20Macs.html">Building on m1/arm Macs</a></h3>
+
+<hr>
+
+<base href="https://opencpn.zulipchat.com">
+
+<head><link href="https://leamas.github.io/zulip-archive/style.css" rel="stylesheet"></head>
+
+<a name="338819669"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332200-shipdriver/topic/Building%20on%20m1/arm%20Macs/near/338819669" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Tony Voss <a href="https://leamas.github.io/zulip-archive/stream/332200-shipdriver/topic/Building.20on.20m1.2Farm.20Macs.html#338819669">(Mar 01 2023 at 12:10)</a>:</h4>
+<p>Akec...apologies... I had not carried the typo fix across to my Intel machine.  Now done so and have seen no error .  Also it does not recompile all of wxWidgets after rerunning <a href="http://circleci-build-macos.sh">circleci-build-macos.sh</a>, so it must be caching the builds OK. All much better on Intel.</p>
+<p>Will try your arm patches when I can.</p>
+
+
+
+<a name="338844720"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332200-shipdriver/topic/Building%20on%20m1/arm%20Macs/near/338844720" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Alec Leamas <a href="https://leamas.github.io/zulip-archive/stream/332200-shipdriver/topic/Building.20on.20m1.2Farm.20Macs.html#338844720">(Mar 01 2023 at 13:48)</a>:</h4>
+<p>No need to appologize. Happy that it works for you.</p>
+<p>To get ir running on arm is probably more than the patch I described, but the patch would be a first step.</p>
+
+
+
+<a name="338850482"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332200-shipdriver/topic/Building%20on%20m1/arm%20Macs/near/338850482" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Alec Leamas <a href="https://leamas.github.io/zulip-archive/stream/332200-shipdriver/topic/Building.20on.20m1.2Farm.20Macs.html#338850482">(Mar 01 2023 at 14:10)</a>:</h4>
+<p><a href="https://github.com/Rasbats/shipdriver_pi/issues/504">https://github.com/Rasbats/shipdriver_pi/issues/504</a></p>
+
+
+
+<a name="338907216"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332200-shipdriver/topic/Building%20on%20m1/arm%20Macs/near/338907216" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Tony Voss <a href="https://leamas.github.io/zulip-archive/stream/332200-shipdriver/topic/Building.20on.20m1.2Farm.20Macs.html#338907216">(Mar 01 2023 at 17:27)</a>:</h4>
+<p><span class="user-mention" data-user-id="399510">@Alec Leamas</span>  Now applied your patches to  <code>MacosWxwidgets</code>.  <code>circleci-build-macos.sh</code> ran OK.<br>
+On first <em>make tarball</em>, still errors.  I note:</p>
+<ol>
+<li>Lines 9-10: It has got the right idea.</li>
+<li>Several warnings worth looking at.  Some say that it cannot find something an so will use the built-in one. That's OK if it is something it is using for the build process.  Not good if it is building it into the tarball.</li>
+<li>Line 230 significant?</li>
+<li>Line 274 seems a significant error. </li>
+<li>Lines 285-290 Might this be consequence of the above?   The cache/lib folder contains just </li>
+</ol>
+<ul>
+<li>libwx_baseu_net-3.2.0.1.0.dylib</li>
+<li>libwx_baseu-3.2.0.1.0.dylib</li>
+<li>and aliases to them</li>
+<li>There is no wx subdirectory that it is looking for</li>
+</ul>
+<p><a href="/user_uploads/33951/RkOTQbC6cP15j_oIQ92VE5D8/BuildOnArmTerminalOutput.txt">BuildOnArmTerminalOutput.txt</a></p>
+
+
+
+<a name="338908206"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332200-shipdriver/topic/Building%20on%20m1/arm%20Macs/near/338908206" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Alec Leamas <a href="https://leamas.github.io/zulip-archive/stream/332200-shipdriver/topic/Building.20on.20m1.2Farm.20Macs.html#338908206">(Mar 01 2023 at 17:31)</a>:</h4>
+<blockquote>
+<p>checking build system type... Invalid configuration <code>arm64-apple-darwin': machine </code>arm64-apple' not recognized</p>
+</blockquote>
+<p>This is the core issue so far. I have no idea what this means, it might be that it's necessary to re-generate configure but ...<br>
+I figure you can run this on your x86 box for now. Let me think about it, back later.</p>
+
+
+
+<a name="340060427"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332200-shipdriver/topic/Building%20on%20m1/arm%20Macs/near/340060427" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Notification Bot <a href="https://leamas.github.io/zulip-archive/stream/332200-shipdriver/topic/Building.20on.20m1.2Farm.20Macs.html#340060427">(Mar 07 2023 at 09:44)</a>:</h4>
+<p>5 messages were moved here from <a class="stream-topic" data-stream-id="332200" href="/#narrow/stream/332200-shipdriver/topic/shipdriver.203.2E2">#shipdriver &gt; shipdriver 3.2</a> by <span class="user-mention silent" data-user-id="399510">Alec Leamas</span>.</p>
+
+
+
+<a name="340091487"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332200-shipdriver/topic/Building%20on%20m1/arm%20Macs/near/340091487" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Mike Rossiter <a href="https://leamas.github.io/zulip-archive/stream/332200-shipdriver/topic/Building.20on.20m1.2Farm.20Macs.html#340091487">(Mar 07 2023 at 12:05)</a>:</h4>
+<p>The PR is fine but some comments on github:<br>
+<a href="https://github.com/Rasbats/shipdriver_pi/issues/505">https://github.com/Rasbats/shipdriver_pi/issues/505</a></p>
+
+
+
+<a name="340391158"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332200-shipdriver/topic/Building%20on%20m1/arm%20Macs/near/340391158" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Alec Leamas <a href="https://leamas.github.io/zulip-archive/stream/332200-shipdriver/topic/Building.20on.20m1.2Farm.20Macs.html#340391158">(Mar 08 2023 at 15:21)</a>:</h4>
+<p><span class="user-mention" data-user-id="399559">@Mike Rossiter</span>  And now I chjery-picked more or less the same commit which you reverted. Hopefully no one reviews our history ;)</p>
+<p>Time for a new release? The macos fixes not that important IMHO, but the opencpn-libs update is.</p>
+
+
+
+<a name="340391869"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332200-shipdriver/topic/Building%20on%20m1/arm%20Macs/near/340391869" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Mike Rossiter <a href="https://leamas.github.io/zulip-archive/stream/332200-shipdriver/topic/Building.20on.20m1.2Farm.20Macs.html#340391869">(Mar 08 2023 at 15:23)</a>:</h4>
+<blockquote>
+<p>Time for a new release?</p>
+</blockquote>
+<p>Yes it is. Please go ahead.</p>
+
+
+
+<a name="340395421"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332200-shipdriver/topic/Building%20on%20m1/arm%20Macs/near/340395421" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Alec Leamas <a href="https://leamas.github.io/zulip-archive/stream/332200-shipdriver/topic/Building.20on.20m1.2Farm.20Macs.html#340395421">(Mar 08 2023 at 15:36)</a>:</h4>
+<p>OK, will do before end of day.</p>
+
+
+
+<a name="340470118"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332200-shipdriver/topic/Building%20on%20m1/arm%20Macs/near/340470118" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Alec Leamas <a href="https://leamas.github.io/zulip-archive/stream/332200-shipdriver/topic/Building.20on.20m1.2Farm.20Macs.html#340470118">(Mar 08 2023 at 21:44)</a>:</h4>
+<p><a href="https://github.com/OpenCPN/OpenCPN/discussions/3063">https://github.com/OpenCPN/OpenCPN/discussions/3063</a></p>
+
+
+
+<a name="343321275"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332200-shipdriver/topic/Building%20on%20m1/arm%20Macs/near/343321275" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Tony Voss <a href="https://leamas.github.io/zulip-archive/stream/332200-shipdriver/topic/Building.20on.20m1.2Farm.20Macs.html#343321275">(Mar 21 2023 at 09:55)</a>:</h4>
+<p><span class="user-mention silent" data-user-id="399510">Alec Leamas</span> <a href="#narrow/stream/332200-shipdriver/topic/Building.20on.20m1.2Farm.20Macs/near/338908206">said</a>:</p>
+<blockquote>
+<blockquote>
+<p>checking build system type... Invalid configuration <code>arm64-apple-darwin': machine </code>arm64-apple' not recognized</p>
+</blockquote>
+<p>This is the core issue so far. I have no idea what this means, it might be that it's necessary to re-generate configure but ...<br>
+I figure you can run this on your x86 box for now. Let me think about it, back later.</p>
+</blockquote>
+<p>Any progress on being able to build on arm for x86 deployment, please?<br>
+For now I am building on an old Intel Mac and transferring tarballs to my M2 Mac.<br>
+But it is a bit of a hassle and I will not be taking the old Mac to sea at the end of April.</p>
+
+
+
+<a name="343400817"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332200-shipdriver/topic/Building%20on%20m1/arm%20Macs/near/343400817" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Alec Leamas <a href="https://leamas.github.io/zulip-archive/stream/332200-shipdriver/topic/Building.20on.20m1.2Farm.20Macs.html#343400817">(Mar 21 2023 at 15:13)</a>:</h4>
+<p>no, not really, and short of time.</p>
+
+
+
+<a name="350034676"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332200-shipdriver/topic/Building%20on%20m1/arm%20Macs/near/350034676" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Kees Verruijt <a href="https://leamas.github.io/zulip-archive/stream/332200-shipdriver/topic/Building.20on.20m1.2Farm.20Macs.html#350034676">(Apr 14 2023 at 19:48)</a>:</h4>
+<p>I was also getting fed up with having to juggle between my M1 and Intel Mac, so I figured I'd give it a go and it turned out to be not so hard.<br>
+I just submitted a PR against ShipDriver so you can see what it entails. It's really only a few lines that cause the cached wxWidgets to be built in universal (both x86_64 and arm64) mode, and then you can build either "normal", "universal" or "crossbuilds" by setting <code>CMAKE_OSX_ARCHITECTURES</code>. </p>
+<p>There is not really anything against building a plugin in universal mode, it gets a little bigger, but then it can be used by an x86_64-only OpenCPN build (and presumably an arm64 version, but I haven't tackled OpenCPN builds yet.)</p>
+
+
+
+<a name="350037637"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332200-shipdriver/topic/Building%20on%20m1/arm%20Macs/near/350037637" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Alec Leamas <a href="https://leamas.github.io/zulip-archive/stream/332200-shipdriver/topic/Building.20on.20m1.2Farm.20Macs.html#350037637">(Apr 14 2023 at 20:08)</a>:</h4>
+<p>Thanks nfo rthe PR. It's late here, but I'll try to find som time for it. This is most welcome, you are not the first running into this...</p>
+
+
+
+<a name="350099594"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332200-shipdriver/topic/Building%20on%20m1/arm%20Macs/near/350099594" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Mike Rossiter <a href="https://leamas.github.io/zulip-archive/stream/332200-shipdriver/topic/Building.20on.20m1.2Farm.20Macs.html#350099594">(Apr 15 2023 at 06:58)</a>:</h4>
+<blockquote>
+<p>I have prepared a release in v3.2. Can we talk before you push the button? In particular, don't forget to update Changelog...</p>
+</blockquote>
+<p>Away from my main pc from tomorrow for a week's shakedown sail. Will still have comms links.</p>
+
+
+
+<a name="377810053"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332200-shipdriver/topic/Building%20on%20m1/arm%20Macs/near/377810053" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Kees Verruijt <a href="https://leamas.github.io/zulip-archive/stream/332200-shipdriver/topic/Building.20on.20m1.2Farm.20Macs.html#377810053">(Jul 23 2023 at 11:36)</a>:</h4>
+<p>Given new activity on the PR, apparently there is some demand. First step is this PR which enables _developers_ to cross-build architectures. The main reason I needed this is that I have an M1 MacBookPro, so if I build the plugin _without_ this PR, I cannot test this on my Mac because the OpenCPN binary then uses a different architecture. E.g. I use it to build x86_64 on arm64! This is the exact problem that <span class="user-mention" data-user-id="554731">@Tony Voss</span> had as well.</p>
+
+
+
+<a name="377814122"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332200-shipdriver/topic/Building%20on%20m1/arm%20Macs/near/377814122" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Kees Verruijt <a href="https://leamas.github.io/zulip-archive/stream/332200-shipdriver/topic/Building.20on.20m1.2Farm.20Macs.html#377814122">(Jul 23 2023 at 11:55)</a>:</h4>
+<p>The next, separate, thing to consider is: Do we want to produce a native arm64 or universal version of OpenCPN in the next major release? And if so, how shall we handle plugins? Because suddenly we have to have those in either "both" architectures or in "universal" (=both in 1 package) style as well.<br>
+For end-users, my opinion is that Universal is the easiest solution: they don't need to know or do anything, it just works (assuming that the plugins are all converted to Universal as well). It does make downloads bigger (by less than 2 because the non-binary parts don't repeat).<br>
+The alternative would be to create a separate arm64 download for OpenCPN.</p>
+<p>Whatever we choose, I think we should already prepare ourselves on the plugin side, e.g. start creating plugins for both or universal, so that whenever O-next is released there are also plugins available for it.</p>
+
+
+
+<a name="377814703"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332200-shipdriver/topic/Building%20on%20m1/arm%20Macs/near/377814703" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Kees Verruijt <a href="https://leamas.github.io/zulip-archive/stream/332200-shipdriver/topic/Building.20on.20m1.2Farm.20Macs.html#377814703">(Jul 23 2023 at 11:57)</a>:</h4>
+<p>Note that there are no concerns regarding CI build infrastructure: you can easily create arm64 versions on x86_64 and vice-versa with Xcode. Or an "universal" (both architectures).</p>
+
+
+
+<a name="377820997"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332200-shipdriver/topic/Building%20on%20m1/arm%20Macs/near/377820997" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Tony Voss <a href="https://leamas.github.io/zulip-archive/stream/332200-shipdriver/topic/Building.20on.20m1.2Farm.20Macs.html#377820997">(Jul 23 2023 at 12:23)</a>:</h4>
+<p>With universal OCPN, presumably the Mac loader only loads the code version relative for the machine. <br>
+Question 1: can really mix plugins?  If on an arm machine, MacOS would load the arm OCPN code. I doubt you could then install an Intel plugin?  I might be wrong. <br>
+Question 2: if we build a universal plugin, would plugin manager meed to work out which plug-in code to load?</p>
+<p>Maybe MacOS is super smart here. But if not, looks like we need to build for both architectures and plugin manager then needs to know which to offer depending on which architecture it is running on.</p>
+
+
+
+<a name="378188450"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332200-shipdriver/topic/Building%20on%20m1/arm%20Macs/near/378188450" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Alec Leamas <a href="https://leamas.github.io/zulip-archive/stream/332200-shipdriver/topic/Building.20on.20m1.2Farm.20Macs.html#378188450">(Jul 24 2023 at 15:38)</a>:</h4>
+<p>hm... late to the party. Also, I just don't know macos that well to say anything useful here.</p>
+<p>Just to clarify: When on macos, we are using the term  "m1" rather than "arm", right?</p>
+<p>I would really appreciate if we could get <span class="user-mention" data-user-id="573239">@Pavel Kalian</span>  into this loop. Ping?</p>
+
+
+
+<a name="378190181"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332200-shipdriver/topic/Building%20on%20m1/arm%20Macs/near/378190181" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Pavel Kalian <a href="https://leamas.github.io/zulip-archive/stream/332200-shipdriver/topic/Building.20on.20m1.2Farm.20Macs.html#378190181">(Jul 24 2023 at 15:43)</a>:</h4>
+<p>I highly doubt we can mix ARM and x86 code in a single process. I am still not sure whether we want to go with universal binaries (Which would imply providing all the dependencies ourselves) or build two single-arch packages (and being able to use dependencies from Homebrew). On a positive note I got myself an M1 machine, so will work on it. But not until I'm back from Europe in mid-August.</p>
+
+
+
+<a name="383526736"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332200-shipdriver/topic/Building%20on%20m1/arm%20Macs/near/383526736" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Alec Leamas <a href="https://leamas.github.io/zulip-archive/stream/332200-shipdriver/topic/Building.20on.20m1.2Farm.20Macs.html#383526736">(Aug 10 2023 at 07:51)</a>:</h4>
+<p><span class="user-mention" data-user-id="399559">@Mike Rossiter</span> Regarding updated 3.2 release with new targets (issue 547): I have pushed a fix to the v3.2 branch.  If you have time: could you test the build(s) available at <a href="https://cloudsmith.io/~alec-leamas/repos/opencpn-plugins-unstable/packages/">https://cloudsmith.io/~alec-leamas/repos/opencpn-plugins-unstable/packages/</a> ? If they looks OK, please tag the branch using sd3.2.5-beta1 and push it as an update to the the beta catalog.</p>
+<p>If you don't have time, I can do it. But it will take some time, and I think Dave is eager to get a PR...</p>
+
+
+
+<a name="383535615"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332200-shipdriver/topic/Building%20on%20m1/arm%20Macs/near/383535615" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Mike Rossiter <a href="https://leamas.github.io/zulip-archive/stream/332200-shipdriver/topic/Building.20on.20m1.2Farm.20Macs.html#383535615">(Aug 10 2023 at 08:27)</a>:</h4>
+<blockquote>
+<p>If you have time</p>
+</blockquote>
+<p>On the case. I have time. I need this fix as well.</p>
+
+
+
+<a name="389922593"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332200-shipdriver/topic/Building%20on%20m1/arm%20Macs/near/389922593" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Tony Voss <a href="https://leamas.github.io/zulip-archive/stream/332200-shipdriver/topic/Building.20on.20m1.2Farm.20Macs.html#389922593">(Sep 08 2023 at 17:32)</a>:</h4>
+<p>Back ashore now and soon to pick up threads on the JavaScript plugin.  Presently build using SD3.2.5.  I am rather out of touch with developments.<br>
+Is there a recipe to build on Mac M2 targeting Mac Intel?  (Not trying to target M2 at this time.)<br>
+If so, what do I have to twiddle to make that work?</p>
+
+
+
+<hr><p>Last updated: Oct 05 2023 at 09:43 UTC</p>
+</html>

@@ -1,0 +1,44 @@
+[
+    {
+        "content": "<p>There is a section of the Core Developer Manual covering the <a href=\"https://opencpn-manuals.github.io/main/opencpn-dev/plugin-messaging.html\">New Message Plugin API here</a>.</p>\n<p>I am struggling with receiving messages.  The manual prescribes this:<br>\n<code>listener.Listen(id.key(), EVT_SHIPDRIVER, this);</code><br>\nbut there is no  Listen method .  The example I have found in dashboard_pi uses:<br>\n<code>listener_rpm = std::move(GetListener(id_rpm, EVT_183_RPM, this));</code><br>\nwhich fits with <code>GetListener</code> declared in ocpn_plugin.h</p>\n<p>Can SKS please update the manual to fit with reality?</p>\n<p>I have copied the relevant code for NMEA0183 from dashboard_pi into my plugin but it failing to match the GetListener call, so  there may be more than just the Listen line that needs updating.</p>",
+        "id": 391543396,
+        "sender_full_name": "Tony Voss",
+        "timestamp": 1694972469
+    },
+    {
+        "content": "<p>Ack, here is something fishy going on. I will try to take a look tomorrow.</p>",
+        "id": 391561626,
+        "sender_full_name": "Alec Leamas",
+        "timestamp": 1694978839
+    },
+    {
+        "content": "<blockquote>\n<p>but there is no Listen method </p>\n</blockquote>\n<p>Could you please expand on this? what is the error message?  What is the context?</p>",
+        "id": 391562017,
+        "sender_full_name": "Alec Leamas",
+        "timestamp": 1694978950
+    },
+    {
+        "content": "<p><span class=\"user-mention\" data-user-id=\"554731\">@Tony Voss</span>  ^</p>",
+        "id": 391562130,
+        "sender_full_name": "Alec Leamas",
+        "timestamp": 1694978979
+    },
+    {
+        "content": "<p><span class=\"user-mention silent\" data-user-id=\"399510\">Alec Leamas</span> <a href=\"#narrow/stream/332172-manuals/topic/New.20Message.20Plugin.20API/near/391562017\">said</a>:</p>\n<blockquote>\n<blockquote>\n<p>but there is no Listen method </p>\n</blockquote>\n<p>Could you please expand on this? what is the error message?  What is the context?</p>\n</blockquote>\n<p>When I write something like <code>listener.Listen(id.key(), EVT_SHIPDRIVER, this);</code> it fails to compile with <em>no such method</em> or something like it. <br>\nLooking in opcn_plugin.h, I see <em>GetListener</em> but no <em>Listen</em></p>",
+        "id": 391564207,
+        "sender_full_name": "Tony Voss",
+        "timestamp": 1694979721
+    },
+    {
+        "content": "<p>I really need the code + exact error message here...</p>",
+        "id": 391565711,
+        "sender_full_name": "Alec Leamas",
+        "timestamp": 1694980819
+    },
+    {
+        "content": "<p>The docs are messed up. Despite the title  the current docs actually describes the API inside opencpn, not  for plugins accessing it over ocpn_plugin.h.</p>\n<p>There is no need to invoke Listen(). The object returned by GetListener()  is listening once it is created by GetListener(...)</p>\n<p>I have written another document from the plugin POV earlier, but it seems lost. Back later.</p>",
+        "id": 391567525,
+        "sender_full_name": "Alec Leamas",
+        "timestamp": 1694981928
+    }
+]

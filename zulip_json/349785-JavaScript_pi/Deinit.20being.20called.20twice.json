@@ -1,0 +1,20 @@
+[
+    {
+        "content": "<p>A few times it seems deinit is called more than once and that crashed OCPN.<br>\nIn  the v2.0.0 just published, I have put a check in to avoid trying to delete stuff that was deleted by the first call, but I have just had another crash.<br>\nI winder how deinit gets called more than once.  I suspect that when you click on the plugin entry in the options panel, the plugin manager activates the plugin enough to see the details and, when you move away from there it deactivates.  This may be how the  extra deinit happens.<br>\nA work around would be to keep a flag recording initialisation and turn it off on deinit and avoid deiniting if it is false.</p>",
+        "id": 323078199,
+        "sender_full_name": "Tony Voss",
+        "timestamp": 1674495159
+    },
+    {
+        "content": "<p>Notice you have your <em>SaveConfig()</em>  at the start of <em>Deinit().</em> For ShipDriver it is at the end of the <em>Deinit()</em> function. Just guessing at things that may cause a problem.</p>",
+        "id": 323082070,
+        "sender_full_name": "Mike Rossiter",
+        "timestamp": 1674496249
+    },
+    {
+        "content": "<p><span class=\"user-mention silent\" data-user-id=\"399559\">Mike Rossiter</span> <a href=\"#narrow/stream/349785-JavaScript_pi/topic/Deinit.20being.20called.20twice/near/323082070\">said</a>:</p>\n<blockquote>\n<p>Notice you have your <em>SaveConfig()</em>  at the start of <em>Deinit().</em> For ShipDriver it is at the end of the <em>Deinit()</em> function. Just guessing at things that may cause a problem.</p>\n</blockquote>\n<p>Mmmm... cannot see that causing the problem.<br>\nBy the way, if you have used the tool to set custom parking parameters, it does a SaveConfig() in an attempt to secure the changes and not lose them should there be an untidy end later.  Not sure whether that helps as the config may only get written out to disc when OCPN quits.  But I had not been anywhere near that when the latest deinit crashed.</p>",
+        "id": 323086960,
+        "sender_full_name": "Tony Voss",
+        "timestamp": 1674497796
+    }
+]

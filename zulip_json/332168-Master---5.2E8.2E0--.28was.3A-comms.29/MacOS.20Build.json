@@ -1,0 +1,308 @@
+[
+    {
+        "content": "<p>New Topic to discuss MacOS build process</p>",
+        "id": 320578817,
+        "sender_full_name": "Dave Register",
+        "timestamp": 1673402148
+    },
+    {
+        "content": "<p>It will help to review the MacOS build process.<br>\nThe build starts with normal compile and link.  Nothing special here.<br>\nThe next steps, however, are very Mac specific.<br>\nA MacOS app is shipped as a bundle, containing all of the libraries required to run the app that are not normally found on a bare metal machine.  Call these libraries \"special\". The list includes things like wxWidgets, SSL, etc. This strategy is part of the way Apple avoids trouble when they make frequent ABI changes to libraries.  The app builder (us) needs to ensure that the build machine has appropriate versions of libraries needed at run time.  And also ensure that they get copied into the bundle.</p>\n<p>After the conventional compile/link, the process of building the bundle belongs to an Apple authored script called \"fixup_bundle\".  His first job is to execute a test link/load of the app, something like \"ldd\" on linux. Using the results, he attempts to locate and move/copy the required \"special\" libraries to the target bundle location.  This way, they will be known to be present on whatever system the target runs on, and are known to be compatible with the app.  Libraries bundled in the app take precedence over any similarly named libraries on the target system.</p>\n<p>The next step is to prepare a release package.  There are two conventional formats:</p>\n<ol>\n<li>DMG (Disk image) format.  The format makes a mountable disk image of the entire bundle, which may be copied onto the target system, and thereby run.  Important to note that the DMG contains a verbatim copy of the constructed bundle.</li>\n<li>PKG (Package) format.  The PKG format distributable app is itself an installer executable, similar to NSIS install found on Windows.  Most apps are distributed in this format, because is is more intuitive to end users.  This is the method we prefer for OCPN, although we build DMG images also, for completeness.</li>\n</ol>\n<p>There is one key difference in the two distribution formats.  A DMG by default contains a verbatim copy of the bundle. However, the PKG format is created from a script maintained as part of the OCPN source tree.  Due to the nature of the app that builds the PKG (cleverly called Packages), each library, symlink, and resource present in the constructed bundle must be explicitely specified in the script template.  This has implications.</p>\n<p>Historically, OCPN built for various MacOS versions has ended up using the same set of \"special\" libraries and resources.  So it is simple to hard-code that list into the script template, and build for whatever version is required.  But MacOS 11+ changed that.  In MacOS 11, \"the fixup_bundle\" utility ends up including one or more libraries that are required by MacOS 11, but are not required (or even available) for MacOS 10.  So this happens:  If we code the PKG script to include all libs required for 11, it will fail when building a PKG for 10, since some files may not be present on 10.  Conversely, if we leave the \"missing\" libs out of the script, the MacOS 11 will fail at runtime, since it needs the \"missing\" library.</p>\n<p>Stepping back to the DMG format.  The DMG built for MacOS 11 will install and run on both MacOS 10.x and MacOS 11.  Why does this work? The \"missing\" file needed for MacOS 11 is in the DMG, and is simply ignored on MacOS 10.  So we can conclude from this that we have a simple packaging problem, no more involved than that.</p>\n<p>So, how to fix this? Two possiblities:</p>\n<p>If we want a single PKG distributable for both MacOS 10 and 11, the simplest thing is to include correctly named \"dummy\" files in the MacOS 10 bundle, and let the Packages script copy these dummies into the PKG installer, where they will do no harm.  On the MacOS 11 build, we of course use the real files.<br>\nThis solution has the feel of a hack, but gives us a single PKG that will run on both systems.</p>\n<p>..or..</p>\n<p>We could build a clever script that will do this:</p>\n<ol>\n<li>Read the contents of the constructed bundle, especially the location of the required special libraries (\"Framework\")</li>\n<li>edit (sed?) the Packages scrip template to include exactly the special files found in the constructed bundle.</li>\n<li>Using CMake, probably, convert the script template into actual script, making appropriate envirnment substitutions as is done today.</li>\n<li>Run Packages against this script.</li>\n</ol>\n<p>This process will of course build a different package for MacOS 10 than for MacOS 11.  This may not be what we want, but it is the \"correct\" solution.</p>\n<p>Thoughts, all?</p>",
+        "id": 320578909,
+        "sender_full_name": "Dave Register",
+        "timestamp": 1673402184
+    },
+    {
+        "content": "<p>Question 1: when  is <span class=\"user-mention\" data-user-id=\"573239\">@Pavel Kalian</span>  back from Antarctica? ^</p>",
+        "id": 320656934,
+        "sender_full_name": "Alec Leamas",
+        "timestamp": 1673430575
+    },
+    {
+        "content": "<p>Q 2: Should we still ship both .dmg and .pkg installers? It seems like quite some work with little upside.</p>\n<p>Q3: Should we  continue on the current approach to patch the  installer \"script\" or rather configuration file or try to run some tool which creates  a pkg directly from either the bundle directory or the dmg , both of which created by cmake? Seems like a more robust approach if we could make it work.</p>\n<p>Q4: If we continue the current approach, wouldn't it be easier to have two templates: one for \"oldest\" (10.15) and one for \"current\" ,  for now macos-11 in GA? Should minimize the need to patch.</p>",
+        "id": 320659846,
+        "sender_full_name": "Alec Leamas",
+        "timestamp": 1673431652
+    },
+    {
+        "content": "<p>On a sidenote we  IMHO  really should start building macos-12  instead of 11 on GA. With Macos-13 already in the wild, it seems strange not being able to build for 12. Not  suggesting we should build both all three, just 10.15 and 12.</p>",
+        "id": 320661782,
+        "sender_full_name": "Alec Leamas",
+        "timestamp": 1673432392
+    },
+    {
+        "content": "<p>Quick, more later.<br>\nIt seems that our CI build for MacOS 11 works everywhere tested so far.  So why do we need system version-dependent MacOS builds, anyway?  Best if we have only one, that works everywhere.</p>",
+        "id": 320749384,
+        "sender_full_name": "Dave Register",
+        "timestamp": 1673455981
+    },
+    {
+        "content": "<p>I think the logic for two builds is clear. The \"old \" is what works everywhere, the latest build (12 or 13 today) is about picking up and handling changes in os and tools when they happen in good order. The alternative is to just build for say 10.15 and face an uphill battle when it's time to move on.</p>",
+        "id": 320790558,
+        "sender_full_name": "Alec Leamas",
+        "timestamp": 1673468743
+    },
+    {
+        "content": "<p>Hmmm....<br>\nOk, that is some good logic, though I cannot remember seeing it stated so before now.</p>\n<p>On the other hand, I am focused on shipping one PKG that runs on all versions, from a reasonable legacy version (2-3 years old) through to current MacOS release at the time we ship.  One PKG.</p>\n<p>So, if our build for 10.15 will do that, then we should defer the 11/12/13 optimizations until:<br>\na)  we have no choice, since we cannot run , say on 13+, without a new build for that version, or<br>\nb) enough time passes that we can safely drop some legacy support, and shift minimum supported version to 11 or so.</p>\n<p>Another wrinkle.  When/if we learn how, we want someday to publish an Apple-silicon native version, not relying on Rosetta emulater, for M1/M2 archs.  Hopefully this could be done with a \"universal\" binary package, of some sort.</p>\n<p>Perhaps we should today focus on the 10.15 build, and test on all possible MacOS versions we can get out hands on.  I will start some of that.  I have access to several MacOS versions.  To do that, we will need to adopt your Q4 suggestion above.  No problem, just more to maintain.....</p>",
+        "id": 320820896,
+        "sender_full_name": "Dave Register",
+        "timestamp": 1673481992
+    },
+    {
+        "content": "<p>And to answer your questions, IMHO:</p>\n<ol>\n<li>Don't know.  Summer down there, could be awhile. We need to move forward from where we are.</li>\n<li>Traditionally, I have dropped the DMG production from the script at production release.  Agree there is no need for it when the PKG works.  OTOH, it is just one line in the script, and has never been seen to fail on OCPN project.</li>\n<li>I would not want to try and replicate the functions of the Packages app that builds the PKG.  There is a GUI involved, as with NSIS.  Might make sense to see if there is improved version of Packages available, with say file globbing support....</li>\n<li>Two templates: Agree, so at least both 10.15 and 11 builds will complete without error on GA, and work at runtime, too.</li>\n</ol>",
+        "id": 320821843,
+        "sender_full_name": "Dave Register",
+        "timestamp": 1673482445
+    },
+    {
+        "content": "<blockquote>\n<p>then we should defer the 11/12/13 optimizations until:</p>\n</blockquote>\n<p>It's not so much about optimizations  as making sure we don't do things which does not work in later versions. Even if the produced binary works, we might start doing things build-time things which works in the old environment, but not in later ones. In short, it's about staying on track</p>",
+        "id": 320945654,
+        "sender_full_name": "Alec Leamas",
+        "timestamp": 1673532374
+    },
+    {
+        "content": "<blockquote>\n<p>I would not want to try and replicate the functions of the Packages app that builds the PKG.</p>\n</blockquote>\n<p>Nor would I. However, there seems to be tools out there .  For example, isn't the standard <em>pkgbuild(1)</em> assumed to do this?</p>",
+        "id": 320948274,
+        "sender_full_name": "Alec Leamas",
+        "timestamp": 1673532934
+    },
+    {
+        "content": "<p>I do not know what pkgbuild(1) does on MacOS.  I'll check.</p>",
+        "id": 320971073,
+        "sender_full_name": "Dave Register",
+        "timestamp": 1673538551
+    },
+    {
+        "content": "<p>Working in the the build directory after a successful  build this seems to create something:</p>\n<div class=\"codehilite\"><pre><span></span><code> pkgbuild \\\n  --root  $PWD/OpenCPN.app  \\\n  --install-location /Applications/OpenCPN.app/  \\\n  --identifier opencpn \\\n  opencpn.pkg\n</code></pre></div>\n<p>It basically just installs everything in <a href=\"http://OpenCPN.app\">OpenCPN.app</a>. Too simple?</p>",
+        "id": 321026728,
+        "sender_full_name": "Alec Leamas",
+        "timestamp": 1673554785
+    },
+    {
+        "content": "<p><span class=\"user-mention\" data-user-id=\"517002\">@Dave Register</span>  ^</p>",
+        "id": 321026908,
+        "sender_full_name": "Alec Leamas",
+        "timestamp": 1673554850
+    },
+    {
+        "content": "<p>However, the pkg created by pkgbuild seems pretty low-level. Perhaps <em>productbuild(1)</em> is a better choice, it seems to be more focused on our  use case. Sample invocation, still  in  build dir.</p>\n<div class=\"codehilite\"><pre><span></span><code>productbuild  \\\n  --root /Users/al/src/OpenCPN/build/OpenCPN.app/ /Applications/OpenCPN.app \\\n  opencpn.pkg\n</code></pre></div>\n<p>I <strong>think</strong> this might be a better approach. However,  the pkg file created this way does not seem to respect  MACOSX_DEPLOYMENT_TARGET, so the resulting pkg cannot start OpenCPN, it seems to think it requires 12.0 which is not available on my build host.</p>\n<p>It can be started on the command line. I'm (almost) sure there is some knob which could be used instead of MACOSX_DEPLOYMENT_TARGET, but I do not find it.</p>",
+        "id": 321032627,
+        "sender_full_name": "Alec Leamas",
+        "timestamp": 1673556952
+    },
+    {
+        "content": "<p><span class=\"user-mention\" data-user-id=\"517002\">@Dave Register</span>  I think I'm  on track to solve this. It seems to be about using a distribution file, and define the allowed version. </p>\n<p>Going to bed, so writing some things here mostly for myself. But if you have time and interest... If not, I'll try a little more tomorrow.</p>\n<div class=\"codehilite\"><pre><span></span><code>$ pkgbuild \\\n  --root /Users/al/src/OpenCPN/build/OpenCPN.app  \\\n  --install-location /Applications/OpenCPN.app/  \\\n  --identifier opencpn \\\n  OpenCPN.app.pkg\n\n$ productbuild --synthesize  --package OpenCPN.app.pkg  distro.xml\n\nEdit distro.xml, add:\n     &lt;allowed-os-versions&gt;\n        &lt;os-version min=&quot;10.10&quot;/&gt;\n     &lt;/allowed-os-versions&gt;\n\n$  productbuild  --distribution distro.xml OpenCPN.pkg\n\n ```\n</code></pre></div>",
+        "id": 321039138,
+        "sender_full_name": "Alec Leamas",
+        "timestamp": 1673559490
+    },
+    {
+        "content": "<p>A message was moved here from <a class=\"stream-topic\" data-stream-id=\"332168\" href=\"/#narrow/stream/332168-Master---5.2E8.2E0--.28was.3A-comms.29/topic/Network.20problems\">#Master - 5.8.0  (was: comms) &gt; Network problems</a> by <span class=\"user-mention silent\" data-user-id=\"399510\">Alec Leamas</span>.</p>",
+        "id": 321039583,
+        "sender_full_name": "Notification Bot",
+        "timestamp": 1673559691
+    },
+    {
+        "content": "<p>I am focused on getting 10.15 build in shape for further user testing.</p>",
+        "id": 321076513,
+        "sender_full_name": "Dave Register",
+        "timestamp": 1673580597
+    },
+    {
+        "content": "<p>So have I been, exploring the pkgbuild/productbuild path. <a href=\"https://github.com/OpenCPN/OpenCPN/pull/2924\">https://github.com/OpenCPN/OpenCPN/pull/2924</a></p>",
+        "id": 321185204,
+        "sender_full_name": "Alec Leamas",
+        "timestamp": 1673622761
+    },
+    {
+        "content": "<p><span class=\"user-mention\" data-user-id=\"517002\">@Dave Register</span> ^</p>",
+        "id": 321185250,
+        "sender_full_name": "Alec Leamas",
+        "timestamp": 1673622774
+    },
+    {
+        "content": "<p><span class=\"user-mention\" data-user-id=\"399510\">@Alec Leamas</span> <br>\nI did find a way to generate the PKG \"script\" file so that it simply includes everything in the constructed bundle.  Less fiddly now, no need to manually edit, nor any sed scripting required.<br>\nAlso, I added an environment variable (\"PKG_MOD\") to MacOS GA build.  Value will be \"10\" or \"11\".  So if you would like to:</p>\n<ol>\n<li>Rebase, and add your new PKG procedure for MacOS 11 builds only, using the environment variable.</li>\n<li>Help me figure out how to rename and retain both PKGs in the Cloudsmith upload step, so that old and new can co-exist for 10.15 and 11, respectively.</li>\n</ol>",
+        "id": 321300588,
+        "sender_full_name": "Dave Register",
+        "timestamp": 1673672115
+    },
+    {
+        "content": "<p>This is all pretty shaky at the moment. It built a PKG for MacOS 10.15, but I have not tested yet.<br>\n Late now, more tomorrow.</p>",
+        "id": 321301925,
+        "sender_full_name": "Dave Register",
+        "timestamp": 1673673390
+    },
+    {
+        "content": "<p>OK, will do, but probably not until tomorrow -- weekend things happening over here</p>",
+        "id": 321355453,
+        "sender_full_name": "Alec Leamas",
+        "timestamp": 1673702226
+    },
+    {
+        "content": "<p>That said, should not be complicated.</p>",
+        "id": 321355480,
+        "sender_full_name": "Alec Leamas",
+        "timestamp": 1673702258
+    },
+    {
+        "content": "<p>Forgot to say:</p>\n<blockquote>\n<p>I did find a way to generate the PKG \"script\" file so that it simply includes everything in the constructed bundle. </p>\n</blockquote>\n<p>This seems great. That I  explored the pkgbuild path was about this, that our way up to now to handle  the <a href=\"http://pkgproj.in\">pkgproj.in</a> file feels (felt) way too hacky.</p>",
+        "id": 321358334,
+        "sender_full_name": "Alec Leamas",
+        "timestamp": 1673703548
+    },
+    {
+        "content": "<p><span class=\"user-mention\" data-user-id=\"399510\">@Alec Leamas</span> <br>\nSmoke test results:  MacOS 10.15 build starts and runs on MacOS versions from 10.14 - 12.1(M1).</p>",
+        "id": 321380144,
+        "sender_full_name": "Dave Register",
+        "timestamp": 1673713113
+    },
+    {
+        "content": "<p>Have been looking at making the \"new\" .pkg file on MaOS 11. After some sleep I think th trick is to make it on 12 instead. This should work around the need for <code>--min-os-version</code> which is not availablebefore 13 (I think). Working on it.</p>",
+        "id": 321488367,
+        "sender_full_name": "Alec Leamas",
+        "timestamp": 1673790686
+    },
+    {
+        "content": "<p><span class=\"user-mention\" data-user-id=\"517002\">@Dave Register</span> <br>\n<a href=\"https://github.com/OpenCPN/OpenCPN/pull/2924\">https://github.com/OpenCPN/OpenCPN/pull/2924</a></p>",
+        "id": 321538878,
+        "sender_full_name": "Alec Leamas",
+        "timestamp": 1673823035
+    },
+    {
+        "content": "<p><span class=\"user-mention\" data-user-id=\"399510\">@Alec Leamas</span> <br>\nAfter merge, the production build (with upload  API key) worked fine on MacOS10.15 build. <br>\nHowever, though MacOS  11 build also completed, the uploaded .pkg contained only ~700 bytes of some metadata.<br>\n<a href=\"https://dl.cloudsmith.io/public/david-register/opencpn-unstable/raw/files/OpenCPN_5.7.1+69.cf35537-11.pkg\">https://dl.cloudsmith.io/public/david-register/opencpn-unstable/raw/files/OpenCPN_5.7.1+69.cf35537-11.pkg</a></p>\n<p>Sorry.</p>",
+        "id": 321561189,
+        "sender_full_name": "Dave Register",
+        "timestamp": 1673843760
+    },
+    {
+        "content": "<p>I'll look into it, was tired yesterday. Should not be hard, but busy  with shipdriver right now.</p>",
+        "id": 321606920,
+        "sender_full_name": "Alec Leamas",
+        "timestamp": 1673865205
+    },
+    {
+        "content": "<p><span class=\"user-mention\" data-user-id=\"517002\">@Dave Register</span> <br>\n<a href=\"https://github.com/OpenCPN/OpenCPN/pull/2934\">https://github.com/OpenCPN/OpenCPN/pull/2934</a></p>",
+        "id": 321718204,
+        "sender_full_name": "Alec Leamas",
+        "timestamp": 1673903368
+    },
+    {
+        "content": "<p><span class=\"user-mention\" data-user-id=\"517002\">@Dave Register</span>  Could you take a look at the liblzma.5.dylib  handling?</p>\n<p>As of now,  find_library()  locates \"somewhere\", probably in /usr/local/lib. If this is the one we should use we should probablye just remove this:</p>\n<div class=\"codehilite\"><pre><span></span><code>  install(CODE &quot;\n    include(BundleUtilities)\n    copy_resolved_item_into_bundle(\\&quot;${LIBLZMA_LIBRARIES}\\&quot; \\&quot;\\${CMAKE_INSTALL_PREFIX}/bin/OpenCPN.app/Contents/Frameworks\\&quot;)\n    &quot;\n    COMPONENT Runtime\n  )\n</code></pre></div>\n<p>Note that as written, the above just installs ${LIBLZMA_LIBRARIES} which is what find_library() located. That's what makes this redundant in this case, the libraries we link to will get bundled anyway.</p>\n<p>OTOH, if we should use some other  library for example in /opt/local we should handle it like we do with mpg123 i. e., force find_library() to look in the right place.  Also in this case the code above should be removed.</p>\n<p>I could do the dirty work here it  you want. The core question is which  liblzma  we should use, both when compiling and linking.  /usr/local/lib? /opt/local/something? something else?</p>",
+        "id": 321722443,
+        "sender_full_name": "Alec Leamas",
+        "timestamp": 1673905734
+    },
+    {
+        "content": "<p>I'll take a look tonight, more info tomorrow.</p>",
+        "id": 321723669,
+        "sender_full_name": "Dave Register",
+        "timestamp": 1673906414
+    },
+    {
+        "content": "<p>BTW, smoke test of Macos 11 build after latest patch (81ae..) loads/starts/runs on MacOS  11.7 and 12.1(M1).<br>\nDoes not install on MacOS 10.14. \"This app requires MacOS 10.15 or later\".<br>\nDid not test on MacOS 10.15 yet.</p>\n<p>I'm pretty sure it will run on 10.14, if the metadata will allow installation.  Maybe even earlier 10,xx</p>",
+        "id": 321725288,
+        "sender_full_name": "Dave Register",
+        "timestamp": 1673907365
+    },
+    {
+        "content": "<p>This is what I have talked about earlier. To force it as usable on anything lower than today the  pkgbuild <code>--min-os-version</code> option is required. This is only available on xcode 14.2. Practically, this means that it must be built on circleci in a very modern  builder, more or less monterey I guess. This is tested and works.</p>\n<p>Without this option, it seems like pkgbuild looks to the target of the bundled libraries and uses the lowest value which matches all. Not sure, but this is what it looks like. I have tried quite hard, but do not find any way around this. There are plenty of options to productbuild, but they seems to be  unable to override the value from pkgconfig.</p>",
+        "id": 321725912,
+        "sender_full_name": "Alec Leamas",
+        "timestamp": 1673907764
+    },
+    {
+        "content": "<p>Making a quick test on GA using a macos-12 builder.  Running now</p>",
+        "id": 321727122,
+        "sender_full_name": "Alec Leamas",
+        "timestamp": 1673908412
+    },
+    {
+        "content": "<p>OK, patch below makes it if you want to make a try. It builds on macos-12. I cannot see that this should be any difference from building at 11. The code we compile is governed by MACOSX_DEPLOYMENT_TARGET, and the bundled libraries are the same.</p>\n<div class=\"codehilite\"><pre><span></span><code>commit 5d3b795978ef50cbbf5eb42b173043d721e392f8 (HEAD -&gt; master)\nAuthor: Alec Leamas &lt;leamas.alec@nowhere.net&gt;\nDate:   Mon Jan 16 23:31:56 2023 +0100\n\n    ci: macos: try to build on macos-12 for 10.10\n\ndiff --git a/.github/workflows/MacOS.yaml b/.github/workflows/MacOS.yaml\nindex 43ad8ecd8..855f4a6a9 100644\n--- a/.github/workflows/MacOS.yaml\n+++ b/.github/workflows/MacOS.yaml\n@@ -31,9 +31,9 @@ jobs:\n           #   cmake_defines: -DCMAKE_CXX_STANDARD=11\n           #   use_homebrew: 1\n           - name: macOS 11 wxOSX\n-            runner: macos-11\n+            runner: macos-12\n             pkg_mod: 11\n-            MACOSX_DEPLOYMENT_TARGET: 11.0\n+            MACOSX_DEPLOYMENT_TARGET: 10.10\n           - name: macOS 10.15 wxOSX\n             runner: macos-10.15\n             pkg_mod: 10\ndiff --git a/CMakeLists.txt b/CMakeLists.txt\nindex dc7791c2c..1fc79f781 100644\n--- a/CMakeLists.txt\n+++ b/CMakeLists.txt\n@@ -3015,6 +3015,7 @@ if (APPLE)\n       --root /tmp/opencpn/bin/OpenCPN.app\n       --identifier org.opencpn\n       --install-location /Applications/OpenCPN.app\n+      --min-os-version 10.10\n       OpenCPN.app.pkg\n   )\n   add_dependencies(component-pkg show-bundled-libs pkg-tmp)\n</code></pre></div>",
+        "id": 321729603,
+        "sender_full_name": "Alec Leamas",
+        "timestamp": 1673909954
+    },
+    {
+        "content": "<p>What I know so far on liblzma:<br>\n1.find_library() finds a .tbd  file, which generally points to a MacOS standard library in /usr/lib, or some such.  The \"tdb\" get resolved at compile and link time.  Mac uses TDB files so that their SDK does not need to contain verbatim copies of libraries known to be present in a base system.</p>\n<ol start=\"2\">\n<li>In the OCPN build script, we install a copy of liblzma.5.dylib in /usr/local/opt/xz, apparently as part of \"xz\" package installed by brew.</li>\n<li>In fixup_bundle, he for some reason prefers the copy in /usr/loca/opt/xz over the system library, and that is the one that ends up in the bundle.</li>\n<li>I do not know yet whether MacOS versions earlier than 10.15 have lzma as a standard library.  Waiting on build to check this.</li>\n</ol>\n<p>What I have done:<br>\nI removed the offending directive from CMakeLists.txt, since it did not seem to be doing anything useful anyway.<br>\nI also shifted MacOS 11 pkg build host to MacOS 12.<br>\nFinally, I shifted all MacOS min versions to 10.13, which is 5 years old now.  Seems like a reasonable deployment target.</p>\n<p>More as I know it.</p>",
+        "id": 321754184,
+        "sender_full_name": "Dave Register",
+        "timestamp": 1673931320
+    },
+    {
+        "content": "<p>The latest build as described above:</p>\n<ol>\n<li>\"10.15\" build worked fine on MacOS 10.14.</li>\n<li>\"12\" build pkg would not install on MacOS 10.14.  Same message as before \"...requires 10.15 or later.\"</li>\n</ol>",
+        "id": 321755431,
+        "sender_full_name": "Dave Register",
+        "timestamp": 1673932496
+    },
+    {
+        "content": "<p><span class=\"user-mention\" data-user-id=\"399510\">@Alec Leamas</span> <br>\nThinking a bit more about liblzma...<br>\nI suppose if we want to be more explicit, we could direct find_library to look in \"/usr/local/opt/xz\" for liblzma, and avoid the ambiguity of the XCode TBD file.  Not sure if there is any advantage.<br>\nThoughts on all this?</p>",
+        "id": 321755553,
+        "sender_full_name": "Dave Register",
+        "timestamp": 1673932654
+    },
+    {
+        "content": "<blockquote>\n<p>I suppose if we want to be more explicit, we could direct find_library to look in \"/usr/local/opt/xz\" for liblzma,</p>\n</blockquote>\n<p>I think we should direct find_library() to locate the correct version, and link to that. If fixup_bundle  does it's work properly it should then bundle the version we link to.</p>\n<p>A possible explanation to current mischief is that find_library() finds the system library, at least when it exists, and links to that. fixup_bundle then rightfully bundles this library rather than brew's.</p>\n<p>However, we should also use the correct header. Currently, it seems that  the header is selected more or less randomly.</p>",
+        "id": 321782586,
+        "sender_full_name": "Alec Leamas",
+        "timestamp": 1673946481
+    },
+    {
+        "content": "<blockquote>\n<p>Finally, I shifted all MacOS min versions to 10.13, which is 5 years old now. Seems like a reasonable deployment target.</p>\n</blockquote>\n<p>Right. However, I missed one part, the <em>buildosx/distro.xml</em> which basically is the productbuild setup. Here, there is also a 10.15 minimum which needs to be patched.</p>\n<p>It looks confusing, but see it this way: each package produced by pkgbuild has a minimum version, here defined by <code>--min-os-version</code>. productbuild is able to combine several pkgbuild packages to a single product package with more metadata. Doing so, productbuild will refuse to create a product with a too low version w r t the pkgbuild  packages but might very well raise it. </p>\n<p>So, pkgbuild defines what is possible. productbuild sets the final minimum version within the pkgbuild ramifications.</p>\n<p>Patch :</p>\n<div class=\"codehilite\"><pre><span></span><code>diff --git a/buildosx/distro.plist b/buildosx/distro.plist\nindex 24f687773..73b8eeb01 100644\n--- a/buildosx/distro.plist\n+++ b/buildosx/distro.plist\n@@ -16,7 +16,7 @@\n         &lt;pkg-ref id=&quot;org.opencpn&quot;/&gt;\n     &lt;/choice&gt;\n     &lt;allowed-os-versions&gt;\n-        &lt;os-version min=&quot;10.15&quot;/&gt;\n+        &lt;os-version min=&quot;10.13&quot;/&gt;\n     &lt;/allowed-os-versions&gt;\n     &lt;pkg-ref id=&quot;org.opencpn&quot; version=&quot;0&quot; onConclusion=&quot;none&quot;&gt;\n         OpenCPN.app.pkg\n</code></pre></div>",
+        "id": 321784650,
+        "sender_full_name": "Alec Leamas",
+        "timestamp": 1673947157
+    },
+    {
+        "content": "<blockquote>\n<p>If fixup_bundle does it's work properly it should then bundle the version we link to.</p>\n</blockquote>\n<p>An interesting question is if fixup_bundle is able to resolve a tbd file...</p>",
+        "id": 321784972,
+        "sender_full_name": "Alec Leamas",
+        "timestamp": 1673947257
+    },
+    {
+        "content": "<p>fiixup_bundle and tbd files: <a href=\"https://stackoverflow.com/questions/11875442\">https://stackoverflow.com/questions/11875442</a></p>",
+        "id": 321786951,
+        "sender_full_name": "Alec Leamas",
+        "timestamp": 1673947933
+    },
+    {
+        "content": "<p>that is, we should use only the brew version. Full stop</p>",
+        "id": 321789289,
+        "sender_full_name": "Alec Leamas",
+        "timestamp": 1673948770
+    },
+    {
+        "content": "<p>I patched distro.plist, as suggested. Tested the resulting pkg built by MacOS 12 method on MacOS v10.14, real hardware.<br>\nIt installs OK, as expected.  But we get the dreaded \"(load command 0x80000034 is unknown)\" message at runtime for libmpg123.dylib.  Also, many warnings on the build.  This is apparently a new linker directive, embedded in the library, that was introduced by Apple for MacOS 10.15.<br>\nI surmise that the Brew is the culprit here.  Brew detects that our build host is MacOS 12, and so installs the most recent version of libmpg123.dylib.  And it fails to load on pre-10.15 machines.<br>\nSigh...Hmmmm...</p>",
+        "id": 321925250,
+        "sender_full_name": "Dave Register",
+        "timestamp": 1673989281
+    },
+    {
+        "content": "<p>I have had a bad feeling about these libraries since long. Brew definitely does not support anything before Big Sur i. e., it supports the two latest versions.</p>\n<p>We probably need to build these libraries from source with MACOSX_DEPLOYMENT_TARGET set to 10.13.  We do have the brew recipes available , so it should not be that bad. But  prebuilt libraries are generally a pain. </p>\n<p>We need all input we can get from <span class=\"user-mention\" data-user-id=\"573239\">@Pavel Kalian</span> ...</p>",
+        "id": 321933361,
+        "sender_full_name": "Alec Leamas",
+        "timestamp": 1673992574
+    },
+    {
+        "content": "<p>I see no general problem building any library from source, with the correct TARGET, other than the effort required.  Do you?</p>",
+        "id": 321933676,
+        "sender_full_name": "Dave Register",
+        "timestamp": 1673992727
+    },
+    {
+        "content": "<blockquote>\n<p>Do you?</p>\n</blockquote>\n<p>No. But that is not to say they don't exist, just that I don't see them</p>",
+        "id": 321933936,
+        "sender_full_name": "Alec Leamas",
+        "timestamp": 1673992830
+    },
+    {
+        "content": "<p>But.... <strong>if</strong> we decide to build from source, there must be better traceability than just an opaque download url. One idea could be a github repo which contains everything needed to build the libs together with the compiled stuff. could just be cloned when used.</p>",
+        "id": 321934584,
+        "sender_full_name": "Alec Leamas",
+        "timestamp": 1673993089
+    },
+    {
+        "content": "<p>Actually, I meant an inline build, as part of the CI process.  Just as we build libarchive now.  This is certainly traceable.</p>",
+        "id": 321957723,
+        "sender_full_name": "Dave Register",
+        "timestamp": 1674004332
+    }
+]

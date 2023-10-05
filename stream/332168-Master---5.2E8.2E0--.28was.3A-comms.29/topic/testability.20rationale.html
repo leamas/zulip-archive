@@ -1,0 +1,33 @@
+<html>
+<head><meta charset="utf-8"><title>testability rationale · Master - 5.8.0  (was: comms) · Zulip Chat Archive</title></head>
+<h2>Stream: <a href="https://leamas.github.io/zulip-archive/stream/332168-Master---5.2E8.2E0--.28was.3A-comms.29/index.html">Master - 5.8.0  (was: comms)</a></h2>
+<h3>Topic: <a href="https://leamas.github.io/zulip-archive/stream/332168-Master---5.2E8.2E0--.28was.3A-comms.29/topic/testability.20rationale.html">testability rationale</a></h3>
+
+<hr>
+
+<base href="https://opencpn.zulipchat.com">
+
+<head><link href="https://leamas.github.io/zulip-archive/style.css" rel="stylesheet"></head>
+
+<a name="297570691"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332168-Master%20-%205.8.0%20%20%28was%3A%20comms%29/topic/testability%20rationale/near/297570691" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Alec Leamas <a href="https://leamas.github.io/zulip-archive/stream/332168-Master---5.2E8.2E0--.28was.3A-comms.29/topic/testability.20rationale.html#297570691">(Sep 07 2022 at 11:35)</a>:</h4>
+<blockquote>
+<p>allowing for better testability.</p>
+</blockquote>
+<p>This is a philosophic post.</p>
+<p>The reasons for having things testable in unit tests  are deeper than just the tests.  The core issue is that the current sources suffers from the "everything depends on everything" syndrome. Files includes files without much thought, and the result is that maintaining the program is utterly hard -- it's hard to replace or rewrite code.  A simple issue is that many changes that should not really require much to be recompiled still forces recompilation of all sorts of files, but the major problems are about maintenance and readability.</p>
+<p>openpcn is a GUI application. For these, a well-known pattern is Model - View - Controller (MVC) which partitions the program in three independent parts.  I'm not aware of any other established pattern of this kind.</p>
+<p>What opencpn-cmd and the unit tests do is to carve out a Model part of opencpn. Simply stated, it is the files in MODEL_SRC in CmakeLists. These files have no dependencies on the GUI. Together with more unit tests this part should be much easier to maintain. It also means that a reasonable large part has a well defined  interface instead of just a bunch of classes and files. </p>
+<p>And this is IMHO the core benefit of these things. opencpn-cmd and not least the tests are good in their own right, but the perhaps most important thing is that they impose some structure to the code.</p>
+
+
+
+<a name="297595181"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332168-Master%20-%205.8.0%20%20%28was%3A%20comms%29/topic/testability%20rationale/near/297595181" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Dave Register <a href="https://leamas.github.io/zulip-archive/stream/332168-Master---5.2E8.2E0--.28was.3A-comms.29/topic/testability.20rationale.html#297595181">(Sep 07 2022 at 13:46)</a>:</h4>
+<p>Thanks for the philosophy.  Had to disagree with any of that.<br>
+Someday over a beer I will tell you some stories of my days at Microsoft, and the state of their codebase in the '90s.</p>
+
+
+
+<hr><p>Last updated: Oct 05 2023 at 09:43 UTC</p>
+</html>

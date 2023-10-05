@@ -1,0 +1,1636 @@
+<html>
+<head><meta charset="utf-8"><title>misc · Master - 5.8.0  (was: comms) · Zulip Chat Archive</title></head>
+<h2>Stream: <a href="https://leamas.github.io/zulip-archive/stream/332168-Master---5.2E8.2E0--.28was.3A-comms.29/index.html">Master - 5.8.0  (was: comms)</a></h2>
+<h3>Topic: <a href="https://leamas.github.io/zulip-archive/stream/332168-Master---5.2E8.2E0--.28was.3A-comms.29/topic/misc.html">misc</a></h3>
+
+<hr>
+
+<base href="https://opencpn.zulipchat.com">
+
+<head><link href="https://leamas.github.io/zulip-archive/style.css" rel="stylesheet"></head>
+
+<a name="293907522"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332168-Master%20-%205.8.0%20%20%28was%3A%20comms%29/topic/misc/near/293907522" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Alec Leamas <a href="https://leamas.github.io/zulip-archive/stream/332168-Master---5.2E8.2E0--.28was.3A-comms.29/topic/misc.html#293907522">(Aug 17 2022 at 14:26)</a>:</h4>
+<p><span class="user-mention" data-user-id="518981">@Github Bot</span>  #2749</p>
+
+
+
+<a name="293907524"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332168-Master%20-%205.8.0%20%20%28was%3A%20comms%29/topic/misc/near/293907524" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Github Bot <a href="https://leamas.github.io/zulip-archive/stream/332168-Master---5.2E8.2E0--.28was.3A-comms.29/topic/misc.html#293907524">(Aug 17 2022 at 14:26)</a>:</h4>
+<p><strong><a href="https://github.com/OpenCPN/OpenCPN/issues/2749">opencpn/OpenCPN#2749</a> - Slow terminal -&gt; Poor GPS coverage</strong><br>
+Created by <strong><a href="https://github.com/leamas">leamas</a></strong><br>
+Status - <strong>Open</strong></p>
+<blockquote>
+<p><strong>Describe the bug</strong><br>
+When using a vncviewer remote session against a headless RPi4 the GPS coverage drops to 0 in random intervals. Replacing the vnc session with a HDMI connected physical screen makes the problem go away, the GPS works as expected.</p>
+<p><strong>To Reproduce</strong><br>
+Steps to reproduce the behavior:</p>
+<ol>
+<li>Start the RPi running Raspbian and Flatpak, Opencpn 5.6.0. GPS connected via serial interface on the 40-pin GPIO header.</li>
+<li>Watch the round icon top-right  randomly become red, no GPS coverage</li>
+</ol>
+<p><strong>Expected behavior</strong><br>
+Stable GPS coverage</p>
+<p><strong>Additional context</strong><br>
+This is obviously some loop updating the screen which is so slow that it affects the communication. There is not much point examining this issue until the communications rewrite is done. However, once done this issue should IMHO be a test case.</p>
+</blockquote>
+
+
+
+<a name="294132951"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332168-Master%20-%205.8.0%20%20%28was%3A%20comms%29/topic/misc/near/294132951" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Alec Leamas <a href="https://leamas.github.io/zulip-archive/stream/332168-Master---5.2E8.2E0--.28was.3A-comms.29/topic/misc.html#294132951">(Aug 18 2022 at 17:24)</a>:</h4>
+<p><span class="user-mention" data-user-id="522486">@Håkan Svensson</span>  IIRC, there is besides the data on <a href="http://signalk.stupan.se">signalk.stupan.se</a> 10012/tcp also an UDP stream. </p>
+<p>Am I right? If so, which port is it on?</p>
+
+
+
+<a name="294133207"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332168-Master%20-%205.8.0%20%20%28was%3A%20comms%29/topic/misc/near/294133207" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Alec Leamas <a href="https://leamas.github.io/zulip-archive/stream/332168-Master---5.2E8.2E0--.28was.3A-comms.29/topic/misc.html#294133207">(Aug 18 2022 at 17:25)</a>:</h4>
+<p>Ah... that UDP data was local, sorry. Could you make it available without to much work (assuming it's not the same as the TCP data)?</p>
+
+
+
+<a name="294134182"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332168-Master%20-%205.8.0%20%20%28was%3A%20comms%29/topic/misc/near/294134182" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Alec Leamas <a href="https://leamas.github.io/zulip-archive/stream/332168-Master---5.2E8.2E0--.28was.3A-comms.29/topic/misc.html#294134182">(Aug 18 2022 at 17:30)</a>:</h4>
+<p>Sorry again... This is actually a lot of work, you'll need to get my address and I would net to set up firewalls and forwarding. </p>
+<p>Let's rephrase that question: The data which you sent over a local UDP port,  have you got that in a file I could get?</p>
+
+
+
+<a name="294137830"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332168-Master%20-%205.8.0%20%20%28was%3A%20comms%29/topic/misc/near/294137830" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Håkan Svensson <a href="https://leamas.github.io/zulip-archive/stream/332168-Master---5.2E8.2E0--.28was.3A-comms.29/topic/misc.html#294137830">(Aug 18 2022 at 17:49)</a>:</h4>
+<p>Alec..<br>
+Here are some files I use:<br>
+A .bat file I use in Win to play VDR-data to an IP-port as UDP.<br>
+The VDR file to play.<br>
+<a href="/user_uploads/33951/5GWy7qj3Q_A0_g6g06y8HsmG/VDR_Hakefjord.bat">VDR_Hakefjord.bat</a> <br>
+<a href="/user_uploads/33951/5dOW2YBnHX8S4jVf0--Ncfik/Hakefjord.txt">Hakefjord.txt</a></p>
+
+
+
+<a name="294143400"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332168-Master%20-%205.8.0%20%20%28was%3A%20comms%29/topic/misc/near/294143400" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Håkan Svensson <a href="https://leamas.github.io/zulip-archive/stream/332168-Master---5.2E8.2E0--.28was.3A-comms.29/topic/misc.html#294143400">(Aug 18 2022 at 18:17)</a>:</h4>
+<p>Alec..<br>
+Forgot:<br>
+I also use Dan's python file to make the real job. Attached.<br>
+<a href="/user_uploads/33951/ofVFSYLDuB9511QDqEYUhjDu/VDRplayer.py">VDRplayer.py</a></p>
+
+
+
+<a name="294144871"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332168-Master%20-%205.8.0%20%20%28was%3A%20comms%29/topic/misc/near/294144871" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Alec Leamas <a href="https://leamas.github.io/zulip-archive/stream/332168-Master---5.2E8.2E0--.28was.3A-comms.29/topic/misc.html#294144871">(Aug 18 2022 at 18:25)</a>:</h4>
+<p>Thanks!   Most of this will committed into tests/testdata when I'm done.</p>
+
+
+
+<a name="294160127"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332168-Master%20-%205.8.0%20%20%28was%3A%20comms%29/topic/misc/near/294160127" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Alec Leamas <a href="https://leamas.github.io/zulip-archive/stream/332168-Master---5.2E8.2E0--.28was.3A-comms.29/topic/misc.html#294160127">(Aug 18 2022 at 20:00)</a>:</h4>
+<p>I have pushed a structural change splitting comm_util into comm_util and comm_drv_factory. Problematic when a thing like "utils" has dependencies on the  complete driver hierarchy.  </p>
+<p>comm_bridge and comm_decode now builds as part of the model. That is, all is set for making unit tests for them. Once there are such tests, I might look more into the priorities stuff.   Time for bed.</p>
+
+
+
+<a name="294252015"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332168-Master%20-%205.8.0%20%20%28was%3A%20comms%29/topic/misc/near/294252015" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Alec Leamas <a href="https://leamas.github.io/zulip-archive/stream/332168-Master---5.2E8.2E0--.28was.3A-comms.29/topic/misc.html#294252015">(Aug 19 2022 at 12:11)</a>:</h4>
+<p>One of those moments: the comm branch does not build. I'm on it.</p>
+
+
+
+<a name="294252689"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332168-Master%20-%205.8.0%20%20%28was%3A%20comms%29/topic/misc/near/294252689" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Alec Leamas <a href="https://leamas.github.io/zulip-archive/stream/332168-Master---5.2E8.2E0--.28was.3A-comms.29/topic/misc.html#294252689">(Aug 19 2022 at 12:16)</a>:</h4>
+<p>Fixed.</p>
+
+
+
+<a name="294525346"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332168-Master%20-%205.8.0%20%20%28was%3A%20comms%29/topic/misc/near/294525346" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Alec Leamas <a href="https://leamas.github.io/zulip-archive/stream/332168-Master---5.2E8.2E0--.28was.3A-comms.29/topic/misc.html#294525346">(Aug 21 2022 at 09:49)</a>:</h4>
+<p><span class="user-mention" data-user-id="518981">@Github Bot</span> #2752</p>
+
+
+
+<a name="294525347"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332168-Master%20-%205.8.0%20%20%28was%3A%20comms%29/topic/misc/near/294525347" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Github Bot <a href="https://leamas.github.io/zulip-archive/stream/332168-Master---5.2E8.2E0--.28was.3A-comms.29/topic/misc.html#294525347">(Aug 21 2022 at 09:49)</a>:</h4>
+<p><strong><a href="https://github.com/OpenCPN/OpenCPN/issues/2752">opencpn/OpenCPN#2752</a> - CI: MacOS builds broken</strong><br>
+Created by <strong><a href="https://github.com/leamas">leamas</a></strong><br>
+Status - <strong>Open</strong></p>
+<blockquote>
+<p><strong>Describe the bug</strong><br>
+The MacOS CI builds are broken since ~some time~ at least a week, failing to rsync the macports sources</p>
+<p><strong>To Reproduce</strong></p>
+<ol>
+<li>Make a commit to OpenCPN repo.</li>
+<li>Push</li>
+<li>Watch logs with failing MacOS build</li>
+</ol>
+<p><strong>Expected behavior</strong><br>
+Well...</p>
+<p><strong>Additional context</strong><br>
+Typical error log here: <a href="https://app.circleci.com/pipelines/github/leamas/OpenCPN/2215/workflows/663bc861-a648-439a-9c0c-8613af7752ce/jobs/3907">https://app.circleci.com/pipelines/github/leamas/OpenCPN/2215/workflows/663bc861-a648-439a-9c0c-8613af7752ce/jobs/3907</a></p>
+<p>Currently most OpenCPN work is on the comms branch, so the errors shows up here. Error has showed up for about a week,  last successful build about three weeks ago here: <a href="https://app.circleci.com/pipelines/github/leamas/OpenCPN/2185/workflows/3df9046a-f1cb-419c-bb7e-608e0955ee81">https://app.circleci.com/pipelines/github/leamas/OpenCPN/2185/workflows/3df9046a-f1cb-419c-bb7e-608e0955ee81</a></p>
+</blockquote>
+
+
+
+<a name="294573835"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332168-Master%20-%205.8.0%20%20%28was%3A%20comms%29/topic/misc/near/294573835" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Alec Leamas <a href="https://leamas.github.io/zulip-archive/stream/332168-Master---5.2E8.2E0--.28was.3A-comms.29/topic/misc.html#294573835">(Aug 21 2022 at 18:45)</a>:</h4>
+<p><span class="user-mention" data-user-id="517002">@Dave Register</span>  Looking at AIS_Decoder.  This depends on gFrame, which makes testing hard and overall is a strange dependency. Intend to replace the dialog invoked in <code>OnTimerAIS()</code>  (~370 lines!) with an event variable + handling of it in ocpn_frame.</p>
+
+
+
+<a name="294577859"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332168-Master%20-%205.8.0%20%20%28was%3A%20comms%29/topic/misc/near/294577859" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Dave Register <a href="https://leamas.github.io/zulip-archive/stream/332168-Master---5.2E8.2E0--.28was.3A-comms.29/topic/misc.html#294577859">(Aug 21 2022 at 19:34)</a>:</h4>
+<p>There is some non-GUI logic here in this timer handler..  Specifically, scrubbing the lists to remove  stale targets.  This should be done independent of GUI considerations, else the list grows without bound.<br>
+Otherwise, I agree with moving the clear GUI aspects to an upstream event.</p>
+
+
+
+<a name="294577879"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332168-Master%20-%205.8.0%20%20%28was%3A%20comms%29/topic/misc/near/294577879" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Dave Register <a href="https://leamas.github.io/zulip-archive/stream/332168-Master---5.2E8.2E0--.28was.3A-comms.29/topic/misc.html#294577879">(Aug 21 2022 at 19:34)</a>:</h4>
+<p>Shall I take a look at it?</p>
+
+
+
+<a name="295158091"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332168-Master%20-%205.8.0%20%20%28was%3A%20comms%29/topic/misc/near/295158091" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Dave Register <a href="https://leamas.github.io/zulip-archive/stream/332168-Master---5.2E8.2E0--.28was.3A-comms.29/topic/misc.html#295158091">(Aug 25 2022 at 04:05)</a>:</h4>
+<p>Status:<br>
+I have finished a working model of socketCAN interface for linux.  Works fine in VCAN, or virtual mode.  Can playback socketCAN logfiles without apparent error.  Waiting for rPI hat hardware to test with live data.<br>
+One more driver to build:  signalK network stream.<br>
+Meanwhile, refactoring some of options.cpp to reduce the huge class size. Starting with "Connections", since this is known to need rework for comms upgrade.</p>
+
+
+
+<a name="295283552"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332168-Master%20-%205.8.0%20%20%28was%3A%20comms%29/topic/misc/near/295283552" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Alec Leamas <a href="https://leamas.github.io/zulip-archive/stream/332168-Master---5.2E8.2E0--.28was.3A-comms.29/topic/misc.html#295283552">(Aug 25 2022 at 18:08)</a>:</h4>
+<p><span class="user-mention" data-user-id="517002">@Dave Register</span>  Did some clean up in my local branches, and was left with v5.6.x which IMO needs an update. Pushed new branch v5.6.x-update which basically brings v.5.6.x to same state as Release_5.6.2-2, just adding the unfortunate renormalizations required for some windows files.</p>
+<p>It is ready to be merged into v5.6.x; leaving that to you for final review.</p>
+
+
+
+<a name="295382210"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332168-Master%20-%205.8.0%20%20%28was%3A%20comms%29/topic/misc/near/295382210" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Alec Leamas <a href="https://leamas.github.io/zulip-archive/stream/332168-Master---5.2E8.2E0--.28was.3A-comms.29/topic/misc.html#295382210">(Aug 26 2022 at 09:16)</a>:</h4>
+<p>I see the light in the tunnel. However, not sure I can complete today. </p>
+<p>Furthermore, this will be a large diff. <span class="user-mention" data-user-id="517002">@Dave Register</span> : will we collide? Have you also a large "untangling" diff under way?</p>
+
+
+
+<a name="295416302"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332168-Master%20-%205.8.0%20%20%28was%3A%20comms%29/topic/misc/near/295416302" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Dave Register <a href="https://leamas.github.io/zulip-archive/stream/332168-Master---5.2E8.2E0--.28was.3A-comms.29/topic/misc.html#295416302">(Aug 26 2022 at 12:49)</a>:</h4>
+<p>I'm working options.cpp at the moment, which will also involve ConnectionsParams.cpp.</p>
+
+
+
+<a name="295421669"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332168-Master%20-%205.8.0%20%20%28was%3A%20comms%29/topic/misc/near/295421669" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Alec Leamas <a href="https://leamas.github.io/zulip-archive/stream/332168-Master---5.2E8.2E0--.28was.3A-comms.29/topic/misc.html#295421669">(Aug 26 2022 at 13:21)</a>:</h4>
+<p>I have splitted Connectionsparam. It's rather straight-forward, two classes, two files. We probably end up in something similar.</p>
+<p>My dependencies has exploded again, it's about the base: routeman, Route, Track , etc. May very well end up in nothing.  About to leave for AW with some friends, sort of farewell  to a pair which are moving to another town.</p>
+
+
+
+<a name="295422315"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332168-Master%20-%205.8.0%20%20%28was%3A%20comms%29/topic/misc/near/295422315" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Alec Leamas <a href="https://leamas.github.io/zulip-archive/stream/332168-Master---5.2E8.2E0--.28was.3A-comms.29/topic/misc.html#295422315">(Aug 26 2022 at 13:25)</a>:</h4>
+<p>Pushing what I have in comm-untangle branch. It compiles and survives my very primitive smoke test. As  you see, Connectionparams is still untouched.</p>
+
+
+
+<a name="295539398"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332168-Master%20-%205.8.0%20%20%28was%3A%20comms%29/topic/misc/near/295539398" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Dave Register <a href="https://leamas.github.io/zulip-archive/stream/332168-Master---5.2E8.2E0--.28was.3A-comms.29/topic/misc.html#295539398">(Aug 27 2022 at 02:43)</a>:</h4>
+<p>Shall I review and merge comm-untangle?  Or do you want to polish some more?</p>
+
+
+
+<a name="295545776"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332168-Master%20-%205.8.0%20%20%28was%3A%20comms%29/topic/misc/near/295545776" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Alec Leamas <a href="https://leamas.github.io/zulip-archive/stream/332168-Master---5.2E8.2E0--.28was.3A-comms.29/topic/misc.html#295545776">(Aug 27 2022 at 04:54)</a>:</h4>
+<p>Yes, please do. It's a  small step, but in the right direction.</p>
+
+
+
+<a name="295604447"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332168-Master%20-%205.8.0%20%20%28was%3A%20comms%29/topic/misc/near/295604447" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Dave Register <a href="https://leamas.github.io/zulip-archive/stream/332168-Master---5.2E8.2E0--.28was.3A-comms.29/topic/misc.html#295604447">(Aug 27 2022 at 14:30)</a>:</h4>
+<p>I looked at it.<br>
+One thing that I don't love is that plugins must listen() in order to receive JSON messages.  At first thought, that breaks instantly all legacy plugins that do any kind of graphics GUI (e.g. GRIB, o-charts, o-draw, etc).  JSON messages are use to inform plugins of interesting core configuration state, especially for OpenGL graphics control.<br>
+There may be more...</p>
+
+
+
+<a name="295611261"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332168-Master%20-%205.8.0%20%20%28was%3A%20comms%29/topic/misc/near/295611261" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Dave Register <a href="https://leamas.github.io/zulip-archive/stream/332168-Master---5.2E8.2E0--.28was.3A-comms.29/topic/misc.html#295611261">(Aug 27 2022 at 15:33)</a>:</h4>
+<p>Reading more closely, I see that the above comment re listening for JSON applies only to AIS target messages.  Correct?  If so, I have no complaints.  AFAIK, there are no plugins that process AIS directly today.</p>
+
+
+
+<a name="295619836"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332168-Master%20-%205.8.0%20%20%28was%3A%20comms%29/topic/misc/near/295619836" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Dave Register <a href="https://leamas.github.io/zulip-archive/stream/332168-Master---5.2E8.2E0--.28was.3A-comms.29/topic/misc.html#295619836">(Aug 27 2022 at 16:56)</a>:</h4>
+<p>All pushed.  Thanks for the code.</p>
+
+
+
+<a name="295670848"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332168-Master%20-%205.8.0%20%20%28was%3A%20comms%29/topic/misc/near/295670848" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Alec Leamas <a href="https://leamas.github.io/zulip-archive/stream/332168-Master---5.2E8.2E0--.28was.3A-comms.29/topic/misc.html#295670848">(Aug 28 2022 at 06:01)</a>:</h4>
+<p>There should not be any difference w r t how the JSON messages are sent. I have just moved existing code from  AIS_decoder to ui parts (ais_info_gui and pluginmanager). </p>
+<p>If the existing code is/was correct is of course another question....</p>
+
+
+
+<a name="295677885"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332168-Master%20-%205.8.0%20%20%28was%3A%20comms%29/topic/misc/near/295677885" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Håkan Svensson <a href="https://leamas.github.io/zulip-archive/stream/332168-Master---5.2E8.2E0--.28was.3A-comms.29/topic/misc.html#295677885">(Aug 28 2022 at 07:51)</a>:</h4>
+<blockquote>
+<p>AFAIK, there are no plugins that process AIS directly today.</p>
+</blockquote>
+<p>If we're talking about the same thing Radar_pi uses AIS info. <br>
+For example <a href="https://github.com/opencpn-radar-pi/radar_pi/blob/166c2013125a28b9c86e627e4062d9cd5c8b77b5/src/radar_pi.cpp#L1905">here</a></p>
+
+
+
+<a name="295682802"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332168-Master%20-%205.8.0%20%20%28was%3A%20comms%29/topic/misc/near/295682802" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Alec Leamas <a href="https://leamas.github.io/zulip-archive/stream/332168-Master---5.2E8.2E0--.28was.3A-comms.29/topic/misc.html#295682802">(Aug 28 2022 at 08:51)</a>:</h4>
+<p><span class="user-mention" data-user-id="517002">@Dave Register</span>  Have untangled the basic mess RoutePoint, Route, TrackPoint and Track using evil #ifdefs. The remaining part is navutil, which is yet another jack of all trades. Pushing some preparation work,  will try to split out the database (this is the real goal) later today or tomorrow.</p>
+
+
+
+<a name="295720336"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332168-Master%20-%205.8.0%20%20%28was%3A%20comms%29/topic/misc/near/295720336" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Dave Register <a href="https://leamas.github.io/zulip-archive/stream/332168-Master---5.2E8.2E0--.28was.3A-comms.29/topic/misc.html#295720336">(Aug 28 2022 at 15:05)</a>:</h4>
+<p><span class="user-mention" data-user-id="399510">@Alec Leamas</span> <br>
+OK, I pushed all my WIP, no plans for major refactor at the moment.  Working comm drivers.</p>
+
+
+
+<a name="295726571"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332168-Master%20-%205.8.0%20%20%28was%3A%20comms%29/topic/misc/near/295726571" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Alec Leamas <a href="https://leamas.github.io/zulip-archive/stream/332168-Master---5.2E8.2E0--.28was.3A-comms.29/topic/misc.html#295726571">(Aug 28 2022 at 16:01)</a>:</h4>
+<p>Nice. Makes me more comfortable. I do indeed have some more refactoring in the pipe, basic goal to make more things testable i. e., without gui deps..</p>
+
+
+
+<a name="295747397"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332168-Master%20-%205.8.0%20%20%28was%3A%20comms%29/topic/misc/near/295747397" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Alec Leamas <a href="https://leamas.github.io/zulip-archive/stream/332168-Master---5.2E8.2E0--.28was.3A-comms.29/topic/misc.html#295747397">(Aug 28 2022 at 18:49)</a>:</h4>
+<p>Looking at that strange x11 fontpicker previously in navutil it doesn't seem to be used at all.</p>
+<p><span class="user-mention" data-user-id="517002">@Dave Register</span>  Do you know the story? Shall we just drop it?</p>
+
+
+
+<a name="295750967"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332168-Master%20-%205.8.0%20%20%28was%3A%20comms%29/topic/misc/near/295750967" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Dave Register <a href="https://leamas.github.io/zulip-archive/stream/332168-Master---5.2E8.2E0--.28was.3A-comms.29/topic/misc.html#295750967">(Aug 28 2022 at 19:33)</a>:</h4>
+<p>Ancient history.  Let's drop it, if the build completes correctly.</p>
+
+
+
+<a name="296508940"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332168-Master%20-%205.8.0%20%20%28was%3A%20comms%29/topic/misc/near/296508940" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Dave Register <a href="https://leamas.github.io/zulip-archive/stream/332168-Master---5.2E8.2E0--.28was.3A-comms.29/topic/misc.html#296508940">(Sep 01 2022 at 02:21)</a>:</h4>
+<p>I completed signalK driver, supporting observables, as well as legacy core and plugin mode operation.  Some small changes in comm_navmsg.  The change hit a fairly large set of files.  Hope you will not have rebase problems.<br>
+Next Step:  Removing all obsolete Datastream parts.</p>
+
+
+
+<a name="296680239"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332168-Master%20-%205.8.0%20%20%28was%3A%20comms%29/topic/misc/near/296680239" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Alec Leamas <a href="https://leamas.github.io/zulip-archive/stream/332168-Master---5.2E8.2E0--.28was.3A-comms.29/topic/misc.html#296680239">(Sep 01 2022 at 18:54)</a>:</h4>
+<p>I haven't really found time  to work  last days. Also stuck on how to handle the unit tests, tried some approaches without luck. Nothing to rebase, so don't worry.</p>
+
+
+
+<a name="296802904"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332168-Master%20-%205.8.0%20%20%28was%3A%20comms%29/topic/misc/near/296802904" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Alec Leamas <a href="https://leamas.github.io/zulip-archive/stream/332168-Master---5.2E8.2E0--.28was.3A-comms.29/topic/misc.html#296802904">(Sep 02 2022 at 11:53)</a>:</h4>
+<p>Finally figured out how to arrange a unit test environment.  It's not that beautiful, more like the least ugly of my attempts -- there are multiple others in the trash. </p>
+<p>Now to make more tests.</p>
+
+
+
+<a name="297122326"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332168-Master%20-%205.8.0%20%20%28was%3A%20comms%29/topic/misc/near/297122326" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Alec Leamas <a href="https://leamas.github.io/zulip-archive/stream/332168-Master---5.2E8.2E0--.28was.3A-comms.29/topic/misc.html#297122326">(Sep 04 2022 at 17:09)</a>:</h4>
+<p><span class="user-mention" data-user-id="517002">@Dave Register</span>  AIVDO: I see that handling of these messages is disabled in comm_bridge. What's the story here?</p>
+
+
+
+<a name="297131072"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332168-Master%20-%205.8.0%20%20%28was%3A%20comms%29/topic/misc/near/297131072" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Dave Register <a href="https://leamas.github.io/zulip-archive/stream/332168-Master---5.2E8.2E0--.28was.3A-comms.29/topic/misc.html#297131072">(Sep 04 2022 at 18:46)</a>:</h4>
+<p>Needs work.  And I do not have a live source of AIVDO to test, at the moment.  Might have to rig something up to test from a VDR recording.</p>
+
+
+
+<a name="297139665"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332168-Master%20-%205.8.0%20%20%28was%3A%20comms%29/topic/misc/near/297139665" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Alec Leamas <a href="https://leamas.github.io/zulip-archive/stream/332168-Master---5.2E8.2E0--.28was.3A-comms.29/topic/misc.html#297139665">(Sep 04 2022 at 20:45)</a>:</h4>
+<p>Actually you do:  test/testdata/Hakefjord.log is filled with a large number of them. I can make a failing unit test, but cannot really figure out the expected positions with decoding the outer encoding layer ffirst</p>
+
+
+
+<a name="297144786"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332168-Master%20-%205.8.0%20%20%28was%3A%20comms%29/topic/misc/near/297144786" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Alec Leamas <a href="https://leamas.github.io/zulip-archive/stream/332168-Master---5.2E8.2E0--.28was.3A-comms.29/topic/misc.html#297144786">(Sep 04 2022 at 22:22)</a>:</h4>
+<p>I have pushed a failing test of !AISVDO messages. It needs testdata (position) to be updated, I cannot decode the binary string right now. However, otherwise I think it's ok, in the very end of tests.cpp.</p>
+<p>Now, the work is to make it pass.</p>
+
+
+
+<a name="297145620"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332168-Master%20-%205.8.0%20%20%28was%3A%20comms%29/topic/misc/near/297145620" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Alec Leamas <a href="https://leamas.github.io/zulip-archive/stream/332168-Master---5.2E8.2E0--.28was.3A-comms.29/topic/misc.html#297145620">(Sep 04 2022 at 22:42)</a>:</h4>
+<p>Updated the testdata, should now be OK</p>
+
+
+
+<a name="297158910"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332168-Master%20-%205.8.0%20%20%28was%3A%20comms%29/topic/misc/near/297158910" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Dave Register <a href="https://leamas.github.io/zulip-archive/stream/332168-Master---5.2E8.2E0--.28was.3A-comms.29/topic/misc.html#297158910">(Sep 05 2022 at 03:35)</a>:</h4>
+<p>OK, I'll take a look at comm_bridge after I get multiplexer settled.</p>
+
+
+
+<a name="297205263"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332168-Master%20-%205.8.0%20%20%28was%3A%20comms%29/topic/misc/near/297205263" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Alec Leamas <a href="https://leamas.github.io/zulip-archive/stream/332168-Master---5.2E8.2E0--.28was.3A-comms.29/topic/misc.html#297205263">(Sep 05 2022 at 10:55)</a>:</h4>
+<p>The multiplexer problems  revealed two things. The first and most basic was that the pointers returned by <code>GetDrivers()</code> was const. This basically made them useless since operations like <code>SendMessage()</code>are non const, the underlying io pipes are stateful. I have revised this so GetDrivers() returns <code>&lt;AbstractCommdriver&gt;</code> rather than the old, buggy <code>&lt;const AbstractCommDriver&gt;</code>. This implied some changes also in multiplexer.cpp which made it compile.</p>
+<p>The second was some mess with the resent message.  I fixed this together with some clean up in   <code>Multiplexer::HandleN0183()</code>, please don't judge me too hard.</p>
+<p>One remaining thing. In multiplexer.cpp around line 223 we have:</p>
+<div class="codehilite"><pre><span></span><code>  if (params.Type == SERIAL || driver-&gt;iface != target_driver-&gt;iface) {
+</code></pre></div>
+<p>As I read this, the  <code>params.Type  == SERIAL</code> part is about testing that params has been set, either by drv_serial or drv_net. However, ConnParams default CTOR actually sets Type to SERIAL so  the test might succeed for any random driver. I  don't have the complete picture, but it looks suspicious. If it actually is as intended it might  be worth a comment.</p>
+
+
+
+<a name="297205672"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332168-Master%20-%205.8.0%20%20%28was%3A%20comms%29/topic/misc/near/297205672" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Alec Leamas <a href="https://leamas.github.io/zulip-archive/stream/332168-Master---5.2E8.2E0--.28was.3A-comms.29/topic/misc.html#297205672">(Sep 05 2022 at 10:58)</a>:</h4>
+<p>There are also some unused boolean flags  around line 227. I left them since I guessed you have plans for them (?)</p>
+
+
+
+<a name="297226426"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332168-Master%20-%205.8.0%20%20%28was%3A%20comms%29/topic/misc/near/297226426" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Dave Register <a href="https://leamas.github.io/zulip-archive/stream/332168-Master---5.2E8.2E0--.28was.3A-comms.29/topic/misc.html#297226426">(Sep 05 2022 at 13:23)</a>:</h4>
+<p>"but it looks suspicious"<br>
+Good catch. I'll fix it.</p>
+
+
+
+<a name="297227198"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332168-Master%20-%205.8.0%20%20%28was%3A%20comms%29/topic/misc/near/297227198" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Dave Register <a href="https://leamas.github.io/zulip-archive/stream/332168-Master---5.2E8.2E0--.28was.3A-comms.29/topic/misc.html#297227198">(Sep 05 2022 at 13:29)</a>:</h4>
+<p>Thanks for scrubbing multiplexer.  All that excessive intermediate variable stuff was to help me understand what exactly was happening.</p>
+
+
+
+<a name="297229387"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332168-Master%20-%205.8.0%20%20%28was%3A%20comms%29/topic/misc/near/297229387" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Håkan Svensson <a href="https://leamas.github.io/zulip-archive/stream/332168-Master---5.2E8.2E0--.28was.3A-comms.29/topic/misc.html#297229387">(Sep 05 2022 at 13:45)</a>:</h4>
+<p><span class="user-mention silent" data-user-id="517002">Dave Register</span> <a href="#narrow/stream/332168-comms/topic/misc/near/297131072">said</a>:</p>
+<blockquote>
+<p>Needs work.  And I do not have a live source of AIVDO to test, at the moment.  Might have to rig something up to test from a VDR recording.</p>
+</blockquote>
+<p>If still valid I made a VDR just now including AIVDO: (attached)<br>
+<a href="/user_uploads/33951/VhcvLztsfpnQuNcChEUEPB0p/VDR_Incl_VDO.txt">VDR_Incl_VDO.txt</a></p>
+
+
+
+<a name="297235530"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332168-Master%20-%205.8.0%20%20%28was%3A%20comms%29/topic/misc/near/297235530" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Dave Register <a href="https://leamas.github.io/zulip-archive/stream/332168-Master---5.2E8.2E0--.28was.3A-comms.29/topic/misc.html#297235530">(Sep 05 2022 at 14:28)</a>:</h4>
+<p><span class="user-mention" data-user-id="399510">@Alec Leamas</span> <br>
+Stuck again.  Why in the world does this fail to compile?</p>
+<div class="codehilite"><pre><span></span><code>void CommDriverN0183Net::SendMessage(const NavMsg&amp; msg, const NavAddr&amp; addr) {
+  auto n0183_msg = std::dynamic_pointer_cast&lt;const Nmea0183Msg &gt;(msg);
+
+  SendSentenceNetwork(n0183_msg.payload.c_str());
+}
+</code></pre></div>
+
+<p>Error is:<br>
+/home/dsr/Projects/opencpn/src/comm_drv_n0183_net.cpp:349:69: error: no matching function for call to ‘dynamic_pointer_cast&lt;const Nmea0183Msg&gt;(const NavMsg&amp;)’</p>
+
+
+
+<a name="297240974"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332168-Master%20-%205.8.0%20%20%28was%3A%20comms%29/topic/misc/near/297240974" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Alec Leamas <a href="https://leamas.github.io/zulip-archive/stream/332168-Master---5.2E8.2E0--.28was.3A-comms.29/topic/misc.html#297240974">(Sep 05 2022 at 15:05)</a>:</h4>
+<p>msg is a reference, not a pointer if I understand this correctly. Easiest path is probably to use <code>make_shared</code> to create a pointer. Short of time now, just skimming your messages for now.</p>
+
+
+
+<a name="297246659"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332168-Master%20-%205.8.0%20%20%28was%3A%20comms%29/topic/misc/near/297246659" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Dave Register <a href="https://leamas.github.io/zulip-archive/stream/332168-Master---5.2E8.2E0--.28was.3A-comms.29/topic/misc.html#297246659">(Sep 05 2022 at 15:46)</a>:</h4>
+<p>I can do make_shared.  But why go through the trouble of creating a new shared_ptr on the heap, when the data I want (payload) is "somewhere" in the nav_msg?  This seems inefficient, and what is the point of having a class hierarchy on NavMsg anyway?</p>
+
+
+
+<a name="297258230"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332168-Master%20-%205.8.0%20%20%28was%3A%20comms%29/topic/misc/near/297258230" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Alec Leamas <a href="https://leamas.github.io/zulip-archive/stream/332168-Master---5.2E8.2E0--.28was.3A-comms.29/topic/misc.html#297258230">(Sep 05 2022 at 17:20)</a>:</h4>
+<blockquote>
+<p>what is the point of having a class hierarchy on NavMsg anyway?</p>
+</blockquote>
+<p>These are the kind of questions that brings you back long in time, why did I do this?  IIRC, this so that for example SendMessage always copes with the same thing. </p>
+<p>But OTOH, class hierarchys are sometimes like temporary variables, a support for the overall design. However NavMsg is part of  AbstractCommdriver,  for example <code> SendMessage(const NavMsg&amp; msg, const NavAddr&amp; addr)</code>. Without a common NavMsg type it's hard to describe a common SendMessage, and the whole things falls apart.</p>
+
+
+
+<a name="297258498"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332168-Master%20-%205.8.0%20%20%28was%3A%20comms%29/topic/misc/near/297258498" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Alec Leamas <a href="https://leamas.github.io/zulip-archive/stream/332168-Master---5.2E8.2E0--.28was.3A-comms.29/topic/misc.html#297258498">(Sep 05 2022 at 17:23)</a>:</h4>
+<blockquote>
+<p>But why go through the trouble of creating a new shared_ptr on the heap, when the data I want (payload) is "somewhere" in the nav_msg?</p>
+</blockquote>
+<p>Because SendMessage needs a shared pointer to track ownership when a single message (potentially) is sent to many receivers. My first attempt was to let SendMessage create the shared_ptr internally, but it became messy. Turned out that it was easier if caller created the shared_ptr.</p>
+<p>Sorry, don't remember the details :(</p>
+
+
+
+<a name="297263127"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332168-Master%20-%205.8.0%20%20%28was%3A%20comms%29/topic/misc/near/297263127" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Alec Leamas <a href="https://leamas.github.io/zulip-archive/stream/332168-Master---5.2E8.2E0--.28was.3A-comms.29/topic/misc.html#297263127">(Sep 05 2022 at 18:11)</a>:</h4>
+<p>Now, remember some details... SendMessage() must take a pointer as argument, this is the only way  it can be generic (polymorphic).</p>
+
+
+
+<a name="297271271"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332168-Master%20-%205.8.0%20%20%28was%3A%20comms%29/topic/misc/near/297271271" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Dave Register <a href="https://leamas.github.io/zulip-archive/stream/332168-Master---5.2E8.2E0--.28was.3A-comms.29/topic/misc.html#297271271">(Sep 05 2022 at 19:37)</a>:</h4>
+<p>All well and good.<br>
+But how do I access the Nmea0183Msg and payload?</p>
+
+
+
+<a name="297279592"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332168-Master%20-%205.8.0%20%20%28was%3A%20comms%29/topic/misc/near/297279592" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Alec Leamas <a href="https://leamas.github.io/zulip-archive/stream/332168-Master---5.2E8.2E0--.28was.3A-comms.29/topic/misc.html#297279592">(Sep 05 2022 at 21:33)</a>:</h4>
+<p>Dammit.  You cannot, because I haven't done what I'm talking about: Let SendMessage  take a pointer instead of a NavMsg -- a navmsg is just   a NavMsg, and nothing beyond that. </p>
+<p>I will fix this first thing tomorrow, too late to make anything like this now.  Sorry for not understanding at once.</p>
+
+
+
+<a name="297279786"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332168-Master%20-%205.8.0%20%20%28was%3A%20comms%29/topic/misc/near/297279786" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Alec Leamas <a href="https://leamas.github.io/zulip-archive/stream/332168-Master---5.2E8.2E0--.28was.3A-comms.29/topic/misc.html#297279786">(Sep 05 2022 at 21:36)</a>:</h4>
+<p>It's actually more. Big homework tomorrow.</p>
+
+
+
+<a name="297291770"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332168-Master%20-%205.8.0%20%20%28was%3A%20comms%29/topic/misc/near/297291770" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Dave Register <a href="https://leamas.github.io/zulip-archive/stream/332168-Master---5.2E8.2E0--.28was.3A-comms.29/topic/misc.html#297291770">(Sep 06 2022 at 00:50)</a>:</h4>
+<p>I await your ministrations.</p>
+
+
+
+<a name="297299376"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332168-Master%20-%205.8.0%20%20%28was%3A%20comms%29/topic/misc/near/297299376" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Dave Register <a href="https://leamas.github.io/zulip-archive/stream/332168-Master---5.2E8.2E0--.28was.3A-comms.29/topic/misc.html#297299376">(Sep 06 2022 at 03:29)</a>:</h4>
+<p>I pushed all my WIP.  I had to disable cli build steps in cmakelists, due to breakage around ais_decoder, which I need in CommBridge to decode AIVDO.  Not sure how to resolve the cli build source file list, now.</p>
+<p>I suppose I could duplicate the AIVDO decode in CommDecoder, thus keeping things "pure".  Lots of duplicated code...<br>
+Thoughts?</p>
+<p>Feel free to hack away at my pitiful attempts to make SendMessage() work.  I left a lot of commented efforts as reminders to myself what did not work.</p>
+
+
+
+<a name="297332854"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332168-Master%20-%205.8.0%20%20%28was%3A%20comms%29/topic/misc/near/297332854" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Alec Leamas <a href="https://leamas.github.io/zulip-archive/stream/332168-Master---5.2E8.2E0--.28was.3A-comms.29/topic/misc.html#297332854">(Sep 06 2022 at 09:28)</a>:</h4>
+<p>Pushed updates to all drivers with new signature <code>SendMessage(std::shared_ptr&lt;const NavMsg&gt;, std:.shared_ptr&lt;NavAddr&gt;)</code>.  Somewhat frustrating, I know I have done these changes earlier but they are obviously lost.</p>
+
+
+
+<a name="297334119"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332168-Master%20-%205.8.0%20%20%28was%3A%20comms%29/topic/misc/near/297334119" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Alec Leamas <a href="https://leamas.github.io/zulip-archive/stream/332168-Master---5.2E8.2E0--.28was.3A-comms.29/topic/misc.html#297334119">(Sep 06 2022 at 09:37)</a>:</h4>
+<blockquote>
+<p>I suppose I could duplicate the AIVDO decode in CommDecoder, thus keeping things "pure". Lots of duplicated code...<br>
+Thoughts?</p>
+</blockquote>
+<p>I have also bee struggling with this. My basic thought is that if decoding messages has GUI deps, things are terribly wrong. Possible strategies includes:</p>
+<ol>
+<li>Re-factoring the actual decoding to a separate class/file/header which can be tested. This would be the best solution. On a scale, how impossible is it?</li>
+<li>Using evil #ifdefs to avoid GUI deps in the decoding. Perhaps possible while holding one's nose. </li>
+<li>Duplicating code. This  defeats the very purpose of unit testing, and feels like a bad move.</li>
+</ol>
+
+
+
+<a name="297342555"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332168-Master%20-%205.8.0%20%20%28was%3A%20comms%29/topic/misc/near/297342555" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Alec Leamas <a href="https://leamas.github.io/zulip-archive/stream/332168-Master---5.2E8.2E0--.28was.3A-comms.29/topic/misc.html#297342555">(Sep 06 2022 at 10:39)</a>:</h4>
+<p>Made some preliminary work. Conclusion: Factoring out AisMsgDecoder::DecodeSingleVDO perfectly possible.  Will require also handling the target list in a separate class/file/header.</p>
+
+
+
+<a name="297350433"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332168-Master%20-%205.8.0%20%20%28was%3A%20comms%29/topic/misc/near/297350433" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Alec Leamas <a href="https://leamas.github.io/zulip-archive/stream/332168-Master---5.2E8.2E0--.28was.3A-comms.29/topic/misc.html#297350433">(Sep 06 2022 at 11:39)</a>:</h4>
+<p>Pushed a new feature branch comm-ais. It has independent files ais_msg_decoder which holds a <code> DecodeSingleVDO()</code> function,   more or less a copy from AIS_Decoder. it should be perfectly testable..</p>
+<p>Also untangled AIS_Decoder from the ais.h include whuch pulls in too much. Left some truly global stuff in AIS_Defs.h, it should probably live elsewhere.</p>
+
+
+
+<a name="297351084"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332168-Master%20-%205.8.0%20%20%28was%3A%20comms%29/topic/misc/near/297351084" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Alec Leamas <a href="https://leamas.github.io/zulip-archive/stream/332168-Master---5.2E8.2E0--.28was.3A-comms.29/topic/misc.html#297351084">(Sep 06 2022 at 11:44)</a>:</h4>
+<p>Need to make other things now. I need some  feedback, and we IMHO need to make a TODO list.</p>
+
+
+
+<a name="297395177"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332168-Master%20-%205.8.0%20%20%28was%3A%20comms%29/topic/misc/near/297395177" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Dave Register <a href="https://leamas.github.io/zulip-archive/stream/332168-Master---5.2E8.2E0--.28was.3A-comms.29/topic/misc.html#297395177">(Sep 06 2022 at 14:17)</a>:</h4>
+<p>comm SendMessage() rework is OK now, makes good sense.  Multiplexer for N0183 message types is implemented.<br>
+I'll take a look at new AIS idea.<br>
+Thanks</p>
+
+
+
+<a name="297396694"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332168-Master%20-%205.8.0%20%20%28was%3A%20comms%29/topic/misc/near/297396694" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Dave Register <a href="https://leamas.github.io/zulip-archive/stream/332168-Master---5.2E8.2E0--.28was.3A-comms.29/topic/misc.html#297396694">(Sep 06 2022 at 14:24)</a>:</h4>
+<p>Shall we expand on the existing TODO list topic?</p>
+
+
+
+<a name="297464836"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332168-Master%20-%205.8.0%20%20%28was%3A%20comms%29/topic/misc/near/297464836" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Håkan Svensson <a href="https://leamas.github.io/zulip-archive/stream/332168-Master---5.2E8.2E0--.28was.3A-comms.29/topic/misc.html#297464836">(Sep 06 2022 at 18:38)</a>:</h4>
+<p>My thought is to make a new topic with only one message; a todo list for test issues and others. The idea is to keep that topic clean from other comments to avoid the list from being withdrawn far up.  Each task would rather refer to messages in other topics than explained in the todo list's topic.<br>
+??</p>
+
+
+
+<a name="297466444"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332168-Master%20-%205.8.0%20%20%28was%3A%20comms%29/topic/misc/near/297466444" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Dave Register <a href="https://leamas.github.io/zulip-archive/stream/332168-Master---5.2E8.2E0--.28was.3A-comms.29/topic/misc.html#297466444">(Sep 06 2022 at 18:49)</a>:</h4>
+<p>OK, please do that.  I will think about TODO's  we need done before some sort of public Alpha test.  I really want to see some real live N2K interfaces activated.<br>
+Maybe titled "TODO List, Alpha test:</p>
+
+
+
+<a name="297604123"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332168-Master%20-%205.8.0%20%20%28was%3A%20comms%29/topic/misc/near/297604123" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Alec Leamas <a href="https://leamas.github.io/zulip-archive/stream/332168-Master---5.2E8.2E0--.28was.3A-comms.29/topic/misc.html#297604123">(Sep 07 2022 at 14:37)</a>:</h4>
+<p><span class="user-mention" data-user-id="517002">@Dave Register</span>  Alpha test: Besides bugs, what parts are missing? Some N2k message? AIVDM? ...?</p>
+
+
+
+<a name="297696825"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332168-Master%20-%205.8.0%20%20%28was%3A%20comms%29/topic/misc/near/297696825" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Dave Register <a href="https://leamas.github.io/zulip-archive/stream/332168-Master---5.2E8.2E0--.28was.3A-comms.29/topic/misc.html#297696825">(Sep 08 2022 at 01:29)</a>:</h4>
+<p>I'm ready to work on basic plugins now, especially Dashboard.<br>
+Have you sorted out the minimal API needed for observable support in plugins?</p>
+
+
+
+<a name="297696948"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332168-Master%20-%205.8.0%20%20%28was%3A%20comms%29/topic/misc/near/297696948" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Dave Register <a href="https://leamas.github.io/zulip-archive/stream/332168-Master---5.2E8.2E0--.28was.3A-comms.29/topic/misc.html#297696948">(Sep 08 2022 at 01:32)</a>:</h4>
+<p>Info.  Basic N2K support is in place, for three supported devices:  Actisense, Yacht devices, and generic socketCAN interfaces, usually found on rPi.  All three interfaces work on my minimal N2K setup.  We need real-world testing to validate.</p>
+
+
+
+<a name="297726928"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332168-Master%20-%205.8.0%20%20%28was%3A%20comms%29/topic/misc/near/297726928" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Alec Leamas <a href="https://leamas.github.io/zulip-archive/stream/332168-Master---5.2E8.2E0--.28was.3A-comms.29/topic/misc.html#297726928">(Sep 08 2022 at 08:07)</a>:</h4>
+<blockquote>
+<p>Have you sorted out the minimal API needed for observable support in plugins?</p>
+</blockquote>
+<p>Think so, it is in ocpn_plugin.h. Many parts are not implemented, though.</p>
+
+
+
+<a name="297814014"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332168-Master%20-%205.8.0%20%20%28was%3A%20comms%29/topic/misc/near/297814014" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Håkan Svensson <a href="https://leamas.github.io/zulip-archive/stream/332168-Master---5.2E8.2E0--.28was.3A-comms.29/topic/misc.html#297814014">(Sep 08 2022 at 16:02)</a>:</h4>
+<p>I've created a todo list as discussed. Some task from my list are there. Please add what's needed.</p>
+<p>Do you think it's possible to discuss or question a single task in another topic to avoid the task list itself to disappear "up in the blue"?<br>
+Another "TODO discussion" topic  or simply in e.g. "Test issues" using the same header as in the TODO list  or .....?</p>
+
+
+
+<a name="297817696"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332168-Master%20-%205.8.0%20%20%28was%3A%20comms%29/topic/misc/near/297817696" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Alec Leamas <a href="https://leamas.github.io/zulip-archive/stream/332168-Master---5.2E8.2E0--.28was.3A-comms.29/topic/misc.html#297817696">(Sep 08 2022 at 16:20)</a>:</h4>
+<blockquote>
+<p>Do you think it's possible to discuss or question a single task in another topic to avoid the task list itself to disappear "up in the blue"?</p>
+</blockquote>
+<p>Yes. we should all do that, agreed. Perhaps you should put a reminder about it as the (hopefully only) comment in the TODO List topic.</p>
+
+
+
+<a name="297841842"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332168-Master%20-%205.8.0%20%20%28was%3A%20comms%29/topic/misc/near/297841842" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Håkan Svensson <a href="https://leamas.github.io/zulip-archive/stream/332168-Master---5.2E8.2E0--.28was.3A-comms.29/topic/misc.html#297841842">(Sep 08 2022 at 18:28)</a>:</h4>
+<p>Done...</p>
+
+
+
+<a name="297848690"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332168-Master%20-%205.8.0%20%20%28was%3A%20comms%29/topic/misc/near/297848690" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Alec Leamas <a href="https://leamas.github.io/zulip-archive/stream/332168-Master---5.2E8.2E0--.28was.3A-comms.29/topic/misc.html#297848690">(Sep 08 2022 at 19:11)</a>:</h4>
+<p><span class="user-mention" data-user-id="517002">@Dave Register</span>  I see the light in the tunnel. Perhaps, as usual, it's the train... </p>
+<p>Anyway, I have decoupled AIS_Decoder from the gui parts and can thus promote it to MODEL_SRC. I now basically needs to make AIS_Decoder handle incoming AIVDM messages.  Ramifications:</p>
+<ol>
+<li>Including AIS_Decoder in comm_bridge is evil, we should not do that i. e., comm_brídge should not invoke AIS_Decoder functions.</li>
+<li>comm_bridge could forward the incoming message using for example an EventVar which AIS_Decoder could listen to. Somewhat convoluted, but keeps the idea the comm_bridge handles everything.</li>
+<li>comm_bridge could just ignore AIVDM while AIS_Decoder listens to it directly. Simpler,  but breaks the "comm_bridge handles everything" model.</li>
+</ol>
+<p>So, we should use 2 or 3. Neither is complicated. Any thoughts?</p>
+
+
+
+<a name="297859484"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332168-Master%20-%205.8.0%20%20%28was%3A%20comms%29/topic/misc/near/297859484" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Dave Register <a href="https://leamas.github.io/zulip-archive/stream/332168-Master---5.2E8.2E0--.28was.3A-comms.29/topic/misc.html#297859484">(Sep 08 2022 at 20:24)</a>:</h4>
+<p><span class="user-mention" data-user-id="399510">@Alec Leamas</span> <br>
+There is no need for comm_bridge to handle any AIS message other than AIVDO, which may be used to supply part of the Basic Nav Info (and associated globals gLat, gLon,, etc.)  And we need this to participate in priority logic, as well. So comm_bridge is OK as is, with the bare functions DecodeSingleAIVDO(), etc.</p>
+<p>Regarding AIS_Decoder itself:  We are already doing (3).<br>
+comm_bridge only listens for AIVDO.<br>
+AIS_Decoder already listens to a specific set of  N1083 messages.  See AIS_Decoder::InitCommListeners(void).  AIS_Decoder already knows how to handle AIVDM.  This all seems to be working today, by actual recorded data playback.</p>
+<p>It is nice to have the GUI elements stripped from AIS_Decoder.</p>
+
+
+
+<a name="297998198"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332168-Master%20-%205.8.0%20%20%28was%3A%20comms%29/topic/misc/near/297998198" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Alec Leamas <a href="https://leamas.github.io/zulip-archive/stream/332168-Master---5.2E8.2E0--.28was.3A-comms.29/topic/misc.html#297998198">(Sep 09 2022 at 15:26)</a>:</h4>
+<p><span class="user-mention" data-user-id="517002">@Dave Register</span> Have anything to commit? Structural clean up in mind.</p>
+
+
+
+<a name="298037307"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332168-Master%20-%205.8.0%20%20%28was%3A%20comms%29/topic/misc/near/298037307" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Dave Register <a href="https://leamas.github.io/zulip-archive/stream/332168-Master---5.2E8.2E0--.28was.3A-comms.29/topic/misc.html#298037307">(Sep 09 2022 at 19:09)</a>:</h4>
+<p><span class="user-mention" data-user-id="399510">@Alec Leamas</span> <br>
+Nothing big.  Littles bits and pieces.  Carry on<br>
+Dave</p>
+
+
+
+<a name="298037415"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332168-Master%20-%205.8.0%20%20%28was%3A%20comms%29/topic/misc/near/298037415" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Alec Leamas <a href="https://leamas.github.io/zulip-archive/stream/332168-Master---5.2E8.2E0--.28was.3A-comms.29/topic/misc.html#298037415">(Sep 09 2022 at 19:10)</a>:</h4>
+<p>ok, you have been warned...</p>
+
+
+
+<a name="298053577"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332168-Master%20-%205.8.0%20%20%28was%3A%20comms%29/topic/misc/near/298053577" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Dave Register <a href="https://leamas.github.io/zulip-archive/stream/332168-Master---5.2E8.2E0--.28was.3A-comms.29/topic/misc.html#298053577">(Sep 09 2022 at 21:09)</a>:</h4>
+<p>I am working locally.  I'll hold my peace until you merge, and then I'll repair the carnage.</p>
+
+
+
+<a name="298319270"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332168-Master%20-%205.8.0%20%20%28was%3A%20comms%29/topic/misc/near/298319270" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Alec Leamas <a href="https://leamas.github.io/zulip-archive/stream/332168-Master---5.2E8.2E0--.28was.3A-comms.29/topic/misc.html#298319270">(Sep 12 2022 at 06:26)</a>:</h4>
+<p><span class="user-mention" data-user-id="517002">@Dave Register</span> . Finding a bad, new dependency: g_comm_out which is in comm_n0183_output which includes pluginmanager.h. pluginmanager.h is gui code. Now everything which references g_comm_out  depends on the gui. </p>
+<p>What is this about? On  a sidenote: Should we stop introducing new globals like these?</p>
+
+
+
+<a name="298319470"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332168-Master%20-%205.8.0%20%20%28was%3A%20comms%29/topic/misc/near/298319470" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Alec Leamas <a href="https://leamas.github.io/zulip-archive/stream/332168-Master---5.2E8.2E0--.28was.3A-comms.29/topic/misc.html#298319470">(Sep 12 2022 at 06:28)</a>:</h4>
+<p>Here is also a dialog, exactly the kind of stuff which the communication stack should not depend on.</p>
+
+
+
+<a name="298389419"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332168-Master%20-%205.8.0%20%20%28was%3A%20comms%29/topic/misc/near/298389419" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Dave Register <a href="https://leamas.github.io/zulip-archive/stream/332168-Master---5.2E8.2E0--.28was.3A-comms.29/topic/misc.html#298389419">(Sep 12 2022 at 14:11)</a>:</h4>
+<p>g_comm_out came from "purifying" of multiplexer.  These are the methods that support output of routes/marks to GPS receiver on n0183.  They need to live somewhere..  Expedient to just create a new bastard class.<br>
+These are more like app-layer methods, simply creating N0183 messages, and sending to the comm stack.  Poor name choice, I agree. Probably does not need to be a global.  I'll take a look.<br>
+Focused on n2k AIS just now...</p>
+
+
+
+<a name="298390237"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332168-Master%20-%205.8.0%20%20%28was%3A%20comms%29/topic/misc/near/298390237" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Alec Leamas <a href="https://leamas.github.io/zulip-archive/stream/332168-Master---5.2E8.2E0--.28was.3A-comms.29/topic/misc.html#298390237">(Sep 12 2022 at 14:16)</a>:</h4>
+<p>I'm on the dialog part, later. It should most likely be in another place (in  a GUI context). Stay tuned..</p>
+
+
+
+<a name="299291479"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332168-Master%20-%205.8.0%20%20%28was%3A%20comms%29/topic/misc/near/299291479" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Alec Leamas <a href="https://leamas.github.io/zulip-archive/stream/332168-Master---5.2E8.2E0--.28was.3A-comms.29/topic/misc.html#299291479">(Sep 17 2022 at 09:06)</a>:</h4>
+<p><span class="user-mention" data-user-id="517002">@Dave Register</span>  I saw your note in comm_n01831_output on  thinking about the GUI feedback. I think the simplest (best) solution is to use callbacks. You can see examples in  my version of  routeman.h/routeman.cpp currently in the comm-deps branch. The crucial part is in ocpn_app.cpp which initiates the callbacks handed to routeman.</p>
+
+
+
+<a name="299317541"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332168-Master%20-%205.8.0%20%20%28was%3A%20comms%29/topic/misc/near/299317541" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Alec Leamas <a href="https://leamas.github.io/zulip-archive/stream/332168-Master---5.2E8.2E0--.28was.3A-comms.29/topic/misc.html#299317541">(Sep 17 2022 at 12:51)</a>:</h4>
+<p>Another perhaps better example is how it done (still in comm-deps) for multiplexer. multiplexer.h + ocpn_frame.cpp around line 1200.</p>
+
+
+
+<a name="299324903"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332168-Master%20-%205.8.0%20%20%28was%3A%20comms%29/topic/misc/near/299324903" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Dave Register <a href="https://leamas.github.io/zulip-archive/stream/332168-Master---5.2E8.2E0--.28was.3A-comms.29/topic/misc.html#299324903">(Sep 17 2022 at 13:54)</a>:</h4>
+<p>Yes, I see the idea.  Looks good. Coming soon, though with low priority.  All those FIXME's to look at....</p>
+
+
+
+<a name="300018968"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332168-Master%20-%205.8.0%20%20%28was%3A%20comms%29/topic/misc/near/300018968" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Alec Leamas <a href="https://leamas.github.io/zulip-archive/stream/332168-Master---5.2E8.2E0--.28was.3A-comms.29/topic/misc.html#300018968">(Sep 21 2022 at 18:48)</a>:</h4>
+<p>New, interesting warning. I'm on it. </p>
+<div class="codehilite"><pre><span></span><code>/home/mk/src/OpenCPN/src/ais_decoder.cpp: In member function ‘bool AisDecoder::HandleN2K_129041(std::shared_ptr&lt;const Nmea2000Msg&gt;)’:
+/home/mk/src/OpenCPN/src/ais_decoder.cpp:653:12: warning: ‘char* strncpy(char*, const char*, size_t)’ writing 34 bytes into a region of size 21 overflows the destination [-Wstringop-overflow=]
+  653 |     strncpy(pTargetData-&gt;ShipName, data.AtoNName, 34);
+      |     ~~~~~~~^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+In file included from /home/mk/src/OpenCPN/include/ais_decoder.h:38,
+                 from /home/mk/src/OpenCPN/src/ais_decoder.cpp:44:
+/home/mk/src/OpenCPN/include/ais_target_data.h:178:8: note: destination object ‘AisTargetData::ShipName’ of size 21
+  178 |   char ShipName[SHIP_NAME_LEN];
+      |        ^~~~~~~~
+</code></pre></div>
+
+
+
+<a name="300025261"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332168-Master%20-%205.8.0%20%20%28was%3A%20comms%29/topic/misc/near/300025261" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Alec Leamas <a href="https://leamas.github.io/zulip-archive/stream/332168-Master---5.2E8.2E0--.28was.3A-comms.29/topic/misc.html#300025261">(Sep 21 2022 at 19:27)</a>:</h4>
+<p><span class="user-mention" data-user-id="517002">@Dave Register</span>  Looking into this I assume the the AtoNName length 34 is non-negotiable. Is there any reason to not expand the AisTargetData to also be 34 +1 chars? Patching assuming it's OK, patch will have to be reverted if not.</p>
+
+
+
+<a name="300026180"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332168-Master%20-%205.8.0%20%20%28was%3A%20comms%29/topic/misc/near/300026180" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Dave Register <a href="https://leamas.github.io/zulip-archive/stream/332168-Master---5.2E8.2E0--.28was.3A-comms.29/topic/misc.html#300026180">(Sep 21 2022 at 19:33)</a>:</h4>
+<p>That's probably a good idea, since we use the same field (ShipName) for both real ships and atons.</p>
+
+
+
+<a name="300046878"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332168-Master%20-%205.8.0%20%20%28was%3A%20comms%29/topic/misc/near/300046878" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Alec Leamas <a href="https://leamas.github.io/zulip-archive/stream/332168-Master---5.2E8.2E0--.28was.3A-comms.29/topic/misc.html#300046878">(Sep 21 2022 at 22:08)</a>:</h4>
+<p><span class="user-mention" data-user-id="518981">@Github Bot</span> #60db1c0</p>
+
+
+
+<a name="300046880"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332168-Master%20-%205.8.0%20%20%28was%3A%20comms%29/topic/misc/near/300046880" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Github Bot <a href="https://leamas.github.io/zulip-archive/stream/332168-Master---5.2E8.2E0--.28was.3A-comms.29/topic/misc.html#300046880">(Sep 21 2022 at 22:08)</a>:</h4>
+<p>** author: Alec Leamas at 2022-09-21T20:40:21Z<br>
+ais_decoder et al: Sort out Shipname length issues.<br>
+<a href="https://github.com/OpenCPN/OpenCPN/commit/60db1c0">https://github.com/OpenCPN/OpenCPN/commit/60db1c0</a></p>
+
+
+
+<a name="300092354"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332168-Master%20-%205.8.0%20%20%28was%3A%20comms%29/topic/misc/near/300092354" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Alec Leamas <a href="https://leamas.github.io/zulip-archive/stream/332168-Master---5.2E8.2E0--.28was.3A-comms.29/topic/misc.html#300092354">(Sep 22 2022 at 07:32)</a>:</h4>
+<p><span class="user-mention" data-user-id="517002">@Dave Register</span>  I have enabled the tests also on MacOS. Builds ok for me on the command line. The CI jobs fails, assumes that this is about your current work, not my changes. Let me know if I'm wrong.</p>
+
+
+
+<a name="300153114"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332168-Master%20-%205.8.0%20%20%28was%3A%20comms%29/topic/misc/near/300153114" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Dave Register <a href="https://leamas.github.io/zulip-archive/stream/332168-Master---5.2E8.2E0--.28was.3A-comms.29/topic/misc.html#300153114">(Sep 22 2022 at 12:59)</a>:</h4>
+<p>You are correct. MacOS CI build is a nightmare.  Very difficult to debug.  The build times out (60 minutes) if the cache is not used.  Every change requires two steps.  First to populate the cache, then again to do the build.  I'm on it, but it's slow.</p>
+
+
+
+<a name="300171109"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332168-Master%20-%205.8.0%20%20%28was%3A%20comms%29/topic/misc/near/300171109" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Dave Register <a href="https://leamas.github.io/zulip-archive/stream/332168-Master---5.2E8.2E0--.28was.3A-comms.29/topic/misc.html#300171109">(Sep 22 2022 at 14:14)</a>:</h4>
+<p>So, here we go.  Alpha test published on CF.  Hardhats in place?</p>
+
+
+
+<a name="300174326"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332168-Master%20-%205.8.0%20%20%28was%3A%20comms%29/topic/misc/near/300174326" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Alec Leamas <a href="https://leamas.github.io/zulip-archive/stream/332168-Master---5.2E8.2E0--.28was.3A-comms.29/topic/misc.html#300174326">(Sep 22 2022 at 14:32)</a>:</h4>
+<p>"Picking up helmet from cellar"</p>
+<p>Is this the time we should merge comm into master?</p>
+
+
+
+<a name="300233489"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332168-Master%20-%205.8.0%20%20%28was%3A%20comms%29/topic/misc/near/300233489" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Dave Register <a href="https://leamas.github.io/zulip-archive/stream/332168-Master---5.2E8.2E0--.28was.3A-comms.29/topic/misc.html#300233489">(Sep 22 2022 at 19:44)</a>:</h4>
+<p>Soon now.  Let us see what the results over a few days give us.</p>
+
+
+
+<a name="300234250"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332168-Master%20-%205.8.0%20%20%28was%3A%20comms%29/topic/misc/near/300234250" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Håkan Svensson <a href="https://leamas.github.io/zulip-archive/stream/332168-Master---5.2E8.2E0--.28was.3A-comms.29/topic/misc.html#300234250">(Sep 22 2022 at 19:48)</a>:</h4>
+<p>For info: You mentioned on CF YDNU-02 wants baud rate 9600. For my device I used 9600 for N0183 but 115 K for N2K.</p>
+
+
+
+<a name="300242267"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332168-Master%20-%205.8.0%20%20%28was%3A%20comms%29/topic/misc/near/300242267" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Dave Register <a href="https://leamas.github.io/zulip-archive/stream/332168-Master---5.2E8.2E0--.28was.3A-comms.29/topic/misc.html#300242267">(Sep 22 2022 at 20:42)</a>:</h4>
+<p>I think it does some autobaud.  I just leave mine as 9600, which seems slow for fully populated N2K traffic.  But it works....</p>
+
+
+
+<a name="300329812"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332168-Master%20-%205.8.0%20%20%28was%3A%20comms%29/topic/misc/near/300329812" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Håkan Svensson <a href="https://leamas.github.io/zulip-archive/stream/332168-Master---5.2E8.2E0--.28was.3A-comms.29/topic/misc.html#300329812">(Sep 23 2022 at 10:14)</a>:</h4>
+<p>Dashboard: <br>
+I pushed code to add N2K data for instruments log and trip-log.<br>
+But I've not been able to test. I found no test-log including that.  If anyone knows a log please upload or we may have fingers crossed for the alpha testers?</p>
+
+
+
+<a name="300373332"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332168-Master%20-%205.8.0%20%20%28was%3A%20comms%29/topic/misc/near/300373332" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Alec Leamas <a href="https://leamas.github.io/zulip-archive/stream/332168-Master---5.2E8.2E0--.28was.3A-comms.29/topic/misc.html#300373332">(Sep 23 2022 at 14:06)</a>:</h4>
+<p><span class="user-mention" data-user-id="522486">@Håkan Svensson</span>  Looking at your last PR handling  PGN 128275. </p>
+<p>It seems that you missed to actually listen to the relevant event i. e.  something like <code> listener_128245 = std::move(GetListener(id_128275, EVT_N2K_128275, this))</code>.    Without this part the event handler will not be invoked.</p>
+<p>Should I patch or do you want to do it? Or, am I just missing something?</p>
+
+
+
+<a name="300375532"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332168-Master%20-%205.8.0%20%20%28was%3A%20comms%29/topic/misc/near/300375532" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Alec Leamas <a href="https://leamas.github.io/zulip-archive/stream/332168-Master---5.2E8.2E0--.28was.3A-comms.29/topic/misc.html#300375532">(Sep 23 2022 at 14:15)</a>:</h4>
+<p><span class="user-mention" data-user-id="518981">@Github Bot</span>  #c0c5c660c</p>
+
+
+
+<a name="300375541"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332168-Master%20-%205.8.0%20%20%28was%3A%20comms%29/topic/misc/near/300375541" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Github Bot <a href="https://leamas.github.io/zulip-archive/stream/332168-Master---5.2E8.2E0--.28was.3A-comms.29/topic/misc.html#300375541">(Sep 23 2022 at 14:15)</a>:</h4>
+<p>** author: Hakan at 2022-09-23T09:58:11Z<br>
+O: Add parse 128275 DB: Add PGN 128275 for log and trip-log<br>
+<a href="https://github.com/OpenCPN/OpenCPN/commit/c0c5c660c">https://github.com/OpenCPN/OpenCPN/commit/c0c5c660c</a></p>
+
+
+
+<a name="300379583"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332168-Master%20-%205.8.0%20%20%28was%3A%20comms%29/topic/misc/near/300379583" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Håkan Svensson <a href="https://leamas.github.io/zulip-archive/stream/332168-Master---5.2E8.2E0--.28was.3A-comms.29/topic/misc.html#300379583">(Sep 23 2022 at 14:33)</a>:</h4>
+<p>Alec..<br>
+Many thanks. "Fast and false.."<br>
+I'll add and PR what's needed and see if can find relevant data in any .log file now when it would also work...</p>
+
+
+
+<a name="300384984"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332168-Master%20-%205.8.0%20%20%28was%3A%20comms%29/topic/misc/near/300384984" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Håkan Svensson <a href="https://leamas.github.io/zulip-archive/stream/332168-Master---5.2E8.2E0--.28was.3A-comms.29/topic/misc.html#300384984">(Sep 23 2022 at 14:56)</a>:</h4>
+<p>Still no distance log data seen. But now it's more likely to work.</p>
+
+
+
+<a name="300389959"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332168-Master%20-%205.8.0%20%20%28was%3A%20comms%29/topic/misc/near/300389959" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Alec Leamas <a href="https://leamas.github.io/zulip-archive/stream/332168-Master---5.2E8.2E0--.28was.3A-comms.29/topic/misc.html#300389959">(Sep 23 2022 at 15:15)</a>:</h4>
+<p>OK, no problem. BTW: Have you seen the MESSAGES.adoc document?</p>
+
+
+
+<a name="300413520"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332168-Master%20-%205.8.0%20%20%28was%3A%20comms%29/topic/misc/near/300413520" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Håkan Svensson <a href="https://leamas.github.io/zulip-archive/stream/332168-Master---5.2E8.2E0--.28was.3A-comms.29/topic/misc.html#300413520">(Sep 23 2022 at 17:13)</a>:</h4>
+<p>Yes, seen it but haven't tested this "from scratch". My error on last commit was more about acting to fast and forgot or thought I have done the listener part.</p>
+
+
+
+<a name="301247831"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332168-Master%20-%205.8.0%20%20%28was%3A%20comms%29/topic/misc/near/301247831" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Håkan Svensson <a href="https://leamas.github.io/zulip-archive/stream/332168-Master---5.2E8.2E0--.28was.3A-comms.29/topic/misc.html#301247831">(Sep 28 2022 at 14:24)</a>:</h4>
+<p><strong><em>RPi 4 OpenGL</em></strong><br>
+1.<br>
+On my RPi Debian 10 OpenGL is switched off at O start. Is that intentional and if so why?<br>
+I can switch it on wo trouble but next restart it's off again.</p>
+<ol start="2">
+<li>On all system there are a lot log file entries: "Duplicate listener, key.........." <br>
+A problem or only log file scrap?</li>
+</ol>
+<p>See attached log file for both 1. and 2.<br>
+<a href="/user_uploads/33951/OqhW95XfZ3aaD5jywqfGZIKV/opencpn_RPi_hakan.log">opencpn_RPi_hakan.log</a></p>
+
+
+
+<a name="302729116"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332168-Master%20-%205.8.0%20%20%28was%3A%20comms%29/topic/misc/near/302729116" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Dave Register <a href="https://leamas.github.io/zulip-archive/stream/332168-Master---5.2E8.2E0--.28was.3A-comms.29/topic/misc.html#302729116">(Oct 06 2022 at 19:52)</a>:</h4>
+<p>Alec...<br>
+What is the plan for new socketcan branch?</p>
+
+
+
+<a name="302793443"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332168-Master%20-%205.8.0%20%20%28was%3A%20comms%29/topic/misc/near/302793443" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Alec Leamas <a href="https://leamas.github.io/zulip-archive/stream/332168-Master---5.2E8.2E0--.28was.3A-comms.29/topic/misc.html#302793443">(Oct 07 2022 at 07:21)</a>:</h4>
+<p><span class="user-mention" data-user-id="517002">@Dave Register</span>  socketcan branch:  To be merged when  know it works, notably the threading.  After that it's time to actually test recorded vcan logs, my original goal.</p>
+
+
+
+<a name="303322199"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332168-Master%20-%205.8.0%20%20%28was%3A%20comms%29/topic/misc/near/303322199" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Dave Register <a href="https://leamas.github.io/zulip-archive/stream/332168-Master---5.2E8.2E0--.28was.3A-comms.29/topic/misc.html#303322199">(Oct 10 2022 at 20:31)</a>:</h4>
+<p><span class="user-mention" data-user-id="399510">@Alec Leamas</span> <br>
+I tested socketcan branch, on linux.  Basically works, but problems on shutdown.  Driver DTOR enters recursive loop. Here's why:<br>
+Let's talk about use pattern for driver activate/deactivate. <br>
+I guess you expect to see the drivers deactivate themselves in Close().<br>
+I have not done that anywhere. To me, it is more natural to deactivate separately from Close(), since Deactivate() is the factory method that ultimately deletes the shared ptr.  Or, said another way, deactivating from within the driver itself seems a bit like "sawing off a branch that I am currently standing on".<br>
+Thoughts?.</p>
+
+
+
+<a name="303322331"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332168-Master%20-%205.8.0%20%20%28was%3A%20comms%29/topic/misc/near/303322331" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Dave Register <a href="https://leamas.github.io/zulip-archive/stream/332168-Master---5.2E8.2E0--.28was.3A-comms.29/topic/misc.html#303322331">(Oct 10 2022 at 20:33)</a>:</h4>
+<p>Also, what's wrong with wxThread?  We use it extensively.  Make life easy on Windows, when we need it.  Just so happens that there is no socketcan on Windows, so we can use std::thread on that driver only.<br>
+More thoughts?</p>
+
+
+
+<a name="303325117"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332168-Master%20-%205.8.0%20%20%28was%3A%20comms%29/topic/misc/near/303325117" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Alec Leamas <a href="https://leamas.github.io/zulip-archive/stream/332168-Master---5.2E8.2E0--.28was.3A-comms.29/topic/misc.html#303325117">(Oct 10 2022 at 21:01)</a>:</h4>
+<p>hm...</p>
+<blockquote>
+<p>since Deactivate() is the factory method that ultimately deletes the shared ptr.</p>
+</blockquote>
+<p>As I see it, registering a driver is basically to announce that it is available. If  there is a need to announce a driver which is not available we probably need to expand the AbstractCommDriver interface so a user can check this.</p>
+<p>But, there is no "the shared ptr". Anything using the driver can store a copy of that pointer, and as long that ptr exists the driver will not go away. Which basically boils down to two questions:</p>
+<ul>
+<li>Is there a need to announce a driver which is closed?</li>
+<li>How do we handle the case when a upper layer tries to use (i. e., send a message) using a driver which  is closed? Is it just to add a case to CommStatus in comm_driver.h or something more elaborate?</li>
+</ul>
+
+
+
+<a name="303325464"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332168-Master%20-%205.8.0%20%20%28was%3A%20comms%29/topic/misc/near/303325464" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Alec Leamas <a href="https://leamas.github.io/zulip-archive/stream/332168-Master---5.2E8.2E0--.28was.3A-comms.29/topic/misc.html#303325464">(Oct 10 2022 at 21:05)</a>:</h4>
+<blockquote>
+<p>, what's wrong with wxThread</p>
+</blockquote>
+<p>I just can't make it work in a CLI context.  Believe me, I have tried...</p>
+<blockquote>
+<p>Make life easy on Windows, when we need it.</p>
+</blockquote>
+<p>Are you saying that std::thread doesn't work on Windows?</p>
+<p>I think we share the idea that usage patterns should be the same across drivers; although this is about socketcan for now.</p>
+
+
+
+<a name="303326687"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332168-Master%20-%205.8.0%20%20%28was%3A%20comms%29/topic/misc/near/303326687" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Alec Leamas <a href="https://leamas.github.io/zulip-archive/stream/332168-Master---5.2E8.2E0--.28was.3A-comms.29/topic/misc.html#303326687">(Oct 10 2022 at 21:17)</a>:</h4>
+<p>Assuming the DTOR loop is  Close -&gt; Deactivate -&gt; ~ CommDriverN2KSocketCAN -&gt; CLose  ...</p>
+<p>We need of  course  to handle this somehow. However, we cannot assume that registry.Deactivate invokes the DTOR, there could very well be  other  pointers around making the driver to stay alive but closed without invoking any DTOR.  Let me sleep in it, late here now.</p>
+
+
+
+<a name="303329243"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332168-Master%20-%205.8.0%20%20%28was%3A%20comms%29/topic/misc/near/303329243" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Alec Leamas <a href="https://leamas.github.io/zulip-archive/stream/332168-Master---5.2E8.2E0--.28was.3A-comms.29/topic/misc.html#303329243">(Oct 10 2022 at 21:45)</a>:</h4>
+<p>On a sidenote: Since Open()  Activates the driver, Close() should probably Deactivate() it for symmetry reasons.</p>
+
+
+
+<a name="303330511"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332168-Master%20-%205.8.0%20%20%28was%3A%20comms%29/topic/misc/near/303330511" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Alec Leamas <a href="https://leamas.github.io/zulip-archive/stream/332168-Master---5.2E8.2E0--.28was.3A-comms.29/topic/misc.html#303330511">(Oct 10 2022 at 22:00)</a>:</h4>
+<p>Can't sleep... I guess this patch should break the DTOR recursive loop:</p>
+<div class="codehilite"><pre><span></span><code>diff --git a/src/comm_drv_n2k_socketcan.cpp b/src/comm_drv_n2k_socketcan.cpp
+index e103273a0..9c5985b0b 100644
+--- a/src/comm_drv_n2k_socketcan.cpp
++++ b/src/comm_drv_n2k_socketcan.cpp
+@@ -272,7 +272,9 @@ CommDriverN2KSocketCAN::CommDriverN2KSocketCAN(const ConnectionParams* params,
+   Open();
+ }
+
+-CommDriverN2KSocketCAN::~CommDriverN2KSocketCAN() { Close(); }
++CommDriverN2KSocketCAN::~CommDriverN2KSocketCAN() {
++  if (m_pSecondary_Thread) Close();
++}
+</code></pre></div>
+
+
+
+<a name="303350327"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332168-Master%20-%205.8.0%20%20%28was%3A%20comms%29/topic/misc/near/303350327" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Dave Register <a href="https://leamas.github.io/zulip-archive/stream/332168-Master---5.2E8.2E0--.28was.3A-comms.29/topic/misc.html#303350327">(Oct 11 2022 at 02:14)</a>:</h4>
+<p>I had the wrong idea about the source of recursion.  It is fixed by making the following change:</p>
+<div class="codehilite"><pre><span></span><code>void CommDriverRegistry::CloseAllDrivers() {
+  for (auto&amp; it : drivers)
+    Deactivate(it);
+</code></pre></div>
+
+<p>}</p>
+<p>So, this allows the driver Close() method to safely Deactivate itself.<br>
+I guess I do not see anything wrong with this, but I do not see the point, beyond logical symmetry with Activate().</p>
+
+
+
+<a name="303350663"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332168-Master%20-%205.8.0%20%20%28was%3A%20comms%29/topic/misc/near/303350663" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Dave Register <a href="https://leamas.github.io/zulip-archive/stream/332168-Master---5.2E8.2E0--.28was.3A-comms.29/topic/misc.html#303350663">(Oct 11 2022 at 02:19)</a>:</h4>
+<p>"How do we handle the case when a upper layer tries to use (i. e., send a message) using a driver which is closed?"<br>
+I figured the upper layer that wants to send a message will first "find" the driver, atomically with the send command.  If the registry does not  have the driver in its list, then the driver does not exist in a usable state.</p>
+
+
+
+<a name="303350972"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332168-Master%20-%205.8.0%20%20%28was%3A%20comms%29/topic/misc/near/303350972" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Dave Register <a href="https://leamas.github.io/zulip-archive/stream/332168-Master---5.2E8.2E0--.28was.3A-comms.29/topic/misc.html#303350972">(Oct 11 2022 at 02:23)</a>:</h4>
+<p>std::thread on Windows:<br>
+Was broken in earlier wx version, pre-3.x. Not tried recently.  I guess you will need this if you want to send M0183 recordings through N0183 driver, somehow.</p>
+
+
+
+<a name="303367138"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332168-Master%20-%205.8.0%20%20%28was%3A%20comms%29/topic/misc/near/303367138" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Alec Leamas <a href="https://leamas.github.io/zulip-archive/stream/332168-Master---5.2E8.2E0--.28was.3A-comms.29/topic/misc.html#303367138">(Oct 11 2022 at 06:32)</a>:</h4>
+<blockquote>
+<p>I figured the upper layer that wants to send a message will first "find" the driver, atomically with the send command.</p>
+</blockquote>
+<p>Yup, this should work. But this usage pattern is not enforced by the API, it's not even documented.  So someone reading the API might very well store the pointer and use it. IMHO, we need to either be prepared to this or change the API.</p>
+<p>OTOH, adding a check in SendMessage that driver is open, returning an error status if not is cheap. I can make a PR for that, stay tuned.</p>
+
+
+
+<a name="303367615"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332168-Master%20-%205.8.0%20%20%28was%3A%20comms%29/topic/misc/near/303367615" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Alec Leamas <a href="https://leamas.github.io/zulip-archive/stream/332168-Master---5.2E8.2E0--.28was.3A-comms.29/topic/misc.html#303367615">(Oct 11 2022 at 06:37)</a>:</h4>
+<blockquote>
+<p>std::thread on Windows: Was broken in earlier wx version, pre-3.x.</p>
+</blockquote>
+<p>That's a long time ago. Simply googling I find  no signs of overall problems with std::thread on Windows (this includes using std::thread in a wxWidgets context).Overall I think it's safe to assume that std::thread is better maintained than wxThread given the number of users and devs.</p>
+<p>I will make a test on WIndows with std::thread for using <a href="http://stupan.se">stupan.se</a>, the live driver I have. Let's wait also for this</p>
+
+
+
+<a name="303371141"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332168-Master%20-%205.8.0%20%20%28was%3A%20comms%29/topic/misc/near/303371141" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Alec Leamas <a href="https://leamas.github.io/zulip-archive/stream/332168-Master---5.2E8.2E0--.28was.3A-comms.29/topic/misc.html#303371141">(Oct 11 2022 at 07:11)</a>:</h4>
+<p>Nope, no threading in comm_drv_n0183_net. So, I cannot test std::thread on WIndows there.</p>
+
+
+
+<a name="303410473"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332168-Master%20-%205.8.0%20%20%28was%3A%20comms%29/topic/misc/near/303410473" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Alec Leamas <a href="https://leamas.github.io/zulip-archive/stream/332168-Master---5.2E8.2E0--.28was.3A-comms.29/topic/misc.html#303410473">(Oct 11 2022 at 11:52)</a>:</h4>
+<blockquote>
+<p>I  guess you will need this if you want to send M0183 recordings through N0183 driver, somehow.</p>
+</blockquote>
+<p>Yes. But before doing this, more or less same thing as in the socketcan driver: Could you make sure that socketcan works also on Windows, since I cannot really test it there? I have run the unit tests on Win, so it's probably not completely broken.  But, I have no live data.</p>
+
+
+
+<a name="303425060"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332168-Master%20-%205.8.0%20%20%28was%3A%20comms%29/topic/misc/near/303425060" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Alec Leamas <a href="https://leamas.github.io/zulip-archive/stream/332168-Master---5.2E8.2E0--.28was.3A-comms.29/topic/misc.html#303425060">(Oct 11 2022 at 12:16)</a>:</h4>
+<p>Sorry, I am confused, writes too much, and probably confuses you. Of course you cannot test the socketcan driver  on windows, sorry "banging head to table".</p>
+
+
+
+<a name="303438962"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332168-Master%20-%205.8.0%20%20%28was%3A%20comms%29/topic/misc/near/303438962" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Alec Leamas <a href="https://leamas.github.io/zulip-archive/stream/332168-Master---5.2E8.2E0--.28was.3A-comms.29/topic/misc.html#303438962">(Oct 11 2022 at 13:35)</a>:</h4>
+<p>I have updated and rebased the socketcan branch. </p>
+<ul>
+<li>Rebase  to current master</li>
+<li>Add "your" change to registry.CloseALlDrivers() -- looks perfectly sound to me.</li>
+<li>Add "my" change to the driver DTOR -- avoid recursive Close(), better safe than sorry.</li>
+<li>Add forgotten delete when tearing down the IO thread (raw pointer, should be fixed!).</li>
+<li>Make comm_drv_n0183_serial use std::thread, an almost identical change as the one in the socketcan driver.</li>
+</ul>
+<p>Here I'm stuck -- needs a confirmation that the threading in <em>comm_drv_n0183_serial</em> works on windows.  Something you can check?</p>
+
+
+
+<a name="303480388"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332168-Master%20-%205.8.0%20%20%28was%3A%20comms%29/topic/misc/near/303480388" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Håkan Svensson <a href="https://leamas.github.io/zulip-archive/stream/332168-Master---5.2E8.2E0--.28was.3A-comms.29/topic/misc.html#303480388">(Oct 11 2022 at 16:58)</a>:</h4>
+<p>No N2k live data for Windows available from my server. What I know is there no known standard to transfer N2k raw data over a network? (Otherwise we could transfer raw data serial achieved from a YDNU)<br>
+My signalk.stupan...  has two channels: one TCP (NMEA0183) mode via "TCP" port 10112 one SignalK  mode via  port 3000.</p>
+
+
+
+<a name="303494547"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332168-Master%20-%205.8.0%20%20%28was%3A%20comms%29/topic/misc/near/303494547" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Dave Register <a href="https://leamas.github.io/zulip-archive/stream/332168-Master---5.2E8.2E0--.28was.3A-comms.29/topic/misc.html#303494547">(Oct 11 2022 at 18:21)</a>:</h4>
+<p>I will check serial on Windows with live data later today.  Down a rat-hole at the moment.</p>
+
+
+
+<a name="303501401"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332168-Master%20-%205.8.0%20%20%28was%3A%20comms%29/topic/misc/near/303501401" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Håkan Svensson <a href="https://leamas.github.io/zulip-archive/stream/332168-Master---5.2E8.2E0--.28was.3A-comms.29/topic/misc.html#303501401">(Oct 11 2022 at 19:03)</a>:</h4>
+<p>I made a short test of branch socketcan on Win built by VS2017.<br>
+A serial N0183 on COM3 from the YDNU is working. (Position/velocity/heading)<br>
+A N2k from the YDNU on COM3 is working.<br>
+A Network TCP N0183 is working<br>
+A SignalK connection is also working.<br>
+If of interest: One thread more used when enable the serial connection. One thread less intermediately after disabling.</p>
+
+
+
+<a name="303505314"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332168-Master%20-%205.8.0%20%20%28was%3A%20comms%29/topic/misc/near/303505314" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Alec Leamas <a href="https://leamas.github.io/zulip-archive/stream/332168-Master---5.2E8.2E0--.28was.3A-comms.29/topic/misc.html#303505314">(Oct 11 2022 at 19:27)</a>:</h4>
+<p><span class="user-mention" data-user-id="522486">@Håkan Svensson</span> Thanks!</p>
+<p>Preliminary conclusion would be  that there is no overall problem using std::thread instead of wxThread on Windows.  But let's wait to see if Dave finds out anything more, there is no hurry.</p>
+
+
+
+<a name="303505474"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332168-Master%20-%205.8.0%20%20%28was%3A%20comms%29/topic/misc/near/303505474" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Alec Leamas <a href="https://leamas.github.io/zulip-archive/stream/332168-Master---5.2E8.2E0--.28was.3A-comms.29/topic/misc.html#303505474">(Oct 11 2022 at 19:28)</a>:</h4>
+<p>The thread count being one more for an enabled serial connection is as expected.</p>
+
+
+
+<a name="303508461"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332168-Master%20-%205.8.0%20%20%28was%3A%20comms%29/topic/misc/near/303508461" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Dave Register <a href="https://leamas.github.io/zulip-archive/stream/332168-Master---5.2E8.2E0--.28was.3A-comms.29/topic/misc.html#303508461">(Oct 11 2022 at 19:49)</a>:</h4>
+<p>Tested on native Windows box with serial n0183 live data.  Overall function fine.  I traced the startup and shutdown of the driver thread.  Looks nominal to  me, no surprises.<br>
+So I guess we can say that std::thread is OK on Windows.</p>
+
+
+
+<a name="304194590"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332168-Master%20-%205.8.0%20%20%28was%3A%20comms%29/topic/misc/near/304194590" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Håkan Svensson <a href="https://leamas.github.io/zulip-archive/stream/332168-Master---5.2E8.2E0--.28was.3A-comms.29/topic/misc.html#304194590">(Oct 15 2022 at 12:36)</a>:</h4>
+<p>Dear gurus:<br>
+Can i get the "handler" info, "dashboard_pi" in this case, to a printf message? Pls, how?<br>
+The pict from comm_plugin_api.cpp: row 33</p>
+<blockquote>
+<p>std::shared_ptr&lt;ObservedVarListener&gt; GetListener(NMEA2000Id id, wxEventType ev,<br>
+                                                 wxEvtHandler* handler) {</p>
+</blockquote>
+<p><a href="/user_uploads/33951/vB7fXAeNvGcaHzHKPuC15U9W/bild.png">bild.png</a></p>
+<div class="message_inline_image"><a href="/user_uploads/33951/vB7fXAeNvGcaHzHKPuC15U9W/bild.png" title="bild.png"><img src="/user_uploads/33951/vB7fXAeNvGcaHzHKPuC15U9W/bild.png"></a></div>
+
+
+
+<a name="304202882"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332168-Master%20-%205.8.0%20%20%28was%3A%20comms%29/topic/misc/near/304202882" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Dave Register <a href="https://leamas.github.io/zulip-archive/stream/332168-Master---5.2E8.2E0--.28was.3A-comms.29/topic/misc.html#304202882">(Oct 15 2022 at 13:44)</a>:</h4>
+<p>"Can i get the "handler" info, "dashboard_pi" in this case, to a printf message?"<br>
+Not sure what you are asking .  I see a log file call there.  What else is required?</p>
+
+
+
+<a name="304208402"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332168-Master%20-%205.8.0%20%20%28was%3A%20comms%29/topic/misc/near/304208402" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Håkan Svensson <a href="https://leamas.github.io/zulip-archive/stream/332168-Master---5.2E8.2E0--.28was.3A-comms.29/topic/misc.html#304208402">(Oct 15 2022 at 14:31)</a>:</h4>
+<p>1: Don't let this trouble a lot. It's just a "nice to have"<br>
+The log message is now printing the requested PGN number(id). One at the time. Good enough but..<br>
+If you see the Quick watch picture the variable "handler" contains some values. But how can I get the text "dashboard_pi" to a printable string I can add to the log message.  e.g. handler.sender...   handler itself has a null vale if I catch that.<br>
+From the log file I can understand this message is from Dashboard since it printed when DB is loaded. So this is just to learn and for joy.</p>
+
+
+
+<a name="304221915"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332168-Master%20-%205.8.0%20%20%28was%3A%20comms%29/topic/misc/near/304221915" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Alec Leamas <a href="https://leamas.github.io/zulip-archive/stream/332168-Master---5.2E8.2E0--.28was.3A-comms.29/topic/misc.html#304221915">(Oct 15 2022 at 16:31)</a>:</h4>
+<p><span class="user-mention" data-user-id="517002">@Dave Register</span>  I'm probably missing something, but still... looking at the  socketcan driver <em>comm_drv_n2k_socketcan.cpp</em>. Here, the reading is done in a separate thread, ok. But why then use a complicated <code>select()</code> which is the way to multiplex concurrent IO, for example  reading/writing or reading from multiple sources.</p>
+<p>That is, since this is a separate thread reading from a single fd: why not just use plain, blocking read? What am I missing?</p>
+
+
+
+<a name="304235774"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332168-Master%20-%205.8.0%20%20%28was%3A%20comms%29/topic/misc/near/304235774" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Alec Leamas <a href="https://leamas.github.io/zulip-archive/stream/332168-Master---5.2E8.2E0--.28was.3A-comms.29/topic/misc.html#304235774">(Oct 15 2022 at 19:11)</a>:</h4>
+<p><span class="user-mention" data-user-id="517002">@Dave Register</span>  Another thing: About slow gcc compilations: what command do you use to compile?</p>
+
+
+
+<a name="304241495"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332168-Master%20-%205.8.0%20%20%28was%3A%20comms%29/topic/misc/near/304241495" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Dave Register <a href="https://leamas.github.io/zulip-archive/stream/332168-Master---5.2E8.2E0--.28was.3A-comms.29/topic/misc.html#304241495">(Oct 15 2022 at 20:32)</a>:</h4>
+<p>socketcan thread:<br>
+You are correct, as usual.  I borrowed the thread code from Twocan plugin, dropped it in like some unthinking robot, and moved on to the next thing.  Optimization TODO, when the feature set is implemented and frozen.......</p>
+
+
+
+<a name="304241705"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332168-Master%20-%205.8.0%20%20%28was%3A%20comms%29/topic/misc/near/304241705" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Dave Register <a href="https://leamas.github.io/zulip-archive/stream/332168-Master---5.2E8.2E0--.28was.3A-comms.29/topic/misc.html#304241705">(Oct 15 2022 at 20:36)</a>:</h4>
+<p>gcc:<br>
+Since I am often changing branches, I do<br>
+$ cmake ..<br>
+$ make</p>
+<p>Things go much faster with<br>
+ $ make -j4<br>
+but I sometimes see problem with mutit-job make right after a fresh cmake run.  So often I am building single process, every source, one at a a time.  A bit slow, mainly due to the wx includes.</p>
+
+
+
+<a name="304243313"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332168-Master%20-%205.8.0%20%20%28was%3A%20comms%29/topic/misc/near/304243313" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Alec Leamas <a href="https://leamas.github.io/zulip-archive/stream/332168-Master---5.2E8.2E0--.28was.3A-comms.29/topic/misc.html#304243313">(Oct 15 2022 at 21:02)</a>:</h4>
+<p>gcc: I always run <code>make -sj12</code> having more processors (16, Ryzen 7). I have not seen any particular problems with that besides that when there are errors the output is a mess . In this case I run again, a simple <code>make</code> to get the errors file by file.  It's fast, iut only compiles the file(s) with error(s)</p>
+<p>Anyway, the speed comparison is probably moot if not using more than one processor.</p>
+
+
+
+<a name="304243544"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332168-Master%20-%205.8.0%20%20%28was%3A%20comms%29/topic/misc/near/304243544" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Alec Leamas <a href="https://leamas.github.io/zulip-archive/stream/332168-Master---5.2E8.2E0--.28was.3A-comms.29/topic/misc.html#304243544">(Oct 15 2022 at 21:05)</a>:</h4>
+<p>Perhaps you could get rid of the cmake problems by clearing <em>build</em> first (or at least remove <em>CMakeCache.txt</em>)</p>
+
+
+
+<a name="304246249"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332168-Master%20-%205.8.0%20%20%28was%3A%20comms%29/topic/misc/near/304246249" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Notification Bot <a href="https://leamas.github.io/zulip-archive/stream/332168-Master---5.2E8.2E0--.28was.3A-comms.29/topic/misc.html#304246249">(Oct 15 2022 at 21:40)</a>:</h4>
+<p>A message was moved here from <a class="stream-topic" data-stream-id="332168" href="/#narrow/stream/332168-comms/topic/UI.20topics">#comms &gt; UI topics</a> by <span class="user-mention silent" data-user-id="399510">Alec Leamas</span>.</p>
+
+
+
+<a name="304246267"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332168-Master%20-%205.8.0%20%20%28was%3A%20comms%29/topic/misc/near/304246267" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Notification Bot <a href="https://leamas.github.io/zulip-archive/stream/332168-Master---5.2E8.2E0--.28was.3A-comms.29/topic/misc.html#304246267">(Oct 15 2022 at 21:40)</a>:</h4>
+<p>A message was moved here from <a class="stream-topic" data-stream-id="332168" href="/#narrow/stream/332168-comms/topic/UI.20topics">#comms &gt; UI topics</a> by <span class="user-mention silent" data-user-id="399510">Alec Leamas</span>.</p>
+
+
+
+<a name="304453682"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332168-Master%20-%205.8.0%20%20%28was%3A%20comms%29/topic/misc/near/304453682" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Dan Dickey <a href="https://leamas.github.io/zulip-archive/stream/332168-Master---5.2E8.2E0--.28was.3A-comms.29/topic/misc.html#304453682">(Oct 17 2022 at 12:55)</a>:</h4>
+<p>FYI, a heap corruption issue has appeared at least in MSW.  I am bisecting to find it.  But it's slow and painful.  Will keep you updated.</p>
+
+
+
+<a name="304480197"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332168-Master%20-%205.8.0%20%20%28was%3A%20comms%29/topic/misc/near/304480197" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Alec Leamas <a href="https://leamas.github.io/zulip-archive/stream/332168-Master---5.2E8.2E0--.28was.3A-comms.29/topic/misc.html#304480197">(Oct 17 2022 at 14:52)</a>:</h4>
+<p><span class="user-mention" data-user-id="522729">@Dan Dickey</span>  You are a hero!</p>
+
+
+
+<a name="304499836"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332168-Master%20-%205.8.0%20%20%28was%3A%20comms%29/topic/misc/near/304499836" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Alec Leamas <a href="https://leamas.github.io/zulip-archive/stream/332168-Master---5.2E8.2E0--.28was.3A-comms.29/topic/misc.html#304499836">(Oct 17 2022 at 16:05)</a>:</h4>
+<p><span class="user-mention" data-user-id="517002">@Dave Register</span>  There is also <a href="https://github.com/OpenCPN/OpenCPN/pull/2791">https://github.com/OpenCPN/OpenCPN/pull/2791</a> and  <a href="https://github.com/OpenCPN/OpenCPN/pull/2787">https://github.com/OpenCPN/OpenCPN/pull/2787</a>. Both are simple build fixes, we  should IMHO try to keep the builders happy.</p>
+
+
+
+<a name="304639810"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332168-Master%20-%205.8.0%20%20%28was%3A%20comms%29/topic/misc/near/304639810" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Alec Leamas <a href="https://leamas.github.io/zulip-archive/stream/332168-Master---5.2E8.2E0--.28was.3A-comms.29/topic/misc.html#304639810">(Oct 18 2022 at 09:18)</a>:</h4>
+<p><span class="user-mention" data-user-id="517002">@Dave Register</span>  There is some trouble in dashboard_pi. I'm looking at all those <code>std::move(GetListener(id_127245, EVT_N2K_127245, this));</code> and such.  It it uses GetListener() from ocpn_pluginb.h which does not have  any implementation. For some reason I cannot fathom it does link on linux (to what?) while the windows build rightfully fails, a fact I discovered too late. </p>
+<p>I'm on  it.</p>
+
+
+
+<a name="304847022"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332168-Master%20-%205.8.0%20%20%28was%3A%20comms%29/topic/misc/near/304847022" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Alec Leamas <a href="https://leamas.github.io/zulip-archive/stream/332168-Master---5.2E8.2E0--.28was.3A-comms.29/topic/misc.html#304847022">(Oct 18 2022 at 21:53)</a>:</h4>
+<p><span class="user-mention" data-user-id="517002">@Dave Register</span>  I have been under the impression that we don't use exceptions, but looking at the code this does not seem to be  the case. One the contrary, exceptions are enabled and used. Late change? Do we have any policy w r t exceptions?</p>
+
+
+
+<a name="304849637"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332168-Master%20-%205.8.0%20%20%28was%3A%20comms%29/topic/misc/near/304849637" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Alec Leamas <a href="https://leamas.github.io/zulip-archive/stream/332168-Master---5.2E8.2E0--.28was.3A-comms.29/topic/misc.html#304849637">(Oct 18 2022 at 22:12)</a>:</h4>
+<p>The missing implementations are in <a href="https://github.com/OpenCPN/OpenCPN/pull/2793">https://github.com/OpenCPN/OpenCPN/pull/2793</a></p>
+
+
+
+<a name="304859794"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332168-Master%20-%205.8.0%20%20%28was%3A%20comms%29/topic/misc/near/304859794" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Dave Register <a href="https://leamas.github.io/zulip-archive/stream/332168-Master---5.2E8.2E0--.28was.3A-comms.29/topic/misc.html#304859794">(Oct 18 2022 at 23:54)</a>:</h4>
+<p>And where are we using C/C++ exceptions?  If so, it is by accident.  Exception management on cross -platform app can be a nightmare....</p>
+
+
+
+<a name="304887533"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332168-Master%20-%205.8.0%20%20%28was%3A%20comms%29/topic/misc/near/304887533" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Notification Bot <a href="https://leamas.github.io/zulip-archive/stream/332168-Master---5.2E8.2E0--.28was.3A-comms.29/topic/misc.html#304887533">(Oct 19 2022 at 06:29)</a>:</h4>
+<p>A message was moved here from <a class="stream-topic" data-stream-id="332168" href="/#narrow/stream/332168-comms/topic/commits">#comms &gt; commits</a> by <span class="user-mention silent" data-user-id="399510">Alec Leamas</span>.</p>
+
+
+
+<a name="304888552"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332168-Master%20-%205.8.0%20%20%28was%3A%20comms%29/topic/misc/near/304888552" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Alec Leamas <a href="https://leamas.github.io/zulip-archive/stream/332168-Master---5.2E8.2E0--.28was.3A-comms.29/topic/misc.html#304888552">(Oct 19 2022 at 06:38)</a>:</h4>
+<p>A quick grep for std::exception reveals around 20 matches.  At a glance, it looks that the primary sources are the pugixml and serial libraries. There is also exceptions in mbtiles.cpp related   sqlite.</p>
+<p>The compilation flags on at least Linux as defined in main CMakeLists.txt contains <code>-fexceptions</code>so they are enabled. </p>
+<p>As I see it, if we are using libraries generating exceptions we just have to enable exceptions and handle them. That is not to say that we should encourage exceptions in our own code so to speak.</p>
+
+
+
+<a name="308891686"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332168-Master%20-%205.8.0%20%20%28was%3A%20comms%29/topic/misc/near/308891686" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Alec Leamas <a href="https://leamas.github.io/zulip-archive/stream/332168-Master---5.2E8.2E0--.28was.3A-comms.29/topic/misc.html#308891686">(Nov 09 2022 at 23:12)</a>:</h4>
+<p><span class="user-mention" data-user-id="517002">@Dave Register</span>  <a href="https://github.com/OpenCPN/OpenCPN/pull/2803#issuecomment-1309506779">https://github.com/OpenCPN/OpenCPN/pull/2803#issuecomment-1309506779</a></p>
+
+
+
+<a name="309370058"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332168-Master%20-%205.8.0%20%20%28was%3A%20comms%29/topic/misc/near/309370058" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Alec Leamas <a href="https://leamas.github.io/zulip-archive/stream/332168-Master---5.2E8.2E0--.28was.3A-comms.29/topic/misc.html#309370058">(Nov 12 2022 at 17:52)</a>:</h4>
+<p><span class="user-mention" data-user-id="517002">@Dave Register</span>  I have wxWidgets 3.2 build for for jammy and focal in <a href="https://launchpad.net/~leamas-alec/+archive/ubuntu/wxwidgets">https://launchpad.net/~leamas-alec/+archive/ubuntu/wxwidgets</a>.</p>
+<p>It should be possible to use this in "your" ppa according to this: <a href="https://askubuntu.com/questions/436322/use-one-ppa-in-another-ppa">https://askubuntu.com/questions/436322/use-one-ppa-in-another-ppa</a>. If this does not work we need to clone my repos into "your" ppa, possible but a bit convoluted.</p>
+<p>Note that idea is to only build Debian plugins, so these are for core opencpn only.</p>
+
+
+
+<a name="309375137"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332168-Master%20-%205.8.0%20%20%28was%3A%20comms%29/topic/misc/near/309375137" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Håkan Svensson <a href="https://leamas.github.io/zulip-archive/stream/332168-Master---5.2E8.2E0--.28was.3A-comms.29/topic/misc.html#309375137">(Nov 12 2022 at 18:43)</a>:</h4>
+<p><span class="user-mention" data-user-id="522729">@Dan Dickey</span> <br>
+  Nether "lost" nor "disappear" works <br>
+When not updated the target shall get cross-over icon (lost) after the set time (default 8 minutes) and disappear after set time default 10 minutes. Not after the time out used for Alerts if I recall correct 18 minutes.</p>
+<p>If you want to try just connect to some AIS targets and disable the connection and check the targets received.<br>
+I've a running server if you like address <a href="http://signalk.stupan.se">signalk.stupan.se</a>  TCP port 10112.  (or Signal K port 3000)</p>
+
+
+
+<a name="309381870"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332168-Master%20-%205.8.0%20%20%28was%3A%20comms%29/topic/misc/near/309381870" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Alec Leamas <a href="https://leamas.github.io/zulip-archive/stream/332168-Master---5.2E8.2E0--.28was.3A-comms.29/topic/misc.html#309381870">(Nov 12 2022 at 19:51)</a>:</h4>
+<p><span class="user-mention" data-user-id="517002">@Dave Register</span> The code which "jails" bad plugins seems to be resurrected, see plugin_loader.cpp around line 1263. But after merging <a href="https://github.com/OpenCPN/OpenCPN/pull/2582">https://github.com/OpenCPN/OpenCPN/pull/2582</a>, all this jailing stuff was gone for reasons we agreed on. </p>
+<p>Any idea what happened?</p>
+
+
+
+<a name="309401661"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332168-Master%20-%205.8.0%20%20%28was%3A%20comms%29/topic/misc/near/309401661" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Dave Register <a href="https://leamas.github.io/zulip-archive/stream/332168-Master---5.2E8.2E0--.28was.3A-comms.29/topic/misc.html#309401661">(Nov 13 2022 at 00:17)</a>:</h4>
+<p><span class="user-mention" data-user-id="399510">@Alec Leamas</span> <br>
+No idea about "jailing" situation.  Though I see that PR #2582 did not touch plugin_loader.cpp, so no surprise that plugin_loader is still jailing plugins.  I guess we need to finish the thought process started by #2582.</p>
+
+
+
+<a name="309402824"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332168-Master%20-%205.8.0%20%20%28was%3A%20comms%29/topic/misc/near/309402824" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Dan Dickey <a href="https://leamas.github.io/zulip-archive/stream/332168-Master---5.2E8.2E0--.28was.3A-comms.29/topic/misc.html#309402824">(Nov 13 2022 at 00:37)</a>:</h4>
+<p><span class="user-mention silent" data-user-id="522486">Håkan Svensson</span> <a href="#narrow/stream/332168-Master---5.2E8.2E0--.28was.3A-comms.29/topic/misc/near/309375137">said</a>:</p>
+<blockquote>
+<p><span class="user-mention silent" data-user-id="522729">Dan Dickey</span> <br>
+  Nether "lost" nor "disappear" works </p>
+</blockquote>
+<p>Is it just SignalK source that has this issue? Or does it also affect NMEA0183 based targets?</p>
+
+
+
+<a name="309427218"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332168-Master%20-%205.8.0%20%20%28was%3A%20comms%29/topic/misc/near/309427218" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Håkan Svensson <a href="https://leamas.github.io/zulip-archive/stream/332168-Master---5.2E8.2E0--.28was.3A-comms.29/topic/misc.html#309427218">(Nov 13 2022 at 08:05)</a>:</h4>
+<p><span class="user-mention" data-user-id="522729">@Dan Dickey</span> <br>
+No difference using TCP, NME0183, or Signal k connection protocol.  (And don't let the IP-address mislead you. You can use both protocol by the same address but different ports.) Use my server or any other AIS reception you may have to test.</p>
+
+
+
+<a name="309475524"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332168-Master%20-%205.8.0%20%20%28was%3A%20comms%29/topic/misc/near/309475524" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Dan Dickey <a href="https://leamas.github.io/zulip-archive/stream/332168-Master---5.2E8.2E0--.28was.3A-comms.29/topic/misc.html#309475524">(Nov 13 2022 at 16:41)</a>:</h4>
+<p><span class="user-mention silent" data-user-id="522486">Håkan Svensson</span> <a href="#narrow/stream/332168-Master---5.2E8.2E0--.28was.3A-comms.29/topic/misc/near/309427218">said</a>:</p>
+<blockquote>
+<p><span class="user-mention silent" data-user-id="522729">Dan Dickey</span> <br>
+No difference using TCP, NME0183, or Signal k connection protocol.  (And don't let the IP-address mislead you. You can use both protocol by the same address but different ports.) Use my server or any other AIS reception you may have to test.</p>
+</blockquote>
+<p>I have tried to duplicate this issue on Windows and RPi but in all cases the AIS targets disappear as expected after the connection is terminated.</p>
+
+
+
+<a name="309484273"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332168-Master%20-%205.8.0%20%20%28was%3A%20comms%29/topic/misc/near/309484273" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Håkan Svensson <a href="https://leamas.github.io/zulip-archive/stream/332168-Master---5.2E8.2E0--.28was.3A-comms.29/topic/misc.html#309484273">(Nov 13 2022 at 18:07)</a>:</h4>
+<p>Dan..<br>
+Here on both Win and RPi: <br>
+My settings are mark as lost after 6 minutes and remove after 8 minutes,<br>
+No lost cross over icon. Never.<br>
+Stil left on screen after 8 minutes. But after that not responsible for "target query". Still left in AIS target list though and can be queried from there.</p>
+
+
+
+<a name="310526715"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332168-Master%20-%205.8.0%20%20%28was%3A%20comms%29/topic/misc/near/310526715" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Dan Dickey <a href="https://leamas.github.io/zulip-archive/stream/332168-Master---5.2E8.2E0--.28was.3A-comms.29/topic/misc.html#310526715">(Nov 17 2022 at 00:30)</a>:</h4>
+<p><span class="user-mention silent" data-user-id="522486">Håkan Svensson</span> <a href="#narrow/stream/332168-Master---5.2E8.2E0--.28was.3A-comms.29/topic/misc/near/309484273">said</a>:</p>
+<blockquote>
+<p>Dan..<br>
+Here on both Win and RPi: <br>
+My settings are mark as lost after 6 minutes and remove after 8 minutes,<br>
+No lost cross over icon. Never.<br>
+Stil left on screen after 8 minutes. But after that not responsible for "target query". Still left in AIS target list though and can be queried from there.</p>
+</blockquote>
+<p>The way I read the code you have to wait fully 3 times the remove minutes for the target to completely be gone from the AIS list.</p>
+
+
+
+<a name="310527131"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332168-Master%20-%205.8.0%20%20%28was%3A%20comms%29/topic/misc/near/310527131" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Dan Dickey <a href="https://leamas.github.io/zulip-archive/stream/332168-Master---5.2E8.2E0--.28was.3A-comms.29/topic/misc.html#310527131">(Nov 17 2022 at 00:35)</a>:</h4>
+<p>I think we have a memory leak somewhere.  I've been testing master branch on Windows for a few days.  When O starts it uses about 150MB memory.  After 24 hours it is up to 950MB and still growing slowly.  I have an NMEA stream playing into o but am not recording tracks other than the standard AIS purple track which is finite.  That should not continuously consume memory.</p>
+
+
+
+<a name="310627200"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332168-Master%20-%205.8.0%20%20%28was%3A%20comms%29/topic/misc/near/310627200" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Dave Register <a href="https://leamas.github.io/zulip-archive/stream/332168-Master---5.2E8.2E0--.28was.3A-comms.29/topic/misc.html#310627200">(Nov 17 2022 at 15:04)</a>:</h4>
+<p>No doubt introduced by the AIS pointer refactor.  I'll take a look.<br>
+Are you using simulation AIS data (e.g.Hakan's feeds)?  Or live data?</p>
+
+
+
+<a name="313291309"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332168-Master%20-%205.8.0%20%20%28was%3A%20comms%29/topic/misc/near/313291309" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Håkan Svensson <a href="https://leamas.github.io/zulip-archive/stream/332168-Master---5.2E8.2E0--.28was.3A-comms.29/topic/misc.html#313291309">(Dec 01 2022 at 14:24)</a>:</h4>
+<p>On Debian 10 closing SocketCan at Program stop causes an endless loop and finally crash down.<br>
+Happens all time O is closed.<br>
+See below log file snippet. After the last row the log contains another 42000 tries to close an already dead thread.<br>
+System:<br>
+OCPN_OSDetail:  armhf ; Raspbian GNU/Linux ; 10 ; raspbian ; debian</p>
+<blockquote>
+<p>14:52:23.317 MESSAGE plugin_loader.cpp:546 PlugInManager: Deactivating PlugIn: /home/pi/.local/lib/opencpn/libo-charts_pi.so<br>
+14:52:23.318 MESSAGE plugin_loader.cpp:546 PlugInManager: Deactivating PlugIn: /home/pi/.local/lib/opencpn/libradar_pi.so<br>
+14:52:23.318 MESSAGE radar_pi.cpp:397 DeInit of plugin<br>
+14:52:23.319 MESSAGE RadarInfo.cpp:154 Emulator receive thread stopped in 1 ms<br>
+14:52:23.323 MESSAGE RadarInfo.cpp:154 Navico BR24 receive thread stopped in 1 ms<br>
+14:52:23.333 MESSAGE radar_pi.cpp:443 radar_pi Context menus removed<br>
+14:52:23.360 MESSAGE plugin_loader.cpp:546 PlugInManager: Deactivating PlugIn: /usr/local/lib/opencpn/libwmm_pi.so<br>
+14:52:23.361 MESSAGE plugin_loader.cpp:546 PlugInManager: Deactivating PlugIn: /usr/local/lib/opencpn/libgrib_pi.so<br>
+14:52:23.361 MESSAGE plugin_loader.cpp:546 PlugInManager: Deactivating PlugIn: /usr/local/lib/opencpn/libdashboard_pi.so<br>
+14:52:23.383 MESSAGE ocpn_frame.cpp:2180 opencpn::MyFrame exiting cleanly.<br>
+14:52:23.439 MESSAGE chartdb.cpp:287 Chart cache PlugIn purge<br>
+14:52:23.457 MESSAGE comm_drv_n0183_net.cpp:611 Closing NMEA NetworkDataStream 10112<br>
+14:52:23.458 MESSAGE comm_drv_n2k_socketcan.cpp:276 Closing N2K socketCAN: can0<br>
+14:52:23.458 MESSAGE comm_drv_n2k_socketcan.cpp:510 Stopping Worker Thread<br>
+14:52:24.458 MESSAGE comm_drv_n2k_socketcan.cpp:517 StopThread: Stopped in 1 sec.<br>
+14:52:24.458 MESSAGE comm_drv_n2k_socketcan.cpp:276 Closing N2K socketCAN: can0<br>
+14:52:24.458 MESSAGE comm_drv_n2k_socketcan.cpp:507 Attempt to stop already dead thread (ignored).<br>
+14:52:24.458 MESSAGE comm_drv_n2k_socketcan.cpp:276 Closing N2K socketCAN: can0<br>
+14:52:24.458 MESSAGE comm_drv_n2k_socketcan.cpp:507 Attempt to stop already dead thread (ignored).<br>
+14:52:24.458 MESSAGE comm_drv_n2k_socketcan.cpp:276 Closing N2K socketCAN: can0<br>
+14:52:24.458 MESSAGE comm_drv_n2k_socketcan.cpp:507 Attempt to stop already dead thread (ignored).<br>
+14:52:24.458 MESSAGE comm_drv_n2k_socketcan.cpp:276 Closing N2K socketCAN: can0<br>
+14:52:24.458 MESSAGE comm_drv_n2k_socketcan.cpp:507 Attempt to stop already dead thread (ignored).<br>
+14:52:24.458 MESSAGE comm_drv_n2k_socketcan.cpp:276 Closing N2K socketCAN: can0<br>
+14:52:24.459 MESSAGE comm_drv_n2k_socketcan.cpp:507 Attempt to stop already dead thread (ignored).<br>
+14:52:24.459 MESSAGE comm_drv_n2k_socketcan.cpp:276 Closing N2K socketCAN: can0<br>
+14:52:24.459 MESSAGE comm_drv_n2k_socketcan.cpp:507 Attempt to stop already dead thread (ignored).</p>
+</blockquote>
+
+
+
+<a name="313304554"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332168-Master%20-%205.8.0%20%20%28was%3A%20comms%29/topic/misc/near/313304554" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Håkan Svensson <a href="https://leamas.github.io/zulip-archive/stream/332168-Master---5.2E8.2E0--.28was.3A-comms.29/topic/misc.html#313304554">(Dec 01 2022 at 15:23)</a>:</h4>
+<p>Just to explain above: Closing SocketCan while running works fine. It's only on O shut down while the port is open the endless tries to close appears.</p>
+
+
+
+<a name="313787350"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332168-Master%20-%205.8.0%20%20%28was%3A%20comms%29/topic/misc/near/313787350" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Alec Leamas <a href="https://leamas.github.io/zulip-archive/stream/332168-Master---5.2E8.2E0--.28was.3A-comms.29/topic/misc.html#313787350">(Dec 04 2022 at 10:08)</a>:</h4>
+<p>Full time renovating kitchen now, not much time for   OPenCPN</p>
+
+
+
+<a name="315997848"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332168-Master%20-%205.8.0%20%20%28was%3A%20comms%29/topic/misc/near/315997848" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Håkan Svensson <a href="https://leamas.github.io/zulip-archive/stream/332168-Master---5.2E8.2E0--.28was.3A-comms.29/topic/misc.html#315997848">(Dec 15 2022 at 10:01)</a>:</h4>
+<p><span class="user-mention" data-user-id="517002">@Dave Register</span> <br>
+Debian 10 SocketCan<br>
+Issue still valid.<br>
+More observations:<br>
+If Can0 is the only enabled source thread shut down is normal.<br>
+If a TCP connection is also enabled the first shut down after enabling  TCP is normal. At next start and O close the issue is back again.<br>
+Rpi4 Anydesk: 149422160</p>
+
+
+
+<a name="316076600"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332168-Master%20-%205.8.0%20%20%28was%3A%20comms%29/topic/misc/near/316076600" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Dave Register <a href="https://leamas.github.io/zulip-archive/stream/332168-Master---5.2E8.2E0--.28was.3A-comms.29/topic/misc.html#316076600">(Dec 15 2022 at 15:59)</a>:</h4>
+<p>Corrected in github master now.</p>
+
+
+
+<a name="316107153"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332168-Master%20-%205.8.0%20%20%28was%3A%20comms%29/topic/misc/near/316107153" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Håkan Svensson <a href="https://leamas.github.io/zulip-archive/stream/332168-Master---5.2E8.2E0--.28was.3A-comms.29/topic/misc.html#316107153">(Dec 15 2022 at 18:10)</a>:</h4>
+<p>Debian 10 socketCan...<br>
+Yes correction confirmed.</p>
+
+
+
+<a name="319273656"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332168-Master%20-%205.8.0%20%20%28was%3A%20comms%29/topic/misc/near/319273656" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Alec Leamas <a href="https://leamas.github.io/zulip-archive/stream/332168-Master---5.2E8.2E0--.28was.3A-comms.29/topic/misc.html#319273656">(Jan 03 2023 at 20:22)</a>:</h4>
+<p><span class="user-mention" data-user-id="517002">@Dave Register</span>  Looking at the beta, there is still debug output from  e. g. the  mDNS server : </p>
+<div class="codehilite"><pre><span></span><code>GLEW init success!nGenerating RSA key...
+Generating x509 certificate...
+Writing key and certificate to disk...
+Success!
+1eb2d665 3 mongoose.c:3461:mg_listen    1 0x35 https://0.0.0.0:8443
+Local IPv4 address: 192.168.2.50
+Opened 2 sockets for mDNS service
+Service mDNS: opencpn-object-control-service.:8000
+Hostname: hemulen
+Sending announce
+</code></pre></div>
+<p>Time to remove before release?</p>
+
+
+
+<a name="319982349"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332168-Master%20-%205.8.0%20%20%28was%3A%20comms%29/topic/misc/near/319982349" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Alec Leamas <a href="https://leamas.github.io/zulip-archive/stream/332168-Master---5.2E8.2E0--.28was.3A-comms.29/topic/misc.html#319982349">(Jan 07 2023 at 16:34)</a>:</h4>
+<p><span class="user-mention" data-user-id="517002">@Dave Register</span> : Pushed a fix to the zulip CI job  <em>.github/workflows/zulip.yml</em></p>
+
+
+
+<a name="321533598"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332168-Master%20-%205.8.0%20%20%28was%3A%20comms%29/topic/misc/near/321533598" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Alec Leamas <a href="https://leamas.github.io/zulip-archive/stream/332168-Master---5.2E8.2E0--.28was.3A-comms.29/topic/misc.html#321533598">(Jan 15 2023 at 21:34)</a>:</h4>
+<p><span class="user-mention" data-user-id="517002">@Dave Register</span>  Android builds fails with</p>
+<div class="codehilite"><pre><span></span><code>W: GPG error: https://packages.cloud.google.com/apt cloud-sdk-buster InRelease: The following signatures couldn&#39;t be verified because the public key is not available: NO_PUBKEY B53DC80D13EDEF05
+E: The repository &#39;https://packages.cloud.google.com/apt cloud-sdk-buster InRelease&#39; is not signed.
+</code></pre></div>
+<p>This is about a missing signing key which has to be imported into gpg. Probably the same as <a href="https://github.com/Rasbats/shipdriver_pi/issues/487">https://github.com/Rasbats/shipdriver_pi/issues/487</a> which I will try to handle tomorrow.</p>
+
+
+
+<a name="321828149"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332168-Master%20-%205.8.0%20%20%28was%3A%20comms%29/topic/misc/near/321828149" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Alec Leamas <a href="https://leamas.github.io/zulip-archive/stream/332168-Master---5.2E8.2E0--.28was.3A-comms.29/topic/misc.html#321828149">(Jan 17 2023 at 13:20)</a>:</h4>
+<p><a href="https://github.com/OpenCPN/plugins/pull/801">https://github.com/OpenCPN/plugins/pull/801</a></p>
+<p>lot of  turbulence around the new ABIs, important to have a fresh build of shipdriver in the Beta catalog as proof of concept.</p>
+
+
+
+<a name="321828169"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332168-Master%20-%205.8.0%20%20%28was%3A%20comms%29/topic/misc/near/321828169" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Alec Leamas <a href="https://leamas.github.io/zulip-archive/stream/332168-Master---5.2E8.2E0--.28was.3A-comms.29/topic/misc.html#321828169">(Jan 17 2023 at 13:20)</a>:</h4>
+<p><span class="user-mention" data-user-id="517002">@Dave Register</span> ^</p>
+
+
+
+<a name="321854947"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332168-Master%20-%205.8.0%20%20%28was%3A%20comms%29/topic/misc/near/321854947" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Pavel Kalian <a href="https://leamas.github.io/zulip-archive/stream/332168-Master---5.2E8.2E0--.28was.3A-comms.29/topic/misc.html#321854947">(Jan 17 2023 at 15:17)</a>:</h4>
+<p><span class="user-mention silent" data-user-id="399510">Alec Leamas</span> <a href="#narrow/stream/332168-Master---5.2E8.2E0--.28was.3A-comms.29/topic/MacOS.20Build/near/320656934">said</a>:</p>
+<blockquote>
+<p>Question 1: when  is <span class="user-mention silent" data-user-id="573239">Pavel Kalian</span>  back from Antarctica? ^</p>
+</blockquote>
+<p>Today. But still a bit busy as the boat has to head back again in 4 days...</p>
+
+
+
+<a name="321894824"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332168-Master%20-%205.8.0%20%20%28was%3A%20comms%29/topic/misc/near/321894824" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Alec Leamas <a href="https://leamas.github.io/zulip-archive/stream/332168-Master---5.2E8.2E0--.28was.3A-comms.29/topic/misc.html#321894824">(Jan 17 2023 at 18:14)</a>:</h4>
+<p>Welcome back! </p>
+<p>Will you go again to Antarctica, in four days?</p>
+
+
+
+<a name="321894947"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332168-Master%20-%205.8.0%20%20%28was%3A%20comms%29/topic/misc/near/321894947" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Notification Bot <a href="https://leamas.github.io/zulip-archive/stream/332168-Master---5.2E8.2E0--.28was.3A-comms.29/topic/misc.html#321894947">(Jan 17 2023 at 18:14)</a>:</h4>
+<p>2 messages were moved here from <a class="stream-topic" data-stream-id="332168" href="/#narrow/stream/332168-Master---5.2E8.2E0--.28was.3A-comms.29/topic/MacOS.20Build">#Master - 5.8.0  (was: comms) &gt; MacOS Build</a> by <span class="user-mention silent" data-user-id="399510">Alec Leamas</span>.</p>
+
+
+
+<a name="321946369"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332168-Master%20-%205.8.0%20%20%28was%3A%20comms%29/topic/misc/near/321946369" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Alec Leamas <a href="https://leamas.github.io/zulip-archive/stream/332168-Master---5.2E8.2E0--.28was.3A-comms.29/topic/misc.html#321946369">(Jan 17 2023 at 23:28)</a>:</h4>
+<p><span class="user-mention" data-user-id="522486">@Håkan Svensson</span> <br>
+You wrote:</p>
+<blockquote>
+<p>Excuse my lack of knowledge but how do you update "on the fly". I've once tried to update from Buster to Bullseye by changing in the sources.list but it did not ended well. What's "regular raspbian routines" for this. No command usable for en "end user" I suppose?</p>
+</blockquote>
+<p>Raspbian is basically just Debian with some add-ons. I have never encountered the idea that a Debian system cannot be updated by regular users until I met with OpenPlotter.  Debian puts a huge effort to make updates smooth, so it's definitely doable for a user like you.</p>
+<p>The idea that you lose all your personal setup when updating the OS is IMHO an example of bad thinking. There are tons of systems out there with way more complicated setup than any OpenPlotter installation, and they are regularly updated again and again without losing configuration.</p>
+<p>If you google "update raspbian  buster bullseye" you get tons of hits;  pick any. There is of course a risk that OpenPlotter has messed it all up and doesn't survive an update in some specific thing they have done, but is should be possible to fix.  And if so, it's IMHO a bug whatever they say. </p>
+<p>To summarize: A linux system which cannot be updated is an abomination broken by design</p>
+
+
+
+<a name="321968331"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332168-Master%20-%205.8.0%20%20%28was%3A%20comms%29/topic/misc/near/321968331" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Pavel Kalian <a href="https://leamas.github.io/zulip-archive/stream/332168-Master---5.2E8.2E0--.28was.3A-comms.29/topic/misc.html#321968331">(Jan 18 2023 at 03:38)</a>:</h4>
+<p><span class="user-mention silent" data-user-id="399510">Alec Leamas</span> <a href="#narrow/stream/332168-Master---5.2E8.2E0--.28was.3A-comms.29/topic/misc/near/321894824">said</a>:</p>
+<blockquote>
+<p>Welcome back! </p>
+<p>Will you go again to Antarctica, in four days?</p>
+</blockquote>
+<p>No, I also have to work sometimes :) But the boat does 3 trips this season and we have to take care of the Drake Passage damage bill between them. This time mostly electronics and heating, seems like IP 69 is not what it used to be.</p>
+
+
+
+<a name="321995313"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332168-Master%20-%205.8.0%20%20%28was%3A%20comms%29/topic/misc/near/321995313" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Håkan Svensson <a href="https://leamas.github.io/zulip-archive/stream/332168-Master---5.2E8.2E0--.28was.3A-comms.29/topic/misc.html#321995313">(Jan 18 2023 at 08:24)</a>:</h4>
+<blockquote>
+<p>The idea that you lose all your personal setup when updating the OS is IMHO an example of bad thinking</p>
+</blockquote>
+<p>If one download a image file and succeed to run a program in Windows to make a boot-able SD-disk out of that file most are very happy.  That process is high level for many cruisers who just want a nav system in the boat.  </p>
+<p>My poor level of knowledge is seen as an expert by many of our users. And I can't say I know how to update the OS on a given SD-card. The tons of advises to do that have so far not went out well. Out of my three or four tries I think one survived. The other halted in the middle by some missing update. So then you have to make a new SD card image from scratch. Bad thinking? Maybe.  </p>
+<p>Many of our end users sees the terminal as a scaring black hole. Openplotter is a wonderful tool for these users who just want a efficient, cheap and low power system to run OpenCPN and have charts so they can find the way out there. The big step here is to create the initial SD card. I've helped not so few to overcome that process.</p>
+<p>There's a reason why at least 70% of our end users stick to Windows. They're not forced to use the "black hole".</p>
+
+
+
+<a name="322005904"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332168-Master%20-%205.8.0%20%20%28was%3A%20comms%29/topic/misc/near/322005904" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Alec Leamas <a href="https://leamas.github.io/zulip-archive/stream/332168-Master---5.2E8.2E0--.28was.3A-comms.29/topic/misc.html#322005904">(Jan 18 2023 at 09:29)</a>:</h4>
+<p>fair enough. But this has nothing to do with my basic statement <em>A linux system which cannot be updated is an abomination broken by design</em></p>
+<p>That is, the OpenPlotter community has full control over what's installed and should be able to design a simple update procedure, perhaps with some support. There are many ways to do this, with or without the terminal.</p>
+
+
+
+<a name="322713624"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332168-Master%20-%205.8.0%20%20%28was%3A%20comms%29/topic/misc/near/322713624" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Håkan Svensson <a href="https://leamas.github.io/zulip-archive/stream/332168-Master---5.2E8.2E0--.28was.3A-comms.29/topic/misc.html#322713624">(Jan 21 2023 at 12:10)</a>:</h4>
+<p>RPi OpenGl performance:<br>
+The OpenGl(?) performance on the RPi4 is slow. That is when zooming and drag o-charts ENC it can be so slow the OS is warning about slow response -Wait?- Quit?. This for ENC charts only. RNC is always good.<br>
+Now if I change OpenGL from default hardware to software and restart O the response is significant better. Zooming is much faster and any OS slow warning never seen.<br>
+Is this anything we would handle by default or just mention as a user hint?</p>
+
+
+
+<a name="322902386"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332168-Master%20-%205.8.0%20%20%28was%3A%20comms%29/topic/misc/near/322902386" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Alec Leamas <a href="https://leamas.github.io/zulip-archive/stream/332168-Master---5.2E8.2E0--.28was.3A-comms.29/topic/misc.html#322902386">(Jan 22 2023 at 20:08)</a>:</h4>
+<p><span class="user-mention" data-user-id="517002">@Dave Register</span> : <a href="https://github.com/OpenCPN/OpenCPN/pull/2937">https://github.com/OpenCPN/OpenCPN/pull/2937</a>  (!!)</p>
+
+
+
+<a name="322902933"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332168-Master%20-%205.8.0%20%20%28was%3A%20comms%29/topic/misc/near/322902933" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Alec Leamas <a href="https://leamas.github.io/zulip-archive/stream/332168-Master---5.2E8.2E0--.28was.3A-comms.29/topic/misc.html#322902933">(Jan 22 2023 at 20:14)</a>:</h4>
+<p><span class="user-mention" data-user-id="522486">@Håkan Svensson</span>  <span class="user-mention" data-user-id="517002">@Dave Register</span>  Just a drive-by  remark: I assume you have tried the scaling functions which seems to be there like  GetBitmapFor()(<a href="https://docs.wxwidgets.org/trunk/classwx_bitmap_bundle.html#a2b427e6ad729074b042acdd805c91e46">https://docs.wxwidgets.org/trunk/classwx_bitmap_bundle.html#a2b427e6ad729074b042acdd805c91e46</a>).</p>
+
+
+
+<a name="322904091"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332168-Master%20-%205.8.0%20%20%28was%3A%20comms%29/topic/misc/near/322904091" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Dave Register <a href="https://leamas.github.io/zulip-archive/stream/332168-Master---5.2E8.2E0--.28was.3A-comms.29/topic/misc.html#322904091">(Jan 22 2023 at 20:25)</a>:</h4>
+<p>Alec...<br>
+Our issues relate to font scaling, mostly.  wx32 did not do a great job on Windows scaled displays.</p>
+
+
+
+<a name="322904556"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332168-Master%20-%205.8.0%20%20%28was%3A%20comms%29/topic/misc/near/322904556" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Alec Leamas <a href="https://leamas.github.io/zulip-archive/stream/332168-Master---5.2E8.2E0--.28was.3A-comms.29/topic/misc.html#322904556">(Jan 22 2023 at 20:30)</a>:</h4>
+<p>OK, I see.</p>
+
+
+
+<a name="323014287"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332168-Master%20-%205.8.0%20%20%28was%3A%20comms%29/topic/misc/near/323014287" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Håkan Svensson <a href="https://leamas.github.io/zulip-archive/stream/332168-Master---5.2E8.2E0--.28was.3A-comms.29/topic/misc.html#323014287">(Jan 23 2023 at 13:04)</a>:</h4>
+<p><span class="user-mention" data-user-id="517002">@Dave Register</span> <br>
+Could we in some way adapt the functions below to respect Windows DPI scaling?<br>
+All set in pluginmanager.cpp<br>
+I see for example the "GetOCPNGUIToolScaleFactor_PlugIn" is used to scale images in Dashboard Preferences.<br>
+The idea is of course to get a general function instead of scaling every single item.<br>
+Håkan</p>
+<p>wxFont *OCPNGetFont(wxString TextElement, int default_size) {<br>
+  return FontMgr::Get().GetFont(TextElement, default_size);<br>
+}</p>
+<p>wxFont *GetOCPNScaledFont_PlugIn(wxString TextElement, int default_size) {<br>
+  return GetOCPNScaledFont(TextElement, default_size);<br>
+}</p>
+<p>double GetOCPNGUIToolScaleFactor_PlugIn(int GUIScaleFactor) {<br>
+  return g_Platform-&gt;GetToolbarScaleFactor(GUIScaleFactor);<br>
+}</p>
+<p>double GetOCPNGUIToolScaleFactor_PlugIn() {<br>
+  return g_Platform-&gt;GetToolbarScaleFactor(g_GUIScaleFactor);<br>
+}</p>
+
+
+
+<a name="323051857"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332168-Master%20-%205.8.0%20%20%28was%3A%20comms%29/topic/misc/near/323051857" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Dave Register <a href="https://leamas.github.io/zulip-archive/stream/332168-Master---5.2E8.2E0--.28was.3A-comms.29/topic/misc.html#323051857">(Jan 23 2023 at 15:39)</a>:</h4>
+<p>Could be.  I'll take a look at some code.</p>
+
+
+
+<a name="323155091"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332168-Master%20-%205.8.0%20%20%28was%3A%20comms%29/topic/misc/near/323155091" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Dave Register <a href="https://leamas.github.io/zulip-archive/stream/332168-Master---5.2E8.2E0--.28was.3A-comms.29/topic/misc.html#323155091">(Jan 24 2023 at 02:48)</a>:</h4>
+<p>Having a look at "GetOCPNScaledFont_PlugIn()", I find that it is a wrapper for "OCPNGetFont()", with addition that it scales the font up a bit on touch-enabled systems.  The idea here is that touch systems are generally small, so we need to make sure the fonts are reasonably readable on these systems.  It is an old leftover from early Android code.<br>
+It could be modified to include wxWidgets DIP scaling, I think.  Certainly worth a try.   I'll do that, and see what happens to Dashboard.</p>
+
+
+
+<a name="323184454"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332168-Master%20-%205.8.0%20%20%28was%3A%20comms%29/topic/misc/near/323184454" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Håkan Svensson <a href="https://leamas.github.io/zulip-archive/stream/332168-Master---5.2E8.2E0--.28was.3A-comms.29/topic/misc.html#323184454">(Jan 24 2023 at 07:55)</a>:</h4>
+<p>"GetOCPNGUIToolScaleFactor_PlugIn" would be the only of these with a significant use for plugin images. So this would be a good test I think?</p>
+<p>"GetOCPNScaledFont_PlugIn" seems not used by any inbound plugin.<br>
+"GetOCPNGUIToolScaleFactor_PlugIn" is used by Dashboard, Grib and WMM<br>
+"GetOCPNGUIScaledFont_PlugIn" is used by Grip for tables.</p>
+
+
+
+<a name="357037637"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332168-Master%20-%205.8.0%20%20%28was%3A%20comms%29/topic/misc/near/357037637" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Alec Leamas <a href="https://leamas.github.io/zulip-archive/stream/332168-Master---5.2E8.2E0--.28was.3A-comms.29/topic/misc.html#357037637">(May 09 2023 at 16:21)</a>:</h4>
+<p><strong>Mike Rossiter</strong> </p>
+<p>I'm having problems with <a href="https://github.com/opencpn/OpenCPN/issues/3200">#3200</a>. Have you any chance to make my simple test: rebuild OpenCPN from master, create a route and activate it. When Håkan does that, it's de-activated more or less directly, but I cannot reproduce it.</p>
+<p>If you do, please report back in the bug.</p>
+
+
+
+<a name="357040075"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332168-Master%20-%205.8.0%20%20%28was%3A%20comms%29/topic/misc/near/357040075" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Pavel Kalian <a href="https://leamas.github.io/zulip-archive/stream/332168-Master---5.2E8.2E0--.28was.3A-comms.29/topic/misc.html#357040075">(May 09 2023 at 16:29)</a>:</h4>
+<p>I can't reproduce it on Linux, haven't tried any other platform yet</p>
+
+
+
+<a name="357042852"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332168-Master%20-%205.8.0%20%20%28was%3A%20comms%29/topic/misc/near/357042852" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Alec Leamas <a href="https://leamas.github.io/zulip-archive/stream/332168-Master---5.2E8.2E0--.28was.3A-comms.29/topic/misc.html#357042852">(May 09 2023 at 16:39)</a>:</h4>
+<p>hm... at a second thougt I think Mike is away  doing you-know-what. Let's see if Håkan makes a try with a freash configuration first. If it does not help I would really appreciate if you had some  time to make a windows test.</p>
+
+
+
+<a name="358404776"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332168-Master%20-%205.8.0%20%20%28was%3A%20comms%29/topic/misc/near/358404776" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Alec Leamas <a href="https://leamas.github.io/zulip-archive/stream/332168-Master---5.2E8.2E0--.28was.3A-comms.29/topic/misc.html#358404776">(May 15 2023 at 09:33)</a>:</h4>
+<p>mystified,again. Working with pluginmanager.cpp I find code below. Since <code>wxCHECK_VERSION(3, 0, 0)</code> is true since long, this method just returns false in all cases.</p>
+<p>OTOH,  AddLocaleCatalog is part of the plugin API, as usual without a single comment.   What's the story here, if any?</p>
+<p><span class="user-mention" data-user-id="573239">@Pavel Kalian</span>  <span class="user-mention" data-user-id="517002">@Dave Register</span> </p>
+<div class="codehilite"><pre><span></span><code>bool AddLocaleCatalog(wxString catalog) {
+#if wxUSE_XLOCALE || !wxCHECK_VERSION(3, 0, 0)
+
+  if (plocale_def_lang) {
+    // Add this catalog to the persistent catalog array
+    g_locale_catalog_array.Add(catalog);
+
+    return plocale_def_lang-&gt;AddCatalog(catalog);
+  } else
+#endif
+    return false;
+}
+</code></pre></div>
+
+
+
+<a name="358405534"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332168-Master%20-%205.8.0%20%20%28was%3A%20comms%29/topic/misc/near/358405534" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Alec Leamas <a href="https://leamas.github.io/zulip-archive/stream/332168-Master---5.2E8.2E0--.28was.3A-comms.29/topic/misc.html#358405534">(May 15 2023 at 09:36)</a>:</h4>
+<p>oops, forget it. Sorry for the noise...</p>
+
+
+
+<a name="358418219"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332168-Master%20-%205.8.0%20%20%28was%3A%20comms%29/topic/misc/near/358418219" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Pavel Kalian <a href="https://leamas.github.io/zulip-archive/stream/332168-Master---5.2E8.2E0--.28was.3A-comms.29/topic/misc.html#358418219">(May 15 2023 at 10:34)</a>:</h4>
+<p>Isn't this the other way around due to the <code>!</code>? It  was simply returning false on versions prior to 3.0.0 where the extended locale support did not work, but now always does  add the catalog (the code is full of this same check).</p>
+
+
+
+<a name="358450606"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332168-Master%20-%205.8.0%20%20%28was%3A%20comms%29/topic/misc/near/358450606" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Alec Leamas <a href="https://leamas.github.io/zulip-archive/stream/332168-Master---5.2E8.2E0--.28was.3A-comms.29/topic/misc.html#358450606">(May 15 2023 at 12:52)</a>:</h4>
+<p>Yes, see my last post. Again, sorry for the noise.</p>
+
+
+
+<a name="359092674"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332168-Master%20-%205.8.0%20%20%28was%3A%20comms%29/topic/misc/near/359092674" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Alec Leamas <a href="https://leamas.github.io/zulip-archive/stream/332168-Master---5.2E8.2E0--.28was.3A-comms.29/topic/misc.html#359092674">(May 17 2023 at 22:24)</a>:</h4>
+<p>I have persuaded JetBrains to give me a free open-source license to their tools including CLion, the  C/C++ IDE. It has a good reputation. Still clumsy for me, lot's of things to learn.</p>
+<p>I'll come back here when I have more to say about it.</p>
+
+
+
+<hr><p>Last updated: Oct 05 2023 at 09:43 UTC</p>
+</html>

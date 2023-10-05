@@ -1,0 +1,144 @@
+<html>
+<head><meta charset="utf-8"><title>Building for earlier than OCPN v5.6 · Git Prowess &amp; Advice · Zulip Chat Archive</title></head>
+<h2>Stream: <a href="https://leamas.github.io/zulip-archive/stream/376294-Git-Prowess-.26-Advice/index.html">Git Prowess &amp; Advice</a></h2>
+<h3>Topic: <a href="https://leamas.github.io/zulip-archive/stream/376294-Git-Prowess-.26-Advice/topic/Building.20for.20earlier.20than.20OCPN.20v5.2E6.html">Building for earlier than OCPN v5.6</a></h3>
+
+<hr>
+
+<base href="https://opencpn.zulipchat.com">
+
+<head><link href="https://leamas.github.io/zulip-archive/style.css" rel="stylesheet"></head>
+
+<a name="341151709"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/376294-Git%20Prowess%20%26%20Advice/topic/Building%20for%20earlier%20than%20OCPN%20v5.6/near/341151709" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Tony Voss <a href="https://leamas.github.io/zulip-archive/stream/376294-Git-Prowess-.26-Advice/topic/Building.20for.20earlier.20than.20OCPN.20v5.2E6.html#341151709">(Mar 11 2023 at 16:11)</a>:</h4>
+<p>So finally, I am building remotely for all relevant platforms - thank you for your patience and support.</p>
+<p>Now a user of the JS plugin still on OCPN 5.6.2 has hit a snag.  I started doing sensibility checks on outgoing NMEA0186 sentences and check they start with $.  This has stopped him sending AIS sentences which start with !<br>
+Easy to fix code-wise but...<br>
+When on Github Desktop  I attempted to switch back to the relevant branch (and wx3.1.5) I get the error:</p>
+<div class="codehilite"><pre><span></span><code>fatal: failed to unpack tree object 6369d95ca4c42053ec2ccb1f880e19aadda1e820
+error: Submodule &#39;opencpn-libs&#39; could not be updated.
+error: Cannot update submodule:
+    opencpn-libs
+Aborting
+</code></pre></div>
+<p>So how do I now go back?</p>
+
+
+
+<a name="341331908"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/376294-Git%20Prowess%20%26%20Advice/topic/Building%20for%20earlier%20than%20OCPN%20v5.6/near/341331908" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Alec Leamas <a href="https://leamas.github.io/zulip-archive/stream/376294-Git-Prowess-.26-Advice/topic/Building.20for.20earlier.20than.20OCPN.20v5.2E6.html#341331908">(Mar 12 2023 at 20:18)</a>:</h4>
+<p>Sorry, long essay ahead.</p>
+<p>Part of this problem is the use of Github Desktop (GD).  Im saying this without even testing it. However, I have used git since it started to become popular and have seen multiple attempts to create a git GUI. They have all failed, as I think this also will. </p>
+<p>There are two reasons. One is that as soon as you need to do something more advanced or just uncommon, the GUI does not support it. It just cannot, since the underlying data model is too complex ti be visible in a GUI. The net result becomes that one does the simple work in GD and more complicated tasks in the CLI. But what is the point with a GUI for the simple tasks, tasks which are simple also in the CLI?</p>
+<p>The other reasons is how to get help. Trying to google what you described here is probably hard, the search terms are not that specific. OTOH, if you use the command line the command you want to do is something you can search for and get usable results. And, important, this way you will reach out also to the git experts which definitely does not nedd ur use any gui like GD.</p>
+<p>TL;DR: Don't use Github Desktop. (more coming)</p>
+
+
+
+<a name="341332692"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/376294-Git%20Prowess%20%26%20Advice/topic/Building%20for%20earlier%20than%20OCPN%20v5.6/near/341332692" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Alec Leamas <a href="https://leamas.github.io/zulip-archive/stream/376294-Git-Prowess-.26-Advice/topic/Building.20for.20earlier.20than.20OCPN.20v5.2E6.html#341332692">(Mar 12 2023 at 20:28)</a>:</h4>
+<p>As for your problem it seems that you are in a bad place w r t opencpn-libs.  Assuming you have the branches <em>new</em> and <em>old</em>; you have checked out <em>new</em> and want to checkout <em>old</em>.  What happens when you do <code>git checkout -f --no-recurse-submodules old</code>? Actually assuming more or less the same thing, but we need a starting point</p>
+
+
+
+<a name="341458219"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/376294-Git%20Prowess%20%26%20Advice/topic/Building%20for%20earlier%20than%20OCPN%20v5.6/near/341458219" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Tony Voss <a href="https://leamas.github.io/zulip-archive/stream/376294-Git-Prowess-.26-Advice/topic/Building.20for.20earlier.20than.20OCPN.20v5.2E6.html#341458219">(Mar 13 2023 at 13:17)</a>:</h4>
+<p>Building for wx3.1.5 from Terminal (so Alec happy).<br>
+But it is not recompiling my src edits.<br>
+It does use the updated PKG_VERSION from Plugin.cmake - this appears in the build and in the details when loaded by the plugin manager.  But the changed code in src not updated.<br>
+$git status confirms on correct branch and nothing to commit and tree clean.<br>
+When I look on-line on github, the changes are there.<br>
+Perhaps the old compiled code is cached?<br>
+How can I clear the cache for sd3.1.4 build pease?  There is no  macos-cache-stamp file with this version.</p>
+
+
+
+<a name="341477994"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/376294-Git%20Prowess%20%26%20Advice/topic/Building%20for%20earlier%20than%20OCPN%20v5.6/near/341477994" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Alec Leamas <a href="https://leamas.github.io/zulip-archive/stream/376294-Git-Prowess-.26-Advice/topic/Building.20for.20earlier.20than.20OCPN.20v5.2E6.html#341477994">(Mar 13 2023 at 14:30)</a>:</h4>
+<p>Could you be more specific about what you are doing? local build? for what platform? What exactly is not updated? </p>
+<p>I did not say not to use IDEs in general, they can be very useful. Just not for git source management.</p>
+
+
+
+<a name="341478462"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/376294-Git%20Prowess%20%26%20Advice/topic/Building%20for%20earlier%20than%20OCPN%20v5.6/near/341478462" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Alec Leamas <a href="https://leamas.github.io/zulip-archive/stream/376294-Git-Prowess-.26-Advice/topic/Building.20for.20earlier.20than.20OCPN.20v5.2E6.html#341478462">(Mar 13 2023 at 14:32)</a>:</h4>
+<p>Nothing is cached when it comes to the "real" source (unless some unknown tool plays tricks with you).  Caching is only made for dependencies on some platforms.</p>
+
+
+
+<a name="341479762"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/376294-Git%20Prowess%20%26%20Advice/topic/Building%20for%20earlier%20than%20OCPN%20v5.6/near/341479762" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Alec Leamas <a href="https://leamas.github.io/zulip-archive/stream/376294-Git-Prowess-.26-Advice/topic/Building.20for.20earlier.20than.20OCPN.20v5.2E6.html#341479762">(Mar 13 2023 at 14:36)</a>:</h4>
+<p>More questions:</p>
+<ul>
+<li>Which git repository? (url)</li>
+<li>which branch ?</li>
+</ul>
+
+
+
+<a name="341499124"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/376294-Git%20Prowess%20%26%20Advice/topic/Building%20for%20earlier%20than%20OCPN%20v5.6/near/341499124" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Tony Voss <a href="https://leamas.github.io/zulip-archive/stream/376294-Git-Prowess-.26-Advice/topic/Building.20for.20earlier.20than.20OCPN.20v5.2E6.html#341499124">(Mar 13 2023 at 15:39)</a>:</h4>
+<p>I am trying to update the JavaScript used by OCPN5.6.2.<br>
+The branch is v2.0.3 in my repository.<br>
+If I build locally, all is well.<br>
+If I build remotely the builds are delivered into <a href="https://cloudsmith.io/~opencpn/repos/javascript-prod/packages/">my repository</a> correctly.  If I download the MacOS tarball and import it, the  metadata is correct (updated version number as expected but the plugin code has not been updated.  The code changes have not happened.<br>
+src/version.h includes the line<br>
+<code>#define     PLUGIN_VERSION_DATE "2023:03:13"</code><br>
+This date is displayed in a new console script.  What actually appears is <code>2023:02:03</code> which is from an earlier version.<br>
+Other updates to functional changes in the code are not active.</p>
+<p>I wondered whether my branches have got in a twist, so I have now created a new branch <code>v2.0.4-wx3.1.2</code>, fetched it to my  local copy, edited the version in <code>Plugin.cmake</code> and <code>src/version.h </code>file and pushed it up.  Same thing - the version number from <code>Plugin.cmake</code> is updated but not that from version.h nor the changes in <code>OCPNapis.cpp</code></p>
+
+
+
+<a name="341582373"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/376294-Git%20Prowess%20%26%20Advice/topic/Building%20for%20earlier%20than%20OCPN%20v5.6/near/341582373" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Alec Leamas <a href="https://leamas.github.io/zulip-archive/stream/376294-Git-Prowess-.26-Advice/topic/Building.20for.20earlier.20than.20OCPN.20v5.2E6.html#341582373">(Mar 13 2023 at 22:05)</a>:</h4>
+<p>Sorry, life takes some toll.  Two important things:</p>
+<ul>
+<li>What does <code>git rev-parse v2.0.3</code>say?</li>
+<li>I need a link to the build logs...</li>
+</ul>
+
+
+
+<a name="341590093"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/376294-Git%20Prowess%20%26%20Advice/topic/Building%20for%20earlier%20than%20OCPN%20v5.6/near/341590093" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Tony Voss <a href="https://leamas.github.io/zulip-archive/stream/376294-Git-Prowess-.26-Advice/topic/Building.20for.20earlier.20than.20OCPN.20v5.2E6.html#341590093">(Mar 13 2023 at 23:00)</a>:</h4>
+<p>Thanks so much for looking into this, Alec.</p>
+<div class="codehilite"><pre><span></span><code>tony@Janov JavaScript_pi % git rev-parse v2.0.3-wx3.1.2
+3a5521ad71a66b2e93eddb42a433335348b7e905
+tony@Janov JavaScript_pi % git rev-parse v2.0.4-wx3.1.2
+10ae0189a8cca0dc8c03e5945106b4b2fc13cdbd
+</code></pre></div>
+<p><a href="https://app.circleci.com/pipelines/github/antipole2/JavaScript_pi/248/workflows/9f3f3431-c9f6-4908-a0b6-daad998af8ec">Builds here.</a></p>
+
+
+
+<a name="341636157"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/376294-Git%20Prowess%20%26%20Advice/topic/Building%20for%20earlier%20than%20OCPN%20v5.6/near/341636157" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Alec Leamas <a href="https://leamas.github.io/zulip-archive/stream/376294-Git-Prowess-.26-Advice/topic/Building.20for.20earlier.20than.20OCPN.20v5.2E6.html#341636157">(Mar 14 2023 at 07:12)</a>:</h4>
+<p>if you look into the build step logs, there is a <em>Checkout code</em> step. In the link you provided, this says it has checked out  10ae018 i. e., v2.0.4-wx3.1.2  according to what you provided above.</p>
+<p>git has a very strong commitment: a given hash is always refers to the same code. That is, if you check out v2.0.4-wx3.1.2 locally  and verify that it indeed is 10ae018 you have the same code as the remote build.  You could then track down what the scripts in ci/ does and make the same steps locally. </p>
+<p>Bottom line: 10ae018 is always the same code, local or remote. If there are differences, it's about what's done with this code. That is, some build script like <em>ci/circleci-build-macos.sh</em> and you make different things. What such a difference would be is hard for me to tell.</p>
+
+
+
+<a name="341700750"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/376294-Git%20Prowess%20%26%20Advice/topic/Building%20for%20earlier%20than%20OCPN%20v5.6/near/341700750" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Tony Voss <a href="https://leamas.github.io/zulip-archive/stream/376294-Git-Prowess-.26-Advice/topic/Building.20for.20earlier.20than.20OCPN.20v5.2E6.html#341700750">(Mar 14 2023 at 12:14)</a>:</h4>
+<p><strong>Mystery solved - kind of..</strong>.<br>
+The build does use the correct commit 10ae018...<br>
+I did a local build and got the same peculiar result... new version imported and installed and old code run.<br>
+Inspection of the OCPN log shows as expected.<br>
+I then did a restart of OpenCPN5.6.2 and all well thereafter!<br>
+So, it seems, OCPN5.6.2 was apparently re-installing the plugin and saying so and logging that but is not unloading the old code and then using it instead of the updated code <span aria-label="face with spiral eyes" class="emoji emoji-1f635-200d-1f4ab" role="img" title="face with spiral eyes">:face_with_spiral_eyes:</span> <br>
+Sorry to take you on a wild goose chase Alec.<br>
+Maybe an obscure bug in OCPN5.6.2 which will die with that version.</p>
+
+
+
+<a name="341787415"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/376294-Git%20Prowess%20%26%20Advice/topic/Building%20for%20earlier%20than%20OCPN%20v5.6/near/341787415" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Alec Leamas <a href="https://leamas.github.io/zulip-archive/stream/376294-Git-Prowess-.26-Advice/topic/Building.20for.20earlier.20than.20OCPN.20v5.2E6.html#341787415">(Mar 14 2023 at 13:06)</a>:</h4>
+<p>Glad to help, and happy that it works for you.  </p>
+<p>I think that what this is all about it just some more hours in the git trenches to get combat experience, so to speak.</p>
+
+
+
+<hr><p>Last updated: Oct 05 2023 at 09:43 UTC</p>
+</html>

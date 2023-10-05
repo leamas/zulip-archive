@@ -1,0 +1,26 @@
+[
+    {
+        "content": "<p><span class=\"user-mention\" data-user-id=\"399510\">@Alec Leamas</span>  this is the linker message when building with VS2022/wxWidgets 3.2+<br>\n*Severity   Code    Description Project File    Line    Suppression State<br>\nError   LNK2019 unresolved external symbol _WinMain@16 referenced in function \"int __cdecl __scrt_common_main_seh(void)\" (?__scrt_common_main_seh@@YAHXZ)   opencpn-cmd D:\\transmitterdan\\OpenCPN\\build\\MSVCRT.lib(exe_winmain.obj) 1   <br>\nError   LNK1120 1 unresolved externals  opencpn-cmd D:\\transmitterdan\\OpenCPN\\build\\RelWithDebInfo\\opencpn-cmd.exe  1   \n*</p>",
+        "id": 303235398,
+        "sender_full_name": "Dan Dickey",
+        "timestamp": 1665398335
+    },
+    {
+        "content": "<p>Now, my windows knowledge is, well, \"unsatisfactory\". That said, isn't WinMain the entry point for a Gui application?  </p>\n<p>Part of the game is the <code>wxIMPLEMENT_APP_CONSOLE(CliApp)</code> in the very end of <em>src/console.cpp</em>. This is assumed to create the correct entry point, something similar to <code>int main(int argc, char** argv)</code>on  non-windows platforms. Is it redefined somehow in 3.2? Without it, compilation fails also on 2017/2019, IIRC with a similar message.</p>\n<p>Is there some kind of switch in VS to define a project as either console or GUI? If  so, is it applied in the right way to opencpn-cmd?</p>",
+        "id": 303236922,
+        "sender_full_name": "Alec Leamas",
+        "timestamp": 1665399142
+    },
+    {
+        "content": "<p>Yes, the linker is told to build a CONSOLE application, so I don't know why it is looking for winmain().</p>",
+        "id": 303249648,
+        "sender_full_name": "Dan Dickey",
+        "timestamp": 1665404443
+    },
+    {
+        "content": "<p>OK, seems that this is about the build environment. That the cli app doesn't have a winmain() is expected. </p>\n<p>I looked around earlier, don't find the stackoverflow link now. But it was basically about using /ENTRY to hardcode the entrypoint, probably <em>tmain</em> or <em>main</em>. Something to give a try?</p>",
+        "id": 303261666,
+        "sender_full_name": "Alec Leamas",
+        "timestamp": 1665409049
+    }
+]

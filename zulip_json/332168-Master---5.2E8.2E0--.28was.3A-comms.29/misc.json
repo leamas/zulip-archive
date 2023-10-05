@@ -1,0 +1,1202 @@
+[
+    {
+        "content": "<p><span class=\"user-mention\" data-user-id=\"518981\">@Github Bot</span>  #2749</p>",
+        "id": 293907522,
+        "sender_full_name": "Alec Leamas",
+        "timestamp": 1660746414
+    },
+    {
+        "content": "<p><strong><a href=\"https://github.com/OpenCPN/OpenCPN/issues/2749\">opencpn/OpenCPN#2749</a> - Slow terminal -&gt; Poor GPS coverage</strong><br>\nCreated by <strong><a href=\"https://github.com/leamas\">leamas</a></strong><br>\nStatus - <strong>Open</strong></p>\n<blockquote>\n<p><strong>Describe the bug</strong><br>\nWhen using a vncviewer remote session against a headless RPi4 the GPS coverage drops to 0 in random intervals. Replacing the vnc session with a HDMI connected physical screen makes the problem go away, the GPS works as expected.</p>\n<p><strong>To Reproduce</strong><br>\nSteps to reproduce the behavior:</p>\n<ol>\n<li>Start the RPi running Raspbian and Flatpak, Opencpn 5.6.0. GPS connected via serial interface on the 40-pin GPIO header.</li>\n<li>Watch the round icon top-right  randomly become red, no GPS coverage</li>\n</ol>\n<p><strong>Expected behavior</strong><br>\nStable GPS coverage</p>\n<p><strong>Additional context</strong><br>\nThis is obviously some loop updating the screen which is so slow that it affects the communication. There is not much point examining this issue until the communications rewrite is done. However, once done this issue should IMHO be a test case.</p>\n</blockquote>",
+        "id": 293907524,
+        "sender_full_name": "Github Bot",
+        "timestamp": 1660746414
+    },
+    {
+        "content": "<p><span class=\"user-mention\" data-user-id=\"522486\">@Håkan Svensson</span>  IIRC, there is besides the data on <a href=\"http://signalk.stupan.se\">signalk.stupan.se</a> 10012/tcp also an UDP stream. </p>\n<p>Am I right? If so, which port is it on?</p>",
+        "id": 294132951,
+        "sender_full_name": "Alec Leamas",
+        "timestamp": 1660843457
+    },
+    {
+        "content": "<p>Ah... that UDP data was local, sorry. Could you make it available without to much work (assuming it's not the same as the TCP data)?</p>",
+        "id": 294133207,
+        "sender_full_name": "Alec Leamas",
+        "timestamp": 1660843549
+    },
+    {
+        "content": "<p>Sorry again... This is actually a lot of work, you'll need to get my address and I would net to set up firewalls and forwarding. </p>\n<p>Let's rephrase that question: The data which you sent over a local UDP port,  have you got that in a file I could get?</p>",
+        "id": 294134182,
+        "sender_full_name": "Alec Leamas",
+        "timestamp": 1660843820
+    },
+    {
+        "content": "<p>Alec..<br>\nHere are some files I use:<br>\nA .bat file I use in Win to play VDR-data to an IP-port as UDP.<br>\nThe VDR file to play.<br>\n<a href=\"/user_uploads/33951/5GWy7qj3Q_A0_g6g06y8HsmG/VDR_Hakefjord.bat\">VDR_Hakefjord.bat</a> <br>\n<a href=\"/user_uploads/33951/5dOW2YBnHX8S4jVf0--Ncfik/Hakefjord.txt\">Hakefjord.txt</a></p>",
+        "id": 294137830,
+        "sender_full_name": "Håkan Svensson",
+        "timestamp": 1660844943
+    },
+    {
+        "content": "<p>Alec..<br>\nForgot:<br>\nI also use Dan's python file to make the real job. Attached.<br>\n<a href=\"/user_uploads/33951/ofVFSYLDuB9511QDqEYUhjDu/VDRplayer.py\">VDRplayer.py</a></p>",
+        "id": 294143400,
+        "sender_full_name": "Håkan Svensson",
+        "timestamp": 1660846666
+    },
+    {
+        "content": "<p>Thanks!   Most of this will committed into tests/testdata when I'm done.</p>",
+        "id": 294144871,
+        "sender_full_name": "Alec Leamas",
+        "timestamp": 1660847130
+    },
+    {
+        "content": "<p>I have pushed a structural change splitting comm_util into comm_util and comm_drv_factory. Problematic when a thing like \"utils\" has dependencies on the  complete driver hierarchy.  </p>\n<p>comm_bridge and comm_decode now builds as part of the model. That is, all is set for making unit tests for them. Once there are such tests, I might look more into the priorities stuff.   Time for bed.</p>",
+        "id": 294160127,
+        "sender_full_name": "Alec Leamas",
+        "timestamp": 1660852809
+    },
+    {
+        "content": "<p>One of those moments: the comm branch does not build. I'm on it.</p>",
+        "id": 294252015,
+        "sender_full_name": "Alec Leamas",
+        "timestamp": 1660911116
+    },
+    {
+        "content": "<p>Fixed.</p>",
+        "id": 294252689,
+        "sender_full_name": "Alec Leamas",
+        "timestamp": 1660911372
+    },
+    {
+        "content": "<p><span class=\"user-mention\" data-user-id=\"518981\">@Github Bot</span> #2752</p>",
+        "id": 294525346,
+        "sender_full_name": "Alec Leamas",
+        "timestamp": 1661075385
+    },
+    {
+        "content": "<p><strong><a href=\"https://github.com/OpenCPN/OpenCPN/issues/2752\">opencpn/OpenCPN#2752</a> - CI: MacOS builds broken</strong><br>\nCreated by <strong><a href=\"https://github.com/leamas\">leamas</a></strong><br>\nStatus - <strong>Open</strong></p>\n<blockquote>\n<p><strong>Describe the bug</strong><br>\nThe MacOS CI builds are broken since ~some time~ at least a week, failing to rsync the macports sources</p>\n<p><strong>To Reproduce</strong></p>\n<ol>\n<li>Make a commit to OpenCPN repo.</li>\n<li>Push</li>\n<li>Watch logs with failing MacOS build</li>\n</ol>\n<p><strong>Expected behavior</strong><br>\nWell...</p>\n<p><strong>Additional context</strong><br>\nTypical error log here: <a href=\"https://app.circleci.com/pipelines/github/leamas/OpenCPN/2215/workflows/663bc861-a648-439a-9c0c-8613af7752ce/jobs/3907\">https://app.circleci.com/pipelines/github/leamas/OpenCPN/2215/workflows/663bc861-a648-439a-9c0c-8613af7752ce/jobs/3907</a></p>\n<p>Currently most OpenCPN work is on the comms branch, so the errors shows up here. Error has showed up for about a week,  last successful build about three weeks ago here: <a href=\"https://app.circleci.com/pipelines/github/leamas/OpenCPN/2185/workflows/3df9046a-f1cb-419c-bb7e-608e0955ee81\">https://app.circleci.com/pipelines/github/leamas/OpenCPN/2185/workflows/3df9046a-f1cb-419c-bb7e-608e0955ee81</a></p>\n</blockquote>",
+        "id": 294525347,
+        "sender_full_name": "Github Bot",
+        "timestamp": 1661075385
+    },
+    {
+        "content": "<p><span class=\"user-mention\" data-user-id=\"517002\">@Dave Register</span>  Looking at AIS_Decoder.  This depends on gFrame, which makes testing hard and overall is a strange dependency. Intend to replace the dialog invoked in <code>OnTimerAIS()</code>  (~370 lines!) with an event variable + handling of it in ocpn_frame.</p>",
+        "id": 294573835,
+        "sender_full_name": "Alec Leamas",
+        "timestamp": 1661107539
+    },
+    {
+        "content": "<p>There is some non-GUI logic here in this timer handler..  Specifically, scrubbing the lists to remove  stale targets.  This should be done independent of GUI considerations, else the list grows without bound.<br>\nOtherwise, I agree with moving the clear GUI aspects to an upstream event.</p>",
+        "id": 294577859,
+        "sender_full_name": "Dave Register",
+        "timestamp": 1661110448
+    },
+    {
+        "content": "<p>Shall I take a look at it?</p>",
+        "id": 294577879,
+        "sender_full_name": "Dave Register",
+        "timestamp": 1661110479
+    },
+    {
+        "content": "<p>Status:<br>\nI have finished a working model of socketCAN interface for linux.  Works fine in VCAN, or virtual mode.  Can playback socketCAN logfiles without apparent error.  Waiting for rPI hat hardware to test with live data.<br>\nOne more driver to build:  signalK network stream.<br>\nMeanwhile, refactoring some of options.cpp to reduce the huge class size. Starting with \"Connections\", since this is known to need rework for comms upgrade.</p>",
+        "id": 295158091,
+        "sender_full_name": "Dave Register",
+        "timestamp": 1661400318
+    },
+    {
+        "content": "<p><span class=\"user-mention\" data-user-id=\"517002\">@Dave Register</span>  Did some clean up in my local branches, and was left with v5.6.x which IMO needs an update. Pushed new branch v5.6.x-update which basically brings v.5.6.x to same state as Release_5.6.2-2, just adding the unfortunate renormalizations required for some windows files.</p>\n<p>It is ready to be merged into v5.6.x; leaving that to you for final review.</p>",
+        "id": 295283552,
+        "sender_full_name": "Alec Leamas",
+        "timestamp": 1661450882
+    },
+    {
+        "content": "<p>I see the light in the tunnel. However, not sure I can complete today. </p>\n<p>Furthermore, this will be a large diff. <span class=\"user-mention\" data-user-id=\"517002\">@Dave Register</span> : will we collide? Have you also a large \"untangling\" diff under way?</p>",
+        "id": 295382210,
+        "sender_full_name": "Alec Leamas",
+        "timestamp": 1661505418
+    },
+    {
+        "content": "<p>I'm working options.cpp at the moment, which will also involve ConnectionsParams.cpp.</p>",
+        "id": 295416302,
+        "sender_full_name": "Dave Register",
+        "timestamp": 1661518174
+    },
+    {
+        "content": "<p>I have splitted Connectionsparam. It's rather straight-forward, two classes, two files. We probably end up in something similar.</p>\n<p>My dependencies has exploded again, it's about the base: routeman, Route, Track , etc. May very well end up in nothing.  About to leave for AW with some friends, sort of farewell  to a pair which are moving to another town.</p>",
+        "id": 295421669,
+        "sender_full_name": "Alec Leamas",
+        "timestamp": 1661520086
+    },
+    {
+        "content": "<p>Pushing what I have in comm-untangle branch. It compiles and survives my very primitive smoke test. As  you see, Connectionparams is still untouched.</p>",
+        "id": 295422315,
+        "sender_full_name": "Alec Leamas",
+        "timestamp": 1661520320
+    },
+    {
+        "content": "<p>Shall I review and merge comm-untangle?  Or do you want to polish some more?</p>",
+        "id": 295539398,
+        "sender_full_name": "Dave Register",
+        "timestamp": 1661568193
+    },
+    {
+        "content": "<p>Yes, please do. It's a  small step, but in the right direction.</p>",
+        "id": 295545776,
+        "sender_full_name": "Alec Leamas",
+        "timestamp": 1661576066
+    },
+    {
+        "content": "<p>I looked at it.<br>\nOne thing that I don't love is that plugins must listen() in order to receive JSON messages.  At first thought, that breaks instantly all legacy plugins that do any kind of graphics GUI (e.g. GRIB, o-charts, o-draw, etc).  JSON messages are use to inform plugins of interesting core configuration state, especially for OpenGL graphics control.<br>\nThere may be more...</p>",
+        "id": 295604447,
+        "sender_full_name": "Dave Register",
+        "timestamp": 1661610618
+    },
+    {
+        "content": "<p>Reading more closely, I see that the above comment re listening for JSON applies only to AIS target messages.  Correct?  If so, I have no complaints.  AFAIK, there are no plugins that process AIS directly today.</p>",
+        "id": 295611261,
+        "sender_full_name": "Dave Register",
+        "timestamp": 1661614424
+    },
+    {
+        "content": "<p>All pushed.  Thanks for the code.</p>",
+        "id": 295619836,
+        "sender_full_name": "Dave Register",
+        "timestamp": 1661619384
+    },
+    {
+        "content": "<p>There should not be any difference w r t how the JSON messages are sent. I have just moved existing code from  AIS_decoder to ui parts (ais_info_gui and pluginmanager). </p>\n<p>If the existing code is/was correct is of course another question....</p>",
+        "id": 295670848,
+        "sender_full_name": "Alec Leamas",
+        "timestamp": 1661666463
+    },
+    {
+        "content": "<blockquote>\n<p>AFAIK, there are no plugins that process AIS directly today.</p>\n</blockquote>\n<p>If we're talking about the same thing Radar_pi uses AIS info. <br>\nFor example <a href=\"https://github.com/opencpn-radar-pi/radar_pi/blob/166c2013125a28b9c86e627e4062d9cd5c8b77b5/src/radar_pi.cpp#L1905\">here</a></p>",
+        "id": 295677885,
+        "sender_full_name": "Håkan Svensson",
+        "timestamp": 1661673102
+    },
+    {
+        "content": "<p><span class=\"user-mention\" data-user-id=\"517002\">@Dave Register</span>  Have untangled the basic mess RoutePoint, Route, TrackPoint and Track using evil #ifdefs. The remaining part is navutil, which is yet another jack of all trades. Pushing some preparation work,  will try to split out the database (this is the real goal) later today or tomorrow.</p>",
+        "id": 295682802,
+        "sender_full_name": "Alec Leamas",
+        "timestamp": 1661676714
+    },
+    {
+        "content": "<p><span class=\"user-mention\" data-user-id=\"399510\">@Alec Leamas</span> <br>\nOK, I pushed all my WIP, no plans for major refactor at the moment.  Working comm drivers.</p>",
+        "id": 295720336,
+        "sender_full_name": "Dave Register",
+        "timestamp": 1661699127
+    },
+    {
+        "content": "<p>Nice. Makes me more comfortable. I do indeed have some more refactoring in the pipe, basic goal to make more things testable i. e., without gui deps..</p>",
+        "id": 295726571,
+        "sender_full_name": "Alec Leamas",
+        "timestamp": 1661702471
+    },
+    {
+        "content": "<p>Looking at that strange x11 fontpicker previously in navutil it doesn't seem to be used at all.</p>\n<p><span class=\"user-mention\" data-user-id=\"517002\">@Dave Register</span>  Do you know the story? Shall we just drop it?</p>",
+        "id": 295747397,
+        "sender_full_name": "Alec Leamas",
+        "timestamp": 1661712567
+    },
+    {
+        "content": "<p>Ancient history.  Let's drop it, if the build completes correctly.</p>",
+        "id": 295750967,
+        "sender_full_name": "Dave Register",
+        "timestamp": 1661715234
+    },
+    {
+        "content": "<p>I completed signalK driver, supporting observables, as well as legacy core and plugin mode operation.  Some small changes in comm_navmsg.  The change hit a fairly large set of files.  Hope you will not have rebase problems.<br>\nNext Step:  Removing all obsolete Datastream parts.</p>",
+        "id": 296508940,
+        "sender_full_name": "Dave Register",
+        "timestamp": 1661998885
+    },
+    {
+        "content": "<p>I haven't really found time  to work  last days. Also stuck on how to handle the unit tests, tried some approaches without luck. Nothing to rebase, so don't worry.</p>",
+        "id": 296680239,
+        "sender_full_name": "Alec Leamas",
+        "timestamp": 1662058476
+    },
+    {
+        "content": "<p>Finally figured out how to arrange a unit test environment.  It's not that beautiful, more like the least ugly of my attempts -- there are multiple others in the trash. </p>\n<p>Now to make more tests.</p>",
+        "id": 296802904,
+        "sender_full_name": "Alec Leamas",
+        "timestamp": 1662119586
+    },
+    {
+        "content": "<p><span class=\"user-mention\" data-user-id=\"517002\">@Dave Register</span>  AIVDO: I see that handling of these messages is disabled in comm_bridge. What's the story here?</p>",
+        "id": 297122326,
+        "sender_full_name": "Alec Leamas",
+        "timestamp": 1662311377
+    },
+    {
+        "content": "<p>Needs work.  And I do not have a live source of AIVDO to test, at the moment.  Might have to rig something up to test from a VDR recording.</p>",
+        "id": 297131072,
+        "sender_full_name": "Dave Register",
+        "timestamp": 1662317168
+    },
+    {
+        "content": "<p>Actually you do:  test/testdata/Hakefjord.log is filled with a large number of them. I can make a failing unit test, but cannot really figure out the expected positions with decoding the outer encoding layer ffirst</p>",
+        "id": 297139665,
+        "sender_full_name": "Alec Leamas",
+        "timestamp": 1662324352
+    },
+    {
+        "content": "<p>I have pushed a failing test of !AISVDO messages. It needs testdata (position) to be updated, I cannot decode the binary string right now. However, otherwise I think it's ok, in the very end of tests.cpp.</p>\n<p>Now, the work is to make it pass.</p>",
+        "id": 297144786,
+        "sender_full_name": "Alec Leamas",
+        "timestamp": 1662330144
+    },
+    {
+        "content": "<p>Updated the testdata, should now be OK</p>",
+        "id": 297145620,
+        "sender_full_name": "Alec Leamas",
+        "timestamp": 1662331377
+    },
+    {
+        "content": "<p>OK, I'll take a look at comm_bridge after I get multiplexer settled.</p>",
+        "id": 297158910,
+        "sender_full_name": "Dave Register",
+        "timestamp": 1662348942
+    },
+    {
+        "content": "<p>The multiplexer problems  revealed two things. The first and most basic was that the pointers returned by <code>GetDrivers()</code> was const. This basically made them useless since operations like <code>SendMessage()</code>are non const, the underlying io pipes are stateful. I have revised this so GetDrivers() returns <code>&lt;AbstractCommdriver&gt;</code> rather than the old, buggy <code>&lt;const AbstractCommDriver&gt;</code>. This implied some changes also in multiplexer.cpp which made it compile.</p>\n<p>The second was some mess with the resent message.  I fixed this together with some clean up in   <code>Multiplexer::HandleN0183()</code>, please don't judge me too hard.</p>\n<p>One remaining thing. In multiplexer.cpp around line 223 we have:</p>\n<div class=\"codehilite\"><pre><span></span><code>  if (params.Type == SERIAL || driver-&gt;iface != target_driver-&gt;iface) {\n</code></pre></div>\n<p>As I read this, the  <code>params.Type  == SERIAL</code> part is about testing that params has been set, either by drv_serial or drv_net. However, ConnParams default CTOR actually sets Type to SERIAL so  the test might succeed for any random driver. I  don't have the complete picture, but it looks suspicious. If it actually is as intended it might  be worth a comment.</p>",
+        "id": 297205263,
+        "sender_full_name": "Alec Leamas",
+        "timestamp": 1662375318
+    },
+    {
+        "content": "<p>There are also some unused boolean flags  around line 227. I left them since I guessed you have plans for them (?)</p>",
+        "id": 297205672,
+        "sender_full_name": "Alec Leamas",
+        "timestamp": 1662375514
+    },
+    {
+        "content": "<p>\"but it looks suspicious\"<br>\nGood catch. I'll fix it.</p>",
+        "id": 297226426,
+        "sender_full_name": "Dave Register",
+        "timestamp": 1662384230
+    },
+    {
+        "content": "<p>Thanks for scrubbing multiplexer.  All that excessive intermediate variable stuff was to help me understand what exactly was happening.</p>",
+        "id": 297227198,
+        "sender_full_name": "Dave Register",
+        "timestamp": 1662384551
+    },
+    {
+        "content": "<p><span class=\"user-mention silent\" data-user-id=\"517002\">Dave Register</span> <a href=\"#narrow/stream/332168-comms/topic/misc/near/297131072\">said</a>:</p>\n<blockquote>\n<p>Needs work.  And I do not have a live source of AIVDO to test, at the moment.  Might have to rig something up to test from a VDR recording.</p>\n</blockquote>\n<p>If still valid I made a VDR just now including AIVDO: (attached)<br>\n<a href=\"/user_uploads/33951/VhcvLztsfpnQuNcChEUEPB0p/VDR_Incl_VDO.txt\">VDR_Incl_VDO.txt</a></p>",
+        "id": 297229387,
+        "sender_full_name": "Håkan Svensson",
+        "timestamp": 1662385525
+    },
+    {
+        "content": "<p><span class=\"user-mention\" data-user-id=\"399510\">@Alec Leamas</span> <br>\nStuck again.  Why in the world does this fail to compile?</p>\n<div class=\"codehilite\"><pre><span></span><code>void CommDriverN0183Net::SendMessage(const NavMsg&amp; msg, const NavAddr&amp; addr) {\n  auto n0183_msg = std::dynamic_pointer_cast&lt;const Nmea0183Msg &gt;(msg);\n\n  SendSentenceNetwork(n0183_msg.payload.c_str());\n}\n</code></pre></div>\n\n<p>Error is:<br>\n/home/dsr/Projects/opencpn/src/comm_drv_n0183_net.cpp:349:69: error: no matching function for call to ‘dynamic_pointer_cast&lt;const Nmea0183Msg&gt;(const NavMsg&amp;)’</p>",
+        "id": 297235530,
+        "sender_full_name": "Dave Register",
+        "timestamp": 1662388127
+    },
+    {
+        "content": "<p>msg is a reference, not a pointer if I understand this correctly. Easiest path is probably to use <code>make_shared</code> to create a pointer. Short of time now, just skimming your messages for now.</p>",
+        "id": 297240974,
+        "sender_full_name": "Alec Leamas",
+        "timestamp": 1662390353
+    },
+    {
+        "content": "<p>I can do make_shared.  But why go through the trouble of creating a new shared_ptr on the heap, when the data I want (payload) is \"somewhere\" in the nav_msg?  This seems inefficient, and what is the point of having a class hierarchy on NavMsg anyway?</p>",
+        "id": 297246659,
+        "sender_full_name": "Dave Register",
+        "timestamp": 1662392798
+    },
+    {
+        "content": "<blockquote>\n<p>what is the point of having a class hierarchy on NavMsg anyway?</p>\n</blockquote>\n<p>These are the kind of questions that brings you back long in time, why did I do this?  IIRC, this so that for example SendMessage always copes with the same thing. </p>\n<p>But OTOH, class hierarchys are sometimes like temporary variables, a support for the overall design. However NavMsg is part of  AbstractCommdriver,  for example <code> SendMessage(const NavMsg&amp; msg, const NavAddr&amp; addr)</code>. Without a common NavMsg type it's hard to describe a common SendMessage, and the whole things falls apart.</p>",
+        "id": 297258230,
+        "sender_full_name": "Alec Leamas",
+        "timestamp": 1662398433
+    },
+    {
+        "content": "<blockquote>\n<p>But why go through the trouble of creating a new shared_ptr on the heap, when the data I want (payload) is \"somewhere\" in the nav_msg?</p>\n</blockquote>\n<p>Because SendMessage needs a shared pointer to track ownership when a single message (potentially) is sent to many receivers. My first attempt was to let SendMessage create the shared_ptr internally, but it became messy. Turned out that it was easier if caller created the shared_ptr.</p>\n<p>Sorry, don't remember the details :(</p>",
+        "id": 297258498,
+        "sender_full_name": "Alec Leamas",
+        "timestamp": 1662398610
+    },
+    {
+        "content": "<p>Now, remember some details... SendMessage() must take a pointer as argument, this is the only way  it can be generic (polymorphic).</p>",
+        "id": 297263127,
+        "sender_full_name": "Alec Leamas",
+        "timestamp": 1662401461
+    },
+    {
+        "content": "<p>All well and good.<br>\nBut how do I access the Nmea0183Msg and payload?</p>",
+        "id": 297271271,
+        "sender_full_name": "Dave Register",
+        "timestamp": 1662406642
+    },
+    {
+        "content": "<p>Dammit.  You cannot, because I haven't done what I'm talking about: Let SendMessage  take a pointer instead of a NavMsg -- a navmsg is just   a NavMsg, and nothing beyond that. </p>\n<p>I will fix this first thing tomorrow, too late to make anything like this now.  Sorry for not understanding at once.</p>",
+        "id": 297279592,
+        "sender_full_name": "Alec Leamas",
+        "timestamp": 1662413591
+    },
+    {
+        "content": "<p>It's actually more. Big homework tomorrow.</p>",
+        "id": 297279786,
+        "sender_full_name": "Alec Leamas",
+        "timestamp": 1662413797
+    },
+    {
+        "content": "<p>I await your ministrations.</p>",
+        "id": 297291770,
+        "sender_full_name": "Dave Register",
+        "timestamp": 1662425437
+    },
+    {
+        "content": "<p>I pushed all my WIP.  I had to disable cli build steps in cmakelists, due to breakage around ais_decoder, which I need in CommBridge to decode AIVDO.  Not sure how to resolve the cli build source file list, now.</p>\n<p>I suppose I could duplicate the AIVDO decode in CommDecoder, thus keeping things \"pure\".  Lots of duplicated code...<br>\nThoughts?</p>\n<p>Feel free to hack away at my pitiful attempts to make SendMessage() work.  I left a lot of commented efforts as reminders to myself what did not work.</p>",
+        "id": 297299376,
+        "sender_full_name": "Dave Register",
+        "timestamp": 1662434956
+    },
+    {
+        "content": "<p>Pushed updates to all drivers with new signature <code>SendMessage(std::shared_ptr&lt;const NavMsg&gt;, std:.shared_ptr&lt;NavAddr&gt;)</code>.  Somewhat frustrating, I know I have done these changes earlier but they are obviously lost.</p>",
+        "id": 297332854,
+        "sender_full_name": "Alec Leamas",
+        "timestamp": 1662456532
+    },
+    {
+        "content": "<blockquote>\n<p>I suppose I could duplicate the AIVDO decode in CommDecoder, thus keeping things \"pure\". Lots of duplicated code...<br>\nThoughts?</p>\n</blockquote>\n<p>I have also bee struggling with this. My basic thought is that if decoding messages has GUI deps, things are terribly wrong. Possible strategies includes:</p>\n<ol>\n<li>Re-factoring the actual decoding to a separate class/file/header which can be tested. This would be the best solution. On a scale, how impossible is it?</li>\n<li>Using evil #ifdefs to avoid GUI deps in the decoding. Perhaps possible while holding one's nose. </li>\n<li>Duplicating code. This  defeats the very purpose of unit testing, and feels like a bad move.</li>\n</ol>",
+        "id": 297334119,
+        "sender_full_name": "Alec Leamas",
+        "timestamp": 1662457050
+    },
+    {
+        "content": "<p>Made some preliminary work. Conclusion: Factoring out AisMsgDecoder::DecodeSingleVDO perfectly possible.  Will require also handling the target list in a separate class/file/header.</p>",
+        "id": 297342555,
+        "sender_full_name": "Alec Leamas",
+        "timestamp": 1662460757
+    },
+    {
+        "content": "<p>Pushed a new feature branch comm-ais. It has independent files ais_msg_decoder which holds a <code> DecodeSingleVDO()</code> function,   more or less a copy from AIS_Decoder. it should be perfectly testable..</p>\n<p>Also untangled AIS_Decoder from the ais.h include whuch pulls in too much. Left some truly global stuff in AIS_Defs.h, it should probably live elsewhere.</p>",
+        "id": 297350433,
+        "sender_full_name": "Alec Leamas",
+        "timestamp": 1662464391
+    },
+    {
+        "content": "<p>Need to make other things now. I need some  feedback, and we IMHO need to make a TODO list.</p>",
+        "id": 297351084,
+        "sender_full_name": "Alec Leamas",
+        "timestamp": 1662464648
+    },
+    {
+        "content": "<p>comm SendMessage() rework is OK now, makes good sense.  Multiplexer for N0183 message types is implemented.<br>\nI'll take a look at new AIS idea.<br>\nThanks</p>",
+        "id": 297395177,
+        "sender_full_name": "Dave Register",
+        "timestamp": 1662473821
+    },
+    {
+        "content": "<p>Shall we expand on the existing TODO list topic?</p>",
+        "id": 297396694,
+        "sender_full_name": "Dave Register",
+        "timestamp": 1662474251
+    },
+    {
+        "content": "<p>My thought is to make a new topic with only one message; a todo list for test issues and others. The idea is to keep that topic clean from other comments to avoid the list from being withdrawn far up.  Each task would rather refer to messages in other topics than explained in the todo list's topic.<br>\n??</p>",
+        "id": 297464836,
+        "sender_full_name": "Håkan Svensson",
+        "timestamp": 1662489539
+    },
+    {
+        "content": "<p>OK, please do that.  I will think about TODO's  we need done before some sort of public Alpha test.  I really want to see some real live N2K interfaces activated.<br>\nMaybe titled \"TODO List, Alpha test:</p>",
+        "id": 297466444,
+        "sender_full_name": "Dave Register",
+        "timestamp": 1662490186
+    },
+    {
+        "content": "<p><span class=\"user-mention\" data-user-id=\"517002\">@Dave Register</span>  Alpha test: Besides bugs, what parts are missing? Some N2k message? AIVDM? ...?</p>",
+        "id": 297604123,
+        "sender_full_name": "Alec Leamas",
+        "timestamp": 1662561430
+    },
+    {
+        "content": "<p>I'm ready to work on basic plugins now, especially Dashboard.<br>\nHave you sorted out the minimal API needed for observable support in plugins?</p>",
+        "id": 297696825,
+        "sender_full_name": "Dave Register",
+        "timestamp": 1662600593
+    },
+    {
+        "content": "<p>Info.  Basic N2K support is in place, for three supported devices:  Actisense, Yacht devices, and generic socketCAN interfaces, usually found on rPi.  All three interfaces work on my minimal N2K setup.  We need real-world testing to validate.</p>",
+        "id": 297696948,
+        "sender_full_name": "Dave Register",
+        "timestamp": 1662600721
+    },
+    {
+        "content": "<blockquote>\n<p>Have you sorted out the minimal API needed for observable support in plugins?</p>\n</blockquote>\n<p>Think so, it is in ocpn_plugin.h. Many parts are not implemented, though.</p>",
+        "id": 297726928,
+        "sender_full_name": "Alec Leamas",
+        "timestamp": 1662624460
+    },
+    {
+        "content": "<p>I've created a todo list as discussed. Some task from my list are there. Please add what's needed.</p>\n<p>Do you think it's possible to discuss or question a single task in another topic to avoid the task list itself to disappear \"up in the blue\"?<br>\nAnother \"TODO discussion\" topic  or simply in e.g. \"Test issues\" using the same header as in the TODO list  or .....?</p>",
+        "id": 297814014,
+        "sender_full_name": "Håkan Svensson",
+        "timestamp": 1662652924
+    },
+    {
+        "content": "<blockquote>\n<p>Do you think it's possible to discuss or question a single task in another topic to avoid the task list itself to disappear \"up in the blue\"?</p>\n</blockquote>\n<p>Yes. we should all do that, agreed. Perhaps you should put a reminder about it as the (hopefully only) comment in the TODO List topic.</p>",
+        "id": 297817696,
+        "sender_full_name": "Alec Leamas",
+        "timestamp": 1662654046
+    },
+    {
+        "content": "<p>Done...</p>",
+        "id": 297841842,
+        "sender_full_name": "Håkan Svensson",
+        "timestamp": 1662661728
+    },
+    {
+        "content": "<p><span class=\"user-mention\" data-user-id=\"517002\">@Dave Register</span>  I see the light in the tunnel. Perhaps, as usual, it's the train... </p>\n<p>Anyway, I have decoupled AIS_Decoder from the gui parts and can thus promote it to MODEL_SRC. I now basically needs to make AIS_Decoder handle incoming AIVDM messages.  Ramifications:</p>\n<ol>\n<li>Including AIS_Decoder in comm_bridge is evil, we should not do that i. e., comm_brídge should not invoke AIS_Decoder functions.</li>\n<li>comm_bridge could forward the incoming message using for example an EventVar which AIS_Decoder could listen to. Somewhat convoluted, but keeps the idea the comm_bridge handles everything.</li>\n<li>comm_bridge could just ignore AIVDM while AIS_Decoder listens to it directly. Simpler,  but breaks the \"comm_bridge handles everything\" model.</li>\n</ol>\n<p>So, we should use 2 or 3. Neither is complicated. Any thoughts?</p>",
+        "id": 297848690,
+        "sender_full_name": "Alec Leamas",
+        "timestamp": 1662664311
+    },
+    {
+        "content": "<p><span class=\"user-mention\" data-user-id=\"399510\">@Alec Leamas</span> <br>\nThere is no need for comm_bridge to handle any AIS message other than AIVDO, which may be used to supply part of the Basic Nav Info (and associated globals gLat, gLon,, etc.)  And we need this to participate in priority logic, as well. So comm_bridge is OK as is, with the bare functions DecodeSingleAIVDO(), etc.</p>\n<p>Regarding AIS_Decoder itself:  We are already doing (3).<br>\ncomm_bridge only listens for AIVDO.<br>\nAIS_Decoder already listens to a specific set of  N1083 messages.  See AIS_Decoder::InitCommListeners(void).  AIS_Decoder already knows how to handle AIVDM.  This all seems to be working today, by actual recorded data playback.</p>\n<p>It is nice to have the GUI elements stripped from AIS_Decoder.</p>",
+        "id": 297859484,
+        "sender_full_name": "Dave Register",
+        "timestamp": 1662668695
+    },
+    {
+        "content": "<p><span class=\"user-mention\" data-user-id=\"517002\">@Dave Register</span> Have anything to commit? Structural clean up in mind.</p>",
+        "id": 297998198,
+        "sender_full_name": "Alec Leamas",
+        "timestamp": 1662737184
+    },
+    {
+        "content": "<p><span class=\"user-mention\" data-user-id=\"399510\">@Alec Leamas</span> <br>\nNothing big.  Littles bits and pieces.  Carry on<br>\nDave</p>",
+        "id": 298037307,
+        "sender_full_name": "Dave Register",
+        "timestamp": 1662750594
+    },
+    {
+        "content": "<p>ok, you have been warned...</p>",
+        "id": 298037415,
+        "sender_full_name": "Alec Leamas",
+        "timestamp": 1662750622
+    },
+    {
+        "content": "<p>I am working locally.  I'll hold my peace until you merge, and then I'll repair the carnage.</p>",
+        "id": 298053577,
+        "sender_full_name": "Dave Register",
+        "timestamp": 1662757756
+    },
+    {
+        "content": "<p><span class=\"user-mention\" data-user-id=\"517002\">@Dave Register</span> . Finding a bad, new dependency: g_comm_out which is in comm_n0183_output which includes pluginmanager.h. pluginmanager.h is gui code. Now everything which references g_comm_out  depends on the gui. </p>\n<p>What is this about? On  a sidenote: Should we stop introducing new globals like these?</p>",
+        "id": 298319270,
+        "sender_full_name": "Alec Leamas",
+        "timestamp": 1662964000
+    },
+    {
+        "content": "<p>Here is also a dialog, exactly the kind of stuff which the communication stack should not depend on.</p>",
+        "id": 298319470,
+        "sender_full_name": "Alec Leamas",
+        "timestamp": 1662964101
+    },
+    {
+        "content": "<p>g_comm_out came from \"purifying\" of multiplexer.  These are the methods that support output of routes/marks to GPS receiver on n0183.  They need to live somewhere..  Expedient to just create a new bastard class.<br>\nThese are more like app-layer methods, simply creating N0183 messages, and sending to the comm stack.  Poor name choice, I agree. Probably does not need to be a global.  I'll take a look.<br>\nFocused on n2k AIS just now...</p>",
+        "id": 298389419,
+        "sender_full_name": "Dave Register",
+        "timestamp": 1662991913
+    },
+    {
+        "content": "<p>I'm on the dialog part, later. It should most likely be in another place (in  a GUI context). Stay tuned..</p>",
+        "id": 298390237,
+        "sender_full_name": "Alec Leamas",
+        "timestamp": 1662992205
+    },
+    {
+        "content": "<p><span class=\"user-mention\" data-user-id=\"517002\">@Dave Register</span>  I saw your note in comm_n01831_output on  thinking about the GUI feedback. I think the simplest (best) solution is to use callbacks. You can see examples in  my version of  routeman.h/routeman.cpp currently in the comm-deps branch. The crucial part is in ocpn_app.cpp which initiates the callbacks handed to routeman.</p>",
+        "id": 299291479,
+        "sender_full_name": "Alec Leamas",
+        "timestamp": 1663405600
+    },
+    {
+        "content": "<p>Another perhaps better example is how it done (still in comm-deps) for multiplexer. multiplexer.h + ocpn_frame.cpp around line 1200.</p>",
+        "id": 299317541,
+        "sender_full_name": "Alec Leamas",
+        "timestamp": 1663419103
+    },
+    {
+        "content": "<p>Yes, I see the idea.  Looks good. Coming soon, though with low priority.  All those FIXME's to look at....</p>",
+        "id": 299324903,
+        "sender_full_name": "Dave Register",
+        "timestamp": 1663422844
+    },
+    {
+        "content": "<p>New, interesting warning. I'm on it. </p>\n<div class=\"codehilite\"><pre><span></span><code>/home/mk/src/OpenCPN/src/ais_decoder.cpp: In member function ‘bool AisDecoder::HandleN2K_129041(std::shared_ptr&lt;const Nmea2000Msg&gt;)’:\n/home/mk/src/OpenCPN/src/ais_decoder.cpp:653:12: warning: ‘char* strncpy(char*, const char*, size_t)’ writing 34 bytes into a region of size 21 overflows the destination [-Wstringop-overflow=]\n  653 |     strncpy(pTargetData-&gt;ShipName, data.AtoNName, 34);\n      |     ~~~~~~~^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~\nIn file included from /home/mk/src/OpenCPN/include/ais_decoder.h:38,\n                 from /home/mk/src/OpenCPN/src/ais_decoder.cpp:44:\n/home/mk/src/OpenCPN/include/ais_target_data.h:178:8: note: destination object ‘AisTargetData::ShipName’ of size 21\n  178 |   char ShipName[SHIP_NAME_LEN];\n      |        ^~~~~~~~\n</code></pre></div>",
+        "id": 300018968,
+        "sender_full_name": "Alec Leamas",
+        "timestamp": 1663786090
+    },
+    {
+        "content": "<p><span class=\"user-mention\" data-user-id=\"517002\">@Dave Register</span>  Looking into this I assume the the AtoNName length 34 is non-negotiable. Is there any reason to not expand the AisTargetData to also be 34 +1 chars? Patching assuming it's OK, patch will have to be reverted if not.</p>",
+        "id": 300025261,
+        "sender_full_name": "Alec Leamas",
+        "timestamp": 1663788465
+    },
+    {
+        "content": "<p>That's probably a good idea, since we use the same field (ShipName) for both real ships and atons.</p>",
+        "id": 300026180,
+        "sender_full_name": "Dave Register",
+        "timestamp": 1663788799
+    },
+    {
+        "content": "<p><span class=\"user-mention\" data-user-id=\"518981\">@Github Bot</span> #60db1c0</p>",
+        "id": 300046878,
+        "sender_full_name": "Alec Leamas",
+        "timestamp": 1663798081
+    },
+    {
+        "content": "<p>** author: Alec Leamas at 2022-09-21T20:40:21Z<br>\nais_decoder et al: Sort out Shipname length issues.<br>\n<a href=\"https://github.com/OpenCPN/OpenCPN/commit/60db1c0\">https://github.com/OpenCPN/OpenCPN/commit/60db1c0</a></p>",
+        "id": 300046880,
+        "sender_full_name": "Github Bot",
+        "timestamp": 1663798082
+    },
+    {
+        "content": "<p><span class=\"user-mention\" data-user-id=\"517002\">@Dave Register</span>  I have enabled the tests also on MacOS. Builds ok for me on the command line. The CI jobs fails, assumes that this is about your current work, not my changes. Let me know if I'm wrong.</p>",
+        "id": 300092354,
+        "sender_full_name": "Alec Leamas",
+        "timestamp": 1663831975
+    },
+    {
+        "content": "<p>You are correct. MacOS CI build is a nightmare.  Very difficult to debug.  The build times out (60 minutes) if the cache is not used.  Every change requires two steps.  First to populate the cache, then again to do the build.  I'm on it, but it's slow.</p>",
+        "id": 300153114,
+        "sender_full_name": "Dave Register",
+        "timestamp": 1663851588
+    },
+    {
+        "content": "<p>So, here we go.  Alpha test published on CF.  Hardhats in place?</p>",
+        "id": 300171109,
+        "sender_full_name": "Dave Register",
+        "timestamp": 1663856063
+    },
+    {
+        "content": "<p>\"Picking up helmet from cellar\"</p>\n<p>Is this the time we should merge comm into master?</p>",
+        "id": 300174326,
+        "sender_full_name": "Alec Leamas",
+        "timestamp": 1663857127
+    },
+    {
+        "content": "<p>Soon now.  Let us see what the results over a few days give us.</p>",
+        "id": 300233489,
+        "sender_full_name": "Dave Register",
+        "timestamp": 1663875868
+    },
+    {
+        "content": "<p>For info: You mentioned on CF YDNU-02 wants baud rate 9600. For my device I used 9600 for N0183 but 115 K for N2K.</p>",
+        "id": 300234250,
+        "sender_full_name": "Håkan Svensson",
+        "timestamp": 1663876132
+    },
+    {
+        "content": "<p>I think it does some autobaud.  I just leave mine as 9600, which seems slow for fully populated N2K traffic.  But it works....</p>",
+        "id": 300242267,
+        "sender_full_name": "Dave Register",
+        "timestamp": 1663879377
+    },
+    {
+        "content": "<p>Dashboard: <br>\nI pushed code to add N2K data for instruments log and trip-log.<br>\nBut I've not been able to test. I found no test-log including that.  If anyone knows a log please upload or we may have fingers crossed for the alpha testers?</p>",
+        "id": 300329812,
+        "sender_full_name": "Håkan Svensson",
+        "timestamp": 1663928051
+    },
+    {
+        "content": "<p><span class=\"user-mention\" data-user-id=\"522486\">@Håkan Svensson</span>  Looking at your last PR handling  PGN 128275. </p>\n<p>It seems that you missed to actually listen to the relevant event i. e.  something like <code> listener_128245 = std::move(GetListener(id_128275, EVT_N2K_128275, this))</code>.    Without this part the event handler will not be invoked.</p>\n<p>Should I patch or do you want to do it? Or, am I just missing something?</p>",
+        "id": 300373332,
+        "sender_full_name": "Alec Leamas",
+        "timestamp": 1663941964
+    },
+    {
+        "content": "<p><span class=\"user-mention\" data-user-id=\"518981\">@Github Bot</span>  #c0c5c660c</p>",
+        "id": 300375532,
+        "sender_full_name": "Alec Leamas",
+        "timestamp": 1663942547
+    },
+    {
+        "content": "<p>** author: Hakan at 2022-09-23T09:58:11Z<br>\nO: Add parse 128275 DB: Add PGN 128275 for log and trip-log<br>\n<a href=\"https://github.com/OpenCPN/OpenCPN/commit/c0c5c660c\">https://github.com/OpenCPN/OpenCPN/commit/c0c5c660c</a></p>",
+        "id": 300375541,
+        "sender_full_name": "Github Bot",
+        "timestamp": 1663942548
+    },
+    {
+        "content": "<p>Alec..<br>\nMany thanks. \"Fast and false..\"<br>\nI'll add and PR what's needed and see if can find relevant data in any .log file now when it would also work...</p>",
+        "id": 300379583,
+        "sender_full_name": "Håkan Svensson",
+        "timestamp": 1663943634
+    },
+    {
+        "content": "<p>Still no distance log data seen. But now it's more likely to work.</p>",
+        "id": 300384984,
+        "sender_full_name": "Håkan Svensson",
+        "timestamp": 1663945006
+    },
+    {
+        "content": "<p>OK, no problem. BTW: Have you seen the MESSAGES.adoc document?</p>",
+        "id": 300389959,
+        "sender_full_name": "Alec Leamas",
+        "timestamp": 1663946122
+    },
+    {
+        "content": "<p>Yes, seen it but haven't tested this \"from scratch\". My error on last commit was more about acting to fast and forgot or thought I have done the listener part.</p>",
+        "id": 300413520,
+        "sender_full_name": "Håkan Svensson",
+        "timestamp": 1663953216
+    },
+    {
+        "content": "<p><strong><em>RPi 4 OpenGL</em></strong><br>\n1.<br>\nOn my RPi Debian 10 OpenGL is switched off at O start. Is that intentional and if so why?<br>\nI can switch it on wo trouble but next restart it's off again.</p>\n<ol start=\"2\">\n<li>On all system there are a lot log file entries: \"Duplicate listener, key..........\" <br>\nA problem or only log file scrap?</li>\n</ol>\n<p>See attached log file for both 1. and 2.<br>\n<a href=\"/user_uploads/33951/OqhW95XfZ3aaD5jywqfGZIKV/opencpn_RPi_hakan.log\">opencpn_RPi_hakan.log</a></p>",
+        "id": 301247831,
+        "sender_full_name": "Håkan Svensson",
+        "timestamp": 1664375095
+    },
+    {
+        "content": "<p>Alec...<br>\nWhat is the plan for new socketcan branch?</p>",
+        "id": 302729116,
+        "sender_full_name": "Dave Register",
+        "timestamp": 1665085938
+    },
+    {
+        "content": "<p><span class=\"user-mention\" data-user-id=\"517002\">@Dave Register</span>  socketcan branch:  To be merged when  know it works, notably the threading.  After that it's time to actually test recorded vcan logs, my original goal.</p>",
+        "id": 302793443,
+        "sender_full_name": "Alec Leamas",
+        "timestamp": 1665127305
+    },
+    {
+        "content": "<p><span class=\"user-mention\" data-user-id=\"399510\">@Alec Leamas</span> <br>\nI tested socketcan branch, on linux.  Basically works, but problems on shutdown.  Driver DTOR enters recursive loop. Here's why:<br>\nLet's talk about use pattern for driver activate/deactivate. <br>\nI guess you expect to see the drivers deactivate themselves in Close().<br>\nI have not done that anywhere. To me, it is more natural to deactivate separately from Close(), since Deactivate() is the factory method that ultimately deletes the shared ptr.  Or, said another way, deactivating from within the driver itself seems a bit like \"sawing off a branch that I am currently standing on\".<br>\nThoughts?.</p>",
+        "id": 303322199,
+        "sender_full_name": "Dave Register",
+        "timestamp": 1665433899
+    },
+    {
+        "content": "<p>Also, what's wrong with wxThread?  We use it extensively.  Make life easy on Windows, when we need it.  Just so happens that there is no socketcan on Windows, so we can use std::thread on that driver only.<br>\nMore thoughts?</p>",
+        "id": 303322331,
+        "sender_full_name": "Dave Register",
+        "timestamp": 1665433980
+    },
+    {
+        "content": "<p>hm...</p>\n<blockquote>\n<p>since Deactivate() is the factory method that ultimately deletes the shared ptr.</p>\n</blockquote>\n<p>As I see it, registering a driver is basically to announce that it is available. If  there is a need to announce a driver which is not available we probably need to expand the AbstractCommDriver interface so a user can check this.</p>\n<p>But, there is no \"the shared ptr\". Anything using the driver can store a copy of that pointer, and as long that ptr exists the driver will not go away. Which basically boils down to two questions:</p>\n<ul>\n<li>Is there a need to announce a driver which is closed?</li>\n<li>How do we handle the case when a upper layer tries to use (i. e., send a message) using a driver which  is closed? Is it just to add a case to CommStatus in comm_driver.h or something more elaborate?</li>\n</ul>",
+        "id": 303325117,
+        "sender_full_name": "Alec Leamas",
+        "timestamp": 1665435683
+    },
+    {
+        "content": "<blockquote>\n<p>, what's wrong with wxThread</p>\n</blockquote>\n<p>I just can't make it work in a CLI context.  Believe me, I have tried...</p>\n<blockquote>\n<p>Make life easy on Windows, when we need it.</p>\n</blockquote>\n<p>Are you saying that std::thread doesn't work on Windows?</p>\n<p>I think we share the idea that usage patterns should be the same across drivers; although this is about socketcan for now.</p>",
+        "id": 303325464,
+        "sender_full_name": "Alec Leamas",
+        "timestamp": 1665435907
+    },
+    {
+        "content": "<p>Assuming the DTOR loop is  Close -&gt; Deactivate -&gt; ~ CommDriverN2KSocketCAN -&gt; CLose  ...</p>\n<p>We need of  course  to handle this somehow. However, we cannot assume that registry.Deactivate invokes the DTOR, there could very well be  other  pointers around making the driver to stay alive but closed without invoking any DTOR.  Let me sleep in it, late here now.</p>",
+        "id": 303326687,
+        "sender_full_name": "Alec Leamas",
+        "timestamp": 1665436666
+    },
+    {
+        "content": "<p>On a sidenote: Since Open()  Activates the driver, Close() should probably Deactivate() it for symmetry reasons.</p>",
+        "id": 303329243,
+        "sender_full_name": "Alec Leamas",
+        "timestamp": 1665438349
+    },
+    {
+        "content": "<p>Can't sleep... I guess this patch should break the DTOR recursive loop:</p>\n<div class=\"codehilite\"><pre><span></span><code>diff --git a/src/comm_drv_n2k_socketcan.cpp b/src/comm_drv_n2k_socketcan.cpp\nindex e103273a0..9c5985b0b 100644\n--- a/src/comm_drv_n2k_socketcan.cpp\n+++ b/src/comm_drv_n2k_socketcan.cpp\n@@ -272,7 +272,9 @@ CommDriverN2KSocketCAN::CommDriverN2KSocketCAN(const ConnectionParams* params,\n   Open();\n }\n\n-CommDriverN2KSocketCAN::~CommDriverN2KSocketCAN() { Close(); }\n+CommDriverN2KSocketCAN::~CommDriverN2KSocketCAN() {\n+  if (m_pSecondary_Thread) Close();\n+}\n</code></pre></div>",
+        "id": 303330511,
+        "sender_full_name": "Alec Leamas",
+        "timestamp": 1665439213
+    },
+    {
+        "content": "<p>I had the wrong idea about the source of recursion.  It is fixed by making the following change:</p>\n<div class=\"codehilite\"><pre><span></span><code>void CommDriverRegistry::CloseAllDrivers() {\n  for (auto&amp; it : drivers)\n    Deactivate(it);\n</code></pre></div>\n\n<p>}</p>\n<p>So, this allows the driver Close() method to safely Deactivate itself.<br>\nI guess I do not see anything wrong with this, but I do not see the point, beyond logical symmetry with Activate().</p>",
+        "id": 303350327,
+        "sender_full_name": "Dave Register",
+        "timestamp": 1665454465
+    },
+    {
+        "content": "<p>\"How do we handle the case when a upper layer tries to use (i. e., send a message) using a driver which is closed?\"<br>\nI figured the upper layer that wants to send a message will first \"find\" the driver, atomically with the send command.  If the registry does not  have the driver in its list, then the driver does not exist in a usable state.</p>",
+        "id": 303350663,
+        "sender_full_name": "Dave Register",
+        "timestamp": 1665454797
+    },
+    {
+        "content": "<p>std::thread on Windows:<br>\nWas broken in earlier wx version, pre-3.x. Not tried recently.  I guess you will need this if you want to send M0183 recordings through N0183 driver, somehow.</p>",
+        "id": 303350972,
+        "sender_full_name": "Dave Register",
+        "timestamp": 1665455023
+    },
+    {
+        "content": "<blockquote>\n<p>I figured the upper layer that wants to send a message will first \"find\" the driver, atomically with the send command.</p>\n</blockquote>\n<p>Yup, this should work. But this usage pattern is not enforced by the API, it's not even documented.  So someone reading the API might very well store the pointer and use it. IMHO, we need to either be prepared to this or change the API.</p>\n<p>OTOH, adding a check in SendMessage that driver is open, returning an error status if not is cheap. I can make a PR for that, stay tuned.</p>",
+        "id": 303367138,
+        "sender_full_name": "Alec Leamas",
+        "timestamp": 1665469976
+    },
+    {
+        "content": "<blockquote>\n<p>std::thread on Windows: Was broken in earlier wx version, pre-3.x.</p>\n</blockquote>\n<p>That's a long time ago. Simply googling I find  no signs of overall problems with std::thread on Windows (this includes using std::thread in a wxWidgets context).Overall I think it's safe to assume that std::thread is better maintained than wxThread given the number of users and devs.</p>\n<p>I will make a test on WIndows with std::thread for using <a href=\"http://stupan.se\">stupan.se</a>, the live driver I have. Let's wait also for this</p>",
+        "id": 303367615,
+        "sender_full_name": "Alec Leamas",
+        "timestamp": 1665470262
+    },
+    {
+        "content": "<p>Nope, no threading in comm_drv_n0183_net. So, I cannot test std::thread on WIndows there.</p>",
+        "id": 303371141,
+        "sender_full_name": "Alec Leamas",
+        "timestamp": 1665472276
+    },
+    {
+        "content": "<blockquote>\n<p>I  guess you will need this if you want to send M0183 recordings through N0183 driver, somehow.</p>\n</blockquote>\n<p>Yes. But before doing this, more or less same thing as in the socketcan driver: Could you make sure that socketcan works also on Windows, since I cannot really test it there? I have run the unit tests on Win, so it's probably not completely broken.  But, I have no live data.</p>",
+        "id": 303410473,
+        "sender_full_name": "Alec Leamas",
+        "timestamp": 1665489150
+    },
+    {
+        "content": "<p>Sorry, I am confused, writes too much, and probably confuses you. Of course you cannot test the socketcan driver  on windows, sorry \"banging head to table\".</p>",
+        "id": 303425060,
+        "sender_full_name": "Alec Leamas",
+        "timestamp": 1665490569
+    },
+    {
+        "content": "<p>I have updated and rebased the socketcan branch. </p>\n<ul>\n<li>Rebase  to current master</li>\n<li>Add \"your\" change to registry.CloseALlDrivers() -- looks perfectly sound to me.</li>\n<li>Add \"my\" change to the driver DTOR -- avoid recursive Close(), better safe than sorry.</li>\n<li>Add forgotten delete when tearing down the IO thread (raw pointer, should be fixed!).</li>\n<li>Make comm_drv_n0183_serial use std::thread, an almost identical change as the one in the socketcan driver.</li>\n</ul>\n<p>Here I'm stuck -- needs a confirmation that the threading in <em>comm_drv_n0183_serial</em> works on windows.  Something you can check?</p>",
+        "id": 303438962,
+        "sender_full_name": "Alec Leamas",
+        "timestamp": 1665495344
+    },
+    {
+        "content": "<p>No N2k live data for Windows available from my server. What I know is there no known standard to transfer N2k raw data over a network? (Otherwise we could transfer raw data serial achieved from a YDNU)<br>\nMy signalk.stupan...  has two channels: one TCP (NMEA0183) mode via \"TCP\" port 10112 one SignalK  mode via  port 3000.</p>",
+        "id": 303480388,
+        "sender_full_name": "Håkan Svensson",
+        "timestamp": 1665507520
+    },
+    {
+        "content": "<p>I will check serial on Windows with live data later today.  Down a rat-hole at the moment.</p>",
+        "id": 303494547,
+        "sender_full_name": "Dave Register",
+        "timestamp": 1665512493
+    },
+    {
+        "content": "<p>I made a short test of branch socketcan on Win built by VS2017.<br>\nA serial N0183 on COM3 from the YDNU is working. (Position/velocity/heading)<br>\nA N2k from the YDNU on COM3 is working.<br>\nA Network TCP N0183 is working<br>\nA SignalK connection is also working.<br>\nIf of interest: One thread more used when enable the serial connection. One thread less intermediately after disabling.</p>",
+        "id": 303501401,
+        "sender_full_name": "Håkan Svensson",
+        "timestamp": 1665514982
+    },
+    {
+        "content": "<p><span class=\"user-mention\" data-user-id=\"522486\">@Håkan Svensson</span> Thanks!</p>\n<p>Preliminary conclusion would be  that there is no overall problem using std::thread instead of wxThread on Windows.  But let's wait to see if Dave finds out anything more, there is no hurry.</p>",
+        "id": 303505314,
+        "sender_full_name": "Alec Leamas",
+        "timestamp": 1665516475
+    },
+    {
+        "content": "<p>The thread count being one more for an enabled serial connection is as expected.</p>",
+        "id": 303505474,
+        "sender_full_name": "Alec Leamas",
+        "timestamp": 1665516530
+    },
+    {
+        "content": "<p>Tested on native Windows box with serial n0183 live data.  Overall function fine.  I traced the startup and shutdown of the driver thread.  Looks nominal to  me, no surprises.<br>\nSo I guess we can say that std::thread is OK on Windows.</p>",
+        "id": 303508461,
+        "sender_full_name": "Dave Register",
+        "timestamp": 1665517768
+    },
+    {
+        "content": "<p>Dear gurus:<br>\nCan i get the \"handler\" info, \"dashboard_pi\" in this case, to a printf message? Pls, how?<br>\nThe pict from comm_plugin_api.cpp: row 33</p>\n<blockquote>\n<p>std::shared_ptr&lt;ObservedVarListener&gt; GetListener(NMEA2000Id id, wxEventType ev,<br>\n                                                 wxEvtHandler* handler) {</p>\n</blockquote>\n<p><a href=\"/user_uploads/33951/vB7fXAeNvGcaHzHKPuC15U9W/bild.png\">bild.png</a></p>\n<div class=\"message_inline_image\"><a href=\"/user_uploads/33951/vB7fXAeNvGcaHzHKPuC15U9W/bild.png\" title=\"bild.png\"><img src=\"/user_uploads/33951/vB7fXAeNvGcaHzHKPuC15U9W/bild.png\"></a></div>",
+        "id": 304194590,
+        "sender_full_name": "Håkan Svensson",
+        "timestamp": 1665837360
+    },
+    {
+        "content": "<p>\"Can i get the \"handler\" info, \"dashboard_pi\" in this case, to a printf message?\"<br>\nNot sure what you are asking .  I see a log file call there.  What else is required?</p>",
+        "id": 304202882,
+        "sender_full_name": "Dave Register",
+        "timestamp": 1665841495
+    },
+    {
+        "content": "<p>1: Don't let this trouble a lot. It's just a \"nice to have\"<br>\nThe log message is now printing the requested PGN number(id). One at the time. Good enough but..<br>\nIf you see the Quick watch picture the variable \"handler\" contains some values. But how can I get the text \"dashboard_pi\" to a printable string I can add to the log message.  e.g. handler.sender...   handler itself has a null vale if I catch that.<br>\nFrom the log file I can understand this message is from Dashboard since it printed when DB is loaded. So this is just to learn and for joy.</p>",
+        "id": 304208402,
+        "sender_full_name": "Håkan Svensson",
+        "timestamp": 1665844307
+    },
+    {
+        "content": "<p><span class=\"user-mention\" data-user-id=\"517002\">@Dave Register</span>  I'm probably missing something, but still... looking at the  socketcan driver <em>comm_drv_n2k_socketcan.cpp</em>. Here, the reading is done in a separate thread, ok. But why then use a complicated <code>select()</code> which is the way to multiplex concurrent IO, for example  reading/writing or reading from multiple sources.</p>\n<p>That is, since this is a separate thread reading from a single fd: why not just use plain, blocking read? What am I missing?</p>",
+        "id": 304221915,
+        "sender_full_name": "Alec Leamas",
+        "timestamp": 1665851465
+    },
+    {
+        "content": "<p><span class=\"user-mention\" data-user-id=\"517002\">@Dave Register</span>  Another thing: About slow gcc compilations: what command do you use to compile?</p>",
+        "id": 304235774,
+        "sender_full_name": "Alec Leamas",
+        "timestamp": 1665861092
+    },
+    {
+        "content": "<p>socketcan thread:<br>\nYou are correct, as usual.  I borrowed the thread code from Twocan plugin, dropped it in like some unthinking robot, and moved on to the next thing.  Optimization TODO, when the feature set is implemented and frozen.......</p>",
+        "id": 304241495,
+        "sender_full_name": "Dave Register",
+        "timestamp": 1665865939
+    },
+    {
+        "content": "<p>gcc:<br>\nSince I am often changing branches, I do<br>\n$ cmake ..<br>\n$ make</p>\n<p>Things go much faster with<br>\n $ make -j4<br>\nbut I sometimes see problem with mutit-job make right after a fresh cmake run.  So often I am building single process, every source, one at a a time.  A bit slow, mainly due to the wx includes.</p>",
+        "id": 304241705,
+        "sender_full_name": "Dave Register",
+        "timestamp": 1665866176
+    },
+    {
+        "content": "<p>gcc: I always run <code>make -sj12</code> having more processors (16, Ryzen 7). I have not seen any particular problems with that besides that when there are errors the output is a mess . In this case I run again, a simple <code>make</code> to get the errors file by file.  It's fast, iut only compiles the file(s) with error(s)</p>\n<p>Anyway, the speed comparison is probably moot if not using more than one processor.</p>",
+        "id": 304243313,
+        "sender_full_name": "Alec Leamas",
+        "timestamp": 1665867722
+    },
+    {
+        "content": "<p>Perhaps you could get rid of the cmake problems by clearing <em>build</em> first (or at least remove <em>CMakeCache.txt</em>)</p>",
+        "id": 304243544,
+        "sender_full_name": "Alec Leamas",
+        "timestamp": 1665867934
+    },
+    {
+        "content": "<p>A message was moved here from <a class=\"stream-topic\" data-stream-id=\"332168\" href=\"/#narrow/stream/332168-comms/topic/UI.20topics\">#comms &gt; UI topics</a> by <span class=\"user-mention silent\" data-user-id=\"399510\">Alec Leamas</span>.</p>",
+        "id": 304246249,
+        "sender_full_name": "Notification Bot",
+        "timestamp": 1665870009
+    },
+    {
+        "content": "<p>A message was moved here from <a class=\"stream-topic\" data-stream-id=\"332168\" href=\"/#narrow/stream/332168-comms/topic/UI.20topics\">#comms &gt; UI topics</a> by <span class=\"user-mention silent\" data-user-id=\"399510\">Alec Leamas</span>.</p>",
+        "id": 304246267,
+        "sender_full_name": "Notification Bot",
+        "timestamp": 1665870029
+    },
+    {
+        "content": "<p>FYI, a heap corruption issue has appeared at least in MSW.  I am bisecting to find it.  But it's slow and painful.  Will keep you updated.</p>",
+        "id": 304453682,
+        "sender_full_name": "Dan Dickey",
+        "timestamp": 1666011359
+    },
+    {
+        "content": "<p><span class=\"user-mention\" data-user-id=\"522729\">@Dan Dickey</span>  You are a hero!</p>",
+        "id": 304480197,
+        "sender_full_name": "Alec Leamas",
+        "timestamp": 1666018325
+    },
+    {
+        "content": "<p><span class=\"user-mention\" data-user-id=\"517002\">@Dave Register</span>  There is also <a href=\"https://github.com/OpenCPN/OpenCPN/pull/2791\">https://github.com/OpenCPN/OpenCPN/pull/2791</a> and  <a href=\"https://github.com/OpenCPN/OpenCPN/pull/2787\">https://github.com/OpenCPN/OpenCPN/pull/2787</a>. Both are simple build fixes, we  should IMHO try to keep the builders happy.</p>",
+        "id": 304499836,
+        "sender_full_name": "Alec Leamas",
+        "timestamp": 1666022700
+    },
+    {
+        "content": "<p><span class=\"user-mention\" data-user-id=\"517002\">@Dave Register</span>  There is some trouble in dashboard_pi. I'm looking at all those <code>std::move(GetListener(id_127245, EVT_N2K_127245, this));</code> and such.  It it uses GetListener() from ocpn_pluginb.h which does not have  any implementation. For some reason I cannot fathom it does link on linux (to what?) while the windows build rightfully fails, a fact I discovered too late. </p>\n<p>I'm on  it.</p>",
+        "id": 304639810,
+        "sender_full_name": "Alec Leamas",
+        "timestamp": 1666084705
+    },
+    {
+        "content": "<p><span class=\"user-mention\" data-user-id=\"517002\">@Dave Register</span>  I have been under the impression that we don't use exceptions, but looking at the code this does not seem to be  the case. One the contrary, exceptions are enabled and used. Late change? Do we have any policy w r t exceptions?</p>",
+        "id": 304847022,
+        "sender_full_name": "Alec Leamas",
+        "timestamp": 1666129985
+    },
+    {
+        "content": "<p>The missing implementations are in <a href=\"https://github.com/OpenCPN/OpenCPN/pull/2793\">https://github.com/OpenCPN/OpenCPN/pull/2793</a></p>",
+        "id": 304849637,
+        "sender_full_name": "Alec Leamas",
+        "timestamp": 1666131139
+    },
+    {
+        "content": "<p>And where are we using C/C++ exceptions?  If so, it is by accident.  Exception management on cross -platform app can be a nightmare....</p>",
+        "id": 304859794,
+        "sender_full_name": "Dave Register",
+        "timestamp": 1666137296
+    },
+    {
+        "content": "<p>A message was moved here from <a class=\"stream-topic\" data-stream-id=\"332168\" href=\"/#narrow/stream/332168-comms/topic/commits\">#comms &gt; commits</a> by <span class=\"user-mention silent\" data-user-id=\"399510\">Alec Leamas</span>.</p>",
+        "id": 304887533,
+        "sender_full_name": "Notification Bot",
+        "timestamp": 1666160961
+    },
+    {
+        "content": "<p>A quick grep for std::exception reveals around 20 matches.  At a glance, it looks that the primary sources are the pugixml and serial libraries. There is also exceptions in mbtiles.cpp related   sqlite.</p>\n<p>The compilation flags on at least Linux as defined in main CMakeLists.txt contains <code>-fexceptions</code>so they are enabled. </p>\n<p>As I see it, if we are using libraries generating exceptions we just have to enable exceptions and handle them. That is not to say that we should encourage exceptions in our own code so to speak.</p>",
+        "id": 304888552,
+        "sender_full_name": "Alec Leamas",
+        "timestamp": 1666161538
+    },
+    {
+        "content": "<p><span class=\"user-mention\" data-user-id=\"517002\">@Dave Register</span>  <a href=\"https://github.com/OpenCPN/OpenCPN/pull/2803#issuecomment-1309506779\">https://github.com/OpenCPN/OpenCPN/pull/2803#issuecomment-1309506779</a></p>",
+        "id": 308891686,
+        "sender_full_name": "Alec Leamas",
+        "timestamp": 1668035551
+    },
+    {
+        "content": "<p><span class=\"user-mention\" data-user-id=\"517002\">@Dave Register</span>  I have wxWidgets 3.2 build for for jammy and focal in <a href=\"https://launchpad.net/~leamas-alec/+archive/ubuntu/wxwidgets\">https://launchpad.net/~leamas-alec/+archive/ubuntu/wxwidgets</a>.</p>\n<p>It should be possible to use this in \"your\" ppa according to this: <a href=\"https://askubuntu.com/questions/436322/use-one-ppa-in-another-ppa\">https://askubuntu.com/questions/436322/use-one-ppa-in-another-ppa</a>. If this does not work we need to clone my repos into \"your\" ppa, possible but a bit convoluted.</p>\n<p>Note that idea is to only build Debian plugins, so these are for core opencpn only.</p>",
+        "id": 309370058,
+        "sender_full_name": "Alec Leamas",
+        "timestamp": 1668275526
+    },
+    {
+        "content": "<p><span class=\"user-mention\" data-user-id=\"522729\">@Dan Dickey</span> <br>\n  Nether \"lost\" nor \"disappear\" works <br>\nWhen not updated the target shall get cross-over icon (lost) after the set time (default 8 minutes) and disappear after set time default 10 minutes. Not after the time out used for Alerts if I recall correct 18 minutes.</p>\n<p>If you want to try just connect to some AIS targets and disable the connection and check the targets received.<br>\nI've a running server if you like address <a href=\"http://signalk.stupan.se\">signalk.stupan.se</a>  TCP port 10112.  (or Signal K port 3000)</p>",
+        "id": 309375137,
+        "sender_full_name": "Håkan Svensson",
+        "timestamp": 1668278590
+    },
+    {
+        "content": "<p><span class=\"user-mention\" data-user-id=\"517002\">@Dave Register</span> The code which \"jails\" bad plugins seems to be resurrected, see plugin_loader.cpp around line 1263. But after merging <a href=\"https://github.com/OpenCPN/OpenCPN/pull/2582\">https://github.com/OpenCPN/OpenCPN/pull/2582</a>, all this jailing stuff was gone for reasons we agreed on. </p>\n<p>Any idea what happened?</p>",
+        "id": 309381870,
+        "sender_full_name": "Alec Leamas",
+        "timestamp": 1668282674
+    },
+    {
+        "content": "<p><span class=\"user-mention\" data-user-id=\"399510\">@Alec Leamas</span> <br>\nNo idea about \"jailing\" situation.  Though I see that PR #2582 did not touch plugin_loader.cpp, so no surprise that plugin_loader is still jailing plugins.  I guess we need to finish the thought process started by #2582.</p>",
+        "id": 309401661,
+        "sender_full_name": "Dave Register",
+        "timestamp": 1668298678
+    },
+    {
+        "content": "<p><span class=\"user-mention silent\" data-user-id=\"522486\">Håkan Svensson</span> <a href=\"#narrow/stream/332168-Master---5.2E8.2E0--.28was.3A-comms.29/topic/misc/near/309375137\">said</a>:</p>\n<blockquote>\n<p><span class=\"user-mention silent\" data-user-id=\"522729\">Dan Dickey</span> <br>\n  Nether \"lost\" nor \"disappear\" works </p>\n</blockquote>\n<p>Is it just SignalK source that has this issue? Or does it also affect NMEA0183 based targets?</p>",
+        "id": 309402824,
+        "sender_full_name": "Dan Dickey",
+        "timestamp": 1668299830
+    },
+    {
+        "content": "<p><span class=\"user-mention\" data-user-id=\"522729\">@Dan Dickey</span> <br>\nNo difference using TCP, NME0183, or Signal k connection protocol.  (And don't let the IP-address mislead you. You can use both protocol by the same address but different ports.) Use my server or any other AIS reception you may have to test.</p>",
+        "id": 309427218,
+        "sender_full_name": "Håkan Svensson",
+        "timestamp": 1668326755
+    },
+    {
+        "content": "<p><span class=\"user-mention silent\" data-user-id=\"522486\">Håkan Svensson</span> <a href=\"#narrow/stream/332168-Master---5.2E8.2E0--.28was.3A-comms.29/topic/misc/near/309427218\">said</a>:</p>\n<blockquote>\n<p><span class=\"user-mention silent\" data-user-id=\"522729\">Dan Dickey</span> <br>\nNo difference using TCP, NME0183, or Signal k connection protocol.  (And don't let the IP-address mislead you. You can use both protocol by the same address but different ports.) Use my server or any other AIS reception you may have to test.</p>\n</blockquote>\n<p>I have tried to duplicate this issue on Windows and RPi but in all cases the AIS targets disappear as expected after the connection is terminated.</p>",
+        "id": 309475524,
+        "sender_full_name": "Dan Dickey",
+        "timestamp": 1668357664
+    },
+    {
+        "content": "<p>Dan..<br>\nHere on both Win and RPi: <br>\nMy settings are mark as lost after 6 minutes and remove after 8 minutes,<br>\nNo lost cross over icon. Never.<br>\nStil left on screen after 8 minutes. But after that not responsible for \"target query\". Still left in AIS target list though and can be queried from there.</p>",
+        "id": 309484273,
+        "sender_full_name": "Håkan Svensson",
+        "timestamp": 1668362841
+    },
+    {
+        "content": "<p><span class=\"user-mention silent\" data-user-id=\"522486\">Håkan Svensson</span> <a href=\"#narrow/stream/332168-Master---5.2E8.2E0--.28was.3A-comms.29/topic/misc/near/309484273\">said</a>:</p>\n<blockquote>\n<p>Dan..<br>\nHere on both Win and RPi: <br>\nMy settings are mark as lost after 6 minutes and remove after 8 minutes,<br>\nNo lost cross over icon. Never.<br>\nStil left on screen after 8 minutes. But after that not responsible for \"target query\". Still left in AIS target list though and can be queried from there.</p>\n</blockquote>\n<p>The way I read the code you have to wait fully 3 times the remove minutes for the target to completely be gone from the AIS list.</p>",
+        "id": 310526715,
+        "sender_full_name": "Dan Dickey",
+        "timestamp": 1668645056
+    },
+    {
+        "content": "<p>I think we have a memory leak somewhere.  I've been testing master branch on Windows for a few days.  When O starts it uses about 150MB memory.  After 24 hours it is up to 950MB and still growing slowly.  I have an NMEA stream playing into o but am not recording tracks other than the standard AIS purple track which is finite.  That should not continuously consume memory.</p>",
+        "id": 310527131,
+        "sender_full_name": "Dan Dickey",
+        "timestamp": 1668645331
+    },
+    {
+        "content": "<p>No doubt introduced by the AIS pointer refactor.  I'll take a look.<br>\nAre you using simulation AIS data (e.g.Hakan's feeds)?  Or live data?</p>",
+        "id": 310627200,
+        "sender_full_name": "Dave Register",
+        "timestamp": 1668697499
+    },
+    {
+        "content": "<p>On Debian 10 closing SocketCan at Program stop causes an endless loop and finally crash down.<br>\nHappens all time O is closed.<br>\nSee below log file snippet. After the last row the log contains another 42000 tries to close an already dead thread.<br>\nSystem:<br>\nOCPN_OSDetail:  armhf ; Raspbian GNU/Linux ; 10 ; raspbian ; debian</p>\n<blockquote>\n<p>14:52:23.317 MESSAGE plugin_loader.cpp:546 PlugInManager: Deactivating PlugIn: /home/pi/.local/lib/opencpn/libo-charts_pi.so<br>\n14:52:23.318 MESSAGE plugin_loader.cpp:546 PlugInManager: Deactivating PlugIn: /home/pi/.local/lib/opencpn/libradar_pi.so<br>\n14:52:23.318 MESSAGE radar_pi.cpp:397 DeInit of plugin<br>\n14:52:23.319 MESSAGE RadarInfo.cpp:154 Emulator receive thread stopped in 1 ms<br>\n14:52:23.323 MESSAGE RadarInfo.cpp:154 Navico BR24 receive thread stopped in 1 ms<br>\n14:52:23.333 MESSAGE radar_pi.cpp:443 radar_pi Context menus removed<br>\n14:52:23.360 MESSAGE plugin_loader.cpp:546 PlugInManager: Deactivating PlugIn: /usr/local/lib/opencpn/libwmm_pi.so<br>\n14:52:23.361 MESSAGE plugin_loader.cpp:546 PlugInManager: Deactivating PlugIn: /usr/local/lib/opencpn/libgrib_pi.so<br>\n14:52:23.361 MESSAGE plugin_loader.cpp:546 PlugInManager: Deactivating PlugIn: /usr/local/lib/opencpn/libdashboard_pi.so<br>\n14:52:23.383 MESSAGE ocpn_frame.cpp:2180 opencpn::MyFrame exiting cleanly.<br>\n14:52:23.439 MESSAGE chartdb.cpp:287 Chart cache PlugIn purge<br>\n14:52:23.457 MESSAGE comm_drv_n0183_net.cpp:611 Closing NMEA NetworkDataStream 10112<br>\n14:52:23.458 MESSAGE comm_drv_n2k_socketcan.cpp:276 Closing N2K socketCAN: can0<br>\n14:52:23.458 MESSAGE comm_drv_n2k_socketcan.cpp:510 Stopping Worker Thread<br>\n14:52:24.458 MESSAGE comm_drv_n2k_socketcan.cpp:517 StopThread: Stopped in 1 sec.<br>\n14:52:24.458 MESSAGE comm_drv_n2k_socketcan.cpp:276 Closing N2K socketCAN: can0<br>\n14:52:24.458 MESSAGE comm_drv_n2k_socketcan.cpp:507 Attempt to stop already dead thread (ignored).<br>\n14:52:24.458 MESSAGE comm_drv_n2k_socketcan.cpp:276 Closing N2K socketCAN: can0<br>\n14:52:24.458 MESSAGE comm_drv_n2k_socketcan.cpp:507 Attempt to stop already dead thread (ignored).<br>\n14:52:24.458 MESSAGE comm_drv_n2k_socketcan.cpp:276 Closing N2K socketCAN: can0<br>\n14:52:24.458 MESSAGE comm_drv_n2k_socketcan.cpp:507 Attempt to stop already dead thread (ignored).<br>\n14:52:24.458 MESSAGE comm_drv_n2k_socketcan.cpp:276 Closing N2K socketCAN: can0<br>\n14:52:24.458 MESSAGE comm_drv_n2k_socketcan.cpp:507 Attempt to stop already dead thread (ignored).<br>\n14:52:24.458 MESSAGE comm_drv_n2k_socketcan.cpp:276 Closing N2K socketCAN: can0<br>\n14:52:24.459 MESSAGE comm_drv_n2k_socketcan.cpp:507 Attempt to stop already dead thread (ignored).<br>\n14:52:24.459 MESSAGE comm_drv_n2k_socketcan.cpp:276 Closing N2K socketCAN: can0<br>\n14:52:24.459 MESSAGE comm_drv_n2k_socketcan.cpp:507 Attempt to stop already dead thread (ignored).</p>\n</blockquote>",
+        "id": 313291309,
+        "sender_full_name": "Håkan Svensson",
+        "timestamp": 1669904660
+    },
+    {
+        "content": "<p>Just to explain above: Closing SocketCan while running works fine. It's only on O shut down while the port is open the endless tries to close appears.</p>",
+        "id": 313304554,
+        "sender_full_name": "Håkan Svensson",
+        "timestamp": 1669908194
+    },
+    {
+        "content": "<p>Full time renovating kitchen now, not much time for   OPenCPN</p>",
+        "id": 313787350,
+        "sender_full_name": "Alec Leamas",
+        "timestamp": 1670148533
+    },
+    {
+        "content": "<p><span class=\"user-mention\" data-user-id=\"517002\">@Dave Register</span> <br>\nDebian 10 SocketCan<br>\nIssue still valid.<br>\nMore observations:<br>\nIf Can0 is the only enabled source thread shut down is normal.<br>\nIf a TCP connection is also enabled the first shut down after enabling  TCP is normal. At next start and O close the issue is back again.<br>\nRpi4 Anydesk: 149422160</p>",
+        "id": 315997848,
+        "sender_full_name": "Håkan Svensson",
+        "timestamp": 1671098483
+    },
+    {
+        "content": "<p>Corrected in github master now.</p>",
+        "id": 316076600,
+        "sender_full_name": "Dave Register",
+        "timestamp": 1671119984
+    },
+    {
+        "content": "<p>Debian 10 socketCan...<br>\nYes correction confirmed.</p>",
+        "id": 316107153,
+        "sender_full_name": "Håkan Svensson",
+        "timestamp": 1671127852
+    },
+    {
+        "content": "<p><span class=\"user-mention\" data-user-id=\"517002\">@Dave Register</span>  Looking at the beta, there is still debug output from  e. g. the  mDNS server : </p>\n<div class=\"codehilite\"><pre><span></span><code>GLEW init success!nGenerating RSA key...\nGenerating x509 certificate...\nWriting key and certificate to disk...\nSuccess!\n1eb2d665 3 mongoose.c:3461:mg_listen    1 0x35 https://0.0.0.0:8443\nLocal IPv4 address: 192.168.2.50\nOpened 2 sockets for mDNS service\nService mDNS: opencpn-object-control-service.:8000\nHostname: hemulen\nSending announce\n</code></pre></div>\n<p>Time to remove before release?</p>",
+        "id": 319273656,
+        "sender_full_name": "Alec Leamas",
+        "timestamp": 1672777336
+    },
+    {
+        "content": "<p><span class=\"user-mention\" data-user-id=\"517002\">@Dave Register</span> : Pushed a fix to the zulip CI job  <em>.github/workflows/zulip.yml</em></p>",
+        "id": 319982349,
+        "sender_full_name": "Alec Leamas",
+        "timestamp": 1673109295
+    },
+    {
+        "content": "<p><span class=\"user-mention\" data-user-id=\"517002\">@Dave Register</span>  Android builds fails with</p>\n<div class=\"codehilite\"><pre><span></span><code>W: GPG error: https://packages.cloud.google.com/apt cloud-sdk-buster InRelease: The following signatures couldn&#39;t be verified because the public key is not available: NO_PUBKEY B53DC80D13EDEF05\nE: The repository &#39;https://packages.cloud.google.com/apt cloud-sdk-buster InRelease&#39; is not signed.\n</code></pre></div>\n<p>This is about a missing signing key which has to be imported into gpg. Probably the same as <a href=\"https://github.com/Rasbats/shipdriver_pi/issues/487\">https://github.com/Rasbats/shipdriver_pi/issues/487</a> which I will try to handle tomorrow.</p>",
+        "id": 321533598,
+        "sender_full_name": "Alec Leamas",
+        "timestamp": 1673818485
+    },
+    {
+        "content": "<p><a href=\"https://github.com/OpenCPN/plugins/pull/801\">https://github.com/OpenCPN/plugins/pull/801</a></p>\n<p>lot of  turbulence around the new ABIs, important to have a fresh build of shipdriver in the Beta catalog as proof of concept.</p>",
+        "id": 321828149,
+        "sender_full_name": "Alec Leamas",
+        "timestamp": 1673961620
+    },
+    {
+        "content": "<p><span class=\"user-mention\" data-user-id=\"517002\">@Dave Register</span> ^</p>",
+        "id": 321828169,
+        "sender_full_name": "Alec Leamas",
+        "timestamp": 1673961630
+    },
+    {
+        "content": "<p><span class=\"user-mention silent\" data-user-id=\"399510\">Alec Leamas</span> <a href=\"#narrow/stream/332168-Master---5.2E8.2E0--.28was.3A-comms.29/topic/MacOS.20Build/near/320656934\">said</a>:</p>\n<blockquote>\n<p>Question 1: when  is <span class=\"user-mention silent\" data-user-id=\"573239\">Pavel Kalian</span>  back from Antarctica? ^</p>\n</blockquote>\n<p>Today. But still a bit busy as the boat has to head back again in 4 days...</p>",
+        "id": 321854947,
+        "sender_full_name": "Pavel Kalian",
+        "timestamp": 1673968656
+    },
+    {
+        "content": "<p>Welcome back! </p>\n<p>Will you go again to Antarctica, in four days?</p>",
+        "id": 321894824,
+        "sender_full_name": "Alec Leamas",
+        "timestamp": 1673979255
+    },
+    {
+        "content": "<p>2 messages were moved here from <a class=\"stream-topic\" data-stream-id=\"332168\" href=\"/#narrow/stream/332168-Master---5.2E8.2E0--.28was.3A-comms.29/topic/MacOS.20Build\">#Master - 5.8.0  (was: comms) &gt; MacOS Build</a> by <span class=\"user-mention silent\" data-user-id=\"399510\">Alec Leamas</span>.</p>",
+        "id": 321894947,
+        "sender_full_name": "Notification Bot",
+        "timestamp": 1673979295
+    },
+    {
+        "content": "<p><span class=\"user-mention\" data-user-id=\"522486\">@Håkan Svensson</span> <br>\nYou wrote:</p>\n<blockquote>\n<p>Excuse my lack of knowledge but how do you update \"on the fly\". I've once tried to update from Buster to Bullseye by changing in the sources.list but it did not ended well. What's \"regular raspbian routines\" for this. No command usable for en \"end user\" I suppose?</p>\n</blockquote>\n<p>Raspbian is basically just Debian with some add-ons. I have never encountered the idea that a Debian system cannot be updated by regular users until I met with OpenPlotter.  Debian puts a huge effort to make updates smooth, so it's definitely doable for a user like you.</p>\n<p>The idea that you lose all your personal setup when updating the OS is IMHO an example of bad thinking. There are tons of systems out there with way more complicated setup than any OpenPlotter installation, and they are regularly updated again and again without losing configuration.</p>\n<p>If you google \"update raspbian  buster bullseye\" you get tons of hits;  pick any. There is of course a risk that OpenPlotter has messed it all up and doesn't survive an update in some specific thing they have done, but is should be possible to fix.  And if so, it's IMHO a bug whatever they say. </p>\n<p>To summarize: A linux system which cannot be updated is an abomination broken by design</p>",
+        "id": 321946369,
+        "sender_full_name": "Alec Leamas",
+        "timestamp": 1673998127
+    },
+    {
+        "content": "<p><span class=\"user-mention silent\" data-user-id=\"399510\">Alec Leamas</span> <a href=\"#narrow/stream/332168-Master---5.2E8.2E0--.28was.3A-comms.29/topic/misc/near/321894824\">said</a>:</p>\n<blockquote>\n<p>Welcome back! </p>\n<p>Will you go again to Antarctica, in four days?</p>\n</blockquote>\n<p>No, I also have to work sometimes :) But the boat does 3 trips this season and we have to take care of the Drake Passage damage bill between them. This time mostly electronics and heating, seems like IP 69 is not what it used to be.</p>",
+        "id": 321968331,
+        "sender_full_name": "Pavel Kalian",
+        "timestamp": 1674013139
+    },
+    {
+        "content": "<blockquote>\n<p>The idea that you lose all your personal setup when updating the OS is IMHO an example of bad thinking</p>\n</blockquote>\n<p>If one download a image file and succeed to run a program in Windows to make a boot-able SD-disk out of that file most are very happy.  That process is high level for many cruisers who just want a nav system in the boat.  </p>\n<p>My poor level of knowledge is seen as an expert by many of our users. And I can't say I know how to update the OS on a given SD-card. The tons of advises to do that have so far not went out well. Out of my three or four tries I think one survived. The other halted in the middle by some missing update. So then you have to make a new SD card image from scratch. Bad thinking? Maybe.  </p>\n<p>Many of our end users sees the terminal as a scaring black hole. Openplotter is a wonderful tool for these users who just want a efficient, cheap and low power system to run OpenCPN and have charts so they can find the way out there. The big step here is to create the initial SD card. I've helped not so few to overcome that process.</p>\n<p>There's a reason why at least 70% of our end users stick to Windows. They're not forced to use the \"black hole\".</p>",
+        "id": 321995313,
+        "sender_full_name": "Håkan Svensson",
+        "timestamp": 1674030296
+    },
+    {
+        "content": "<p>fair enough. But this has nothing to do with my basic statement <em>A linux system which cannot be updated is an abomination broken by design</em></p>\n<p>That is, the OpenPlotter community has full control over what's installed and should be able to design a simple update procedure, perhaps with some support. There are many ways to do this, with or without the terminal.</p>",
+        "id": 322005904,
+        "sender_full_name": "Alec Leamas",
+        "timestamp": 1674034163
+    },
+    {
+        "content": "<p>RPi OpenGl performance:<br>\nThe OpenGl(?) performance on the RPi4 is slow. That is when zooming and drag o-charts ENC it can be so slow the OS is warning about slow response -Wait?- Quit?. This for ENC charts only. RNC is always good.<br>\nNow if I change OpenGL from default hardware to software and restart O the response is significant better. Zooming is much faster and any OS slow warning never seen.<br>\nIs this anything we would handle by default or just mention as a user hint?</p>",
+        "id": 322713624,
+        "sender_full_name": "Håkan Svensson",
+        "timestamp": 1674303039
+    },
+    {
+        "content": "<p><span class=\"user-mention\" data-user-id=\"517002\">@Dave Register</span> : <a href=\"https://github.com/OpenCPN/OpenCPN/pull/2937\">https://github.com/OpenCPN/OpenCPN/pull/2937</a>  (!!)</p>",
+        "id": 322902386,
+        "sender_full_name": "Alec Leamas",
+        "timestamp": 1674418106
+    },
+    {
+        "content": "<p><span class=\"user-mention\" data-user-id=\"522486\">@Håkan Svensson</span>  <span class=\"user-mention\" data-user-id=\"517002\">@Dave Register</span>  Just a drive-by  remark: I assume you have tried the scaling functions which seems to be there like  GetBitmapFor()(<a href=\"https://docs.wxwidgets.org/trunk/classwx_bitmap_bundle.html#a2b427e6ad729074b042acdd805c91e46\">https://docs.wxwidgets.org/trunk/classwx_bitmap_bundle.html#a2b427e6ad729074b042acdd805c91e46</a>).</p>",
+        "id": 322902933,
+        "sender_full_name": "Alec Leamas",
+        "timestamp": 1674418491
+    },
+    {
+        "content": "<p>Alec...<br>\nOur issues relate to font scaling, mostly.  wx32 did not do a great job on Windows scaled displays.</p>",
+        "id": 322904091,
+        "sender_full_name": "Dave Register",
+        "timestamp": 1674419126
+    },
+    {
+        "content": "<p>OK, I see.</p>",
+        "id": 322904556,
+        "sender_full_name": "Alec Leamas",
+        "timestamp": 1674419455
+    },
+    {
+        "content": "<p><span class=\"user-mention\" data-user-id=\"517002\">@Dave Register</span> <br>\nCould we in some way adapt the functions below to respect Windows DPI scaling?<br>\nAll set in pluginmanager.cpp<br>\nI see for example the \"GetOCPNGUIToolScaleFactor_PlugIn\" is used to scale images in Dashboard Preferences.<br>\nThe idea is of course to get a general function instead of scaling every single item.<br>\nHåkan</p>\n<p>wxFont *OCPNGetFont(wxString TextElement, int default_size) {<br>\n  return FontMgr::Get().GetFont(TextElement, default_size);<br>\n}</p>\n<p>wxFont *GetOCPNScaledFont_PlugIn(wxString TextElement, int default_size) {<br>\n  return GetOCPNScaledFont(TextElement, default_size);<br>\n}</p>\n<p>double GetOCPNGUIToolScaleFactor_PlugIn(int GUIScaleFactor) {<br>\n  return g_Platform-&gt;GetToolbarScaleFactor(GUIScaleFactor);<br>\n}</p>\n<p>double GetOCPNGUIToolScaleFactor_PlugIn() {<br>\n  return g_Platform-&gt;GetToolbarScaleFactor(g_GUIScaleFactor);<br>\n}</p>",
+        "id": 323014287,
+        "sender_full_name": "Håkan Svensson",
+        "timestamp": 1674479084
+    },
+    {
+        "content": "<p>Could be.  I'll take a look at some code.</p>",
+        "id": 323051857,
+        "sender_full_name": "Dave Register",
+        "timestamp": 1674488375
+    },
+    {
+        "content": "<p>Having a look at \"GetOCPNScaledFont_PlugIn()\", I find that it is a wrapper for \"OCPNGetFont()\", with addition that it scales the font up a bit on touch-enabled systems.  The idea here is that touch systems are generally small, so we need to make sure the fonts are reasonably readable on these systems.  It is an old leftover from early Android code.<br>\nIt could be modified to include wxWidgets DIP scaling, I think.  Certainly worth a try.   I'll do that, and see what happens to Dashboard.</p>",
+        "id": 323155091,
+        "sender_full_name": "Dave Register",
+        "timestamp": 1674528532
+    },
+    {
+        "content": "<p>\"GetOCPNGUIToolScaleFactor_PlugIn\" would be the only of these with a significant use for plugin images. So this would be a good test I think?</p>\n<p>\"GetOCPNScaledFont_PlugIn\" seems not used by any inbound plugin.<br>\n\"GetOCPNGUIToolScaleFactor_PlugIn\" is used by Dashboard, Grib and WMM<br>\n\"GetOCPNGUIScaledFont_PlugIn\" is used by Grip for tables.</p>",
+        "id": 323184454,
+        "sender_full_name": "Håkan Svensson",
+        "timestamp": 1674546945
+    },
+    {
+        "content": "<p><strong>Mike Rossiter</strong> </p>\n<p>I'm having problems with <a href=\"https://github.com/opencpn/OpenCPN/issues/3200\">#3200</a>. Have you any chance to make my simple test: rebuild OpenCPN from master, create a route and activate it. When Håkan does that, it's de-activated more or less directly, but I cannot reproduce it.</p>\n<p>If you do, please report back in the bug.</p>",
+        "id": 357037637,
+        "sender_full_name": "Alec Leamas",
+        "timestamp": 1683649309
+    },
+    {
+        "content": "<p>I can't reproduce it on Linux, haven't tried any other platform yet</p>",
+        "id": 357040075,
+        "sender_full_name": "Pavel Kalian",
+        "timestamp": 1683649757
+    },
+    {
+        "content": "<p>hm... at a second thougt I think Mike is away  doing you-know-what. Let's see if Håkan makes a try with a freash configuration first. If it does not help I would really appreciate if you had some  time to make a windows test.</p>",
+        "id": 357042852,
+        "sender_full_name": "Alec Leamas",
+        "timestamp": 1683650344
+    },
+    {
+        "content": "<p>mystified,again. Working with pluginmanager.cpp I find code below. Since <code>wxCHECK_VERSION(3, 0, 0)</code> is true since long, this method just returns false in all cases.</p>\n<p>OTOH,  AddLocaleCatalog is part of the plugin API, as usual without a single comment.   What's the story here, if any?</p>\n<p><span class=\"user-mention\" data-user-id=\"573239\">@Pavel Kalian</span>  <span class=\"user-mention\" data-user-id=\"517002\">@Dave Register</span> </p>\n<div class=\"codehilite\"><pre><span></span><code>bool AddLocaleCatalog(wxString catalog) {\n#if wxUSE_XLOCALE || !wxCHECK_VERSION(3, 0, 0)\n\n  if (plocale_def_lang) {\n    // Add this catalog to the persistent catalog array\n    g_locale_catalog_array.Add(catalog);\n\n    return plocale_def_lang-&gt;AddCatalog(catalog);\n  } else\n#endif\n    return false;\n}\n</code></pre></div>",
+        "id": 358404776,
+        "sender_full_name": "Alec Leamas",
+        "timestamp": 1684143199
+    },
+    {
+        "content": "<p>oops, forget it. Sorry for the noise...</p>",
+        "id": 358405534,
+        "sender_full_name": "Alec Leamas",
+        "timestamp": 1684143399
+    },
+    {
+        "content": "<p>Isn't this the other way around due to the <code>!</code>? It  was simply returning false on versions prior to 3.0.0 where the extended locale support did not work, but now always does  add the catalog (the code is full of this same check).</p>",
+        "id": 358418219,
+        "sender_full_name": "Pavel Kalian",
+        "timestamp": 1684146865
+    },
+    {
+        "content": "<p>Yes, see my last post. Again, sorry for the noise.</p>",
+        "id": 358450606,
+        "sender_full_name": "Alec Leamas",
+        "timestamp": 1684155142
+    },
+    {
+        "content": "<p>I have persuaded JetBrains to give me a free open-source license to their tools including CLion, the  C/C++ IDE. It has a good reputation. Still clumsy for me, lot's of things to learn.</p>\n<p>I'll come back here when I have more to say about it.</p>",
+        "id": 359092674,
+        "sender_full_name": "Alec Leamas",
+        "timestamp": 1684362277
+    }
+]

@@ -1,0 +1,483 @@
+<html>
+<head><meta charset="utf-8"><title>New  windows build - localWinbuild · Master - 5.8.0  (was: comms) · Zulip Chat Archive</title></head>
+<h2>Stream: <a href="https://leamas.github.io/zulip-archive/stream/332168-Master---5.2E8.2E0--.28was.3A-comms.29/index.html">Master - 5.8.0  (was: comms)</a></h2>
+<h3>Topic: <a href="https://leamas.github.io/zulip-archive/stream/332168-Master---5.2E8.2E0--.28was.3A-comms.29/topic/New.20.20windows.20build.20-.20localWinbuild.html">New  windows build - localWinbuild</a></h3>
+
+<hr>
+
+<base href="https://opencpn.zulipchat.com">
+
+<head><link href="https://leamas.github.io/zulip-archive/style.css" rel="stylesheet"></head>
+
+<a name="362380611"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332168-Master%20-%205.8.0%20%20%28was%3A%20comms%29/topic/New%20%20windows%20build%20-%20localWinbuild/near/362380611" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Alec Leamas <a href="https://leamas.github.io/zulip-archive/stream/332168-Master---5.2E8.2E0--.28was.3A-comms.29/topic/New.20.20windows.20build.20-.20localWinbuild.html#362380611">(May 31 2023 at 08:23)</a>:</h4>
+<p><span class="user-mention" data-user-id="522729">@Dan Dickey</span> </p>
+<p>Running current version of  <em>winConfig.bat</em>. It build everythging OK, and I can start the sln file using VS. In VS, I can rebuild the project.</p>
+<p>However, when I try to start a debugging session the build target is not found (below). The reason seems to be that it looks in <em>build\Debug\ALL_BUILD</em> while the actual path produced by the build is <em>build\Win32\Debug\ALL_BUILD</em>.</p>
+<p>Thoughts?<br>
+<a href="/user_uploads/33951/KjzPirbvkE9xq5qbTzbB6RzI/image.png">image.png</a></p>
+<div class="message_inline_image"><a href="/user_uploads/33951/KjzPirbvkE9xq5qbTzbB6RzI/image.png" title="image.png"><img src="/user_uploads/33951/KjzPirbvkE9xq5qbTzbB6RzI/image.png"></a></div>
+
+
+
+<a name="362380862"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332168-Master%20-%205.8.0%20%20%28was%3A%20comms%29/topic/New%20%20windows%20build%20-%20localWinbuild/near/362380862" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Alec Leamas <a href="https://leamas.github.io/zulip-archive/stream/332168-Master---5.2E8.2E0--.28was.3A-comms.29/topic/New.20.20windows.20build.20-.20localWinbuild.html#362380862">(May 31 2023 at 08:24)</a>:</h4>
+<p>VS 22,  recently updated to 17.4</p>
+
+
+
+<a name="362386538"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332168-Master%20-%205.8.0%20%20%28was%3A%20comms%29/topic/New%20%20windows%20build%20-%20localWinbuild/near/362386538" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Alec Leamas <a href="https://leamas.github.io/zulip-archive/stream/332168-Master---5.2E8.2E0--.28was.3A-comms.29/topic/New.20.20windows.20build.20-.20localWinbuild.html#362386538">(May 31 2023 at 08:47)</a>:</h4>
+<p><span class="user-mention" data-user-id="522486">@Håkan Svensson</span>  perhaps you have some clue how to work around this?</p>
+
+
+
+<a name="362406823"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332168-Master%20-%205.8.0%20%20%28was%3A%20comms%29/topic/New%20%20windows%20build%20-%20localWinbuild/near/362406823" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Dan Dickey <a href="https://leamas.github.io/zulip-archive/stream/332168-Master---5.2E8.2E0--.28was.3A-comms.29/topic/New.20.20windows.20build.20-.20localWinbuild.html#362406823">(May 31 2023 at 10:09)</a>:</h4>
+<p>Have been traveling for few days. Will look into it ASAP.</p>
+
+
+
+<a name="362407217"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332168-Master%20-%205.8.0%20%20%28was%3A%20comms%29/topic/New%20%20windows%20build%20-%20localWinbuild/near/362407217" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Dan Dickey <a href="https://leamas.github.io/zulip-archive/stream/332168-Master---5.2E8.2E0--.28was.3A-comms.29/topic/New.20.20windows.20build.20-.20localWinbuild.html#362407217">(May 31 2023 at 10:11)</a>:</h4>
+<p>Is the startup project set to “opencpn” or to “ALL_BUILD”?</p>
+
+
+
+<a name="362431334"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332168-Master%20-%205.8.0%20%20%28was%3A%20comms%29/topic/New%20%20windows%20build%20-%20localWinbuild/near/362431334" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Håkan Svensson <a href="https://leamas.github.io/zulip-archive/stream/332168-Master---5.2E8.2E0--.28was.3A-comms.29/topic/New.20.20windows.20build.20-.20localWinbuild.html#362431334">(May 31 2023 at 11:47)</a>:</h4>
+<p>Sorry I have not come to a stage where I use that bat-file in my ordinary environment.  I use to build for RealWithDebInfo and have copied all that may possible be needed to .\build\RealWithDebInfo. That includes external plugin's .dll I may need to debug.</p>
+
+
+
+<a name="362454530"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332168-Master%20-%205.8.0%20%20%28was%3A%20comms%29/topic/New%20%20windows%20build%20-%20localWinbuild/near/362454530" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Dan Dickey <a href="https://leamas.github.io/zulip-archive/stream/332168-Master---5.2E8.2E0--.28was.3A-comms.29/topic/New.20.20windows.20build.20-.20localWinbuild.html#362454530">(May 31 2023 at 13:17)</a>:</h4>
+<p><span class="user-mention silent" data-user-id="399510">Alec Leamas</span> <a href="#narrow/stream/332168-Master---5.2E8.2E0--.28was.3A-comms.29/topic/New.20.20windows.20build.20-.20localWinbuild/near/362380611">said</a>:</p>
+<blockquote>
+<p><span class="user-mention silent" data-user-id="522729">Dan Dickey</span> </p>
+<p>Running current version of  <em>winConfig.bat</em>. It build everythging OK, and I can start the sln file using VS. In VS, I can rebuild the project.</p>
+<p>However, when I try to start a debugging session the build target is not found (below). The reason seems to be that it looks in <em>build\Debug\ALL_BUILD</em> while the actual path produced by the build is <em>build\Win32\Debug\ALL_BUILD</em>.</p>
+<p>Thoughts?</p>
+</blockquote>
+<p>I don't see any reason it should ever build into a 'Win32' folder name.  There is no such configuration as 'Win32'.  Are you sure you are using the most recent commit (<a href="https://github.com/transmitterdan/OpenCPN/commit/996b8c34c05d453282f75a179ff900396334318c">https://github.com/transmitterdan/OpenCPN/commit/996b8c34c05d453282f75a179ff900396334318c</a>)?</p>
+
+
+
+<a name="362455454"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332168-Master%20-%205.8.0%20%20%28was%3A%20comms%29/topic/New%20%20windows%20build%20-%20localWinbuild/near/362455454" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Alec Leamas <a href="https://leamas.github.io/zulip-archive/stream/332168-Master---5.2E8.2E0--.28was.3A-comms.29/topic/New.20.20windows.20build.20-.20localWinbuild.html#362455454">(May 31 2023 at 13:20)</a>:</h4>
+<p>(bAck from town)</p>
+<p>Yes, it's the right commit. </p>
+<p>I can see that the support files (downloaded dlls etc) are in <em>build\debug</em>  so it rather seem to be about VS. Could I have made some setting? Is the recent update messing up things?</p>
+
+
+
+<a name="362456986"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332168-Master%20-%205.8.0%20%20%28was%3A%20comms%29/topic/New%20%20windows%20build%20-%20localWinbuild/near/362456986" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Alec Leamas <a href="https://leamas.github.io/zulip-archive/stream/332168-Master---5.2E8.2E0--.28was.3A-comms.29/topic/New.20.20windows.20build.20-.20localWinbuild.html#362456986">(May 31 2023 at 13:26)</a>:</h4>
+<p>I'll restart my windows machine, there are updates pending. It could not become worse, can it?</p>
+
+
+
+<a name="362458147"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332168-Master%20-%205.8.0%20%20%28was%3A%20comms%29/topic/New%20%20windows%20build%20-%20localWinbuild/near/362458147" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Alec Leamas <a href="https://leamas.github.io/zulip-archive/stream/332168-Master---5.2E8.2E0--.28was.3A-comms.29/topic/New.20.20windows.20build.20-.20localWinbuild.html#362458147">(May 31 2023 at 13:30)</a>:</h4>
+<p>Rebuilding after windows update...</p>
+
+
+
+<a name="362458236"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332168-Master%20-%205.8.0%20%20%28was%3A%20comms%29/topic/New%20%20windows%20build%20-%20localWinbuild/near/362458236" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Dan Dickey <a href="https://leamas.github.io/zulip-archive/stream/332168-Master---5.2E8.2E0--.28was.3A-comms.29/topic/New.20.20windows.20build.20-.20localWinbuild.html#362458236">(May 31 2023 at 13:31)</a>:</h4>
+<p><span class="user-mention silent" data-user-id="399510">Alec Leamas</span> <a href="#narrow/stream/332168-Master---5.2E8.2E0--.28was.3A-comms.29/topic/New.20.20windows.20build.20-.20localWinbuild/near/362455454">said</a>:</p>
+<blockquote>
+<p>(bAck from town)</p>
+<p>Yes, it's the right commit. </p>
+</blockquote>
+<p>Ok, I think I see the problem.  Digging...</p>
+
+
+
+<a name="362460042"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332168-Master%20-%205.8.0%20%20%28was%3A%20comms%29/topic/New%20%20windows%20build%20-%20localWinbuild/near/362460042" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Dan Dickey <a href="https://leamas.github.io/zulip-archive/stream/332168-Master---5.2E8.2E0--.28was.3A-comms.29/topic/New.20.20windows.20build.20-.20localWinbuild.html#362460042">(May 31 2023 at 13:37)</a>:</h4>
+<p><span class="user-mention silent" data-user-id="399510">Alec Leamas</span> <a href="#narrow/stream/332168-Master---5.2E8.2E0--.28was.3A-comms.29/topic/New.20.20windows.20build.20-.20localWinbuild/near/362455454">said</a>:</p>
+<blockquote>
+<p>I can see that the support files (downloaded dlls etc) are in <em>build\debug</em>  so it rather seem to be about VS. Could I have made some setting? Is the recent update messing up things?</p>
+</blockquote>
+<p>What exact command lines are you using to rebuild?  I just tried a build from scratch and it worked ok for me.</p>
+
+
+
+<a name="362460892"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332168-Master%20-%205.8.0%20%20%28was%3A%20comms%29/topic/New%20%20windows%20build%20-%20localWinbuild/near/362460892" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Dan Dickey <a href="https://leamas.github.io/zulip-archive/stream/332168-Master---5.2E8.2E0--.28was.3A-comms.29/topic/New.20.20windows.20build.20-.20localWinbuild.html#362460892">(May 31 2023 at 13:40)</a>:</h4>
+<p>Can you take a screen shot of this in VS?  How does it compare?<br>
+<a href="/user_uploads/33951/XM6S39PpWTSrXjek6shXz8nR/image.png">image.png</a></p>
+<div class="message_inline_image"><a href="/user_uploads/33951/XM6S39PpWTSrXjek6shXz8nR/image.png" title="image.png"><img src="/user_uploads/33951/XM6S39PpWTSrXjek6shXz8nR/image.png"></a></div>
+
+
+
+<a name="362460976"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332168-Master%20-%205.8.0%20%20%28was%3A%20comms%29/topic/New%20%20windows%20build%20-%20localWinbuild/near/362460976" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Alec Leamas <a href="https://leamas.github.io/zulip-archive/stream/332168-Master---5.2E8.2E0--.28was.3A-comms.29/topic/New.20.20windows.20build.20-.20localWinbuild.html#362460976">(May 31 2023 at 13:40)</a>:</h4>
+<p><code>&gt; buildwin\winConfig.bat --rebuild --debug</code></p>
+
+
+
+<a name="362461475"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332168-Master%20-%205.8.0%20%20%28was%3A%20comms%29/topic/New%20%20windows%20build%20-%20localWinbuild/near/362461475" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Alec Leamas <a href="https://leamas.github.io/zulip-archive/stream/332168-Master---5.2E8.2E0--.28was.3A-comms.29/topic/New.20.20windows.20build.20-.20localWinbuild.html#362461475">(May 31 2023 at 13:42)</a>:</h4>
+<p><a href="/user_uploads/33951/GD4GVBmLRwodcaJwkba_5b26/image.png">image.png</a></p>
+<div class="message_inline_image"><a href="/user_uploads/33951/GD4GVBmLRwodcaJwkba_5b26/image.png" title="image.png"><img src="/user_uploads/33951/GD4GVBmLRwodcaJwkba_5b26/image.png"></a></div>
+
+
+
+<a name="362461771"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332168-Master%20-%205.8.0%20%20%28was%3A%20comms%29/topic/New%20%20windows%20build%20-%20localWinbuild/near/362461771" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Dan Dickey <a href="https://leamas.github.io/zulip-archive/stream/332168-Master---5.2E8.2E0--.28was.3A-comms.29/topic/New.20.20windows.20build.20-.20localWinbuild.html#362461771">(May 31 2023 at 13:44)</a>:</h4>
+<p><span class="user-mention silent" data-user-id="399510">Alec Leamas</span> <a href="#narrow/stream/332168-Master---5.2E8.2E0--.28was.3A-comms.29/topic/New.20.20windows.20build.20-.20localWinbuild/near/362461475">said</a>:</p>
+<blockquote>
+<p><a href="/user_uploads/33951/GD4GVBmLRwodcaJwkba_5b26/image.png">image.png</a></p>
+</blockquote>
+<p>What about the 'Debugging' section?</p>
+
+
+
+<a name="362461932"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332168-Master%20-%205.8.0%20%20%28was%3A%20comms%29/topic/New%20%20windows%20build%20-%20localWinbuild/near/362461932" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Alec Leamas <a href="https://leamas.github.io/zulip-archive/stream/332168-Master---5.2E8.2E0--.28was.3A-comms.29/topic/New.20.20windows.20build.20-.20localWinbuild.html#362461932">(May 31 2023 at 13:44)</a>:</h4>
+<p>Sorry, just noticed. Here:<br>
+<a href="/user_uploads/33951/7oWTVFiitJT-RwXuHl8i6ewS/image.png">image.png</a></p>
+<div class="message_inline_image"><a href="/user_uploads/33951/7oWTVFiitJT-RwXuHl8i6ewS/image.png" title="image.png"><img src="/user_uploads/33951/7oWTVFiitJT-RwXuHl8i6ewS/image.png"></a></div>
+
+
+
+<a name="362462295"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332168-Master%20-%205.8.0%20%20%28was%3A%20comms%29/topic/New%20%20windows%20build%20-%20localWinbuild/near/362462295" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Dan Dickey <a href="https://leamas.github.io/zulip-archive/stream/332168-Master---5.2E8.2E0--.28was.3A-comms.29/topic/New.20.20windows.20build.20-.20localWinbuild.html#362462295">(May 31 2023 at 13:45)</a>:</h4>
+<p><span class="user-mention silent" data-user-id="399510">Alec Leamas</span> <a href="#narrow/stream/332168-Master---5.2E8.2E0--.28was.3A-comms.29/topic/New.20.20windows.20build.20-.20localWinbuild/near/362461932">said</a>:</p>
+<blockquote>
+<p>Sorry, just noticed. Here:</p>
+</blockquote>
+<p>Looks right. I will try to reproduce using your exact command line options.</p>
+
+
+
+<a name="362462701"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332168-Master%20-%205.8.0%20%20%28was%3A%20comms%29/topic/New%20%20windows%20build%20-%20localWinbuild/near/362462701" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Alec Leamas <a href="https://leamas.github.io/zulip-archive/stream/332168-Master---5.2E8.2E0--.28was.3A-comms.29/topic/New.20.20windows.20build.20-.20localWinbuild.html#362462701">(May 31 2023 at 13:47)</a>:</h4>
+<p>MY gut feeling is that this is about my environment, in particular the VS setup. I have basically not used it, but still. Are you aware of any way to reset VS to "factory settings" so to speak?</p>
+
+
+
+<a name="362463506"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332168-Master%20-%205.8.0%20%20%28was%3A%20comms%29/topic/New%20%20windows%20build%20-%20localWinbuild/near/362463506" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Dan Dickey <a href="https://leamas.github.io/zulip-archive/stream/332168-Master---5.2E8.2E0--.28was.3A-comms.29/topic/New.20.20windows.20build.20-.20localWinbuild.html#362463506">(May 31 2023 at 13:50)</a>:</h4>
+<p><span class="user-mention silent" data-user-id="399510">Alec Leamas</span> <a href="#narrow/stream/332168-Master---5.2E8.2E0--.28was.3A-comms.29/topic/New.20.20windows.20build.20-.20localWinbuild/near/362462701">said</a>:</p>
+<blockquote>
+<p>MY gut feeling is that this is about my environment, in particular the VS setup. I have basically not used it, but still. Are you aware of any way to reset VS to "factory settings" so to speak?</p>
+</blockquote>
+<p>I was pretty sure that --rebuild will reset everything back to "factory" as regards debugging and building.  I tried to convince CMake to setup all the VS project options correctly when making an initial build or using --rebuild.</p>
+<p>It could be you have some environment variables set that 'override' what I told CMake to do.</p>
+
+
+
+<a name="362464670"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332168-Master%20-%205.8.0%20%20%28was%3A%20comms%29/topic/New%20%20windows%20build%20-%20localWinbuild/near/362464670" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Alec Leamas <a href="https://leamas.github.io/zulip-archive/stream/332168-Master---5.2E8.2E0--.28was.3A-comms.29/topic/New.20.20windows.20build.20-.20localWinbuild.html#362464670">(May 31 2023 at 13:54)</a>:</h4>
+<p>Attaching the environment...<br>
+<a href="/user_uploads/33951/PBsmpdLDO9Xm96nsCumVU9cB/slask">slask</a></p>
+
+
+
+<a name="362464925"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332168-Master%20-%205.8.0%20%20%28was%3A%20comms%29/topic/New%20%20windows%20build%20-%20localWinbuild/near/362464925" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Alec Leamas <a href="https://leamas.github.io/zulip-archive/stream/332168-Master---5.2E8.2E0--.28was.3A-comms.29/topic/New.20.20windows.20build.20-.20localWinbuild.html#362464925">(May 31 2023 at 13:55)</a>:</h4>
+<p>(slask is basically Swedish for "foo", sorry...")</p>
+
+
+
+<a name="362465456"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332168-Master%20-%205.8.0%20%20%28was%3A%20comms%29/topic/New%20%20windows%20build%20-%20localWinbuild/near/362465456" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Dan Dickey <a href="https://leamas.github.io/zulip-archive/stream/332168-Master---5.2E8.2E0--.28was.3A-comms.29/topic/New.20.20windows.20build.20-.20localWinbuild.html#362465456">(May 31 2023 at 13:57)</a>:</h4>
+<p><span class="user-mention silent" data-user-id="399510">Alec Leamas</span> <a href="#narrow/stream/332168-Master---5.2E8.2E0--.28was.3A-comms.29/topic/New.20.20windows.20build.20-.20localWinbuild/near/362464670">said</a>:</p>
+<blockquote>
+<p>Attaching the environment...<br>
+<a href="/user_uploads/33951/PBsmpdLDO9Xm96nsCumVU9cB/slask">slask</a></p>
+</blockquote>
+<p>Something's not right there.  It should look more like this:<br>
+<a href="/user_uploads/33951/TdnnmQ-77SG4snbn00U-qkxR/env.txt">env.txt</a></p>
+<p>In yours I don't see all the VS variables that should be set automatically when you open the VS command prompt.</p>
+
+
+
+<a name="362466367"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332168-Master%20-%205.8.0%20%20%28was%3A%20comms%29/topic/New%20%20windows%20build%20-%20localWinbuild/near/362466367" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Alec Leamas <a href="https://leamas.github.io/zulip-archive/stream/332168-Master---5.2E8.2E0--.28was.3A-comms.29/topic/New.20.20windows.20build.20-.20localWinbuild.html#362466367">(May 31 2023 at 14:00)</a>:</h4>
+<p>OK, my env was before running the build. (still a linux guy, it's hard to grasp that a script can change the environment)<br>
+Here is the one after the build:<br>
+<a href="/user_uploads/33951/nGluMS0cRLZTwvoVBXmciIHs/slisk">slisk</a></p>
+
+
+
+<a name="362473775"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332168-Master%20-%205.8.0%20%20%28was%3A%20comms%29/topic/New%20%20windows%20build%20-%20localWinbuild/near/362473775" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Dan Dickey <a href="https://leamas.github.io/zulip-archive/stream/332168-Master---5.2E8.2E0--.28was.3A-comms.29/topic/New.20.20windows.20build.20-.20localWinbuild.html#362473775">(May 31 2023 at 14:24)</a>:</h4>
+<p><span class="user-mention silent" data-user-id="399510">Alec Leamas</span> <a href="#narrow/stream/332168-Master---5.2E8.2E0--.28was.3A-comms.29/topic/New.20.20windows.20build.20-.20localWinbuild/near/362466367">said</a>:</p>
+<blockquote>
+<p>OK, my env was before running the build. (still a linux guy, it's hard to grasp that a script can change the environment)<br>
+Here is the one after the build:<br>
+<a href="/user_uploads/33951/nGluMS0cRLZTwvoVBXmciIHs/slisk">slisk</a></p>
+</blockquote>
+<p>The VC environment variable should exist before running the build.  Exactly what command prompt are you opening?  The one I open is:</p>
+<div class="codehilite"><pre><span></span><code>C:\ProgramData\Microsoft\Windows\Start Menu\Programs\Visual Studio 2022\Visual Studio Tools\Developer Command Prompt for VS 2022.lnk
+</code></pre></div>
+
+
+
+<a name="362475462"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332168-Master%20-%205.8.0%20%20%28was%3A%20comms%29/topic/New%20%20windows%20build%20-%20localWinbuild/near/362475462" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Alec Leamas <a href="https://leamas.github.io/zulip-archive/stream/332168-Master---5.2E8.2E0--.28was.3A-comms.29/topic/New.20.20windows.20build.20-.20localWinbuild.html#362475462">(May 31 2023 at 14:30)</a>:</h4>
+<p>I open using the bottom-left launcher, but I guess it invoke the same. </p>
+<p>Now invoking it from a command window using "your" path. It looks like the welcome message is the same as the one issued when  I start using the launcher.</p>
+<p>There is no "VC" environment variable, but several VC* ones</p>
+
+
+
+<a name="362476025"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332168-Master%20-%205.8.0%20%20%28was%3A%20comms%29/topic/New%20%20windows%20build%20-%20localWinbuild/near/362476025" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Alec Leamas <a href="https://leamas.github.io/zulip-archive/stream/332168-Master---5.2E8.2E0--.28was.3A-comms.29/topic/New.20.20windows.20build.20-.20localWinbuild.html#362476025">(May 31 2023 at 14:32)</a>:</h4>
+<p>For example: <code>VSCMD_VER=17.4.1</code></p>
+
+
+
+<a name="362495924"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332168-Master%20-%205.8.0%20%20%28was%3A%20comms%29/topic/New%20%20windows%20build%20-%20localWinbuild/near/362495924" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Alec Leamas <a href="https://leamas.github.io/zulip-archive/stream/332168-Master---5.2E8.2E0--.28was.3A-comms.29/topic/New.20.20windows.20build.20-.20localWinbuild.html#362495924">(May 31 2023 at 15:40)</a>:</h4>
+<p>New data point: Using the fast track gives the same problem.</p>
+<p>Which version of VS-22 are you on?</p>
+
+
+
+<a name="362497672"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332168-Master%20-%205.8.0%20%20%28was%3A%20comms%29/topic/New%20%20windows%20build%20-%20localWinbuild/near/362497672" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Alec Leamas <a href="https://leamas.github.io/zulip-archive/stream/332168-Master---5.2E8.2E0--.28was.3A-comms.29/topic/New.20.20windows.20build.20-.20localWinbuild.html#362497672">(May 31 2023 at 15:45)</a>:</h4>
+<p>I think the Win32 prefix is related to this thing, available as "Configuration Manager" , drop-downs in the second line's  Debug and  Win32 boxes. Do you also have this one, showing the same thing?</p>
+<p><a href="/user_uploads/33951/XIC-nPiCH-gvNTRHRQS-FPNU/image.png">image.png</a></p>
+<div class="message_inline_image"><a href="/user_uploads/33951/XIC-nPiCH-gvNTRHRQS-FPNU/image.png" title="image.png"><img src="/user_uploads/33951/XIC-nPiCH-gvNTRHRQS-FPNU/image.png"></a></div>
+
+
+
+<a name="362499329"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332168-Master%20-%205.8.0%20%20%28was%3A%20comms%29/topic/New%20%20windows%20build%20-%20localWinbuild/near/362499329" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Alec Leamas <a href="https://leamas.github.io/zulip-archive/stream/332168-Master---5.2E8.2E0--.28was.3A-comms.29/topic/New.20.20windows.20build.20-.20localWinbuild.html#362499329">(May 31 2023 at 15:51)</a>:</h4>
+<p>i. e., available from here:<br>
+<a href="/user_uploads/33951/G4UDsO8kYad48WINdLj9kKgt/image.png">image.png</a></p>
+<div class="message_inline_image"><a href="/user_uploads/33951/G4UDsO8kYad48WINdLj9kKgt/image.png" title="image.png"><img src="/user_uploads/33951/G4UDsO8kYad48WINdLj9kKgt/image.png"></a></div>
+
+
+
+<a name="362543190"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332168-Master%20-%205.8.0%20%20%28was%3A%20comms%29/topic/New%20%20windows%20build%20-%20localWinbuild/near/362543190" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Alec Leamas <a href="https://leamas.github.io/zulip-archive/stream/332168-Master---5.2E8.2E0--.28was.3A-comms.29/topic/New.20.20windows.20build.20-.20localWinbuild.html#362543190">(May 31 2023 at 18:43)</a>:</h4>
+<p><span class="user-mention" data-user-id="522729">@Dan Dickey</span> Ping? Would be nice to know if you have the same configuration setup as I.</p>
+
+
+
+<a name="362546078"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332168-Master%20-%205.8.0%20%20%28was%3A%20comms%29/topic/New%20%20windows%20build%20-%20localWinbuild/near/362546078" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Dan Dickey <a href="https://leamas.github.io/zulip-archive/stream/332168-Master---5.2E8.2E0--.28was.3A-comms.29/topic/New.20.20windows.20build.20-.20localWinbuild.html#362546078">(May 31 2023 at 18:56)</a>:</h4>
+<p><span class="user-mention silent" data-user-id="399510">Alec Leamas</span> <a href="#narrow/stream/332168-Master---5.2E8.2E0--.28was.3A-comms.29/topic/New.20.20windows.20build.20-.20localWinbuild/near/362543190">said</a>:</p>
+<blockquote>
+<p><span class="user-mention silent" data-user-id="522729">Dan Dickey</span> Ping? Would be nice to know if you have the same configuration setup as I.</p>
+</blockquote>
+<p>I am on VS2022 V17.6.2. I believe it is the latest.</p>
+<p>Yes, the Win32 folder relates to the "Platform Type" which is controlled from CMake "-A" option.  But it should never try to execute anything from that folder.  It should always execute from a folder based on the "Configuration" not on the "Platform".  I recall reading somewhere there is a way to build multiple platform types so maybe that is what your system is trying to do.  When you open the "Configuration Manager" of VS2022 how many solution "Platforms" do you see in the drop-down list?  If you see more than just "Win32" that may be a clue.</p>
+
+
+
+<a name="362546666"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332168-Master%20-%205.8.0%20%20%28was%3A%20comms%29/topic/New%20%20windows%20build%20-%20localWinbuild/near/362546666" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Dan Dickey <a href="https://leamas.github.io/zulip-archive/stream/332168-Master---5.2E8.2E0--.28was.3A-comms.29/topic/New.20.20windows.20build.20-.20localWinbuild.html#362546666">(May 31 2023 at 18:58)</a>:</h4>
+<p><a href="/user_uploads/33951/XmiC1P4bXjSagrN1BbT3pZsi/image.png">image.png</a></p>
+<div class="message_inline_image"><a href="/user_uploads/33951/XmiC1P4bXjSagrN1BbT3pZsi/image.png" title="image.png"><img src="/user_uploads/33951/XmiC1P4bXjSagrN1BbT3pZsi/image.png"></a></div>
+
+
+
+<a name="362550706"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332168-Master%20-%205.8.0%20%20%28was%3A%20comms%29/topic/New%20%20windows%20build%20-%20localWinbuild/near/362550706" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Alec Leamas <a href="https://leamas.github.io/zulip-archive/stream/332168-Master---5.2E8.2E0--.28was.3A-comms.29/topic/New.20.20windows.20build.20-.20localWinbuild.html#362550706">(May 31 2023 at 19:17)</a>:</h4>
+<p>Now also on 17.6.2.  And, exactly as you, I have only one alternative WIn32 (sorry for  delay)</p>
+
+
+
+<a name="362551825"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332168-Master%20-%205.8.0%20%20%28was%3A%20comms%29/topic/New%20%20windows%20build%20-%20localWinbuild/near/362551825" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Alec Leamas <a href="https://leamas.github.io/zulip-archive/stream/332168-Master---5.2E8.2E0--.28was.3A-comms.29/topic/New.20.20windows.20build.20-.20localWinbuild.html#362551825">(May 31 2023 at 19:22)</a>:</h4>
+<p>Basically, it looks like VS is broken. It compiles stuff into <em>win32\debug</em> but looks for the artifacts in <em>debug</em>. I wonder if it's possible to reset all settings to "factory state" (turning to google)</p>
+
+
+
+<a name="362552331"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332168-Master%20-%205.8.0%20%20%28was%3A%20comms%29/topic/New%20%20windows%20build%20-%20localWinbuild/near/362552331" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Alec Leamas <a href="https://leamas.github.io/zulip-archive/stream/332168-Master---5.2E8.2E0--.28was.3A-comms.29/topic/New.20.20windows.20build.20-.20localWinbuild.html#362552331">(May 31 2023 at 19:25)</a>:</h4>
+<p>Found Tools | Import /Export  settings | Reset all settings. Trying that, now rebuilding.</p>
+
+
+
+<a name="362555044"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332168-Master%20-%205.8.0%20%20%28was%3A%20comms%29/topic/New%20%20windows%20build%20-%20localWinbuild/near/362555044" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Alec Leamas <a href="https://leamas.github.io/zulip-archive/stream/332168-Master---5.2E8.2E0--.28was.3A-comms.29/topic/New.20.20windows.20build.20-.20localWinbuild.html#362555044">(May 31 2023 at 19:38)</a>:</h4>
+<p>Out of disk space. New build ahead</p>
+
+
+
+<a name="362562439"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332168-Master%20-%205.8.0%20%20%28was%3A%20comms%29/topic/New%20%20windows%20build%20-%20localWinbuild/near/362562439" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Alec Leamas <a href="https://leamas.github.io/zulip-archive/stream/332168-Master---5.2E8.2E0--.28was.3A-comms.29/topic/New.20.20windows.20build.20-.20localWinbuild.html#362562439">(May 31 2023 at 20:15)</a>:</h4>
+<p>Same result. Build artifacts are stored in <em>Win32\Debug</em> but VS tries to run program in <em>Debug</em>.</p>
+
+
+
+<a name="362567572"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332168-Master%20-%205.8.0%20%20%28was%3A%20comms%29/topic/New%20%20windows%20build%20-%20localWinbuild/near/362567572" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Alec Leamas <a href="https://leamas.github.io/zulip-archive/stream/332168-Master---5.2E8.2E0--.28was.3A-comms.29/topic/New.20.20windows.20build.20-.20localWinbuild.html#362567572">(May 31 2023 at 20:41)</a>:</h4>
+<p>Making progress, but still problems. And time for bed. More news tomorrow. Thanks for all support so far!</p>
+
+
+
+<a name="362583911"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332168-Master%20-%205.8.0%20%20%28was%3A%20comms%29/topic/New%20%20windows%20build%20-%20localWinbuild/near/362583911" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Alec Leamas <a href="https://leamas.github.io/zulip-archive/stream/332168-Master---5.2E8.2E0--.28was.3A-comms.29/topic/New.20.20windows.20build.20-.20localWinbuild.html#362583911">(May 31 2023 at 22:13)</a>:</h4>
+<p><span class="user-mention" data-user-id="522729">@Dan Dickey</span> </p>
+<p>Cannot sleep. Worked around other problems, not  really sure what made things work better. Remaining problem now is that the wrong libraries seems to be copied to the build areas like <em>Debug</em> and <em>RelWithDebInfo</em>.</p>
+<p>As for <em>Debug</em> the libraries should be named ...wx32ud_...  However, the actual libraries are ...wx32u_... i. e., they are not the debug ones.</p>
+<p>When it comes to <em>RelWithDebInfo</em> these libraries should be substantially larger than the normal ones due to the bundled debug info. However, they are not and VS does not find any debug info for <em>RelWithDebInfo</em>.</p>
+<p>In short, it seems that the same, default libraries are copied to all four configurations. At least for the debugging libs they are actually built, but does not seem to end up in the right place.  </p>
+<p>Attaching the build log. Thoughts?</p>
+<p>Command: <code>buildwin\winConfig.bat --rebuild &gt;build.log 2&gt;&amp;1</code><br>
+<a href="/user_uploads/33951/zb2nf7woisMuDzUUhN2oPvuf/build.log">build.log</a></p>
+
+
+
+<a name="362587318"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332168-Master%20-%205.8.0%20%20%28was%3A%20comms%29/topic/New%20%20windows%20build%20-%20localWinbuild/near/362587318" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Alec Leamas <a href="https://leamas.github.io/zulip-archive/stream/332168-Master---5.2E8.2E0--.28was.3A-comms.29/topic/New.20.20windows.20build.20-.20localWinbuild.html#362587318">(May 31 2023 at 22:34)</a>:</h4>
+<p>More: If I manually copies the missing ...32ud... files from <em>cache\</em> to <em>\build\Debug</em>  the libraries are fine. However, the main opencpn seems to be compiled without debugging symbols, VS does not find any.</p>
+<p>All this is basically so I should be able to get a stacktrace from a windows-only crash which haunts me. It is not that easy.,</p>
+
+
+
+<a name="362601175"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332168-Master%20-%205.8.0%20%20%28was%3A%20comms%29/topic/New%20%20windows%20build%20-%20localWinbuild/near/362601175" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Dan Dickey <a href="https://leamas.github.io/zulip-archive/stream/332168-Master---5.2E8.2E0--.28was.3A-comms.29/topic/New.20.20windows.20build.20-.20localWinbuild.html#362601175">(Jun 01 2023 at 00:40)</a>:</h4>
+<p><span class="user-mention silent" data-user-id="399510">Alec Leamas</span> <a href="#narrow/stream/332168-Master---5.2E8.2E0--.28was.3A-comms.29/topic/New.20.20windows.20build.20-.20localWinbuild/near/362587318">said</a>:</p>
+<blockquote>
+<p>More: If I manually copies the missing ...32ud... files from <em>cache\</em> to <em>\build\Debug</em>  the libraries are fine. However, the main opencpn seems to be compiled without debugging symbols, VS does not find any.</p>
+<p>All this is basically so I should be able to get a stacktrace from a windows-only crash which haunts me. It is not that easy.,</p>
+</blockquote>
+<p>RelWithDebInfo is not a debug build.  So, winConfig configures that to use the non-debug wxWidgets dlls.  However, the 'Debug' build configuration is a pure debug build and it uses the wxWidgets debug dlls.</p>
+<p>I will study the build log file and come back to you.</p>
+
+
+
+<a name="362625019"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332168-Master%20-%205.8.0%20%20%28was%3A%20comms%29/topic/New%20%20windows%20build%20-%20localWinbuild/near/362625019" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Dan Dickey <a href="https://leamas.github.io/zulip-archive/stream/332168-Master---5.2E8.2E0--.28was.3A-comms.29/topic/New.20.20windows.20build.20-.20localWinbuild.html#362625019">(Jun 01 2023 at 04:42)</a>:</h4>
+<p>Studying the log files is interesting.  It's as if the script you are running is not the same as the one I am running.  Please compare (I used <code>diff -a --strip-trailing-cr blah.bat blahblah.bat</code>) the attached winConfig.bat to the one you extracted from my git repo.  They should be identical.  If they are not, then somehow when I pull the latest from the git repo I get something different than what you pull. <br>
+<a href="/user_uploads/33951/DSquA2xoLg-gI-cAi18-24-n/winConfig.bat">winConfig.bat</a></p>
+
+
+
+<a name="362644087"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332168-Master%20-%205.8.0%20%20%28was%3A%20comms%29/topic/New%20%20windows%20build%20-%20localWinbuild/near/362644087" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Alec Leamas <a href="https://leamas.github.io/zulip-archive/stream/332168-Master---5.2E8.2E0--.28was.3A-comms.29/topic/New.20.20windows.20build.20-.20localWinbuild.html#362644087">(Jun 01 2023 at 06:48)</a>:</h4>
+<p>Good morning...</p>
+<p>There are probably more than one thing lurking around here, many of  which on my side. My windows skills being what they are,  I do embarrasing mistakes. Sorry for that.</p>
+<p>Background:  I'm doing this since I have a PR which works fine on the Linux side but crashes on Windows. Basically I need a stack trace from that crash. But it would also be the time when I finally got something more than the CLI usable on Windows.</p>
+<p>Hence, we have two different forks we need to merge. I have not done this properly earlier, my little brain produced the not so bright idea that using the <em>buildwin</em> directory from yor branch should be enough. Of course, it isn't and my earlier failures are thus not really usable. So, making a fresh start.</p>
+<p>I have rebased localBuildwin on my local branch tmp.  Doing so, I have ditched your changes to <em>src</em> and <em>include</em> since they collide with things I do. The resulting diff stat against localWInBuild below. This time I think I got it right, changes to sources should not be part of the drama here.</p>
+<p>I can now start the Debug build in VS, and generate the crash I want a trace from. However, VS still complains about missing debug info. The libraries are fine, but core OpenCPN seems to be generated without debug info.</p>
+<p>Rebuilding the Debug configuration does not help. Rebuilding after adding a hardcoded "<code>set(CMAKE_BUILD_TYPE Debug)</code>to CMakeLists.txt does not help either.</p>
+<p>Some data points: The remote 'dan' is pointing to your repo. Note that the script is indeed as of dan/localWinBuild</p>
+<div class="codehilite"><pre><span></span><code>&gt; git rev-parse dan/localWInBuild
+a40fc4ef266dfcb6ebea4732745887e285db8e9d
+
+N&gt;git diff --stat dan/localWinBuild
+ .gitignore               |    6 +-
+ include/catalog_parser.h |   18 +-
+ include/plugin_handler.h |   22 +-
+ include/plugin_loader.h  |  169 ++++---
+ include/pluginmanager.h  |   24 +-
+ src/catalog_handler.cpp  |   39 +-
+ src/catalog_parser.cpp   |  164 +++---
+ src/download_mgr.cpp     |    5 +-
+ src/glChartCanvas.cpp    |    0
+ src/ocpn_frame.cpp       |    2 +-
+ src/options.cpp          |   76 ++-
+ src/plugin_handler.cpp   |   75 ++-
+ src/plugin_loader.cpp    |  877 ++++++++++++++++----------------
+ src/pluginmanager.cpp    | 1235 ++++++++++------------------------------------
+ src/udev_rule_mgr.cpp    |    7 +-
+ src/update_mgr.cpp       |    5 +-
+ test/tests.cpp           |    4 +-
+ 17 files changed, 1063 insertions(+), 1665 deletions(-)
+</code></pre></div>
+
+
+
+<a name="362688177"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332168-Master%20-%205.8.0%20%20%28was%3A%20comms%29/topic/New%20%20windows%20build%20-%20localWinbuild/near/362688177" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Dan Dickey <a href="https://leamas.github.io/zulip-archive/stream/332168-Master---5.2E8.2E0--.28was.3A-comms.29/topic/New.20.20windows.20build.20-.20localWinbuild.html#362688177">(Jun 01 2023 at 09:39)</a>:</h4>
+<p>If this branch is accessible to me I am happy to try to build it here and see what I can figure out.  It should not be too hard to fix this but I need to see it build I think.</p>
+
+
+
+<a name="362717165"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332168-Master%20-%205.8.0%20%20%28was%3A%20comms%29/topic/New%20%20windows%20build%20-%20localWinbuild/near/362717165" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Alec Leamas <a href="https://leamas.github.io/zulip-archive/stream/332168-Master---5.2E8.2E0--.28was.3A-comms.29/topic/New.20.20windows.20build.20-.20localWinbuild.html#362717165">(Jun 01 2023 at 11:20)</a>:</h4>
+<p>In my repo <a href="https://github.com/leamas/OpenCPN.git">https://github.com/leamas/OpenCPN.git</a> as the branch <em>dan-build</em></p>
+
+
+
+<a name="362718125"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332168-Master%20-%205.8.0%20%20%28was%3A%20comms%29/topic/New%20%20windows%20build%20-%20localWinbuild/near/362718125" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Alec Leamas <a href="https://leamas.github.io/zulip-archive/stream/332168-Master---5.2E8.2E0--.28was.3A-comms.29/topic/New.20.20windows.20build.20-.20localWinbuild.html#362718125">(Jun 01 2023 at 11:24)</a>:</h4>
+<p>In that branch, Options | Plugins  leads to a crash. It's the stack trace from that crash which is my immediate target.</p>
+
+
+
+<a name="362748602"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332168-Master%20-%205.8.0%20%20%28was%3A%20comms%29/topic/New%20%20windows%20build%20-%20localWinbuild/near/362748602" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Alec Leamas <a href="https://leamas.github.io/zulip-archive/stream/332168-Master---5.2E8.2E0--.28was.3A-comms.29/topic/New.20.20windows.20build.20-.20localWinbuild.html#362748602">(Jun 01 2023 at 13:09)</a>:</h4>
+<p>I was able to fix my immediate problems without full stack traces. That said, I'm still interested in getting my windows environment in better shape, in particular using debug builds.</p>
+<p>I  see a great value in the locaWinBuild branch, and is looking forward to have it merged. I have some input regarding this if/when you are interested</p>
+
+
+
+<a name="362970973"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332168-Master%20-%205.8.0%20%20%28was%3A%20comms%29/topic/New%20%20windows%20build%20-%20localWinbuild/near/362970973" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Dan Dickey <a href="https://leamas.github.io/zulip-archive/stream/332168-Master---5.2E8.2E0--.28was.3A-comms.29/topic/New.20.20windows.20build.20-.20localWinbuild.html#362970973">(Jun 02 2023 at 08:45)</a>:</h4>
+<p>It's still a WIP.  I welcome any comments/suggestions as I work through some recently created bugs.</p>
+
+
+
+<a name="362997196"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332168-Master%20-%205.8.0%20%20%28was%3A%20comms%29/topic/New%20%20windows%20build%20-%20localWinbuild/near/362997196" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Alec Leamas <a href="https://leamas.github.io/zulip-archive/stream/332168-Master---5.2E8.2E0--.28was.3A-comms.29/topic/New.20.20windows.20build.20-.20localWinbuild.html#362997196">(Jun 02 2023 at 10:22)</a>:</h4>
+<p>At a glance: </p>
+<ul>
+<li>It's too big, you should probably split it onto two; one for the dll checking and one for the build stuff. I guess you are aware of that, though.</li>
+<li>You have added execute permissions on some source files, these should be 644. I guess windows does not make it that obvious.</li>
+</ul>
+
+
+
+<a name="363018607"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332168-Master%20-%205.8.0%20%20%28was%3A%20comms%29/topic/New%20%20windows%20build%20-%20localWinbuild/near/363018607" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Dan Dickey <a href="https://leamas.github.io/zulip-archive/stream/332168-Master---5.2E8.2E0--.28was.3A-comms.29/topic/New.20.20windows.20build.20-.20localWinbuild.html#363018607">(Jun 02 2023 at 11:43)</a>:</h4>
+<p><span class="user-mention silent" data-user-id="399510">Alec Leamas</span> <a href="#narrow/stream/332168-Master---5.2E8.2E0--.28was.3A-comms.29/topic/New.20.20windows.20build.20-.20localWinbuild/near/362997196">said</a>:</p>
+<blockquote>
+<p>At a glance: </p>
+<ul>
+<li>It's too big, you should probably split it onto two; one for the dll checking and one for the build stuff. I guess you are aware of that, though.</li>
+<li>You have added execute permissions on some source files, these should be 644. I guess windows does not make it that obvious.</li>
+</ul>
+</blockquote>
+<p>You are saying winConfig.bat is "too big"?  If so, that's a bit philosophical.  A good part of it is the utility subroutines at the end.  It's a pain to move those to a separate file.  Each one would have to be in its own file.</p>
+<p>I don't know how it changed the permissions on source files.  I didn't do that intentionally.</p>
+
+
+
+<a name="363039887"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332168-Master%20-%205.8.0%20%20%28was%3A%20comms%29/topic/New%20%20windows%20build%20-%20localWinbuild/near/363039887" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Pavel Kalian <a href="https://leamas.github.io/zulip-archive/stream/332168-Master---5.2E8.2E0--.28was.3A-comms.29/topic/New.20.20windows.20build.20-.20localWinbuild.html#363039887">(Jun 02 2023 at 12:55)</a>:</h4>
+<p>Windows keeps messing up the permissions making everything executable all the time, that is a PITA...</p>
+
+
+
+<a name="363094250"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332168-Master%20-%205.8.0%20%20%28was%3A%20comms%29/topic/New%20%20windows%20build%20-%20localWinbuild/near/363094250" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Alec Leamas <a href="https://leamas.github.io/zulip-archive/stream/332168-Master---5.2E8.2E0--.28was.3A-comms.29/topic/New.20.20windows.20build.20-.20localWinbuild.html#363094250">(Jun 02 2023 at 15:52)</a>:</h4>
+<p>it should be possible to handle this in a git hook...</p>
+
+
+
+<a name="363095104"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332168-Master%20-%205.8.0%20%20%28was%3A%20comms%29/topic/New%20%20windows%20build%20-%20localWinbuild/near/363095104" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Alec Leamas <a href="https://leamas.github.io/zulip-archive/stream/332168-Master---5.2E8.2E0--.28was.3A-comms.29/topic/New.20.20windows.20build.20-.20localWinbuild.html#363095104">(Jun 02 2023 at 15:55)</a>:</h4>
+<blockquote>
+<p>You are saying winConfig.bat is "too big"? </p>
+</blockquote>
+<p>No, no... I'm saying that the delta between the localWinBuild branch and master might be  too big, and that it would be much easier (necessary?) to split it into two PRs, one for the  build stuff  and one for the dll checking.</p>
+
+
+
+<a name="363122914"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332168-Master%20-%205.8.0%20%20%28was%3A%20comms%29/topic/New%20%20windows%20build%20-%20localWinbuild/near/363122914" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Dan Dickey <a href="https://leamas.github.io/zulip-archive/stream/332168-Master---5.2E8.2E0--.28was.3A-comms.29/topic/New.20.20windows.20build.20-.20localWinbuild.html#363122914">(Jun 02 2023 at 17:39)</a>:</h4>
+<p>Ok, I'll look at breaking into multiple PR's.  I intend to rebase to master first. But I need to ensure that each PR is "buildable" so as to not break 'git bisect'.</p>
+
+
+
+<a name="363145808"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332168-Master%20-%205.8.0%20%20%28was%3A%20comms%29/topic/New%20%20windows%20build%20-%20localWinbuild/near/363145808" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Alec Leamas <a href="https://leamas.github.io/zulip-archive/stream/332168-Master---5.2E8.2E0--.28was.3A-comms.29/topic/New.20.20windows.20build.20-.20localWinbuild.html#363145808">(Jun 02 2023 at 19:23)</a>:</h4>
+<p>MIght be worth it. I have a similar situation in <a href="https://github.com/opencpn/OpenCPN/issues/3106">#3106</a>.  In this case, I am submitting in piece by piece. The first is merged, next in queue is  <a href="https://github.com/opencpn/OpenCPN/issues/3198">#3198</a></p>
+
+
+
+<hr><p>Last updated: Oct 05 2023 at 09:43 UTC</p>
+</html>

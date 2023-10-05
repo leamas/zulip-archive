@@ -1,0 +1,241 @@
+<html>
+<head><meta charset="utf-8"><title>mongoose library · DataSharing · Zulip Chat Archive</title></head>
+<h2>Stream: <a href="https://leamas.github.io/zulip-archive/stream/349652-DataSharing/index.html">DataSharing</a></h2>
+<h3>Topic: <a href="https://leamas.github.io/zulip-archive/stream/349652-DataSharing/topic/mongoose.20library.html">mongoose library</a></h3>
+
+<hr>
+
+<base href="https://opencpn.zulipchat.com">
+
+<head><link href="https://leamas.github.io/zulip-archive/style.css" rel="stylesheet"></head>
+
+<a name="303807244"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/349652-DataSharing/topic/mongoose%20library/near/303807244" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Alec Leamas <a href="https://leamas.github.io/zulip-archive/stream/349652-DataSharing/topic/mongoose.20library.html#303807244">(Oct 13 2022 at 11:30)</a>:</h4>
+<p>The mongoose web server is not packaged for Debian.  If we could get it packaged it would certainly simplify things.  An existing mongoose  math library is a distraction.</p>
+<p>We would still have to bundle it in Flatpak, though. Should be fine if cached.</p>
+<p>There are pre-built binaries for Windows and MacOS. Whether the MacOS  version can be used  on all (old) OS versions supported  by us is another question.</p>
+
+
+
+<a name="303811125"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/349652-DataSharing/topic/mongoose%20library/near/303811125" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Alec Leamas <a href="https://leamas.github.io/zulip-archive/stream/349652-DataSharing/topic/mongoose.20library.html#303811125">(Oct 13 2022 at 11:54)</a>:</h4>
+<p>The license for mongoose is GPL-2, not GPL2+. We can live with that, but it means that we cannot use any sw with an Apache 2.0 license. This might become a problem, but there is no apache-2 licensed sw in current codebase.</p>
+<p>There are other licenses with the same problem, but apache is the most important example.</p>
+
+
+
+<a name="303837599"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/349652-DataSharing/topic/mongoose%20library/near/303837599" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Dave Register <a href="https://leamas.github.io/zulip-archive/stream/349652-DataSharing/topic/mongoose.20library.html#303837599">(Oct 13 2022 at 13:56)</a>:</h4>
+<p>Mongoose:<br>
+I was planning to use mongoose from source.  Compiles on all our platforms, so far.  Two simple files (.c, .h).  No other dependencies.  One of the design goals of mongoose is easy incorporation on embedded systems.  I like that .</p>
+
+
+
+<a name="303839000"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/349652-DataSharing/topic/mongoose%20library/near/303839000" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Alec Leamas <a href="https://leamas.github.io/zulip-archive/stream/349652-DataSharing/topic/mongoose.20library.html#303839000">(Oct 13 2022 at 14:03)</a>:</h4>
+<p>We (I) might run into troubles if we bundle a library like this in Debian -- they have a rather strong policy against using "convenience copies" in their parlance. But it should basically be fine if I package it, and we use cmake to determine whether to use the system version if it  exists and otherwise the bundled version.</p>
+<p>Of course, it's important to bundle it in libs/ rather than src/ to make it possible to handle source, licensing and such.</p>
+
+
+
+<a name="303848157"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/349652-DataSharing/topic/mongoose%20library/near/303848157" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Dave Register <a href="https://leamas.github.io/zulip-archive/stream/349652-DataSharing/topic/mongoose.20library.html#303848157">(Oct 13 2022 at 14:19)</a>:</h4>
+<p>" bundle it in libs/ "<br>
+Yes, agreed.  mongoose source is only two files full of platform "#IFDEFs", no magic.</p>
+
+
+
+<a name="303952061"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/349652-DataSharing/topic/mongoose%20library/near/303952061" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Dave Register <a href="https://leamas.github.io/zulip-archive/stream/349652-DataSharing/topic/mongoose.20library.html#303952061">(Oct 14 2022 at 02:08)</a>:</h4>
+<p>"Why not just do a POST instead, with the XML file as content"<br>
+Indeed.  After some sketching and fiddling around with the mongoose API, this seems the better idea.<br>
+Going in that direction.</p>
+
+
+
+<a name="303952242"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/349652-DataSharing/topic/mongoose%20library/near/303952242" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Dave Register <a href="https://leamas.github.io/zulip-archive/stream/349652-DataSharing/topic/mongoose.20library.html#303952242">(Oct 14 2022 at 02:11)</a>:</h4>
+<p>btw, did we decide that observable/notify is thread-safe?<br>
+As you might imagine, the mongoose server runs in in its own thread, basically a forever select loop.</p>
+
+
+
+<a name="306825020"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/349652-DataSharing/topic/mongoose%20library/near/306825020" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Mike Rossiter <a href="https://leamas.github.io/zulip-archive/stream/349652-DataSharing/topic/mongoose.20library.html#306825020">(Oct 29 2022 at 11:35)</a>:</h4>
+<p>Added  files from <em>OCPNWindowsCoreBuildSupport-0.1.zip</em><br>
+Trying to compile OpenCPN (Win 8.0, VS 2019) Getting these errors.<br>
+<code>1&gt;   Creating library C:/Users/Mike/Documents/GitHub/OpenCPN/build/Release/opencpn.lib and object C:/Users/Mike/Documents/GitHub/OpenCPN/build/Release/opencpn.exp
+1&gt;MONGOOSE.lib(mongoose.obj) : error LNK2019: unresolved external symbol _SSLv23_server_method referenced in function _mg_tls_init
+1&gt;MONGOOSE.lib(mongoose.obj) : error LNK2019: unresolved external symbol _SSLv23_client_method referenced in function _mg_tls_init
+1&gt;MONGOOSE.lib(mongoose.obj) : error LNK2019: unresolved external symbol _SSL_library_init referenced in function _mg_tls_init
+1&gt;C:\Users\Mike\Documents\GitHub\OpenCPN\build\Release\opencpn.exe : fatal error LNK1120: 3 unresolved externals
+1&gt;Done building project "opencpn.vcxproj" -- FAILED.
+========== Build: 0 succeeded, 1 failed, 0 up-to-date, 0 skipped ==========</code></p>
+<p>Is it linked with this: <a href="https://stackoverflow.com/questions/32415816/how-to-implement-ssl-with-embedded-mongoose">https://stackoverflow.com/questions/32415816/how-to-implement-ssl-with-embedded-mongoose</a></p>
+
+
+
+<a name="306825248"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/349652-DataSharing/topic/mongoose%20library/near/306825248" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Mike Rossiter <a href="https://leamas.github.io/zulip-archive/stream/349652-DataSharing/topic/mongoose.20library.html#306825248">(Oct 29 2022 at 11:37)</a>:</h4>
+<p>Same with <em>RelWithDebInfo</em></p>
+
+
+
+<a name="306847686"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/349652-DataSharing/topic/mongoose%20library/near/306847686" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Dave Register <a href="https://leamas.github.io/zulip-archive/stream/349652-DataSharing/topic/mongoose.20library.html#306847686">(Oct 29 2022 at 14:33)</a>:</h4>
+<p>Mike...<br>
+Please compare your build log to the current Appveyor CI build.<br>
+<a href="https://ci.appveyor.com/project/bdbcat/opencpn/builds/45217644">https://ci.appveyor.com/project/bdbcat/opencpn/builds/45217644</a><br>
+This is the canonical build object example.<br>
+Dave</p>
+
+
+
+<a name="306854218"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/349652-DataSharing/topic/mongoose%20library/near/306854218" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Mike Rossiter <a href="https://leamas.github.io/zulip-archive/stream/349652-DataSharing/topic/mongoose.20library.html#306854218">(Oct 29 2022 at 15:25)</a>:</h4>
+<p><span class="user-mention" data-user-id="517002">@Dave Register</span>  Thanks. My mistake. I did not remove the old <em>buildwin</em> directory before using the new version.</p>
+
+
+
+<a name="308086534"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/349652-DataSharing/topic/mongoose%20library/near/308086534" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Dave Register <a href="https://leamas.github.io/zulip-archive/stream/349652-DataSharing/topic/mongoose.20library.html#308086534">(Nov 05 2022 at 03:34)</a>:</h4>
+<p><span class="user-mention" data-user-id="399510">@Alec Leamas</span> <br>
+I have the PIN exchange logic coded, smoke-tested, working.   But...</p>
+<p>"{This PIN can be used to establish an API key, a much larger random number sequence."<br>
+What is the point of this?  Sounds like simple obfuscation of the 4 digit PIN, with the obfuscation formula accessible to anyone with access to OCPN source.  Am I missing something?</p>
+
+
+
+<a name="308103061"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/349652-DataSharing/topic/mongoose%20library/near/308103061" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Alec Leamas <a href="https://leamas.github.io/zulip-archive/stream/349652-DataSharing/topic/mongoose.20library.html#308103061">(Nov 05 2022 at 08:21)</a>:</h4>
+<p>I think the key needs to be larger than four digíts to avoid brute force  "guess the key" attempts.  The keyword here is "random": the key needs to be truly random. There are  C++11 libraries for this so it should not be a problem. With a random key an attacker isn't helped by the source code. </p>
+<p>In haste...</p>
+
+
+
+<a name="308150190"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/349652-DataSharing/topic/mongoose%20library/near/308150190" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Dave Register <a href="https://leamas.github.io/zulip-archive/stream/349652-DataSharing/topic/mongoose.20library.html#308150190">(Nov 05 2022 at 14:35)</a>:</h4>
+<p>OK, I see your point.  In my implementation, a new random PIN is generated on each failed attack.  Statistically, the lock could be breached in 10000 attacks using  a constant PIN. Easy enough to obfuscate further.</p>
+
+
+
+<a name="308200574"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/349652-DataSharing/topic/mongoose%20library/near/308200574" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Dave Register <a href="https://leamas.github.io/zulip-archive/stream/349652-DataSharing/topic/mongoose.20library.html#308200574">(Nov 06 2022 at 00:29)</a>:</h4>
+<p>Committed PIN share logic.  GUI is the same, "Route-&gt;Send to..."<br>
+Enjoy!</p>
+
+
+
+<a name="308294883"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/349652-DataSharing/topic/mongoose%20library/near/308294883" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Håkan Svensson <a href="https://leamas.github.io/zulip-archive/stream/349652-DataSharing/topic/mongoose.20library.html#308294883">(Nov 06 2022 at 20:25)</a>:</h4>
+<p>The pin code seems to work between my system, RPi and  Win10.</p>
+<p>I've two RPi where I now see some problem on the RPi4. (New or not?)</p>
+<ul>
+<li>My RPi400 64 , Bullseye, detects both O-Win10 and RPi4 32, Buster.  And "send to"  works to both wo trouble.</li>
+<li>The RPi4 though detects only Win10 but not the RPi400.</li>
+</ul>
+<p>If I on the RPi4 run in gdb the following appears:</p>
+<blockquote>
+<p>warning: JITed object file architecture armv8-a is not compatible with target architecture armv6.<br>
+Reading mDNS query replies<br>
+192.168.1.73:5353 : answer opencpn-object-control-service. PTR RPi4.opencpn-object-control-service. rclass 0x1 ttl 10 length 7<br>
+10.10.10.1:5353 : answer opencpn-object-control-service. PTR RPi4.opencpn-object-control-service. rclass 0x1 ttl 10 length 7<br>
+192.168.1.67:5353 : answer opencpn-object-control-service. PTR HAS-WIN.opencpn-object-control-service. rclass 0x1 ttl 10 length 10<br>
+192.168.1.154:5353 : answer opencpn-object-control-service. PTR RPi400.opencpn-object-control-service. rclass 0x1 ttl 10 length 9<br>
+Read 10 records</p>
+</blockquote>
+<p>So although the RPI400 is listed there it's not listed in the "Send to.." dialog.<br>
+<a href="/user_uploads/33951/ayFMVA8Yb7VHHIpj-Go9tQk0/bild.png">bild.png</a></p>
+<div class="message_inline_image"><a href="/user_uploads/33951/ayFMVA8Yb7VHHIpj-Go9tQk0/bild.png" title="bild.png"><img src="/user_uploads/33951/ayFMVA8Yb7VHHIpj-Go9tQk0/bild.png"></a></div>
+
+
+
+<a name="308297506"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/349652-DataSharing/topic/mongoose%20library/near/308297506" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Håkan Svensson <a href="https://leamas.github.io/zulip-archive/stream/349652-DataSharing/topic/mongoose.20library.html#308297506">(Nov 06 2022 at 20:56)</a>:</h4>
+<p>Ooo- forgot to mention the RPi400 is well detected by Win10<br>
+<a href="/user_uploads/33951/ekOwH2WnaWyGZ_3SX6mEhhAI/bild.png">bild.png</a></p>
+<div class="message_inline_image"><a href="/user_uploads/33951/ekOwH2WnaWyGZ_3SX6mEhhAI/bild.png" title="bild.png"><img src="/user_uploads/33951/ekOwH2WnaWyGZ_3SX6mEhhAI/bild.png"></a></div>
+
+
+
+<a name="308409122"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/349652-DataSharing/topic/mongoose%20library/near/308409122" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Dave Register <a href="https://leamas.github.io/zulip-archive/stream/349652-DataSharing/topic/mongoose.20library.html#308409122">(Nov 07 2022 at 15:12)</a>:</h4>
+<p>Hakan...<br>
+Are these systems all hard-wired, or WiFi?  We do see some occasional trouble with mDNS on Wifi...</p>
+
+
+
+<a name="308415793"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/349652-DataSharing/topic/mongoose%20library/near/308415793" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Håkan Svensson <a href="https://leamas.github.io/zulip-archive/stream/349652-DataSharing/topic/mongoose.20library.html#308415793">(Nov 07 2022 at 15:44)</a>:</h4>
+<p>Dave..<br>
+All WiFi. <br>
+All 5.0 Gb  (Ipv4 like 192.168.1.73/24)</p>
+
+
+
+<a name="308455339"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/349652-DataSharing/topic/mongoose%20library/near/308455339" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Håkan Svensson <a href="https://leamas.github.io/zulip-archive/stream/349652-DataSharing/topic/mongoose.20library.html#308455339">(Nov 07 2022 at 19:10)</a>:</h4>
+<p>Just a note - probably not related?<br>
+The RPi4 is Openplotter based so two WiFi is present. wlan0 connected to the local router (192.168.1.1)  and wlan9 own adhoc 10.10.10.1 not used for any connection.<br>
+But I can't see how this could disturb the detection of the RPi400 where only a wlan0 to router is present.</p>
+
+
+
+<a name="308999251"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/349652-DataSharing/topic/mongoose%20library/near/308999251" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Håkan Svensson <a href="https://leamas.github.io/zulip-archive/stream/349652-DataSharing/topic/mongoose.20library.html#308999251">(Nov 10 2022 at 14:23)</a>:</h4>
+<p>I tried to connect the RPi400, who's not detected by RPi4, to a wired connection instead of WiFi. <br>
+No difference. Still only detected by HAS-WIN.</p>
+
+
+
+<a name="309008821"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/349652-DataSharing/topic/mongoose%20library/near/309008821" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Håkan Svensson <a href="https://leamas.github.io/zulip-archive/stream/349652-DataSharing/topic/mongoose.20library.html#309008821">(Nov 10 2022 at 15:09)</a>:</h4>
+<p>Dave..<br>
+One thought :<br>
+Could the "skip "self" be involved?<br>
+When "self" = RPi4 the item.Startswith("RPi4") will sort out item: "RPi400" I suppose. So the code believe the RPi400 is "self" and therefor not listed.<br>
+If so we may run into the same for occasions like: "NavPC",  "NavPC_Cockpit" and so on..</p>
+<p>we have this code..</p>
+<blockquote>
+<p>//skip "self"<br>
+    if(item.StartsWith(g_hostname))<br>
+      continue;<br>
+    item += " {";<br>
+    item += g_DNS_cache[i]-&gt;ip.c_str();<br>
+    item += "}";<br>
+    m_PeerListBox-&gt;Append(item);<br>
+  }</p>
+</blockquote>
+
+
+
+<a name="309031188"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/349652-DataSharing/topic/mongoose%20library/near/309031188" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Håkan Svensson <a href="https://leamas.github.io/zulip-archive/stream/349652-DataSharing/topic/mongoose.20library.html#309031188">(Nov 10 2022 at 16:53)</a>:</h4>
+<p>Dave..<br>
+I tested this change on Win &amp; RPi4 &amp; RPi400. Works.<br>
+If you agree: You change or I PR?<br>
+    @@ -101,7 +101,7 @@ void SendToPeerDlg::CreateControls(const wxString&amp; hint) {<br>
+     wxString item(g_DNS_cache[i]-&gt;hostname.c_str());<br>
+     //skip "self"</p>
+<p>-    if(item.StartsWith(g_hostname))<br>
+  +    if (g_hostname.IsSameAs(item.BeforeFirst('.')) )<br>
+       continue;<br>
+     item += " {";</p>
+
+
+
+<a name="309036809"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/349652-DataSharing/topic/mongoose%20library/near/309036809" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Dave Register <a href="https://leamas.github.io/zulip-archive/stream/349652-DataSharing/topic/mongoose.20library.html#309036809">(Nov 10 2022 at 17:20)</a>:</h4>
+<p>Good catch !<br>
+PR welcome.</p>
+
+
+
+<a name="309050068"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/349652-DataSharing/topic/mongoose%20library/near/309050068" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Håkan Svensson <a href="https://leamas.github.io/zulip-archive/stream/349652-DataSharing/topic/mongoose.20library.html#309050068">(Nov 10 2022 at 18:22)</a>:</h4>
+<p>Done.</p>
+
+
+
+<hr><p>Last updated: Oct 05 2023 at 09:43 UTC</p>
+</html>

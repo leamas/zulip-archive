@@ -1,0 +1,577 @@
+<html>
+<head><meta charset="utf-8"><title>(no topic) · shipdriver · Zulip Chat Archive</title></head>
+<h2>Stream: <a href="https://leamas.github.io/zulip-archive/stream/332200-shipdriver/index.html">shipdriver</a></h2>
+<h3>Topic: <a href="https://leamas.github.io/zulip-archive/stream/332200-shipdriver/topic/.28no.20topic.29.html">(no topic)</a></h3>
+
+<hr>
+
+<base href="https://opencpn.zulipchat.com">
+
+<head><link href="https://leamas.github.io/zulip-archive/style.css" rel="stylesheet"></head>
+
+<a name="313011478"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332200-shipdriver/topic/%28no%20topic%29/near/313011478" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Mike Rossiter <a href="https://leamas.github.io/zulip-archive/stream/332200-shipdriver/topic/.28no.20topic.29.html#313011478">(Nov 30 2022 at 08:50)</a>:</h4>
+<p>Good. I think you have it. The files in the cache from windeps.bat  do not provide the dependents.<br>
+<a href="/user_uploads/33951/5HtfWzT21ghslCI2uuZpGsmx/dump.txt">dump.txt</a></p>
+
+
+
+<a name="313018926"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332200-shipdriver/topic/%28no%20topic%29/near/313018926" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Alec Leamas <a href="https://leamas.github.io/zulip-archive/stream/332200-shipdriver/topic/.28no.20topic.29.html#313018926">(Nov 30 2022 at 09:39)</a>:</h4>
+<p>Yes. And this is really about the opencpn binary, which is linked to <em>wxmsw32u_XX_custom.dll</em> whereas the plugins are linked against the official release <em>wxbase32u_XX_vc14x.dll</em>. </p>
+<p>I'd argue that the plugins does the right thing here, and that the thing to fix is main opencpn. We need <span class="user-mention" data-user-id="517002">@Dave Register</span>  in the loop.</p>
+
+
+
+<a name="313019189"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332200-shipdriver/topic/%28no%20topic%29/near/313019189" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Alec Leamas <a href="https://leamas.github.io/zulip-archive/stream/332200-shipdriver/topic/.28no.20topic.29.html#313019189">(Nov 30 2022 at 09:41)</a>:</h4>
+<p><span class="user-mention" data-user-id="517002">@Dave Register</span> : thoughts?</p>
+
+
+
+<a name="313029797"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332200-shipdriver/topic/%28no%20topic%29/near/313029797" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Mike Rossiter <a href="https://leamas.github.io/zulip-archive/stream/332200-shipdriver/topic/.28no.20topic.29.html#313029797">(Nov 30 2022 at 10:43)</a>:</h4>
+<p>Compiled the latest master (Windows). .jail still taking place. ShipDriver does not install.</p>
+
+
+
+<a name="313033736"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332200-shipdriver/topic/%28no%20topic%29/near/313033736" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Alec Leamas <a href="https://leamas.github.io/zulip-archive/stream/332200-shipdriver/topic/.28no.20topic.29.html#313033736">(Nov 30 2022 at 11:06)</a>:</h4>
+<p>Yes. The jailing is <a href="https://github.com/OpenCPN/OpenCPN/issues/2516">https://github.com/OpenCPN/OpenCPN/issues/2516</a></p>
+<p>You could try my version. It has patches for the jailing  and is also using the official wxWidgets 3.2.1 build. To get it:</p>
+<div class="codehilite"><pre><span></span><code>&gt; git remote add leamas https://github.com/leamas/OpenCPN.git
+&gt; git remote update leamas
+&gt; git fetch leamas master:master.leamas
+&gt; git checkout  master.ĺeamas
+</code></pre></div>
+<p>The tests are broken, you need to  configure with <em>-DOCPN_BUILD_TEST=OFF</em></p>
+
+
+
+<a name="313036667"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332200-shipdriver/topic/%28no%20topic%29/near/313036667" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Alec Leamas <a href="https://leamas.github.io/zulip-archive/stream/332200-shipdriver/topic/.28no.20topic.29.html#313036667">(Nov 30 2022 at 11:23)</a>:</h4>
+<blockquote>
+<p>ShipDriver does not install</p>
+</blockquote>
+<p>We can and IMHO should test my version as of above to make sure that our analyze is correct and that more bugs does not surface when using it. However, we need Dave to wake up to and chime in before making any final decisions how to handle this.</p>
+
+
+
+<a name="313036886"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332200-shipdriver/topic/%28no%20topic%29/near/313036886" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Mike Rossiter <a href="https://leamas.github.io/zulip-archive/stream/332200-shipdriver/topic/.28no.20topic.29.html#313036886">(Nov 30 2022 at 11:24)</a>:</h4>
+<p><span class="user-mention" data-user-id="399510">@Alec Leamas</span>  Compiling now.</p>
+
+
+
+<a name="313044219"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332200-shipdriver/topic/%28no%20topic%29/near/313044219" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Alec Leamas <a href="https://leamas.github.io/zulip-archive/stream/332200-shipdriver/topic/.28no.20topic.29.html#313044219">(Nov 30 2022 at 12:06)</a>:</h4>
+<p>Away for a while.</p>
+
+
+
+<a name="313044902"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332200-shipdriver/topic/%28no%20topic%29/near/313044902" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Mike Rossiter <a href="https://leamas.github.io/zulip-archive/stream/332200-shipdriver/topic/.28no.20topic.29.html#313044902">(Nov 30 2022 at 12:10)</a>:</h4>
+<blockquote>
+<p>should test my version as of above </p>
+</blockquote>
+<p>Done. No .jail. shipdriver.dll is present but not recognised. No warnings and does not install in the list of plugins. I will run a debug log again.</p>
+
+
+
+<a name="313073011"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332200-shipdriver/topic/%28no%20topic%29/near/313073011" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Dave Register <a href="https://leamas.github.io/zulip-archive/stream/332200-shipdriver/topic/.28no.20topic.29.html#313073011">(Nov 30 2022 at 14:32)</a>:</h4>
+<p>I will investigate today.</p>
+
+
+
+<a name="313073551"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332200-shipdriver/topic/%28no%20topic%29/near/313073551" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Mike Rossiter <a href="https://leamas.github.io/zulip-archive/stream/332200-shipdriver/topic/.28no.20topic.29.html#313073551">(Nov 30 2022 at 14:34)</a>:</h4>
+<p>The log shows the same error:<br>
+<a href="/user_uploads/33951/wGFXuVkpjYIWBwosHpyOS3oh/opencpn.log">opencpn.log</a></p>
+
+
+
+<a name="313078123"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332200-shipdriver/topic/%28no%20topic%29/near/313078123" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Alec Leamas <a href="https://leamas.github.io/zulip-archive/stream/332200-shipdriver/topic/.28no.20topic.29.html#313078123">(Nov 30 2022 at 14:55)</a>:</h4>
+<p>OK. Time then to use dumpbin on opencpn.exe and check that the results there corresponds to the end of the appveyor build log where dumpbin is run on the plugin (note: the end of the first build, the last one is not wx32).</p>
+<p>Do they match? Is the dependencies the same? They should be...</p>
+
+
+
+<a name="313078449"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332200-shipdriver/topic/%28no%20topic%29/near/313078449" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Alec Leamas <a href="https://leamas.github.io/zulip-archive/stream/332200-shipdriver/topic/.28no.20topic.29.html#313078449">(Nov 30 2022 at 14:56)</a>:</h4>
+<p>I don't really have the time now to breathe life into my Windows environment...</p>
+
+
+
+<a name="313078488"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332200-shipdriver/topic/%28no%20topic%29/near/313078488" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Alec Leamas <a href="https://leamas.github.io/zulip-archive/stream/332200-shipdriver/topic/.28no.20topic.29.html#313078488">(Nov 30 2022 at 14:57)</a>:</h4>
+<p>Maybe late today</p>
+
+
+
+<a name="313078578"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332200-shipdriver/topic/%28no%20topic%29/near/313078578" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Mike Rossiter <a href="https://leamas.github.io/zulip-archive/stream/332200-shipdriver/topic/.28no.20topic.29.html#313078578">(Nov 30 2022 at 14:57)</a>:</h4>
+<p>No problem. I an on it.</p>
+
+
+
+<a name="313079156"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332200-shipdriver/topic/%28no%20topic%29/near/313079156" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Alec Leamas <a href="https://leamas.github.io/zulip-archive/stream/332200-shipdriver/topic/.28no.20topic.29.html#313079156">(Nov 30 2022 at 15:00)</a>:</h4>
+<p><span class="user-mention" data-user-id="517002">@Dave Register</span> Just to be clear: From our horizon, the important thing is to finalize the libraries which should be used, they must be the same both in main opencpn and the plugins. As now, main opencpn uses a custom build whereas the SD machinery uses the official build.  </p>
+<p>Needless to say, I think using the official build is the right way to go</p>
+
+
+
+<a name="313083646"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332200-shipdriver/topic/%28no%20topic%29/near/313083646" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Mike Rossiter <a href="https://leamas.github.io/zulip-archive/stream/332200-shipdriver/topic/.28no.20topic.29.html#313083646">(Nov 30 2022 at 15:22)</a>:</h4>
+<p>Dump from leamas OpenCPN and  latest ShipDriver appveyor dump is here: <br>
+<a href="/user_uploads/33951/8xwGrbN8Pc4qK56_kwdkDwEV/dump.leamas.txt">dump.leamas.txt</a></p>
+
+
+
+<a name="313086838"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332200-shipdriver/topic/%28no%20topic%29/near/313086838" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Alec Leamas <a href="https://leamas.github.io/zulip-archive/stream/332200-shipdriver/topic/.28no.20topic.29.html#313086838">(Nov 30 2022 at 15:36)</a>:</h4>
+<p>opencpn.exe still links to <em>wxmsw32u_XX_custom.dll</em>. You must remove all of these files and replace them with the files downloaded by appveyor.yml.  The easiest way to obtain these files might be to copy them from the shipdriver repo after running win_deps.bat which places the files in the directory <em>cache</em>.</p>
+<p>Also note that you need new values for wxWidgets_ROOT_DIR and wxWidgets_LIB_DIR. The values depends on where you store the downloaded files.</p>
+<p>As long as opencpn.exe is linked to <em>wxmsw32u_XX_custom.dll</em> there is no point testing anything.</p>
+
+
+
+<a name="313087389"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332200-shipdriver/topic/%28no%20topic%29/near/313087389" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Alec Leamas <a href="https://leamas.github.io/zulip-archive/stream/332200-shipdriver/topic/.28no.20topic.29.html#313087389">(Nov 30 2022 at 15:38)</a>:</h4>
+<p>OOPS!! You need to run <em>win_deps.bat wx32</em> in order to get the wx32 files. Without <em>wx32</em> it downloads the wrong  3.1 version of wxWidgets</p>
+
+
+
+<a name="313101833"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332200-shipdriver/topic/%28no%20topic%29/near/313101833" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Alec Leamas <a href="https://leamas.github.io/zulip-archive/stream/332200-shipdriver/topic/.28no.20topic.29.html#313101833">(Nov 30 2022 at 16:40)</a>:</h4>
+<p>The alternative would be to use (just to test) the appveyor built package on <a href="https://dl.cloudsmith.io/public/alec-leamas/opencpn/raw/files/opencpn-msvc_5.7.1+2256.946dff9_setup.exe">https://dl.cloudsmith.io/public/alec-leamas/opencpn/raw/files/opencpn-msvc_5.7.1+2256.946dff9_setup.exe</a>.</p>
+<p>I see that Dave in this very moment is moving main opencpn to use the official build, so the question seems settled. That means that you will have to update your build environment in any case, the net result is the same: No custom dlls should be visible in the build, only the official  vx14x ones.</p>
+
+
+
+<a name="313103987"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332200-shipdriver/topic/%28no%20topic%29/near/313103987" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Mike Rossiter <a href="https://leamas.github.io/zulip-archive/stream/332200-shipdriver/topic/.28no.20topic.29.html#313103987">(Nov 30 2022 at 16:50)</a>:</h4>
+<p>Interesting ... both your installer and my new one suffer from the same missing .dll.</p>
+<p><a href="/user_uploads/33951/LtMFtf59i5zDQt-VS-Ca8CZr/missing.vc14x.dll.jpg">missing.vc14x.dll.jpg</a></p>
+<div class="message_inline_image"><a href="/user_uploads/33951/LtMFtf59i5zDQt-VS-Ca8CZr/missing.vc14x.dll.jpg" title="missing.vc14x.dll.jpg"><img src="/user_uploads/33951/LtMFtf59i5zDQt-VS-Ca8CZr/missing.vc14x.dll.jpg"></a></div>
+
+
+
+<a name="313105726"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332200-shipdriver/topic/%28no%20topic%29/near/313105726" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Alec Leamas <a href="https://leamas.github.io/zulip-archive/stream/332200-shipdriver/topic/.28no.20topic.29.html#313105726">(Nov 30 2022 at 16:58)</a>:</h4>
+<p>let's focus on your development setup for now. Have you that file available there?</p>
+
+
+
+<a name="313106058"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332200-shipdriver/topic/%28no%20topic%29/near/313106058" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Mike Rossiter <a href="https://leamas.github.io/zulip-archive/stream/332200-shipdriver/topic/.28no.20topic.29.html#313106058">(Nov 30 2022 at 16:59)</a>:</h4>
+<p>Yes ... just adding it to the program directory to test.</p>
+
+
+
+<a name="313109418"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332200-shipdriver/topic/%28no%20topic%29/near/313109418" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Mike Rossiter <a href="https://leamas.github.io/zulip-archive/stream/332200-shipdriver/topic/.28no.20topic.29.html#313109418">(Nov 30 2022 at 17:14)</a>:</h4>
+<p>More missing .dll fixed by adding stuff. OpenCPN starts but a series of debug messages - timer, image data format. This also happens with my own latest build. </p>
+<p>The missing .dll were in <em>wxMSW-3.2.1_vc14x_ReleaseDLL.7z</em> cf <em>wxMSW-3.2.1_vc14x_Dev.7z</em> from <em>win_deps.bat</em>.<br>
+URL for  <em>wxMSW-3.2.1_vc14x_ReleaseDLL.7z</em> is here:<br>
+<a href="https://www.wxwidgets.org/downloads/#v3.2.1_msw">https://www.wxwidgets.org/downloads/#v3.2.1_msw</a></p>
+
+
+
+<a name="313109548"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332200-shipdriver/topic/%28no%20topic%29/near/313109548" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Alec Leamas <a href="https://leamas.github.io/zulip-archive/stream/332200-shipdriver/topic/.28no.20topic.29.html#313109548">(Nov 30 2022 at 17:15)</a>:</h4>
+<p>Hm... I think it is like this:</p>
+<ul>
+<li>We are using the headers download, no problems here.</li>
+<li>We are also using the Dev download. This contains for example wxmsw32ud_gl_vc14x.dll. This is the unstripped development library with debugging symbols and quite big.</li>
+<li>The Release download contains the stripped library   wxmsw32u_gl_vc14x.dll.</li>
+<li>Since we are using REL_WITH_DEBINFO cmake links to the stripped library. But we have not downloaded that one.</li>
+</ul>
+<p>Ergo: download  <a href="https://github.com/wxWidgets/wxWidgets/releases/download/v3.2.1/wxMSW-3.2.1_vc14x_ReleaseDLL.7z">https://github.com/wxWidgets/wxWidgets/releases/download/v3.2.1/wxMSW-3.2.1_vc14x_ReleaseDLL.7z</a> and put these files in the same place as where you have your other dlls and report back</p>
+
+
+
+<a name="313120311"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332200-shipdriver/topic/%28no%20topic%29/near/313120311" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Mike Rossiter <a href="https://leamas.github.io/zulip-archive/stream/332200-shipdriver/topic/.28no.20topic.29.html#313120311">(Nov 30 2022 at 18:03)</a>:</h4>
+<blockquote>
+<p>put these files in the same place as where you have your other dlls and report back</p>
+</blockquote>
+<p>Compiled with the stripped library added to wxWidgets-3.1.2. OpenCPN shows it depends on vc14x but it does not run. Added vc14x .dll to the program directory. Program starts but I still get the same errors and it crashes.</p>
+
+
+
+<a name="313124866"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332200-shipdriver/topic/%28no%20topic%29/near/313124866" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Dave Register <a href="https://leamas.github.io/zulip-archive/stream/332200-shipdriver/topic/.28no.20topic.29.html#313124866">(Nov 30 2022 at 18:25)</a>:</h4>
+<p>I have update OCPN master branch, appyeyor script, to use the "official"  source images now.<br>
+v3.2.1/wxMSW-3.2.1_vc14x<br>
+Should resolve this collision automatically.  I'm in the process of updating o-charts_pi to ShipDriver, so I will confirm.</p>
+
+
+
+<a name="313146582"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332200-shipdriver/topic/%28no%20topic%29/near/313146582" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Alec Leamas <a href="https://leamas.github.io/zulip-archive/stream/332200-shipdriver/topic/.28no.20topic.29.html#313146582">(Nov 30 2022 at 20:14)</a>:</h4>
+<p><span class="user-mention" data-user-id="517002">@Dave Register</span>  Note the linkage problems, wxmsw32u vs wxmsw32ud , see above</p>
+
+
+
+<a name="313150657"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332200-shipdriver/topic/%28no%20topic%29/near/313150657" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Alec Leamas <a href="https://leamas.github.io/zulip-archive/stream/332200-shipdriver/topic/.28no.20topic.29.html#313150657">(Nov 30 2022 at 20:38)</a>:</h4>
+<p>I just made a build on Windows. I can reproduce the bad behaviour:  opencpn.exe links to msw32ud_ files i. e. the development libraries with debug info, but we want it to use msw32u, the release libraries. I'm on it...</p>
+
+
+
+<a name="313151110"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332200-shipdriver/topic/%28no%20topic%29/near/313151110" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Dave Register <a href="https://leamas.github.io/zulip-archive/stream/332200-shipdriver/topic/.28no.20topic.29.html#313151110">(Nov 30 2022 at 20:41)</a>:</h4>
+<p>Yes, I see the same.  Waiting for your patch...</p>
+
+
+
+<a name="313154515"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332200-shipdriver/topic/%28no%20topic%29/near/313154515" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Alec Leamas <a href="https://leamas.github.io/zulip-archive/stream/332200-shipdriver/topic/.28no.20topic.29.html#313154515">(Nov 30 2022 at 21:00)</a>:</h4>
+<p>This is not trivial... don't know if it will be today.</p>
+
+
+
+<a name="313166791"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332200-shipdriver/topic/%28no%20topic%29/near/313166791" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Alec Leamas <a href="https://leamas.github.io/zulip-archive/stream/332200-shipdriver/topic/.28no.20topic.29.html#313166791">(Nov 30 2022 at 22:11)</a>:</h4>
+<p>I give up for now. Filed an issue on wxWidgets forum: <a href="https://forums.wxwidgets.org/viewtopic.php?f=19&amp;t=49888">https://forums.wxwidgets.org/viewtopic.php?f=19&amp;t=49888</a></p>
+<p>Yes, I have reproduced this on the minimal sample in the wxw sources. So it's some basic, very basic problem. Let's see if there is any feedback</p>
+
+
+
+<a name="313178729"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332200-shipdriver/topic/%28no%20topic%29/near/313178729" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Alec Leamas <a href="https://leamas.github.io/zulip-archive/stream/332200-shipdriver/topic/.28no.20topic.29.html#313178729">(Nov 30 2022 at 23:42)</a>:</h4>
+<p>Back with new experiments, progress: using <code>cmake --build . --target package --config Release</code> fixes the linkage -- opencpn is linked  the the msw32u libraries. However, these libraries are not bundled in the NSIS package,  needs fixing. </p>
+<p>But with manual copying of the relevant libs it should maybe work for now.</p>
+
+
+
+<a name="313245921"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332200-shipdriver/topic/%28no%20topic%29/near/313245921" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Mike Rossiter <a href="https://leamas.github.io/zulip-archive/stream/332200-shipdriver/topic/.28no.20topic.29.html#313245921">(Dec 01 2022 at 10:30)</a>:</h4>
+<blockquote>
+<p>it should maybe work for now</p>
+</blockquote>
+<p>It does. Needed to remove the custom.dll in the program folder as well. Latest shipdriver_pi build and o-charts_pi from the catalog run fine.</p>
+
+
+
+<a name="313246176"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332200-shipdriver/topic/%28no%20topic%29/near/313246176" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Mike Rossiter <a href="https://leamas.github.io/zulip-archive/stream/332200-shipdriver/topic/.28no.20topic.29.html#313246176">(Dec 01 2022 at 10:32)</a>:</h4>
+<p>This using the leamas opencpn code.</p>
+
+
+
+<a name="313248158"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332200-shipdriver/topic/%28no%20topic%29/near/313248158" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Alec Leamas <a href="https://leamas.github.io/zulip-archive/stream/332200-shipdriver/topic/.28no.20topic.29.html#313248158">(Dec 01 2022 at 10:42)</a>:</h4>
+<p>Great to hear!  </p>
+<p>The open issue is about getting the dlls into the NSIS installer. :(</p>
+
+
+
+<a name="313371386"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332200-shipdriver/topic/%28no%20topic%29/near/313371386" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Mike Rossiter <a href="https://leamas.github.io/zulip-archive/stream/332200-shipdriver/topic/.28no.20topic.29.html#313371386">(Dec 01 2022 at 20:34)</a>:</h4>
+<blockquote>
+<p>The open issue is about getting the dlls into the NSIS installer.</p>
+</blockquote>
+<p>My naive solution was to replace the wxWidgets in <em>/buildwin</em> with <em>wx32u...vc_14x.dll</em> versions. This made a package that installed correctly, without any further action to replace files. Is this all that is needed, an updated <em>buildwin</em> <em>.7z</em> from <span class="user-mention" data-user-id="517002">@Dave Register</span> ?</p>
+
+
+
+<a name="313378519"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332200-shipdriver/topic/%28no%20topic%29/near/313378519" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Alec Leamas <a href="https://leamas.github.io/zulip-archive/stream/332200-shipdriver/topic/.28no.20topic.29.html#313378519">(Dec 01 2022 at 21:13)</a>:</h4>
+<p>Nothing  bad bad with a quick fix. But we certainly need something more sane in the long run. I know not all agree on this, but I do insist.</p>
+<p>I'm on it with the time I have. Trying to reset the build environment in OpenCPN, it 's a true nightmare today.</p>
+
+
+
+<a name="313426322"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332200-shipdriver/topic/%28no%20topic%29/near/313426322" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Dave Register <a href="https://leamas.github.io/zulip-archive/stream/332200-shipdriver/topic/.28no.20topic.29.html#313426322">(Dec 02 2022 at 04:46)</a>:</h4>
+<p>OK, I think I have a workable solution, at least for O58 release.<br>
+The trouble was not in NSIS (thank goodness), but in our cmake install step.  So I patched to do the following:</p>
+<ol>
+<li>In appveyor.yml, download wx321 Release DLLs, and install alongside the DLLs coming from the -dev package. </li>
+<li>In cmake install step, arrange to copy the required wx321 no-debug Release DLLs into the install directory.</li>
+<li>Happily, NSIS blindly copies what it finds in the install directory, and builds a package  without editorial comment.</li>
+</ol>
+<p>Seems to work.  Base package starts up, and o-charts loads correctly, since it uses ShipDriver template (mostly), which builds against wx321 Release.<br>
+Solution is in github master now.</p>
+<p>There may be more elegant solutions, but I am not  encouraging more work on this right now.  We need to stabilize, and get to Beta.<br>
+For the record, I am not opposed to using "officially maintained" libraries and components.  I only object to the build breakage and additional fiddly work it brings us, every darned time. :)</p>
+
+
+
+<a name="313452711"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332200-shipdriver/topic/%28no%20topic%29/near/313452711" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Alec Leamas <a href="https://leamas.github.io/zulip-archive/stream/332200-shipdriver/topic/.28no.20topic.29.html#313452711">(Dec 02 2022 at 08:59)</a>:</h4>
+<p>There is already an option in CMakeLists OCPN_BUNDLE_WXDLLS which obviously is aimed to fix exactly this.</p>
+
+
+
+<a name="313452865"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332200-shipdriver/topic/%28no%20topic%29/near/313452865" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Alec Leamas <a href="https://leamas.github.io/zulip-archive/stream/332200-shipdriver/topic/.28no.20topic.29.html#313452865">(Dec 02 2022 at 09:00)</a>:</h4>
+<p>I have an alternative solution under way, let's see if I can land it today. It offers some other benefits.</p>
+
+
+
+<a name="313471668"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332200-shipdriver/topic/%28no%20topic%29/near/313471668" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Alec Leamas <a href="https://leamas.github.io/zulip-archive/stream/332200-shipdriver/topic/.28no.20topic.29.html#313471668">(Dec 02 2022 at 10:47)</a>:</h4>
+<p><span class="user-mention" data-user-id="399559">@Mike Rossiter</span> Could you perhaps give me a hand? I have created a opencpn installer package, but it crashes directly on startup.  Problem is that  when I rebuild current master I get the same result, so I suspect it's something wrong with my windows box rather than the actual package.</p>
+<p>So, could you just try to download <a href="https://dl.cloudsmith.io/public/alec-leamas/opencpn/raw/files/opencpn-msvc_5.7.1+2813.31a35d8_setup.exe">https://dl.cloudsmith.io/public/alec-leamas/opencpn/raw/files/opencpn-msvc_5.7.1+2813.31a35d8_setup.exe</a>, install it and see if it crashes directly on startup also for you?</p>
+
+
+
+<a name="313484213"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332200-shipdriver/topic/%28no%20topic%29/near/313484213" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Mike Rossiter <a href="https://leamas.github.io/zulip-archive/stream/332200-shipdriver/topic/.28no.20topic.29.html#313484213">(Dec 02 2022 at 12:04)</a>:</h4>
+<blockquote>
+<p>install it and see if it crashes directly on startup also for you?</p>
+</blockquote>
+<p>It does not crash. Installs normally and previous wx32 plugins work correctly.</p>
+
+
+
+<a name="313484258"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332200-shipdriver/topic/%28no%20topic%29/near/313484258" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Mike Rossiter <a href="https://leamas.github.io/zulip-archive/stream/332200-shipdriver/topic/.28no.20topic.29.html#313484258">(Dec 02 2022 at 12:05)</a>:</h4>
+<p>Now back to the garden!</p>
+
+
+
+<a name="313504378"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332200-shipdriver/topic/%28no%20topic%29/near/313504378" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Dave Register <a href="https://leamas.github.io/zulip-archive/stream/332200-shipdriver/topic/.28no.20topic.29.html#313504378">(Dec 02 2022 at 13:54)</a>:</h4>
+<p>"There is already an option in CMakeLists OCPN_BUNDLE_WXDLLS which obviously is aimed to fix exactly this."<br>
+Which was broken....</p>
+
+
+
+<a name="313511188"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332200-shipdriver/topic/%28no%20topic%29/near/313511188" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Alec Leamas <a href="https://leamas.github.io/zulip-archive/stream/332200-shipdriver/topic/.28no.20topic.29.html#313511188">(Dec 02 2022 at 14:26)</a>:</h4>
+<p>I have fixed it. PR under way.</p>
+
+
+
+<a name="313512806"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332200-shipdriver/topic/%28no%20topic%29/near/313512806" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Alec Leamas <a href="https://leamas.github.io/zulip-archive/stream/332200-shipdriver/topic/.28no.20topic.29.html#313512806">(Dec 02 2022 at 14:34)</a>:</h4>
+<p><a href="https://github.com/OpenCPN/OpenCPN/pull/2841">https://github.com/OpenCPN/OpenCPN/pull/2841</a></p>
+
+
+
+<a name="313513868"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332200-shipdriver/topic/%28no%20topic%29/near/313513868" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Alec Leamas <a href="https://leamas.github.io/zulip-archive/stream/332200-shipdriver/topic/.28no.20topic.29.html#313513868">(Dec 02 2022 at 14:40)</a>:</h4>
+<p><span class="user-mention" data-user-id="399559">@Mike Rossiter</span> Thanks!</p>
+
+
+
+<a name="314127228"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332200-shipdriver/topic/%28no%20topic%29/near/314127228" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Alec Leamas <a href="https://leamas.github.io/zulip-archive/stream/332200-shipdriver/topic/.28no.20topic.29.html#314127228">(Dec 05 2022 at 21:23)</a>:</h4>
+<p><span class="user-mention" data-user-id="399559">@Mike Rossiter</span>      Back here after some work on the main OpenCPN side. Still not much time, kitchen repairs takes a toll. Are you aware of anything besides cleaning up the MasOS builds which stops us from making a release?</p>
+
+
+
+<a name="314194206"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332200-shipdriver/topic/%28no%20topic%29/near/314194206" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Mike Rossiter <a href="https://leamas.github.io/zulip-archive/stream/332200-shipdriver/topic/.28no.20topic.29.html#314194206">(Dec 06 2022 at 09:02)</a>:</h4>
+<blockquote>
+<p>Are you aware of anything besides cleaning up the MasOS builds which stops us from making a release?</p>
+</blockquote>
+<p>Nothing  in ShipDriver. Only concerned my crude update of <em>leamas/opencpn-libs/api</em>  does not match the <em>devel</em> version. And  for Windows an update of <em>opencpn-libs</em> may be needed as well as <em>update-templates</em>.</p>
+<p>Still have the toolbar icon problem with JavaScript_pi. Need to have another look at that.</p>
+
+
+
+<a name="314206249"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332200-shipdriver/topic/%28no%20topic%29/near/314206249" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Mike Rossiter <a href="https://leamas.github.io/zulip-archive/stream/332200-shipdriver/topic/.28no.20topic.29.html#314206249">(Dec 06 2022 at 10:24)</a>:</h4>
+<p>Last build from commit 3fea86e produced two debian bullseye armhf tarballs. The name is the same (ShipDriver-3.2-debian-A32-11-tarball ). Contents?</p>
+
+
+
+<a name="314215618"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332200-shipdriver/topic/%28no%20topic%29/near/314215618" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Mike Rossiter <a href="https://leamas.github.io/zulip-archive/stream/332200-shipdriver/topic/.28no.20topic.29.html#314215618">(Dec 06 2022 at 11:21)</a>:</h4>
+<p>Batch files in <em>buildwin</em> need updating or removing.</p>
+
+
+
+<a name="314222506"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332200-shipdriver/topic/%28no%20topic%29/near/314222506" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Alec Leamas <a href="https://leamas.github.io/zulip-archive/stream/332200-shipdriver/topic/.28no.20topic.29.html#314222506">(Dec 06 2022 at 12:04)</a>:</h4>
+<p>Thanks for feedback, I'll try to have a look. But, as I said earlier, kitchen takes most of my time so slow progress here.</p>
+
+
+
+<a name="314271918"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332200-shipdriver/topic/%28no%20topic%29/near/314271918" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Mike Rossiter <a href="https://leamas.github.io/zulip-archive/stream/332200-shipdriver/topic/.28no.20topic.29.html#314271918">(Dec 06 2022 at 16:22)</a>:</h4>
+<p>Possible typo in api-17 <em>CMakeLists.txt</em>:<br>
+Line 22:<br>
+OCPN_API_WX_32<br>
+Should it read:<br>
+OCPN_API_WX32</p>
+
+
+
+<a name="314616104"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332200-shipdriver/topic/%28no%20topic%29/near/314616104" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Alec Leamas <a href="https://leamas.github.io/zulip-archive/stream/332200-shipdriver/topic/.28no.20topic.29.html#314616104">(Dec 08 2022 at 07:11)</a>:</h4>
+<blockquote>
+<p>Last build from commit 3fea86e produced two debian bullseye armhf tarballs.</p>
+</blockquote>
+<p>Good catch, thanks! <a href="https://github.com/Rasbats/shipdriver_pi/pull/473">https://github.com/Rasbats/shipdriver_pi/pull/473</a></p>
+
+
+
+<a name="314616728"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332200-shipdriver/topic/%28no%20topic%29/near/314616728" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Alec Leamas <a href="https://leamas.github.io/zulip-archive/stream/332200-shipdriver/topic/.28no.20topic.29.html#314616728">(Dec 08 2022 at 07:17)</a>:</h4>
+<blockquote>
+<p>Possible typo in api-17 CMakeLists.txt:</p>
+</blockquote>
+<p>This is already fixed in current devel branch.  </p>
+<p>It's time to release opencpn-libs, at that point master will be updated to devel. However, before that it is crucial to add a api-18 library, without this plugins cannot access the new communications framework.</p>
+
+
+
+<a name="314621285"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332200-shipdriver/topic/%28no%20topic%29/near/314621285" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Mike Rossiter <a href="https://leamas.github.io/zulip-archive/stream/332200-shipdriver/topic/.28no.20topic.29.html#314621285">(Dec 08 2022 at 07:56)</a>:</h4>
+<p><span class="user-mention" data-user-id="517002">@Dave Register</span> : Could you provide Alec with an <em>opencpn.lib</em> or shall I make one from your <em>master</em> code?</p>
+
+
+
+<a name="314703180"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332200-shipdriver/topic/%28no%20topic%29/near/314703180" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Dave Register <a href="https://leamas.github.io/zulip-archive/stream/332200-shipdriver/topic/.28no.20topic.29.html#314703180">(Dec 08 2022 at 15:37)</a>:</h4>
+<p>Mike...<br>
+For now, you should use the one that is produced by a normal master build.</p>
+
+
+
+<a name="314704764"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332200-shipdriver/topic/%28no%20topic%29/near/314704764" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Mike Rossiter <a href="https://leamas.github.io/zulip-archive/stream/332200-shipdriver/topic/.28no.20topic.29.html#314704764">(Dec 08 2022 at 15:45)</a>:</h4>
+<p>Thanks. I will make a new build.</p>
+
+
+
+<a name="314724594"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332200-shipdriver/topic/%28no%20topic%29/near/314724594" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Mike Rossiter <a href="https://leamas.github.io/zulip-archive/stream/332200-shipdriver/topic/.28no.20topic.29.html#314724594">(Dec 08 2022 at 17:18)</a>:</h4>
+<p><span class="user-mention" data-user-id="399510">@Alec Leamas</span> <em>.lib</em> and <em>.h</em> are here:<br>
+<a href="/user_uploads/33951/kHoeoyZUMmdkg0AsHT_3IOOG/api-18">api-18</a><br>
+RelWithDebInfo version of the <em>.lib</em>.</p>
+
+
+
+<a name="314746392"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332200-shipdriver/topic/%28no%20topic%29/near/314746392" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Alec Leamas <a href="https://leamas.github.io/zulip-archive/stream/332200-shipdriver/topic/.28no.20topic.29.html#314746392">(Dec 08 2022 at 18:47)</a>:</h4>
+<p>Thanks! I'll try to find some time, probably tomorrow morning.</p>
+
+
+
+<a name="314779690"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332200-shipdriver/topic/%28no%20topic%29/near/314779690" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Alec Leamas <a href="https://leamas.github.io/zulip-archive/stream/332200-shipdriver/topic/.28no.20topic.29.html#314779690">(Dec 08 2022 at 21:56)</a>:</h4>
+<p><span class="user-mention" data-user-id="517002">@Dave Register</span>  api 18: Empty link? </p>
+<p>BTW: from which commit do you build?</p>
+
+
+
+<a name="314797586"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332200-shipdriver/topic/%28no%20topic%29/near/314797586" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Dave Register <a href="https://leamas.github.io/zulip-archive/stream/332200-shipdriver/topic/.28no.20topic.29.html#314797586">(Dec 09 2022 at 00:23)</a>:</h4>
+<p>I always build from master/HEAD</p>
+
+
+
+<a name="314897712"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332200-shipdriver/topic/%28no%20topic%29/near/314897712" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Alec Leamas <a href="https://leamas.github.io/zulip-archive/stream/332200-shipdriver/topic/.28no.20topic.29.html#314897712">(Dec 09 2022 at 13:46)</a>:</h4>
+<p>Still  nothing in that link. Rebuilt windows from 43d90aab, added library (Release) + pdb file to new subdirectory api-18 into devel branch.  Will merge into master and release opencpn-libs "shortly".</p>
+
+
+
+<a name="314905230"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332200-shipdriver/topic/%28no%20topic%29/near/314905230" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Mike Rossiter <a href="https://leamas.github.io/zulip-archive/stream/332200-shipdriver/topic/.28no.20topic.29.html#314905230">(Dec 09 2022 at 14:22)</a>:</h4>
+<blockquote>
+<p>Still nothing in that link</p>
+</blockquote>
+<p>My mistake. I thought I had made a zip file. Thanks for building.</p>
+
+
+
+<a name="315309695"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332200-shipdriver/topic/%28no%20topic%29/near/315309695" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Alec Leamas <a href="https://leamas.github.io/zulip-archive/stream/332200-shipdriver/topic/.28no.20topic.29.html#315309695">(Dec 12 2022 at 08:16)</a>:</h4>
+<p>I have one pending change for macos, stay tuned</p>
+
+
+
+<a name="315321620"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332200-shipdriver/topic/%28no%20topic%29/near/315321620" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Alec Leamas <a href="https://leamas.github.io/zulip-archive/stream/332200-shipdriver/topic/.28no.20topic.29.html#315321620">(Dec 12 2022 at 09:29)</a>:</h4>
+<p>No, I have nothing pending for the moment. Discussion at <a href="https://github.com/OpenCPN/OpenCPN/discussions/2797#discussioncomment-4373532">https://github.com/OpenCPN/OpenCPN/discussions/2797#discussioncomment-4373532</a></p>
+
+
+
+<a name="315326912"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332200-shipdriver/topic/%28no%20topic%29/near/315326912" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Mike Rossiter <a href="https://leamas.github.io/zulip-archive/stream/332200-shipdriver/topic/.28no.20topic.29.html#315326912">(Dec 12 2022 at 09:59)</a>:</h4>
+<p>MacOS has tarball name <em>ShipDriver-3.2-darwin-wx315-10.13.6-tar…</em>  <br>
+wx32?</p>
+
+
+
+<a name="315599105"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332200-shipdriver/topic/%28no%20topic%29/near/315599105" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Alec Leamas <a href="https://leamas.github.io/zulip-archive/stream/332200-shipdriver/topic/.28no.20topic.29.html#315599105">(Dec 13 2022 at 14:08)</a>:</h4>
+<p><span class="user-mention" data-user-id="399559">@Mike Rossiter</span>  Away for a while</p>
+
+
+
+<a name="316230431"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332200-shipdriver/topic/%28no%20topic%29/near/316230431" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Alec Leamas <a href="https://leamas.github.io/zulip-archive/stream/332200-shipdriver/topic/.28no.20topic.29.html#316230431">(Dec 16 2022 at 10:28)</a>:</h4>
+<p><span class="user-mention" data-user-id="399559">@Mike Rossiter</span>  My test case looks fine, and I think we have addressed all the things you have talked about. Time to make a 3.2.0 release?</p>
+
+
+
+<a name="316230890"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332200-shipdriver/topic/%28no%20topic%29/near/316230890" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Mike Rossiter <a href="https://leamas.github.io/zulip-archive/stream/332200-shipdriver/topic/.28no.20topic.29.html#316230890">(Dec 16 2022 at 10:30)</a>:</h4>
+<p>I would like to make another beta tag to test against other plugins.</p>
+
+
+
+<a name="316231438"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332200-shipdriver/topic/%28no%20topic%29/near/316231438" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Alec Leamas <a href="https://leamas.github.io/zulip-archive/stream/332200-shipdriver/topic/.28no.20topic.29.html#316231438">(Dec 16 2022 at 10:33)</a>:</h4>
+<p>More testing is not wrong....</p>
+
+
+
+<a name="316231488"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332200-shipdriver/topic/%28no%20topic%29/near/316231488" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Alec Leamas <a href="https://leamas.github.io/zulip-archive/stream/332200-shipdriver/topic/.28no.20topic.29.html#316231488">(Dec 16 2022 at 10:33)</a>:</h4>
+<p>I'll wait for input from you</p>
+
+
+
+<a name="316231573"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332200-shipdriver/topic/%28no%20topic%29/near/316231573" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Mike Rossiter <a href="https://leamas.github.io/zulip-archive/stream/332200-shipdriver/topic/.28no.20topic.29.html#316231573">(Dec 16 2022 at 10:33)</a>:</h4>
+<p>Thanks. beta6 coming.</p>
+
+
+
+<a name="316231858"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332200-shipdriver/topic/%28no%20topic%29/near/316231858" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Alec Leamas <a href="https://leamas.github.io/zulip-archive/stream/332200-shipdriver/topic/.28no.20topic.29.html#316231858">(Dec 16 2022 at 10:35)</a>:</h4>
+<p>NOte <a href="https://github.com/Rasbats/shipdriver_pi/pull/480">https://github.com/Rasbats/shipdriver_pi/pull/480</a></p>
+
+
+
+<a name="316233481"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332200-shipdriver/topic/%28no%20topic%29/near/316233481" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Mike Rossiter <a href="https://leamas.github.io/zulip-archive/stream/332200-shipdriver/topic/.28no.20topic.29.html#316233481">(Dec 16 2022 at 10:41)</a>:</h4>
+<p>Thanks - nearly missed that one. Now tagging.</p>
+
+
+
+<a name="316435636"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332200-shipdriver/topic/%28no%20topic%29/near/316435636" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Alec Leamas <a href="https://leamas.github.io/zulip-archive/stream/332200-shipdriver/topic/.28no.20topic.29.html#316435636">(Dec 17 2022 at 11:04)</a>:</h4>
+<p>Found a somewhat embarrassing error: <a href="https://github.com/Rasbats/shipdriver_pi/pull/482">https://github.com/Rasbats/shipdriver_pi/pull/482</a></p>
+
+
+
+<a name="316438868"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332200-shipdriver/topic/%28no%20topic%29/near/316438868" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Mike Rossiter <a href="https://leamas.github.io/zulip-archive/stream/332200-shipdriver/topic/.28no.20topic.29.html#316438868">(Dec 17 2022 at 11:22)</a>:</h4>
+<p>Now merged.<br>
+16 OS! <br>
+Tag 7 coming!<br>
+BTW found a fix for the bounding box problem that you solved with a patch for wxWidgets. Now using wxRect iso bbox for UKTides. Compiles but not yet tested with bullseye.</p>
+
+
+
+<a name="316439080"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332200-shipdriver/topic/%28no%20topic%29/near/316439080" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Mike Rossiter <a href="https://leamas.github.io/zulip-archive/stream/332200-shipdriver/topic/.28no.20topic.29.html#316439080">(Dec 17 2022 at 11:24)</a>:</h4>
+<p>How can I local build a plugin using GA? Thinking of <em>dashboardsk_pi</em>?</p>
+
+
+
+<hr><p>Last updated: Oct 05 2023 at 09:43 UTC</p>
+</html>

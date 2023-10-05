@@ -1,0 +1,38 @@
+[
+    {
+        "content": "<p><span class=\"user-mention\" data-user-id=\"522486\">@Håkan Svensson</span> </p>\n<blockquote>\n<p>Then when trying to build using VS2017 including the tests project it was one error instead </p>\n</blockquote>\n<p>I can just say \"works for me\", also on VS2017.  I'm using the  command line.</p>",
+        "id": 293840934,
+        "sender_full_name": "Alec Leamas",
+        "timestamp": 1660717147
+    },
+    {
+        "content": "<p>Hmm... So what's the difference? <br>\nNow setting sails and leaving the buoy. Back tonight.</p>",
+        "id": 293847005,
+        "sender_full_name": "Håkan Svensson",
+        "timestamp": 1660720835
+    },
+    {
+        "content": "<p>Happy sailing!</p>\n<p>I have pushed some Windows-related fixes to comm.  I'm pretty convinced that your problem is about %PATH%.  The fixes makes it possible to run tests using cmake, and  more details in test/README.md.  And yes, I have verified it ;)</p>",
+        "id": 293847800,
+        "sender_full_name": "Alec Leamas",
+        "timestamp": 1660721269
+    },
+    {
+        "content": "<p>Digging a little further. The \"X86 Native Tools Command Prompt\" has a <em>dumpbin</em> utility. I can use it like this</p>\n<div class=\"codehilite\"><pre><span></span><code>&gt; cd build\\test\\RelWithDebInfo\n\n&gt; dumpbin /dependents tests.exe\nMicrosoft (R) COFF/PE Dumper Version 14.16.27045.0\nCopyright (C) Microsoft Corporation.  All rights reserved.\nDump of file tests.exe\n\nFile Type: EXECUTABLE IMAGE\n\n  Image has the following dependencies:\n\n    wxbase312u_xml_vc_custom.dll\n    wxmsw312u_core_vc_custom.dll\n    wxbase312u_vc_custom.dll\n    archive.dll\n    libcurl.dll\n    KERNEL32.dll\n    MSVCP140.dll\n    VCRUNTIME140.dll\n    api-ms-win-crt-runtime-l1-1-0.dll\n    api-ms-win-crt-heap-l1-1-0.dll\n    api-ms-win-crt-stdio-l1-1-0.dll\n    api-ms-win-crt-filesystem-l1-1-0.dll\n    api-ms-win-crt-time-l1-1-0.dll\n    api-ms-win-crt-math-l1-1-0.dll\n    api-ms-win-crt-string-l1-1-0.dll\n    api-ms-win-crt-environment-l1-1-0.dll\n    api-ms-win-crt-convert-l1-1-0.dll\n    api-ms-win-crt-locale-l1-1-0.dll\n</code></pre></div>\n<p>The 0xc0000135 basically means that one or more of these libs cannot be found on %PATH%. It boils down to system libs, the wxWidgets pre-compiled stuff and <em>buildwin</em>. That is does not provide any info about which library is missing is IMHO  a shame.</p>",
+        "id": 293850096,
+        "sender_full_name": "Alec Leamas",
+        "timestamp": 1660722564
+    },
+    {
+        "content": "<p>Alec..<br>\nThanks for the hint of: \"dumpbin /dependents tests.exe\"<br>\nWhile having info about needed files my work around for now is to update my \"copyfiles.bat\" to include what's needed in \".\\build\\test\\RelWithDebInfo\"<br>\n(copyfiles.bat I use to copy files needed to debug and so on.)<br>\nNow the complete \"comm\" branch solution, including \"tests\" is built wo errors in my VS2017.<br>\nBTW: What's the purpose for test.exe?</p>",
+        "id": 294136868,
+        "sender_full_name": "Håkan Svensson",
+        "timestamp": 1660844622
+    },
+    {
+        "content": "<p>tests.exe is the first, minimal  set of unit tests. Unit tests is all the rage in modern development, google it and you will be enlightened. </p>\n<p>One can use unit tests in two ways. The first is under development of new functions, like the the communications framework here. If you really adapt the test driven development paradigm you first make a test case and then implements the code which makes the test pass. Makes you do the right thing,  not spending time on other \"good to have\" stuff.</p>\n<p>The other way is about avoiding regressions. Once all is set, the unit tests are part of the build. This  catches regressions, and also makes it possible to make much more aggressive rewrites of  existing code.  This is the core reason why these tests are so good, if we just could get more coverage.</p>\n<p>Another aspect is that these kind of unit tests are reproducible, making it easier to communicate.</p>\n<p>If you have built any modern piece of sw you should have seen unit tests, usually as a \"test\" target, traditionally executed between \"build' and \"install\".</p>",
+        "id": 294144272,
+        "sender_full_name": "Alec Leamas",
+        "timestamp": 1660846935
+    }
+]

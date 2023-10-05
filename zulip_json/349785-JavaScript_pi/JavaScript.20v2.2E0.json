@@ -1,0 +1,416 @@
+[
+    {
+        "content": "<p>V2.0 alpha is now available <a href=\"https://cloudsmith.io/~opencpn/repos/javascript-alpha/packages/\">in the repository</a>.  As I am MacOS only, please can some kind souls (<span class=\"user-mention\" data-user-id=\"399559\">@Mike Rossiter</span> ?) test on other platforms, especially as detailed here:</p>\n<p><strong>Console management</strong><br>\nWhen cruising, I normally have three JavaScripts running (keeping iNavX on mobile devices sync’d; tackAdvisor and a script that writes navigational data out for my FileMaker-based ship’s log).  Between passages, a fourth script writes tracks out as .kml files for my blog.  With the JavaScript plugin v1, having all these scripts running could get in the way of enjoying OpenCPN itself.  Although a script could be hidden, making it visible again involved unhiding all consoles.  JavaScript v2.0 makes all this much much better and easier.</p>\n<p>The following is true for MacOS: Windows can now be minimised to a size that just contains the traffic lights and the console name.  The minimum size is adjusted for name length and if the console is renamed the minimum size adjusts accordingly.  Consoles can be parked in the window bar above the chart, keeping them out of the chart itself.  If not in full-screen mode, a console can even be parked above the main window. A new script function <code>consolePark()</code> allows a script to park itself in available space at the highest level of other consoles.<br>\nWhen a console has output to display, it is enlarged so that the output can be seen.  It is now possible to enlarge and view parked consoles and minimise them again individually.  The test scripts now include a <em>Park console</em> test that exercises this.  Herewith a screen shot of how it looks under MacOS, showing five consoles of different name lengths.<br>\n<a href=\"/user_uploads/33951/r44M0ZmXJGq7KZqB3L7GHCMp/Parked-consoles-OSX.png\">Parked-consoles-OSX.png</a> </p>\n<div class=\"message_inline_image\"><a href=\"/user_uploads/33951/r44M0ZmXJGq7KZqB3L7GHCMp/Parked-consoles-OSX.png\" title=\"Parked-consoles-OSX.png\"><img src=\"/user_uploads/33951/r44M0ZmXJGq7KZqB3L7GHCMp/Parked-consoles-OSX.png\"></a></div><p>I have no idea how this will work out under Windows or other platforms.  In particular, the width allowing for different console name lengths may not be correct with different platform fonts.  It may require platform-specific tweaks.</p>\n<p><strong>messageBox( )</strong> <br>\nThis new function displays a modal message box - much easier for sequential steps in scripts than having to set up a dialogue with a function to process the user choice.</p>\n<p>Because scripts can execute functions in response to an event, a script could have more than one modal window open. It is also possible for a script to be closed with modal message boxes still displayed.  Clearing such windows is fraught but I have it such that orphaned message boxes can be later dismissed with any button without ill effect such as crashing OpenCPN.</p>\n<p>The test suite has been completely rewritten and makes much use of <code>messageBox( )</code>.  If you do not respond to a test action with a dialogue box open and the test times out, that is a good exercise of coping with orphaned windows.</p>\n<p><strong>Here is a full list of the changes in V2.0</strong></p>\n<p><em>Load script</em><br>\n The plugin now keeps a list of the ten most recently accessed script files. Load now displays a dialogue in which you can select a file from the lists or you can choose Other... which opens a file selection dialogue. You can also add a recent file to a list of favourites, which will always be offered, or you can remove a favourite. </p>\n<p><em>Consoles</em> </p>\n<ul>\n<li>The script and output panes are now more flexible and better optimise their space, including when resized.  </li>\n<li>The splitter sash between the script and output pane now shows adjustments while being moved.  </li>\n<li>Consoles can now be reduced to a minimal size just showing the console name to facilitate parking out of the way.  </li>\n<li>The consoles page of the tools now allows you to change the name of a console.  </li>\n</ul>\n<p><em>Extended APIs</em> </p>\n<ul>\n<li><code>readTextFile(fileString)</code> -  fileString can now be a URL and text will be read from that location, if OpenCPN is on-line.</li>\n</ul>\n<p><em>New APIs</em><br>\n * <code>onContextMenu()</code> - create a context menu item and handle its selection with a function <br>\n• <code>consoleName()</code> - set the console name from a script <br>\n• <code>consolePark()</code> - park this console <br>\n• <code>messageBox ()</code><br>\n• <code>OCPNgetCursorPosition()</code> - gets cursor position - useful with onContextMenu( )<br>\n• <code>OCPNsoundAlarm()</code>  - draw attention to script </p>\n<p><em>Other</em>  </p>\n<ul>\n<li>JavaScript engine updated from v2.5.0 to 2.7.0. Performance improvements and bug fixes only.  </li>\n<li><code>OCPNpushNMEA( )</code> now checks the sentence starts \"$.....,\"</li>\n</ul>\n<p><a href=\"https://github.com/antipole2/JavaScript_pi/blob/v2.0/documentation/JavaScript_plugin_user_guide.pdf\">Updated User Guide here.</a></p>",
+        "id": 310402168,
+        "sender_full_name": "Tony Voss",
+        "timestamp": 1668603661
+    },
+    {
+        "content": "<p>PS The builds assume OCPN5.6.2 - likely not good for later.</p>",
+        "id": 310404350,
+        "sender_full_name": "Tony Voss",
+        "timestamp": 1668604516
+    },
+    {
+        "content": "<p><span class=\"user-mention\" data-user-id=\"554731\">@Tony Voss</span>  Time is at a premium. Could you suggest one or two scripts that will stress test the plugin?</p>",
+        "id": 310434064,
+        "sender_full_name": "Mike Rossiter",
+        "timestamp": 1668612204
+    },
+    {
+        "content": "<p><span class=\"user-mention\" data-user-id=\"399559\">@Mike Rossiter</span>  The test suite tests almost all things in a pretty stressful way.  It is in the Test_scripts folder.  If you do not have the relevant version,  you can <a href=\"https://github.com/antipole2/JavaScript_pi/tree/v2.0/Tests_scripts\">download it from here</a>.<br>\nThe most critical testing is the console minimisation and parking.  I suggest you run the <em>Park console</em> test individually before running all, so you can study the result and compare with my screenshot without the time out timer timing out.  It would be good to see screenshots equivalent to mine above from the other platforms.</p>\n<p>The new thing not covered in the test suite is the completely new Load script button.  I don't expect it to have platform dependent issues but worth checking.    Load a few scripts and check they appear in the recents list and can be reloaded by selecting from the list.  Also in the Load scripts window check that <em>Organise favourites</em> allows you to make a recent a favourite and you can also remove a favourite.  The list of recents and favourites should be preserved across plugin deactivation and reactivation.</p>",
+        "id": 310449068,
+        "sender_full_name": "Tony Voss",
+        "timestamp": 1668616309
+    },
+    {
+        "content": "<p>Have done a major rework of the internals.  Rather similar stuff was being done in many different places, especially after JS code execution.  Now they all use the same methods afterwards() and wrapUp() to decide what happens next.  Also the decision on when to run the onExit() script and calling back to another console is all regularised and documented.</p>\n<p>The new messageBox() function has been a pain using wxMessageBox() as it proved impossible to dismiss the modal dialogue other than by pressing a button.  I have re-implemented it using wxDialog() for which endModal() works.</p>\n<p>The test script has had a major rework and more tests added.  If a test times out with a messageBox modal open, it now tidies up OK  <span aria-label=\"big smile\" class=\"emoji emoji-1f604\" role=\"img\" title=\"big smile\">:big_smile:</span> </p>\n<p>I have just built the new Apha2 into the JavaScript alpha repository.  Please can you magic up some time to test it on Windows and ?  Main thing is to run the test scripts.  You will need to retrieve upto date copies of test scrips and documentation - much has changed.  The builds are for OCPNv5.6.</p>\n<p>Thanks a million.</p>",
+        "id": 319649036,
+        "sender_full_name": "Tony Voss",
+        "timestamp": 1672944242
+    },
+    {
+        "content": "<blockquote>\n<p>test it on Windows</p>\n</blockquote>\n<p>I will look at this today. Need a break from updating plugins for 5.8.</p>",
+        "id": 319737261,
+        "sender_full_name": "Mike Rossiter",
+        "timestamp": 1672994004
+    },
+    {
+        "content": "<p>Problem with Windows. I have a clean O 5.6.2. Neither the alpha from Cloudsmith or my own tarball will run. OpenCPN crashes as soon as it is enabled. Traced the issue to <em>loadConfig()</em>.  Now playing with that function to locate the issue.</p>",
+        "id": 319765879,
+        "sender_full_name": "Mike Rossiter",
+        "timestamp": 1673005862
+    },
+    {
+        "content": "<p>Crash happens around line 308 of <em>JavaScript_pi.cpp</em> (l<em>oadConfig</em>):         </p>\n<div class=\"codehilite\"><pre><span></span><code>if (consoles == wxEmptyString){ // no consoles configured\n               new Console(m_parent_window, &quot;JavaScript&quot;);\n                }\n            else {\n</code></pre></div>\n<p>Tries to make a console and fails.</p>",
+        "id": 319770006,
+        "sender_full_name": "Mike Rossiter",
+        "timestamp": 1673007614
+    },
+    {
+        "content": "<p>You could probably reproduce this by removing all the JavaScript items from your <em>opencpn.ini</em> file.</p>",
+        "id": 319770128,
+        "sender_full_name": "Mike Rossiter",
+        "timestamp": 1673007679
+    },
+    {
+        "content": "<p>Ah!  Obviously, have not tested for first run recently.  Will come back with a fix but have family for lunch today.  Stand by.</p>",
+        "id": 319778267,
+        "sender_full_name": "Tony Voss",
+        "timestamp": 1673010875
+    },
+    {
+        "content": "<p>No problem. I will just chunder away.</p>\n<p>In loadConfig():</p>\n<div class=\"codehilite\"><pre><span></span><code>       int versionMajor = pConf-&gt;Read ( _T ( &quot;VersionMajor&quot; ), 0L );\n        int versionMinor = pConf-&gt;Read ( _T ( &quot;VersionMinor&quot; ), 0L );\n</code></pre></div>\n<p>Needed to change to:</p>\n<div class=\"codehilite\"><pre><span></span><code>       int versionMajor = pConf-&gt;Read ( _T ( &quot;VersionMajor&quot; ), 20L );\n        int versionMinor = pConf-&gt;Read ( _T ( &quot;VersionMinor&quot; ), 20L );\n</code></pre></div>\n<p>Problem still with:</p>\n<div class=\"codehilite\"><pre><span></span><code>if (consoles == wxEmptyString){ // no consoles configured\n               new Console(m_parent_window, &quot;JavaScript&quot;);\n                }\n            else {\n</code></pre></div>",
+        "id": 319794691,
+        "sender_full_name": "Mike Rossiter",
+        "timestamp": 1673016178
+    },
+    {
+        "content": "<blockquote>\n<p>In loadConfig():</p>\n<div class=\"codehilite\"><pre><span></span><code>   int versionMajor = pConf-&gt;Read ( _T ( &quot;VersionMajor&quot; ), 0L );\n    int versionMinor = pConf-&gt;Read ( _T ( &quot;VersionMinor&quot; ), 0L );\n</code></pre></div>\n\n<p>Needed to change to:</p>\n<div class=\"codehilite\"><pre><span></span><code>   int versionMajor = pConf-&gt;Read ( _T ( &quot;VersionMajor&quot; ), 20L );\n    int versionMinor = pConf-&gt;Read ( _T ( &quot;VersionMinor&quot; ), 20L );\n</code></pre></div>\n\n</blockquote>\n<p>Why?  Defaulting to zero is desired behaviour.  Why default to 20?</p>",
+        "id": 319929580,
+        "sender_full_name": "Tony Voss",
+        "timestamp": 1673085568
+    },
+    {
+        "content": "<blockquote>\n<p>Why default to 20?</p>\n</blockquote>\n<p>Not sure if the change is needed but to get to:</p>\n<div class=\"codehilite\"><pre><span></span><code> if (consoles == wxEmptyString)\n</code></pre></div>\n<p>I needed to make this change. 20L is used in other plugins.<br>\n I use <em>wxMessageBox(\"here\")</em> placed in the code to locate a bug.</p>",
+        "id": 319931075,
+        "sender_full_name": "Mike Rossiter",
+        "timestamp": 1673086242
+    },
+    {
+        "content": "<p>It seems like your .ini file says you have previously run the multi-console version (v &gt; 0.4) but there are zero consoles configured, which should not be.<br>\nBut, of course, even if it is nonsense, it should not crash OCPN.<br>\nPlease let me have a copy of the [PlugIns/JavaScript_pi] section of your .ini file that causes the crash.<br>\nAlso can you see in the crash report  where in the console constructer it is crashing?</p>",
+        "id": 319932610,
+        "sender_full_name": "Tony Voss",
+        "timestamp": 1673086946
+    },
+    {
+        "content": "<p>Tested with a blank .ini. As soon as JS is enabled the crash happens. No JS information in the .ini file as it has not yet run. It can't get past the loadConfig function.</p>\n<p>Log file not much help:<br>\n<a href=\"/user_uploads/33951/IhmQZsvPwtp3hXqLQ0bLVrua/opencpn.log\">opencpn.log</a> <br>\nI will try --loglevel debug next.</p>",
+        "id": 319934464,
+        "sender_full_name": "Mike Rossiter",
+        "timestamp": 1673087869
+    },
+    {
+        "content": "<blockquote>\n<p>--loglevel debug</p>\n</blockquote>\n<p>No help either. Same as the previous log.</p>",
+        "id": 319935365,
+        "sender_full_name": "Mike Rossiter",
+        "timestamp": 1673088312
+    },
+    {
+        "content": "<p>Still believe the problem is with constructing a console if JS has never been run.</p>\n<div class=\"codehilite\"><pre><span></span><code>if (consoles == wxEmptyString){ // no consoles configured\n               new Console(m_parent_window, &quot;JavaScript&quot;);\n                }\n            else {\n</code></pre></div>\n<p>I will now try and run v1.1b from the catalog and then try 2.0 again.</p>",
+        "id": 319935731,
+        "sender_full_name": "Mike Rossiter",
+        "timestamp": 1673088514
+    },
+    {
+        "content": "<p>Same crash even when I have JS information in the .ini file. BTW I am now running Win 10 on a new computer. Security?</p>",
+        "id": 319938231,
+        "sender_full_name": "Mike Rossiter",
+        "timestamp": 1673089674
+    },
+    {
+        "content": "<p>I am not aware of any such problem under MacOS.  I have run with no previous .ini entry and all is well.  Looks like a Windows issue or, possibly, something uninitialised that does not show up under MacOS.<br>\nThe particular call to the constructor you are crashing on relies on default values more than a call with previous consoles.<br>\nWhen OCPN crashes under MacOS, the crash report includes a call trace back with code line numbers.  I would be able to see where in the console constructor the problem arises.  Is such a trace available under Windows?    We need to find where in the constructor the problem is arising.</p>",
+        "id": 319941776,
+        "sender_full_name": "Tony Voss",
+        "timestamp": 1673091266
+    },
+    {
+        "content": "<p>No crash reports. No trace like the Mac as far as I know.<br>\nUsing a 1.1. ini with 2.0:</p>\n<div class=\"codehilite\"><pre><span></span><code>[PlugIns/JavaScript_pi]\nVersionMajor=1\nVersionMinor=1\nShowJavaScriptIcon=1\nCurrentDirectory=D:\\\\Downloads\\\\JavaScript_pi-1.1\\\\JavaScript_pi-1.1\\\\Tests_scripts\nJavaScript\\:ConsolePosX=491\nJavaScript\\:ConsolePosY=193\nJavaScript\\:DialogPosX=150\nJavaScript\\:DialogPosY=100\nJavaScript\\:AlertPosX=90\nJavaScript\\:AlertPosY=20\nJavaScript\\:AutoRun=0\nJavaScript\\:LoadFile=D:\\\\Downloads\\\\JavaScript_pi-1.1\\\\JavaScript_pi-1.1\\\\Tests_scripts\\\\00_main.js\nConsoles=JavaScript\n</code></pre></div>\n<p>I get up to the line before this in <em>loadConfig</em>:</p>\n<div class=\"codehilite\"><pre><span></span><code> new Console(m_parent_window, name, consolePosition, consoleSize, dialogPosition, alertPosition, fileString, autoRun, welcome);\n</code></pre></div>\n<p><em>JavaScript\\:AlertPosX=90</em> Those back slashes look a little strange when the name of the console does not have one.</p>",
+        "id": 319951134,
+        "sender_full_name": "Mike Rossiter",
+        "timestamp": 1673095581
+    },
+    {
+        "content": "<p>BTW - now using Visual Studio 2022 because this version will be used for 5.8.</p>",
+        "id": 319951368,
+        "sender_full_name": "Mike Rossiter",
+        "timestamp": 1673095662
+    },
+    {
+        "content": "<p>Hoorah ... found it. Line 313 of <em>JavaScriptgui_impl.h</em>.<br>\nNeeded to comment out:</p>\n<div class=\"codehilite\"><pre><span></span><code> this-&gt;setMinWidth()\n</code></pre></div>\n<p>Now to run the tests.</p>",
+        "id": 319964173,
+        "sender_full_name": "Mike Rossiter",
+        "timestamp": 1673100829
+    },
+    {
+        "content": "<p>Individual scripts are working fine so far. But the <em>main.js</em> script causes a crash.</p>",
+        "id": 319967212,
+        "sender_full_name": "Mike Rossiter",
+        "timestamp": 1673101891
+    },
+    {
+        "content": "<p>My method <code>setMinWidth( ) </code>makes use of <code>wxSize</code> related aspects of wxWindow.  Wonder if there is a wxWidgets issue on Windows.<br>\nIt also uses the constants set conditionally for Windows in consolePositioning.h</p>",
+        "id": 319968107,
+        "sender_full_name": "Tony Voss",
+        "timestamp": 1673102247
+    },
+    {
+        "content": "<p>Adding <em>#include \"wx/sizer.h\"</em> did not help.</p>",
+        "id": 319970144,
+        "sender_full_name": "Mike Rossiter",
+        "timestamp": 1673103167
+    },
+    {
+        "content": "<p>JavaScriptgui_imp.h line 1036 reads<br>\n<code> TRACE(4, wxString::Format(\"setMinWidth %s was minimised: %b\\nNew min size to %dx%d\", this-&gt;mConsoleName, newMinSize.x, newMinSize.y));</code><br>\nShould be<br>\n<code> TRACE(4, wxString::Format(\"setMinWidth %s was minimised: %b\\nNew min size to %dx%d\", this-&gt;mConsoleName, wasMinimized, newMinSize.x, newMinSize.y));</code><br>\nbut that does not explain the crash because TRACEing is off</p>",
+        "id": 319970513,
+        "sender_full_name": "Tony Voss",
+        "timestamp": 1673103329
+    },
+    {
+        "content": "<p>With <code>setMinWidth()</code> commented out, expect the console parking tests to not look right.</p>",
+        "id": 319970655,
+        "sender_full_name": "Tony Voss",
+        "timestamp": 1673103388
+    },
+    {
+        "content": "<blockquote>\n<p>But the main.js script causes a crash.</p>\n</blockquote>\n<p>It should be possible to add print statements to the <code>main.js</code> to find where it is causing a crash.  I have radically reworked that script but it should not be able to crash OCPN.  Perhaps a problem with one of my APIs.</p>",
+        "id": 319971047,
+        "sender_full_name": "Tony Voss",
+        "timestamp": 1673103601
+    },
+    {
+        "content": "<blockquote>\n<p>Those back slashes look a little strange</p>\n</blockquote>\n<p>Not so. Escaping the \":\" character.</p>",
+        "id": 319971464,
+        "sender_full_name": "Mike Rossiter",
+        "timestamp": 1673103778
+    },
+    {
+        "content": "<blockquote>\n<p>It should be possible to add print statements to the main.js</p>\n</blockquote>\n<p>I will see if I can do this.</p>",
+        "id": 319971590,
+        "sender_full_name": "Mike Rossiter",
+        "timestamp": 1673103838
+    },
+    {
+        "content": "<p><em>setMinWidth();</em> Found a workaround for Windows:</p>\n<div class=\"codehilite\"><pre><span></span><code>            wxSize size = this-&gt;GetSize();\n\n            if (size.x &lt; newMinSize.x) {\n                size.x = newMinSize.x;\n                this-&gt;SetSize(size);\n            } else {\n                this-&gt;SetSize(size);\n                return;\n            }\n</code></pre></div>\n<p>About line 1033 in <em>JavaScriptgui_impl.h</em>.<br>\nRunning the latest tests. BBL.</p>",
+        "id": 319981481,
+        "sender_full_name": "Mike Rossiter",
+        "timestamp": 1673108763
+    },
+    {
+        "content": "<p>Re your <code>setMinWidth()</code> code change...<br>\nMy original code did not SetSize if there was no change.<br>\nYou change resets the size even if no change.  Is that correct?  Why should it be necessary?  Strange that it fixes something.<br>\nYour return statement is not required.  It should return via the end, having perhaps having displayed the TRACE.</p>",
+        "id": 319982773,
+        "sender_full_name": "Tony Voss",
+        "timestamp": 1673109540
+    },
+    {
+        "content": "<p>Ok, removed the return and commented out the trace. This also works.</p>",
+        "id": 319987234,
+        "sender_full_name": "Mike Rossiter",
+        "timestamp": 1673111984
+    },
+    {
+        "content": "<p>Parking now ok. But consoles parked on top of each other.</p>",
+        "id": 319987459,
+        "sender_full_name": "Mike Rossiter",
+        "timestamp": 1673112136
+    },
+    {
+        "content": "<blockquote>\n<p>Parking now ok. But consoles parked on top of each other.</p>\n</blockquote>\n<p>When a console is parked, checks to see if it is already parked  - no action<br>\nThen it looks to see what other consoles are already parked and places itself to the right of the rightmost parked console.<br>\nIssue is most likely that it is failing to determine whether a console is parked.  This could follow from issues you seem to be having with GetSize/SetSize.<br>\nThe test is done in the function <code>duk_consolePark( )</code> to be found in JSextensions.cpp<br>\nThe test is <br>\nline 593 for own console: <code>if (size.y &lt;= CONSOLE_MIN_HEIGHT){  // this console regarded as already parked </code></p>\n<p>line 602 for other consoles: <code>bool wasMinimized = (oldSize.y &lt;= CONSOLE_MIN_HEIGHT+1);  // allow for rounding error</code></p>\n<p>Note the + 1 added in case of rounding error.  <strong>If that test fails</strong>, it will not be recognized as already parked and the present console may be parked on top of it.</p>\n<p>If you need to see what values are being returned, you could turn on tracing by setting in trace.h some value like 1<br>\n<code>#define TRACE_LEVEL 0   // set to zero to omit all tracing code</code><br>\nand then insert TRACE(1, &lt;whatever to display&gt;);</p>",
+        "id": 319990840,
+        "sender_full_name": "Tony Voss",
+        "timestamp": 1673114296
+    },
+    {
+        "content": "<p>No need to comment out TRACE.  If TRACE_LEVEL set to zero, no code is inserted - it just gets a warning when compiling.</p>",
+        "id": 319990920,
+        "sender_full_name": "Tony Voss",
+        "timestamp": 1673114360
+    },
+    {
+        "content": "<blockquote>\n<p>No need to comment out TRACE</p>\n</blockquote>\n<p>Restored all your original code. To stop it crashing I still had to comment out TRACE.  No other changes to the code were needed. Now looking at parking.</p>",
+        "id": 320059987,
+        "sender_full_name": "Mike Rossiter",
+        "timestamp": 1673174771
+    },
+    {
+        "content": "<p>For the parking test the consoles were not spread out. There is a test, line 603 of <em>JSExtensions.cpp</em>:</p>\n<div class=\"codehilite\"><pre><span></span><code>            bool wasMinimized = (oldSize.y &lt;= CONSOLE_MIN_HEIGHT+1);    // allow for rounding error\n            if (!wasMinimized) continue;    // omit non-minimized from this\n</code></pre></div>\n<p>Removing the test (if (//!wasMinimized etc) allows the consoles to spread out across the canvas.<br>\nBut ... the minimum width of console 2 does not take place.<br>\nThis links to the problems with <em>setMinWidth()</em> where the same test is used.</p>",
+        "id": 320066154,
+        "sender_full_name": "Mike Rossiter",
+        "timestamp": 1673178776
+    },
+    {
+        "content": "<p>Thanks - suggest you stand by on this - once out of bed <span aria-label=\"blush\" class=\"emoji emoji-1f60a\" role=\"img\" title=\"blush\">:blush:</span> I will complete revamped TRACE and let you have version with lots of helpful relevant debug tracing in it.</p>",
+        "id": 320066555,
+        "sender_full_name": "Tony Voss",
+        "timestamp": 1673179040
+    },
+    {
+        "content": "<p>Just pushed Alpha3 to repository at 13:32</p>\n<ul>\n<li>Fixed that TRACE statement - I think.  Interesting an invalid %b in format string showed up in Windows but not MacOS</li>\n<li>Revamped tracing so can now trace a range of levels</li>\n<li>This build traces levels 25-30</li>\n<li>setMinWinth() and consolePark() have lots of tracing in them, which should help you find what your problem is.  You can always add extra trace detail if required.</li>\n</ul>\n<p>To keep things simple, rather than running the parking test script, simply run the one line script<br>\n<code>consolePark(); scriptResult();</code><br>\nin one or more windows.  Create extra windows with various name length with the tools console tab.</p>\n<p>To remove all tracing, in trace.h change line 20 to <code>#undef TRACE_YES</code></p>\n<p>Tip: To avoid confusing number of trace windows, close  before reinstalling plugin, when a new one will be created..</p>",
+        "id": 320078432,
+        "sender_full_name": "Tony Voss",
+        "timestamp": 1673185718
+    },
+    {
+        "content": "<blockquote>\n<p>To remove all tracing, in trace.h change line 20 to #undef TRACE_YES</p>\n</blockquote>\n<p>On Windows this did not work for me. Still needed to comment out the line:<br>\n        //TRACE(4, wxString::Format(\"setMinWidth %s was minimised: %b\\nNew min size to %dx%d\", this-&gt;mConsoleName, newMinSize.x, newMinSize.y));</p>\n<p>Still the parking problem of  consoles not spreading out across the canvas and minimizing not working.</p>",
+        "id": 320086811,
+        "sender_full_name": "Mike Rossiter",
+        "timestamp": 1673190392
+    },
+    {
+        "content": "<p>???<br>\nIn JavaScriptgui_imp.h, the trace statement is now at line 1036 and reads:<br>\n<code>TRACE(28, wxString::Format(\"setMinWidth %s was minimised: %s\\nNew min size to X:%i  Y:%i\", this-&gt;mConsoleName, wasMinimized?\"true\":\"false\", newMinSize.x, newMinSize.y));</code><br>\nnot what you just quoted.  Are you sure you have my latest src?</p>",
+        "id": 320087468,
+        "sender_full_name": "Tony Voss",
+        "timestamp": 1673190777
+    },
+    {
+        "content": "<blockquote>\n<p>Are you sure you have my latest src?</p>\n</blockquote>\n<p>Checking.</p>",
+        "id": 320087930,
+        "sender_full_name": "Mike Rossiter",
+        "timestamp": 1673190988
+    },
+    {
+        "content": "<p>Ah ... did not update my fork!</p>",
+        "id": 320088323,
+        "sender_full_name": "Mike Rossiter",
+        "timestamp": 1673191206
+    },
+    {
+        "content": "<p>Just updated again at 15:24 - compiling now..<br>\nPreviously, when no trace,  <code>TRACE(4, xxx);</code> compiled to <code>(4,xxx);</code> which got a compiler warning and might be causing your Windows problem.<br>\nNow using proper macro parameters  and when no trace it compiles to  ((void) 0);  No compiler warning.</p>",
+        "id": 320089299,
+        "sender_full_name": "Tony Voss",
+        "timestamp": 1673191745
+    },
+    {
+        "content": "<p>PS the <code>(void)0</code> needed because there is a ; after so we need something</p>",
+        "id": 320089454,
+        "sender_full_name": "Tony Voss",
+        "timestamp": 1673191845
+    },
+    {
+        "content": "<p>The trace now looks good. b4 your latest update I get this error message when running the parking.js script:</p>\n<div class=\"codehilite\"><pre><span></span><code>Error\nfindConsoleByCtx failed to match console\n</code></pre></div>",
+        "id": 320089878,
+        "sender_full_name": "Mike Rossiter",
+        "timestamp": 1673192153
+    },
+    {
+        "content": "<p>Results of parking script.<br>\nDoes not seem to detect that previous console is parked.<br>\n<a href=\"/user_uploads/33951/jPtDiS7SpMvnF4jLQS5RQSj2/parking.txt\">parking.txt</a></p>",
+        "id": 320091123,
+        "sender_full_name": "Mike Rossiter",
+        "timestamp": 1673192906
+    },
+    {
+        "content": "<blockquote>\n<p>consolePark(); scriptResult();</p>\n</blockquote>\n<p>With this the parking works and also the mini-console shrinks.</p>",
+        "id": 320093391,
+        "sender_full_name": "Mike Rossiter",
+        "timestamp": 1673194212
+    },
+    {
+        "content": "<p>Not sure why but for the test:</p>\n<div class=\"codehilite\"><pre><span></span><code>        bool wasMinimized = (oldSize.y &lt;= CONSOLE_MIN_HEIGHT+1);    // allow for rounding error\n</code></pre></div>\n<p>Changed to:</p>\n<div class=\"codehilite\"><pre><span></span><code>        bool wasMinimized = (oldSize.y &gt;= CONSOLE_MIN_HEIGHT+1);    // allow for rounding error\n</code></pre></div>\n<p>And the consoles spread across the canvas AND the #2 console shrinks properly.<br>\nWith the simple script:<br>\n<em>consolePark(); scriptResult();</em><br>\nThe parking  works correctly as well.</p>",
+        "id": 320095222,
+        "sender_full_name": "Mike Rossiter",
+        "timestamp": 1673195195
+    },
+    {
+        "content": "<p>My twisted logic is that we need wasMinimized to be true in order to minimise the console.</p>",
+        "id": 320096053,
+        "sender_full_name": "Mike Rossiter",
+        "timestamp": 1673195714
+    },
+    {
+        "content": "<p>Clearly, the test is failing as written on Windows but not on MacOS.  Your kludge forces it to success - but always, even when it should not.<br>\nI suspect on Windows SetMinSize() is not setting it exactly as that.  Perhaps rounding, or perhaps allowing for some minimum minimum.<br>\nWe need to find out what it is doing with it.<br>\nIn JSExtensions.cpp please insert these extra lines after line 622   pConsole-&gt;SetSize(minSize);</p>\n<div class=\"codehilite\"><pre><span></span><code>// temp\n        wxSize readBack  = pConsole-&gt;GetMinSize();\n        TRACE(25, wxString::Format(&quot;%s-&gt;consolePark() resize to X:%i  Y:%i readback is X:%i  Y:%i&quot;,\n            pConsole-&gt;mConsoleName, minSize.x, minSize.y, readBack.x, readBack.y));\n// end of temp\n</code></pre></div>\n<p>For me this shows I get back what was set:</p>\n<blockquote>\n<p>L25   PluginTests-&gt;consolePark() resize to X:183  Y:20 readback is X:183  Y:20</p>\n</blockquote>",
+        "id": 320099293,
+        "sender_full_name": "Tony Voss",
+        "timestamp": 1673197860
+    },
+    {
+        "content": "<p>Without the kludge:</p>\n<div class=\"codehilite\"><pre><span></span><code>L0  â€“â€“â€“â€“â€“â€“â€“â€“â€“â€“â€“â€“â€“â€“â€“ Run console Test\nL25 consolePark canvas position X:9  Y:32\nL25 consolePark parkingBase:20\nL25 Test-&gt;consolePark() on call position X:580  Y:149  size X:680  Y:700\nL25 Test-&gt;consolePark() to be parked\nL25 Test-&gt;consolePark() first to be parked\nL25 Test-&gt;consolePark() resize to X:0  Y:0 readback is X:90  Y:13\nL25 Test-&gt;consolePark() parked at position X:79  Y:20  size X:90  Y:13\n</code></pre></div>",
+        "id": 320100423,
+        "sender_full_name": "Mike Rossiter",
+        "timestamp": 1673198642
+    },
+    {
+        "content": "<p>Back later.</p>",
+        "id": 320101216,
+        "sender_full_name": "Mike Rossiter",
+        "timestamp": 1673199216
+    },
+    {
+        "content": "<p>So it seems that , under Windows, if the minimum size has never been set, GetMinSize( ) returns (0,0) although the documentation says it should take note of the sizers.<br>\nIf a console is renamed with the tools, the minimum size gets set.  But if it has not been renamed, it will not have had its minimum size set explicitly.  So...  we better do that in the console constructor.<br>\nJavaScriptgui_impl.h after line 273: <code>mBrief.briefingConsoleName = wxEmptyString;</code> please insert:<br>\n<code>setMinWidth();</code><br>\nThat method actually sets both  min width and height.</p>",
+        "id": 320102182,
+        "sender_full_name": "Tony Voss",
+        "timestamp": 1673199944
+    },
+    {
+        "content": "<p>After the change:</p>\n<div class=\"codehilite\"><pre><span></span><code>L28 setMinWidth Test was minimised: false\nNew min size to X:90  Y:13\nL28 setMinWidth Test was minimised: false\nNew min size to X:90  Y:13\nL0  â€“â€“â€“â€“â€“â€“â€“â€“â€“â€“â€“â€“â€“â€“â€“ Run console Test\nL25 consolePark canvas position X:9  Y:32\nL25 consolePark parkingBase:20\nL25 Test-&gt;consolePark() on call position X:61  Y:236  size X:680  Y:700\nL25 Test-&gt;consolePark() to be parked\nL25 Test-&gt;consolePark() first to be parked\nL25 Test-&gt;consolePark() resize to X:0  Y:0 readback is X:90  Y:13\nL25 Test-&gt;consolePark() parked at position X:79  Y:20  size X:90  Y:13\n</code></pre></div>",
+        "id": 320102974,
+        "sender_full_name": "Mike Rossiter",
+        "timestamp": 1673200492
+    },
+    {
+        "content": "<p>Knocking off for Sunday evening.  Back tomorrow.  May need to read back in <code>setMinWidth()</code> to find out what is going on.</p>",
+        "id": 320103855,
+        "sender_full_name": "Tony Voss",
+        "timestamp": 1673201120
+    },
+    {
+        "content": "<p>When you started testing JS v2 for me, parking worked OK, apart from needing some tweaking.  Issue with minSize not apparent.  So what has changed?  Different Windows?  Or are you testing the new OCPN with different wxWidgets?</p>",
+        "id": 320107603,
+        "sender_full_name": "Tony Voss",
+        "timestamp": 1673203767
+    },
+    {
+        "content": "<blockquote>\n<p>So what has changed?</p>\n</blockquote>\n<p>Now on Win10, VS2022. wxWidgets still 3.1.2. MacOS uses 3.1.5. Before I was using VS2017, Win8.1.<br>\nBoating today but tomorrow I will flash up my old pc and see if things change.</p>",
+        "id": 320166558,
+        "sender_full_name": "Mike Rossiter",
+        "timestamp": 1673251523
+    },
+    {
+        "content": "<p>Appveyor uses VS2017 so a new build in Cloudsmith would be useful for a test.</p>",
+        "id": 320166852,
+        "sender_full_name": "Mike Rossiter",
+        "timestamp": 1673251675
+    },
+    {
+        "content": "<p>May be on to something... suggest stand by until further info.</p>",
+        "id": 320292098,
+        "sender_full_name": "Tony Voss",
+        "timestamp": 1673287789
+    },
+    {
+        "content": "<p>I suspect problem with not recognising a parked console to do with settings in consolePositioning.h and different way Windows behaves if  a window is set smaller than Windows likes.  Am working on a way of reliably determining the values for a given platform.  But it will take a while and I have other calls on my time as well, so please stand by.  No point in you spending effort on it as there will be changes to support what I have in mind.</p>",
+        "id": 320338560,
+        "sender_full_name": "Tony Voss",
+        "timestamp": 1673301384
+    },
+    {
+        "content": "<p>Your build system is about a year behind the last wx3.1.2 ShipDriver templates. Probably not worth worrying at this stage but for keeping in mind. sd3.1.4 was the last template for wx3.1.2/wx3.1.5. Alec and I are having some issues with Debian Bookworm builds for OpenCPN 5.7/5.8 but the sd3.2 series of templates are for wxWidgets 3.2.1.</p>",
+        "id": 322082841,
+        "sender_full_name": "Mike Rossiter",
+        "timestamp": 1674056212
+    },
+    {
+        "content": "<p>Final? test  Alpha 6   built just now at 12:55.</p>\n<p><strong>New help page in tools with documentation links</strong> <br>\nThis is available directly from the ? button top right in console.<br>\nOn first run or update of plugin, help page automatically shown<br>\nAlso from Preferences button in plugin entry in  OCPN Options list</p>\n<p><strong>StartStyling mask now wxWidgets version dependent rather than platform dependent</strong></p>\n<p><strong>Inclusion of '_' in plugin name now wxWidgets version dependent rather than platform dependent</strong></p>\n<p><strong>Compiler warnings all eliminated - at least on MacOS</strong></p>\n<p><strong>Linux dependencies we introduced all removed</strong></p>\n<p>Would appreciate your blessing.</p>",
+        "id": 322856953,
+        "sender_full_name": "Tony Voss",
+        "timestamp": 1674393120
+    },
+    {
+        "content": "<blockquote>\n<p>Would appreciate your blessing.</p>\n</blockquote>\n<p>No blessings available here! I will have a play.</p>",
+        "id": 322864901,
+        "sender_full_name": "Mike Rossiter",
+        "timestamp": 1674396892
+    },
+    {
+        "content": "<p>Cannot see an msvc tarball in Cloudsmith. Did the appveyor build fail for some reason. I had problems with #if def in consolePositioning.h. Used this to make it compile:</p>\n<div class=\"codehilite\" data-code-language=\"#ifdef\"><pre><span></span><code>#define CONSOLE_MIN_HEIGHT 20L\n#define CONSOLE_STUB 50L\n#define PARK_LEVEL 25L\n#define PARK_FIRST_X 70L\n#define PARK_SEP 8L\n\n\n#elif defined(__LINUX__)\n#define CONSOLE_MIN_HEIGHT 38L\n#define CONSOLE_STUB 79L\n#define PARK_LEVEL 48L\n#define PARK_FIRST_X 66L\n#define PARK_SEP 21L\n\n#else\n//includes MacOS\n#define CONSOLE_MIN_HEIGHT 29L\n#define CONSOLE_STUB 77L\n#define PARK_LEVEL 25L\n#define PARK_FIRST_X 3L\n#define PARK_SEP 6L\n\n#endif\n\n#endif      // consolePositioning_h\n</code></pre></div>",
+        "id": 322868690,
+        "sender_full_name": "Mike Rossiter",
+        "timestamp": 1674398644
+    },
+    {
+        "content": "<p>Linux - all tests passed. Success.</p>",
+        "id": 322869689,
+        "sender_full_name": "Mike Rossiter",
+        "timestamp": 1674399073
+    },
+    {
+        "content": "<p>Oops... yes should be using #elif - now fixed and pushed.  appveyor build was tripping on that but has now succeeded.<br>\nPlease let me know when you are content with it all.</p>",
+        "id": 322878811,
+        "sender_full_name": "Tony Voss",
+        "timestamp": 1674403525
+    },
+    {
+        "content": "<p>All looks good here. Go for it.</p>",
+        "id": 322880850,
+        "sender_full_name": "Mike Rossiter",
+        "timestamp": 1674404579
+    }
+]
