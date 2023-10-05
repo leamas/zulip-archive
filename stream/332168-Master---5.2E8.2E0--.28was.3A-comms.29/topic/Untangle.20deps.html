@@ -1,0 +1,40 @@
+<html>
+<head><meta charset="utf-8"><title>Untangle deps · Master - 5.8.0  (was: comms) · Zulip Chat Archive</title></head>
+<h2>Stream: <a href="https://leamas.github.io/zulip-archive/stream/332168-Master---5.2E8.2E0--.28was.3A-comms.29/index.html">Master - 5.8.0  (was: comms)</a></h2>
+<h3>Topic: <a href="https://leamas.github.io/zulip-archive/stream/332168-Master---5.2E8.2E0--.28was.3A-comms.29/topic/Untangle.20deps.html">Untangle deps</a></h3>
+
+<hr>
+
+<base href="https://opencpn.zulipchat.com">
+
+<head><link href="https://leamas.github.io/zulip-archive/style.css" rel="stylesheet"></head>
+
+<a name="299007920"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332168-Master%20-%205.8.0%20%20%28was%3A%20comms%29/topic/Untangle%20deps/near/299007920" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Alec Leamas <a href="https://leamas.github.io/zulip-archive/stream/332168-Master---5.2E8.2E0--.28was.3A-comms.29/topic/Untangle.20deps.html#299007920">(Sep 15 2022 at 16:34)</a>:</h4>
+<p>I have partly recovered, and made test shot which untangles many, many dependencies.  It is not in a state which can be merged, the history is a joke. To be useful one would need to merge this in small pieces. It's a bit hard, since everything depends on everything until done, but probably doable.</p>
+<p>Some bits and pieces:</p>
+<ul>
+<li>The route/waypoint database which now is in navutils is separated so it can be used without depending on the complete navutils mess.</li>
+<li>Track, Route, RoutePoint and  RouteMan have been splitted in to a gui part + core, thus making it possible to use the core elements without importing gui deps.</li>
+<li>Call from lower layers to dialogs have been handled using EventVar, std::function and, sparingly, evil #ifdefs.</li>
+<li>Various functions in navutil , OCPNPlatform have been  moved out of the guid deps part.</li>
+</ul>
+<p>I do think these are important and good steps. Will try to create some  sane merge candidates later. For now, pushing the branch comm_deps which is the current status. It compiles and links cleanly, opencpn-cmd "seems" to work. The last test fails  due to test code problems, otherwise OK.</p>
+
+
+
+<a name="299039979"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332168-Master%20-%205.8.0%20%20%28was%3A%20comms%29/topic/Untangle%20deps/near/299039979" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Dave Register <a href="https://leamas.github.io/zulip-archive/stream/332168-Master---5.2E8.2E0--.28was.3A-comms.29/topic/Untangle.20deps.html#299039979">(Sep 15 2022 at 19:43)</a>:</h4>
+<p>OK, huge amount of work here.  Thanks for tackling this.  I would not have the energy to redo 10 years of code and creeping bit-rot...<br>
+Is it safe for me to work on comm_n0183_output.cpp/h while you work on comm_deps branch?</p>
+
+
+
+<a name="299053038"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332168-Master%20-%205.8.0%20%20%28was%3A%20comms%29/topic/Untangle%20deps/near/299053038" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Alec Leamas <a href="https://leamas.github.io/zulip-archive/stream/332168-Master---5.2E8.2E0--.28was.3A-comms.29/topic/Untangle.20deps.html#299053038">(Sep 15 2022 at 21:16)</a>:</h4>
+<p>Yes, so was my plan. I will try to merge this piece by piece, trying to not break that many eggs...</p>
+
+
+
+<hr><p>Last updated: Oct 05 2023 at 09:43 UTC</p>
+</html>

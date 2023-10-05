@@ -1,0 +1,92 @@
+[
+    {
+        "content": "<p>With AIS transmissions there is the concern about publishing code that could be used for spoofing. <br>\n<span class=\"user-mention\" data-user-id=\"517002\">@Dave Register</span> Are there any restrictions on having a private plugin running on OpenCPN, as far as licences are concerned. EU RIS have raised this issue. The Tx plugin would not appear in the catalog.</p>",
+        "id": 307714364,
+        "sender_full_name": "Mike Rossiter",
+        "timestamp": 1667477750
+    },
+    {
+        "content": "<p>Mike...</p>\n<ol>\n<li>I do not know who EU RIS is.  Background?</li>\n<li>A plugin that is \"published\" in any way will need to honor the GPL, since it by definition will include wxWidgets linkages.  So, in general, the source code must be published as well.</li>\n<li>That said, there is a mechanism to include a closed source blob in the plugin, as long as the interface to such blob does not involve direct object linkage.</li>\n</ol>\n<p>So, to answer fully, I'd need more info.</p>",
+        "id": 307733007,
+        "sender_full_name": "Dave Register",
+        "timestamp": 1667483507
+    },
+    {
+        "content": "<blockquote>\n<p>I do not know who EU RIS </p>\n</blockquote>\n<p>European Union River Information Services.</p>",
+        "id": 307736432,
+        "sender_full_name": "Mike Rossiter",
+        "timestamp": 1667484392
+    },
+    {
+        "content": "<p>This is the ais message we are working with:<br>\n<a href=\"https://www.e-navigation.nl/content/isrs-text-message\">https://www.e-navigation.nl/content/isrs-text-message</a></p>",
+        "id": 307736751,
+        "sender_full_name": "Mike Rossiter",
+        "timestamp": 1667484479
+    },
+    {
+        "content": "<p>With public code anyone could make and send spoof ais messages using a plugin/transceiver. <br>\n<span class=\"user-mention\" data-user-id=\"559084\">@Fabian Olsthoorn</span>  is the intern working on this project.</p>",
+        "id": 307737283,
+        "sender_full_name": "Mike Rossiter",
+        "timestamp": 1667484596
+    },
+    {
+        "content": "<p>I see the vulnerability.  But not sure how it relates to OCPN specifically.  Yes, we potentially make spoofing somehow \"easier\".  But it is just code that anyone skilled in the art could write from scratch.<br>\nIs there a proposal for some unpublished component to handle this message?</p>",
+        "id": 307862353,
+        "sender_full_name": "Dave Register",
+        "timestamp": 1667520613
+    },
+    {
+        "content": "<blockquote>\n<p>Is there a proposal for some unpublished component to handle this message?</p>\n</blockquote>\n<p>Inland ECDIS (Periskal, Tresco etc) are ready to use these messages. I have an alpha plugin that is ready to decode the text messages (public).<br>\n<span class=\"user-mention\" data-user-id=\"559084\">@Fabian Olsthoorn</span> ^^</p>",
+        "id": 307896229,
+        "sender_full_name": "Mike Rossiter",
+        "timestamp": 1667546342
+    },
+    {
+        "content": "<p>Hmm, I'm fairly certain that using OpenCPN is a must have. I will ask my supervisor what they want me to do about this. </p>\n<p>Like Dave said anyone could just write code to encode and send our message. I've asked them about this before. The client told me he wanted a form of encryption added, so maybe this is already enough. </p>\n<p>Keeping the plug-in private is also a must have. So I'll tell them about the GPL aswell and see what they want with that problem.</p>",
+        "id": 307901053,
+        "sender_full_name": "Fabian Olsthoorn",
+        "timestamp": 1667548962
+    },
+    {
+        "content": "<p>As long as the core issue is that it should not be possible to spoof bogus messages,  my personal opinion is that keeping  the plugin private does not make much sense. As Dave pointed out, as long as the protocol does not have any security provisions, the simple fact is that it is possible to spoof messages. This is the situation for \"standard\" AIS data.</p>\n<p>If there is a need to block this possibility I also don't see that encryption is meaningful. After all, the problem is to verify that the received data is correct rather than to keep it private (?)</p>\n<p>Which boils down to that a possible solution to this would be to sign each sent message using standard public key tools, and that the receiving side verifies the signature. This would make it possible for a receiver to check if  the AIS  sender is legitimate. </p>\n<p>For the receivers, this would mean they  would have to maintain a list of good public keys representing known good data sources. This list might need tools to be updated.</p>\n<p>For the senders, it means using a secret key in the deployment process. In general, this is more complicated -- how complicated depends on the use case. </p>\n<p>The problem to verify data is actually a standard one, and signatures  is the standard way to solve it.</p>\n<p>Just my 5 öre...</p>",
+        "id": 307990603,
+        "sender_full_name": "Alec Leamas",
+        "timestamp": 1667577312
+    },
+    {
+        "content": "<p>Thank you for all the help everyone,<br>\nI agree that it doesn't make much sense to keep the plug-in private, since it only contains public knowledge anyways. Hopefully the client will be convinced when he hears about the GPL. My supervisor agrees with us too.</p>\n<p>To verify the data, I was considering making a list of all base station MMSIs that the Dutch government has and white-listing them. So that only messages from those base stations will show up.</p>",
+        "id": 308381432,
+        "sender_full_name": "Fabian Olsthoorn",
+        "timestamp": 1667825395
+    },
+    {
+        "content": "<blockquote>\n<p>To verify the data, I was considering making a list of all base station MMSIs that the Dutch government has and white-listing them</p>\n</blockquote>\n<p>Can you trust the MMSI? Couldn't this be spoofed as well?</p>",
+        "id": 308381998,
+        "sender_full_name": "Alec Leamas",
+        "timestamp": 1667825583
+    },
+    {
+        "content": "<blockquote>\n<p>Can you trust the MMSI? Couldn't this be spoofed as well?</p>\n</blockquote>\n<p>Yes it can!</p>\n<blockquote>\n<p>So that only messages from those base stations will show up.</p>\n</blockquote>\n<p>That could be added to an OpenCPN plugin but would not be used be Periskal or Tresco etc.</p>",
+        "id": 308382442,
+        "sender_full_name": "Mike Rossiter",
+        "timestamp": 1667825760
+    },
+    {
+        "content": "<p><span class=\"user-mention silent\" data-user-id=\"399510\">Alec Leamas</span> <a href=\"#narrow/stream/282854-general/topic/security/near/308381998\">said</a>:</p>\n<blockquote>\n<p>Can you trust the MMSI? Couldn't this be spoofed as well?</p>\n</blockquote>\n<p>Hmm, for the transmitted messages the MMSI gets added by the base station. I am not sure how easy it is to change the MMSI on the base station.</p>\n<p><span class=\"user-mention silent\" data-user-id=\"399559\">Mike Rossiter</span> <a href=\"#narrow/stream/282854-general/topic/security/near/308382442\">said</a>:</p>\n<blockquote>\n<p>That could be added to an OpenCPN plugin but would not be used be Periskal or Tresco etc.</p>\n</blockquote>\n<p>As far as I know this PoC is only about OpenCPN. So, I don't think my client is concerned about this. But I will keep it in mind if it comes up.</p>",
+        "id": 308384168,
+        "sender_full_name": "Fabian Olsthoorn",
+        "timestamp": 1667826396
+    },
+    {
+        "content": "<blockquote>\n<blockquote>\n<p>Can you trust the MMSI? Couldn't this be spoofed as well?</p>\n</blockquote>\n</blockquote>\n<blockquote>\n<p>Yes it can!</p>\n</blockquote>\n<p>\"It can be trusted\" or \"it can be spoofed\"?</p>",
+        "id": 308387440,
+        "sender_full_name": "Alec Leamas",
+        "timestamp": 1667827595
+    },
+    {
+        "content": "<blockquote>\n<p>Hmm, for the transmitted messages the MMSI gets added by the base station. I am not sure how easy it is to change the MMSI on the base station.</p>\n</blockquote>\n<p>The MMSI must indeed be registered to work as intended. However, I don't see any particular problems for an attacker which wants to spoof a ship identification.</p>\n<p>Bottom line: Anything which is unsigned cannot be trusted. For this reason, both GNSS and AIS data is open for spoofing attacks. If you come to the conclusion that the data discussed here is so sensitive that it requires stronger security measures, public key signatures is probably the only viable solution.</p>",
+        "id": 308389498,
+        "sender_full_name": "Alec Leamas",
+        "timestamp": 1667828263
+    }
+]

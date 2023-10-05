@@ -1,0 +1,119 @@
+<html>
+<head><meta charset="utf-8"><title>frozen builds · shipdriver · Zulip Chat Archive</title></head>
+<h2>Stream: <a href="https://leamas.github.io/zulip-archive/stream/332200-shipdriver/index.html">shipdriver</a></h2>
+<h3>Topic: <a href="https://leamas.github.io/zulip-archive/stream/332200-shipdriver/topic/frozen.20builds.html">frozen builds</a></h3>
+
+<hr>
+
+<base href="https://opencpn.zulipchat.com">
+
+<head><link href="https://leamas.github.io/zulip-archive/style.css" rel="stylesheet"></head>
+
+<a name="322535801"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332200-shipdriver/topic/frozen%20builds/near/322535801" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Alec Leamas <a href="https://leamas.github.io/zulip-archive/stream/332200-shipdriver/topic/frozen.20builds.html#322535801">(Jan 20 2023 at 15:08)</a>:</h4>
+<p>OK, feeling better. I think there is something lurking around when it comes to keeping the old, frozen builds in place while still purging old builds which should be overridden by new after merging the auto branch. B Ut is was too early, I need to think more before there is anything to discuss. So, just let's drop this for now.</p>
+
+
+
+<a name="322687970"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332200-shipdriver/topic/frozen%20builds/near/322687970" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Mike Rossiter <a href="https://leamas.github.io/zulip-archive/stream/332200-shipdriver/topic/frozen.20builds.html#322687970">(Jan 21 2023 at 09:16)</a>:</h4>
+<p>I see the problem. In my haste with adding ShipDriver to the master catalog I deleted the old xml files. Now there are no references for the wxWidgets 3.1.2 artifacts. </p>
+<p>As updates are made for wx32 plugins the old artifacts in Cloudsmith slip further down the heap until they are eventually deleted by Cloudsmith.</p>
+
+
+
+<a name="322753801"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332200-shipdriver/topic/frozen%20builds/near/322753801" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Alec Leamas <a href="https://leamas.github.io/zulip-archive/stream/332200-shipdriver/topic/frozen.20builds.html#322753801">(Jan 21 2023 at 16:45)</a>:</h4>
+<p>OK, we have some common understanding. I think we should be able to handle this with some git-fu, basically put the old, fro</p>
+
+
+
+<a name="322755239"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332200-shipdriver/topic/frozen%20builds/near/322755239" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Alec Leamas <a href="https://leamas.github.io/zulip-archive/stream/332200-shipdriver/topic/frozen.20builds.html#322755239">(Jan 21 2023 at 16:56)</a>:</h4>
+<blockquote>
+<p>some git-fu, basically put the old, frozen entries in a separate branch.</p>
+</blockquote>
+<p>Lot's of things missing here, we can take it later.</p>
+
+
+
+<a name="322897745"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332200-shipdriver/topic/frozen%20builds/near/322897745" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Alec Leamas <a href="https://leamas.github.io/zulip-archive/stream/332200-shipdriver/topic/frozen.20builds.html#322897745">(Jan 22 2023 at 19:16)</a>:</h4>
+<p><span class="user-mention" data-user-id="399559">@Mike Rossiter</span> <br>
+hm, yes, there is also the  problem that Cloudsmith will remove the untagged builds. Did not think of it.</p>
+<p>What if we create a new branch with a  fancy name like <em>frozen</em>? This could be used in two ways:</p>
+<ul>
+<li>we could tag the builds in this branch, thus  make them uploaded to a stable Cloudsmith repo  where they won't be removed over time.</li>
+<li>When making the PR we could proceed as we always do, remove all old builds, keeping the new. However, as a final step we could merge the <em>frozen</em> branch. This will make sure all frozen builds are in place as they should before making a PR. </li>
+</ul>
+<p>Thoughts?</p>
+
+
+
+<a name="322988713"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332200-shipdriver/topic/frozen%20builds/near/322988713" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Mike Rossiter <a href="https://leamas.github.io/zulip-archive/stream/332200-shipdriver/topic/frozen.20builds.html#322988713">(Jan 23 2023 at 10:49)</a>:</h4>
+<blockquote>
+<p>the problem that Cloudsmith will remove the untagged builds</p>
+</blockquote>
+<p>But existing artifacts in beta or prod will always be tagged??? Isn't the issue the lifecyle of the Cloudsmith repo and the number of packages in the repo? Excess (old) wx3.0 packages being deleted.</p>
+<blockquote>
+<p>create a new branch with a fancy name like frozen? <br>
+ uploaded to a stable Cloudsmith repo where they won't be removed over time.</p>
+</blockquote>
+<p>We are still faced with the issue of the lifecycle. The Cloudsmith api allows deletion of an artifact. Can this be used to ensure that the number of packages is kept within the limit number?  Tackle the issue as one of Cloudsmith house-keeping. Manual deletion of packages could also be used.</p>
+<p>For the new ABI I have increased the major version number of a plugin other than ShipDriver by 1. It is easy to recognise the new versions in the metadata list. Leaving old wx3.0 versions when pruning is pretty simple, if you remember to do it!</p>
+<blockquote>
+<p>as a final step we could merge the frozen branch</p>
+</blockquote>
+<p>What repo is this a branch of? Sounds like OpenCPN/plugins, where we make the PR to the master branch. A backup here would be useful. </p>
+<p>In the actual plugin a branch with the old wx30 version is useful for backup builds. I need to do this for my plugins anyway.</p>
+<p>To fix my problem of missing wx30 metadata files. Can I find a commit of fork OpenCPN/plugins with the wx3.0 xml files for the relevant plugins. Copy the xml files from here to the latest fork OpenCPN/plugins directory and then make the PR? The artifacts will still be in Cloudsmith at this stage.</p>
+
+
+
+<a name="323083871"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332200-shipdriver/topic/frozen%20builds/near/323083871" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Mike Rossiter <a href="https://leamas.github.io/zulip-archive/stream/332200-shipdriver/topic/frozen.20builds.html#323083871">(Jan 23 2023 at 18:00)</a>:</h4>
+<blockquote>
+<p>To fix my problem of missing wx30 metadata files. Can I find a commit of fork OpenCPN/plugins with the wx3.0 xml files for the relevant plugins. Copy the xml files from here to the latest fork OpenCPN/plugins directory and then make the PR? The artifacts will still be in Cloudsmith at this stage.</p>
+</blockquote>
+<p><span class="user-mention" data-user-id="399510">@Alec Leamas</span> ^^</p>
+
+
+
+<a name="323084100"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332200-shipdriver/topic/frozen%20builds/near/323084100" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Alec Leamas <a href="https://leamas.github.io/zulip-archive/stream/332200-shipdriver/topic/frozen.20builds.html#323084100">(Jan 23 2023 at 18:01)</a>:</h4>
+<p>Well, you have it in the history, right? Just checkout the version before you removed  them...</p>
+
+
+
+<a name="323084470"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332200-shipdriver/topic/frozen%20builds/near/323084470" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Alec Leamas <a href="https://leamas.github.io/zulip-archive/stream/332200-shipdriver/topic/frozen.20builds.html#323084470">(Jan 23 2023 at 18:03)</a>:</h4>
+<p>(let me know if you need more)</p>
+
+
+
+<a name="323101380"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332200-shipdriver/topic/frozen%20builds/near/323101380" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Mike Rossiter <a href="https://leamas.github.io/zulip-archive/stream/332200-shipdriver/topic/frozen.20builds.html#323101380">(Jan 23 2023 at 19:31)</a>:</h4>
+<p>That's fine. I just wanted to check there were no side effects from just dealing with the .xml files.</p>
+
+
+
+<a name="325600319"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332200-shipdriver/topic/frozen%20builds/near/325600319" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Alec Leamas <a href="https://leamas.github.io/zulip-archive/stream/332200-shipdriver/topic/frozen.20builds.html#325600319">(Feb 03 2023 at 11:08)</a>:</h4>
+<p>The manual: The bottom of the page Plugin-Adaptation.adoc contains a list of files/dirs affected. Personally I don't think it's possible to maintain in it's current form which is really hard to maintain and thus needs an update.</p>
+<p>An alternative would be to just list some important files and directories and their role, without any suggestion what so ever that the list is complete.</p>
+<p><span class="user-mention" data-user-id="399559">@Mike Rossiter</span>  :  thoughts?</p>
+
+
+
+<a name="325637709"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332200-shipdriver/topic/frozen%20builds/near/325637709" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Mike Rossiter <a href="https://leamas.github.io/zulip-archive/stream/332200-shipdriver/topic/frozen.20builds.html#325637709">(Feb 03 2023 at 14:00)</a>:</h4>
+<blockquote>
+<p>An alternative would be to just list some important files and directories and their role, without any suggestion what so ever that the list is complete.</p>
+</blockquote>
+<p>Most of us have updated with templates at least once  and the necessary files/directories are in place. Your alternative looks like the best way forward.</p>
+
+
+
+<hr><p>Last updated: Oct 05 2023 at 09:43 UTC</p>
+</html>

@@ -1,0 +1,344 @@
+[
+    {
+        "content": "<p><a href=\"/user_uploads/33951/esU7dcG-kb9ks9dXbmXCtwsr/recents.jpg\">Recent Scripts </a> <br>\nThe colon seems to split the filepath into two lines. (Windows)</p>\n<div class=\"message_inline_image\"><a href=\"/user_uploads/33951/esU7dcG-kb9ks9dXbmXCtwsr/recents.jpg\" title=\"Recent Scripts \"><img src=\"/user_uploads/33951/esU7dcG-kb9ks9dXbmXCtwsr/recents.jpg\"></a></div>",
+        "id": 310580945,
+        "sender_full_name": "Mike Rossiter",
+        "timestamp": 1668680734
+    },
+    {
+        "content": "<p><a href=\"/user_uploads/33951/TKhYyrFHQNp8wtLwLryimZAJ/Parking-Tests.jpg\">Parking-Tests</a> <br>\nThe parked console width has not changed.<br>\nParking positions on my screen are too high. Is the height of the parked console used to calculate vertical position of the parked console?</p>\n<div class=\"message_inline_image\"><a href=\"/user_uploads/33951/TKhYyrFHQNp8wtLwLryimZAJ/Parking-Tests.jpg\" title=\"Parking-Tests\"><img src=\"/user_uploads/33951/TKhYyrFHQNp8wtLwLryimZAJ/Parking-Tests.jpg\"></a></div>",
+        "id": 310583973,
+        "sender_full_name": "Mike Rossiter",
+        "timestamp": 1668681931
+    },
+    {
+        "content": "<p><span class=\"user-mention silent\" data-user-id=\"399559\">Mike Rossiter</span> <a href=\"#narrow/stream/349785-JavaScript_pi/topic/Test.20issues/near/310580945\">said</a>:</p>\n<blockquote>\n<p><a href=\"/user_uploads/33951/esU7dcG-kb9ks9dXbmXCtwsr/recents.jpg\">Recent Scripts </a> <br>\nThe colon seems to split the filepath into two lines. (Windows)</p>\n</blockquote>\n<p>I guess this is only after you have disabled an re-enabled the plugin, thus causing the list to be loaded from the .in file?</p>",
+        "id": 310584674,
+        "sender_full_name": "Tony Voss",
+        "timestamp": 1668682209
+    },
+    {
+        "content": "<p>The <em>.ini</em> file uses colons as separators causing the C to be split off. Can another character be used?</p>",
+        "id": 310587386,
+        "sender_full_name": "Mike Rossiter",
+        "timestamp": 1668683277
+    },
+    {
+        "content": "<p><span class=\"user-mention silent\" data-user-id=\"399559\">Mike Rossiter</span> <a href=\"#narrow/stream/349785-JavaScript_pi/topic/Test.20issues/near/310587386\">said</a>:</p>\n<blockquote>\n<p>The <em>.ini</em> file uses colons as separators causing the C to be split off. Can another character be used?</p>\n</blockquote>\n<p>Ah!  I see.  colon is used in Windows filestrings as in C:\\ccc\\ccc<br>\nI will change to semicolon.</p>",
+        "id": 310593263,
+        "sender_full_name": "Tony Voss",
+        "timestamp": 1668685645
+    },
+    {
+        "content": "<p><span class=\"user-mention silent\" data-user-id=\"399559\">Mike Rossiter</span> <a href=\"#narrow/stream/349785-JavaScript_pi/topic/Test.20issues/near/310583973\">said</a>:</p>\n<blockquote>\n<p><a href=\"/user_uploads/33951/TKhYyrFHQNp8wtLwLryimZAJ/Parking-Tests.jpg\">Parking-Tests</a> <br>\nThe parked console width has not changed.<br>\nParking positions on my screen are too high. Is the height of the parked console used to calculate vertical position of the parked console?</p>\n</blockquote>\n<p><strong>Vertical</strong><br>\nYes, the minimum  height of a console is set thus<br>\n<code>JavaScript_pi.h:33: #define MIN_CONSOLE_HEIGHT 28</code><br>\nThis value works fine for MacOS on both standard and retina displays  but it looks too large for Windows.</p>\n<p>The vertical position is set thus:<br>\n<code>JSExtensions.cpp:565:     parkingBase = canvasPosition.y - MIN_CONSOLE_HEIGHT - cill;</code><br>\ncill is 3 and tweaks the white space below the nam text.<br>\nReducing MIN_CONSOLE_HEIGHT should therefore move the parked console up a bit - hopefully into the canvas top margin.</p>\n<p><strong>Width</strong><br>\nIn your screenshot, the different consoles are of different width but possibly they do not vary enough.  Width is set by<br>\nJavaScriptgui_imp.h: 1039        int minWidth = 80 + mConsoleName.Length() * 8;<br>\nThis might need tweaking.</p>\n<p>Your screenshot looks like it was taken at the end of the test script.  The rightmost console has had its name changed from <code>ConsoleE</code> to <code>2</code> to check that the window is shrunk accordingly, which it appears not to have done.  I found it takes a moment for this to happen, so the test script has a delay built in to allow for it to happen.  Perhaps on Windows there is no automatic refresh?  You could try manually reducing that console by dragging it smaller to confirm the minimum width has been reduced to the correct size.  Alternatively, can you try doing something that causes a refresh to see whether that makes the shrinking apparent?</p>\n<p>Let me know if you want me to rebuild with changes. I would have to guess  changes to MIN_CONSOLE_HEIGHT as it needs trial and error.</p>",
+        "id": 310606038,
+        "sender_full_name": "Tony Voss",
+        "timestamp": 1668690522
+    },
+    {
+        "content": "<blockquote>\n<p>MIN_CONSOLE_HEIGHT 28<br>\nThis value works fine for MacOS on both standard and retina displays but it looks too large for Windows.</p>\n</blockquote>\n<p>Can you try a smaller size and I will re-test?</p>\n<blockquote>\n<p>something that causes a refresh to see whether that makes the shrinking apparent?</p>\n</blockquote>\n<p>But, but ... The consoles are at the top of the main monitor screen, independent of the OpenCPN screen. No way to refresh?</p>\n<p>The good news - no other obvious problems.</p>",
+        "id": 310620559,
+        "sender_full_name": "Mike Rossiter",
+        "timestamp": 1668695440
+    },
+    {
+        "content": "<p>Having trouble finding two definitions:<br>\nchooseFileString<br>\nchooseLoadFile<br>\nWhere are these found?</p>",
+        "id": 310646532,
+        "sender_full_name": "Mike Rossiter",
+        "timestamp": 1668702351
+    },
+    {
+        "content": "<p><span class=\"user-mention silent\" data-user-id=\"399559\">Mike Rossiter</span> <a href=\"#narrow/stream/349785-JavaScript_pi/topic/Test.20issues/near/310646532\">said</a>:</p>\n<blockquote>\n<p>Having trouble finding two definitions:<br>\nchooseFileString<br>\nchooseLoadFile<br>\nWhere are these found?</p>\n</blockquote>\n<p>fileOrganiser.cpp:186: wxString chooseFileString(Console* pConsole){<br>\nfileOrganiser.cpp:51: wxString chooseLoadFile(Console* console){</p>",
+        "id": 310674581,
+        "sender_full_name": "Tony Voss",
+        "timestamp": 1668710605
+    },
+    {
+        "content": "<p>Have built with</p>\n<ul>\n<li>separator char ; instead of :</li>\n<li>MIN_CONSOLE_HEIGHT for Windows reduced for Windows<br>\nIn JavaScript_pi.h:<br>\n<code>// Minimised console height is platform dependent\n#ifdef __WXMSW__\n#define MIN_CONSOLE_HEIGHT 16\n#else\n#define MIN_CONSOLE_HEIGHT 28\n#endif</code><br>\nBuild is javascript-2.0-msvc-10.0.14393-tarball==2.0.0-alpha+47.7e2b2e4</li>\n</ul>",
+        "id": 310675635,
+        "sender_full_name": "Tony Voss",
+        "timestamp": 1668710944
+    },
+    {
+        "content": "<blockquote>\n<p>fileOrganiser.cpp:186: wxString chooseFileString(Console* pConsole){<br>\nfileOrganiser.cpp:51: wxString chooseLoadFile(Console* console){</p>\n</blockquote>\n<p>Without an include Visual Studio 2019 is complaining about a lack of reference.</p>",
+        "id": 310679694,
+        "sender_full_name": "Mike Rossiter",
+        "timestamp": 1668712112
+    },
+    {
+        "content": "<p>Include what?  Sorry - don’t understand.</p>",
+        "id": 310719058,
+        "sender_full_name": "Tony Voss",
+        "timestamp": 1668727634
+    },
+    {
+        "content": "<p>Following fix for : separator in recents, you can clear out duff Recents by using the Organiser to make them Favourites and then removing them as Favourite.</p>",
+        "id": 310761274,
+        "sender_full_name": "Tony Voss",
+        "timestamp": 1668756027
+    },
+    {
+        "content": "<p>Best delete any badly parked consoles before testing new version.  Parking notes anybpresently parked one’s.</p>",
+        "id": 310761576,
+        "sender_full_name": "Tony Voss",
+        "timestamp": 1668756222
+    },
+    {
+        "content": "<blockquote>\n<p>Include what? Sorry - don’t understand.</p>\n</blockquote>\n<p><em>fileOrganiser.cpp</em> is not listed in <em>Plugin.cmake</em>. By include I meant <br>\n<code>#include fileOrganiser.cpp</code><br>\nBut adding to <em>Plugin.cmake</em> may be enough.</p>",
+        "id": 310763813,
+        "sender_full_name": "Mike Rossiter",
+        "timestamp": 1668757536
+    },
+    {
+        "content": "<p><span class=\"user-mention silent\" data-user-id=\"399559\">Mike Rossiter</span> <a href=\"#narrow/stream/349785-JavaScript_pi/topic/Test.20issues/near/310763813\">said</a>:</p>\n<blockquote>\n<blockquote>\n<p>Include what? Sorry - don’t understand.</p>\n</blockquote>\n<p><em>fileOrganiser.cpp</em> is not listed in <em>Plugin.cmake</em>. By include I meant <br>\n<code>#include fileOrganiser.cpp</code><br>\nBut adding to <em>Plugin.cmake</em> may be enough.</p>\n</blockquote>\n<p>Odd - it was in my copy.  Have now sorted the list of src files which also touched it.  Pushed.</p>",
+        "id": 310786719,
+        "sender_full_name": "Tony Voss",
+        "timestamp": 1668766827
+    },
+    {
+        "content": "<p>Recent scripts problem is fixed.<br>\n<em>Parking.js</em><br>\nThe shrink part is not working for me.<br>\nThe script deletes the consoles when run from the main console, but not when the script is run as part of <em>00_main.js</em>.</p>",
+        "id": 310789102,
+        "sender_full_name": "Mike Rossiter",
+        "timestamp": 1668767633
+    },
+    {
+        "content": "<p>Unable to add a console with <em>JavaScript Tools</em> button. Or change the name of a console.</p>",
+        "id": 310789437,
+        "sender_full_name": "Mike Rossiter",
+        "timestamp": 1668767758
+    },
+    {
+        "content": "<blockquote>\n<p>Odd - it was in my copy</p>\n</blockquote>\n<p>Maybe my messing. I have been playing with a version for O5.8. Windows build is fine apart from an icon issue. Not sure about MacOS. Tarball is here:<br>\n<a href=\"https://cloudsmith.io/~mike-rossiter/repos/javascript-alpha/packages/\">https://cloudsmith.io/~mike-rossiter/repos/javascript-alpha/packages/</a></p>",
+        "id": 310790111,
+        "sender_full_name": "Mike Rossiter",
+        "timestamp": 1668767999
+    },
+    {
+        "content": "<blockquote>\n<p>Unable to add a console with JavaScript Tools button. Or change the name of a console</p>\n</blockquote>\n<p>But I can paste a name into the textbox and add/change the name.</p>",
+        "id": 310791190,
+        "sender_full_name": "Mike Rossiter",
+        "timestamp": 1668768378
+    },
+    {
+        "content": "<p><span class=\"user-mention silent\" data-user-id=\"399559\">Mike Rossiter</span> <a href=\"#narrow/stream/349785-JavaScript_pi/topic/Test.20issues/near/310791190\">said</a>:</p>\n<blockquote>\n<blockquote>\n<p>Unable to add a console with JavaScript Tools button. Or change the name of a console</p>\n</blockquote>\n<p>But I can paste a name into the textbox and add/change the name.</p>\n</blockquote>\n<p>It seems that validation as you type is not applied on paste.<br>\nV2 has an extra bit in the constructor which I had attempted to only include for Apple but got it wrong.<br>\nJust pushed (11:48) version that should omit this entirely for non-apple.  It is working  for Apple now.<br>\nIf not apple, it should be as was in V1.2.<br>\nPlease test again.<br>\n`<br>\n ToolsClass( wxWindow *parent,  wxWindowID id = wxID_ANY, const wxString&amp; title = wxEmptyString, const wxPoint&amp; pos = wxDefaultPosition, const wxSize&amp; size = wxDefaultSize, long style = wxDEFAULT_DIALOG_STYLE )<br>\n        :ToolsClassBase(parent, id, title, pos, size, style)<br>\n        {</p>\n<div class=\"codehilite\"><pre><span></span><code>    // adding extra _ to list of valid chards via wxFormBuilder does not work.  Bug in wxWidgets?\n    // so we will do it this way\n    // this not yet available in wxWidgets as used by Windows and Linux so only for Apple for now`\n</code></pre></div>\n\n<p>#ifdef __APPLE__<br>\n        wxTextValidator* validator;<br>\n        validator = (wxTextValidator*)m_newConsoleName-&gt;GetValidator();<br>\n        validator-&gt;AddCharIncludes(\"_\");   <br>\n        validator = (wxTextValidator*)m_changedName-&gt;GetValidator();<br>\n        validator-&gt;AddCharIncludes(\"_\");<br>\n#endif</p>\n<div class=\"codehilite\"><pre><span></span><code>   this-&gt;resizeDialogue(0); // we open on first page\n    }\n</code></pre></div>\n\n<p>`</p>",
+        "id": 310802701,
+        "sender_full_name": "Tony Voss",
+        "timestamp": 1668772375
+    },
+    {
+        "content": "<p><span class=\"user-mention silent\" data-user-id=\"399559\">Mike Rossiter</span> <a href=\"#narrow/stream/349785-JavaScript_pi/topic/Test.20issues/near/310789102\">said</a>:</p>\n<blockquote>\n<p>Recent scripts problem is fixed.<br>\n<em>Parking.js</em><br>\nThe shrink part is not working for me.<br>\nThe script deletes the consoles when run from the main console, but not when the script is run as part of <em>00_main.js</em>.</p>\n</blockquote>\n<p>Screen shot before exiting parking test please.</p>",
+        "id": 310803105,
+        "sender_full_name": "Tony Voss",
+        "timestamp": 1668772550
+    },
+    {
+        "content": "<p>Adding/renaming is still not playing for me.</p>\n<blockquote>\n<p>but not when the script is run as part of 00_main.js.</p>\n</blockquote>\n<p><em>shrinkYourself</em> is not playing.<br>\nThe problem of not removing consoles happens when an error is reported. Script finishes leaving consoles in place.<br>\nAlso after the rename to \"<em>Maximum_length</em>\" the name changes back to <em>ConsoleE</em> before the script departs.  Is this Ok?</p>\n<p><a href=\"/user_uploads/33951/LraNpoLGLSxF29jp65EXJrmo/Parking-Tests-3.jpg\">Parking-Tests-3</a> <a href=\"/user_uploads/33951/Cy96_W6Zjd3kX3tpCC0sW2g_/Parking-Tests-2.jpg\">Parking-Tests-2</a></p>\n<div class=\"message_inline_image\"><a href=\"/user_uploads/33951/LraNpoLGLSxF29jp65EXJrmo/Parking-Tests-3.jpg\" title=\"Parking-Tests-3\"><img src=\"/user_uploads/33951/LraNpoLGLSxF29jp65EXJrmo/Parking-Tests-3.jpg\"></a></div><div class=\"message_inline_image\"><a href=\"/user_uploads/33951/Cy96_W6Zjd3kX3tpCC0sW2g_/Parking-Tests-2.jpg\" title=\"Parking-Tests-2\"><img src=\"/user_uploads/33951/Cy96_W6Zjd3kX3tpCC0sW2g_/Parking-Tests-2.jpg\"></a></div>",
+        "id": 310807148,
+        "sender_full_name": "Mike Rossiter",
+        "timestamp": 1668773885
+    },
+    {
+        "content": "<p>Much changes Parking.js to clean up under all circumstances.  You will need to <a href=\"https://github.com/antipole2/JavaScript_pi/blob/7aec92782232acbf325888aec60c4782f734592c/Tests_scripts/44_parking.js\">re-download it from my repository</a>.</p>\n<p>I have completely rewritten how the console minimisation and parking constants are set up for various platforms.  They are now in consolePositioning.h.  I have had a guess at the settings for Windows but I expect they will need tweaking.   There are instructions in the Technical Guide on how to do this.   I include a copy to save you looking in there.<br>\nYou can either send me screen shots so I can try tweaking and rebuild for you or, if you are willing, you could tweak the settings yourself and let me know the desired values.  A screen shot would also be welcome.<br>\nThanks so much for your help here.<br>\n<a href=\"/user_uploads/33951/FzrIAPnsDdCcTu7i8C6knMeE/Screenshot-2022-11-18-at-18.58.27.png\">Screenshot-2022-11-18-at-18.58.27.png</a></p>\n<div class=\"message_inline_image\"><a href=\"/user_uploads/33951/FzrIAPnsDdCcTu7i8C6knMeE/Screenshot-2022-11-18-at-18.58.27.png\" title=\"Screenshot-2022-11-18-at-18.58.27.png\"><img src=\"/user_uploads/33951/FzrIAPnsDdCcTu7i8C6knMeE/Screenshot-2022-11-18-at-18.58.27.png\"></a></div>",
+        "id": 310900459,
+        "sender_full_name": "Tony Voss",
+        "timestamp": 1668797949
+    },
+    {
+        "content": "<p>Boat maintenance today. I will test <em>Parking.js</em> tomorrow.</p>",
+        "id": 311042494,
+        "sender_full_name": "Mike Rossiter",
+        "timestamp": 1668875672
+    },
+    {
+        "content": "<p>I have improved the instructions for setting the constants for minimising and parking consoles.  Herewith an updated copy.  While it will take time to work through,  it should give good results.  The parking feature has really opened up the usability of the plugin with multiple scripts.<br>\n<a href=\"/user_uploads/33951/t3FhEydjid4C_TO7JY1of7xj/Configure-parking.png\">Configure-parking.png</a></p>\n<div class=\"message_inline_image\"><a href=\"/user_uploads/33951/t3FhEydjid4C_TO7JY1of7xj/Configure-parking.png\" title=\"Configure-parking.png\"><img src=\"/user_uploads/33951/t3FhEydjid4C_TO7JY1of7xj/Configure-parking.png\"></a></div>",
+        "id": 311054270,
+        "sender_full_name": "Tony Voss",
+        "timestamp": 1668882053
+    },
+    {
+        "content": "<p><code>MIN_CONSOLE_HEIGHT</code> left in code.<br>\n<code>CONSOLE_MIN_HEIGHT</code> used in <em>consolePositioning.h</em>. This is what I have now used.</p>",
+        "id": 311127388,
+        "sender_full_name": "Mike Rossiter",
+        "timestamp": 1668944376
+    },
+    {
+        "content": "<p><em>consolePositining.h</em> needs adding to <em>Plugin.cmake</em>.</p>",
+        "id": 311127545,
+        "sender_full_name": "Mike Rossiter",
+        "timestamp": 1668944453
+    },
+    {
+        "content": "<p><span class=\"user-mention silent\" data-user-id=\"399559\">Mike Rossiter</span> <a href=\"#narrow/stream/349785-JavaScript_pi/topic/Test.20issues/near/311127545\">said</a>:</p>\n<blockquote>\n<p><em>consolePositining.h</em> needs adding to <em>Plugin.cmake</em>.</p>\n</blockquote>\n<p>Added</p>",
+        "id": 311128478,
+        "sender_full_name": "Tony Voss",
+        "timestamp": 1668944987
+    },
+    {
+        "content": "<p><span class=\"user-mention silent\" data-user-id=\"399559\">Mike Rossiter</span> <a href=\"#narrow/stream/349785-JavaScript_pi/topic/Test.20issues/near/311127388\">said</a>:</p>\n<blockquote>\n<p><code>MIN_CONSOLE_HEIGHT</code> left in code.<br>\n<code>CONSOLE_MIN_HEIGHT</code> used in <em>consolePositioning.h</em>. This is what I have now used.</p>\n</blockquote>\n<p>Sorry - don't understand what you are telling me with either of these lines</p>",
+        "id": 311128695,
+        "sender_full_name": "Tony Voss",
+        "timestamp": 1668945104
+    },
+    {
+        "content": "<p><code>MIN_CONSOLE_HEIGHT</code> is used in <em>JavaScriptgui_impl.h</em>. This definition not found. It should be <code>CONSOLE_MIN_HEIGHT</code>, coming from <em>consolePositioning.h</em>.</p>",
+        "id": 311129071,
+        "sender_full_name": "Mike Rossiter",
+        "timestamp": 1668945300
+    },
+    {
+        "content": "<p><span class=\"user-mention silent\" data-user-id=\"554731\">Tony Voss</span> <a href=\"#narrow/stream/349785-JavaScript_pi/topic/Test.20issues/near/311128695\">said</a>:</p>\n<blockquote>\n<p><span class=\"user-mention silent\" data-user-id=\"399559\">Mike Rossiter</span> <a href=\"#narrow/stream/349785-JavaScript_pi/topic/Test.20issues/near/311127388\">said</a>:</p>\n<blockquote>\n<p><code>MIN_CONSOLE_HEIGHT</code> left in code.<br>\n<code>CONSOLE_MIN_HEIGHT</code> used in <em>consolePositioning.h</em>. This is what I have now used.</p>\n</blockquote>\n<p>Sorry - don't understand what you are telling me with either of these lines</p>\n</blockquote>\n<p>Now I do - will fix</p>",
+        "id": 311130231,
+        "sender_full_name": "Tony Voss",
+        "timestamp": 1668945911
+    },
+    {
+        "content": "<p>Don't know how that CONSOLE_MIN_HEIGHT error stayed in, since it complied for me.<br>\nAnyhow now fixed and rebuilds in progress as I type.</p>",
+        "id": 311130980,
+        "sender_full_name": "Tony Voss",
+        "timestamp": 1668946316
+    },
+    {
+        "content": "<p>For the tools dialog I added #ifdef in <em>toolsDialogGui.cpp</em>:</p>\n<p><code>#ifdef __APPLE__\n    m_newConsoleName-&gt;SetValidator( wxTextValidator( wxFILTER_ALPHANUMERIC|wxFILTER_INCLUDE_CHAR_LIST, &amp;mNewNameInput ) );\n    #endif</code></p>\n<p><code>#ifdef __APPLE__\n    m_changedName-&gt;SetValidator( wxTextValidator( wxFILTER_ALPHANUMERIC|wxFILTER_INCLUDE_CHAR_LIST, &amp;m_changedNameInput ) );\n    #endif</code></p>\n<p>This allows adding/changing console name for Windows at least.</p>",
+        "id": 311145150,
+        "sender_full_name": "Mike Rossiter",
+        "timestamp": 1668953598
+    },
+    {
+        "content": "<p>Sorry about that.  I had tried to add _ to the alphanumeric character set by adding a character list in wxFormBuilder but never got it to work.</p>\n<p>Instead I used  <code>validator-&gt;AddCharIncludes(\"_\"); </code> in the constructor , which we have found is not available for Windows given the version of wxWidgets used.  This is, for now, only included in the __APPLE__ compile.</p>\n<p>But I forgot to revert the field style in wxFormBuilder - hence your issue.  I have now removed my unsuccesfull wxFormBuilder experiment so that will obviate your last fix.</p>",
+        "id": 311151052,
+        "sender_full_name": "Tony Voss",
+        "timestamp": 1668956855
+    },
+    {
+        "content": "<p>Pushed and rebuilding now.</p>",
+        "id": 311151196,
+        "sender_full_name": "Tony Voss",
+        "timestamp": 1668956905
+    },
+    {
+        "content": "<p>Finally ... I have compiled for Windows. A wx3.2 cache in ShipDriver was causing me grief.<br>\nTools is fine.<br>\nJust <em>shrinkYourself</em> is an issue for me, using <em>Parking.js</em>.</p>",
+        "id": 311155762,
+        "sender_full_name": "Mike Rossiter",
+        "timestamp": 1668959372
+    },
+    {
+        "content": "<p>shrinkYourself ??</p>",
+        "id": 311156118,
+        "sender_full_name": "Tony Voss",
+        "timestamp": 1668959614
+    },
+    {
+        "content": "<p>When the new Parking.js is run from the main test harness, it does not clear out the parked windows.  I know where to look.<br>\nIt works fine when run standalone.</p>",
+        "id": 311156527,
+        "sender_full_name": "Tony Voss",
+        "timestamp": 1668959891
+    },
+    {
+        "content": "<p><code>Function step1(){ </code></p>\n<p>A new problem. Unable to copy paste from the main console to another console.</p>",
+        "id": 311156726,
+        "sender_full_name": "Mike Rossiter",
+        "timestamp": 1668960027
+    },
+    {
+        "content": "<p>The new problem may be a problem here. Think I need to re-boot.</p>",
+        "id": 311157176,
+        "sender_full_name": "Mike Rossiter",
+        "timestamp": 1668960273
+    },
+    {
+        "content": "<blockquote>\n<p>A new problem. Unable to copy paste from the main console to another console.</p>\n</blockquote>\n<p>It was my machine.  Copying is fine again.</p>",
+        "id": 311158288,
+        "sender_full_name": "Mike Rossiter",
+        "timestamp": 1668961004
+    },
+    {
+        "content": "<p>Shrinking... or not in your case...</p>\n<p>Please create /take a console with a long name and check that, using your mouse, you can shrink it down to the size just wide enough to display the name.   Then change its name to a short name. Suggest you use the Tools to do that.<br>\nNow - can you shrink it down to the smaller size  needed for the shorter name, or does it refuse to shrink smaller than when it has the long name?<br>\nThe answer to this will narrow down where the problem is.</p>",
+        "id": 311161242,
+        "sender_full_name": "Tony Voss",
+        "timestamp": 1668962839
+    },
+    {
+        "content": "<blockquote>\n<p>can you shrink it down to the smaller size needed for the shorter name</p>\n</blockquote>\n<p>Yes I can shrink it.</p>",
+        "id": 311165347,
+        "sender_full_name": "Mike Rossiter",
+        "timestamp": 1668965232
+    },
+    {
+        "content": "<p>Please hold off.  I  don't want you waisting time on stuff I am reworking.</p>",
+        "id": 311169614,
+        "sender_full_name": "Tony Voss",
+        "timestamp": 1668968034
+    },
+    {
+        "content": "<p>Tested an update for O5.8. Everything working well. My big problem is that the SVG icons in the toolbar will not appear. A black square which when toggled turns grey. A couple of days testing many ideas have not produced a solution. ShipDriver and UKTides do not have this problem.</p>",
+        "id": 311585577,
+        "sender_full_name": "Mike Rossiter",
+        "timestamp": 1669121547
+    },
+    {
+        "content": "<p><span class=\"user-mention silent\" data-user-id=\"399559\">Mike Rossiter</span> <a href=\"#narrow/stream/349785-JavaScript_pi/topic/Test.20issues/near/311585577\">said</a>:</p>\n<blockquote>\n<p>Tested an update for O5.8. Everything working well.  <span aria-label=\"+1\" class=\"emoji emoji-1f44d\" role=\"img\" title=\"+1\">:+1:</span> <span aria-label=\"+1\" class=\"emoji emoji-1f44d\" role=\"img\" title=\"+1\">:+1:</span></p>\n<p>My big problem is that the SVG icons in the toolbar will not appear. A black square which when toggled turns grey. A couple of days testing many ideas have not produced a solution. ShipDriver and UKTides do not have this problem.</p>\n</blockquote>\n<p>Re SVG - to borrow one of your phrases - that is above my pay grade.</p>\n<p>I take it there need to be two builds - one for O5.8 and one for  O5. Will the catalogue update know which to offer?</p>",
+        "id": 311647387,
+        "sender_full_name": "Tony Voss",
+        "timestamp": 1669131493
+    },
+    {
+        "content": "<blockquote>\n<p>Will the catalogue update know which to offer?</p>\n</blockquote>\n<p>The plugin xml metadata will sort this out. Generally there will be two entries for each OS in the OpenCPN/plugins  metadata directory.</p>",
+        "id": 311650586,
+        "sender_full_name": "Mike Rossiter",
+        "timestamp": 1669132393
+    },
+    {
+        "content": "<p>In the <a href=\"https://cloudsmith.io/~opencpn/repos/javascript-prod/packages/\">JavaScript production repository</a> you can see the number of downloads.  Is that the number of installs or re-installs?  If so, it gives guidance on which platforms it is running.</p>\n<p>Is there any chance of you giving a Linux one a whirl?</p>\n<p>The <em>consolePositioning.h</em> config uses values you know for Windows and the other lot for everything else.  MY latest values allow for earlier releases of MacOS having a narrower window bar than for  MacOS Catalina, so they might be good for Linux?<br>\nPlease can you let me have your values for Windows to include in my source?</p>\n<p>I have rewritten the resizing and parking, so it will need checking again.</p>\n<p>Wrapping up a script is complicated.  There may be a onClose() function to run, a call back to an invoking script and maybe a chain to a successor script or even all three <span aria-label=\"face with spiral eyes\" class=\"emoji emoji-1f635-200d-1f4ab\" role=\"img\" title=\"face with spiral eyes\">:face_with_spiral_eyes:</span>   And if a script throes an error, which of these need to be done and what needs to be passed back?  I have had problems with the test suite because the re-written Parking.js uses onClose( ) and reports back to the main script.  It was doing the report back before the onClose( ) leading to the parking.js console being deleted before it had finally wrapped up.  OCPN crash.   I am chasing the last gremlins in that (while also having a hearth reworked for a wood burner and other things) and will let you know when it is  ready - as far as I can tell.</p>",
+        "id": 311651562,
+        "sender_full_name": "Tony Voss",
+        "timestamp": 1669132679
+    },
+    {
+        "content": "<blockquote>\n<p>Is that the number of installs or re-installs? </p>\n</blockquote>\n<p>It will be the number of first installs.  The reinstall comes from the local cache unless there has been a complete removal/reinstall of OpenCPN.</p>\n<blockquote>\n<p>Linux</p>\n</blockquote>\n<p>Tested on Ubuntu Focal with a 15 inch notebook pc. In Standard Mode JavaScript Tools notebook titles can't be read. Faint white text. With Dark Mode they appear correctly. There is a fix that Nohal provided. I will see if I can find it.</p>\n<p><em>dialogue_test.js</em> size did not allow seeing the bottom of the console, to access the button.</p>\n<p><em>consolePositioning.h</em> </p>\n<p><code>#ifdef __WXMSW__\n#define CONSOLE_MIN_HEIGHT 13\n#define CONSOLE_STUB 50\n#define CONSOLE_CHAR_WIDTH 12\n#define PARK_FRAME_HEIGHT 10\n#define PARK_CILL 3\n#define PARK_FIRST_X 70\n#define PARK_SEP 10</code><br>\nThese worked fine for me.</p>\n<blockquote>\n<p>rewritten the resizing and parking, so it will need checking again.</p>\n</blockquote>\n<p>TBC</p>",
+        "id": 311674447,
+        "sender_full_name": "Mike Rossiter",
+        "timestamp": 1669139644
+    },
+    {
+        "content": "<blockquote>\n<p>dialogue_test.js size did not allow seeing the bottom of the console</p>\n</blockquote>\n<p>Could this be placed at the top of the dialogue:<br>\n<code>myDialogue.push({type:\"button\", label:[\"Finish\",\"Read back\"]})</code></p>",
+        "id": 312363981,
+        "sender_full_name": "Mike Rossiter",
+        "timestamp": 1669476970
+    },
+    {
+        "content": "<p><span class=\"user-mention silent\" data-user-id=\"399559\">Mike Rossiter</span> <a href=\"#narrow/stream/349785-JavaScript_pi/topic/Test.20issues/near/312363981\">said</a>:</p>\n<blockquote>\n<blockquote>\n<p>dialogue_test.js size did not allow seeing the bottom of the console</p>\n</blockquote>\n<p>Could this be placed at the top of the dialogue:<br>\n<code>myDialogue.push({type:\"button\", label:[\"Finish\",\"Read back\"]})</code></p>\n</blockquote>\n<p>Apologies for delays - just moving to new MacBook Air after damaged my old Mac  by knocking a cup of tea over it.</p>\n<p><code>JSdialog.cpp line 597:       dialog-&gt;Fit();</code><br>\nThat should be sufficient and, as far I know worked before on Windows - otherwise you would not have been able to run the test script..  Are you now using something different?  Like new version of wxWidgets?</p>\n<p>Yes, you could put the buttons at the top as a workaround during testing but not as a permanent solution.  We need to find why the window is not sizing correctly.  How much too small is it?</p>",
+        "id": 312379687,
+        "sender_full_name": "Tony Voss",
+        "timestamp": 1669485157
+    },
+    {
+        "content": "<p>The test was done with ubuntu-focal and a 15\" notebook pc. I will test again. The console can be re-sized but the bottom section disappears and with it the buttons.</p>",
+        "id": 312380445,
+        "sender_full_name": "Mike Rossiter",
+        "timestamp": 1669485632
+    },
+    {
+        "content": "<p>Ubuntu 20.04 (Focal) Even with full-screen no buttons visible. Resizing causes shrinking from the base of the visible dialogue and does not make the buttons visible.<br>\n<a href=\"/user_uploads/33951/4M27BlPj6dg6Z39Jzwm8kN4q/Screenshot-from-2022-11-29-10-29-52.png\">Screenshot-from-2022-11-29-10-29-52.png</a></p>\n<div class=\"message_inline_image\"><a href=\"/user_uploads/33951/4M27BlPj6dg6Z39Jzwm8kN4q/Screenshot-from-2022-11-29-10-29-52.png\" title=\"Screenshot-from-2022-11-29-10-29-52.png\"><img src=\"/user_uploads/33951/4M27BlPj6dg6Z39Jzwm8kN4q/Screenshot-from-2022-11-29-10-29-52.png\"></a></div>",
+        "id": 312811846,
+        "sender_full_name": "Mike Rossiter",
+        "timestamp": 1669718189
+    },
+    {
+        "content": "<p>The dialogue is OK on Mac and Windows so this looks like a Ubuntu problem - not a plugin coding one.<br>\nTee field length for the Name filed (1st one) could be made longer to allow for this font.<br>\nThe vertical space for the Ticklist is insufficient and the whole window is too shirt, as you say.  Looks like size() is in error.</p>\n<p>Which version of wxWidgets is this using?<br>\nI could, perhaps, put some Ubuntu.-specific code in to make extra space?</p>",
+        "id": 312885659,
+        "sender_full_name": "Tony Voss",
+        "timestamp": 1669740489
+    },
+    {
+        "content": "<blockquote>\n<p>Which version of wxWidgets is this using?</p>\n</blockquote>\n<p>wxWidgets 3.1.2, same as Windows. On Windows the dialogue can be extended beyond the OpenCPN screen. All the display height is available. On Ubuntu it is limited to the OpenCPN display area.</p>",
+        "id": 312929523,
+        "sender_full_name": "Mike Rossiter",
+        "timestamp": 1669752944
+    },
+    {
+        "content": "<p><span class=\"user-mention silent\" data-user-id=\"399559\">Mike Rossiter</span> <a href=\"#narrow/stream/349785-JavaScript_pi/topic/Linux.20issues/near/321147844\">said</a>:</p>\n<blockquote>\n<p>Message test does not work. Fails to find <em>71_message_test.js</em>. Need to restart <em>001_main.js</em></p>\n</blockquote>\n<p>The file in the test scripts is capitalised to <code>1_Message_test.js</code><br>\nPlease edit to 71_message_test.js if wrong in your copy.  I have just fixed it in repository.</p>",
+        "id": 321692247,
+        "sender_full_name": "Tony Voss",
+        "timestamp": 1673891415
+    }
+]

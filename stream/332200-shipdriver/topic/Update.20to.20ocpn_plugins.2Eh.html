@@ -1,0 +1,273 @@
+<html>
+<head><meta charset="utf-8"><title>Update to ocpn_plugins.h · shipdriver · Zulip Chat Archive</title></head>
+<h2>Stream: <a href="https://leamas.github.io/zulip-archive/stream/332200-shipdriver/index.html">shipdriver</a></h2>
+<h3>Topic: <a href="https://leamas.github.io/zulip-archive/stream/332200-shipdriver/topic/Update.20to.20ocpn_plugins.2Eh.html">Update to ocpn_plugins.h</a></h3>
+
+<hr>
+
+<base href="https://opencpn.zulipchat.com">
+
+<head><link href="https://leamas.github.io/zulip-archive/style.css" rel="stylesheet"></head>
+
+<a name="344692961"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332200-shipdriver/topic/Update%20to%20ocpn_plugins.h/near/344692961" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Tony Voss <a href="https://leamas.github.io/zulip-archive/stream/332200-shipdriver/topic/Update.20to.20ocpn_plugins.2Eh.html#344692961">(Mar 26 2023 at 17:10)</a>:</h4>
+<p>Dave has made a small change to ocpn_plugins.h to accommodate a wish of mine.<br>
+For now I have edited my copy in opencpn-libs/api-18.<br>
+But what has to happen so it becomes permanent?  Is it sufficient to reinstall shipdriver 3.2 or is more needed?</p>
+
+
+
+<a name="344851738"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332200-shipdriver/topic/Update%20to%20ocpn_plugins.h/near/344851738" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Alec Leamas <a href="https://leamas.github.io/zulip-archive/stream/332200-shipdriver/topic/Update.20to.20ocpn_plugins.2Eh.html#344851738">(Mar 27 2023 at 12:40)</a>:</h4>
+<p>I mell merge your PR later, thanks, busy now.</p>
+<p>Until we have a new release of Shipdriver you will have to update opencpn-libs to latest commit. </p>
+<p>However, I think the best option for you right now is to create a new directory <em>libs</em> if it does not exist already. Then copy api-18 from <em>opencpn-libs</em> to  <em>libs</em> and change the reference in Plugin.cmake. This way, you have a local copy for the time being. When there is a new shipdriver release move things back again.</p>
+<p>Of course, this works iff the version you have in libs is the same as in the opencpn-libs PR</p>
+
+
+
+<a name="344914328"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332200-shipdriver/topic/Update%20to%20ocpn_plugins.h/near/344914328" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Tony Voss <a href="https://leamas.github.io/zulip-archive/stream/332200-shipdriver/topic/Update.20to.20ocpn_plugins.2Eh.html#344914328">(Mar 27 2023 at 16:30)</a>:</h4>
+<p><span class="user-mention" data-user-id="399510">@Alec Leamas</span>  I have put a duplicate api-18 into libs as you advise.  But my Plugin.cmake file refers only to libs and not to opncpn-libs.  It must workout to use ocpn-libs somewhere else?</p>
+
+
+
+<a name="344923042"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332200-shipdriver/topic/Update%20to%20ocpn_plugins.h/near/344923042" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Alec Leamas <a href="https://leamas.github.io/zulip-archive/stream/332200-shipdriver/topic/Update.20to.20ocpn_plugins.2Eh.html#344923042">(Mar 27 2023 at 17:07)</a>:</h4>
+<p>No, it's not mandatory in any way. opencpn-libs is just a centralized way to maintain dependencies, plugins are free to use whatever deps they want . The catch is that if you have a local copy you must  maintain it yourself. But then again, since you are ahead of opencpn-libs it makes sense in this case.</p>
+
+
+
+<a name="344932611"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332200-shipdriver/topic/Update%20to%20ocpn_plugins.h/near/344932611" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Tony Voss <a href="https://leamas.github.io/zulip-archive/stream/332200-shipdriver/topic/Update.20to.20ocpn_plugins.2Eh.html#344932611">(Mar 27 2023 at 17:54)</a>:</h4>
+<p>Sorry Alex - I do not understand.  I have the updated ocpn_plugins.h in</p>
+<ol>
+<li>ocpn-libs/api18 (my fork) </li>
+<li>libs/api-18</li>
+</ol>
+<p>The Plugins.cmake file only refers to libs/api-18 not ocpn-libs.<br>
+I can build locally OK.<br>
+But remote builds load from ocpn-libs/api-18 and not my fork, so the remote builds fail.</p>
+
+
+
+<a name="344936155"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332200-shipdriver/topic/Update%20to%20ocpn_plugins.h/near/344936155" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Alec Leamas <a href="https://leamas.github.io/zulip-archive/stream/332200-shipdriver/topic/Update.20to.20ocpn_plugins.2Eh.html#344936155">(Mar 27 2023 at 18:13)</a>:</h4>
+<p>Just restore opencpn-libs, you don't use it but might run into trouble when the builder tries to  checkout a non-existent commit.</p>
+
+
+
+<a name="345052293"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332200-shipdriver/topic/Update%20to%20ocpn_plugins.h/near/345052293" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Tony Voss <a href="https://leamas.github.io/zulip-archive/stream/332200-shipdriver/topic/Update.20to.20ocpn_plugins.2Eh.html#345052293">(Mar 28 2023 at 07:49)</a>:</h4>
+<p>Restored main branch but it is still using ocpn-libs and hence failing because of the old .h file.</p>
+<div class="codehilite"><pre><span></span><code>+ &#39;[&#39; -f /Users/distiller/.config/local-build.rc &#39;]&#39;
++ git submodule update --init opencpn-libs
+Submodule &#39;opencpn-libs&#39; (https://github.com/leamas/opencpn-libs.git) registered for path &#39;opencpn-libs&#39;
+Cloning into &#39;/Users/distiller/project/opencpn-libs&#39;...
+</code></pre></div>
+
+
+
+<a name="345062197"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332200-shipdriver/topic/Update%20to%20ocpn_plugins.h/near/345062197" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Alec Leamas <a href="https://leamas.github.io/zulip-archive/stream/332200-shipdriver/topic/Update.20to.20ocpn_plugins.2Eh.html#345062197">(Mar 28 2023 at 08:37)</a>:</h4>
+<p>You have not restored  opencpn-libs. You need to read up on git submodules.</p>
+<p>Then (only then) do something like:</p>
+<div class="codehilite"><pre><span></span><code>$ cd opencpn-libs
+$ git checkout -b tmp 
+$ git remote update origin
+$ git fetch -f origin master:master
+$ git checkout master
+$ cd ..
+$ git add opencpn-libs
+$ git commit -m &quot; opencpn-libs: restore master branch&quot;
+</code></pre></div>
+
+<p>I. e., checkout the remote master  branch, a branch which is available also for the builder.</p>
+
+
+
+<a name="345127729"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332200-shipdriver/topic/Update%20to%20ocpn_plugins.h/near/345127729" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Tony Voss <a href="https://leamas.github.io/zulip-archive/stream/332200-shipdriver/topic/Update.20to.20ocpn_plugins.2Eh.html#345127729">(Mar 28 2023 at 13:10)</a>:</h4>
+<div class="codehilite"><pre><span></span><code>% cd /Users/tony/JavaScript_pi/opencpn-libs
+% git checkout -b tmp
+Switched to a new branch &#39;tmp&#39;
+% git remote update origin
+Fetching origin
+% git fetch -f origin master:master
+fatal: couldn&#39;t find remote ref master
+</code></pre></div>
+<p>Alec...  I think we are just trying to get me back to where we started before I forked?<br>
+If so, can I not just reinstall Shipdriver?  I think it sets up the sub-module correctly?<br>
+I still need to use the .h file from libs not ocpn-libs where I put it on your instruction</p>
+
+
+
+<a name="345138162"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332200-shipdriver/topic/Update%20to%20ocpn_plugins.h/near/345138162" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Alec Leamas <a href="https://leamas.github.io/zulip-archive/stream/332200-shipdriver/topic/Update.20to.20ocpn_plugins.2Eh.html#345138162">(Mar 28 2023 at 13:46)</a>:</h4>
+<p>No, re-installinng will not help you here, you really must get opencpn-libs in order again. </p>
+<p>My bad, there is no branch "master", it's named "main". So using <code>git fetch -f origin main:main; git checkout main</code> should  do the trick</p>
+
+
+
+<a name="345162777"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332200-shipdriver/topic/Update%20to%20ocpn_plugins.h/near/345162777" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Tony Voss <a href="https://leamas.github.io/zulip-archive/stream/332200-shipdriver/topic/Update.20to.20ocpn_plugins.2Eh.html#345162777">(Mar 28 2023 at 15:10)</a>:</h4>
+<p>OK - looks like I am back with the correct sub-module.<br>
+But remote builds use the ocpn-libs and not libs, so my compile fails because the extra couple of lines in the .h file are missed.  I see no place in my Plugins.cmake file to change that.  It includes the line:<br>
+<code>set(PKG_API_LIB api-18)  #  A directory in libs/ e. g., api-17 or api-16</code><br>
+but no reference to ocpn-libs</p>
+
+
+
+<a name="347351981"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332200-shipdriver/topic/Update%20to%20ocpn_plugins.h/near/347351981" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Mike Rossiter <a href="https://leamas.github.io/zulip-archive/stream/332200-shipdriver/topic/Update.20to.20ocpn_plugins.2Eh.html#347351981">(Apr 06 2023 at 09:43)</a>:</h4>
+<p><span class="user-mention" data-user-id="399510">@Alec Leamas</span> : Need to put the latest (v3.2  branch) version into the catalog. What tag  should I use to put it into Cloudsmith prod? <em>sd3.2.4-beta1</em>?</p>
+
+
+
+<a name="347353171"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332200-shipdriver/topic/Update%20to%20ocpn_plugins.h/near/347353171" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Alec Leamas <a href="https://leamas.github.io/zulip-archive/stream/332200-shipdriver/topic/Update.20to.20ocpn_plugins.2Eh.html#347353171">(Apr 06 2023 at 09:48)</a>:</h4>
+<p>hang on...</p>
+
+
+
+<a name="347355937"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332200-shipdriver/topic/Update%20to%20ocpn_plugins.h/near/347355937" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Alec Leamas <a href="https://leamas.github.io/zulip-archive/stream/332200-shipdriver/topic/Update.20to.20ocpn_plugins.2Eh.html#347355937">(Apr 06 2023 at 09:59)</a>:</h4>
+<p>Current v.3.2 branch is tagged with <em>sd3.2.3</em>.  The way to find out is </p>
+<div class="codehilite"><pre><span></span><code>    $ git checkout v3.2.1
+    $ git log --oneline  -12
+    5f15a0c4 (HEAD -&gt; v3.2, tag: sd3.2.3, upstream/v3.2) Changelog: 3.2.3 release
+    e1a3141d Changelog update
+    [snip]
+    318eca5a (tag: sd3.2.3-beta1, tag: sd3.2.1-beta1) Changelog: Initial 3.2.3-beta1 TBD entry
+</code></pre></div>
+<p>That is, v3.2 is currently at <code>5f15a0c4</code> which is tagged as <em>sd3.2.3</em>  i. e. it is published as sd3.2.3. Why not just stick to that?</p>
+
+
+
+<a name="347357283"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332200-shipdriver/topic/Update%20to%20ocpn_plugins.h/near/347357283" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Mike Rossiter <a href="https://leamas.github.io/zulip-archive/stream/332200-shipdriver/topic/Update.20to.20ocpn_plugins.2Eh.html#347357283">(Apr 06 2023 at 10:04)</a>:</h4>
+<p>But if I use sd3.2.3 as the tag it will tell me that has already been used when making new artifacts for the catalog.</p>
+
+
+
+<a name="347357480"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332200-shipdriver/topic/Update%20to%20ocpn_plugins.h/near/347357480" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Alec Leamas <a href="https://leamas.github.io/zulip-archive/stream/332200-shipdriver/topic/Update.20to.20ocpn_plugins.2Eh.html#347357480">(Apr 06 2023 at 10:05)</a>:</h4>
+<p>Oops... <code>git checkout v3.2.1</code> should be <code>git checkout v3.2</code>. Sorry.</p>
+
+
+
+<a name="347357664"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332200-shipdriver/topic/Update%20to%20ocpn_plugins.h/near/347357664" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Alec Leamas <a href="https://leamas.github.io/zulip-archive/stream/332200-shipdriver/topic/Update.20to.20ocpn_plugins.2Eh.html#347357664">(Apr 06 2023 at 10:05)</a>:</h4>
+<blockquote>
+<p>But if I use sd3.2.3 as the tag it will tell me that has already been used when making new artifacts for the catalog.</p>
+</blockquote>
+<p>But if you have, why not use them?</p>
+
+
+
+<a name="347359075"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332200-shipdriver/topic/Update%20to%20ocpn_plugins.h/near/347359075" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Mike Rossiter <a href="https://leamas.github.io/zulip-archive/stream/332200-shipdriver/topic/Update.20to.20ocpn_plugins.2Eh.html#347359075">(Apr 06 2023 at 10:11)</a>:</h4>
+<p>I see them in plugins/auto branch but I am wary of merging them with the master branch. Auto was not made from the latest upstream master.</p>
+
+
+
+<a name="347359678"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332200-shipdriver/topic/Update%20to%20ocpn_plugins.h/near/347359678" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Mike Rossiter <a href="https://leamas.github.io/zulip-archive/stream/332200-shipdriver/topic/Update.20to.20ocpn_plugins.2Eh.html#347359678">(Apr 06 2023 at 10:13)</a>:</h4>
+<p>What about deleting all metadata files apart from ShipDriver in plugins auto branch and then squashing that into master?</p>
+
+
+
+<a name="347359805"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332200-shipdriver/topic/Update%20to%20ocpn_plugins.h/near/347359805" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Alec Leamas <a href="https://leamas.github.io/zulip-archive/stream/332200-shipdriver/topic/Update.20to.20ocpn_plugins.2Eh.html#347359805">(Apr 06 2023 at 10:14)</a>:</h4>
+<p>Sounds good to me.</p>
+
+
+
+<a name="347359902"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332200-shipdriver/topic/Update%20to%20ocpn_plugins.h/near/347359902" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Alec Leamas <a href="https://leamas.github.io/zulip-archive/stream/332200-shipdriver/topic/Update.20to.20ocpn_plugins.2Eh.html#347359902">(Apr 06 2023 at 10:14)</a>:</h4>
+<p>I can take a look at the PR before Dave wakes up...</p>
+
+
+
+<a name="347360023"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332200-shipdriver/topic/Update%20to%20ocpn_plugins.h/near/347360023" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Alec Leamas <a href="https://leamas.github.io/zulip-archive/stream/332200-shipdriver/topic/Update.20to.20ocpn_plugins.2Eh.html#347360023">(Apr 06 2023 at 10:15)</a>:</h4>
+<p>wait....</p>
+
+
+
+<a name="347361219"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332200-shipdriver/topic/Update%20to%20ocpn_plugins.h/near/347361219" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Alec Leamas <a href="https://leamas.github.io/zulip-archive/stream/332200-shipdriver/topic/Update.20to.20ocpn_plugins.2Eh.html#347361219">(Apr 06 2023 at 10:19)</a>:</h4>
+<p>No. If you delete all other files the deletions will be forwarded in the PR. This is not a good idea. Instead, working in the plugins clone:</p>
+<p>- Make sure you have the correct shipdriver metadata files in place.<br>
+  - Update the remote: <code>git remote update upstream</code><br>
+  - And then rebase you branch on upstream: <code>git rebase upstream/master</code></p>
+<p>If that fails,  you could add the files manually to upstream/master. Let me know if you need to do this.</p>
+
+
+
+<a name="347362303"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332200-shipdriver/topic/Update%20to%20ocpn_plugins.h/near/347362303" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Alec Leamas <a href="https://leamas.github.io/zulip-archive/stream/332200-shipdriver/topic/Update.20to.20ocpn_plugins.2Eh.html#347362303">(Apr 06 2023 at 10:23)</a>:</h4>
+<p>Before you do that, it might make sense to save your auto branch. One simple way is to tag it: <code>git tag auto-bak auto</code>. This creates a tag <em>auto-bak</em> whcih will be the original auto branch. You might need that...</p>
+
+
+
+<a name="347364477"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332200-shipdriver/topic/Update%20to%20ocpn_plugins.h/near/347364477" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Alec Leamas <a href="https://leamas.github.io/zulip-archive/stream/332200-shipdriver/topic/Update.20to.20ocpn_plugins.2Eh.html#347364477">(Apr 06 2023 at 10:30)</a>:</h4>
+<p>Need lunch. Just in case you need it, another way assuming that the metadata files lives in the auto branch:</p>
+<div class="codehilite"><pre><span></span><code>    $ git remote update upstream
+    $ git checkout auto
+    ... Check the exact shidpriver files you want to have in master, like metadata/ShipDriver-3.2-android-armhf-A32-16.xml. Should be a quite long list of files.
+    $ git fetch -f upstream master:master
+    $ git checkout master
+</code></pre></div>
+<p>Now you have an updated copy of  the master branch and a list of files you want to add from the auto branch. Each file is added/updated using commands like</p>
+<div class="codehilite"><pre><span></span><code>    git checkout auto metadata/ShipDriver-3.2-android-armhf-A32-16.xml
+</code></pre></div>
+<p>Here, you have exact control, but also a lot of work...</p>
+
+
+
+<a name="347367827"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332200-shipdriver/topic/Update%20to%20ocpn_plugins.h/near/347367827" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Mike Rossiter <a href="https://leamas.github.io/zulip-archive/stream/332200-shipdriver/topic/Update.20to.20ocpn_plugins.2Eh.html#347367827">(Apr 06 2023 at 10:45)</a>:</h4>
+<p>First method seems to have worked. PR made and validated.</p>
+
+
+
+<a name="347372050"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332200-shipdriver/topic/Update%20to%20ocpn_plugins.h/near/347372050" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Alec Leamas <a href="https://leamas.github.io/zulip-archive/stream/332200-shipdriver/topic/Update.20to.20ocpn_plugins.2Eh.html#347372050">(Apr 06 2023 at 11:03)</a>:</h4>
+<p>back. great!</p>
+
+
+
+<a name="349865554"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332200-shipdriver/topic/Update%20to%20ocpn_plugins.h/near/349865554" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Mike Rossiter <a href="https://leamas.github.io/zulip-archive/stream/332200-shipdriver/topic/Update.20to.20ocpn_plugins.2Eh.html#349865554">(Apr 14 2023 at 15:15)</a>:</h4>
+<p><span class="user-mention" data-user-id="399510">@Alec Leamas</span> : Is there anything you want to add to the ShipDriver template (tag sd3.2.3 at present) before I go ahead with publishing a number of plugins.  I would like to avoid too many roundtrips (obviously).</p>
+
+
+
+<a name="349985867"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332200-shipdriver/topic/Update%20to%20ocpn_plugins.h/near/349985867" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Alec Leamas <a href="https://leamas.github.io/zulip-archive/stream/332200-shipdriver/topic/Update.20to.20ocpn_plugins.2Eh.html#349985867">(Apr 14 2023 at 15:45)</a>:</h4>
+<p>Dinner party here. Yes we we need to cherrypick one or two commits more . Will do late today or early tomorrow</p>
+
+
+
+<a name="349987646"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332200-shipdriver/topic/Update%20to%20ocpn_plugins.h/near/349987646" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Mike Rossiter <a href="https://leamas.github.io/zulip-archive/stream/332200-shipdriver/topic/Update.20to.20ocpn_plugins.2Eh.html#349987646">(Apr 14 2023 at 15:53)</a>:</h4>
+<p>Thanks. Enjoy your evening.</p>
+
+
+
+<a name="350021307"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332200-shipdriver/topic/Update%20to%20ocpn_plugins.h/near/350021307" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Alec Leamas <a href="https://leamas.github.io/zulip-archive/stream/332200-shipdriver/topic/Update.20to.20ocpn_plugins.2Eh.html#350021307">(Apr 14 2023 at 18:28)</a>:</h4>
+<p><a href="https://github.com/Rasbats/shipdriver_pi/pull/515">https://github.com/Rasbats/shipdriver_pi/pull/515</a></p>
+
+
+
+<a name="350021714"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332200-shipdriver/topic/Update%20to%20ocpn_plugins.h/near/350021714" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Alec Leamas <a href="https://leamas.github.io/zulip-archive/stream/332200-shipdriver/topic/Update.20to.20ocpn_plugins.2Eh.html#350021714">(Apr 14 2023 at 18:30)</a>:</h4>
+<p>I have prepared a release in v3.2. Can we talk before you push the button? In particular, don't forget to update Changelog...</p>
+
+
+
+<hr><p>Last updated: Oct 05 2023 at 09:43 UTC</p>
+</html>

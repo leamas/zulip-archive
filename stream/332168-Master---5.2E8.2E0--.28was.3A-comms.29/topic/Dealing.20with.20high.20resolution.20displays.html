@@ -1,0 +1,66 @@
+<html>
+<head><meta charset="utf-8"><title>Dealing with high resolution displays · Master - 5.8.0  (was: comms) · Zulip Chat Archive</title></head>
+<h2>Stream: <a href="https://leamas.github.io/zulip-archive/stream/332168-Master---5.2E8.2E0--.28was.3A-comms.29/index.html">Master - 5.8.0  (was: comms)</a></h2>
+<h3>Topic: <a href="https://leamas.github.io/zulip-archive/stream/332168-Master---5.2E8.2E0--.28was.3A-comms.29/topic/Dealing.20with.20high.20resolution.20displays.html">Dealing with high resolution displays</a></h3>
+
+<hr>
+
+<base href="https://opencpn.zulipchat.com">
+
+<head><link href="https://leamas.github.io/zulip-archive/style.css" rel="stylesheet"></head>
+
+<a name="342354260"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332168-Master%20-%205.8.0%20%20%28was%3A%20comms%29/topic/Dealing%20with%20high%20resolution%20displays/near/342354260" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Tony Voss <a href="https://leamas.github.io/zulip-archive/stream/332168-Master---5.2E8.2E0--.28was.3A-comms.29/topic/Dealing.20with.20high.20resolution.20displays.html#342354260">(Mar 16 2023 at 15:48)</a>:</h4>
+<p>As a Mac user working with both 'normal' and Retina displays, I have been mostly ignorant of the issue of screen resolution.  However, Rick and his high res Windows setup has led me to face this issue.</p>
+<p><a href="https://docs.wxwidgets.org/trunk/overview_high_dpi.html">https://docs.wxwidgets.org/trunk/overview_high_dpi.html</a> explains:</p>
+<div class="codehilite"><pre><span></span><code>Some systems like eg Apple&#39;s OSes automatically scale all the coordinates
+by the DPI scaling factor, however not all systems supported by wxWidgets
+do it – notably, MSW does not. This means that logical pixels, in which all coordinates and sizes are expressed in wxWidgets API, do not have the same meaning on all platforms when using high DPI displays. So while on macOS
+you can always pass in a size of (500,500) to create the window from the
+previous paragraph, whatever the resolution of the display is, you would have
+to increase this to (1000,1000) on MSW when working on a 200% display.
+To hide this difference from the application, wxWidgets provides device-independent pixels, abbreviated as &quot;DIP&quot;, that are always of the same size
+on all displays and all platforms.
+
+Thus, the first thing do when preparing your application for high DPI
+support is to stop using raw pixel values, as they mean different things
+under different platforms when DPI scaling is used. Actually, using any
+pixel values is not recommended and replacing them with the values based
+on the text metrics, i.e. obtained using wxWindow::GetTextExtent(), or
+expressing them in dialog units (see wxWindow::ConvertDialogToPixels()) is preferable. However the simplest change is to just replace the pixel values
+with the values in DIP: for this, just use wxWindow::FromDIP() to convert
+rom one to the other.
+</code></pre></div>
+<p>So when I create, say, a wxDialog  with a desired size of <code>wxSize(200, 300)</code> I should actually use <code>FromDIP(wxSize(200, 300)</code>.  When I save the position in the preferences file, I need to convert back to DIP and then back again when loading the config.  The same applies for positions.  All doable although I need to track down all places the conversion is needed.  Do all plugins that create windows need to do this?  Or  do they already and I am just late to the party?</p>
+<p>How do we handle the situation where a window is dragged onto a screen of different resolution?<br>
+I have already reported an issue with the canvas not adjusting <a href="https://github.com/OpenCPN/OpenCPN/issues/3036">#3036</a> but is this a more widespread issue?  I have a nasty hunch it might require processing the window move event and then redrawing with the correct DIP adjustment.</p>
+<p>What's the wisdom here?</p>
+
+
+
+<a name="342411141"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332168-Master%20-%205.8.0%20%20%28was%3A%20comms%29/topic/Dealing%20with%20high%20resolution%20displays/near/342411141" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Pavel Kalian <a href="https://leamas.github.io/zulip-archive/stream/332168-Master---5.2E8.2E0--.28was.3A-comms.29/topic/Dealing.20with.20high.20resolution.20displays.html#342411141">(Mar 16 2023 at 20:00)</a>:</h4>
+<p>I just ignore it for now until I have access to a HiDPI monitor. Without it it's simply impossible to fix with all the related WX bugs hitting all the time.</p>
+
+
+
+<a name="342436691"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332168-Master%20-%205.8.0%20%20%28was%3A%20comms%29/topic/Dealing%20with%20high%20resolution%20displays/near/342436691" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Notification Bot <a href="https://leamas.github.io/zulip-archive/stream/332168-Master---5.2E8.2E0--.28was.3A-comms.29/topic/Dealing.20with.20high.20resolution.20displays.html#342436691">(Mar 16 2023 at 22:50)</a>:</h4>
+<p>This topic was moved here from <a class="stream-topic" data-stream-id="282854" href="/#narrow/stream/282854-general/topic/Dealing.20with.20high.20resolution.20displays">#general &gt; Dealing with high resolution displays</a> by <span class="user-mention silent" data-user-id="399510">Alec Leamas</span>.</p>
+
+
+
+<a name="350177042"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332168-Master%20-%205.8.0%20%20%28was%3A%20comms%29/topic/Dealing%20with%20high%20resolution%20displays/near/350177042" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Tony Voss <a href="https://leamas.github.io/zulip-archive/stream/332168-Master---5.2E8.2E0--.28was.3A-comms.29/topic/Dealing.20with.20high.20resolution.20displays.html#350177042">(Apr 15 2023 at 14:59)</a>:</h4>
+<p>I have the JavaScript plugin working with Windows scaled displays.  Thanks to Rick for testing.</p>
+<p>The tricky bit for this plugin is that wxFormBuilder is resolution ignorant and any constants set in it need fixing up.   During development I compiled some extra code which overlaid the methods such as <code>FromDIP</code> with ones that applied a fictitious scaling.  This had the effect of enlarging the displayed window and its fields so I could see the effect without having a screen that needed scaling - MacOS in my case but it could be Windows without a hi-res screen.  This helped greatly in finding all the places in the wxFormBuilder form where I had a constant but did not really need it.</p>
+<p>I then added a method which carries out a series of adjustments to the wxFormBuilder-generated code, such as <br>
+<code>Directory-&gt;SetSize(FromDIP(Directory-&gt;GetSize()));</code><br>
+In  in the case of the Tools window of the JavaScript plugin it needed 24 such adjustments.</p>
+<p>I have recorded this in the Technical Guide for the plugin in the section  <em>Windows scaled displays</em>.<br>
+If it should be available somewhere else, SKS point me to it.</p>
+
+
+
+<hr><p>Last updated: Oct 05 2023 at 09:43 UTC</p>
+</html>

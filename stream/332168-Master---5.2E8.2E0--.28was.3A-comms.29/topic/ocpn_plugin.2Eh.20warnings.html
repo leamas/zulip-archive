@@ -1,0 +1,336 @@
+<html>
+<head><meta charset="utf-8"><title>ocpn_plugin.h warnings · Master - 5.8.0  (was: comms) · Zulip Chat Archive</title></head>
+<h2>Stream: <a href="https://leamas.github.io/zulip-archive/stream/332168-Master---5.2E8.2E0--.28was.3A-comms.29/index.html">Master - 5.8.0  (was: comms)</a></h2>
+<h3>Topic: <a href="https://leamas.github.io/zulip-archive/stream/332168-Master---5.2E8.2E0--.28was.3A-comms.29/topic/ocpn_plugin.2Eh.20warnings.html">ocpn_plugin.h warnings</a></h3>
+
+<hr>
+
+<base href="https://opencpn.zulipchat.com">
+
+<head><link href="https://leamas.github.io/zulip-archive/style.css" rel="stylesheet"></head>
+
+<a name="384142429"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332168-Master%20-%205.8.0%20%20%28was%3A%20comms%29/topic/ocpn_plugin.h%20warnings/near/384142429" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Dave Register <a href="https://leamas.github.io/zulip-archive/stream/332168-Master---5.2E8.2E0--.28was.3A-comms.29/topic/ocpn_plugin.2Eh.20warnings.html#384142429">(Aug 12 2023 at 03:21)</a>:</h4>
+<p><span class="user-mention" data-user-id="399510">@Alec Leamas</span> <br>
+<span class="user-mention" data-user-id="573239">@Pavel Kalian</span> <br>
+Pavel...<br>
+Will you remind us what this was all about:<br>
+<a href="https://github.com/opencpn/OpenCPN/commit/d5e4ee43610cb60b45a034019d5c60cb210b587b">d5e4ee43610cb60b45a034019d5c60cb210b587b</a><br>
+    "Implement API 1.18 adding plugin overlay rendering in multiple phases of the rendering pipeline"</p>
+
+
+
+<a name="384158213"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332168-Master%20-%205.8.0%20%20%28was%3A%20comms%29/topic/ocpn_plugin.h%20warnings/near/384158213" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Pavel Kalian <a href="https://leamas.github.io/zulip-archive/stream/332168-Master---5.2E8.2E0--.28was.3A-comms.29/topic/ocpn_plugin.2Eh.20warnings.html#384158213">(Aug 12 2023 at 05:46)</a>:</h4>
+<p><span class="user-mention silent" data-user-id="517002">Dave Register</span> <a href="#narrow/stream/332168-Master---5.2E8.2E0--.28was.3A-comms.29/topic/Network.20problems/near/384142429">said</a>:</p>
+<blockquote>
+<p><span class="user-mention silent" data-user-id="399510">Alec Leamas</span> <br>
+<span class="user-mention silent" data-user-id="573239">Pavel Kalian</span> <br>
+Pavel...<br>
+Will you remind us what this was all about:<br>
+<a href="https://github.com/opencpn/OpenCPN/commit/d5e4ee43610cb60b45a034019d5c60cb210b587b">d5e4ee43610cb60b45a034019d5c60cb210b587b</a><br>
+    "Implement API 1.18 adding plugin overlay rendering in multiple phases of the rendering pipeline"</p>
+</blockquote>
+<p>This made DashboardSK possible, we do not want ships etc. drawn above the instruments.</p>
+
+
+
+<a name="384186233"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332168-Master%20-%205.8.0%20%20%28was%3A%20comms%29/topic/ocpn_plugin.h%20warnings/near/384186233" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Alec Leamas <a href="https://leamas.github.io/zulip-archive/stream/332168-Master---5.2E8.2E0--.28was.3A-comms.29/topic/ocpn_plugin.2Eh.20warnings.html#384186233">(Aug 12 2023 at 08:22)</a>:</h4>
+<p>OK, I can sort out the   RenderGLOverlayMultiCanvas() and RenderOverlay()  mess  with patch  below.  It 's basically about splitting the  signature  with a  default  value  to two. This is as I understand it  perfectly safe, but would preferably need a review. However,  this is not the end of this sad story.</p>
+<div class="codehilite"><pre><span></span><code>diff -U2 ../opencpn-libs/api-18/ocpn_plugin.h ../libs/api-18/ocpn_plugin.h
+--- ../opencpn-libs/api-18/ocpn_plugin.h    2023-08-12 09:35:26.194704390 +0200
++++ ../libs/api-18/ocpn_plugin.h    2023-08-12 10:14:42.633269994 +0200
+@@ -590,5 +590,11 @@
+   /// \return true if overlay was rendered, false otherwise
+   virtual bool RenderGLOverlayMultiCanvas(wxGLContext *pcontext,
+-                                          PlugIn_ViewPort *vp, int canvasIndex, int priority = -1);
++                                          PlugIn_ViewPort *vp, int canvas_ix,
++                                          int priority);
++  virtual bool RenderGLOverlayMultiCanvas(wxGLContext *pcontext,
++                                          PlugIn_ViewPort *vp,
++                                          int canvas_ix) override {
++    return RenderGLOverlayMultiCanvas(pcontext, vp, canvas_ix, -1);
++  }
+   /// Render plugin overlay over chart canvas in non-OpenGL mode
+   ///
+@@ -600,5 +606,10 @@
+   /// \return true if overlay was rendered, false otherwise
+   virtual bool RenderOverlayMultiCanvas(wxDC &amp;dc, PlugIn_ViewPort *vp,
+-                                        int canvasIndex, int priority = -1);
++                                        int canvasIndex, int priority);
++
++  bool RenderOverlayMultiCanvas(wxDC &amp;dc, PlugIn_ViewPort *vp,
++                                int canvas_ix) {
++    return RenderOverlayMultiCanvas(dc, vp, canvas_ix, -1); }
++
+ };
+ //------------------------------------------------------------------
+</code></pre></div>
+
+
+
+<a name="384190169"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332168-Master%20-%205.8.0%20%20%28was%3A%20comms%29/topic/ocpn_plugin.h%20warnings/near/384190169" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Alec Leamas <a href="https://leamas.github.io/zulip-archive/stream/332168-Master---5.2E8.2E0--.28was.3A-comms.29/topic/ocpn_plugin.2Eh.20warnings.html#384190169">(Aug 12 2023 at 08:39)</a>:</h4>
+<p>Remaining problem is RenderOverlay.  Here the compiler says</p>
+<div class="codehilite"><pre><span></span><code>libs/api-18/ocpn_plugin.h:427:16: warning: ‘virtual bool opencpn_plugin::RenderOverlay(wxDC*, PlugIn_ViewPort*)’ was hidden [-Woverloaded-virtual=]
+  427 |   virtual bool RenderOverlay(wxDC *dc, PlugIn_ViewPort *vp);
+      |                ^~~~~~~~~~~~~
+libs/api-18/ocpn_plugin.h:460:8: note:   by ‘bool opencpn_plugin_16::RenderOverlay(wxDC&amp;, PlugIn_ViewPort*)’
+  460 |   bool RenderOverlay(wxDC &amp;dc, PlugIn_ViewPort *vp);
+      |        ^~~~~~~~~~~~~
+</code></pre></div>
+<p>That is,</p>
+<ul>
+<li>opencpn_plugin uses <code>RenderOverlay(wxMemoryDC *pmdc, ...)</code></li>
+<li>opencpn_plugin_16 uses <code>RenderOverlay(wxDC &amp;dc, ...)</code></li>
+<li>opencpn_plugin_17 and opencpn_plugin_18  alse uses <code> </code>RenderOverlay(wxDC &amp;dc, ...)`</li>
+</ul>
+<p>The net effect is that  a main opencpn compiled before API 116 expects a <code>wxMemoryDC*</code> pointer argument whereas newer versions expects a wxDC&amp; reference. As I  understand it, this breaks the API compatibility promise.</p>
+<p>OTOH, plugins compiled before API 116 are unusable anyway due to the wx32 ABI break, and it seems pretty safe to assume that anything usable on current OpenCPN is compiled against at least API 116. Which means it might be possible to break the API in order to sort this out.</p>
+<p>"Confused"</p>
+
+
+
+<a name="384282056"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332168-Master%20-%205.8.0%20%20%28was%3A%20comms%29/topic/ocpn_plugin.h%20warnings/near/384282056" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Dave Register <a href="https://leamas.github.io/zulip-archive/stream/332168-Master---5.2E8.2E0--.28was.3A-comms.29/topic/ocpn_plugin.2Eh.20warnings.html#384282056">(Aug 12 2023 at 14:36)</a>:</h4>
+<p><span class="user-mention" data-user-id="399510">@Alec Leamas</span> <br>
+AFAICT, the only plugins that use either of these methods today are GRIB and the much newer DashboardSK.<br>
+GRIB is of course no problem, since it builds and ships with whatever the latest core plugin API might be. Easily patched if necessary.<br>
+DashboardSK builds against API118, since it requires the extended method (with priority parameter).<br>
+Net:  I think the signature change to this method (patch above) is safe.  And there is nothing needed to be done now about the ABI break between 116 and 118, since there is no third-party plugin that needs to tolerate that ABI break in this particular method.</p>
+
+
+
+<a name="384291768"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332168-Master%20-%205.8.0%20%20%28was%3A%20comms%29/topic/ocpn_plugin.h%20warnings/near/384291768" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Dave Register <a href="https://leamas.github.io/zulip-archive/stream/332168-Master---5.2E8.2E0--.28was.3A-comms.29/topic/ocpn_plugin.2Eh.20warnings.html#384291768">(Aug 12 2023 at 15:12)</a>:</h4>
+<p><span class="user-mention" data-user-id="399510">@Alec Leamas</span> <br>
+Correction:<br>
+"... there is nothing needed to be done now about the ABI break between <strong>pre-116</strong> and 118..."</p>
+
+
+
+<a name="384299396"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332168-Master%20-%205.8.0%20%20%28was%3A%20comms%29/topic/ocpn_plugin.h%20warnings/near/384299396" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Notification Bot <a href="https://leamas.github.io/zulip-archive/stream/332168-Master---5.2E8.2E0--.28was.3A-comms.29/topic/ocpn_plugin.2Eh.20warnings.html#384299396">(Aug 12 2023 at 15:42)</a>:</h4>
+<p>6 messages were moved here from <a class="stream-topic" data-stream-id="332168" href="/#narrow/stream/332168-Master---5.2E8.2E0--.28was.3A-comms.29/topic/Network.20problems">#Master - 5.8.0  (was: comms) &gt; Network problems</a> by <span class="user-mention silent" data-user-id="399510">Alec Leamas</span>.</p>
+
+
+
+<a name="384608598"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332168-Master%20-%205.8.0%20%20%28was%3A%20comms%29/topic/ocpn_plugin.h%20warnings/near/384608598" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Dave Register <a href="https://leamas.github.io/zulip-archive/stream/332168-Master---5.2E8.2E0--.28was.3A-comms.29/topic/ocpn_plugin.2Eh.20warnings.html#384608598">(Aug 14 2023 at 00:31)</a>:</h4>
+<p><span class="user-mention" data-user-id="399510">@Alec Leamas</span> <br>
+On ocpn_plugin.h and friends:<br>
+The trouble is this:</p>
+<div class="codehilite"><pre><span></span><code>opencpn_plugin uses RenderOverlay(wxMemoryDC *pmdc, ...)
+opencpn_plugin_16 uses RenderOverlay(wxDC &amp;dc, ...)
+opencpn_plugin_17 and opencpn_plugin_18 alse uses  RenderOverlay(wxDC &amp;dc, ...)`
+</code></pre></div>
+
+<p>As I now think about it, this is OK as-is.  Confusing, but not inconsistent.<br>
+Yes, it is true that the API changed at API 16.  We dropped one class interface method, and added another.  However, both methods are implemented in core OCPN, in their respective base classes. So a plugin will use the one that matches, depending on the API version it chooses to follow.<br>
+There is one breakage to think about.  If an older plugin (pre-116) wishes to upgrade to say API-118 to take advantage of newer functions in later APIs, the author will need to adapt to the newer RenderOverlay(...) method signature, if indeed the plugin actually overrides this function in it implementation.  This scenario has not happened yet, but could, in principle.</p>
+
+
+
+<a name="384611683"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332168-Master%20-%205.8.0%20%20%28was%3A%20comms%29/topic/ocpn_plugin.h%20warnings/near/384611683" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Dave Register <a href="https://leamas.github.io/zulip-archive/stream/332168-Master---5.2E8.2E0--.28was.3A-comms.29/topic/ocpn_plugin.2Eh.20warnings.html#384611683">(Aug 14 2023 at 00:47)</a>:</h4>
+<p>Actually, disregard the "one breakage to think about" clause.<br>
+Since API-116+ class inherits from pre-116 class, than all previous (pre-116) methods are still available in the base class, and may be overridden if desired.  So the suggested upgrade will be no problem for the linker.</p>
+
+
+
+<a name="384663304"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332168-Master%20-%205.8.0%20%20%28was%3A%20comms%29/topic/ocpn_plugin.h%20warnings/near/384663304" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Alec Leamas <a href="https://leamas.github.io/zulip-archive/stream/332168-Master---5.2E8.2E0--.28was.3A-comms.29/topic/ocpn_plugin.2Eh.20warnings.html#384663304">(Aug 14 2023 at 06:23)</a>:</h4>
+<p>Indeed. However, the compiler is unhappy since it thinks that  116+ classes overrides the base class wxMemoryDC argument. And this can not really be, since they have different signatures.  I. e., what should  the argument be, or be converted to.</p>
+<p>I see two paths: One is to just remove the base class code. That would mean that there was no linkage from main OpenCPN to the plugin in this case. Might work, but the RTTI runtime inheritance info might break, dunno. Will investigate.</p>
+<p>The other path is to just silence the warning, adding a comment...</p>
+
+
+
+<a name="384790323"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332168-Master%20-%205.8.0%20%20%28was%3A%20comms%29/topic/ocpn_plugin.h%20warnings/near/384790323" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Dave Register <a href="https://leamas.github.io/zulip-archive/stream/332168-Master---5.2E8.2E0--.28was.3A-comms.29/topic/ocpn_plugin.2Eh.20warnings.html#384790323">(Aug 14 2023 at 14:04)</a>:</h4>
+<p>I expect that all declared methods in the base class must be implemented in order for RTTI to be satisfied during the plugin derived class llnk step.</p>
+
+
+
+<a name="384850383"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332168-Master%20-%205.8.0%20%20%28was%3A%20comms%29/topic/ocpn_plugin.h%20warnings/near/384850383" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Dave Register <a href="https://leamas.github.io/zulip-archive/stream/332168-Master---5.2E8.2E0--.28was.3A-comms.29/topic/ocpn_plugin.2Eh.20warnings.html#384850383">(Aug 14 2023 at 17:16)</a>:</h4>
+<p>Just so we can compare notes, what plugin compilation is generating the RenderOverlay() "hidden" warning?  I'm not seeing it in normal builds.</p>
+
+
+
+<a name="385135319"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332168-Master%20-%205.8.0%20%20%28was%3A%20comms%29/topic/ocpn_plugin.h%20warnings/near/385135319" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Alec Leamas <a href="https://leamas.github.io/zulip-archive/stream/332168-Master---5.2E8.2E0--.28was.3A-comms.29/topic/ocpn_plugin.2Eh.20warnings.html#385135319">(Aug 15 2023 at 14:09)</a>:</h4>
+<p>Here: <a href="/user_uploads/33951/jqdQq9xjYC0_HQ0LouTsN1Pk/build.log">build.log</a></p>
+
+
+
+<a name="385137229"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332168-Master%20-%205.8.0%20%20%28was%3A%20comms%29/topic/ocpn_plugin.h%20warnings/near/385137229" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Alec Leamas <a href="https://leamas.github.io/zulip-archive/stream/332168-Master---5.2E8.2E0--.28was.3A-comms.29/topic/ocpn_plugin.2Eh.20warnings.html#385137229">(Aug 15 2023 at 14:16)</a>:</h4>
+<blockquote>
+<p>I expect that all declared methods in the base class must be implemented in order for RTTI to be satisfied</p>
+</blockquote>
+<p>Definitely. However, the question is really the other way around: Is it ok that the plugin ABI implements  a method not listed in the header, and thus not is required by main OpenCPN? I plan to  look into this, preferably later...</p>
+
+
+
+<a name="385578374"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332168-Master%20-%205.8.0%20%20%28was%3A%20comms%29/topic/ocpn_plugin.h%20warnings/near/385578374" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Dave Register <a href="https://leamas.github.io/zulip-archive/stream/332168-Master---5.2E8.2E0--.28was.3A-comms.29/topic/ocpn_plugin.2Eh.20warnings.html#385578374">(Aug 17 2023 at 02:14)</a>:</h4>
+<p><span class="user-mention" data-user-id="399510">@Alec Leamas</span> <br>
+After some reading and fiddling, I think we can best resolve this by employing a "using" directive in three offending class declarations:<br>
+We need this only in 116, 117, and 118.  119, and later, all derive from 118, so they are covered.</p>
+<p>TBH, I am not completely clear on the effect of these declarations.  It seems like some sort of prompt to clang to "pay attention to the signatures".  I observe that gcc knows what to do without fuss.  There is some google juice on this deviation (or"bug") in clang.<br>
+Anyway, I see that adding the three declarations seems to resolve the clang warning.  That is a good thing.</p>
+<p>Thoughts?</p>
+<div class="codehilite"><pre><span></span><code>class DECL_EXP opencpn_plugin_16 : public opencpn_plugin
+ {
+   public:
+         opencpn_plugin_16(void *pmgr);
+         virtual ~opencpn_plugin_16();
+
+         using opencpn_plugin::RenderOverlay;
+         virtual bool RenderOverlay(wxDC &amp;dc, PlugIn_ViewPort *vp);
+
+         virtual void SetPluginMessage(wxString &amp;message_id, wxString &amp;message_body);
+
+ };
+
+class DECL_EXP opencpn_plugin_17 : public opencpn_plugin
+{
+   public:
+         opencpn_plugin_17(void *pmgr);
+         virtual ~opencpn_plugin_17();
+
+         using opencpn_plugin::RenderOverlay;
+         virtual bool RenderOverlay(wxDC &amp;dc, PlugIn_ViewPort *vp);
+         virtual bool RenderGLOverlay(wxGLContext *pcontext, PlugIn_ViewPort *vp);
+
+         virtual void SetPluginMessage(wxString &amp;message_id, wxString &amp;message_body);
+
+};
+
+class DECL_EXP opencpn_plugin_18 : public opencpn_plugin
+{
+  public:
+        opencpn_plugin_18(void *pmgr);
+        virtual ~opencpn_plugin_18();
+
+        using opencpn_plugin::RenderOverlay;
+        virtual bool RenderOverlay(wxDC &amp;dc, PlugIn_ViewPort *vp);
+        virtual bool RenderGLOverlay(wxGLContext *pcontext, PlugIn_ViewPort *vp);
+
+        virtual void SetPluginMessage(wxString &amp;message_id, wxString &amp;message_body);
+        virtual void SetPositionFixEx(PlugIn_Position_Fix_Ex &amp;pfix);
+
+};
+</code></pre></div>
+
+
+
+<a name="385607739"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332168-Master%20-%205.8.0%20%20%28was%3A%20comms%29/topic/ocpn_plugin.h%20warnings/near/385607739" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Alec Leamas <a href="https://leamas.github.io/zulip-archive/stream/332168-Master---5.2E8.2E0--.28was.3A-comms.29/topic/ocpn_plugin.2Eh.20warnings.html#385607739">(Aug 17 2023 at 06:45)</a>:</h4>
+<p>Yes, you are right, this seems to be the correct fix.</p>
+<blockquote>
+<p>TBH, I am not completely clear on the effect of these declarations</p>
+</blockquote>
+<p><a href="https://en.cppreference.com/w/cpp/language/using_declaration">https://en.cppreference.com/w/cpp/language/using_declaration</a> says,<br>
+section "In namespace and block scope"</p>
+<div class="codehilite"><pre><span></span><code>Using-declarations can be used to introduce namespace members into other
+namespaces and block scopes, or to introduce base class members into derived
+class definitions, or to introduce enumerators into namespaces, block,
+and class scopes (since C++20).
+</code></pre></div>
+<p>In our case, that means that we resolve the ambiguity for the compiler and makes both <code>RenderOverlay(wxMemoryDC *pmdc,  ...);</code>and <code>RenderOverlay(wxDC &amp;dc, ...)</code>  available, which is more or less what we intended. The example in the link is pretty clear.</p>
+<p>c++ is anything but simple. But, we do learn ;)</p>
+
+
+
+<a name="385609612"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332168-Master%20-%205.8.0%20%20%28was%3A%20comms%29/topic/ocpn_plugin.h%20warnings/near/385609612" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Alec Leamas <a href="https://leamas.github.io/zulip-archive/stream/332168-Master---5.2E8.2E0--.28was.3A-comms.29/topic/ocpn_plugin.2Eh.20warnings.html#385609612">(Aug 17 2023 at 06:55)</a>:</h4>
+<p>Might add that this C++ learning has been, and is, a bumpy road for me.</p>
+
+
+
+<a name="385622216"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332168-Master%20-%205.8.0%20%20%28was%3A%20comms%29/topic/ocpn_plugin.h%20warnings/near/385622216" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Alec Leamas <a href="https://leamas.github.io/zulip-archive/stream/332168-Master---5.2E8.2E0--.28was.3A-comms.29/topic/ocpn_plugin.2Eh.20warnings.html#385622216">(Aug 17 2023 at 08:14)</a>:</h4>
+<p>Curious question, somewhat OT: Why does a plugin like <code>opencpn_plugin_18</code> (API 1.18) derive from the base  <code>opencpn_plugin</code> instead of previous one, <code>opencpn_plugin_17</code> in this case? </p>
+<p>To me, it seems natural to carry all enhancements so far to next version...</p>
+
+
+
+<a name="385716289"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332168-Master%20-%205.8.0%20%20%28was%3A%20comms%29/topic/ocpn_plugin.h%20warnings/near/385716289" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Dave Register <a href="https://leamas.github.io/zulip-archive/stream/332168-Master---5.2E8.2E0--.28was.3A-comms.29/topic/ocpn_plugin.2Eh.20warnings.html#385716289">(Aug 17 2023 at 16:56)</a>:</h4>
+<p><span class="user-mention" data-user-id="399510">@Alec Leamas</span> <br>
+Answer to curious question:<br>
+This is very old code, written while I was still learning the usefulness of polymorphism.<br>
+I learned, and switched methods at 119.<br>
+Some of this stuff comes slow to an old embedded C and assembler coder.</p>
+
+
+
+<a name="385716493"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332168-Master%20-%205.8.0%20%20%28was%3A%20comms%29/topic/ocpn_plugin.h%20warnings/near/385716493" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Pavel Kalian <a href="https://leamas.github.io/zulip-archive/stream/332168-Master---5.2E8.2E0--.28was.3A-comms.29/topic/ocpn_plugin.2Eh.20warnings.html#385716493">(Aug 17 2023 at 16:57)</a>:</h4>
+<p><span class="user-mention silent" data-user-id="399510">Alec Leamas</span> <a href="#narrow/stream/332168-Master---5.2E8.2E0--.28was.3A-comms.29/topic/ocpn_plugin.2Eh.20warnings/near/385622216">said</a>:</p>
+<blockquote>
+<p>Curious question, somewhat OT: Why does a plugin like <code>opencpn_plugin_18</code> (API 1.18) derive from the base  <code>opencpn_plugin</code> instead of previous one, <code>opencpn_plugin_17</code> in this case? </p>
+<p>To me, it seems natural to carry all enhancements so far to next version...</p>
+</blockquote>
+<p>That was a LONG time ago, I don't think anybody remembers.</p>
+
+
+
+<a name="387735828"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332168-Master%20-%205.8.0%20%20%28was%3A%20comms%29/topic/ocpn_plugin.h%20warnings/near/387735828" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Alec Leamas <a href="https://leamas.github.io/zulip-archive/stream/332168-Master---5.2E8.2E0--.28was.3A-comms.29/topic/ocpn_plugin.2Eh.20warnings.html#387735828">(Aug 28 2023 at 18:45)</a>:</h4>
+<p><span class="user-mention" data-user-id="517002">@Dave Register</span>  The ocpn_plugin.h is currently unusable, see <a href="https://github.com/Rasbats/shipdriver_pi/issues/552">https://github.com/Rasbats/shipdriver_pi/issues/552</a> which is about using the last iteration.The MSCV linker is, well, "interesting"...</p>
+<p>I'll see what I can do.</p>
+
+
+
+<a name="387742524"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332168-Master%20-%205.8.0%20%20%28was%3A%20comms%29/topic/ocpn_plugin.h%20warnings/near/387742524" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Dave Register <a href="https://leamas.github.io/zulip-archive/stream/332168-Master---5.2E8.2E0--.28was.3A-comms.29/topic/ocpn_plugin.2Eh.20warnings.html#387742524">(Aug 28 2023 at 19:27)</a>:</h4>
+<p><span class="user-mention" data-user-id="399510">@Alec Leamas</span> <br>
+I think we have a solution, just has not been implemented yet.  IIRC, we need to add "using" directive.</p>
+
+
+
+<a name="387746532"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332168-Master%20-%205.8.0%20%20%28was%3A%20comms%29/topic/ocpn_plugin.h%20warnings/near/387746532" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Alec Leamas <a href="https://leamas.github.io/zulip-archive/stream/332168-Master---5.2E8.2E0--.28was.3A-comms.29/topic/ocpn_plugin.2Eh.20warnings.html#387746532">(Aug 28 2023 at 19:55)</a>:</h4>
+<p>Nope, that's what's in current master, and seemingly MSCV cannot handle this. I'm on it, later.</p>
+
+
+
+<a name="387864367"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332168-Master%20-%205.8.0%20%20%28was%3A%20comms%29/topic/ocpn_plugin.h%20warnings/near/387864367" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Notification Bot <a href="https://leamas.github.io/zulip-archive/stream/332168-Master---5.2E8.2E0--.28was.3A-comms.29/topic/ocpn_plugin.2Eh.20warnings.html#387864367">(Aug 29 2023 at 11:41)</a>:</h4>
+<p>3 messages were moved here from <a class="stream-topic" data-stream-id="332168" href="/#narrow/stream/332168-Master---5.2E8.2E0--.28was.3A-comms.29/topic/Headless.20strategy">#Master - 5.8.0  (was: comms) &gt; Headless strategy</a> by <span class="user-mention silent" data-user-id="399510">Alec Leamas</span>.</p>
+
+
+
+<a name="387865149"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332168-Master%20-%205.8.0%20%20%28was%3A%20comms%29/topic/ocpn_plugin.h%20warnings/near/387865149" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Alec Leamas <a href="https://leamas.github.io/zulip-archive/stream/332168-Master---5.2E8.2E0--.28was.3A-comms.29/topic/ocpn_plugin.2Eh.20warnings.html#387865149">(Aug 29 2023 at 11:45)</a>:</h4>
+<p>The core fix needed  is : </p>
+<div class="codehilite"><pre><span></span><code>+#ifdef _MSC_VER
++  virtual bool RenderOverlayMultiCanvas(wxDC &amp;dc, PlugIn_ViewPort *vp,
++                                        int canvasIndex, int priority = -1);
++#else
+   bool RenderOverlayMultiCanvas(wxDC &amp;dc, PlugIn_ViewPort *vp, int canvas_ix,
+                                 int priority);
+   bool RenderOverlayMultiCanvas(wxDC &amp;dc, PlugIn_ViewPort *vp,
+                                 int canvas_ix) override {
+-    return RenderOverlayMultiCanvas(dc, vp, canvas_ix, -1); }
++    return RenderOverlayMultiCanvas(dc, vp, canvas_ix, -1);
++  }
++#endif
+</code></pre></div>
+<p>Once again this is about the msvc linker being brain dead while the gnu and clang linkers have some minimal intelligence. I will make a PR.</p>
+<p>The PR is somewhat hard to read due to a lot of documentation changes caused by comments  with long lines &gt; 80 chars. To document methods is good, to do it using lines &lt; 8o chars even better.</p>
+
+
+
+<a name="387903383"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332168-Master%20-%205.8.0%20%20%28was%3A%20comms%29/topic/ocpn_plugin.h%20warnings/near/387903383" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Alec Leamas <a href="https://leamas.github.io/zulip-archive/stream/332168-Master---5.2E8.2E0--.28was.3A-comms.29/topic/ocpn_plugin.2Eh.20warnings.html#387903383">(Aug 29 2023 at 15:12)</a>:</h4>
+<p><a href="https://github.com/OpenCPN/OpenCPN/pull/3414">https://github.com/OpenCPN/OpenCPN/pull/3414</a></p>
+
+
+
+<hr><p>Last updated: Oct 05 2023 at 09:43 UTC</p>
+</html>

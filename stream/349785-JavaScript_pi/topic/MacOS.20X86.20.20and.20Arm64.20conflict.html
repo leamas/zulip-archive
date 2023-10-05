@@ -1,0 +1,95 @@
+<html>
+<head><meta charset="utf-8"><title>MacOS X86  and Arm64 conflict · JavaScript_pi · Zulip Chat Archive</title></head>
+<h2>Stream: <a href="https://leamas.github.io/zulip-archive/stream/349785-JavaScript_pi/index.html">JavaScript_pi</a></h2>
+<h3>Topic: <a href="https://leamas.github.io/zulip-archive/stream/349785-JavaScript_pi/topic/MacOS.20X86.20.20and.20Arm64.20conflict.html">MacOS X86  and Arm64 conflict</a></h3>
+
+<hr>
+
+<base href="https://opencpn.zulipchat.com">
+
+<head><link href="https://leamas.github.io/zulip-archive/style.css" rel="stylesheet"></head>
+
+<a name="322045998"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/349785-JavaScript_pi/topic/MacOS%20X86%20%20and%20Arm64%20conflict/near/322045998" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Tony Voss <a href="https://leamas.github.io/zulip-archive/stream/349785-JavaScript_pi/topic/MacOS.20X86.20.20and.20Arm64.20conflict.html#322045998">(Jan 18 2023 at 12:59)</a>:</h4>
+<p>I have been messing with the new OCPN v5.7 Beta 3 which I ran on another Mac (Intel) to avoid conflicts.  Never mind about that now but somehow I have messed up my build script on my main machine (Apple Silicon and hence Arm64.<br>
+Now when I do a local build, it builds for Arm64 rather than X86.  And it fails to load into OCPN v5.6 which is X86.<br>
+Is there a switch in the build script or something?  Cannot see anything in <code>circleci-build-macos.sh</code></p>
+
+
+
+<a name="322048557"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/349785-JavaScript_pi/topic/MacOS%20X86%20%20and%20Arm64%20conflict/near/322048557" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Tony Voss <a href="https://leamas.github.io/zulip-archive/stream/349785-JavaScript_pi/topic/MacOS.20X86.20.20and.20Arm64.20conflict.html#322048557">(Jan 18 2023 at 13:12)</a>:</h4>
+<p>PS I had to update to the latest cMake.  Might that have spotted I am on an Arm64 machine and set up to build for that?</p>
+
+
+
+<a name="322049200"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/349785-JavaScript_pi/topic/MacOS%20X86%20%20and%20Arm64%20conflict/near/322049200" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Tony Voss <a href="https://leamas.github.io/zulip-archive/stream/349785-JavaScript_pi/topic/MacOS.20X86.20.20and.20Arm64.20conflict.html#322049200">(Jan 18 2023 at 13:15)</a>:</h4>
+<p>Found it.  I need to do this:<br>
+<code>set(CMAKE_OSX_ARCHITECTURES "x86_64")</code><br>
+Just need to find where it goes.</p>
+
+
+
+<a name="322054725"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/349785-JavaScript_pi/topic/MacOS%20X86%20%20and%20Arm64%20conflict/near/322054725" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Tony Voss <a href="https://leamas.github.io/zulip-archive/stream/349785-JavaScript_pi/topic/MacOS.20X86.20.20and.20Arm64.20conflict.html#322054725">(Jan 18 2023 at 13:40)</a>:</h4>
+<p>The new build scripts set the architecture to X86 but also wx32, so cannot use those for wx3.1.<br>
+I think I need to patch the old script?  But where?</p>
+
+
+
+<a name="322056644"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/349785-JavaScript_pi/topic/MacOS%20X86%20%20and%20Arm64%20conflict/near/322056644" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Mike Rossiter <a href="https://leamas.github.io/zulip-archive/stream/349785-JavaScript_pi/topic/MacOS.20X86.20.20and.20Arm64.20conflict.html#322056644">(Jan 18 2023 at 13:50)</a>:</h4>
+<p>Probably cannot help much. For local builds I run the script <em>circleci_macos_build.sh.</em> The second part makes the tarball for the import.</p>
+
+
+
+<a name="322060081"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/349785-JavaScript_pi/topic/MacOS%20X86%20%20and%20Arm64%20conflict/near/322060081" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Mike Rossiter <a href="https://leamas.github.io/zulip-archive/stream/349785-JavaScript_pi/topic/MacOS.20X86.20.20and.20Arm64.20conflict.html#322060081">(Jan 18 2023 at 14:05)</a>:</h4>
+<blockquote>
+<p>set(CMAKE_OSX_ARCHITECTURES "x86_64")<br>
+Just need to find where it goes.</p>
+</blockquote>
+<p><a href="https://stackoverflow.com/questions/69803659/what-is-the-proper-way-to-build-for-macos-x86-64-using-cmake-on-apple-m1-arm">https://stackoverflow.com/questions/69803659/what-is-the-proper-way-to-build-for-macos-x86-64-using-cmake-on-apple-m1-arm</a></p>
+<p>Perhaps before line 54 of <em>cicleci-build-macos.sh</em> (before "cmake \")</p>
+
+
+
+<a name="322062679"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/349785-JavaScript_pi/topic/MacOS%20X86%20%20and%20Arm64%20conflict/near/322062679" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Mike Rossiter <a href="https://leamas.github.io/zulip-archive/stream/349785-JavaScript_pi/topic/MacOS.20X86.20.20and.20Arm64.20conflict.html#322062679">(Jan 18 2023 at 14:15)</a>:</h4>
+<p>Or after "cmake\":<br>
+-DCMAKE_OSX_ARCHITECTURES=x86_64 \</p>
+
+
+
+<a name="322066541"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/349785-JavaScript_pi/topic/MacOS%20X86%20%20and%20Arm64%20conflict/near/322066541" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Tony Voss <a href="https://leamas.github.io/zulip-archive/stream/349785-JavaScript_pi/topic/MacOS.20X86.20.20and.20Arm64.20conflict.html#322066541">(Jan 18 2023 at 14:32)</a>:</h4>
+<p>That last has done it.  Thanks <span aria-label="smile" class="emoji emoji-1f642" role="img" title="smile">:smile:</span> <br>
+The tarball name is still has arm64 but it loads OK so isn't.<br>
+<code>javascript-2.0.0-alpha+2301181428.3ec7362_darwin-wx315-10.13.6-arm64</code></p>
+
+
+
+<a name="322066818"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/349785-JavaScript_pi/topic/MacOS%20X86%20%20and%20Arm64%20conflict/near/322066818" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Tony Voss <a href="https://leamas.github.io/zulip-archive/stream/349785-JavaScript_pi/topic/MacOS.20X86.20.20and.20Arm64.20conflict.html#322066818">(Jan 18 2023 at 14:33)</a>:</h4>
+<p>Should I post a warning somewhere that if you update Cmake and are building locally, you need to fix this?</p>
+
+
+
+<a name="322069277"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/349785-JavaScript_pi/topic/MacOS%20X86%20%20and%20Arm64%20conflict/near/322069277" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Mike Rossiter <a href="https://leamas.github.io/zulip-archive/stream/349785-JavaScript_pi/topic/MacOS.20X86.20.20and.20Arm64.20conflict.html#322069277">(Jan 18 2023 at 14:42)</a>:</h4>
+<p>Might be worth an alpha build to see if the metadata file has the same file name. If so it may fail to be recognised for inclusion in a catalog. I suspect that making the alpha build will produce a tarball with name showing x86_64.</p>
+
+
+
+<a name="322078577"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/349785-JavaScript_pi/topic/MacOS%20X86%20%20and%20Arm64%20conflict/near/322078577" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Mike Rossiter <a href="https://leamas.github.io/zulip-archive/stream/349785-JavaScript_pi/topic/MacOS.20X86.20.20and.20Arm64.20conflict.html#322078577">(Jan 18 2023 at 15:20)</a>:</h4>
+<blockquote>
+<p>Should I post a warning somewhere</p>
+</blockquote>
+<p>Your alpha builds look good. There is a lot of work going on at the minute. Perhaps a discussion point in your github repo.</p>
+
+
+
+<hr><p>Last updated: Oct 05 2023 at 09:43 UTC</p>
+</html>

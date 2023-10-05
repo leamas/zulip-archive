@@ -1,0 +1,158 @@
+[
+    {
+        "content": "<p>Ack</p>",
+        "id": 293816106,
+        "sender_full_name": "Dave Register",
+        "timestamp": 1660691970
+    },
+    {
+        "content": "<p>Except, of course, when providing objects to the wxWidgets API. But this is not that bad since these pointers are managed by wxWidgets.</p>",
+        "id": 293838996,
+        "sender_full_name": "Alec Leamas",
+        "timestamp": 1660715627
+    },
+    {
+        "content": "<p>An obvious goal is to make AIS_decoder testable i. e., to decouple it from the GUI. After all, decoding AIS messages should not have anything to do with the gui.</p>\n<p>First, there is a dialog. This could be split out, and connected through a EventVar. This gets rid of the gFrame dependency. So far. so good.</p>\n<p>However, the decoder still depends on ais.h. After cleaning up things the remaining dep is  navutil.h.   The dependency is to add a new  waypoint and a track representing the decoded value.   Perfectly sane, but pulling in navutil mean pulling in <strong>lots</strong> of gui.  I could refactor this, basically splitting out the waypoints/tracks/routes database from navutil.</p>\n<p>This reveals the disgusting fact that at the very, very bottom of this  in the form of RoutePoint, Route, TrackPoint and Track there is  GUI dependencies.  They basically know about layers and viewport, and I'm close to giving up.  Sigh, let's see what some sleep might do</p>\n<p>Thanks for listening, if you read all this...</p>",
+        "id": 295303015,
+        "sender_full_name": "Alec Leamas",
+        "timestamp": 1661458154
+    },
+    {
+        "content": "<p><span class=\"user-mention\" data-user-id=\"517002\">@Dave Register</span>  : The basic problem is that for example a RoutePoint has a <code>m_bIsInLayer</code> property which is tested  when inserted into the database.  Same for the others.  What is this about?  Any ideas how this could be refactored?</p>\n<p>EDIT: The obvious fix would be to check before calling for example <code>AddNewRoute()</code> However, this is also done in AIS_Decoder... Is it possible to make a safe assumption about <code>m_bIsInLayer</code> being  true in this case?  The other places it used in is no problem, they are gui parts.</p>",
+        "id": 295304103,
+        "sender_full_name": "Alec Leamas",
+        "timestamp": 1661458635
+    },
+    {
+        "content": "<p>Nope, not  <code>AddNewRoute()</code> but  <code>AddNewWayPoin()</code>.  If I just could fix that one....</p>",
+        "id": 295305114,
+        "sender_full_name": "Alec Leamas",
+        "timestamp": 1661459116
+    },
+    {
+        "content": "<p>...and   <code>&gt;AddNewTrack() </code></p>",
+        "id": 295305316,
+        "sender_full_name": "Alec Leamas",
+        "timestamp": 1661459215
+    },
+    {
+        "content": "<p>... as I said: thanks for listening. Writing this made me sort out things. In short, the value of  <code>m_bIsInLayer</code> is known in AIS_decoder. I should be able to untangle this mess. Good night.</p>",
+        "id": 295309699,
+        "sender_full_name": "Alec Leamas",
+        "timestamp": 1661461149
+    },
+    {
+        "content": "<p><span class=\"user-mention\" data-user-id=\"399510\">@Alec Leamas</span> <br>\n This darned smart pointers are too smart for me.</p>\n<p>I have a shared pointer to abstract comm driver.<br>\nI want to cast this pointer to a particular driver, and then call a method on it.  Something like:</p>\n<div class=\"codehilite\"><pre><span></span><code>       std::shared_ptr&lt;const AbstractCommDriver&gt; target_driver = FindDriver(drivers, source);\n\n        const std::shared_ptr&lt;const CommDriverN0183Net&gt; drv_net = std::dynamic_pointer_cast&lt;const CommDriverN0183Net&gt;(target_driver);\n     if (drv_net){\n       params = drv_net-&gt;GetParams();\n</code></pre></div>",
+        "id": 297139385,
+        "sender_full_name": "Dave Register",
+        "timestamp": 1662324088
+    },
+    {
+        "content": "<p>But of course it does not work.</p>\n<p>What is wrong, please?</p>",
+        "id": 297139419,
+        "sender_full_name": "Dave Register",
+        "timestamp": 1662324115
+    },
+    {
+        "content": "<p>If you are really sure you can use \"static_pointer_cast&lt;&gt;\". IIRC, it does not make any  run time checks</p>",
+        "id": 297139802,
+        "sender_full_name": "Alec Leamas",
+        "timestamp": 1662324451
+    },
+    {
+        "content": "<p>But... I miss some context. FindDriver does indeed include an AbstractCommDriver. Why do you need the derived driver?  Is it that we missed something needed in AbstractCommDriver, is the solution to expand it?</p>",
+        "id": 297140264,
+        "sender_full_name": "Alec Leamas",
+        "timestamp": 1662324911
+    },
+    {
+        "content": "<p>No... you don't know that its'a net driver...   Can you share the compiler output ( the top up to the reference to the source line)</p>",
+        "id": 297140756,
+        "sender_full_name": "Alec Leamas",
+        "timestamp": 1662325373
+    },
+    {
+        "content": "<p>That said, <code>dynamic_pointer_cast</code>works fine in simple examples done by expanding an existing test:</p>\n<div class=\"codehilite\"><pre><span></span><code>  auto found = FindDriver(drivers, &quot;bar&quot;);\n  auto file_drv = std::dynamic_pointer_cast&lt;const FileCommDriver&gt;(found);\n  EXPECT_NE(file_drv.get(), nullptr);\n</code></pre></div>",
+        "id": 297141393,
+        "sender_full_name": "Alec Leamas",
+        "timestamp": 1662326062
+    },
+    {
+        "content": "<p>Hm... digging more.  One suspicious thing is that header declares the default CTOR <code>CommDriverN0183Net::CommDriverN0183Net()</code>, but this is is not implemented (commented out) in the cpp file.</p>",
+        "id": 297141638,
+        "sender_full_name": "Alec Leamas",
+        "timestamp": 1662326366
+    },
+    {
+        "content": "<p>And... what does <em>But of course it does not work.</em> exactly mean here? compile time or runtime error? which is?</p>",
+        "id": 297142160,
+        "sender_full_name": "Alec Leamas",
+        "timestamp": 1662326952
+    },
+    {
+        "content": "<p>error is:</p>\n<div class=\"codehilite\"><pre><span></span><code>          params = drv_net-&gt;GetParams();\n\n/home/dsr/Projects/opencpn/src/multiplexer.cpp:233:39: error: passing ‘std::__shared_ptr_access&lt;const CommDriverN0183Net, (__gnu_cxx::_Lock_policy)2, false, false&gt;::element_type {aka const CommDriverN0183Net}’ as ‘this’ argument discards qualifiers [-fpermissive]\n</code></pre></div>",
+        "id": 297143580,
+        "sender_full_name": "Dave Register",
+        "timestamp": 1662328678
+    },
+    {
+        "content": "<p>Context:<br>\nI need to access some driver-specific fields that are not in the abstract base class.  This will appear in several places, moving forward.</p>",
+        "id": 297143702,
+        "sender_full_name": "Dave Register",
+        "timestamp": 1662328792
+    },
+    {
+        "content": "<p>Note: You will not find \"GetParams()\" in any driver, yet.  Local  WIP, not pushed yet.</p>",
+        "id": 297146512,
+        "sender_full_name": "Dave Register",
+        "timestamp": 1662332597
+    },
+    {
+        "content": "<p>Some progress on mulitplexer.  A misplaced \"const\" declaration.  Sigh...  But now stuck on SendMessage().<br>\nI pushed some changes, and core still builds. \"tests\" build broken.<br>\nAnyway, if you could take a look at multiplexer.cpp, un-comment line 247, and help me understand why this fails to compile.  I would sure appreciate it.<br>\nThis convoluted access to derived drivers is something we need to get working, and be able to document clearly.  Some plugins will need direct access like this (e.g. N2k autopilot)</p>",
+        "id": 297158821,
+        "sender_full_name": "Dave Register",
+        "timestamp": 1662348812
+    },
+    {
+        "content": "<p>Global variables brain-dump ahead...</p>\n<p>We have all sorts of global variables. This is a pain we basically have to live with,  the work to get rid of them would be overwhelming. However, we could IMHO enhance the situation without rewriting everything.</p>\n<p>We have five sets of globals with some intersections:</p>\n<ol>\n<li>The own ship state: gLat, gLon, etc... These  should be collected into a single, possibly separate file with a corresponding header.  The header could be commented, and would make it easier to use them in other files.</li>\n<li>All sorts of configuration variables  stored in the config file. These should be collected into file with a corresponding header. Might be navutils_base.</li>\n<li>Some pointers to singleton classes. These  should be replaced with proper static <code>getInstance()</code> factories. This ties the use to the header, and sorts out ownership and initialization once and for all.</li>\n<li>Other global state flags, hopefully not too many... These should be collected in yet another file with header, most likely separate.</li>\n<li>For obvious reasons we should be careful to not change things defined in ocpn_plugin.h. </li>\n</ol>\n<p>If we did something like above things would IMHO improve considerably.</p>",
+        "id": 297573550,
+        "sender_full_name": "Alec Leamas",
+        "timestamp": 1662551681
+    },
+    {
+        "content": "<p>Yes, I agree with the idea.<br>\nWe can polish forever, I suppose.  And we should.  But right now I am focused on functionality, especially regression breakage in the small dark corners of legacy behavior.  Time to think seriously of merging comm-&gt;master, and starting some sort of Alpha test.</p>",
+        "id": 297594358,
+        "sender_full_name": "Dave Register",
+        "timestamp": 1662558118
+    },
+    {
+        "content": "<p>As I said, just a brain dump. No prio now, agreed.</p>",
+        "id": 297603768,
+        "sender_full_name": "Alec Leamas",
+        "timestamp": 1662561309
+    },
+    {
+        "content": "<p>Still trying to untangle the basic stuff: Tracks routes, etc.  With most of things under control I stumble into RouteMan, a data base which includes and calls each and every gui component. Argh...</p>",
+        "id": 298244952,
+        "sender_full_name": "Alec Leamas",
+        "timestamp": 1662899452
+    },
+    {
+        "content": "<p>Routeman and other plugins are also using PushNMEA() (To autopilot) but for now the mux won't let it out.</p>",
+        "id": 298261638,
+        "sender_full_name": "Håkan Svensson",
+        "timestamp": 1662909421
+    },
+    {
+        "content": "<p>Doing the comm-deps work, it becomes clear what a mess the global variables are. Just to be evil: here is the list in console/src.cpp</p>\n<div class=\"codehilite\"><pre><span></span><code>BasePlatform* g_BasePlatform = 0;\nbool g_bportable = false;\nwxString g_winPluginDir;\nwxConfigBase* pBaseConfig = 0;\nvoid* g_pi_manager = reinterpret_cast&lt;void*&gt;(1L);\nwxString g_compatOS = PKG_TARGET;\nwxString g_compatOsVersion = PKG_TARGET_VERSION;\n\nwxString g_catalog_custom_url;\nwxString g_catalog_channel;\nwxLog* g_logger;\n\nbool g_bAIS_ACK_Timeout;\nbool g_bAIS_CPA_Alert_Suppress_Moored;\nbool g_bCPAMax;\nbool g_bCPAWarn;\nbool g_bHideMoored;\nbool g_bTCPA_Max;\ndouble g_AckTimeout_Mins;\ndouble g_CPAMax_NM;\ndouble g_CPAWarn_NM;\ndouble g_ShowMoored_Kts;\ndouble g_TCPA_Max;\nbool g_bShowMag;\nbool g_bShowTrue;\nbool bGPSValid;\nbool g_bInlandEcdis;\nbool g_bRemoveLost;\nbool g_bMarkLost;\nbool g_bShowScaled;\nbool g_bAllowShowScaled;\nbool g_bAISRolloverShowCOG;\nbool g_bAISRolloverShowCPA;\nbool g_bAISShowTracks;\nbool g_bAISRolloverShowClass;\nbool g_bAIS_CPA_Alert;\ndouble g_RemoveLost_Mins;\ndouble g_MarkLost_Mins;\ndouble g_AISShowTracks_Mins;\n\n\nstd::vector&lt;Track*&gt; g_TrackList;\nwxString AISTargetNameFileName;\nAISTargetAlertDialog* g_pais_alert_dialog_active;\nRoute* pAISMOBRoute;\nint g_WplAction;\nSelect* pSelectAIS;\n\n/* comm_bridge context. */\n\ndouble gCog;\ndouble gHdm;\ndouble gHdt;\ndouble gLat;\ndouble gLon;\ndouble gSog;\ndouble gVar;\ndouble g_UserVar;\nint gps_watchdog_timeout_ticks;\nbool g_bHDT_Rx;\nint g_nNMEADebug;\nbool g_bSatValid;\nbool g_bVAR_Rx;\nint g_NMEAAPBPrecision;\nint g_SatsInView;\nint g_priSats;\nint sat_watchdog_timeout_ticks = 12;\n\nwxString gRmcTime;\nwxString gRmcDate;\n\nwxString g_TalkerIdText;\n\nSelect* pSelect;\ndouble g_n_arrival_circle_radius;\ndouble g_PlanSpeed;\nbool g_bTrackDaily;\nint g_trackFilterMax;\nwxString g_default_routepoint_icon;\ndouble g_TrackDeltaDistance;\nfloat g_fWaypointRangeRingsStep;\nfloat g_ChartScaleFactorExp;\nwxString g_default_wp_icon;\nbool g_btouch;\nint g_iWaypointRangeRingsNumber;\nint g_iWaypointRangeRingsStepUnits;\nwxColour g_colourWaypointRangeRingsColour;\nfloat g_selection_radius_mm;\nbool g_bUseWptScaMin;\nint g_iWpt_ScaMin;\nint g_LayerIdx;\nbool g_bOverruleScaMin;\nfloat g_selection_radius_touch_mm;\nint g_nTrackPrecision;\nbool g_bIsNewLayer;\nRouteList *pRouteList;\nWayPointman* pWayPointMan;\nint g_route_line_width;\nint g_track_line_width;\nRoutePoint* pAnchorWatchPoint1 = 0;\nRoutePoint* pAnchorWatchPoint2 = 0;\nbool g_bAllowShipToActive;\nwxRect g_blink_rect;\nint g_maxWPNameLength;\nCommN0183Out* g_comm_out;\nbool g_bMagneticAPB;\n\nRouteman* g_pRouteMan;\n</code></pre></div>",
+        "id": 299009160,
+        "sender_full_name": "Alec Leamas",
+        "timestamp": 1663260014
+    },
+    {
+        "content": "<p>This  list is only  the subset needed for the non-gui cli context. More than 100 random variables, no header, unclear ownership, no docs.IMHO it's  just not maintainable.</p>",
+        "id": 299009802,
+        "sender_full_name": "Alec Leamas",
+        "timestamp": 1663260204
+    }
+]

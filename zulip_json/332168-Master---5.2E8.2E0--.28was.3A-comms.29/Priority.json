@@ -1,0 +1,392 @@
+[
+    {
+        "content": "<p>All legacy N0183 messages now handled.  Still no sK, coming next.<br>\nProof of concept in place for automatic priority logic. Lots of console printf on linux tracking priority logic, if you can construct a test scenario.<br>\nI am testing with a serial (local) GPS source, and Hakan's TCP server.  Both running at the same time.  Of course, without prioritization, the ownship jumps across the Atlantic every second.  </p>\n<p>With automatic priority determination, the local serial port comes up first (quicker than making the TCP connection), and so is selected as highest priority source.  And so I am home in North America.  TCP messages from Sweden are decoded and dropped.  If I then unplug the serial line (simulating device failure), then I jump to Sweden, according to the TCP source.  Replug the serial line, and I pop back home.  Basic functionality is OK.  No doubt some edge-cases not handled well.  Needs significant testing, and verification, and code review.</p>",
+        "id": 293823721,
+        "sender_full_name": "Dave Register",
+        "timestamp": 1660698416
+    },
+    {
+        "content": "<p>And of course, this approach can be abandoned entirely in favor of an observable event solution, if that seems better.  Food for thought, anyway.</p>",
+        "id": 293825549,
+        "sender_full_name": "Dave Register",
+        "timestamp": 1660700509
+    },
+    {
+        "content": "<blockquote>\n<p>Current \"comm\" branch is still WIP. GGA is not yet processed. Probably coming tonight</p>\n</blockquote>\n<p>For info does my server not provide GGA as you may have noticed, only GSV.</p>",
+        "id": 293837865,
+        "sender_full_name": "Håkan Svensson",
+        "timestamp": 1660714541
+    },
+    {
+        "content": "<p>Dave..<br>\nFor info I tested two IP conns. My TCP server and a local UDP feed with different positions.<br>\nThe one first established after O start was also here the first priority so no \"jumping\". The watchdog also worked as expected.</p>",
+        "id": 293846599,
+        "sender_full_name": "Håkan Svensson",
+        "timestamp": 1660720623
+    },
+    {
+        "content": "<p>Now I've the YDNU-02 connected.<br>\nThe first test was to connect it in the YDs' Auto mode and a serial N0183 connection in O.  - Nothing seen.<br>\nIf I use O in real 5.6.1 version it's working as expected. See a Debug copy of what's received attached. <br>\nQ:</p>\n<ol>\n<li>Can I debug it in some way?</li>\n<li>How can I proceed to test it N2K mode? <br>\n<a href=\"/user_uploads/33951/-w4fFb70mIBY9SGlMNu5_KNy/YDNU-02NM.txt\">YDNU-02NM.txt</a></li>\n</ol>",
+        "id": 294106722,
+        "sender_full_name": "Håkan Svensson",
+        "timestamp": 1660835438
+    },
+    {
+        "content": "<p>Debugging: I have tthe task to enhance the test suite to cover also this on my TODO list. Some day...</p>\n<p>N2K:  Similar thing here: we need static, simple test cases first. Ability to replay n2k logs, etc...</p>",
+        "id": 294117259,
+        "sender_full_name": "Alec Leamas",
+        "timestamp": 1660838657
+    },
+    {
+        "content": "<p>That is, there is really no n2k functionality in place yet. Nothing to test...</p>",
+        "id": 294118059,
+        "sender_full_name": "Alec Leamas",
+        "timestamp": 1660838886
+    },
+    {
+        "content": "<p>This first test was only a serial N0183 connection.<br>\nNow I tried \"my usual\" test on another COM port and it didn't worked either.<br>\n<span class=\"user-mention\" data-user-id=\"517002\">@Dave Register</span>    Didn't you earlier succeed to use a N0183 COM port, or is my memory weak again?<br>\n/H</p>",
+        "id": 294125620,
+        "sender_full_name": "Håkan Svensson",
+        "timestamp": 1660841212
+    },
+    {
+        "content": "<p>I'm here, but soon out for early dinner.  Back on tonight, lots to do.</p>",
+        "id": 294152196,
+        "sender_full_name": "Dave Register",
+        "timestamp": 1660849716
+    },
+    {
+        "content": "<p>Hakan...<br>\nN0183/Serial for Windows was not well tested by me.  Corrected now.</p>",
+        "id": 294194664,
+        "sender_full_name": "Dave Register",
+        "timestamp": 1660875337
+    },
+    {
+        "content": "<p>Working on N2K for Windows, should have something soon.  Also integrating N2K into the priority scheme.<br>\nWhat N2K devices do you have for test?</p>",
+        "id": 294198502,
+        "sender_full_name": "Dave Register",
+        "timestamp": 1660879850
+    },
+    {
+        "content": "<p>I think the issue with YDNU-02 relates to initial mode set. \"Auto\"mode is preferred.  In this mode, we need to send a few bytes to the device to switch it to \"N2K\" mode, which is said to be compatible with Actisense format.  It also disables any N2k-N0183 translations, which is good. The switch to \"N2K\" mode will be done in the driver, just after the serial port is opened.<br>\nI assume you have the online user manual for the YDNU?<br>\n<a href=\"https://www.manualslib.com/manual/1249459/Yacht-Devices-Ydnu-02rm.html?page=50#manual\">https://www.manualslib.com/manual/1249459/Yacht-Devices-Ydnu-02rm.html?page=50#manual</a></p>",
+        "id": 294199975,
+        "sender_full_name": "Dave Register",
+        "timestamp": 1660881820
+    },
+    {
+        "content": "<p><span class=\"user-mention\" data-user-id=\"399510\">@Alec Leamas</span>   Working on linux O/S provided socketCAN interface.  This will be what is required for many of the various rPi \"hat\" devices.<br>\nNice feature of this interface is that it supports a \"virtual\" mode, allowing very easy CLI invoked replay of raw N2K logs.  So some of the testing will be easier on linux, at least.  No such beast on Windows, I'm afraid.</p>",
+        "id": 294200261,
+        "sender_full_name": "Dave Register",
+        "timestamp": 1660882138
+    },
+    {
+        "content": "<p>Dave..<br>\nI've the YDNU-02NM. And the manual as well. I've also updated the firmware to latest 1.40<br>\nIt's connected to a Simrad GS-25, heading and GNSS receiver.</p>\n<p>It's now set in the prefererad Auto mode but manually switching to Raw or N2K mode is no problem but as you say the switch to 0183 or N2K would be done by O dependent on connection type. Just say if I for test should switch it manually.</p>",
+        "id": 294217101,
+        "sender_full_name": "Håkan Svensson",
+        "timestamp": 1660895491
+    },
+    {
+        "content": "<p>The serial N0183 connection is now working with the YDNU-02 in Auto mode. Very good!</p>\n<p>Some prioritization observations: (Note: Not issues or claims. Just thoughts for info.)</p>\n<ul>\n<li>Watchdog switching between N0183 and IP-TCP connections is not yet finalized?</li>\n<li>I saw position data from IP-TCP but \"number of satellites\" from the N0183 node. Parsing of GGA/GSV would be done from the same source/node as position?</li>\n</ul>\n<p>Unfortunately seems the GGA from my YDNU-02 does not contain  a count of \"satellites in use\". the field says \"00\". Let's see if I can discuss this with Yacht Device.</p>",
+        "id": 294227833,
+        "sender_full_name": "Håkan Svensson",
+        "timestamp": 1660900887
+    },
+    {
+        "content": "<p><span class=\"user-mention\" data-user-id=\"522486\">@Håkan Svensson</span> <br>\nThe YDNU-02 is working for me on Windows, in N2K mode.</p>\n<ol>\n<li>Manually set YDNU mode to N2K</li>\n<li>\n<p>Set the Settings-&gt;Connections serial port to protocal  \"NMEA2000\".<br>\nTwo points, also:</p>\n</li>\n<li>\n<p>PGN providing heading data is not yet implemented.  Position and velocity are implemented.</p>\n</li>\n<li>N2K does not yet participate in priority negotiation.  So please test with only one connection enabled.<br>\nPlease let me know how this goes before I move further.</li>\n</ol>",
+        "id": 294343342,
+        "sender_full_name": "Dave Register",
+        "timestamp": 1660934826
+    },
+    {
+        "content": "<p><span class=\"user-mention\" data-user-id=\"517002\">@Dave Register</span> <br>\nYes it works. I get position COG and SOG.<br>\nTwo observations:</p>\n<ol>\n<li>\n<p>In options-&gt;Connections. If I change something and click \"OK\" it works but if I click \"Apply\" O crashes in:<br>\nopencpn.exe!CommDriverN2KSerialThread::Entry() Line 632 C++  See attached pict.1</p>\n</li>\n<li>\n<p>The scaled vector ship symbol is destroyed. The GPS point is moved. See pict 2, 3</p>\n</li>\n</ol>\n<p><a href=\"/user_uploads/33951/y6egWzsr50IHfAF1w4njxaYM/bild.png\">bild.png</a> <br>\n<a href=\"/user_uploads/33951/ZKFIpJwl2u8VudDf0sdbFM9K/bild.png\">bild.png</a> <br>\n<a href=\"/user_uploads/33951/IRNCv3GMVklcWrReHk3p1Ow9/bild.png\">bild.png</a></p>\n<div class=\"message_inline_image\"><a href=\"/user_uploads/33951/y6egWzsr50IHfAF1w4njxaYM/bild.png\" title=\"bild.png\"><img src=\"/user_uploads/33951/y6egWzsr50IHfAF1w4njxaYM/bild.png\"></a></div><div class=\"message_inline_image\"><a href=\"/user_uploads/33951/ZKFIpJwl2u8VudDf0sdbFM9K/bild.png\" title=\"bild.png\"><img src=\"/user_uploads/33951/ZKFIpJwl2u8VudDf0sdbFM9K/bild.png\"></a></div><div class=\"message_inline_image\"><a href=\"/user_uploads/33951/IRNCv3GMVklcWrReHk3p1Ow9/bild.png\" title=\"bild.png\"><img src=\"/user_uploads/33951/IRNCv3GMVklcWrReHk3p1Ow9/bild.png\"></a></div>",
+        "id": 294353647,
+        "sender_full_name": "Håkan Svensson",
+        "timestamp": 1660939161
+    },
+    {
+        "content": "<p>Q: The value for baud rate is irrelevant I suppose? I didn't changed from default 4800. Should we in this case change the default to 250k to not puzzle users?</p>",
+        "id": 294354935,
+        "sender_full_name": "Håkan Svensson",
+        "timestamp": 1660939644
+    },
+    {
+        "content": "<p>The crash..<br>\nIf I change baud rate and click \"OK\" O again crash here:</p>\n<blockquote>\n<p>opencpn.exe!CommDriverN2KSerialThread::Entry() Line 587 C++</p>\n</blockquote>",
+        "id": 294358049,
+        "sender_full_name": "Håkan Svensson",
+        "timestamp": 1660940952
+    },
+    {
+        "content": "<p>OK, great. Thanks for the confirmation.  Next I will add Heading PGN, make YDNU auto switch to N2K mode, and finish priority logic for N2K.  Should be ready overnight.</p>",
+        "id": 294359094,
+        "sender_full_name": "Dave Register",
+        "timestamp": 1660941464
+    },
+    {
+        "content": "<p>I think baud rate is irrelevant.  I will probably just remove it from setting dialog, when N2K is selected.</p>",
+        "id": 294359309,
+        "sender_full_name": "Dave Register",
+        "timestamp": 1660941562
+    },
+    {
+        "content": "<p>I have added PGN for Heading, enabled auto-switch  to \"N2K\" mode for YDNU gateway, and enabled message priority handling for N2K.  Heading PGN (127250) is untested, as I have no N2K heading sensor.<br>\nAlso corrected fault on driver change/shutdown.<br>\nGood Luck.</p>",
+        "id": 294381904,
+        "sender_full_name": "Dave Register",
+        "timestamp": 1660958179
+    },
+    {
+        "content": "<p>Dave..<br>\nThe command to get the YDNU-02 to switch to N2K mode is working. As well as back to N0183 mode when needed.</p>\n<p>Heading:<br>\nWhat I can see is heading data not used in a proper way. The ship is not orientated according to the heading neither by N0183 nor N2K data.<br>\n(To compare I also used N0183 in a O v5.6.1 and there it's working so no problem with the received data)</p>\n<p>Debug of \"comm_decoder.cpp\" while the Simrad compass was in the same position.<br>\nIn N2K connection I received:<br>\nDecodePGN127250(.....<br>\n  temp_data.gHdt = Heading = 3.3643000000000001 (Radians!!)</p>\n<p>In N0183 connection I received:<br>\nDecodeHDT(....<br>\n  temp_data.gHdt = m_NMEA0183.Hdt.DegreesTrue = 196.40000000000001</p>\n<p>BTW:<br>\nI still get O crash on Options-&gt;Apply on a N0183 connection at &gt;    opencpn.exe!CommDriverN0183SerialThread::Entry() Line 488   C++</p>",
+        "id": 294402432,
+        "sender_full_name": "Håkan Svensson",
+        "timestamp": 1660979787
+    },
+    {
+        "content": "<p>Dave..<br>\nFor info about the heading....<br>\nMy bad about the improper ship symbol heading orientation.<br>\nIf adapt the N2K PGN 172350 decoding to radians:<br>\n  temp_data.gHdt = Heading * 180. / M_PI;<br>\nThe ship's heading is correct.</p>\n<p>What happened before was I switched from N2K connection to N0183 \"on the fly\" and then was the 3.3 radians value from N2K not updated to 129° from N0183. If I restart O in between the shift of connection all is good. So it was about the prioritization logic.</p>\n<p>BTW:<br>\nMy Simrad device is not healthy. Position is correct but COG is corrupt. (Maybe that's why I got it?)<br>\nDebug N0183....<br>\nm_NMEA0183.Rmc.SpeedOverGroundKnots = 0.0000000000000000<br>\nm_NMEA0183.Rmc.TrackMadeGoodDegreesTrue = -nan(ind)<br>\nDebug N2K...<br>\nif (ParseN2kPGN129026(v, SID, ref, COG, SOG)) {<br>\n    temp_data.gCog = COG *180. / M_PI;  &gt;&gt;&gt; COG = -1000000000.0000000<br>\n    temp_data.gSog = SOG;  &gt;&gt;&gt;  SOG = 0.0000000000000000</p>",
+        "id": 294409543,
+        "sender_full_name": "Håkan Svensson",
+        "timestamp": 1660984817
+    },
+    {
+        "content": "<p>Dave...again<br>\nOf course the same goes for the variation, so PGN decoder would read:</p>\n<blockquote>\n<p>if (ParseN2kPGN127250(v, SID, Heading, Deviation, Variation, ref)){<br>\n    temp_data.gHdt = Heading * 180. / M_PI;<br>\n    temp_data.gVar = Variation * 180. / M_PI;<br>\n    return true;<br>\n  }</p>\n</blockquote>",
+        "id": 294410901,
+        "sender_full_name": "Håkan Svensson",
+        "timestamp": 1660985760
+    },
+    {
+        "content": "<p>More info - discussion:<br>\nFrom PGN 127250 I've the following reading:<br>\nSID: SID = 0 '\\0'  <br>\nDeviation: -1000000000.0000000<br>\nref: N2khr_magnetic (1)</p>\n<p>The \"ref\" value (1) would indicate the Heading is true?<br>\nIf \"ref\"  not equals \"1\" and variation equals \"0\" or null would that indicate hdm instead of hdt? If so we would let WMM adjust it?</p>",
+        "id": 294414041,
+        "sender_full_name": "Håkan Svensson",
+        "timestamp": 1660987513
+    },
+    {
+        "content": "<p>I'll fix the missing rad-&gt;degrees conversion.<br>\nOn the COG corruption:  I suppose if we see a ridiculous value (i.e. abs(COG) &gt; 360), we judge it invalid.  <br>\nIs COG correct when moving (SOG &gt; 0)?</p>",
+        "id": 294442316,
+        "sender_full_name": "Dave Register",
+        "timestamp": 1661002425
+    },
+    {
+        "content": "<p>No I get no COG from the device and how I move the antenna no SOG either. But I assume if he has no COG he don't transfer any SOG either.</p>",
+        "id": 294442814,
+        "sender_full_name": "Håkan Svensson",
+        "timestamp": 1661002688
+    },
+    {
+        "content": "<p>So here we have a real case:  We know that SOG/COG from this device is unreliable.  Should we:</p>\n<ol>\n<li>Try to automatically detect (by invalid values), and simply ignore the data?</li>\n<li>Or is this a case where we need to filter PGNs to eliminate the bad one?  This requires a UI...<br>\nThoughts?</li>\n</ol>",
+        "id": 294445984,
+        "sender_full_name": "Dave Register",
+        "timestamp": 1661004375
+    },
+    {
+        "content": "<p>MIddle ground for now could be to do some intelligent logging. We should IMHO not  throw away messages fully automated.  After all, it could be a device which just not is working properly, something user should be informed about.  </p>\n<p>So, when illegal input is discovered we should inform user about it, but only once. Once this is done, just let remove things which are invalid. </p>\n<p>As for the user interface I think it would be an advantage if we could postpone this until we have more details on what should be handled.</p>",
+        "id": 294448600,
+        "sender_full_name": "Alec Leamas",
+        "timestamp": 1661005801
+    },
+    {
+        "content": "<p>Bye for now...</p>",
+        "id": 294448657,
+        "sender_full_name": "Alec Leamas",
+        "timestamp": 1661005812
+    },
+    {
+        "content": "<p>Thoughts....<br>\n1.<br>\nNot reliable COG, and therefor also SOG, we should ignore, What else could we do?<br>\nIf we from the same source get position we could use that. At least if this is the only source providing position.<br>\nIf we get both position and velocity from another source we may prioritize that one instead?<br>\n2.<br>\nIf it's the only position we may use it.<br>\nA UI showing all sources and what we get from each and where the user can set priority would of course be the ultimate solution. That will be similar to for example the TimeZero system.</p>",
+        "id": 294453146,
+        "sender_full_name": "Håkan Svensson",
+        "timestamp": 1661008353
+    },
+    {
+        "content": "<p>I did correct the rad-&gt;degrees conversion.<br>\nI am suspicious that the value \"-1000000000.0000000\" is special, in some way.  Maybe signals \"invalid data\"  from PGN generally.  If so, we can have a common method for notifying the user, and logging such error events. I have asked Timo for more information.</p>",
+        "id": 294503919,
+        "sender_full_name": "Dave Register",
+        "timestamp": 1661052827
+    },
+    {
+        "content": "<p>The value \"-1000000000.0000000\" seems like a \"nan\", agree.</p>",
+        "id": 294514992,
+        "sender_full_name": "Håkan Svensson",
+        "timestamp": 1661066297
+    },
+    {
+        "content": "<p>Considerations...<br>\n1.<br>\nThe YDNU-02 has different modes that can be controlled by us during establish of a connection like N2K. For now we send the \"set N2K\" when opening a serial NMEA2000 type of connection. For a NMEA0183 type of connection we send nothing and thus assuming the device is in AUTO mode. The AUTO mode will fall back to N0183 if nothing is \"said\". <br>\nWhat if the user has set the device to RAW/N2K. Do we need to send \"set N0183 mode\" for a serial NMEA0183 connection? </p>\n<p>2.<br>\nIn my case the YDNU-02 device is connected to COM3.<br>\nWhat if is the user enable two connections; One NMEA0183 on COM3 and one NMEA2000 on COM3.<br>\nWhen I tried O crashes here: </p>\n<blockquote>\n<p>opencpn.exe!CommDriverN2KSerialThread::Entry() Line 673<br>\n    at c:\\builds\\ocpn\\opencpn\\src\\comm_drv_n2k_serial.cpp(673)</p>\n</blockquote>\n<p>We may take precaution to hinder two or more enabled connections for the same serial source to avoid crashes? When saved to config a manual tweak to the config file is needed to solve it.</p>",
+        "id": 294522201,
+        "sender_full_name": "Håkan Svensson",
+        "timestamp": 1661072636
+    },
+    {
+        "content": "<blockquote>\n<p>We may take precaution to hinder two or more enabled connections for the same serial source</p>\n</blockquote>\n<p>Yes. </p>\n<p>On windows it will probably crash since the OS only allows one open connection to a given device.</p>\n<p>Linux/MacOS is even  worse since the OS won't give any error if a device is opened multiple times.  But of course it will not work, the input will be randomly distributed between the different drivers giving all sorts of interesting errors.</p>",
+        "id": 294522902,
+        "sender_full_name": "Alec Leamas",
+        "timestamp": 1661073206
+    },
+    {
+        "content": "<p>Heading priorities..<br>\nIf I switch from a N2K connection on COM3 (YDNU-02) to a N0183 connection or vice versa the heading is not updated with the new data. I assume the heading priority is not \"released\" (no watchdog?) but still stick to the first connection. <br>\nIf I restart O the correct heading is detected.</p>",
+        "id": 294522921,
+        "sender_full_name": "Håkan Svensson",
+        "timestamp": 1661073231
+    },
+    {
+        "content": "<p>So, a driver needs to reserve a port as long as it uses it. Should not be that hard. However, we must also ensure that it  does release  the port when  it should, which might be harder.</p>",
+        "id": 294523046,
+        "sender_full_name": "Alec Leamas",
+        "timestamp": 1661073308
+    },
+    {
+        "content": "<p>Serial ports..<br>\nOr simply hinder enabling in the connections UI if the same port is already enabled?</p>",
+        "id": 294523424,
+        "sender_full_name": "Håkan Svensson",
+        "timestamp": 1661073677
+    },
+    {
+        "content": "<p>Something like that.  But this needs underpinning code, it's not the sort of decisions to be made in a GUI part.</p>",
+        "id": 294523597,
+        "sender_full_name": "Alec Leamas",
+        "timestamp": 1661073808
+    },
+    {
+        "content": "<p>Maybe but we need to inform the user now using the GUI about the \"silly\" attempt.</p>",
+        "id": 294523893,
+        "sender_full_name": "Håkan Svensson",
+        "timestamp": 1661074114
+    },
+    {
+        "content": "<p>No, let's not divert into this, keeping focus on  the core.  The longer we can postpone UI stuff, the better. Nothing is worse than UI:s which are amended and amended over time  without overall thoughts. Thoughts which I think we  are just not  able to do right now. </p>\n<p>That is, for now we assume experienced testers ;)</p>",
+        "id": 294524838,
+        "sender_full_name": "Alec Leamas",
+        "timestamp": 1661074897
+    },
+    {
+        "content": "<p>Might certainly qualify for a  bullet inn the Alpha Release Notes, though.</p>",
+        "id": 294524931,
+        "sender_full_name": "Alec Leamas",
+        "timestamp": 1661074953
+    },
+    {
+        "content": "<p>\" What if the user has set the device to RAW/N2K. Do we need to send \"set N0183 mode\" for a serial NMEA0183 connection? <br>\nMy opinion is \"No\".  YDNU-02 in NMEA translate mode is not our business.  We cannot detect this condition.  Clearly, we will need some very specific documentation for the various N2K adapters we will support.  General notion for YDNU-02:  Leave it in Auto mode.</p>",
+        "id": 294550086,
+        "sender_full_name": "Dave Register",
+        "timestamp": 1661091876
+    },
+    {
+        "content": "<p>\"If I switch from a N2K connection on COM3 (YDNU-02) to a N0183 connection...\"<br>\nDo you mean both connections us YDNU?, or is the N0183 connection a separate serial line?</p>",
+        "id": 294550282,
+        "sender_full_name": "Dave Register",
+        "timestamp": 1661092003
+    },
+    {
+        "content": "<p>Timo responds on \"-1e9\" value.  This come from the N2K parser library, and does indicate \"unavailable data\".  I will improve the detection and handling of this condition.<br>\nAside:  What could be wrong with your Simrad device?  Lat/Lon OK, but calculated Cog/Sog not provided.  Strange...</p>",
+        "id": 294550515,
+        "sender_full_name": "Dave Register",
+        "timestamp": 1661092183
+    },
+    {
+        "content": "<p>\"So, a driver needs to reserve a port as long as it uses it.\"<br>\nMaybe a job for the registry?</p>",
+        "id": 294550739,
+        "sender_full_name": "Dave Register",
+        "timestamp": 1661092286
+    },
+    {
+        "content": "<p>More on registry:  Maybe we need a method where the driver factory asks the registry if a particular serial port is \" not occupied\" before instantiating any serial driver?</p>",
+        "id": 294551675,
+        "sender_full_name": "Dave Register",
+        "timestamp": 1661092844
+    },
+    {
+        "content": "<blockquote>\n<p>we will need some very specific documentation for the various N2K adapters</p>\n</blockquote>\n<p>If I understand the YDNU-02 manual correct these command, like to set N2K, is general for YD and Actisense. To set it in N0183 mode it's just to send some dummy like $XXGGA. But I can agree to your \"No\".</p>\n<blockquote>\n<p>Do you mean both connections us YDNU?, or is the N0183 connection a separate serial line?</p>\n</blockquote>\n<p>Sorry, I was unclear. I mean both connections was made for the same COM3 port. One N2K and one N0183. My consideration was about to hinder both to be enabled at the same time.</p>\n<blockquote>\n<p>What could be wrong with your Simrad device? Lat/Lon OK, but calculated Cog/Sog not provided. Strange...</p>\n</blockquote>\n<p>Yes, but I assume something with the calculation or other damage. There's a reason why this device was once replaced from the ship it was mounted? (And I couldn't find any service program to investigate it.)</p>",
+        "id": 294555843,
+        "sender_full_name": "Håkan Svensson",
+        "timestamp": 1661095654
+    },
+    {
+        "content": "<p>Testing today's commits:<br>\nO crash:<br>\nI have a N2K connection to YDNU on port COM3 running and disable that using \"OK\".<br>\nThen, in options, I enable a N0183 connection to the same port COM3 and click \"OK\" O still crashes here:</p>\n<blockquote>\n<div class=\"codehilite\"><pre><span></span><code>  opencpn.exe!CommDriverN0183SerialThread::Entry() Line 488   C++\n[External Code] \n[Frames below may be incorrect and/or missing, no symbols loaded for wxbase312u_vc_custom.dll]  Unknown\n</code></pre></div>\n\n</blockquote>\n<p><a href=\"/user_uploads/33951/YjLzfL6uGnPb9ODhGUa080zI/bild.png\">bild.png</a></p>\n<div class=\"message_inline_image\"><a href=\"/user_uploads/33951/YjLzfL6uGnPb9ODhGUa080zI/bild.png\" title=\"bild.png\"><img src=\"/user_uploads/33951/YjLzfL6uGnPb9ODhGUa080zI/bild.png\"></a></div>",
+        "id": 294613062,
+        "sender_full_name": "Håkan Svensson",
+        "timestamp": 1661149914
+    },
+    {
+        "content": "<p>Dave..<br>\nI made performance with my Simrad device. After having leaved the harbor I've visited the last days I went out and made a compass calibration by turning 2.5 turns directly after power on. The calibration was not really OK but now it reports both GOG and SOG. <br>\nSo now we at least have learned how a bad value is reported and can continue as normal. <br>\nThe bad heading degrees I've to investigate more but now under sail and have to back later.</p>",
+        "id": 294630206,
+        "sender_full_name": "Håkan Svensson",
+        "timestamp": 1661157989
+    },
+    {
+        "content": "<p>Dave..<br>\nNow when my Simrad GS25 is also reporting COG I noticed an intressant detail:<br>\nWhen I make no speed, moored, the COG is reported as \"-1e9\". As soon the ship is moving a relevant value is sent. I've to study more to identify the threshold. (Could this be a way to simply say: N/A? \"0.0\" can of course not be used as for SOG)<br>\nThis may imply we can't use the \"-1e9\" value as a generally bad or unusable connection as discussed above.</p>\n<p>Do you see the same from your N2K GNSS receiver?</p>",
+        "id": 294823867,
+        "sender_full_name": "Håkan Svensson",
+        "timestamp": 1661243453
+    },
+    {
+        "content": "<p><span class=\"user-mention\" data-user-id=\"522486\">@Håkan Svensson</span>   Generally, comparing float/double numbers to fixed values is a bad idea. Floating point arithmetic  (almost) always has some errors, it's  just not exact.  That is, any comparison to a constant like 0.0 (or 0) should be done like <code>abs(value - 0.0) &lt; PRECISION</code>, where <code>PRECISION</code> is a constant which often can be defined once and for all.</p>",
+        "id": 294825333,
+        "sender_full_name": "Alec Leamas",
+        "timestamp": 1661244128
+    },
+    {
+        "content": "<p>Arrg... -1e9... that's not a rounding error.  Sorry.</p>",
+        "id": 294827559,
+        "sender_full_name": "Alec Leamas",
+        "timestamp": 1661245195
+    },
+    {
+        "content": "<p>FWIW: More info about the \"-1e9\" value from the Simrad device.<br>\nI've tracked what's happening with COG and SOG from \"not moving\" to \"moving\" and my conclusion is the -1e9 value is a way to report \"nan\" or \"---\".  If you study the sequence below where I'm moored, move a little bit and finally cast off also the SOG says \"-1e9\" while COG is established but obviously not yet ackurat.  <br>\nHere I've logged COG and SOG when any value is changed:</p>\n<blockquote>\n<p>08:13:28.104 MESSAGE comm_decoder.cpp:282  <strong>*</strong> YDNU-02: COG: -1000000000.000000, SOG: 0.000000<br>\n08:14:23.004 MESSAGE comm_decoder.cpp:282  <strong>*</strong> YDNU-02: COG: 0.011500, SOG: 0.060000<br>\n08:14:23.203 MESSAGE comm_decoder.cpp:282  <strong>*</strong> YDNU-02: COG: -1000000000.000000, SOG: 0.000000<br>\n08:28:31.546 MESSAGE comm_decoder.cpp:282  <strong>*</strong> YDNU-02: COG: 6.553200, SOG: -1000000000.000000<br>\n08:28:31.597 MESSAGE comm_decoder.cpp:282  <strong>*</strong> YDNU-02: COG: -1000000000.000000, SOG: 0.000000<br>\n08:57:02.287 MESSAGE comm_decoder.cpp:282  <strong>*</strong> YDNU-02: COG: 1.548900, SOG: 0.220000<br>\n08:57:02.287 MESSAGE comm_decoder.cpp:282  <strong>*</strong> YDNU-02: COG: 1.556800, SOG: 0.220000<br>\n08:57:02.488 MESSAGE comm_decoder.cpp:282  <strong>*</strong> YDNU-02: COG: 1.561100, SOG: 0.220000<br>\n08:57:02.489 MESSAGE comm_decoder.cpp:282  <strong>*</strong> YDNU-02: COG: 1.565500, SOG: 0.230000<br>\n08:57:02.687 MESSAGE comm_decoder.cpp:282  <strong>*</strong> YDNU-02: COG: 1.573400, SOG: 0.240000</p>\n</blockquote>",
+        "id": 295176116,
+        "sender_full_name": "Håkan Svensson",
+        "timestamp": 1661412986
+    },
+    {
+        "content": "<p>I've not made any priority for the N2K GNSS Status data in Dashboard.<br>\nNot yet sure how to handle that.<br>\nFor a reliable handling we may need a flag from O core what source used for position  and Dashboard would use the same source for GNSS data.  <br>\nThoughts?</p>",
+        "id": 298973636,
+        "sender_full_name": "Håkan Svensson",
+        "timestamp": 1663250039
+    },
+    {
+        "content": "<p>Since we are changing the plugin API rather significantly, we could add such information.  I will investigate.  Add to ToDo List?</p>",
+        "id": 298988890,
+        "sender_full_name": "Dave Register",
+        "timestamp": 1663254076
+    },
+    {
+        "content": "<p>Added to TODO: \"Position source flag to Dashboard\"</p>",
+        "id": 299004357,
+        "sender_full_name": "Håkan Svensson",
+        "timestamp": 1663258542
+    },
+    {
+        "content": "<p>For info I've in a  ship installed a \"MiniPlex-3USB(-N2K)\" from <a href=\"http://www.shipmodul.com/products.html\">Shipmodul</a> Impressive! There are plenty of valuable settings and opportunities to combine, filter and priority incoming data. Both N0183 and N2k. This <a href=\"https://www.shipmodul.com/downloads/manuals/MiniPlex-3_3.14_EN.pdf\">manual</a> describes it all.<br>\nIt's a waste read but would inspire our priority logic and possible GUI.</p>",
+        "id": 304017601,
+        "sender_full_name": "Håkan Svensson",
+        "timestamp": 1665749694
+    },
+    {
+        "content": "<p>I move to this topic to discuss the new priority implementation:</p>\n<p>Amazing! A good start. I like the dialog.<br>\nOn Win10<br>\nFirst a general discussion about priority expressions so we're talking the same \"language\":<br>\nIf I say one connection has prio 2 and another prio 3. Whome is the first choise for OCPN?<br>\nIn other words; is OCPN priority hierarchy from \"top/highest\" to lower 0,1,2,3 or 3,2,1,0<br>\nOr is the priority order 0, 1, 2, 3  or 3, 2, 1, 0?<br>\n(Should we use the designation \"0\"?)<br>\nAnother expression: If I move a source Up in the list it will get higher priority. Do we call the top most posiotion prio 1?<br>\nThere are all kinds of understanding about this out there so we better nail it between us to be able to explain for others.</p>\n<p>Now to first prio test.<br>\nThe first test scenario here is two serial TCP connections, a) and b), where the positions are quit different. <br>\nMaybe not a real case but easy to follow what's happening.<br>\na) is the first detected so prio 1.<br>\nInitial notes:</p>\n<p>Function:</p>\n<ul>\n<li>All sources are there. Good.</li>\n<li>If I change for example the position source, a)RMC &gt; b)AIVDO the ship's position is not stable changed. (I saw one trace but very short)</li>\n<li>If I change sources for all Pos, Velo and Sat from source a) to source b) nothing is changed and when return to \"Adjust comm...\" dialog the last change is not saved</li>\n<li>[Settings/CommPriority] in the config file is not changed.</li>\n<li>It may be since I'm for a test using sources with totally different positions you make some relevancy check and don't allow this change of priority! Is it so? I haven't checked.</li>\n</ul>\n<p>UI:</p>\n<ul>\n<li>The dialog form is nice and clear.</li>\n<li>Please make the dialog size adjustable or the priority list window adapted to text length. See below picture.</li>\n<li>The checkbox to open the dialog is still checked after dialog OK-close. When disable/deselect the checkbox the dialog is again opened. Would it be feasible to change to a click button instead of a checkbox?</li>\n<li>When I select one row to move up/down the row is moved but after one \"move\" the row is deselected and the view is up-most again.<br>\nThe expected function is the actual row would still be selected so one could follow the row movements up/down.<br>\nCompare Dashboard preferences \"Instruments\" Up/Down.</li>\n</ul>\n<p>General discussion:</p>\n<ul>\n<li>What happens if one source priority is printed to config  [Settings/CommPriority] and that source is not available upon next OCPN start?</li>\n<li>Now we can set individual priority for each of Pos, Velo, Var and Sat. So in theory we can select Pos from one source and Velo/Sat from another.  That seems not feasible? If used we can present a position from a receiver using 3 satellites but report satellites count from another receiver using 12 satellites? <br>\nWould we instead package Pos/Velo/Var/Sat to one prio row and select from which of available sources to select or move up/down?<br>\nHmm.. Not easy. Thoughts and discussion please.</li>\n</ul>\n<p>This was the initial test only. You have produced a very good start! I think we have a job to do to finalize this. Amazing! :)</p>\n<p><a href=\"/user_uploads/33951/mD2yaSeaSAI87uu0iGO5OBog/bild.png\">bild.png</a></p>\n<div class=\"message_inline_image\"><a href=\"/user_uploads/33951/mD2yaSeaSAI87uu0iGO5OBog/bild.png\" title=\"bild.png\"><img src=\"/user_uploads/33951/mD2yaSeaSAI87uu0iGO5OBog/bild.png\"></a></div>",
+        "id": 307070915,
+        "sender_full_name": "Håkan Svensson",
+        "timestamp": 1667211494
+    },
+    {
+        "content": "<p>Priority 0 is highest.</p>",
+        "id": 307120468,
+        "sender_full_name": "Dave Register",
+        "timestamp": 1667226123
+    },
+    {
+        "content": "<p>Ok good!</p>",
+        "id": 307162920,
+        "sender_full_name": "Håkan Svensson",
+        "timestamp": 1667237755
+    },
+    {
+        "content": "<p>Dave..<br>\nThe priority logic is not good when sources are changed.<br>\nHere I disabled all previous serial connections and enabled a Signalk connection instead.<br>\nThe now not active sources are still in the priority window and for example heading is not passed to the ship symbol. It should have pointed in the track direction. Not north.<br>\n<a href=\"/user_uploads/33951/3ni3GjdVR1E_jbPRkDviD0yX/bild.png\">bild.png</a></p>\n<div class=\"message_inline_image\"><a href=\"/user_uploads/33951/3ni3GjdVR1E_jbPRkDviD0yX/bild.png\" title=\"bild.png\"><img src=\"/user_uploads/33951/3ni3GjdVR1E_jbPRkDviD0yX/bild.png\"></a></div>",
+        "id": 307184562,
+        "sender_full_name": "Håkan Svensson",
+        "timestamp": 1667244370
+    },
+    {
+        "content": "<p>Talking about the priority \"categories\", of Pos, Vel, Var, and Sats.<br>\nI'm not sure why, in fact, that anyone would want to use data from two different sources at one time, say Pos and Vel.  I am usually thinking like:</p>\n<ol>\n<li>initial startup data source selection automatically, when multiple sources are available, and..</li>\n<li>fail-over scenarios, where the primary nav data source goes off line</li>\n</ol>\n<p>I welcome comment on other use cases.</p>",
+        "id": 315872511,
+        "sender_full_name": "Dave Register",
+        "timestamp": 1671038711
+    },
+    {
+        "content": "<p>Window: Adjust Comm Priorities O crash when collapse a list<br>\nOpen the window from Options-&gt;Connections<br>\nClick one of the \"-\" or arrows to collapse either of the lists -&gt; O Crash</p>",
+        "id": 317319265,
+        "sender_full_name": "Håkan Svensson",
+        "timestamp": 1671701524
+    }
+]

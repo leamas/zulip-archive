@@ -1,0 +1,32 @@
+[
+    {
+        "content": "<p><strong>Public</strong> stream created by <span class=\"user-mention silent\" data-user-id=\"399865\">Rick Gleason</span>. <strong>Description:</strong></p>\n<blockquote>\n<p><em>No description.</em></p>\n</blockquote>",
+        "id": 341147386,
+        "sender_full_name": "Notification Bot",
+        "timestamp": 1678549342
+    },
+    {
+        "content": "<p>I have a particular git problem associated with watchdog_pi. My repos and Sean's have diverged. My repos has a rudder alarm (I removed the old pypilot alarm), and Seans has current pypilot alarm.  I have tried to merge these two repos several different ways (with conflicts resolved) and it has failed.  I have a local repos watchdog_pi which is cloned from my remote repos of the same name.</p>\n<p>Then I cloned sean's repos locally to \"<em>watchdog-sean</em>\" and now have it working with Bdbcat's help. I cannot directly push to Sean's repos.  From  local <em>watchdog-sean</em> (master branch), I would like to create a duplicate branch  <em>pypilot-sean</em>.</p>\n<p>git checkout -b  <em>pypilot-sean</em></p>\n<p>The remotes are   C:\\Users\\fcgle\\source\\watchdog-sean&gt;git remote -v<br>\n  origin  <a href=\"https://github.com/seandepagnier/watchdog_pi\">https://github.com/seandepagnier/watchdog_pi</a> (fetch)<br>\n  origin  <a href=\"https://github.com/seandepagnier/watchdog_pi\">https://github.com/seandepagnier/watchdog_pi</a> (push)</p>\n<p>In local <em>watchdog-sean</em>   I would like to change them as follows:</p>\n<p>git remote rename origin upstream<br>\n  git remote add origin git@github.com:rgleason/watchdog_pi.git   #to use ssh</p>\n<p>Then I would like to push the branch <em>pypilot-sean</em>  up to a new identical branch in my remote <em>watchdog_pi</em> repos.</p>\n<p>From local <em>watchdog-sean</em></p>\n<p>git push origin <em>pypilot-sean</em>:<em>pypilot-sean</em> </p>\n<p>Is it acceptable to have two local repositories push to the same remote repository but different branches?<br>\nWill this work?  and not screw up my local and remote \"<em>watchdog_pi</em>\"</p>\n<p>If so, I would then pull bring the branch <em>pypilot-sean</em> down to my local <em>watchdog_pi</em> repos<br>\nand delete my local repos <em>watchdog-sean</em>  and continue work.</p>",
+        "id": 341151721,
+        "sender_full_name": "Rick Gleason",
+        "timestamp": 1678551080
+    },
+    {
+        "content": "<p>Not quite the same <br>\npush to new repo from existing repos branch.<br>\n<a href=\"https://medium.com/fuzzy-code/git-push-to-new-repo-from-existing-repos-branch-acb8bef3f7be\">https://medium.com/fuzzy-code/git-push-to-new-repo-from-existing-repos-branch-acb8bef3f7be</a></p>",
+        "id": 341200302,
+        "sender_full_name": "Rick Gleason",
+        "timestamp": 1678580687
+    },
+    {
+        "content": "<p>First, we need to sort out   the terminology. You need to use the correct definitions if you should be able to google or use GPT to find some answers</p>\n<blockquote>\n<p>. My repos and Sean's have diverged. My repos has a rudder alarm (I removed the old pypilot alarm), and Seans has current pypilot alarm. I have tried to merge these two repos several different ways (with conflicts resolved) and it has failed. I have a local repos watchdog_pi which is cloned from my remote repos of the same name.</p>\n</blockquote>\n<p>No, this is about branches, not repos. You have a branch called master with a  rudder alarm, Sean has another branch also called master with a pypilot alarm. You want to merge these branches.</p>\n<p>If things are setup in a sane way you have two remotes. One is called <em>upstream</em> and is created using Sean's repo url. You also have another one caled <em>origin</em> which is created using  your own repo url.</p>\n<p>Hence, the name of Sean's master branch is <em>upstream/master</em>, and your own branch is origin/master. Note that hese are the branches on the remotes.</p>\n<p>All work should be done in a single clone, the one which is cloned from <em>origin</em>. Here you could just do <code>git fetch upstream master:master-sean</code>. This will create a new branch <em>master-sean</em> n your repo which is Sean's branch. With this in place toy do things like merge (probably a bad idea), rebase (better idea) and finally push your work to  a new branch at origin, a branch which could be used as a sane PR to Sean's repo.</p>",
+        "id": 341247942,
+        "sender_full_name": "Alec Leamas",
+        "timestamp": 1678614218
+    },
+    {
+        "content": "<p>Alec, I had not seen your response:   This is exactly what I have:<br>\n\"If things are setup in a sane way you have two remotes. One is called upstream and is created using Sean's repo url. You also have another one caled origin which is created using your own repo url.<br>\nHence, the name of Sean's master branch is upstream/master, and your own branch is origin/master. Note that hese are the branches on the remotes.\"</p>\n<p>The problem is that once conflicts are resolved, it does not work.  But it has been awhile, and I need to get back to this at some point and resolve it.  Yes, I've tried this.  It has been awhile and I need to review the work and get back into it.  Thanks for your help. Let me think about this and get back into it.</p>\n<p>\"All work should be done in a single clone, the one which is cloned from origin. Here you could just do git fetch upstream master:master-sean. This will create a new branch master-sean n your repo which is Sean's branch. With this in place toy do things like merge (probably a bad idea), rebase (better idea) and finally push your work to a new branch at origin, a branch which could be used as a sane PR to Sean's repo.\"</p>",
+        "id": 346428562,
+        "sender_full_name": "Rick Gleason",
+        "timestamp": 1680480594
+    }
+]

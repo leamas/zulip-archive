@@ -1,0 +1,101 @@
+<html>
+<head><meta charset="utf-8"><title>Bad wxWidgets includes · Master - 5.8.0  (was: comms) · Zulip Chat Archive</title></head>
+<h2>Stream: <a href="https://leamas.github.io/zulip-archive/stream/332168-Master---5.2E8.2E0--.28was.3A-comms.29/index.html">Master - 5.8.0  (was: comms)</a></h2>
+<h3>Topic: <a href="https://leamas.github.io/zulip-archive/stream/332168-Master---5.2E8.2E0--.28was.3A-comms.29/topic/Bad.20wxWidgets.20includes.html">Bad wxWidgets includes</a></h3>
+
+<hr>
+
+<base href="https://opencpn.zulipchat.com">
+
+<head><link href="https://leamas.github.io/zulip-archive/style.css" rel="stylesheet"></head>
+
+<a name="308542785"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332168-Master%20-%205.8.0%20%20%28was%3A%20comms%29/topic/Bad%20wxWidgets%20includes/near/308542785" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Alec Leamas <a href="https://leamas.github.io/zulip-archive/stream/332168-Master---5.2E8.2E0--.28was.3A-comms.29/topic/Bad.20wxWidgets.20includes.html#308542785">(Nov 08 2022 at 09:04)</a>:</h4>
+<p>We have multiple includes like <code>#include "wx/wx.h"</code>which should be <code>#include &lt;wx/wx.h&gt;</code> according to standard C/C++ conventions. Annoying, and creates yet another (small) barrier for casual readers.</p>
+<p>Could and should be fixed using a sed oneliner: <code>sed -i  '/include "wx/s/"\([^"]*\)"/&lt;\1&gt;/'  include/*.h  src/*.cpp</code>.  Just a reminder for later.</p>
+
+
+
+<a name="308587903"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332168-Master%20-%205.8.0%20%20%28was%3A%20comms%29/topic/Bad%20wxWidgets%20includes/near/308587903" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Dan Dickey <a href="https://leamas.github.io/zulip-archive/stream/332168-Master---5.2E8.2E0--.28was.3A-comms.29/topic/Bad.20wxWidgets.20includes.html#308587903">(Nov 08 2022 at 13:29)</a>:</h4>
+<p><span class="user-mention silent" data-user-id="399510">Alec Leamas</span> <a href="#narrow/stream/332168-comms/topic/Bad.20wxWidgets.20includes/near/308542785">said</a>:</p>
+<blockquote>
+<p>We have multiple includes like <code>#include "wx/wx.h"</code>which should be <code>#include &lt;wx/wx.h&gt;</code> according to standard C/C++ conventions. Annoying, and creates yet another (small) barrier for casual readers.</p>
+<p>Could and should be fixed using a sed oneliner: <code>sed -i  '/include "wx/s/"\([^"]*\)"/&lt;\1&gt;/'  include/*.h  src/*.cpp</code>.  Just a reminder for later.</p>
+</blockquote>
+<p>I think this is no longer true in wx321 branch.</p>
+
+
+
+<a name="308595660"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332168-Master%20-%205.8.0%20%20%28was%3A%20comms%29/topic/Bad%20wxWidgets%20includes/near/308595660" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Alec Leamas <a href="https://leamas.github.io/zulip-archive/stream/332168-Master---5.2E8.2E0--.28was.3A-comms.29/topic/Bad.20wxWidgets.20includes.html#308595660">(Nov 08 2022 at 14:11)</a>:</h4>
+<p>It is:  (on branch wxwin321)</p>
+<div class="codehilite"><pre><span></span><code>$ git grep &#39;include &quot;wx&#39; ../src
+../src/Osenc.cpp:#include &quot;wx/wxprec.h&quot;
+../src/Osenc.cpp:#include &quot;wx/wx.h&quot;
+../src/RoutePoint.cpp:#include &quot;wx/wxprec.h&quot;
+../src/RoutePoint.cpp:#include &quot;wx28compat.h&quot;
+../src/SencManager.cpp:#include &quot;wx/wxprec.h&quot;
+../src/SencManager.cpp:#include &quot;wx/wx.h&quot;
+../src/TCWin.cpp:#include &quot;wx28compat.h&quot;
+../src/ais.cpp:#include &quot;wx28compat.h&quot;
+../src/androidUTIL.cpp:#include &quot;wx/wxprec.h&quot;
+../src/androidUTIL.cpp:#include &quot;wx/wx.h&quot;
+../src/chcanv.cpp:#include &quot;wx28compat.h&quot;
+../src/cm93.cpp:#include &quot;wx/wxprec.h&quot;
+../src/cm93.cpp:#include &quot;wx/wx.h&quot;
+../src/cm93.cpp:#include &quot;wx28compat.h&quot;
+../src/compasswin.cpp:#include &quot;wx/wxprec.h&quot;
+../src/compasswin.cpp:#include &quot;wx/wx.h&quot;
+../src/compasswin.cpp:#include &quot;wx28compat.h&quot;
+../src/concanv.cpp:#include &quot;wx28compat.h&quot;
+../src/console.cpp:#include &quot;wx/wxprec.h&quot;
+../src/console.cpp:#include &quot;wx/wx.h&quot;
+../src/macutils.c:#include &quot;wx/wxprec.h&quot;
+../src/mygeom.cpp:#include &quot;wx/wxprec.h&quot;
+../src/mygeom.cpp:#include &quot;wx/wx.h&quot;
+../src/mygeom.cpp:#include &quot;wx/tokenzr.h&quot;
+../src/ocpndc.cpp:#include &quot;wx28compat.h&quot;
+../src/options.cpp:#include &quot;wx28compat.h&quot;
+../src/piano.cpp:#include &quot;wx28compat.h&quot;
+../src/route.cpp:#include &quot;wx/wx.h&quot;
+../src/route_point.cpp:#include &quot;wx28compat.h&quot;
+../src/routeprintout.cpp:#include &quot;wx28compat.h&quot;
+../src/s57chart.cpp:#include &quot;wx/wxprec.h&quot;
+../src/s57chart.cpp:#include &quot;wx/wx.h&quot;
+../src/s57chart.cpp:#include &quot;wx/image.h&quot;  // for some reason, needed for msvc???
+../src/s57chart.cpp:#include &quot;wx/tokenzr.h&quot;
+../src/s57chart.cpp:#include &quot;wx28compat.h&quot;
+../src/s57obj.cpp:#include &quot;wx/wxprec.h&quot;
+../src/s57obj.cpp:#include &quot;wx/wx.h&quot;
+../src/s57obj.cpp:#include &quot;wx/image.h&quot;  // for some reason, needed for msvc???
+../src/s57obj.cpp:#include &quot;wx/tokenzr.h&quot;
+../src/s57obj.cpp:#include &quot;wx28compat.h&quot;
+../src/scrollingdialog.cpp:#include &quot;wx/wx.h&quot;
+../src/scrollingdialog.cpp:#include &quot;wx/module.h&quot;
+../src/scrollingdialog.cpp:#include &quot;wx/display.h&quot;
+../src/scrollingdialog.cpp:#include &quot;wx/bookctrl.h&quot;
+../src/styles.cpp:#include &quot;wx28compat.h&quot;
+../src/svg_utils.cpp:#include &quot;wxSVG/svg.h&quot;
+../src/thumbwin.cpp:#include &quot;wx28compat.h&quot;
+../src/wificlient.cpp:#include &quot;wx/wxprec.h&quot;
+../src/wificlient.cpp:#include &quot;wx/wx.h&quot;
+</code></pre></div>
+
+
+
+<a name="308598444"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332168-Master%20-%205.8.0%20%20%28was%3A%20comms%29/topic/Bad%20wxWidgets%20includes/near/308598444" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Dan Dickey <a href="https://leamas.github.io/zulip-archive/stream/332168-Master---5.2E8.2E0--.28was.3A-comms.29/topic/Bad.20wxWidgets.20includes.html#308598444">(Nov 08 2022 at 14:25)</a>:</h4>
+<p>Ok, I submitted (or thought I did) this yesterday.  Will submit PR shortly.</p>
+
+
+
+<a name="308612781"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332168-Master%20-%205.8.0%20%20%28was%3A%20comms%29/topic/Bad%20wxWidgets%20includes/near/308612781" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Alec Leamas <a href="https://leamas.github.io/zulip-archive/stream/332168-Master---5.2E8.2E0--.28was.3A-comms.29/topic/Bad.20wxWidgets.20includes.html#308612781">(Nov 08 2022 at 15:32)</a>:</h4>
+<p><span class="user-mention" data-user-id="522729">@Dan Dickey</span> This is definitely not just about "your" changes, this is bad code since long. You could just leave it for now, I'll make a PR  or so once the wxwin31 branch is merged. </p>
+<p>What happened here is that I first noticed this in your PR, and thought it would be a good idea to have "new" code fixed. But I now see that this is all over the place and thus needs  a  more "global" fix so to speak. Let's keep this thread as a reminder.</p>
+
+
+
+<hr><p>Last updated: Oct 05 2023 at 09:43 UTC</p>
+</html>

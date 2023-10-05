@@ -1,0 +1,74 @@
+[
+    {
+        "content": "<p>Continued from <a href=\"https://github.com/leamas/opencpn-libs/issues/15\">https://github.com/leamas/opencpn-libs/issues/15</a></p>",
+        "id": 352925523,
+        "sender_full_name": "Alec Leamas",
+        "timestamp": 1682535649
+    },
+    {
+        "content": "<p>Forget what I said about that the message must be supported in comm_bridge. I wrote before I thought this through. </p>\n<p>All messages arre posted by the driver, and they should be available on the message bus. comm_bridge is just about handling messages which needs to be dealt with, it has nothing to do with what's available for plugins or not.</p>",
+        "id": 352926505,
+        "sender_full_name": "Alec Leamas",
+        "timestamp": 1682535957
+    },
+    {
+        "content": "<p><span class=\"user-mention\" data-user-id=\"522486\">@Håkan Svensson</span>  ^</p>",
+        "id": 352926578,
+        "sender_full_name": "Alec Leamas",
+        "timestamp": 1682535971
+    },
+    {
+        "content": "<p>2 messages were moved here from <a class=\"stream-topic\" data-stream-id=\"332168\" href=\"/#narrow/stream/332168-Master---5.2E8.2E0--.28was.3A-comms.29/topic/canbus.20testing\">#Master - 5.8.0  (was: comms) &gt; canbus testing</a> by <span class=\"user-mention silent\" data-user-id=\"399510\">Alec Leamas</span>.</p>",
+        "id": 352926896,
+        "sender_full_name": "Notification Bot",
+        "timestamp": 1682536077
+    },
+    {
+        "content": "<p>Ok, good. <br>\nSo to receive \"VSD\" and more particular the AIVSD would be possible for a plugin? comm_bridge is only for OCPN own needs?</p>\n<p>And I suppose transmit of a message out from the plugin will still be handled by \"PushNMEABuffer()\"?</p>",
+        "id": 352927835,
+        "sender_full_name": "Håkan Svensson",
+        "timestamp": 1682536371
+    },
+    {
+        "content": "<blockquote>\n<p>So to receive \"VSD\" and more particular the AIVSD would be possible for a plugin? comm_bridge is only for OCPN own needs?</p>\n</blockquote>\n<p>Yes</p>\n<blockquote>\n<p>And I suppose transmit of a message out from the plugin will still be handled by \"PushNMEABuffer()\"?</p>\n</blockquote>\n<p>No. See <a href=\"https://opencpn-manuals.github.io/main/opencpn-dev/plugin-messaging.html#_sending_messages\">https://opencpn-manuals.github.io/main/opencpn-dev/plugin-messaging.html#_sending_messages</a></p>",
+        "id": 352947397,
+        "sender_full_name": "Alec Leamas",
+        "timestamp": 1682543288
+    },
+    {
+        "content": "<p>Output:<br>\nWithout having seen a used examples some quick conclusions:</p>\n<p>With PushNMEABuffer() the plugin don't have to care for available output ports. The multiplexer will take care of that and send out on any serial or network port set as output. </p>\n<p>With WriteCommDriver() the plugin has to do the job to search for output port(s) and send to every each found.  The plugin, in this case ais-vd_pi,  can not know on witch port a AIS transponder is connected and has to broadcast all serial/network outputs found.</p>\n<p>So, what's advantage with this method compared to present PushNMEABuffer()?</p>",
+        "id": 353103395,
+        "sender_full_name": "Håkan Svensson",
+        "timestamp": 1682575900
+    },
+    {
+        "content": "<p>As I understand it, the meaning of \"output\" is a bit confused here. I refer to sending messages via the physical interfaces  to another host, for example an NMEA slave instrument or an autopilot. But <code>PushNMEABuffer()</code>is really about sending messages to other plugins on the same host.</p>\n<p>That is, the comparison is not really meaningful. But to be honest I cannot fully follow the flow in <code>PushNMEABuffer()</code>. It also notifies to an address called <code>\"virtual\"</code> which don't see anything listening to, but I might miss it.</p>",
+        "id": 353150559,
+        "sender_full_name": "Alec Leamas",
+        "timestamp": 1682582571
+    },
+    {
+        "content": "<p><a href=\"#narrow/stream/332168-Master---5.2E8.2E0--.28was.3A-comms.29/topic/Testing.200183.20messages.20on.20new.20API/near/353150559\">A message</a> was moved here from <a class=\"stream-topic\" data-stream-id=\"361980\" href=\"/#narrow/stream/361980-opencpn-commits/topic/OpenCPN.20.2F.20v5.2E8.2Ex\">#opencpn-commits &gt; OpenCPN / v5.8.x</a> by <span class=\"user-mention silent\" data-user-id=\"399510\">Alec Leamas</span>.</p>",
+        "id": 353150962,
+        "sender_full_name": "Notification Bot",
+        "timestamp": 1682582633
+    },
+    {
+        "content": "<p>ah... found it. The multiplexer does indeed do some dirty job here. The basic difference is that using <code>PushNMEABuffer()</code> the user does not control to which interfaces the message is sent, it will basically go to all available interfaces subject to various filtering conditions.  This might or might not be what you want to do.</p>",
+        "id": 353162301,
+        "sender_full_name": "Alec Leamas",
+        "timestamp": 1682584219
+    },
+    {
+        "content": "<p>Yes, PushNMEABuffer() does use all all available output connections. A possible connection's filter will control what's sent to a specific target.  Since the ais-vd plugin cannot know which connection is used to reach the AIS transponder that's exactly what I want.<br>\nThe conclusion is I see no advantage to not use PushNMEABuffer() here. Neither for the plugin nor system performance?</p>\n<p>The \"virtual\" is for internal OCPN use. For example radar_pi use PushNMEABuffer() to send out ARPA objects by $RATTM which is used by OCPN, AIS_decoder,  to draw a ARPA target on screen. The same goes for a possible HDT received from a radar scanner. The \"source\" for both examples is not a physical connection but \"virtual\".</p>",
+        "id": 353273250,
+        "sender_full_name": "Håkan Svensson",
+        "timestamp": 1682599406
+    },
+    {
+        "content": "<p>As long as it works it should be OK. It does not work for N2k, the multiplexer isn't involved in those -- that's the core reason for the new API.</p>",
+        "id": 353729880,
+        "sender_full_name": "Alec Leamas",
+        "timestamp": 1682671300
+    }
+]

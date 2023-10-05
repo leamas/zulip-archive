@@ -1,0 +1,75 @@
+<html>
+<head><meta charset="utf-8"><title>New Message Plugin API · manuals · Zulip Chat Archive</title></head>
+<h2>Stream: <a href="https://leamas.github.io/zulip-archive/stream/332172-manuals/index.html">manuals</a></h2>
+<h3>Topic: <a href="https://leamas.github.io/zulip-archive/stream/332172-manuals/topic/New.20Message.20Plugin.20API.html">New Message Plugin API</a></h3>
+
+<hr>
+
+<base href="https://opencpn.zulipchat.com">
+
+<head><link href="https://leamas.github.io/zulip-archive/style.css" rel="stylesheet"></head>
+
+<a name="391543396"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332172-manuals/topic/New%20Message%20Plugin%20API/near/391543396" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Tony Voss <a href="https://leamas.github.io/zulip-archive/stream/332172-manuals/topic/New.20Message.20Plugin.20API.html#391543396">(Sep 17 2023 at 17:41)</a>:</h4>
+<p>There is a section of the Core Developer Manual covering the <a href="https://opencpn-manuals.github.io/main/opencpn-dev/plugin-messaging.html">New Message Plugin API here</a>.</p>
+<p>I am struggling with receiving messages.  The manual prescribes this:<br>
+<code>listener.Listen(id.key(), EVT_SHIPDRIVER, this);</code><br>
+but there is no  Listen method .  The example I have found in dashboard_pi uses:<br>
+<code>listener_rpm = std::move(GetListener(id_rpm, EVT_183_RPM, this));</code><br>
+which fits with <code>GetListener</code> declared in ocpn_plugin.h</p>
+<p>Can SKS please update the manual to fit with reality?</p>
+<p>I have copied the relevant code for NMEA0183 from dashboard_pi into my plugin but it failing to match the GetListener call, so  there may be more than just the Listen line that needs updating.</p>
+
+
+
+<a name="391561626"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332172-manuals/topic/New%20Message%20Plugin%20API/near/391561626" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Alec Leamas <a href="https://leamas.github.io/zulip-archive/stream/332172-manuals/topic/New.20Message.20Plugin.20API.html#391561626">(Sep 17 2023 at 19:27)</a>:</h4>
+<p>Ack, here is something fishy going on. I will try to take a look tomorrow.</p>
+
+
+
+<a name="391562017"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332172-manuals/topic/New%20Message%20Plugin%20API/near/391562017" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Alec Leamas <a href="https://leamas.github.io/zulip-archive/stream/332172-manuals/topic/New.20Message.20Plugin.20API.html#391562017">(Sep 17 2023 at 19:29)</a>:</h4>
+<blockquote>
+<p>but there is no Listen method </p>
+</blockquote>
+<p>Could you please expand on this? what is the error message?  What is the context?</p>
+
+
+
+<a name="391562130"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332172-manuals/topic/New%20Message%20Plugin%20API/near/391562130" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Alec Leamas <a href="https://leamas.github.io/zulip-archive/stream/332172-manuals/topic/New.20Message.20Plugin.20API.html#391562130">(Sep 17 2023 at 19:29)</a>:</h4>
+<p><span class="user-mention" data-user-id="554731">@Tony Voss</span>  ^</p>
+
+
+
+<a name="391564207"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332172-manuals/topic/New%20Message%20Plugin%20API/near/391564207" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Tony Voss <a href="https://leamas.github.io/zulip-archive/stream/332172-manuals/topic/New.20Message.20Plugin.20API.html#391564207">(Sep 17 2023 at 19:42)</a>:</h4>
+<p><span class="user-mention silent" data-user-id="399510">Alec Leamas</span> <a href="#narrow/stream/332172-manuals/topic/New.20Message.20Plugin.20API/near/391562017">said</a>:</p>
+<blockquote>
+<blockquote>
+<p>but there is no Listen method </p>
+</blockquote>
+<p>Could you please expand on this? what is the error message?  What is the context?</p>
+</blockquote>
+<p>When I write something like <code>listener.Listen(id.key(), EVT_SHIPDRIVER, this);</code> it fails to compile with <em>no such method</em> or something like it. <br>
+Looking in opcn_plugin.h, I see <em>GetListener</em> but no <em>Listen</em></p>
+
+
+
+<a name="391565711"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332172-manuals/topic/New%20Message%20Plugin%20API/near/391565711" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Alec Leamas <a href="https://leamas.github.io/zulip-archive/stream/332172-manuals/topic/New.20Message.20Plugin.20API.html#391565711">(Sep 17 2023 at 20:00)</a>:</h4>
+<p>I really need the code + exact error message here...</p>
+
+
+
+<a name="391567525"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332172-manuals/topic/New%20Message%20Plugin%20API/near/391567525" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Alec Leamas <a href="https://leamas.github.io/zulip-archive/stream/332172-manuals/topic/New.20Message.20Plugin.20API.html#391567525">(Sep 17 2023 at 20:18)</a>:</h4>
+<p>The docs are messed up. Despite the title  the current docs actually describes the API inside opencpn, not  for plugins accessing it over ocpn_plugin.h.</p>
+<p>There is no need to invoke Listen(). The object returned by GetListener()  is listening once it is created by GetListener(...)</p>
+<p>I have written another document from the plugin POV earlier, but it seems lost. Back later.</p>
+
+
+
+<hr><p>Last updated: Oct 05 2023 at 09:43 UTC</p>
+</html>

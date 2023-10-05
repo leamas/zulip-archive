@@ -1,0 +1,518 @@
+[
+    {
+        "content": "<p>Hi there...<br>\nTime to start implementation of proposed data sharing facility planned for OCPN 58</p>",
+        "id": 303746376,
+        "sender_full_name": "Dave Register",
+        "timestamp": 1665625140
+    },
+    {
+        "content": "<p>I have a design in mind, ready to share it here for comments, flames, etc.  Here are the key points:<br>\nLeaving Service discovery aside for a moment....</p>\n<p>Server side:</p>\n<ol>\n<li>OCPN will implement a RESTful server with HTTP(s) accessibility.</li>\n<li>A subset of the standard verbs (GET, PUT, POST) will be supported.</li>\n</ol>\n<p>Client side:</p>\n<ol>\n<li>OCPN curl library (well known, stable, used today on o-charts_pi) will be used to access the server.</li>\n</ol>\n<p>So, taking a simple task.  We wish to send a route from one instance of OCPN to another.  Assume the sender knows the ip address of the target (by Service discovery, separate topic).<br>\nOne approach is simply to issue a PUT request to the server, instructing the server to accept an XML file describing the route, and store it to a  well-known data location on the server (e.g.$OCPNPrivateData/xfer).  When the server successfully receives and validates the XML file, he will merge the transferred XML file contents with existing navobj file, in exactly the same way an IMPORT operation does today. Update GUI on the server-side, and we are done. <br>\nOf course, there are details.  UUID collision comes to mind.  But leaving that aside also, are there comments on the strategy?  Are there any other reasonable peer-peer operations that could NOT be performed using a simple http RESTful server model?  Or do we need a more complex server with more precise verbs?</p>",
+        "id": 303747253,
+        "sender_full_name": "Dave Register",
+        "timestamp": 1665626064
+    },
+    {
+        "content": "<p>Implementation details proposed:</p>\n<ol>\n<li>RESTful server will be implemented using \"mongoose\" library.  Seems a good fit, so far.  Compatible FOSS license.  And a quick smoke test shows that it works, at least on linux.</li>\n<li>I prefer not to use JSON payloads in this interface, since that would involve a round-trip conversion of our existing XML data structures to JSON, and back.  I see nothing to be gained here.</li>\n</ol>",
+        "id": 303747511,
+        "sender_full_name": "Dave Register",
+        "timestamp": 1665626300
+    },
+    {
+        "content": "<p>Mongoose:<br>\n<a href=\"https://github.com/cesanta/mongoose\">https://github.com/cesanta/mongoose</a></p>",
+        "id": 303747580,
+        "sender_full_name": "Dave Register",
+        "timestamp": 1665626391
+    },
+    {
+        "content": "<p>I understand that users and devs will come at this problem from many backgrounds and viewpoints.  That's good.  So I am interested in some wide ranging discussions before we commit to a plan.<br>\nBring on the flame....</p>",
+        "id": 303748251,
+        "sender_full_name": "Dave Register",
+        "timestamp": 1665626908
+    },
+    {
+        "content": "<p>Overall, this seems like a good plan.</p>\n<blockquote>\n<p>One approach is simply to issue a PUT request to the server, instructing the server to accept an XML file describing the route,</p>\n</blockquote>\n<p>Why not just do a POST instead, with the XML file as content? Seems simpler and cleaner to me, no need to mess with out-of-protocol file transfers, locations etc.</p>\n<p>We should be careful to have ipv6 enabled while doing this in order to be prepared for Nmea OneNet.</p>",
+        "id": 303776688,
+        "sender_full_name": "Alec Leamas",
+        "timestamp": 1665648150
+    },
+    {
+        "content": "<blockquote>\n<p>I prefer not to use JSON payloads in this interface</p>\n</blockquote>\n<p>Encoding XML files in json is of course madness. However, we should IMHO not rule out using json for other purposes.</p>",
+        "id": 303779826,
+        "sender_full_name": "Alec Leamas",
+        "timestamp": 1665649501
+    },
+    {
+        "content": "<p>Most probably a distraction but is it time to provide a schema for OpenCPN routes and waypoints? At the moment these XML files cannot be validated.</p>",
+        "id": 303792998,
+        "sender_full_name": "Mike Rossiter",
+        "timestamp": 1665654918
+    },
+    {
+        "content": "<p>Not a distraction at all.  Part of the design should IMHO be that XML used in the interface should have schemas and thus be possible to validate.</p>",
+        "id": 303795229,
+        "sender_full_name": "Alec Leamas",
+        "timestamp": 1665655915
+    },
+    {
+        "content": "<p>Mike...<br>\nWould you like to take that on your plate?</p>",
+        "id": 303838608,
+        "sender_full_name": "Dave Register",
+        "timestamp": 1665669688
+    },
+    {
+        "content": "<p><span class=\"user-mention\" data-user-id=\"399559\">@Mike Rossiter</span>  ^</p>",
+        "id": 303839211,
+        "sender_full_name": "Alec Leamas",
+        "timestamp": 1665669851
+    },
+    {
+        "content": "<p>Dave ... <br>\nI will try and find the schema that was prepared some time ago!</p>",
+        "id": 303840792,
+        "sender_full_name": "Mike Rossiter",
+        "timestamp": 1665670326
+    },
+    {
+        "content": "<p><span class=\"user-mention\" data-user-id=\"517002\">@Dave Register</span> Now hosting the initial schema for test purposes.<br>\n<a href=\"http://mikerossiter.co.uk/site/OpenCPN/xmlschemas/opencpn_v1.xsd\">http://mikerossiter.co.uk/site/OpenCPN/xmlschemas/opencpn_v1.xsd</a><br>\nI have edited route and waypoint gpx files to reference this schema. They validate ok. When <a href=\"http://opencpn.org\">opencpn.org</a>  can host the schema I will look at the minor changes needed for the construction of valid gpx files.</p>",
+        "id": 304291677,
+        "sender_full_name": "Mike Rossiter",
+        "timestamp": 1665916318
+    },
+    {
+        "content": "<p>Hm... I presume that this schema reflects what we have today (?). </p>\n<p>One thing which strikes me is that there are no top level elements like <code>&lt;route&gt;</code> and/or <code>&lt;waypoint&gt;</code> which contains this stuff.  Certainly no XML guru, but such  toplevels are customary for a reason, I guess.</p>\n<p>Another thing is that it might make sense to use <em>xs</em> rather than <em>xsd</em> since this is what we already are using in the plugin definitions. No big deal, for sure.</p>",
+        "id": 304294223,
+        "sender_full_name": "Alec Leamas",
+        "timestamp": 1665917896
+    },
+    {
+        "content": "<blockquote>\n<p>One thing which strikes me is that there are no top level elements like &lt;route&gt; and/or &lt;waypoint&gt;</p>\n</blockquote>\n<p>These are covered by the topografix schema.</p>",
+        "id": 304297857,
+        "sender_full_name": "Mike Rossiter",
+        "timestamp": 1665920267
+    },
+    {
+        "content": "<p>Agree ... xs would be more consistent. I will make an edit.</p>",
+        "id": 304299047,
+        "sender_full_name": "Mike Rossiter",
+        "timestamp": 1665920931
+    },
+    {
+        "content": "<p>Question for thought...<br>\nMaking good progress on REST server implementation.  A question arises.<br>\nWe will need some \"user-space\" naming scheme for OCPN instances, both for service discovery, as well as GUI elements.  For instance, in the prototype code now I have a dialog with string:<br>\n\"someone has sent you a new route.\\nAccept?\"<br>\nClearly we need something more than \"someone\".  And I don't think ip-address (alone) is enough for average users.<br>\nWe have choices, as always.</p>\n<ol>\n<li>Autogenerate a name string, based on host type, and something (?) else..  Show the generated name in \"help\" dialog.</li>\n<li>Allow (require?) user to specify a desired instance name, according to some rules.  Name would be persistent for this device.  Somehow, we guarantee uniqueness, at least on the local net?</li>\n</ol>\n<p>Thoughts?<br>\nDave</p>",
+        "id": 304367043,
+        "sender_full_name": "Dave Register",
+        "timestamp": 1665970771
+    },
+    {
+        "content": "<p>Planning to use this for mDNS/Service Discovery support:<br>\n<a href=\"https://github.com/mjansson/mdns\">https://github.com/mjansson/mdns</a></p>\n<p>Will implement as library with simple static methods.<br>\nAny thoughts?</p>",
+        "id": 304368915,
+        "sender_full_name": "Dave Register",
+        "timestamp": 1665972836
+    },
+    {
+        "content": "<p>\"[Someone] has sent...\"</p>\n<ol>\n<li>Thought: Use [hostname].  Would be a good first time use. Save to config. Show in \"Help/About\" and/or Options-&gt;User interface. Make it editable with rules.</li>\n</ol>",
+        "id": 304392599,
+        "sender_full_name": "Håkan Svensson",
+        "timestamp": 1665989844
+    },
+    {
+        "content": "<blockquote>\n<p>Planning to use this for mDNS/Service Discovery support:</p>\n</blockquote>\n<p>That one looks really good. Hopefully if can replace the current, problematic library as well.</p>",
+        "id": 304399272,
+        "sender_full_name": "Alec Leamas",
+        "timestamp": 1665992736
+    },
+    {
+        "content": "<blockquote>\n<p>Allow (require?) user to specify a desired instance name</p>\n</blockquote>\n<p>This is IMHO the way to go, \"specify\" meaning configure. If  not configured let it default to IP address, this is what we have.</p>\n<p>In the long run this scheme with a dialog for each route will be cumbersome to use.  For that reason, we probably will need to add some mechanism to verify a client \"once and for all\".  This is the security question which we won't get around when implementing an API like this on  a  navigation device. Another topic...</p>",
+        "id": 304403894,
+        "sender_full_name": "Alec Leamas",
+        "timestamp": 1665994600
+    },
+    {
+        "content": "<blockquote>\n<p>Thought: Use [hostname]. Would be a good first time use. </p>\n</blockquote>\n<p>Many (most?) users does not have a configured hostname.  </p>\n<p>In any case, this must be done on the client side, the OpenCPN server typically does not know the client hostname. So  hostname could perhaps be default id configured, but probably not more than that.</p>",
+        "id": 304404690,
+        "sender_full_name": "Alec Leamas",
+        "timestamp": 1665994918
+    },
+    {
+        "content": "<p>Tech question, working on mDNS service discovery:<br>\n<strong>Does anyone know how to enable multicast UDP reception on Windows 10?</strong><br>\nI've checked with Wireshark, and nothing is received when probed by linux.  Conversely, multicast UDP is correctly sent by Windows. and seen by linux.</p>",
+        "id": 304596136,
+        "sender_full_name": "Dave Register",
+        "timestamp": 1666059033
+    },
+    {
+        "content": "<p>I'm not sure I understand it correct but FWIW on my local net I use to:<br>\nOn my RPi I Tx to UDP 192.168.1.255 : 10112<br>\nOn Win10 Rx UDP 0.0.0.0 : 10112</p>",
+        "id": 304615298,
+        "sender_full_name": "Håkan Svensson",
+        "timestamp": 1666073212
+    },
+    {
+        "content": "<p>I have merged the current state of REST server, mDNS discovery, and object sharing branch, into \"master\" branch.<br>\nThis is for testing of basic plumbing and UI.<br>\nNotes:</p>\n<ol>\n<li>The code is rough and incomplete.  But the skeletons are sound, I think.  Additional objects (routepoints &amp; tracks) will be added easily.  Also, additional server endpoints for other control functions will be simple enough.</li>\n<li>The only operation available <strong>NOW</strong> is to send a single route to a peer instance of OCPN.  This is accessed by right-click on route, \"Send to...\"  You may modify the route on the source, re-send to the peer, and the route on the peer will be updated.  A dialog will require confirmation of overwrite of the original route.</li>\n<li>\n<p>To make this work with Win10, it is necessary to enable multicast UDP reception.  One easy way to do this is to change the ipv4 \"metric\" from \"Auto\" to \"1\".  See here:<br>\n<a href=\"https://wphosting.tv/how-to-set-the-network-adapter-order-priority-in-windows-10/\">https://wphosting.tv/how-to-set-the-network-adapter-order-priority-in-windows-10/</a><br>\nYou will need to Disable and Re-enable the connection after the change. Why this works, I cannot say.  Anyone?</p>\n</li>\n<li>\n<p>There is a noticeable time lag (~4 secs) on the operation.  Most of this comes from the peer discovery process.</p>\n</li>\n</ol>\n<p>There are two issues to discuss further:</p>\n<ol>\n<li>mDNS performance and caching policy.</li>\n<li>Security.</li>\n</ol>\n<p>More on these later.</p>",
+        "id": 305034991,
+        "sender_full_name": "Dave Register",
+        "timestamp": 1666210640
+    },
+    {
+        "content": "<p>Data Sharing security:<br>\nThoughts and concerns, anyone?</p>",
+        "id": 305035230,
+        "sender_full_name": "Dave Register",
+        "timestamp": 1666210726
+    },
+    {
+        "content": "<p>mDNS performance.<br>\nMulticast network Discovery/DNS  is by definition a non-time-deterministic process. How it works in OCPN is this:</p>\n<ol>\n<li>A device/app requiring a specific service (e.g.OCPN REST server)ends a specific multicast query  onto the network.</li>\n<li>Server daemons on enabled clients respond with a unicast message to the requester, if the request is serviceable by that deamon.  The responses include the ip and other identifying data for the target server.</li>\n<li>The responses arrive at the requester in unspecified time and order.  The current code waits 4 seconds for all results to appear.</li>\n<li>The mDNS server daemon supporting the OCPN REST server is  integral with OCPN.  That means that if OCPN is not running on a system, it is not detected by the query/response logic.</li>\n</ol>\n<p>You will see from this logic that there is no \"always running DNS server\" in the mDNS architecture.  That is one of the advantages of the system.  It allows \"ad-hoc\" connections without any network-resident controller other than the source and destination.<br>\nYou will also understand that absent any local caching of mDNS records, each operation to access an OCPN REST server on another device (e.g. to send a route) will require an mDNS discovery process to find the current ip of the target device.<br>\nWith me so far?</p>\n<p>I invite comments from network experts here on the discussion.</p>",
+        "id": 305037745,
+        "sender_full_name": "Dave Register",
+        "timestamp": 1666211654
+    },
+    {
+        "content": "<p>Security: As I said earlier I think we need a scheme to verify a client \"once and for all\". This is of course for general security reasons, but also usability since the alternative is a  cumbersome dialog for each action.</p>\n<p>Overall, we can assume that the two devices involved are physically close (in the same yacht...) at least when establishing a connection. The bluetooth-like pairing mechanism comes to mind here, server presents a number on it's gui which user enters into the client. This establishes a common secret which can be used to generate an API key which is known by both sides.</p>\n<p>This is then about the client adding the api key to the request, and server checking it. Requires encrypted https transport, but this is probably needed anyway. The certificate question is there, even if we are on a non-routable network.  There are other possibilities which does not require a certificate, but we should IMHO explore the \"standard\" https path first.</p>",
+        "id": 305038360,
+        "sender_full_name": "Alec Leamas",
+        "timestamp": 1666211913
+    },
+    {
+        "content": "<p>Lets focus on <a href=\"https://.\">https://.</a><br>\nThere are hooks already in place within mongoose for https certificate support. I think we need a \".pem\" file containing a certificate and key.  How do we build this certificate file?</p>",
+        "id": 305063840,
+        "sender_full_name": "Dave Register",
+        "timestamp": 1666226830
+    },
+    {
+        "content": "<p>A short test - more this evening.<br>\nAll on the same wifi net.</p>\n<ul>\n<li>Rpi is detected by Win10 and a route transfer worked.</li>\n<li>Win10 is not detected by RPi.  (With or without Auto metric)</li>\n</ul>",
+        "id": 305083627,
+        "sender_full_name": "Håkan Svensson",
+        "timestamp": 1666245200
+    },
+    {
+        "content": "<p>https:  Last time I encountered this was when working with OpenVPN which contains a bundled copy of EasyRSA. It is packaged in Debian as easy-rsa.</p>\n<p>EasyRSA can be used create certificates for a certificate authority (CA) and one or more client certificate. Each certificate is a public file meant to be distributed and a secret file used to verify data. Two problems:</p>\n<ul>\n<li>The procedure to set up a CA and create  client certificates is utterly convoluted and bash i. e., nothing for end users.</li>\n<li>Creating the certificate centrally means distributing the secrets which obviously does not work.</li>\n</ul>\n<p>To walk this path we would somehow need to create a \"initiate OpenCPN for remote use\"step  which would create a CA and at least one client certificate for the OpenVPN server.  The client would then be required  to trust this certificate, it's about configuring  curl to accept the certificate.  All this is probably possible, but basically an error prone mess.</p>",
+        "id": 305101946,
+        "sender_full_name": "Alec Leamas",
+        "timestamp": 1666254454
+    },
+    {
+        "content": "<p>Hakan...<br>\nWin10:  Did you stop and restart the Win10 network connection after changing metric?<br>\nAlso, you may try adding a program exception (for OpenCPN) to the Win10 firewall.<br>\n<a href=\"https://www.dummies.com/article/technology/computers/pcs/how-to-allow-firewall-exceptions-on-your-windows-10-laptop-139433/\">https://www.dummies.com/article/technology/computers/pcs/how-to-allow-firewall-exceptions-on-your-windows-10-laptop-139433/</a><br>\nI have not tried this myself</p>",
+        "id": 305183642,
+        "sender_full_name": "Dave Register",
+        "timestamp": 1666281940
+    },
+    {
+        "content": "<p>Dave..<br>\nThe network was restarted after metric changes.<br>\nOpenCPN is allowed through both local and global firewall. The latter is also needed for radar plugin. And no problem to transfer data in or out the local network.<br>\nI'll set up another Win10 for further checks.</p>",
+        "id": 305185526,
+        "sender_full_name": "Håkan Svensson",
+        "timestamp": 1666282471
+    },
+    {
+        "content": "<p>The exception allowing multicast is  (or should be) exactly as required for radar_pi.  So you system should have been already allowed.</p>",
+        "id": 305189823,
+        "sender_full_name": "Dave Register",
+        "timestamp": 1666283721
+    },
+    {
+        "content": "<p>I now tried between two Win 10 without any Win detection. RPi is seen everywhere though.<br>\nBut arp sees all IPs in both Win and Linux.<br>\nCan I Debug somewhere to see anything valuable?</p>",
+        "id": 305194716,
+        "sender_full_name": "Håkan Svensson",
+        "timestamp": 1666285030
+    },
+    {
+        "content": "<p>Dave..<br>\nSome kind of partial progress I suppose.<br>\nAfter changes to the metric (1) option I restarted both Win PCs. On one of them two system was detected, see picture.<br>\nThe HAS.WIN is a Win10 but when I select that and OK nothing is received on the HAS-WIN. <br>\nWhat's HAS-WIN {[2001} Instead of the IP address?</p>\n<p>The HAS-WIN PC itself does still not detect more than the RPi though.</p>\n<p><a href=\"/user_uploads/33951/Xu1uNYlsIRU-QH7LO-SDHSdB/bild.png\">bild.png</a></p>\n<div class=\"message_inline_image\"><a href=\"/user_uploads/33951/Xu1uNYlsIRU-QH7LO-SDHSdB/bild.png\" title=\"bild.png\"><img src=\"/user_uploads/33951/Xu1uNYlsIRU-QH7LO-SDHSdB/bild.png\"></a></div>",
+        "id": 305202688,
+        "sender_full_name": "Håkan Svensson",
+        "timestamp": 1666287396
+    },
+    {
+        "content": "<p>The peers offered by the OCPN mDNS server should all contain the ip address in the label \"{a.b.c.d} as does rpi.  Maybe some other DNS server is responding?<br>\nTime for Anydesk...</p>",
+        "id": 305230530,
+        "sender_full_name": "Dave Register",
+        "timestamp": 1666297184
+    },
+    {
+        "content": "<p>I've not been involved from start here but what's the reason to use multicast instead of broadcast UDP?<br>\nDo we really need to address a designated receiver on a small local net I suppose will be the situation for OCPN users.<br>\nCouldn't all connected OCPN instances instead have the option to react, or not, on broadcasted tracks?</p>",
+        "id": 305296490,
+        "sender_full_name": "Håkan Svensson",
+        "timestamp": 1666338318
+    },
+    {
+        "content": "<p>Dave..<br>\nAny desk...sure. I'll send a mail when back from workshop. Cars!!!! :( <br>\nMeanwhile. Here's printf from my RPi. It was once detecting one out of two Win PCs. But it seems rather occasional?</p>\n<p><a href=\"/user_uploads/33951/2tIqMCz8pCsmOuiAOz11j_4z/printf.txt\">printf.txt</a></p>",
+        "id": 305303433,
+        "sender_full_name": "Håkan Svensson",
+        "timestamp": 1666341158
+    },
+    {
+        "content": "<p><span class=\"user-mention\" data-user-id=\"522486\">@Håkan Svensson</span> </p>\n<blockquote>\n<p>what's the reason to use multicast instead of broadcast UDP?</p>\n</blockquote>\n<p>We are not inventing the mDNS protocol, we are using it.  See for example <a href=\"https://en.wikipedia.org/wiki/Multicast_DNS\">https://en.wikipedia.org/wiki/Multicast_DNS</a>. The thinking is that it is better to use existing, reviewed and tested protocols rather than to invent them -- designing protocols is hard.</p>\n<p>We are BTW already using mDNS, there is an alternative library wxserverdisc which implements the same protocol since long. To be honest, I havn't digged into where it is (was?) used. Anyway, it's a not that well maintained piece of sw, hopefully the new library will replace it completely.</p>",
+        "id": 305311521,
+        "sender_full_name": "Alec Leamas",
+        "timestamp": 1666344124
+    },
+    {
+        "content": "<p>In particular, look into DNS-SD in the Wikipedia article.</p>",
+        "id": 305313107,
+        "sender_full_name": "Alec Leamas",
+        "timestamp": 1666344762
+    },
+    {
+        "content": "<p>How about this:</p>\n<ol>\n<li>It seems that we will need to generate a new certificate on each OCPN run-time instance, since we do not use a fixed domain with mDNS.  The system ip may change dynamically, based on the DHCP results, usually.  We need a dynamic SAN (subject-alternative-name)certificate?</li>\n<li>I have searched high and low to find a way to reliably generate certificates without full-blown OpenSLL help. No luck so far.  What would you think of bundling OpenSSL library (.dll) in Windows, and using system OpenSSL library in linux/Mac?  If we use a library, we can avoid forking CLI script processes, which is a pain, and usually become fragile over time.</li>\n</ol>",
+        "id": 305536662,
+        "sender_full_name": "Dave Register",
+        "timestamp": 1666445333
+    },
+    {
+        "content": "<blockquote>\n<p>Howe about this?</p>\n</blockquote>\n<p>I have come to the same conclusion, not to to say I'm sure. </p>\n<p>There are alternatives. One would be to create a network service which issues certificates. This is probably the only way to get around the OpenSSL dependency on Windows. It breaks the idea of a self-contained OpenCPN application,though. But besides that, it would be an elegant solution.</p>\n<p>Another idea would be to use wireguard instead of https, basically running all connections through a VPN. Wireguard is much simpler to set up,  no signatures, just a key pair for each node. The main problem here is that  the wg server for Windows is not that mature (I think). An advantage would be that OpenCPN  would not really had to care about it, the use  of a VPN is basically transparent to the application.</p>\n<p>Other VPNs like OpenVPN tends to be based on the the same PKI infrastructure as https/OpenSSL, and is hence as bad to set up.</p>\n<p>If someone had more info on the wg Windows server this might change my mind. Until then, using the OpenSSL library  to issue certificates as you  propose seems like the best alternative.</p>\n<p>Dependency-wise, it's of course somewhat painful to depend on the OpenSSL library on Windows. However, at least on Linux all https servers depends on OpenSSL anyway, so it's not really a problem.  Not sure about macOS.  All in all, I don't see the added dependency as a major problem.</p>",
+        "id": 305631662,
+        "sender_full_name": "Alec Leamas",
+        "timestamp": 1666510657
+    },
+    {
+        "content": "<p>There is an authentication dependency here. Using https does give us encryption but no authentication,  we need to implement something like pairing or so on top of that. Using a VPN avoids this need since we know the client so to speak.</p>",
+        "id": 305632374,
+        "sender_full_name": "Alec Leamas",
+        "timestamp": 1666511278
+    },
+    {
+        "content": "<p>Looking more into the WIndows wg server. It actually looks quite OK. To just create the tunnel descriptions seems reasonable. Ergo:  there is IMHO a path of using wg  also on windows.  Don't really know what to think.</p>",
+        "id": 305633058,
+        "sender_full_name": "Alec Leamas",
+        "timestamp": 1666511857
+    },
+    {
+        "content": "<p>For info regarding Windows.<br>\nWith the the last <a href=\"https://github.com/OpenCPN/OpenCPN/commit/b418d4c500f22f9c6c731aa95368e3abb4f9898c\">commit</a> All my tested system, two Win10 one RPi, are now detected by \"Send to..\" with correct IP address. That's valid also if the reception host's address is changed. <br>\nRoutes are well detected and functional. Also the \"replace?\" function when an already present route is again received works.<br>\nAnd, not less, on my Windows system, the \"metric\" is left at default \"Auto\". For any reason the earlier discussed method to change to \"metric = 1\" is according to my tests disturbing the route transfer function.<br>\nWhat's left to test are Windows versions before W10 like W7/8. I'll have a look in my drawers but if anyone else...</p>\n<p>A nice to have but not essential: <br>\nSome kind of receipt back to the sender when the transfer is detected and viewed on screen. It could be used to generate an error if the transfer didn't worked? <br>\nThis is about system functionality only. Not if the user is accepting the new route or not.</p>",
+        "id": 306002450,
+        "sender_full_name": "Håkan Svensson",
+        "timestamp": 1666695486
+    },
+    {
+        "content": "<p>We have decided to drop at least W7 for next release, no need to test that. Have we ever supported W8?</p>",
+        "id": 306028646,
+        "sender_full_name": "Alec Leamas",
+        "timestamp": 1666704547
+    },
+    {
+        "content": "<p>Route sharing tested on W8 wo any issues. Also there are the users asked to confirm Firewall entrance like W10. Local is enough.<br>\nThe W8 was nicely detected by other and detect others as well. Route transfer both ways wo issues.<br>\nAlex..<br>\nWe have naturally supported all Win from XP to W11. No problem. In this matter the Win world is easy. One .exe file installation file for all.<br>\nBecause some OpenGL related issues I understand we are close to exclude XP from our support list. But W7 wouldn't have the same issue and can remain. At least to my understanding?</p>",
+        "id": 306048597,
+        "sender_full_name": "Håkan Svensson",
+        "timestamp": 1666710275
+    },
+    {
+        "content": "<p>\"We have decided to drop at least W7\"<br>\nWe have ?  News to me...  Quotation?<br>\nWe are dropping XP, sure.</p>",
+        "id": 306154779,
+        "sender_full_name": "Dave Register",
+        "timestamp": 1666750510
+    },
+    {
+        "content": "<p>\"There is an authentication dependency here. Using https does give us encryption but no authentication\"<br>\nSo it seems.  After lots of googling, it seems that since both client and server are open-source, no amount of \"magic\" in the certificate can make us proof against determined MITM attacks.<br>\nAs an alternative, I would like to see a \"word sketch\" of your concept for \"pairing\".<br>\nIn other new:<br>\nBundling OpenSSLv3 on Windows, and using it to created dynamic certs without CLI:  Solved.   Got it working now.  Traffic is definitely encrypted, by Wireshark verification.<br>\nBut still no way using libcurl to authenticate server against conventional attack vectors.</p>",
+        "id": 306155308,
+        "sender_full_name": "Dave Register",
+        "timestamp": 1666750966
+    },
+    {
+        "content": "<p>Windows multicast troubles:<br>\nIt starts to seem that the problem with multicast on intel W10 platforms is confined to the WiFi connection only. Sometimes it works, sometimes not.  Always works on a wired connection.  There is some google juice on this....<br>\n<a href=\"https://superuser.com/questions/730288/why-do-some-wifi-routers-block-multicast-packets-going-from-wired-to-wireless\">https://superuser.com/questions/730288/why-do-some-wifi-routers-block-multicast-packets-going-from-wired-to-wireless</a><br>\nAny confirmation?</p>",
+        "id": 306155437,
+        "sender_full_name": "Dave Register",
+        "timestamp": 1666751150
+    },
+    {
+        "content": "<p>Some kind of receipt back to the sender when the transfer is detected and viewed on screen. It could be used to generate an error if the transfer didn't worked? <br>\nYes, on my list.  We already have the structure for reporting some errors from the server.  For example, if a \"Send To...\" route is rejected by the destination, a message box is shown on the source device.<br>\nDo we need a message like: \"Route successfully transferred.\" ? Probably a good idea...<br>\nThoughts?</p>",
+        "id": 306156048,
+        "sender_full_name": "Dave Register",
+        "timestamp": 1666751842
+    },
+    {
+        "content": "<div class=\"codehilite\"><pre><span></span><code>Do we need a message like: &quot;Route successfully transferred.&quot; ? Probably a good idea...\n</code></pre></div>\n\n<p>Agree. A self closing positiv receipt or a message only when failed? Maybe the latter. A user may expect a function to work but want to know about exceptional fail cases.</p>",
+        "id": 306170759,
+        "sender_full_name": "Håkan Svensson",
+        "timestamp": 1666764309
+    },
+    {
+        "content": "<p>Sorry, my bad. Somehow mixed up W7 with XP. Just disregard.</p>",
+        "id": 306191935,
+        "sender_full_name": "Alec Leamas",
+        "timestamp": 1666774082
+    },
+    {
+        "content": "<blockquote>\n<p>A self closing positive receipt or a message only when failed? Maybe the latter</p>\n</blockquote>\n<p>IMHO, just the latter. There are good arguments against  feedback basically saying \"Things worked as expected\".</p>",
+        "id": 306192413,
+        "sender_full_name": "Alec Leamas",
+        "timestamp": 1666774246
+    },
+    {
+        "content": "<p>I'm on the crash after modifying a route. However, limited time,  rebuilding my kitchen...</p>",
+        "id": 306192624,
+        "sender_full_name": "Alec Leamas",
+        "timestamp": 1666774327
+    },
+    {
+        "content": "<p>I have merged the SSL/TLS certificate management and \"https\" support for Data Sharing to master branch.<br>\nThere is a small change required for Windows build from source.  I have brought the build support bundle under version control, and it is now available on github as:</p>\n<p><a href=\"http://github.com/OpenCPN/OCPNWindowsCoreBuildSupport\">github.com/OpenCPN/OCPNWindowsCoreBuildSupport</a></p>\n<p>Windows builders will need to download the latest repo Release file, and un-zip the embedded \"buildwin\" directory to the build machine's \"buildwin\" directory.<br>\n<a href=\"https://github.com/OpenCPN/OCPNWindowsCoreBuildSupport/archive/refs/tags/v0.1.zip\">https://github.com/OpenCPN/OCPNWindowsCoreBuildSupport/archive/refs/tags/v0.1.zip</a></p>\n<p>The Appveyor.yml build script has been updated.  Please consult that script for more details on \"OCPNWindowsCoreBuildSupport\"</p>",
+        "id": 306343476,
+        "sender_full_name": "Dave Register",
+        "timestamp": 1666822947
+    },
+    {
+        "content": "<p>Dave..<br>\nA also had to tweak this to build: (VS2017)</p>\n<blockquote>\n<div class=\"codehilite\"><pre><span></span><code>src/certificates.cpp\n</code></pre></div>\n\n<p>-35,9 +35,9 <br>\n#include &lt;openssl/x509v3.h&gt;<br>\n#ifdef __MSVC__<br>\n-#include \"applink.c\"<br>\n+#include &lt;openssl/applink.c&gt;<br>\n #endif</p>\n</blockquote>",
+        "id": 306380433,
+        "sender_full_name": "Håkan Svensson",
+        "timestamp": 1666850920
+    },
+    {
+        "content": "<p>Dave..2<br>\nI created a package and installed on another PC.<br>\nIt may be the Win package creator needs to include also:<br>\nlibssl-3.dll and libcrypto-3.dll</p>",
+        "id": 306384010,
+        "sender_full_name": "Håkan Svensson",
+        "timestamp": 1666852904
+    },
+    {
+        "content": "<p>...2<br>\nThe two dll are listed in CMakeLists but commented out by \"if (FALSE)\" at row 1640?</p>",
+        "id": 306386190,
+        "sender_full_name": "Håkan Svensson",
+        "timestamp": 1666853975
+    },
+    {
+        "content": "<p>Hakan..<br>\nFixed.  Thanks.</p>",
+        "id": 306459167,
+        "sender_full_name": "Dave Register",
+        "timestamp": 1666880096
+    },
+    {
+        "content": "<p><span class=\"user-mention\" data-user-id=\"399510\">@Alec Leamas</span> <br>\nping....<br>\n\"As an alternative, I would like to see a \"word sketch\" of your concept for \"pairing\".</p>",
+        "id": 306459883,
+        "sender_full_name": "Dave Register",
+        "timestamp": 1666880317
+    },
+    {
+        "content": "<p>It's not really an alternative, it still requires a secure transport. That said</p>\n<ul>\n<li>The client (PC used to create routes...) is initially \"unpaired\".</li>\n<li>When an unpaired device tries to connect, the server displays a message like \"Connect from ..., use 1234 to pair\".</li>\n<li>At the same time, the client displays a dialog which expects the random number 1234 in an text entry box.</li>\n<li>EDIT: User reads the random number from server and inputs it in the client dialog.</li>\n<li>The client and the server now have a shared secret. This can be  used to establish an API key, a much larger random number sequence. Server stores it, with reference to the client computer.</li>\n<li>The client attaches the api key to each and every https operation.</li>\n</ul>\n<p>This scheme is simple and efficient, but if we transfer the API key unencrypted  using http we lose. We should probably let user user \"name\" the client as well when pairing.</p>",
+        "id": 306461650,
+        "sender_full_name": "Alec Leamas",
+        "timestamp": 1666880914
+    },
+    {
+        "content": "<p>Dave..<br>\nWin builds fixed. Thanks.<br>\nSome quick notes wo further investigations:<br>\nOn Windows.</p>\n<ul>\n<li>All connected OCPN system are detected. See picture 1.</li>\n<li>The client respons is there.  But the \"Send to.. dialog\" is halted until any reaction from peer wo any \"awaiting respons\" message.  Not intentional I suppose? Once peer has done \"OK\" the dialog is closed. But not before that.</li>\n<li>If peer rejects, \"Cancel\", the object a nice message is shown. See picture 2.</li>\n<li>Neither of [ ] \"Always accept objects from this source\" nor [ ] \"Always replace objects from this source\" has any impact on next \"Send to..\"<br>\n<a href=\"/user_uploads/33951/6pQDrxxiMKUmw82QyqM3rpT6/bild.png\">bild.png</a> <br>\n<a href=\"/user_uploads/33951/fC8hBdQf5B0QQ1xRtZfXqUfq/bild.png\">bild.png</a><div class=\"message_inline_image\"><a href=\"/user_uploads/33951/6pQDrxxiMKUmw82QyqM3rpT6/bild.png\" title=\"bild.png\"><img src=\"/user_uploads/33951/6pQDrxxiMKUmw82QyqM3rpT6/bild.png\"></a></div><div class=\"message_inline_image\"><a href=\"/user_uploads/33951/fC8hBdQf5B0QQ1xRtZfXqUfq/bild.png\" title=\"bild.png\"><img src=\"/user_uploads/33951/fC8hBdQf5B0QQ1xRtZfXqUfq/bild.png\"></a></div></li>\n</ul>",
+        "id": 306492439,
+        "sender_full_name": "Håkan Svensson",
+        "timestamp": 1666889334
+    },
+    {
+        "content": "<p><span class=\"user-mention\" data-user-id=\"399510\">@Alec Leamas</span> <br>\nOK, I get it.  By alternative, I mean as an alternative to traditional \"authentication by certificate.\"<br>\nWe do something similar with o-charts server. Thinking on it.....<br>\nThanks</p>",
+        "id": 306529611,
+        "sender_full_name": "Dave Register",
+        "timestamp": 1666901124
+    },
+    {
+        "content": "<p><strong>Route replace issue</strong><br>\nA replaced route is not replaced it's copied \"above\" the old.</p>\n<ul>\n<li>Create a route on PC1. Send to PC2.</li>\n<li>Now exist as a copy on PC2</li>\n<li>Change the route on PC1 by moving one WP. Send to PC2</li>\n<li>Now both the old and the moved WP are shown on PC2. In fact it's two routes upon each others.</li>\n<li>Reverse the route on PC1 and send to and accept on PC2.</li>\n<li>Now two routes upon each other on PC2</li>\n</ul>\n<p>Expected behavior:<br>\n When a replaced route is accepted the old would be edited or deleted.</p>",
+        "id": 313025773,
+        "sender_full_name": "Håkan Svensson",
+        "timestamp": 1669803670
+    },
+    {
+        "content": "<p>Corrected in github now,</p>",
+        "id": 315941507,
+        "sender_full_name": "Dave Register",
+        "timestamp": 1671064815
+    },
+    {
+        "content": "<p>Correction to route replace issue is confirmed.<br>\nThanks</p>",
+        "id": 316036856,
+        "sender_full_name": "Håkan Svensson",
+        "timestamp": 1671109926
+    },
+    {
+        "content": "<p><span class=\"user-mention\" data-user-id=\"517002\">@Dave Register</span> <br>\nI've problem now to get the \"Send to\" function to find other O instances.  Both to/from Win and Rpi. <br>\nRpi400 can sometimes be found from one of the two Win's connected but Win is very seldom found.<br>\nDo you experience the same?<br>\nThe Rpi says:<br>\nMessage like: \"No other instansens found\"</p>\n<blockquote>\n<p>Local IPv4 address: 192.168.1.154<br>\nLocal IPv6 address: 2001:2042:7c05:3000:91fd:d496:9ec7:8864<br>\nOpened 2 sockets for mDNS query<br>\nSending mDNS query : opencpn-object-control-service PTR<br>\nQuery PTR opencpn-object-control-service.<br>\nReading mDNS query replies<br>\n  --&gt; answer RPi400.opencpn-object-control-service. (unicast)<br>\n192.168.1.154:5353 : answer opencpn-object-control-service. PTR RPi400.opencpn-object-control-service. rclass 0x1 ttl 10 length 9<br>\nQuery PTR opencpn-object-control-service.<br>\n  --&gt; answer RPi400.opencpn-object-control-service. (unicast)<br>\nRead 4 records<br>\nClosed sockets</p>\n</blockquote>",
+        "id": 324614006,
+        "sender_full_name": "Håkan Svensson",
+        "timestamp": 1675087499
+    },
+    {
+        "content": "<p><span class=\"user-mention\" data-user-id=\"522486\">@Håkan Svensson</span> <br>\nOn RPi4, bullseye/64.<br>\nNo problem.  Windows detected reliably to/from.</p>",
+        "id": 324818940,
+        "sender_full_name": "Dave Register",
+        "timestamp": 1675134294
+    },
+    {
+        "content": "<p>OK, thanks for testing.<br>\nAfter I have restarted \"everything\" all was again detected.  Bad Monday?</p>",
+        "id": 324830229,
+        "sender_full_name": "Håkan Svensson",
+        "timestamp": 1675142859
+    },
+    {
+        "content": "<p>The trouble to locate RPi400 seems more than bad Monday. What we partly saw yesterday is still present.<br>\nMy two Win does always find each others. Occasionally one of the Win also detects RPi400.<br>\nRPi400 have hard to find the other. If one Win has seen RPi400 and send a route the Rpi400 can later also find the Win that has sent. But not the other.<br>\nMore network trouble with the RPi400. I mean more than the 20 minutes \"gaps\"?</p>",
+        "id": 325140923,
+        "sender_full_name": "Håkan Svensson",
+        "timestamp": 1675253831
+    },
+    {
+        "content": "<p><span class=\"user-mention\" data-user-id=\"517002\">@Dave Register</span> <br>\nLate test issue. sorry.<br>\nWe may need a general timeout for the Send To function.<br>\nTest case:</p>\n<ul>\n<li>Send To from e.g. RPi to a Win</li>\n<li>Since it's a already existing route and no general accept Rpi is waiting for a respons from Win.</li>\n<li>The Win's network connection failed, or a PC shut down, during this wait for respons.</li>\n<li>Now RPi is waiting forever and eventually \"Peer is not responding..\"  - Wait - Quit. If \"Quit\" O shuts down.</li>\n<li>We may need a timeout: \"No peer respons! Stop waiting?\" And then nicely shut the Send To function instead of OCPN itself.</li>\n</ul>",
+        "id": 325597083,
+        "sender_full_name": "Håkan Svensson",
+        "timestamp": 1675421505
+    },
+    {
+        "content": "<p><span class=\"user-mention\" data-user-id=\"517002\">@Dave Register</span> <br>\n\"Send To\" respons  - No peers found.<br>\nRpi400 and other can miss sometimes although the request is always sent. But I sometimes see long respons time. Longer than the time out.<br>\nExample here from WIN-HAS.<br>\nWIN (...1.67) used \"Send To\".<br>\nAfter time out the message \"No OCPN peers detected\" <br>\nLooking at the Wireshark log below we can see the request was sent. After 19 seconds the first answer was received and all the rest thereafter. No one was missing but all was late. So late the Send To function timed out and message \"No peers\"<br>\nHow to handle this I don't know. We can't wait forever, can we?<br>\nNext time I tried Send To, after some minutes, all was answering within the time out limit.</p>\n<p>I have seen, on RPi400 only two peers are answering. Not WIN-HAS. Not either after both O was restarted.  I also manage to send a route to RPi400 from WIN-HAS. But also after that WIN-HAS didn't respond on a RPi400 request??<br>\nIt's not easy to find a logic in this issue.</p>\n<blockquote>\n<div class=\"codehilite\"><pre><span></span><code>3043  77.461638   192.168.1.67    224.0.0.251 MDNS    90  Standard query 0x0000 PTR opencpn-object-control-service, &quot;QU&quot; question.\n4106  98.316735   192.168.1.101   192.168.1.67    MDNS    147 Standard query response 0x0000 PTR opencpn-object-control-service, &quot;QU&quot; question PTR HAS-LENO.opencpn-object-control-service SRV 0 0 8000 HAS-LENO.local.\n4977  118.576120  192.168.1.154   192.168.1.67    MDNS    143 Standard query response 0x0000 PTR opencpn-object-control-service, &quot;QU&quot; question PTR RPi400.opencpn-object-control-service SRV 0 0 8000 RPi400.local.\n4978  118.577444  192.168.1.73    192.168.1.67    MDNS    139 Standard query response 0x0000 PTR opencpn-object-control-service, &quot;QU&quot; question PTR RPi4.opencpn-object-control-service SRV 0 0 8000 RPi4.local\n</code></pre></div>\n\n</blockquote>",
+        "id": 325625579,
+        "sender_full_name": "Håkan Svensson",
+        "timestamp": 1675429799
+    },
+    {
+        "content": "<p>From RPi400 (...1.154):<br>\nHere one peer (..1.101) answered in due time and was also listed. The other two was obviously not listed. To late.</p>\n<blockquote>\n<div class=\"codehilite\"><pre><span></span><code> 5301 202.620279421   192.168.1.154   224.0.0.251 MDNS    90  Standard query 0x0000 PTR opencpn-object-control-service, &quot;QU&quot; question\n 5307 202.686669729   192.168.1.101   192.168.1.154   MDNS    147 Standard query response 0x0000 PTR opencpn-object-control-service, &quot;QU&quot; question PTR HAS-LENO.opencpn-object-control-service SRV 0 0 8000 HAS-LENO.local\n 6599 220.996783174   192.168.1.73    192.168.1.154   MDNS    139 Standard query response 0x0000 PTR opencpn-object-control-service, &quot;QU&quot; question PTR RPi4.opencpn-object-control-service SRV 0 0 8000 RPi4.local\n 6600 220.996865543   192.168.1.154   192.168.1.73    ICMP    167 Destination unreachable (Port unreachable)\n 6601 220.999214893   192.168.1.67    192.168.1.154   MDNS    145 Standard query response 0x0000 PTR opencpn-object-control-service, &quot;QU&quot; question PTR HAS-WIN.opencpn-object-control-service SRV 0 0 8000 HAS-WIN.local\n 6602 220.999237949   192.168.1.154   192.168.1.67    ICMP    173 Destination unreachable (Port unreachable)\n</code></pre></div>\n\n</blockquote>",
+        "id": 325629772,
+        "sender_full_name": "Håkan Svensson",
+        "timestamp": 1675430900
+    },
+    {
+        "content": "<p><span class=\"user-mention\" data-user-id=\"522486\">@Håkan Svensson</span> <br>\nGeneral timeout:  Yes, we need that.  I'll take a look.<br>\nSlow response:  Maybe we should implement some sort of caching of responses.  So if a response is late, we get a timeout.  But the next SendTo... will likely find the target in the cache and not even need to query.  In this case, the General Timeout may be triggered, if the target is really not there.  Also, we could put a time aging on the cache.  That is, cache is invalidated after say 2 minutes?<br>\nJust ideas...</p>",
+        "id": 325654784,
+        "sender_full_name": "Dave Register",
+        "timestamp": 1675437189
+    },
+    {
+        "content": "<p>I've no further ideas. But isn't it strange the respons time can sometimes be so long? Normal within the same second but occasionally ~20 seconds. Why is the peer waiting and for what?</p>",
+        "id": 325697944,
+        "sender_full_name": "Håkan Svensson",
+        "timestamp": 1675448761
+    },
+    {
+        "content": "<p>Dave..<br>\nRather often, but not all time, I saw a respons of \"No peers..\" I waited a minute and tried again. Then all three was there.<br>\nMaybe complete the a message with ... \"Please try again in 1 minute....\"   or A button to automat it?  :-)</p>",
+        "id": 325728836,
+        "sender_full_name": "Håkan Svensson",
+        "timestamp": 1675460295
+    },
+    {
+        "content": "<p><span class=\"user-mention\" data-user-id=\"522486\">@Håkan Svensson</span> <br>\nI pushed an improvement to SendTo... UI.</p>\n<ol>\n<li>Verify OCPN mdns cache is active, and useful.</li>\n<li>Reduce mdns query timeout to 2 secs.</li>\n<li>Added \"Scan\" button to dialog, to easily try again if your desired peer is not on the list yet.</li>\n</ol>\n<p>I did not yet implement a global timeout for \"dead\" peers.  That will be next.</p>",
+        "id": 325755317,
+        "sender_full_name": "Dave Register",
+        "timestamp": 1675475640
+    },
+    {
+        "content": "<p><span class=\"user-mention\" data-user-id=\"517002\">@Dave Register</span> </p>\n<ul>\n<li>The new \"Scan\" button is fine. Maybe change text to \"Scan again\" to not confuse and give the impression it needs to be clicked all time?  </li>\n<li>Also is an empty list now shown when no peers are received. I think that's fine and understandable in combination with the \"Scan again\" button.</li>\n<li>Reply function. It's still strange why we sometimes have a long delay. Is it anything within OCPN or some network buffer function? </li>\n<li>Nevertheless; we already have a spinning cursor all time using the Send To function so we may add some extra seconds? Study the pictures below. In the first we are for any strange reason missing one peer. IP ...1.154 although it was received within 4 seconds.  At next request all was received in one second and also all three are listed. </li>\n</ul>\n<p><a href=\"/user_uploads/33951/qQbkU6-iaix6xq5nlpJcu4E5/bild.png\">bild.png</a> <br>\n<a href=\"/user_uploads/33951/ewPhJLBK9mErxxpRPfpp9wb4/bild.png\">bild.png</a></p>\n<div class=\"message_inline_image\"><a href=\"/user_uploads/33951/qQbkU6-iaix6xq5nlpJcu4E5/bild.png\" title=\"bild.png\"><img src=\"/user_uploads/33951/qQbkU6-iaix6xq5nlpJcu4E5/bild.png\"></a></div><div class=\"message_inline_image\"><a href=\"/user_uploads/33951/ewPhJLBK9mErxxpRPfpp9wb4/bild.png\" title=\"bild.png\"><img src=\"/user_uploads/33951/ewPhJLBK9mErxxpRPfpp9wb4/bild.png\"></a></div>",
+        "id": 325820018,
+        "sender_full_name": "Håkan Svensson",
+        "timestamp": 1675514233
+    },
+    {
+        "content": "<p><span class=\"user-mention\" data-user-id=\"522486\">@Håkan Svensson</span> <br>\nYou could experiment with adding more seconds.  This is now a parameter for <br>\nvoid FindAllOCPNServers(size_t timeout_secs)<br>\nCurrently using 2 seconds, for nice user effect.  But maybe 4 is OK?<br>\nWhy the delay?  Now need to determine if this is system effect, of OCPN stall.  Seems \"odd\" that all three peers in your pictures are all delayed about the same time, but they are completely different systems (win/linux).  This makes me think that it is somehow OCPN that is stalling.</p>",
+        "id": 325836956,
+        "sender_full_name": "Dave Register",
+        "timestamp": 1675521379
+    },
+    {
+        "content": "<p><span class=\"user-mention\" data-user-id=\"517002\">@Dave Register</span> <br>\nFor a test I extended the timeout_secs to 5 sec on a Win and a RPi.<br>\nThat makes it of course more reliabel. <br>\nOn the RPi400 the first two attempts from a O start can had a delay of 12-15 sec and 15-22 sec respectively. <br>\nThe third was 1-3 sec to receive all three peers and then the list was populated.<br>\nThe nasty thing is it's not repeatable all times. It often happens all replies are in one second also after O start.<br>\nAnother note: If I resend the request several times just after the last good all replies are within one second. <br>\nIf I wait say some minutes and test again the delays  &gt;10 seconds are often there again. But not always?</p>\n<p>Can I in some way test if \"OCPN is stalling\" ?<br>\nYou don't see the same ever?</p>",
+        "id": 325845734,
+        "sender_full_name": "Håkan Svensson",
+        "timestamp": 1675524962
+    },
+    {
+        "content": "<p><span class=\"user-mention\" data-user-id=\"517002\">@Dave Register</span>  <br>\nThe send to detection is not yet reliably on my wifi net.  I've been \"quite\" about this basically to await CF comments. Not much talk about that. We may push for the new feature and ask for tests?<br>\nToday I wanted to test the server dialog PIN \"m_pText1\" size on the RPi400. It's to small but leave that for now.<br>\nHere WIN-HAS and RPi400 are involved as example. Wireshark, WS, on both.<br>\nClick send to on WIN-HAS. <br>\nWS on WIN-HAS sees the QU question. WS on RPi400 not. Can be repeated several times.<br>\nClick send to on RPi400<br>\nWS on RPi400 sees the QU question. WS on WIN-HAS not. Can be repeated several times.</p>\n<p>Sometimes after 30 - 120 seconds the QU question is seen by WS on  the server and the O server sends a direct  QU response. That is also seen by client WS.  Obviously to late to be detected by O client.</p>\n<p>My conclusion is that the wifi router in some way delay the mdns QU question? Is this anything you can reproduce or have seen any notes about? You once mentioned some possible wifi obstacles in this matter.<br>\nIf so is there anything we can do when sending the client question to force it through the wifi router in due time? Prioritized question?</p>",
+        "id": 340538310,
+        "sender_full_name": "Håkan Svensson",
+        "timestamp": 1678350073
+    },
+    {
+        "content": "<p><span class=\"user-mention\" data-user-id=\"522486\">@Håkan Svensson</span> <br>\n\"Sometimes after 30 - 120 seconds the QU question is seen by WS on the server and the O server sends a direct QU response. That is also seen by client WS. Obviously to late to be detected by O client.\"<br>\nWhen this happens. does the next send request from the client show the correct IP in the selection list?  It should be cached, I think.</p>",
+        "id": 340906373,
+        "sender_full_name": "Dave Register",
+        "timestamp": 1678465257
+    },
+    {
+        "content": "<p>Testing more here.  Full load network, all running at same time:  linux (wired),  plus RPi4, two W10's, and MacOS, all on WiFi.<br>\nResults:<br>\n Problems seem confined to W10 machines.  Sometimes works, sometimes not.  Retries usually allow detection, may take some tries.<br>\nFor non-WIN devices, WiFi or not, always works first time.</p>\n<p>Interesting reading here:<br>\n<a href=\"https://superuser.com/questions/730288/why-do-some-wifi-routers-block-multicast-packets-going-from-wired-to-wireless\">https://superuser.com/questions/730288/why-do-some-wifi-routers-block-multicast-packets-going-from-wired-to-wireless</a></p>",
+        "id": 340919031,
+        "sender_full_name": "Dave Register",
+        "timestamp": 1678468265
+    },
+    {
+        "content": "<p><span class=\"user-mention\" data-user-id=\"517002\">@Dave Register</span> </p>\n<blockquote>\n<p>When this happens. does the next send request from the client show the correct IP in the selection list? It should be cached, I think.<br>\nNo, I've tried several times after each others. No change. The mdns QU query is not detected by Wireshark on the server. So this is not Win or RPi related. It's the router I suppose since WS don't detect it.<br>\nI saw the page you linked to but I'm not sure I fully understand it. Some note about another address?<br>\nI can't test much more during this weekend. I'm occupied by a OCPN class in Stockholm. But a short Send To test by the wlan at the room for the class wasn't working.</p>\n</blockquote>",
+        "id": 340929554,
+        "sender_full_name": "Håkan Svensson",
+        "timestamp": 1678471185
+    }
+]

@@ -1,0 +1,38 @@
+[
+    {
+        "content": "<p>Just somewhat related sidenote: Have been looking at can-utils: canplay, candump, etc. Tempted to create something similar on the OpenCPN driver level which could log and replay arbitrary data cross-platform. The  http interface created here could then be used to start/stop logging,  otherwise complicated.</p>",
+        "id": 303777259,
+        "sender_full_name": "Alec Leamas",
+        "timestamp": 1665648379
+    },
+    {
+        "content": "<blockquote>\n<p>Server side:<br>\nOCPN will implement a RESTful server with HTTP(s) accessibility.<br>\nA subset of the standard verbs (GET, PUT, POST) will be supported.</p>\n</blockquote>\n<p>Will also need ability to send a command for remote execution, such as <em>Activate route</em> or <em>Deactivate route</em>.  With a suitable API that would allow a plugin to respond to a remote command.</p>",
+        "id": 303989695,
+        "sender_full_name": "Tony Voss",
+        "timestamp": 1665738229
+    },
+    {
+        "content": "<p><span class=\"user-mention\" data-user-id=\"554731\">@Tony Voss</span>  This would be yet another example how we could use the http server API. However, implementing it would not require changes to the basic server which would accept at least http PUT and POST, it would just be about creating new \"endpoints\" in the REST API parlance i. e., new http addresses which would manipulate the OpenCPN instance.</p>\n<p>Moving your message to what I think is the proper topic.</p>",
+        "id": 304024522,
+        "sender_full_name": "Alec Leamas",
+        "timestamp": 1665751892
+    },
+    {
+        "content": "<p>One of the implementation challenges is that the server code runs in a separate thread, and we cannot use any wxWidgets GUI there.  So we need to pop back to main app thread to process the requested task, then coordinate with the server thread to send a response code, thus completing the server cycle.  Probably need a mutex or semaphore of some sort.  I'm on it..<br>\nAdd new endpoints is no problem.  When we get the basic flow working, I'll call for help defining the final API.</p>",
+        "id": 304034791,
+        "sender_full_name": "Dave Register",
+        "timestamp": 1665754976
+    },
+    {
+        "content": "<blockquote>\n<p>One of the implementation challenges is that the server code runs in a separate thread,</p>\n</blockquote>\n<p>We should probably look into using the c++11 <code>std::future</code> and <code>std::promise</code>, these are an elegant and simple way to handle things like this.</p>",
+        "id": 304044498,
+        "sender_full_name": "Alec Leamas",
+        "timestamp": 1665757652
+    },
+    {
+        "content": "<p>Yep, that's where I am now.  Also std::condition_variable.</p>",
+        "id": 304050562,
+        "sender_full_name": "Dave Register",
+        "timestamp": 1665759308
+    }
+]

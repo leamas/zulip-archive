@@ -1,0 +1,366 @@
+<html>
+<head><meta charset="utf-8"><title>Plugin API · Master - 5.8.0  (was: comms) · Zulip Chat Archive</title></head>
+<h2>Stream: <a href="https://leamas.github.io/zulip-archive/stream/332168-Master---5.2E8.2E0--.28was.3A-comms.29/index.html">Master - 5.8.0  (was: comms)</a></h2>
+<h3>Topic: <a href="https://leamas.github.io/zulip-archive/stream/332168-Master---5.2E8.2E0--.28was.3A-comms.29/topic/Plugin.20API.html">Plugin API</a></h3>
+
+<hr>
+
+<base href="https://opencpn.zulipchat.com">
+
+<head><link href="https://leamas.github.io/zulip-archive/style.css" rel="stylesheet"></head>
+
+<a name="294222533"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332168-Master%20-%205.8.0%20%20%28was%3A%20comms%29/topic/Plugin%20API/near/294222533" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Alec Leamas <a href="https://leamas.github.io/zulip-archive/stream/332168-Master---5.2E8.2E0--.28was.3A-comms.29/topic/Plugin.20API.html#294222533">(Aug 19 2022 at 08:37)</a>:</h4>
+<p>Looking into the API after  memory leak hunt. We need to export  <code>ObservedEvt</code>, it is required to transfer a shared_ptr in a safe way to any consumer.  I thought I could work around this, but Dan proved me wrong.</p>
+<p>First step is to make it a separate file. It will have to be pasted into ocpn_plugin.h, but that's just life.</p>
+
+
+
+<a name="294234180"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332168-Master%20-%205.8.0%20%20%28was%3A%20comms%29/topic/Plugin%20API/near/294234180" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Alec Leamas <a href="https://leamas.github.io/zulip-archive/stream/332168-Master---5.2E8.2E0--.28was.3A-comms.29/topic/Plugin.20API.html#294234180">(Aug 19 2022 at 10:13)</a>:</h4>
+<p>I have updated the Plugin API</p>
+<ul>
+<li>Accommodated  the new memory leak changes which requires a new event type.  Duplicated code in ocpn_plugin.h and observable_evt.h, sigh.  </li>
+<li>Added handling of decoded data.</li>
+</ul>
+<p>The API seems  export the necessary parts without exposing too much of internal structure (?). The intended usage is in MESSAGES.adoc at top level.</p>
+
+
+
+<a name="294234452"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332168-Master%20-%205.8.0%20%20%28was%3A%20comms%29/topic/Plugin%20API/near/294234452" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Alec Leamas <a href="https://leamas.github.io/zulip-archive/stream/332168-Master---5.2E8.2E0--.28was.3A-comms.29/topic/Plugin.20API.html#294234452">(Aug 19 2022 at 10:15)</a>:</h4>
+<p>Closing the "Design API" task. we will certainly need to revise this before done, but we do have a basic design in place.</p>
+
+
+
+<a name="298502627"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332168-Master%20-%205.8.0%20%20%28was%3A%20comms%29/topic/Plugin%20API/near/298502627" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Dave Register <a href="https://leamas.github.io/zulip-archive/stream/332168-Master---5.2E8.2E0--.28was.3A-comms.29/topic/Plugin.20API.html#298502627">(Sep 13 2022 at 01:31)</a>:</h4>
+<p>Tried to implement n2k listener in Dashboard plugin, following the recipe inMESSAGES.adoc.<br>
+Did not compile.</p>
+<div class="codehilite"><pre><span></span><code>  wxDEFINE_EVENT(PEVT_N2K_129540, wxCommandEvent);
+ NMEA2000Id id_129540 = NMEA2000Id(129540);
+ listener = std::move(GetListener(id_129540, PEVT_N2K_129540, this);
+
+ Bind(PEVT_N2K_129540, [&amp;](wxCommandEvent ev) {
+   HandleN2K_129540();
+ });
+</code></pre></div>
+
+<p>Error is:<br>
+opencpn/plugins/dashboard_pi/src/dashboard_pi.cpp:555:68: error: no matching function for call to ‘GetListener(NMEA2000Id&amp;, const wxEventTypeTag&lt;wxCommandEvent&gt;&amp;, dashboard_pi*)’</p>
+<p>Which, of course, there is not.  The second parameter of GetListener is "ObservedEvt ev".<br>
+btw, I had to change the third parameter from "wxEvtHandler handler" to wxEvtHandler *handler.  Needs a pointer, not an object.<br>
+???</p>
+
+
+
+<a name="298530615"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332168-Master%20-%205.8.0%20%20%28was%3A%20comms%29/topic/Plugin%20API/near/298530615" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Alec Leamas <a href="https://leamas.github.io/zulip-archive/stream/332168-Master---5.2E8.2E0--.28was.3A-comms.29/topic/Plugin.20API.html#298530615">(Sep 13 2022 at 07:52)</a>:</h4>
+<p>My bad, sorry. The GetListener() signature was plain wrong, fixed it in recent commit  0405210.</p>
+<p>A more fundamental problem is that while this will compile, it won't link since it is not implemented :(</p>
+
+
+
+<a name="298539200"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332168-Master%20-%205.8.0%20%20%28was%3A%20comms%29/topic/Plugin%20API/near/298539200" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Alec Leamas <a href="https://leamas.github.io/zulip-archive/stream/332168-Master---5.2E8.2E0--.28was.3A-comms.29/topic/Plugin.20API.html#298539200">(Sep 13 2022 at 08:52)</a>:</h4>
+<p>Furthermore, MESSAGES.adoc needed more review. I have pushed some bugfixes, the most important being wxCommandEvt -&gt; ObservedEvt.</p>
+
+
+
+<a name="298605952"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332168-Master%20-%205.8.0%20%20%28was%3A%20comms%29/topic/Plugin%20API/near/298605952" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Dave Register <a href="https://leamas.github.io/zulip-archive/stream/332168-Master---5.2E8.2E0--.28was.3A-comms.29/topic/Plugin.20API.html#298605952">(Sep 13 2022 at 15:04)</a>:</h4>
+<p>OK, can I help?  Or should I just wait for implementation?</p>
+
+
+
+<a name="298606727"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332168-Master%20-%205.8.0%20%20%28was%3A%20comms%29/topic/Plugin%20API/near/298606727" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Alec Leamas <a href="https://leamas.github.io/zulip-archive/stream/332168-Master---5.2E8.2E0--.28was.3A-comms.29/topic/Plugin.20API.html#298606727">(Sep 13 2022 at 15:08)</a>:</h4>
+<p>I have plans to make it late today or early tomorrow. Can it wait until then?</p>
+
+
+
+<a name="298613438"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332168-Master%20-%205.8.0%20%20%28was%3A%20comms%29/topic/Plugin%20API/near/298613438" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Dave Register <a href="https://leamas.github.io/zulip-archive/stream/332168-Master---5.2E8.2E0--.28was.3A-comms.29/topic/Plugin.20API.html#298613438">(Sep 13 2022 at 15:41)</a>:</h4>
+<p>Sure.</p>
+
+
+
+<a name="298673354"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332168-Master%20-%205.8.0%20%20%28was%3A%20comms%29/topic/Plugin%20API/near/298673354" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Alec Leamas <a href="https://leamas.github.io/zulip-archive/stream/332168-Master---5.2E8.2E0--.28was.3A-comms.29/topic/Plugin.20API.html#298673354">(Sep 13 2022 at 21:52)</a>:</h4>
+<p>Pushed an untested implementation.</p>
+
+
+
+<a name="298689889"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332168-Master%20-%205.8.0%20%20%28was%3A%20comms%29/topic/Plugin%20API/near/298689889" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Dave Register <a href="https://leamas.github.io/zulip-archive/stream/332168-Master---5.2E8.2E0--.28was.3A-comms.29/topic/Plugin.20API.html#298689889">(Sep 14 2022 at 01:26)</a>:</h4>
+<p>Works, with very slight patch to ocpn_plugin.h, pushed.  (f99820c)<br>
+I am able to catch and process N2K Satellite Info messages in Dashboard plugin.  I'm sure other message types will work as well.<br>
+This patch is not quite right though, since it needs to include core file "observable.h".  So no good for plugins built out of core source tree.<br>
+How to fix?</p>
+
+
+
+<a name="298690246"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332168-Master%20-%205.8.0%20%20%28was%3A%20comms%29/topic/Plugin%20API/near/298690246" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Dave Register <a href="https://leamas.github.io/zulip-archive/stream/332168-Master---5.2E8.2E0--.28was.3A-comms.29/topic/Plugin.20API.html#298690246">(Sep 14 2022 at 01:32)</a>:</h4>
+<p>Also made slight correction to MESSAGES.adoc</p>
+
+
+
+<a name="298695648"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332168-Master%20-%205.8.0%20%20%28was%3A%20comms%29/topic/Plugin%20API/near/298695648" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Dave Register <a href="https://leamas.github.io/zulip-archive/stream/332168-Master---5.2E8.2E0--.28was.3A-comms.29/topic/Plugin.20API.html#298695648">(Sep 14 2022 at 03:05)</a>:</h4>
+<p>And also some hacks to "observable.h" to satisfy the brain-dead MSW linker. You will probably want to edit this...<br>
+But anyway, this gets us further along, and we learn.</p>
+
+
+
+<a name="298709580"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332168-Master%20-%205.8.0%20%20%28was%3A%20comms%29/topic/Plugin%20API/near/298709580" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Håkan Svensson <a href="https://leamas.github.io/zulip-archive/stream/332168-Master---5.2E8.2E0--.28was.3A-comms.29/topic/Plugin.20API.html#298709580">(Sep 14 2022 at 06:25)</a>:</h4>
+<p>I may run into that humble judgement of VS's capabilities trying to build here.  :)</p>
+
+
+
+<a name="298710738"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332168-Master%20-%205.8.0%20%20%28was%3A%20comms%29/topic/Plugin%20API/near/298710738" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Alec Leamas <a href="https://leamas.github.io/zulip-archive/stream/332168-Master---5.2E8.2E0--.28was.3A-comms.29/topic/Plugin.20API.html#298710738">(Sep 14 2022 at 06:36)</a>:</h4>
+<blockquote>
+<p>patch is not quite right though, since it needs to include core file "observable.h".</p>
+</blockquote>
+<p>This is a hole below water line. Need to revise the whole API.</p>
+
+
+
+<a name="298714733"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332168-Master%20-%205.8.0%20%20%28was%3A%20comms%29/topic/Plugin%20API/near/298714733" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Alec Leamas <a href="https://leamas.github.io/zulip-archive/stream/332168-Master---5.2E8.2E0--.28was.3A-comms.29/topic/Plugin.20API.html#298714733">(Sep 14 2022 at 07:11)</a>:</h4>
+<p>OK, a quick fix was  's/unique_ptr/shared_ptr/' .  It turns out that using <code>unique_ptr</code>with an incomplete type is extremely messy.</p>
+<p>I'm not really happy with this change,  theoretically it opens up a hole for two concurrent listener instances. However,  performance should not be a problem here, pointers are only assigned on initialization. And "normal" usage patterns should not generate two instances. </p>
+<p>However, this gives me a bad feeling and I plan to come back to it later.  API can be changed before the release....</p>
+
+
+
+<a name="298719116"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332168-Master%20-%205.8.0%20%20%28was%3A%20comms%29/topic/Plugin%20API/near/298719116" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Håkan Svensson <a href="https://leamas.github.io/zulip-archive/stream/332168-Master---5.2E8.2E0--.28was.3A-comms.29/topic/Plugin.20API.html#298719116">(Sep 14 2022 at 07:47)</a>:</h4>
+<p>Now also VS linked ok and build succeeded.  <br>
+Thanks</p>
+
+
+
+<a name="298719823"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332168-Master%20-%205.8.0%20%20%28was%3A%20comms%29/topic/Plugin%20API/near/298719823" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Håkan Svensson <a href="https://leamas.github.io/zulip-archive/stream/332168-Master---5.2E8.2E0--.28was.3A-comms.29/topic/Plugin.20API.html#298719823">(Sep 14 2022 at 07:53)</a>:</h4>
+<p>FWIW: I read about  MESSAGES.adoc and "<em>EVT_SHIPDRIVER_ for each received GPGGA message</em>".<br>
+Just be careful to not accidentally call for explicit "GPGGA" using the talker "GP". According to the NMEA standard GGA talker can be "GP" if the GPS system only is used for position fix. Otherwise talker "GN" would be used. ("GNGGA")<br>
+The same goes for GSV. (GPGSV, GNGSV, GAGSV and more)</p>
+
+
+
+<a name="298722476"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332168-Master%20-%205.8.0%20%20%28was%3A%20comms%29/topic/Plugin%20API/near/298722476" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Alec Leamas <a href="https://leamas.github.io/zulip-archive/stream/332168-Master---5.2E8.2E0--.28was.3A-comms.29/topic/Plugin.20API.html#298722476">(Sep 14 2022 at 08:14)</a>:</h4>
+<p>We need probably to think more about this, it was not clear to me at all when I wrote it (code and docs).</p>
+<p>Now, these docs are just about how the messaging system works and should IMHO be kept as simple as possible. What you talk about now probably needs another document.</p>
+<p>Should we just match on GGA instead i. e.,  ignore the talker?  This is what we do for 0183, so it might make sense. Thoughts?</p>
+
+
+
+<a name="298771983"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332168-Master%20-%205.8.0%20%20%28was%3A%20comms%29/topic/Plugin%20API/near/298771983" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Håkan Svensson <a href="https://leamas.github.io/zulip-archive/stream/332168-Master---5.2E8.2E0--.28was.3A-comms.29/topic/Plugin.20API.html#298771983">(Sep 14 2022 at 13:35)</a>:</h4>
+<blockquote>
+<p>Should we just match on GGA instead i. e., ignore the talker? </p>
+</blockquote>
+<p>Yes, talker in general, except for GGA and GSV is sender dependent for info. But for these two we need to know and in some cases, Dashboard(--GSV), react on used talker, as done today. For user individuell use the talker can though be used in mux filters.  For instance filter out $ECGGA and use others like GPGGA/GNGGA.</p>
+
+
+
+<a name="298787055"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332168-Master%20-%205.8.0%20%20%28was%3A%20comms%29/topic/Plugin%20API/near/298787055" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Alec Leamas <a href="https://leamas.github.io/zulip-archive/stream/332168-Master---5.2E8.2E0--.28was.3A-comms.29/topic/Plugin.20API.html#298787055">(Sep 14 2022 at 14:55)</a>:</h4>
+<p>It's hard and most likely wrong to split this to special cases. We should really, really either ignore the talker or not.</p>
+<p>Suggestion: we ignore the  talker when listening i. e. the listener gets all messages of given type. And add ssupport in Nmea2000Msg to retrieve the talker id, so the listening part (typically a plugin) can check the the talker id do whatever needed. </p>
+<p>OK?</p>
+
+
+
+<a name="298790078"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332168-Master%20-%205.8.0%20%20%28was%3A%20comms%29/topic/Plugin%20API/near/298790078" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Dave Register <a href="https://leamas.github.io/zulip-archive/stream/332168-Master---5.2E8.2E0--.28was.3A-comms.29/topic/Plugin.20API.html#298790078">(Sep 14 2022 at 15:12)</a>:</h4>
+<p>I suppose you mean N0183Msg ?  Talker not defined in N2K.</p>
+
+
+
+<a name="298790136"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332168-Master%20-%205.8.0%20%20%28was%3A%20comms%29/topic/Plugin%20API/near/298790136" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Dave Register <a href="https://leamas.github.io/zulip-archive/stream/332168-Master---5.2E8.2E0--.28was.3A-comms.29/topic/Plugin.20API.html#298790136">(Sep 14 2022 at 15:12)</a>:</h4>
+<p>Suggestion: we ignore the talker when listening i. e. the listener gets all messages of given type<br>
+Agree.</p>
+
+
+
+<a name="298793315"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332168-Master%20-%205.8.0%20%20%28was%3A%20comms%29/topic/Plugin%20API/near/298793315" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Håkan Svensson <a href="https://leamas.github.io/zulip-archive/stream/332168-Master---5.2E8.2E0--.28was.3A-comms.29/topic/Plugin.20API.html#298793315">(Sep 14 2022 at 15:28)</a>:</h4>
+<p>Yes, e.g. $--GGA is a N0183 message. Nothing else.<br>
+Agree!</p>
+
+
+
+<a name="298793951"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332168-Master%20-%205.8.0%20%20%28was%3A%20comms%29/topic/Plugin%20API/near/298793951" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Alec Leamas <a href="https://leamas.github.io/zulip-archive/stream/332168-Master---5.2E8.2E0--.28was.3A-comms.29/topic/Plugin.20API.html#298793951">(Sep 14 2022 at 15:32)</a>:</h4>
+<p>My bad. not focused as I should. just disregard</p>
+
+
+
+<a name="298798865"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332168-Master%20-%205.8.0%20%20%28was%3A%20comms%29/topic/Plugin%20API/near/298798865" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Dave Register <a href="https://leamas.github.io/zulip-archive/stream/332168-Master---5.2E8.2E0--.28was.3A-comms.29/topic/Plugin.20API.html#298798865">(Sep 14 2022 at 15:56)</a>:</h4>
+<p>And btw, recall that no existing plugins will need to listen to N0183, anyway.  They already get the full N0183 stream by legacy plugin API.</p>
+
+
+
+<a name="298801978"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332168-Master%20-%205.8.0%20%20%28was%3A%20comms%29/topic/Plugin%20API/near/298801978" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Alec Leamas <a href="https://leamas.github.io/zulip-archive/stream/332168-Master---5.2E8.2E0--.28was.3A-comms.29/topic/Plugin.20API.html#298801978">(Sep 14 2022 at 16:12)</a>:</h4>
+<p>Read my lips: sooner or later someone will try...</p>
+
+
+
+<a name="298829834"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332168-Master%20-%205.8.0%20%20%28was%3A%20comms%29/topic/Plugin%20API/near/298829834" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Dave Register <a href="https://leamas.github.io/zulip-archive/stream/332168-Master---5.2E8.2E0--.28was.3A-comms.29/topic/Plugin.20API.html#298829834">(Sep 14 2022 at 18:47)</a>:</h4>
+<p>And we want them to, for new work.</p>
+
+
+
+<a name="298842733"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332168-Master%20-%205.8.0%20%20%28was%3A%20comms%29/topic/Plugin%20API/near/298842733" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Alec Leamas <a href="https://leamas.github.io/zulip-archive/stream/332168-Master---5.2E8.2E0--.28was.3A-comms.29/topic/Plugin.20API.html#298842733">(Sep 14 2022 at 20:04)</a>:</h4>
+<p>On a sidenote we should probably keep MESSAGES.adoc in the opencn git repo, while still integrating it in the main manual.  This is how the plugin manuals work, and it's a good setup.  </p>
+<p>Suffering from degraded health -- covid?. Not much work...</p>
+
+
+
+<a name="298883058"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332168-Master%20-%205.8.0%20%20%28was%3A%20comms%29/topic/Plugin%20API/near/298883058" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Dave Register <a href="https://leamas.github.io/zulip-archive/stream/332168-Master---5.2E8.2E0--.28was.3A-comms.29/topic/Plugin.20API.html#298883058">(Sep 14 2022 at 23:54)</a>:</h4>
+<p>Hope not covid.  Take good care....</p>
+
+
+
+<a name="298971736"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332168-Master%20-%205.8.0%20%20%28was%3A%20comms%29/topic/Plugin%20API/near/298971736" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Håkan Svensson <a href="https://leamas.github.io/zulip-archive/stream/332168-Master---5.2E8.2E0--.28was.3A-comms.29/topic/Plugin.20API.html#298971736">(Sep 15 2022 at 13:45)</a>:</h4>
+<p>When merged Dashboard would now read N2k to update GNSS Status instrument.<br>
+Dave.. <br>
+Please check with your Garmin so it's working also there.<br>
+BTW: Did you get any value on SID from Garmin?  Just "0" from my Simrad!</p>
+
+
+
+<a name="299064547"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332168-Master%20-%205.8.0%20%20%28was%3A%20comms%29/topic/Plugin%20API/near/299064547" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Dave Register <a href="https://leamas.github.io/zulip-archive/stream/332168-Master---5.2E8.2E0--.28was.3A-comms.29/topic/Plugin.20API.html#299064547">(Sep 15 2022 at 22:55)</a>:</h4>
+<p>New dashboard GNSS instrument works fine with my Garmin GPS receiver, YDNU interface.<br>
+SID:  Garmin reports values, increasing by "5" at each callback, like:  "145, 150, 155, 160..."</p>
+
+
+
+<a name="299094893"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332168-Master%20-%205.8.0%20%20%28was%3A%20comms%29/topic/Plugin%20API/near/299094893" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Håkan Svensson <a href="https://leamas.github.io/zulip-archive/stream/332168-Master---5.2E8.2E0--.28was.3A-comms.29/topic/Plugin.20API.html#299094893">(Sep 16 2022 at 05:50)</a>:</h4>
+<p>SID: So your Garmin use it but my Simrad not. Obviously not a parameter we can rely on to e.g. check if various PGN are time connected. If anywhere important we better check update time span.</p>
+
+
+
+<a name="299296974"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332168-Master%20-%205.8.0%20%20%28was%3A%20comms%29/topic/Plugin%20API/near/299296974" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Håkan Svensson <a href="https://leamas.github.io/zulip-archive/stream/332168-Master---5.2E8.2E0--.28was.3A-comms.29/topic/Plugin.20API.html#299296974">(Sep 17 2022 at 09:58)</a>:</h4>
+<p><span class="user-mention" data-user-id="517002">@Dave Register</span> <br>
+Dashboard wont get Heading when connected to N2K.<br>
+Instead of call a whole new PGN to DB my thought is to instead use the heading available in O core.<br>
+But for that we need to upgrade DB from "opencpn_plugin_16" to "opencpn_plugin_18" and use SetPositionFixEx(PlugIn_Position_Fix_Ex &amp;pfix) where Hdt is included.</p>
+<p>If you think this a good idea please help to update DB to opencpn_plugin_18. I tried but didn't succeeded. Haven't done this before so it's obviously more than a simple change to opencpn_plugin_18 inside DB. <br>
+I need to study how you do it.</p>
+
+
+
+<a name="299314484"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332168-Master%20-%205.8.0%20%20%28was%3A%20comms%29/topic/Plugin%20API/near/299314484" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Håkan Svensson <a href="https://leamas.github.io/zulip-archive/stream/332168-Master---5.2E8.2E0--.28was.3A-comms.29/topic/Plugin.20API.html#299314484">(Sep 17 2022 at 12:23)</a>:</h4>
+<p>Dave..<br>
+Got it. found the third place to change to API version 18. So now Hdt is nicely passed.<br>
+So if the idea is good(?) I'll commit together with other changes?</p>
+
+
+
+<a name="299322445"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332168-Master%20-%205.8.0%20%20%28was%3A%20comms%29/topic/Plugin%20API/near/299322445" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Dave Register <a href="https://leamas.github.io/zulip-archive/stream/332168-Master---5.2E8.2E0--.28was.3A-comms.29/topic/Plugin.20API.html#299322445">(Sep 17 2022 at 13:34)</a>:</h4>
+<p>Yes, good.  Dashboard will be updated to API 18 for the new listener/notify signaling.<br>
+I await your PR.</p>
+
+
+
+<a name="299323546"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332168-Master%20-%205.8.0%20%20%28was%3A%20comms%29/topic/Plugin%20API/near/299323546" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Håkan Svensson <a href="https://leamas.github.io/zulip-archive/stream/332168-Master---5.2E8.2E0--.28was.3A-comms.29/topic/Plugin.20API.html#299323546">(Sep 17 2022 at 13:43)</a>:</h4>
+<p>Will do today. <br>
+For info: I'll take the boat tomorrow and have access to N2K-boat  with "a lot instrument" so I can test DB N2K and try to make a candump with all. The latter implies my server will be down a couple of days since that's the RPi4 I'll use.</p>
+
+
+
+<a name="299323926"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332168-Master%20-%205.8.0%20%20%28was%3A%20comms%29/topic/Plugin%20API/near/299323926" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Dave Register <a href="https://leamas.github.io/zulip-archive/stream/332168-Master---5.2E8.2E0--.28was.3A-comms.29/topic/Plugin.20API.html#299323926">(Sep 17 2022 at 13:45)</a>:</h4>
+<p>OK, good.</p>
+
+
+
+<a name="299332904"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332168-Master%20-%205.8.0%20%20%28was%3A%20comms%29/topic/Plugin%20API/near/299332904" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Håkan Svensson <a href="https://leamas.github.io/zulip-archive/stream/332168-Master---5.2E8.2E0--.28was.3A-comms.29/topic/Plugin.20API.html#299332904">(Sep 17 2022 at 15:00)</a>:</h4>
+<p>Dave..<br>
+Changes pushed. I you've wind and depth in your captures you may want to test?</p>
+
+
+
+<a name="301216605"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332168-Master%20-%205.8.0%20%20%28was%3A%20comms%29/topic/Plugin%20API/near/301216605" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Håkan Svensson <a href="https://leamas.github.io/zulip-archive/stream/332168-Master---5.2E8.2E0--.28was.3A-comms.29/topic/Plugin.20API.html#301216605">(Sep 28 2022 at 12:18)</a>:</h4>
+<p><strong><em>Crash at language change</em></strong><br>
+When I change language O crashes. In my debug it seems related to Plugins, see below.<br>
+Also is the language list in User Interface not nice. Empty rows and question marks and other signs.  Both Win and RPi <br>
+We may have other things now? I make a Todo task.<br>
+Call stack:</p>
+<blockquote>
+<p>radar_pi.dll!RadarPlugin::RadarInfo::GetInfoStatus() Line 1456  C++<br>
+    radar_pi.dll!RadarPlugin::MessageBoxW::CreateControls() Line 135    C++<br>
+    radar_pi.dll!RadarPlugin::MessageBoxW::Create(wxWindow * parent, RadarPlugin::radar_pi * pi) Line 100   C++<br>
+    radar_pi.dll!RadarPlugin::radar_pi::Init() Line 258 C++<br>
+    opencpn.exe!PluginLoader::UpdatePlugIns() Line 515  C++<br>
+    opencpn.exe!ApplyLocale() Line 8694 C++<br>
+    opencpn.exe!MyFrame::DoOptionsDialog() Line 4586    C++<br>
+    opencpn.exe!MyFrame::DoSettings() Line 3247 C++<br>
+    opencpn.exe!ChartCanvas::OnKeyDown(wxKeyEvent &amp; event) Line 3109    C++<br>
+    [External Code] <br>
+    [Frames below may be incorrect and/or missing, no symbols loaded for wxbase312u_vc_custom.dll]  Unknown<br>
+    opencpn.exe!WinMain(HINSTANCE__ * hInstance, HINSTANCE__ * hPrevInstance, char * __formal, int nCmdShow) Line 949   C++<br>
+    [External Code]</p>
+</blockquote>
+
+
+
+<a name="345986334"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332168-Master%20-%205.8.0%20%20%28was%3A%20comms%29/topic/Plugin%20API/near/345986334" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Kees Verruijt <a href="https://leamas.github.io/zulip-archive/stream/332168-Master---5.2E8.2E0--.28was.3A-comms.29/topic/Plugin.20API.html#345986334">(Mar 31 2023 at 15:30)</a>:</h4>
+<p>Gents, a problem was reported that the radar plugin 5.5.0-beta + O 5.7.1RC isn't showing AIS targets on the radar PPI (the separate OpenGL canvas). We use <code>PlugInAISDraw()</code> for that, which has been in the API for ages (1.14 I believe). I'm setting up an OpenCPN build environment (hadn't needed one for a long time, and new laptop etc.) to check what broke here. As far as I can tell we're calling <code>PlugInAISDraw()</code> exactly the same way as before, and on first sight the changes in <code>ais.cpp</code> aren't that big (nothing major screams out). I'm saying this as a) a heads up that this bug remains, and it may very well be in O not the plugin; b) maybe one of you has an idea on why this might be?</p>
+
+
+
+<a name="346336580"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332168-Master%20-%205.8.0%20%20%28was%3A%20comms%29/topic/Plugin%20API/near/346336580" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Notification Bot <a href="https://leamas.github.io/zulip-archive/stream/332168-Master---5.2E8.2E0--.28was.3A-comms.29/topic/Plugin.20API.html#346336580">(Apr 02 2023 at 10:51)</a>:</h4>
+<p>A message was moved here from <a class="stream-topic" data-stream-id="332168" href="/#narrow/stream/332168-Master---5.2E8.2E0--.28was.3A-comms.29/topic/Documentation">#Master - 5.8.0  (was: comms) &gt; Documentation</a> by <span class="user-mention silent" data-user-id="493038">Kees Verruijt</span>.</p>
+
+
+
+<a name="346395878"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332168-Master%20-%205.8.0%20%20%28was%3A%20comms%29/topic/Plugin%20API/near/346395878" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Alec Leamas <a href="https://leamas.github.io/zulip-archive/stream/332168-Master---5.2E8.2E0--.28was.3A-comms.29/topic/Plugin.20API.html#346395878">(Apr 02 2023 at 17:58)</a>:</h4>
+<p><span class="user-mention" data-user-id="517002">@Dave Register</span>  ^</p>
+
+
+
+<a name="346412355"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332168-Master%20-%205.8.0%20%20%28was%3A%20comms%29/topic/Plugin%20API/near/346412355" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Dave Register <a href="https://leamas.github.io/zulip-archive/stream/332168-Master---5.2E8.2E0--.28was.3A-comms.29/topic/Plugin.20API.html#346412355">(Apr 02 2023 at 20:46)</a>:</h4>
+<p>Are you here now?</p>
+
+
+
+<a name="346413083"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332168-Master%20-%205.8.0%20%20%28was%3A%20comms%29/topic/Plugin%20API/near/346413083" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Alec Leamas <a href="https://leamas.github.io/zulip-archive/stream/332168-Master---5.2E8.2E0--.28was.3A-comms.29/topic/Plugin.20API.html#346413083">(Apr 02 2023 at 20:54)</a>:</h4>
+<p>yup</p>
+
+
+
+<a name="347323961"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332168-Master%20-%205.8.0%20%20%28was%3A%20comms%29/topic/Plugin%20API/near/347323961" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Kees Verruijt <a href="https://leamas.github.io/zulip-archive/stream/332168-Master---5.2E8.2E0--.28was.3A-comms.29/topic/Plugin.20API.html#347323961">(Apr 06 2023 at 07:32)</a>:</h4>
+<p><span class="user-mention" data-user-id="517002">@Dave Register</span> thanks for fixing this so quickly. For others, see <a href="https://github.com/opencpn-radar-pi/radar_pi/issues/224">https://github.com/opencpn-radar-pi/radar_pi/issues/224</a> and <a href="https://github.com/OpenCPN/OpenCPN/commit/0d019bc72003e01863791f30c5abdea5a1294cd6">https://github.com/OpenCPN/OpenCPN/commit/0d019bc72003e01863791f30c5abdea5a1294cd6</a></p>
+
+
+
+<hr><p>Last updated: Oct 05 2023 at 09:43 UTC</p>
+</html>

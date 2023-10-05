@@ -1,0 +1,164 @@
+[
+    {
+        "content": "<p>Found major problems with parking.  Positions were relative to the screen, so any movement of the frame destroyed everything.  Also you could set a console smaller than allowed by drag.  These probably explain why you could not get it working on Windows.</p>\n<p>I have now completely re-written that part.  It is much better, smaller, more understandable and hence more maintainable.  Only issue is that switching in or out of full screen mode unparks any parked consoles.  But I can live with that, at least until someone complains.</p>\n<p>I have also created a special script configParking.js which helps you work out the values to go in consolePositioning.h.  This virtually eliminates the need for trial and error compiling.  You will find it in the test scripts folder.  An extract fom the technical manual on this is attached.</p>\n<p>Best of luck and thanks<br>\n<a href=\"/user_uploads/33951/HgMjDcSo9XRojWlH4s3gMilx/Screenshot-2023-01-12-at-17.50.39.png\">Screenshot-2023-01-12-at-17.50.39.png</a></p>\n<div class=\"message_inline_image\"><a href=\"/user_uploads/33951/HgMjDcSo9XRojWlH4s3gMilx/Screenshot-2023-01-12-at-17.50.39.png\" title=\"Screenshot-2023-01-12-at-17.50.39.png\"><img src=\"/user_uploads/33951/HgMjDcSo9XRojWlH4s3gMilx/Screenshot-2023-01-12-at-17.50.39.png\"></a></div>",
+        "id": 321000913,
+        "sender_full_name": "Tony Voss",
+        "timestamp": 1673546596
+    },
+    {
+        "content": "<p>Great work.  Will test again tomorrow.</p>",
+        "id": 321001395,
+        "sender_full_name": "Mike Rossiter",
+        "timestamp": 1673546727
+    },
+    {
+        "content": "<p>Pushed and alpha4 built  ca 17:40 today</p>",
+        "id": 321001746,
+        "sender_full_name": "Tony Voss",
+        "timestamp": 1673546815
+    },
+    {
+        "content": "<p>All the tests pass. If a console that had a test script is cleared and RUN is pressed OpenCPN crashes. Now going to linux.</p>",
+        "id": 321133200,
+        "sender_full_name": "Mike Rossiter",
+        "timestamp": 1673608124
+    },
+    {
+        "content": "<blockquote>\n<p>consolePark(); scriptResult();</p>\n</blockquote>\n<p>On Linux this does not work. Result undefined.</p>",
+        "id": 321147400,
+        "sender_full_name": "Mike Rossiter",
+        "timestamp": 1673612604
+    },
+    {
+        "content": "<p>Printing does not produce a coloured text.</p>",
+        "id": 321147999,
+        "sender_full_name": "Mike Rossiter",
+        "timestamp": 1673612796
+    },
+    {
+        "content": "<p>Dialogue - same issue with no ability to see buttons at the base of the dialogue.</p>",
+        "id": 321148920,
+        "sender_full_name": "Mike Rossiter",
+        "timestamp": 1673613088
+    },
+    {
+        "content": "<p>Had to run tests individually because of the problem with the message test.</p>",
+        "id": 321149098,
+        "sender_full_name": "Mike Rossiter",
+        "timestamp": 1673613133
+    },
+    {
+        "content": "<p><span class=\"user-mention silent\" data-user-id=\"399559\">Mike Rossiter</span> <a href=\"#narrow/stream/349785-JavaScript_pi/topic/Parking/near/321147400\">said</a>:</p>\n<blockquote>\n<blockquote>\n<p>consolePark(); scriptResult();</p>\n</blockquote>\n<p>On Linux this does not work. Result undefined.</p>\n</blockquote>\n<p>Whoops - I expect that moved the console but enlarged it enough to display the result.<br>\n<code>scriptResult()</code> returns the presently set result.<br>\nTo suppress the result so the console stays minimised, it should be:</p>\n<blockquote>\n<p>consolePark(); scriptResult(\"\");</p>\n</blockquote>",
+        "id": 321154692,
+        "sender_full_name": "Tony Voss",
+        "timestamp": 1673614741
+    },
+    {
+        "content": "<p>It moves the console to the left of the screen but without shrinking!</p>",
+        "id": 321155600,
+        "sender_full_name": "Mike Rossiter",
+        "timestamp": 1673614977
+    },
+    {
+        "content": "<p>You can now suppress the result with <code>scriptResult(null);</code><br>\nParking has significant enhancements<br>\n(1) Consoles now have a parking button near the tools button, so you can park them without running a script.<br>\n(2) Parked consoles can be manually shuffled/reordered/repositioned within the parking lot and stay parked as long as the height remains close to the parking level.<br>\n(3) I have solved the problem of working out how much width to allow for the name. 'iiii' now less than 'MMMM' <span aria-label=\"smile\" class=\"emoji emoji-1f642\" role=\"img\" title=\"smile\">:smile:</span> <br>\n(4) There is now a Parking tab in the tools.  You can customise the parking parameters, which will be remembered in the config file.  So each user can choose their own preferred place. You can also reveal the current parameters in the form needed for the <code>parkingConfig.h</code> file.  So to customise for a given platform, you customise so it work s optimally and can then copy out the settings to go in the <code>parkingConfig.h</code> file thus making them the default for that platform.  I think that is neat. <span aria-label=\"smirk\" class=\"emoji emoji-1f60f\" role=\"img\" title=\"smirk\">:smirk:</span></p>",
+        "id": 321689814,
+        "sender_full_name": "Tony Voss",
+        "timestamp": 1673890362
+    },
+    {
+        "content": "<p>Please confirm the <code>consolePositioning.h</code> values for Windows so I can include in the source.  Presently</p>\n<div class=\"codehilite\"><pre><span></span><code>#ifdef __WXMSW__\n#define CONSOLE_MIN_HEIGHT 20\n#define CONSOLE_STUB 50\n#define PARK_LEVEL 25\n#define PARK_FIRST_X 70\n#define PARK_SEP 8\n</code></pre></div>",
+        "id": 322070414,
+        "sender_full_name": "Tony Voss",
+        "timestamp": 1674053280
+    },
+    {
+        "content": "<p>Personally I prefer the same values for Windows as the MacOS has. Might simplify things a bit. Yes ... I see the clear button of a console when mimimised but for me this is useful for removing a console.</p>",
+        "id": 322075295,
+        "sender_full_name": "Mike Rossiter",
+        "timestamp": 1674054481
+    },
+    {
+        "content": "<p><span class=\"user-mention silent\" data-user-id=\"399559\">Mike Rossiter</span> <a href=\"#narrow/stream/349785-JavaScript_pi/topic/Parking/near/322075295\">said</a>:</p>\n<blockquote>\n<p>Personally I prefer the same values for Windows as the MacOS has. Might simplify things a bit. Yes ... I see the clear button of a console when mimimised but for me this is useful for removing a console.</p>\n</blockquote>\n<p>Clearing and removing parked consoles frequently is something you have been doing regularly during testing - but not something the user would do often.  If you try to close a fulling minimised console if will grow anyway to show the message and the clear button.  I suggest for consistency and so I do not have to document a special case for Windows, I would prefer that it minimises as much as possible - not leaving the Clear button visible.  So please can you confirm the values for that for Windows.</p>",
+        "id": 322087826,
+        "sender_full_name": "Tony Voss",
+        "timestamp": 1674057400
+    },
+    {
+        "content": "<p>My SetClientSize() causes a problem with Windows. I cannot eliminate the \"Clear\" button! But shrinkYourself() from the script works. Frustrating.</p>",
+        "id": 322098168,
+        "sender_full_name": "Mike Rossiter",
+        "timestamp": 1674059815
+    },
+    {
+        "content": "<p>Parking button also leaves the clear button visible.</p>",
+        "id": 322098368,
+        "sender_full_name": "Mike Rossiter",
+        "timestamp": 1674059870
+    },
+    {
+        "content": "<p>Last setting  after using the tools:</p>\n<div class=\"codehilite\"><pre><span></span><code>#define CONSOLE_MIN_HEIGHT 39\n#define CONSOLE_STUB 57\n#define PARK_LEVEL 76\n#define PARK_FIRST_X 76\n#define PARK_SEP 9\n</code></pre></div>",
+        "id": 322098677,
+        "sender_full_name": "Mike Rossiter",
+        "timestamp": 1674059946
+    },
+    {
+        "content": "<p>For Windows I want to use SetSize() rather than SetClientSize - hence my request for the compiler flag for Linux.  That should fix your issue with Windows. <br>\n<code>#define CONSOLE_MIN_HEIGHT 39</code> is large.  Previously you had 20.  That is probably why you still see the Clear button.</p>",
+        "id": 322105621,
+        "sender_full_name": "Tony Voss",
+        "timestamp": 1674061710
+    },
+    {
+        "content": "<blockquote>\n<p>hence my request for the compiler flag for Linux</p>\n</blockquote>\n<p>#ifdef(__LINUX__)<br>\n#endif</p>\n<p>Reduced CONSOLE_MIN_HEIGHT to 20 without effect. Need to wait for the mods for Linux/Windows to test again.</p>",
+        "id": 322114727,
+        "sender_full_name": "Mike Rossiter",
+        "timestamp": 1674064074
+    },
+    {
+        "content": "<p>Had to use <code>#ifdef __LINUX__</code> not <code>#ifdef(__LINUX__)</code> as it is not a macro for me.<br>\nHave applied condition to use <code>SetClientSize()</code> for Linux and <code>SetSize()</code> for all others in following</p>\n<div class=\"codehilite\"><pre><span></span><code>setConsoleMinSize()\npark()\nonChangeName()\n</code></pre></div>\n<p>but cannot test other than for MacOS.<br>\nHave also found why, when a parked console's name was changed to something shorter, the parked console was not being made shorter.  Now it is.<br>\nAlpha builds started ca 18:40<br>\nPlease give it a whirl. <span aria-label=\"pray\" class=\"emoji emoji-1f64f\" role=\"img\" title=\"pray\">:pray:</span></p>",
+        "id": 322129194,
+        "sender_full_name": "Tony Voss",
+        "timestamp": 1674068237
+    },
+    {
+        "content": "<p>Windows is good. Will test Linux later this morning.</p>",
+        "id": 322235297,
+        "sender_full_name": "Mike Rossiter",
+        "timestamp": 1674121471
+    },
+    {
+        "content": "<p>Problems with Linux. Back to square 1. <br>\nNow trying:<br>\n#if defined (__LINUX__)</p>",
+        "id": 322260702,
+        "sender_full_name": "Mike Rossiter",
+        "timestamp": 1674129278
+    },
+    {
+        "content": "<p>That worked. Just getting some console settings for Ubuntu.</p>",
+        "id": 322268298,
+        "sender_full_name": "Mike Rossiter",
+        "timestamp": 1674131490
+    },
+    {
+        "content": "<div class=\"codehilite\"><pre><span></span><code>#if defined(__LINUX__)\n#define CONSOLE_MIN_HEIGHT 38\n#define CONSOLE_STUB 79\n#define PARK_LEVEL 48\n#define PARK_FIRST_X 66\n#define PARK_SEP 21\n#endif\n</code></pre></div>\n<p>Cannot remove the clear button.</p>",
+        "id": 322276336,
+        "sender_full_name": "Mike Rossiter",
+        "timestamp": 1674133988
+    },
+    {
+        "content": "<p>Trying again with minimum height 20, just in case there was a mistake.</p>",
+        "id": 322276708,
+        "sender_full_name": "Mike Rossiter",
+        "timestamp": 1674134080
+    },
+    {
+        "content": "<p>No difference ... the height still includes the clear button.</p>",
+        "id": 322278943,
+        "sender_full_name": "Mike Rossiter",
+        "timestamp": 1674134711
+    },
+    {
+        "content": "<p>Yes please.</p>",
+        "id": 322311169,
+        "sender_full_name": "Mike Rossiter",
+        "timestamp": 1674142596
+    }
+]

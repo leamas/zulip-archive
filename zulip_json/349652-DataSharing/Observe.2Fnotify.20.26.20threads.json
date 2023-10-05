@@ -1,0 +1,50 @@
+[
+    {
+        "content": "<p>Generally, observable/notify is not thread safe, it is designed for things in the overall event loop.</p>\n<p>I need to review stuff with this perspective, there are some other things as well. Stay tuned.</p>",
+        "id": 303971566,
+        "sender_full_name": "Alec Leamas",
+        "timestamp": 1665729813
+    },
+    {
+        "content": "<p>More on this: We basically have listen() and notify().  Both of these uses and/or modifies the list of listeners, so they need a mutex to work reliably if anything (typically notify()) happens in  a non-main thread.</p>\n<p>That said, the basic mechanism used in notify() is wxQueueEvent; this is mt-safe. We only need to guard the listener list.</p>\n<p>There should basically be no congestion on such a mutex, so the performance hit would be minimal. Thanks for listening ;)</p>",
+        "id": 304082215,
+        "sender_full_name": "Alec Leamas",
+        "timestamp": 1665768267
+    },
+    {
+        "content": "<p>With the latest commits the multithreading issue should be resolved, observable is now thread-safe (to the best of my abilities...)</p>",
+        "id": 305333601,
+        "sender_full_name": "Alec Leamas",
+        "timestamp": 1666352612
+    },
+    {
+        "content": "<p>Alec..<br>\nI was probably not able to describe my point in a good manner since your answer for me is to another question.<br>\nWhat I was trying to say, in other words:<br>\nWhy use a somewhat complicated way to transfer data to a single PC? For many years we have been able to transfer NMEA to any listener on the local net by UDP. Not complicated and works on every system. <br>\nI suppose also tracks info can use the same technique? Not necessarily by NMEA sentences, as Mike did it, but maybe some own serial protocol OCPN on both ends will understand.</p>",
+        "id": 305415460,
+        "sender_full_name": "Håkan Svensson",
+        "timestamp": 1666375775
+    },
+    {
+        "content": "<p>mDNS-SD is not really about transferring data, that could of course be done in any way, UDP or TCP.  We have decided to use the well-known htpp/https REST API for this.  However, this requires that you know who you are talking to i. e., the ip address of your peer.</p>\n<p>Enter the \"service discovery\" . This  is when cooperating systems (typically on single Ethernet) finds available services in an automated way. This is about all machines announcing what services they have available, and how machines finding the service they are interested in.  </p>\n<p>What we want here is to announce our capabilities such as being able to accept a route, and that other machines could find us. When we do this in a standardized way we are good network citizens, all sorts of sw will be aware of us -- this is a good thing. And of course, we get the benefits of a protocol, including implementation, which is known to work.</p>\n<p>In other words, we are starting to use well-known solutions instead of inventing our own wheel. It might be more complicated initially,  but I'm convinced that it will pay off over time. <span class=\"user-mention\" data-user-id=\"554731\">@Tony Voss</span>  has worded this better than me...</p>",
+        "id": 305439131,
+        "sender_full_name": "Alec Leamas",
+        "timestamp": 1666384800
+    },
+    {
+        "content": "<p>BTW: the idea to send a UDP broadcast was the initial try here. It was turned down by some discussion partners, all of which  pointing to the benefits of using standardized solutions to well.known problems.</p>",
+        "id": 305439409,
+        "sender_full_name": "Alec Leamas",
+        "timestamp": 1666384911
+    },
+    {
+        "content": "<p>Alec..<br>\nThanks for the description.<br>\nMy discussion was initiated because this method is obviously not working well between different system?<br>\nAnd if it implies we must ask the users to tweak the Network card's Ipv4 properties I think we are making us trouble.</p>",
+        "id": 305463487,
+        "sender_full_name": "Håkan Svensson",
+        "timestamp": 1666396183
+    },
+    {
+        "content": "<p>Windows network stack is a well-known can of worms, indeed. Note that  <em>not working well between different systems</em> really is \"problematic on Windows\"</p>\n<p>As I understand it, mDNS is integrated in later windows versions (fully updated win10 and win11). What we see might be collisions with the system service.  The windows API seems (somewhat) documented <a href=\"https://learn.microsoft.com/en-us/uwp/api/Windows.Networking.ServiceDiscovery.Dnssd?redirectedfrom=MSDN&amp;view=winrt-22621\">here</a></p>\n<p>Note that the API seems to have some 32-bit quirks: <a href=\"https://stackoverflow.com/questions/23624525\">https://stackoverflow.com/questions/23624525</a></p>\n<p>Q: Should we  use the native Windows API on windows instead, at least on updated hosts which have it available? <br>\nQ: Can there be two processes (system mDNS, \"our\" mDNS)  listening to the same multicast port on a single host? (probably not)<br>\nQ Should we just disable the  Windows system service as described <a href=\"https://superuser.com/questions/1330027\">here</a>?</p>",
+        "id": 305495877,
+        "sender_full_name": "Alec Leamas",
+        "timestamp": 1666425527
+    }
+]

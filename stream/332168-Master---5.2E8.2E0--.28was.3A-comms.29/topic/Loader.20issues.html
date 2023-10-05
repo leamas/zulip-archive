@@ -1,0 +1,63 @@
+<html>
+<head><meta charset="utf-8"><title>Loader issues · Master - 5.8.0  (was: comms) · Zulip Chat Archive</title></head>
+<h2>Stream: <a href="https://leamas.github.io/zulip-archive/stream/332168-Master---5.2E8.2E0--.28was.3A-comms.29/index.html">Master - 5.8.0  (was: comms)</a></h2>
+<h3>Topic: <a href="https://leamas.github.io/zulip-archive/stream/332168-Master---5.2E8.2E0--.28was.3A-comms.29/topic/Loader.20issues.html">Loader issues</a></h3>
+
+<hr>
+
+<base href="https://opencpn.zulipchat.com">
+
+<head><link href="https://leamas.github.io/zulip-archive/style.css" rel="stylesheet"></head>
+
+<a name="340353199"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332168-Master%20-%205.8.0%20%20%28was%3A%20comms%29/topic/Loader%20issues/near/340353199" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Alec Leamas <a href="https://leamas.github.io/zulip-archive/stream/332168-Master---5.2E8.2E0--.28was.3A-comms.29/topic/Loader.20issues.html#340353199">(Mar 08 2023 at 12:59)</a>:</h4>
+<p><span class="user-mention" data-user-id="517002">@Dave Register</span>  Looking at <a href="https://github.com/opencpn/OpenCPN/commit/b0daf4184">b0daf4184</a>. This means that we no longer supports legacy plugins at all, we just refuse to load them. Fine with me if you ask, but it will at least require release notes or so, right?</p>
+
+
+
+<a name="340353655"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332168-Master%20-%205.8.0%20%20%28was%3A%20comms%29/topic/Loader%20issues/near/340353655" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Alec Leamas <a href="https://leamas.github.io/zulip-archive/stream/332168-Master---5.2E8.2E0--.28was.3A-comms.29/topic/Loader.20issues.html#340353655">(Mar 08 2023 at 13:01)</a>:</h4>
+<p>"legacy" in the old meaning, plugins installed in /usr/share etc.</p>
+
+
+
+<a name="340391803"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332168-Master%20-%205.8.0%20%20%28was%3A%20comms%29/topic/Loader%20issues/near/340391803" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Håkan Svensson <a href="https://leamas.github.io/zulip-archive/stream/332168-Master---5.2E8.2E0--.28was.3A-comms.29/topic/Loader.20issues.html#340391803">(Mar 08 2023 at 15:23)</a>:</h4>
+<p>There would be no plugins using the NSIS installer, saved at "...\program files\opencpn\plugins", suitable for Win 5.8 I suppose.</p>
+
+
+
+<a name="340392918"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332168-Master%20-%205.8.0%20%20%28was%3A%20comms%29/topic/Loader%20issues/near/340392918" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Dave Register <a href="https://leamas.github.io/zulip-archive/stream/332168-Master---5.2E8.2E0--.28was.3A-comms.29/topic/Loader.20issues.html#340392918">(Mar 08 2023 at 15:26)</a>:</h4>
+<p><span class="user-mention" data-user-id="399510">@Alec Leamas</span> <br>
+"no longer supports legacy plugins at all"<br>
+Yep, that's my implicit proposal.  For sure we cannot support them on Win or Mac, since we have no legacy plugins suitable for wx32.  And in the fullness of time, as they say, we will have wx32 on all platforms.  So let us make the break now..</p>
+
+
+
+<a name="340393131"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332168-Master%20-%205.8.0%20%20%28was%3A%20comms%29/topic/Loader%20issues/near/340393131" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Alec Leamas <a href="https://leamas.github.io/zulip-archive/stream/332168-Master---5.2E8.2E0--.28was.3A-comms.29/topic/Loader.20issues.html#340393131">(Mar 08 2023 at 15:27)</a>:</h4>
+<p>As I said, fine with me. But we need to make it explicit</p>
+
+
+
+<a name="340402242"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332168-Master%20-%205.8.0%20%20%28was%3A%20comms%29/topic/Loader%20issues/near/340402242" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Alec Leamas <a href="https://leamas.github.io/zulip-archive/stream/332168-Master---5.2E8.2E0--.28was.3A-comms.29/topic/Loader.20issues.html#340402242">(Mar 08 2023 at 16:02)</a>:</h4>
+<p>At a second thought, a cleaner way to do this is proably to remove the legacy dirs from the set of paths searched by PluginLoader.  I'll file a bug, not to be handled until after 5.8.0.</p>
+
+
+
+<a name="340411962"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332168-Master%20-%205.8.0%20%20%28was%3A%20comms%29/topic/Loader%20issues/near/340411962" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Dave Register <a href="https://leamas.github.io/zulip-archive/stream/332168-Master---5.2E8.2E0--.28was.3A-comms.29/topic/Loader.20issues.html#340411962">(Mar 08 2023 at 16:40)</a>:</h4>
+<p>We need the legacy dirs for the inbuilt 4 plugins.</p>
+
+
+
+<a name="340412175"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332168-Master%20-%205.8.0%20%20%28was%3A%20comms%29/topic/Loader%20issues/near/340412175" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Dave Register <a href="https://leamas.github.io/zulip-archive/stream/332168-Master---5.2E8.2E0--.28was.3A-comms.29/topic/Loader.20issues.html#340412175">(Mar 08 2023 at 16:41)</a>:</h4>
+<p>Unless we decide to move them to user space, maybe not a bad idea?  But Post 58.</p>
+
+
+
+<hr><p>Last updated: Oct 05 2023 at 09:43 UTC</p>
+</html>

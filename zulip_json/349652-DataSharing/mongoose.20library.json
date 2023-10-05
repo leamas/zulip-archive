@@ -1,0 +1,152 @@
+[
+    {
+        "content": "<p>The mongoose web server is not packaged for Debian.  If we could get it packaged it would certainly simplify things.  An existing mongoose  math library is a distraction.</p>\n<p>We would still have to bundle it in Flatpak, though. Should be fine if cached.</p>\n<p>There are pre-built binaries for Windows and MacOS. Whether the MacOS  version can be used  on all (old) OS versions supported  by us is another question.</p>",
+        "id": 303807244,
+        "sender_full_name": "Alec Leamas",
+        "timestamp": 1665660629
+    },
+    {
+        "content": "<p>The license for mongoose is GPL-2, not GPL2+. We can live with that, but it means that we cannot use any sw with an Apache 2.0 license. This might become a problem, but there is no apache-2 licensed sw in current codebase.</p>\n<p>There are other licenses with the same problem, but apache is the most important example.</p>",
+        "id": 303811125,
+        "sender_full_name": "Alec Leamas",
+        "timestamp": 1665662067
+    },
+    {
+        "content": "<p>Mongoose:<br>\nI was planning to use mongoose from source.  Compiles on all our platforms, so far.  Two simple files (.c, .h).  No other dependencies.  One of the design goals of mongoose is easy incorporation on embedded systems.  I like that .</p>",
+        "id": 303837599,
+        "sender_full_name": "Dave Register",
+        "timestamp": 1665669382
+    },
+    {
+        "content": "<p>We (I) might run into troubles if we bundle a library like this in Debian -- they have a rather strong policy against using \"convenience copies\" in their parlance. But it should basically be fine if I package it, and we use cmake to determine whether to use the system version if it  exists and otherwise the bundled version.</p>\n<p>Of course, it's important to bundle it in libs/ rather than src/ to make it possible to handle source, licensing and such.</p>",
+        "id": 303839000,
+        "sender_full_name": "Alec Leamas",
+        "timestamp": 1665669796
+    },
+    {
+        "content": "<p>\" bundle it in libs/ \"<br>\nYes, agreed.  mongoose source is only two files full of platform \"#IFDEFs\", no magic.</p>",
+        "id": 303848157,
+        "sender_full_name": "Dave Register",
+        "timestamp": 1665670748
+    },
+    {
+        "content": "<p>\"Why not just do a POST instead, with the XML file as content\"<br>\nIndeed.  After some sketching and fiddling around with the mongoose API, this seems the better idea.<br>\nGoing in that direction.</p>",
+        "id": 303952061,
+        "sender_full_name": "Dave Register",
+        "timestamp": 1665713293
+    },
+    {
+        "content": "<p>btw, did we decide that observable/notify is thread-safe?<br>\nAs you might imagine, the mongoose server runs in in its own thread, basically a forever select loop.</p>",
+        "id": 303952242,
+        "sender_full_name": "Dave Register",
+        "timestamp": 1665713489
+    },
+    {
+        "content": "<p>Added  files from <em>OCPNWindowsCoreBuildSupport-0.1.zip</em><br>\nTrying to compile OpenCPN (Win 8.0, VS 2019) Getting these errors.<br>\n<code>1&gt;   Creating library C:/Users/Mike/Documents/GitHub/OpenCPN/build/Release/opencpn.lib and object C:/Users/Mike/Documents/GitHub/OpenCPN/build/Release/opencpn.exp\n1&gt;MONGOOSE.lib(mongoose.obj) : error LNK2019: unresolved external symbol _SSLv23_server_method referenced in function _mg_tls_init\n1&gt;MONGOOSE.lib(mongoose.obj) : error LNK2019: unresolved external symbol _SSLv23_client_method referenced in function _mg_tls_init\n1&gt;MONGOOSE.lib(mongoose.obj) : error LNK2019: unresolved external symbol _SSL_library_init referenced in function _mg_tls_init\n1&gt;C:\\Users\\Mike\\Documents\\GitHub\\OpenCPN\\build\\Release\\opencpn.exe : fatal error LNK1120: 3 unresolved externals\n1&gt;Done building project \"opencpn.vcxproj\" -- FAILED.\n========== Build: 0 succeeded, 1 failed, 0 up-to-date, 0 skipped ==========</code></p>\n<p>Is it linked with this: <a href=\"https://stackoverflow.com/questions/32415816/how-to-implement-ssl-with-embedded-mongoose\">https://stackoverflow.com/questions/32415816/how-to-implement-ssl-with-embedded-mongoose</a></p>",
+        "id": 306825020,
+        "sender_full_name": "Mike Rossiter",
+        "timestamp": 1667043332
+    },
+    {
+        "content": "<p>Same with <em>RelWithDebInfo</em></p>",
+        "id": 306825248,
+        "sender_full_name": "Mike Rossiter",
+        "timestamp": 1667043458
+    },
+    {
+        "content": "<p>Mike...<br>\nPlease compare your build log to the current Appveyor CI build.<br>\n<a href=\"https://ci.appveyor.com/project/bdbcat/opencpn/builds/45217644\">https://ci.appveyor.com/project/bdbcat/opencpn/builds/45217644</a><br>\nThis is the canonical build object example.<br>\nDave</p>",
+        "id": 306847686,
+        "sender_full_name": "Dave Register",
+        "timestamp": 1667054024
+    },
+    {
+        "content": "<p><span class=\"user-mention\" data-user-id=\"517002\">@Dave Register</span>  Thanks. My mistake. I did not remove the old <em>buildwin</em> directory before using the new version.</p>",
+        "id": 306854218,
+        "sender_full_name": "Mike Rossiter",
+        "timestamp": 1667057139
+    },
+    {
+        "content": "<p><span class=\"user-mention\" data-user-id=\"399510\">@Alec Leamas</span> <br>\nI have the PIN exchange logic coded, smoke-tested, working.   But...</p>\n<p>\"{This PIN can be used to establish an API key, a much larger random number sequence.\"<br>\nWhat is the point of this?  Sounds like simple obfuscation of the 4 digit PIN, with the obfuscation formula accessible to anyone with access to OCPN source.  Am I missing something?</p>",
+        "id": 308086534,
+        "sender_full_name": "Dave Register",
+        "timestamp": 1667619263
+    },
+    {
+        "content": "<p>I think the key needs to be larger than four digíts to avoid brute force  \"guess the key\" attempts.  The keyword here is \"random\": the key needs to be truly random. There are  C++11 libraries for this so it should not be a problem. With a random key an attacker isn't helped by the source code. </p>\n<p>In haste...</p>",
+        "id": 308103061,
+        "sender_full_name": "Alec Leamas",
+        "timestamp": 1667636494
+    },
+    {
+        "content": "<p>OK, I see your point.  In my implementation, a new random PIN is generated on each failed attack.  Statistically, the lock could be breached in 10000 attacks using  a constant PIN. Easy enough to obfuscate further.</p>",
+        "id": 308150190,
+        "sender_full_name": "Dave Register",
+        "timestamp": 1667658926
+    },
+    {
+        "content": "<p>Committed PIN share logic.  GUI is the same, \"Route-&gt;Send to...\"<br>\nEnjoy!</p>",
+        "id": 308200574,
+        "sender_full_name": "Dave Register",
+        "timestamp": 1667694569
+    },
+    {
+        "content": "<p>The pin code seems to work between my system, RPi and  Win10.</p>\n<p>I've two RPi where I now see some problem on the RPi4. (New or not?)</p>\n<ul>\n<li>My RPi400 64 , Bullseye, detects both O-Win10 and RPi4 32, Buster.  And \"send to\"  works to both wo trouble.</li>\n<li>The RPi4 though detects only Win10 but not the RPi400.</li>\n</ul>\n<p>If I on the RPi4 run in gdb the following appears:</p>\n<blockquote>\n<p>warning: JITed object file architecture armv8-a is not compatible with target architecture armv6.<br>\nReading mDNS query replies<br>\n192.168.1.73:5353 : answer opencpn-object-control-service. PTR RPi4.opencpn-object-control-service. rclass 0x1 ttl 10 length 7<br>\n10.10.10.1:5353 : answer opencpn-object-control-service. PTR RPi4.opencpn-object-control-service. rclass 0x1 ttl 10 length 7<br>\n192.168.1.67:5353 : answer opencpn-object-control-service. PTR HAS-WIN.opencpn-object-control-service. rclass 0x1 ttl 10 length 10<br>\n192.168.1.154:5353 : answer opencpn-object-control-service. PTR RPi400.opencpn-object-control-service. rclass 0x1 ttl 10 length 9<br>\nRead 10 records</p>\n</blockquote>\n<p>So although the RPI400 is listed there it's not listed in the \"Send to..\" dialog.<br>\n<a href=\"/user_uploads/33951/ayFMVA8Yb7VHHIpj-Go9tQk0/bild.png\">bild.png</a></p>\n<div class=\"message_inline_image\"><a href=\"/user_uploads/33951/ayFMVA8Yb7VHHIpj-Go9tQk0/bild.png\" title=\"bild.png\"><img src=\"/user_uploads/33951/ayFMVA8Yb7VHHIpj-Go9tQk0/bild.png\"></a></div>",
+        "id": 308294883,
+        "sender_full_name": "Håkan Svensson",
+        "timestamp": 1667766317
+    },
+    {
+        "content": "<p>Ooo- forgot to mention the RPi400 is well detected by Win10<br>\n<a href=\"/user_uploads/33951/ekOwH2WnaWyGZ_3SX6mEhhAI/bild.png\">bild.png</a></p>\n<div class=\"message_inline_image\"><a href=\"/user_uploads/33951/ekOwH2WnaWyGZ_3SX6mEhhAI/bild.png\" title=\"bild.png\"><img src=\"/user_uploads/33951/ekOwH2WnaWyGZ_3SX6mEhhAI/bild.png\"></a></div>",
+        "id": 308297506,
+        "sender_full_name": "Håkan Svensson",
+        "timestamp": 1667768205
+    },
+    {
+        "content": "<p>Hakan...<br>\nAre these systems all hard-wired, or WiFi?  We do see some occasional trouble with mDNS on Wifi...</p>",
+        "id": 308409122,
+        "sender_full_name": "Dave Register",
+        "timestamp": 1667833923
+    },
+    {
+        "content": "<p>Dave..<br>\nAll WiFi. <br>\nAll 5.0 Gb  (Ipv4 like 192.168.1.73/24)</p>",
+        "id": 308415793,
+        "sender_full_name": "Håkan Svensson",
+        "timestamp": 1667835891
+    },
+    {
+        "content": "<p>Just a note - probably not related?<br>\nThe RPi4 is Openplotter based so two WiFi is present. wlan0 connected to the local router (192.168.1.1)  and wlan9 own adhoc 10.10.10.1 not used for any connection.<br>\nBut I can't see how this could disturb the detection of the RPi400 where only a wlan0 to router is present.</p>",
+        "id": 308455339,
+        "sender_full_name": "Håkan Svensson",
+        "timestamp": 1667848212
+    },
+    {
+        "content": "<p>I tried to connect the RPi400, who's not detected by RPi4, to a wired connection instead of WiFi. <br>\nNo difference. Still only detected by HAS-WIN.</p>",
+        "id": 308999251,
+        "sender_full_name": "Håkan Svensson",
+        "timestamp": 1668090223
+    },
+    {
+        "content": "<p>Dave..<br>\nOne thought :<br>\nCould the \"skip \"self\" be involved?<br>\nWhen \"self\" = RPi4 the item.Startswith(\"RPi4\") will sort out item: \"RPi400\" I suppose. So the code believe the RPi400 is \"self\" and therefor not listed.<br>\nIf so we may run into the same for occasions like: \"NavPC\",  \"NavPC_Cockpit\" and so on..</p>\n<p>we have this code..</p>\n<blockquote>\n<p>//skip \"self\"<br>\n    if(item.StartsWith(g_hostname))<br>\n      continue;<br>\n    item += \" {\";<br>\n    item += g_DNS_cache[i]-&gt;ip.c_str();<br>\n    item += \"}\";<br>\n    m_PeerListBox-&gt;Append(item);<br>\n  }</p>\n</blockquote>",
+        "id": 309008821,
+        "sender_full_name": "Håkan Svensson",
+        "timestamp": 1668092964
+    },
+    {
+        "content": "<p>Dave..<br>\nI tested this change on Win &amp; RPi4 &amp; RPi400. Works.<br>\nIf you agree: You change or I PR?<br>\n    @@ -101,7 +101,7 @@ void SendToPeerDlg::CreateControls(const wxString&amp; hint) {<br>\n     wxString item(g_DNS_cache[i]-&gt;hostname.c_str());<br>\n     //skip \"self\"</p>\n<p>-    if(item.StartsWith(g_hostname))<br>\n  +    if (g_hostname.IsSameAs(item.BeforeFirst('.')) )<br>\n       continue;<br>\n     item += \" {\";</p>",
+        "id": 309031188,
+        "sender_full_name": "Håkan Svensson",
+        "timestamp": 1668099183
+    },
+    {
+        "content": "<p>Good catch !<br>\nPR welcome.</p>",
+        "id": 309036809,
+        "sender_full_name": "Dave Register",
+        "timestamp": 1668100816
+    },
+    {
+        "content": "<p>Done.</p>",
+        "id": 309050068,
+        "sender_full_name": "Håkan Svensson",
+        "timestamp": 1668104564
+    }
+]

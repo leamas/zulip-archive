@@ -1,0 +1,410 @@
+[
+    {
+        "content": "<p>Windows builds are broken.</p>",
+        "id": 294523663,
+        "sender_full_name": "Alec Leamas",
+        "timestamp": 1661073849
+    },
+    {
+        "content": "<p>Windows build is back again</p>",
+        "id": 294528111,
+        "sender_full_name": "Alec Leamas",
+        "timestamp": 1661077387
+    },
+    {
+        "content": "<p>I have added flatpak builds to the comm branch. They currently fails, seems like a circleci  issue. Have filed a circleci support ticket, let's see what happens.</p>",
+        "id": 294869048,
+        "sender_full_name": "Alec Leamas",
+        "timestamp": 1661262505
+    },
+    {
+        "content": "<p>Fixed the flatpak build.</p>",
+        "id": 295198208,
+        "sender_full_name": "Alec Leamas",
+        "timestamp": 1661422666
+    },
+    {
+        "content": "<p>Disabled the MacOS build until #2752 is fixed. No point rebuilding known, not fixed errors -- having builds that always fails means that we won't spot other errors when they occur.</p>",
+        "id": 295198558,
+        "sender_full_name": "Alec Leamas",
+        "timestamp": 1661422814
+    },
+    {
+        "content": "<p><span class=\"user-mention\" data-user-id=\"518981\">@Github Bot</span>  #2752</p>",
+        "id": 295203268,
+        "sender_full_name": "Alec Leamas",
+        "timestamp": 1661424841
+    },
+    {
+        "content": "<p><strong><a href=\"https://github.com/OpenCPN/OpenCPN/issues/2752\">opencpn/OpenCPN#2752</a> - CI: MacOS builds broken</strong><br>\nCreated by <strong><a href=\"https://github.com/leamas\">leamas</a></strong><br>\nStatus - <strong>Open</strong></p>\n<blockquote>\n<p><strong>Describe the bug</strong><br>\nThe MacOS CI builds are broken since ~some time~ at least a week, failing to rsync the macports sources</p>\n<p><strong>To Reproduce</strong></p>\n<ol>\n<li>Make a commit to OpenCPN repo.</li>\n<li>Push</li>\n<li>Watch logs with failing MacOS build</li>\n</ol>\n<p><strong>Expected behavior</strong><br>\nWell...</p>\n<p><strong>Additional context</strong><br>\nTypical error log here: <a href=\"https://app.circleci.com/pipelines/github/leamas/OpenCPN/2215/workflows/663bc861-a648-439a-9c0c-8613af7752ce/jobs/3907\">https://app.circleci.com/pipelines/github/leamas/OpenCPN/2215/workflows/663bc861-a648-439a-9c0c-8613af7752ce/jobs/3907</a></p>\n<p>Currently most OpenCPN work is on the comms branch, so the errors shows up here. Error has showed up for about a week,  last successful build about three weeks ago here: <a href=\"https://app.circleci.com/pipelines/github/leamas/OpenCPN/2185/workflows/3df9046a-f1cb-419c-bb7e-608e0955ee81\">https://app.circleci.com/pipelines/github/leamas/OpenCPN/2185/workflows/3df9046a-f1cb-419c-bb7e-608e0955ee81</a></p>\n</blockquote>",
+        "id": 295203272,
+        "sender_full_name": "Github Bot",
+        "timestamp": 1661424841
+    },
+    {
+        "content": "<p>Current build status:</p>\n<ul>\n<li>Focal OK</li>\n<li>Bionic: OK</li>\n<li>Windows - OK</li>\n<li>Macos: Disabled until #2752 is fixed</li>\n<li>Flatpak: OK</li>\n<li>Android-armhf: OK</li>\n</ul>\n<p>We should add some integration to the builders so results pops up in a common area. That is, automate these updates.</p>",
+        "id": 295203724,
+        "sender_full_name": "Alec Leamas",
+        "timestamp": 1661425030
+    },
+    {
+        "content": "<p>Using today's code I again can't build on VS 2017 while including the test project:<br>\n(Without \"test\" it builds as it should.)</p>\n<blockquote>\n<div class=\"codehilite\"><pre><span></span><code>6&gt;tests.cpp\n</code></pre></div>\n\n<p>6&gt;   Creating library C:/Builds/OCPN/OpenCPN/build/test/RelWithDebInfo/tests.lib and object C:/Builds/OCPN/OpenCPN/build/test/RelWithDebInfo/tests.exp<br>\n6&gt;AIS_Decoder.obj : error LNK2019: unresolved external symbol _mysnprintf referenced in function \"private: class AIS_Target_Data * __thiscall AIS_Decoder::ProcessDSx(class wxString const &amp;,bool)\" (?ProcessDSx@AIS_Decoder@@AAEPAVAIS_Target_Data@@ABVwxString@@_N@Z)<br>\n6&gt;georef.obj : error LNK2001: unresolved external symbol _mysnprintf<br>\n6&gt;AIS_Decoder.obj : error LNK2001: unresolved external symbol \"class Select * pSelectAIS\" (?pSelectAIS@@3PAVSelect@@A)<br>\n6&gt;C:\\Builds\\OCPN\\OpenCPN\\build\\test\\RelWithDebInfo\\tests.exe : fatal error LNK1120: 2 unresolved externals<br>\n6&gt;Done building project \"tests.vcxproj\" -- FAILED.</p>\n</blockquote>",
+        "id": 297220036,
+        "sender_full_name": "Håkan Svensson",
+        "timestamp": 1662381576
+    },
+    {
+        "content": "<p>OK, most likely my bad. I'll look into it.</p>",
+        "id": 297241075,
+        "sender_full_name": "Alec Leamas",
+        "timestamp": 1662390393
+    },
+    {
+        "content": "<p>From yesterday I can't build at all. (VS2017) Have you succeed so it's only here?</p>\n<blockquote>\n<p>6&gt;   Creating library C:/Builds/OCPN/OpenCPN/build/RelWithDebInfo/opencpn-cmd.lib and object C:/Builds/OCPN/OpenCPN/build/RelWithDebInfo/opencpn-cmd.exp<br>\n6&gt;comm_bridge.obj : error LNK2019: unresolved external symbol \"public: enum AIS_Error __thiscall AIS_Decoder::DecodeSingleVDO(class wxString const &amp;,struct GenericPosDatEx *,class wxString *)\" (?DecodeSingleVDO@AIS_Decoder@@QAE?AW4AIS_Error@@ABVwxString@@PAUGenericPosDatEx@@PAV3@@Z) referenced in function \"public: bool __thiscall CommBridge::HandleN0183_AIVDO(class std::shared_ptr&lt;class Nmea0183Msg const &gt;)\" (?HandleN0183_AIVDO@CommBridge@@QAE_NV?$shared_ptr@$$CBVNmea0183Msg@@@std@@@Z)<br>\n6&gt;comm_bridge.obj : error LNK2001: unresolved external symbol \"class AIS_Decoder * g_pAIS\" (?g_pAIS@@3PAVAIS_Decoder@@A)<br>\n6&gt;C:\\Builds\\OCPN\\OpenCPN\\build\\RelWithDebInfo\\opencpn-cmd.exe : fatal error LNK1120: 2 unresolved externals<br>\n6&gt;Done building project \"opencpn-cmd.vcxproj\" -- FAILED.</p>\n</blockquote>",
+        "id": 297367271,
+        "sender_full_name": "Håkan Svensson",
+        "timestamp": 1662470493
+    },
+    {
+        "content": "<p>I'd love to test the new features but still can't build on my Win environment. Obviously something local since you guys must be able to build and test. Any hints?<br>\nThe error for the present code in comm (Still wo building \"test\"):</p>\n<blockquote>\n<div class=\"codehilite\"><pre><span></span><code>  6&gt;   Creating library C:/Builds/OCPN/OpenCPN/build/RelWithDebInfo/opencpn-cmd.lib and object C:/Builds/OCPN/OpenCPN/build/RelWithDebInfo/opencpn-cmd.exp\n</code></pre></div>\n\n<p>6&gt;comm_bridge.obj : error LNK2019: unresolved external symbol \"enum AIS_Error __cdecl DecodeSingleVDO(class wxString const &amp;,struct GenericPosDatEx *)\" (?DecodeSingleVDO@@YA?AW4AIS_Error@@ABVwxString@@PAUGenericPosDatEx@@@Z) referenced in function \"public: bool __thiscall CommBridge::HandleN0183_AIVDO(class std::shared_ptr&lt;class Nmea0183Msg const &gt;)\" (?HandleN0183_AIVDO@CommBridge@@QAE_NV?$shared_ptr@$$CBVNmea0183Msg@@@std@@@Z)<br>\n6&gt;C:\\Builds\\OCPN\\OpenCPN\\build\\RelWithDebInfo\\opencpn-cmd.exe : fatal error LNK1120: 1 unresolved externals<br>\n6&gt;Done building project \"opencpn-cmd.vcxproj\" -- FAILED.</p>\n</blockquote>",
+        "id": 297521717,
+        "sender_full_name": "Håkan Svensson",
+        "timestamp": 1662526598
+    },
+    {
+        "content": "<p>After commits earlier today Windows builds, at least in Appveyor.</p>",
+        "id": 297563459,
+        "sender_full_name": "Alec Leamas",
+        "timestamp": 1662547777
+    },
+    {
+        "content": "<p>Yes, after the last commits Win is built. Now also including \"tests\" project.<br>\nThanks /H</p>",
+        "id": 297593171,
+        "sender_full_name": "Håkan Svensson",
+        "timestamp": 1662557735
+    },
+    {
+        "content": "<p>You can run the tests on the command line, see test/README.md. However, we have irritating GUI message boxes for various asserts in libraries. IIRC, they are really hard to get rid of, like design mistakes in both Windows and wxWidgets cooperating :(</p>",
+        "id": 297600069,
+        "sender_full_name": "Alec Leamas",
+        "timestamp": 1662560043
+    },
+    {
+        "content": "<p>Just a positive note....<br>\nUsing VS2017 to create a NSIS package is working flawless! <span aria-label=\"+1\" class=\"emoji emoji-1f44d\" role=\"img\" title=\"+1\">:+1:</span></p>",
+        "id": 297734384,
+        "sender_full_name": "Håkan Svensson",
+        "timestamp": 1662627546
+    },
+    {
+        "content": "<p><span class=\"user-mention\" data-user-id=\"517002\">@Dave Register</span> : There are MacOS builds till running on Github Actions, and they fail trying to build linux-specific can drivers. Error message in the very end: <a href=\"https://github.com/leamas/OpenCPN/runs/8257180008\">https://github.com/leamas/OpenCPN/runs/8257180008</a></p>",
+        "id": 297854713,
+        "sender_full_name": "Alec Leamas",
+        "timestamp": 1662666768
+    },
+    {
+        "content": "<p><span class=\"user-mention\" data-user-id=\"399510\">@Alec Leamas</span> <br>\nOn my local linux builds, I am getting errors building, specifically linking opencpn-cmd</p>\n<div class=\"codehilite\"><pre><span></span><code>CMakeFiles/opencpn-cmd.dir/src/ais_decoder.cpp.o: In function `onSoundFinished(void*)&#39;:\n/home/dsr/Projects/opencpn/src/ais_decoder.cpp:152: undefined reference to `g_bquiting&#39;\n/home/dsr/Projects/opencpn/src/ais_decoder.cpp:155: undefined reference to `g_pAIS&#39;\nCMakeFiles/opencpn-cmd.dir/src/ais_decoder.cpp.o: In function `AisDecoder::Decode(wxString const&amp;)&#39;:\n/home/dsr/Projects/opencpn/src/ais_decoder.cpp:1185: undefined reference to `g_default_wp_icon&#39;\n/home/dsr/Projects/opencpn/src/ais_decoder.cpp:1187: undefined reference to `pSelect&#39;\nCMakeFiles/opencpn-cmd.dir/src/ais_decoder.cpp.o: In function `AisDecoder::UpdateOneTrack(AisTargetData*)&#39;:\n/home/dsr/Projects/opencpn/src/ais_decoder.cpp:2714: undefined reference to `pSelect&#39;\n</code></pre></div>\n\n<p>thoughts?</p>",
+        "id": 298284184,
+        "sender_full_name": "Dave Register",
+        "timestamp": 1662925323
+    },
+    {
+        "content": "<p>Is this when building opencpn, opencpn-cmd or tests?</p>",
+        "id": 298284227,
+        "sender_full_name": "Alec Leamas",
+        "timestamp": 1662925380
+    },
+    {
+        "content": "<p>If it is opencpn-cmd, we could perhaps leave for (just) now. I can look into it tomorrow.</p>",
+        "id": 298284278,
+        "sender_full_name": "Alec Leamas",
+        "timestamp": 1662925436
+    },
+    {
+        "content": "<p>I am trying diligently to always build all three targets, for full coverage.  opencpn core build and runs fine.  tests does not build on my Windows machine, complaints about googletest, or something.<br>\nThis is not blocking me anywhere, so leave it for tonight.<br>\np.s.  You may note that MacOS  CI build is completing now.  Time to test....</p>",
+        "id": 298284613,
+        "sender_full_name": "Dave Register",
+        "timestamp": 1662925709
+    },
+    {
+        "content": "<p>Tests builds on my windows machine, google test is downloaded and compiled from source by cmake. Can you attach the actual error when you are on Windows? no hurry.</p>",
+        "id": 298284883,
+        "sender_full_name": "Alec Leamas",
+        "timestamp": 1662925942
+    },
+    {
+        "content": "<p>Using Win VS2017. Before I start to investigate does anyone know why inbound plugins (...Program Files (x86)\\OpenCPN\\plugins\\)  Dashboard/WMM/Grib are not started by pluginmanager while running Debug (RelWithDebInfo)? <br>\nPlugins from ...\\AppData\\Local\\opencpn\\plugins\\ are started in Debug.</p>",
+        "id": 298775392,
+        "sender_full_name": "Håkan Svensson",
+        "timestamp": 1663163616
+    },
+    {
+        "content": "<p>Sorry, no.  I could investigate, if this is blocking your progress.</p>",
+        "id": 298775730,
+        "sender_full_name": "Dave Register",
+        "timestamp": 1663163718
+    },
+    {
+        "content": "<p>Yes please. I'd like too see PGN content in Dashboard. I could use log messages but so to say a detour.</p>",
+        "id": 298778258,
+        "sender_full_name": "Håkan Svensson",
+        "timestamp": 1663164510
+    },
+    {
+        "content": "<p>\"tests does not build on my Windows machine,\"<br>\nPlease disregard.  configuration error on my side.</p>",
+        "id": 298780153,
+        "sender_full_name": "Dave Register",
+        "timestamp": 1663165122
+    },
+    {
+        "content": "<p>Flatpak builds breaks in a very late stage, the signing key is expired. Needs a fix...</p>",
+        "id": 299060229,
+        "sender_full_name": "Alec Leamas",
+        "timestamp": 1663280097
+    },
+    {
+        "content": "<p>Some Win VS2017 obstacles on last patch:</p>\n<blockquote>\n<p>6&gt;base_platform.cpp<br>\n6&gt;C:\\Builds\\OCPN\\OpenCPN\\src\\base_platform.cpp(751): error C2065: 'm_bdisableWindowsDisplayEnum': undeclared identifier<br>\n6&gt;C:\\Builds\\OCPN\\OpenCPN\\src\\base_platform.cpp(752): error C3861: 'GetWindowsMonitorSize': identifier not found<br>\n6&gt;C:\\Builds\\OCPN\\OpenCPN\\src\\base_platform.cpp(756): error C2065: 'm_bdisableWindowsDisplayEnum': undeclared identifier<br>\n6&gt;Done building project \"opencpn.vcxproj\" -- FAILED.</p>\n</blockquote>",
+        "id": 299096070,
+        "sender_full_name": "Håkan Svensson",
+        "timestamp": 1663308243
+    },
+    {
+        "content": "<p>Should be fixed right now, together with some missing libs<br>\n<span class=\"user-mention\" data-user-id=\"518981\">@Github Bot</span>  #9f8149a</p>",
+        "id": 299107676,
+        "sender_full_name": "Alec Leamas",
+        "timestamp": 1663314383
+    },
+    {
+        "content": "<p><span class=\"user-mention\" data-user-id=\"518981\">@Github Bot</span>  #9f8149a</p>",
+        "id": 299107850,
+        "sender_full_name": "Alec Leamas",
+        "timestamp": 1663314464
+    },
+    {
+        "content": "<p>** author: Alec Leamas at 2022-09-16T07:44:19Z<br>\nCMakeLists: Windows: Fix missing libraries.<br>\n<a href=\"https://github.com/OpenCPN/OpenCPN/commit/9f8149a\">https://github.com/OpenCPN/OpenCPN/commit/9f8149a</a></p>",
+        "id": 299107851,
+        "sender_full_name": "Github Bot",
+        "timestamp": 1663314465
+    },
+    {
+        "content": "<p>Yes, fixed! Thanks</p>",
+        "id": 299112968,
+        "sender_full_name": "Håkan Svensson",
+        "timestamp": 1663316628
+    },
+    {
+        "content": "<p>MacOS  is broken, assuming Dave is on it</p>",
+        "id": 300099903,
+        "sender_full_name": "Alec Leamas",
+        "timestamp": 1663835295
+    },
+    {
+        "content": "<p>On Win10:<br>\nSince several years I've a branch with some own adaptions to my Auto pilot. Two variables present in both options.cpp and routeman.cpp. Also in navutil.cpp for the config file as usual.<br>\nI can't get it to build now due to errors from the new code. <br>\nWhat's the method to satisfy opencpn-cmd.exe? (If I exclude that part it's not possible to make the installer package)</p>\n<div class=\"codehilite\"><pre><span></span><code>Creating library C:/Builds/OCPN/OpenCPN/build/RelWithDebInfo/opencpn-cmd.lib and object C:/Builds/OCPN/OpenCPN/build/RelWithDebInfo/opencpn-cmd.exp\nrouteman.obj : error LNK2001: unresolved external symbol &quot;bool g_bXTE_multiply&quot; (?g_bXTE_multiply@@3_NA)\nrouteman.obj : error LNK2001: unresolved external symbol &quot;double g_dXTE_multiplier&quot; (?g_dXTE_multiplier@@3NA)\nC:\\Builds\\OCPN\\OpenCPN\\build\\RelWithDebInfo\\opencpn-cmd.exe : fatal error LNK1120: 2 unresolved externals\n</code></pre></div>",
+        "id": 301955478,
+        "sender_full_name": "Håkan Svensson",
+        "timestamp": 1664729822
+    },
+    {
+        "content": "<p>I suppose the two new variables are declared in ocpn_app, like all the other globals?  The fail is because ocpn_app.cpp is not included in the opencpn-cmd.exe module set.</p>\n<p>Quick fix would be to move your two new variables at the top of routeman.cpp, like:</p>\n<div class=\"codehilite\"><pre><span></span><code>bool g_bPluginHandleAutopilotRoute;\nbool g_bXTE_multiply;\ndouble g_dXTE_multiplier;\n</code></pre></div>\n\n<p>So, the two new vars will be declared in \"routeman.cpp\",  and \"ext\" in options.cpp and navutil.cpp.</p>",
+        "id": 301994335,
+        "sender_full_name": "Dave Register",
+        "timestamp": 1664768221
+    },
+    {
+        "content": "<p>Works! Many thanks.<br>\nSo expressed with my own words and limited grip of the opencpn-cmd:<br>\nThe new ocpn_app.cpp is not a \"umbrella\" for the whole project like chart1.cpp was.<br>\nA function with it's variables has to be declared where it's meant to be used and servisers like set it in options and save to config are (still) external calls.</p>",
+        "id": 302004077,
+        "sender_full_name": "Håkan Svensson",
+        "timestamp": 1664777973
+    },
+    {
+        "content": "<blockquote>\n<p>The new ocpn_app.cpp is not a \"umbrella\" for the whole project like chart1.cpp was.</p>\n</blockquote>\n<p>One way to see it it: console.cpp is an umbrella for the source files listed in MODEL_SRC in CMakeLists.txt . This is a subset of the files used to build the opencpn  app, the subset which have no GUI dependencies.</p>\n<p>The same applies for the unit tests, currently <em>test/tests.cpp</em> (more under way).  In both cases global variables often needs to be declared  to satisfy the linker. The basic problem is that we use global variables (bad idea we have to live with) and how we handle them (could be sanitized, for sure). See the Rants topic...</p>",
+        "id": 302034291,
+        "sender_full_name": "Alec Leamas",
+        "timestamp": 1664791854
+    },
+    {
+        "content": "<p>OK, thanks for the info. I can't say I follow it all but will do my best.<br>\nCould it be the GUI problem with icons and more described in Test issues has something to do with the split of \"code\" and GUI?</p>",
+        "id": 302036664,
+        "sender_full_name": "Håkan Svensson",
+        "timestamp": 1664792957
+    },
+    {
+        "content": "<p>Windows build fails on Appveyor. I'm on it, will take some time, occasionally having a life.</p>",
+        "id": 304663601,
+        "sender_full_name": "Alec Leamas",
+        "timestamp": 1666094632
+    },
+    {
+        "content": "<p>Building life is really important as well. Doing it just now in the boat with a good book.</p>",
+        "id": 304676722,
+        "sender_full_name": "Håkan Svensson",
+        "timestamp": 1666099312
+    },
+    {
+        "content": "<p><a href=\"https://github.com/OpenCPN/OpenCPN/pull/2792\">https://github.com/OpenCPN/OpenCPN/pull/2792</a> should fix windows builds</p>",
+        "id": 304849518,
+        "sender_full_name": "Alec Leamas",
+        "timestamp": 1666131084
+    },
+    {
+        "content": "<p>MacOS builds:  We are duplicating MacOS builds, running on both CircleCI and Github actions.  A lot to maintain...</p>\n<p>The Github Actions \"macOS latest Homebrew wxOSX \" fails constantly, possibly hiding other errors since we get used to failing builds. IMHO this build should be removed for now and be kept in that state until someone fixes it. Thoughts?</p>",
+        "id": 304850261,
+        "sender_full_name": "Alec Leamas",
+        "timestamp": 1666131427
+    },
+    {
+        "content": "<p>\"MacOS builds: We are duplicating MacOS builds, running on both CircleCI and Github actions.\"<br>\nWhy are we doing this?</p>",
+        "id": 304859849,
+        "sender_full_name": "Dave Register",
+        "timestamp": 1666137342
+    },
+    {
+        "content": "<p>I will take a look at the Homebrew MacOS build.</p>",
+        "id": 304877218,
+        "sender_full_name": "Dave Register",
+        "timestamp": 1666152443
+    },
+    {
+        "content": "<p>MacOS builds:  The Github Actions builds was introduced by Pavel quite recently. I had the impression that he just is more familiar with GA than CircleCI. Combined with a need to add more MacOS builds it ended up in the current situation.</p>",
+        "id": 304887429,
+        "sender_full_name": "Alec Leamas",
+        "timestamp": 1666160902
+    },
+    {
+        "content": "<p>Now builds on Win and some old warnings gone as well. Thanks.<br>\nTest issues though..</p>",
+        "id": 304887456,
+        "sender_full_name": "Håkan Svensson",
+        "timestamp": 1666160922
+    },
+    {
+        "content": "<p>I am going to remove the offending build from GA.  The failed build may relate to multi-arch support for Apple M1 silicon, which is a real can of worms.<br>\nWill wait for input from Pavel on this platform.</p>",
+        "id": 305066219,
+        "sender_full_name": "Dave Register",
+        "timestamp": 1666229021
+    },
+    {
+        "content": "<p><span class=\"user-mention\" data-user-id=\"399510\">@Alec Leamas</span> <br>\nWhat are the github GA workflows for \"zulip\" about?  Are they supposed to work?</p>",
+        "id": 306579226,
+        "sender_full_name": "Dave Register",
+        "timestamp": 1666929583
+    },
+    {
+        "content": "<p>They are unfinished work aiming to get build messages into the stream <em>CI</em>. Yet not completed, please just leave them in place (the current main issue here is the CircleCI builds where some work in the Zulip community seems stalled).</p>",
+        "id": 306597506,
+        "sender_full_name": "Alec Leamas",
+        "timestamp": 1666942610
+    },
+    {
+        "content": "<p><span class=\"user-mention\" data-user-id=\"399510\">@Alec Leamas</span> <br>\nNote failure of flatpak CI build.  Fails due to missing access to Pavel's server for some keys.<br>\nThoughts?</p>",
+        "id": 308995242,
+        "sender_full_name": "Dave Register",
+        "timestamp": 1668089063
+    },
+    {
+        "content": "<p>We need a working solution for binary up- and downloads. Pavel's server offers (offered?) the possibility to use rsync, this is needed to handle the large flatpak transfers reasonably efficient.</p>\n<p>So, we need rsync. But even disregarding this, I think we need a better solution. Using <a href=\"http://opencpn.org\">opencpn.org</a> obviously has drawbacks (bad urls, tensions with the host company). </p>\n<p>Using cloudsmith works like a charm, but if/when we distribute stuff we don't have developed ourselves we break their rules (last time I checked).   EDIT: And they don't support rsync.</p>\n<p>So, we need something supporting rsync where we can distribute binary files. The closest I come is actually sourceforge which does support rsync,  a bit unsure if they can handle password-less key authentication for that.   Sourceforge works otherwise great for distributing stuff. </p>\n<p>You have an opencpn account on sf, perhaps you could let me in there.  But running out of time anyway...</p>",
+        "id": 308999379,
+        "sender_full_name": "Alec Leamas",
+        "timestamp": 1668090253
+    },
+    {
+        "content": "<p>On Windows.<br>\nSince we have added use of local changes to OpenCPN repository.<br>\nI experienced an obvious risk to upload .\\cache to Github master by a PR with other changes. (Big files!)<br>\nOne method to avoid this could be to never build, and create .\\cache, locally on master branch but on a own like \"myocpn\" or similar.<br>\nThen when PR a patch do it from a branch created from master and cherry-pick the commit from \"myocpn\".<br>\nThoughts?  More sophisticated methods? (Maybe add something to \"Compiling Windows\" manual?)</p>",
+        "id": 315053447,
+        "sender_full_name": "Håkan Svensson",
+        "timestamp": 1670667862
+    },
+    {
+        "content": "<p>How about adding <em>OpenCPN/cache</em> to <em>.gitignore</em> in the master branch?</p>",
+        "id": 315056521,
+        "sender_full_name": "Mike Rossiter",
+        "timestamp": 1670669338
+    },
+    {
+        "content": "<p><em>build</em> is already there.</p>",
+        "id": 315056610,
+        "sender_full_name": "Mike Rossiter",
+        "timestamp": 1670669378
+    },
+    {
+        "content": "<p>Men</p>",
+        "id": 315120015,
+        "sender_full_name": "Alec Leamas",
+        "timestamp": 1670700780
+    },
+    {
+        "content": "<p>This topic was moved here from <a class=\"stream-topic\" data-stream-id=\"332168\" href=\"/#narrow/stream/332168-Master---5.2E8.2E0--.28was.3A-comms.29/topic/it.20should.20be.20in.20.2Egitignore.2E.20If.20not.2C.20it.20is.20a.20bug.2E.20In.20haste.2E.2E.2E\">#Master - 5.8.0  (was: comms) &gt; it should be in .gitignore. If not, it is a bug. In haste...</a> by <span class=\"user-mention silent\" data-user-id=\"399510\">Alec Leamas</span>.</p>",
+        "id": 315127815,
+        "sender_full_name": "Notification Bot",
+        "timestamp": 1670706747
+    },
+    {
+        "content": "<p><a href=\"https://github.com/OpenCPN/OpenCPN/pull/2864\">https://github.com/OpenCPN/OpenCPN/pull/2864</a></p>",
+        "id": 315128319,
+        "sender_full_name": "Alec Leamas",
+        "timestamp": 1670707139
+    },
+    {
+        "content": "<p>Adding /cache to .gitignore is of course the solution. Sorry for that noise. Thanks.<br>\nBut also /Buildwin may need more exceptions? Like the different .7z files.   ( .7z  .7z1 ) created by the .bat file.</p>",
+        "id": 315397580,
+        "sender_full_name": "Håkan Svensson",
+        "timestamp": 1670859791
+    },
+    {
+        "content": "<p>Basically I don't think buildwin/ needs any more files to exclude, the goal is that no temporary files should be created there. That the .7z files are created there is just sloppy programming from my side, they could and should live elsewhere (build/ or cache/).  This is a bug, I need to fix that for sure.</p>",
+        "id": 315398810,
+        "sender_full_name": "Alec Leamas",
+        "timestamp": 1670860179
+    },
+    {
+        "content": "<p>Agree, very good.</p>",
+        "id": 315456683,
+        "sender_full_name": "Håkan Svensson",
+        "timestamp": 1670877193
+    },
+    {
+        "content": "<p>For build on Windows.<br>\nIn directory  .\\build\\RelWithDebInfo we need a folder \\plugins\\ to collect plugin binaries to run a local debug.<br>\nNow the cmake build system creates a file \"plugins\" instead of the folder \"\\plugins\\\". <br>\nObviously the file folder \\plugins\\ is not found and have to be created manually after first cmake .. (After deletion of the file plugins)<br>\nI haven't found the place where the setup to create the .\\build\\RelWithDebInfo\\plugins\\ is done to possible correct it. Please advice or tweak. Thanks/ Håkan</p>",
+        "id": 317846911,
+        "sender_full_name": "Håkan Svensson",
+        "timestamp": 1671981076
+    },
+    {
+        "content": "<p>FIrst: I have started to build <em>Release</em> rather than <em>RelWithDebInfo</em>. However, the appveyor.bat still defaults to RelWithDebInfo. Please work around by setting the environment variable <code>CONFIGURATION=Release</code>for now.</p>\n<p>Looking into the <em>build\\Release</em> directory I  don't find anything named <em>plugins</em> </p>\n<div class=\"codehilite\"><pre><span></span><code>DESKTOP-VPDSRM1 MINGW64 ~/src/shipdriver_pi/build (sd3.2.1)\n$ cd Release/\n\nDESKTOP-VPDSRM1 MINGW64 ~/src/shipdriver_pi/build/Release (sd3.2.1)\n$ pwd\n/c/Users/micha/src/shipdriver_pi/build/Release\n\nDESKTOP-VPDSRM1 MINGW64 ~/src/shipdriver_pi/build/Release (sd3.2.1)\n$ find . -name plugins\n\nDESKTOP-VPDSRM1 MINGW64 ~/src/shipdriver_pi/build/Release (sd3.2.1)\n$\n</code></pre></div>\n<p>What am I missing?</p>",
+        "id": 317851089,
+        "sender_full_name": "Alec Leamas",
+        "timestamp": 1671983512
+    },
+    {
+        "content": "<blockquote>\n<p>It diffs in \"A64\" instead of \"arm64\" and \"64-11\" instead of \"64:11\"</p>\n</blockquote>\n<p>This does not actually matter, the file names are arbitrary. When looking up a plugin in the catalog, the catalog contains the correct filename, and that's that. </p>\n<p>What makes a plugin compatible or not is only about the <code>&lt;target&gt;</code>  item in the catalog  and also in the xml metadata bundled with the plugin.</p>",
+        "id": 317852070,
+        "sender_full_name": "Alec Leamas",
+        "timestamp": 1671984005
+    },
+    {
+        "content": "<blockquote>\n<p>Please work around by setting the environment variable CONFIGURATION=Release for now.</p>\n</blockquote>\n<p>Please why so?<br>\nWhen I build both project OCPN and extern plugins for RelWithDebInfo I can use the same build to both Debug O and plugins as well produce executable to run O and make a package for test runs. Very handy. What's the problem?</p>\n<p>If core O is built for Release that's good but \"not my local business\"? </p>\n<p>I've also tried to find where the file \"plugins\" is set to be created (instead of a directory). I also couldn't. But it's created by first cmake..  There is also some binary content in the file. But no one is sad when deleted.</p>",
+        "id": 317852572,
+        "sender_full_name": "Håkan Svensson",
+        "timestamp": 1671984307
+    },
+    {
+        "content": "<p>It's a linkage question. But as long as the build works,  no need to bother besides to come to the same base line as I'm using.</p>\n<p>The core issue is of course why I cannot reproduce your <em>plugins</em> file.</p>",
+        "id": 317855890,
+        "sender_full_name": "Alec Leamas",
+        "timestamp": 1671986489
+    },
+    {
+        "content": "<p>Today's master<br>\nI updated the wx prebuilt binaries to e.g. wxMSW-3.2.2_vc14x...<br>\nNo problem with that.<br>\nWhen running debug I get the message as of below picture.<br>\nAnyone seen a solution to share before I try find the cause.<br>\nTo Eng: \"The procedure start address couldn't be found\"<br>\n<a href=\"/user_uploads/33951/v6b2u8y7ib5NzVDpa5dH5DJx/bild.png\">bild.png</a></p>\n<div class=\"message_inline_image\"><a href=\"/user_uploads/33951/v6b2u8y7ib5NzVDpa5dH5DJx/bild.png\" title=\"bild.png\"><img src=\"/user_uploads/33951/v6b2u8y7ib5NzVDpa5dH5DJx/bild.png\"></a></div><p>Build output:</p>\n<blockquote>\n<p>'opencpn.exe' (Win32): Loaded 'C:\\Windows\\WinSxS\\x86_microsoft.windows.common-controls_6595b64144ccf1df_6.0.19041.1110_none_a8625c1886757984\\comctl32.dll'. <br>\n'opencpn.exe' (Win32): Loaded 'C:\\Windows\\SysWOW64\\winspool.drv'. <br>\n'opencpn.exe' (Win32): Loaded 'C:\\Windows\\SysWOW64\\winmm.dll'. <br>\n'opencpn.exe' (Win32): Loaded 'C:\\Windows\\SysWOW64\\msimg32.dll'. <br>\n'opencpn.exe' (Win32): Loaded 'C:\\Builds\\OCPN\\OpenCPN\\build\\RelWithDebInfo\\libeay32.dll'. <br>\n'opencpn.exe' (Win32): Loaded 'C:\\Builds\\OCPN\\OpenCPN\\build\\RelWithDebInfo\\libeay32.dll'. <br>\n'opencpn.exe' (Win32): Unloaded 'C:\\Builds\\OCPN\\OpenCPN\\build\\RelWithDebInfo\\libeay32.dll'<br>\n'opencpn.exe' (Win32): Loaded 'C:\\Windows\\SysWOW64\\oleacc.dll'.</p>\n</blockquote>",
+        "id": 339534544,
+        "sender_full_name": "Håkan Svensson",
+        "timestamp": 1677929069
+    },
+    {
+        "content": "<p>Above \"MSWUpdateFontOnDPIChange@wxTopLevelWindowsMSW@@MAEXABVwxSize@@@Z\" obstacle solved.</p>\n<p>I let VS2022 create the installer package and then files needed for wx 3.2.2 was installed and runtime works. So after copying the new files to \\build also Debug does run smoothly.</p>",
+        "id": 339570057,
+        "sender_full_name": "Håkan Svensson",
+        "timestamp": 1677941825
+    },
+    {
+        "content": "<p><span class=\"user-mention\" data-user-id=\"522486\">@Håkan Svensson</span> <br>\nI had the same trouble updating locally to wx322.  Solved by similar procedure.  Did not investigate fully the trouble, but confirmed that OCPN build by CI workflow loads and runs correctly. So all is well.</p>",
+        "id": 339571340,
+        "sender_full_name": "Dave Register",
+        "timestamp": 1677942368
+    }
+]

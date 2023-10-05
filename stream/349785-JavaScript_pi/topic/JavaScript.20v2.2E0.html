@@ -1,0 +1,727 @@
+<html>
+<head><meta charset="utf-8"><title>JavaScript v2.0 · JavaScript_pi · Zulip Chat Archive</title></head>
+<h2>Stream: <a href="https://leamas.github.io/zulip-archive/stream/349785-JavaScript_pi/index.html">JavaScript_pi</a></h2>
+<h3>Topic: <a href="https://leamas.github.io/zulip-archive/stream/349785-JavaScript_pi/topic/JavaScript.20v2.2E0.html">JavaScript v2.0</a></h3>
+
+<hr>
+
+<base href="https://opencpn.zulipchat.com">
+
+<head><link href="https://leamas.github.io/zulip-archive/style.css" rel="stylesheet"></head>
+
+<a name="310402168"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/349785-JavaScript_pi/topic/JavaScript%20v2.0/near/310402168" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Tony Voss <a href="https://leamas.github.io/zulip-archive/stream/349785-JavaScript_pi/topic/JavaScript.20v2.2E0.html#310402168">(Nov 16 2022 at 13:01)</a>:</h4>
+<p>V2.0 alpha is now available <a href="https://cloudsmith.io/~opencpn/repos/javascript-alpha/packages/">in the repository</a>.  As I am MacOS only, please can some kind souls (<span class="user-mention" data-user-id="399559">@Mike Rossiter</span> ?) test on other platforms, especially as detailed here:</p>
+<p><strong>Console management</strong><br>
+When cruising, I normally have three JavaScripts running (keeping iNavX on mobile devices sync’d; tackAdvisor and a script that writes navigational data out for my FileMaker-based ship’s log).  Between passages, a fourth script writes tracks out as .kml files for my blog.  With the JavaScript plugin v1, having all these scripts running could get in the way of enjoying OpenCPN itself.  Although a script could be hidden, making it visible again involved unhiding all consoles.  JavaScript v2.0 makes all this much much better and easier.</p>
+<p>The following is true for MacOS: Windows can now be minimised to a size that just contains the traffic lights and the console name.  The minimum size is adjusted for name length and if the console is renamed the minimum size adjusts accordingly.  Consoles can be parked in the window bar above the chart, keeping them out of the chart itself.  If not in full-screen mode, a console can even be parked above the main window. A new script function <code>consolePark()</code> allows a script to park itself in available space at the highest level of other consoles.<br>
+When a console has output to display, it is enlarged so that the output can be seen.  It is now possible to enlarge and view parked consoles and minimise them again individually.  The test scripts now include a <em>Park console</em> test that exercises this.  Herewith a screen shot of how it looks under MacOS, showing five consoles of different name lengths.<br>
+<a href="/user_uploads/33951/r44M0ZmXJGq7KZqB3L7GHCMp/Parked-consoles-OSX.png">Parked-consoles-OSX.png</a> </p>
+<div class="message_inline_image"><a href="/user_uploads/33951/r44M0ZmXJGq7KZqB3L7GHCMp/Parked-consoles-OSX.png" title="Parked-consoles-OSX.png"><img src="/user_uploads/33951/r44M0ZmXJGq7KZqB3L7GHCMp/Parked-consoles-OSX.png"></a></div><p>I have no idea how this will work out under Windows or other platforms.  In particular, the width allowing for different console name lengths may not be correct with different platform fonts.  It may require platform-specific tweaks.</p>
+<p><strong>messageBox( )</strong> <br>
+This new function displays a modal message box - much easier for sequential steps in scripts than having to set up a dialogue with a function to process the user choice.</p>
+<p>Because scripts can execute functions in response to an event, a script could have more than one modal window open. It is also possible for a script to be closed with modal message boxes still displayed.  Clearing such windows is fraught but I have it such that orphaned message boxes can be later dismissed with any button without ill effect such as crashing OpenCPN.</p>
+<p>The test suite has been completely rewritten and makes much use of <code>messageBox( )</code>.  If you do not respond to a test action with a dialogue box open and the test times out, that is a good exercise of coping with orphaned windows.</p>
+<p><strong>Here is a full list of the changes in V2.0</strong></p>
+<p><em>Load script</em><br>
+ The plugin now keeps a list of the ten most recently accessed script files. Load now displays a dialogue in which you can select a file from the lists or you can choose Other... which opens a file selection dialogue. You can also add a recent file to a list of favourites, which will always be offered, or you can remove a favourite. </p>
+<p><em>Consoles</em> </p>
+<ul>
+<li>The script and output panes are now more flexible and better optimise their space, including when resized.  </li>
+<li>The splitter sash between the script and output pane now shows adjustments while being moved.  </li>
+<li>Consoles can now be reduced to a minimal size just showing the console name to facilitate parking out of the way.  </li>
+<li>The consoles page of the tools now allows you to change the name of a console.  </li>
+</ul>
+<p><em>Extended APIs</em> </p>
+<ul>
+<li><code>readTextFile(fileString)</code> -  fileString can now be a URL and text will be read from that location, if OpenCPN is on-line.</li>
+</ul>
+<p><em>New APIs</em><br>
+ * <code>onContextMenu()</code> - create a context menu item and handle its selection with a function <br>
+• <code>consoleName()</code> - set the console name from a script <br>
+• <code>consolePark()</code> - park this console <br>
+• <code>messageBox ()</code><br>
+• <code>OCPNgetCursorPosition()</code> - gets cursor position - useful with onContextMenu( )<br>
+• <code>OCPNsoundAlarm()</code>  - draw attention to script </p>
+<p><em>Other</em>  </p>
+<ul>
+<li>JavaScript engine updated from v2.5.0 to 2.7.0. Performance improvements and bug fixes only.  </li>
+<li><code>OCPNpushNMEA( )</code> now checks the sentence starts "$.....,"</li>
+</ul>
+<p><a href="https://github.com/antipole2/JavaScript_pi/blob/v2.0/documentation/JavaScript_plugin_user_guide.pdf">Updated User Guide here.</a></p>
+
+
+
+<a name="310404350"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/349785-JavaScript_pi/topic/JavaScript%20v2.0/near/310404350" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Tony Voss <a href="https://leamas.github.io/zulip-archive/stream/349785-JavaScript_pi/topic/JavaScript.20v2.2E0.html#310404350">(Nov 16 2022 at 13:15)</a>:</h4>
+<p>PS The builds assume OCPN5.6.2 - likely not good for later.</p>
+
+
+
+<a name="310434064"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/349785-JavaScript_pi/topic/JavaScript%20v2.0/near/310434064" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Mike Rossiter <a href="https://leamas.github.io/zulip-archive/stream/349785-JavaScript_pi/topic/JavaScript.20v2.2E0.html#310434064">(Nov 16 2022 at 15:23)</a>:</h4>
+<p><span class="user-mention" data-user-id="554731">@Tony Voss</span>  Time is at a premium. Could you suggest one or two scripts that will stress test the plugin?</p>
+
+
+
+<a name="310449068"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/349785-JavaScript_pi/topic/JavaScript%20v2.0/near/310449068" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Tony Voss <a href="https://leamas.github.io/zulip-archive/stream/349785-JavaScript_pi/topic/JavaScript.20v2.2E0.html#310449068">(Nov 16 2022 at 16:31)</a>:</h4>
+<p><span class="user-mention" data-user-id="399559">@Mike Rossiter</span>  The test suite tests almost all things in a pretty stressful way.  It is in the Test_scripts folder.  If you do not have the relevant version,  you can <a href="https://github.com/antipole2/JavaScript_pi/tree/v2.0/Tests_scripts">download it from here</a>.<br>
+The most critical testing is the console minimisation and parking.  I suggest you run the <em>Park console</em> test individually before running all, so you can study the result and compare with my screenshot without the time out timer timing out.  It would be good to see screenshots equivalent to mine above from the other platforms.</p>
+<p>The new thing not covered in the test suite is the completely new Load script button.  I don't expect it to have platform dependent issues but worth checking.    Load a few scripts and check they appear in the recents list and can be reloaded by selecting from the list.  Also in the Load scripts window check that <em>Organise favourites</em> allows you to make a recent a favourite and you can also remove a favourite.  The list of recents and favourites should be preserved across plugin deactivation and reactivation.</p>
+
+
+
+<a name="319649036"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/349785-JavaScript_pi/topic/JavaScript%20v2.0/near/319649036" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Tony Voss <a href="https://leamas.github.io/zulip-archive/stream/349785-JavaScript_pi/topic/JavaScript.20v2.2E0.html#319649036">(Jan 05 2023 at 18:44)</a>:</h4>
+<p>Have done a major rework of the internals.  Rather similar stuff was being done in many different places, especially after JS code execution.  Now they all use the same methods afterwards() and wrapUp() to decide what happens next.  Also the decision on when to run the onExit() script and calling back to another console is all regularised and documented.</p>
+<p>The new messageBox() function has been a pain using wxMessageBox() as it proved impossible to dismiss the modal dialogue other than by pressing a button.  I have re-implemented it using wxDialog() for which endModal() works.</p>
+<p>The test script has had a major rework and more tests added.  If a test times out with a messageBox modal open, it now tidies up OK  <span aria-label="big smile" class="emoji emoji-1f604" role="img" title="big smile">:big_smile:</span> </p>
+<p>I have just built the new Apha2 into the JavaScript alpha repository.  Please can you magic up some time to test it on Windows and ?  Main thing is to run the test scripts.  You will need to retrieve upto date copies of test scrips and documentation - much has changed.  The builds are for OCPNv5.6.</p>
+<p>Thanks a million.</p>
+
+
+
+<a name="319737261"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/349785-JavaScript_pi/topic/JavaScript%20v2.0/near/319737261" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Mike Rossiter <a href="https://leamas.github.io/zulip-archive/stream/349785-JavaScript_pi/topic/JavaScript.20v2.2E0.html#319737261">(Jan 06 2023 at 08:33)</a>:</h4>
+<blockquote>
+<p>test it on Windows</p>
+</blockquote>
+<p>I will look at this today. Need a break from updating plugins for 5.8.</p>
+
+
+
+<a name="319765879"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/349785-JavaScript_pi/topic/JavaScript%20v2.0/near/319765879" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Mike Rossiter <a href="https://leamas.github.io/zulip-archive/stream/349785-JavaScript_pi/topic/JavaScript.20v2.2E0.html#319765879">(Jan 06 2023 at 11:51)</a>:</h4>
+<p>Problem with Windows. I have a clean O 5.6.2. Neither the alpha from Cloudsmith or my own tarball will run. OpenCPN crashes as soon as it is enabled. Traced the issue to <em>loadConfig()</em>.  Now playing with that function to locate the issue.</p>
+
+
+
+<a name="319770006"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/349785-JavaScript_pi/topic/JavaScript%20v2.0/near/319770006" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Mike Rossiter <a href="https://leamas.github.io/zulip-archive/stream/349785-JavaScript_pi/topic/JavaScript.20v2.2E0.html#319770006">(Jan 06 2023 at 12:20)</a>:</h4>
+<p>Crash happens around line 308 of <em>JavaScript_pi.cpp</em> (l<em>oadConfig</em>):         </p>
+<div class="codehilite"><pre><span></span><code>if (consoles == wxEmptyString){ // no consoles configured
+               new Console(m_parent_window, &quot;JavaScript&quot;);
+                }
+            else {
+</code></pre></div>
+<p>Tries to make a console and fails.</p>
+
+
+
+<a name="319770128"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/349785-JavaScript_pi/topic/JavaScript%20v2.0/near/319770128" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Mike Rossiter <a href="https://leamas.github.io/zulip-archive/stream/349785-JavaScript_pi/topic/JavaScript.20v2.2E0.html#319770128">(Jan 06 2023 at 12:21)</a>:</h4>
+<p>You could probably reproduce this by removing all the JavaScript items from your <em>opencpn.ini</em> file.</p>
+
+
+
+<a name="319778267"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/349785-JavaScript_pi/topic/JavaScript%20v2.0/near/319778267" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Tony Voss <a href="https://leamas.github.io/zulip-archive/stream/349785-JavaScript_pi/topic/JavaScript.20v2.2E0.html#319778267">(Jan 06 2023 at 13:14)</a>:</h4>
+<p>Ah!  Obviously, have not tested for first run recently.  Will come back with a fix but have family for lunch today.  Stand by.</p>
+
+
+
+<a name="319794691"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/349785-JavaScript_pi/topic/JavaScript%20v2.0/near/319794691" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Mike Rossiter <a href="https://leamas.github.io/zulip-archive/stream/349785-JavaScript_pi/topic/JavaScript.20v2.2E0.html#319794691">(Jan 06 2023 at 14:42)</a>:</h4>
+<p>No problem. I will just chunder away.</p>
+<p>In loadConfig():</p>
+<div class="codehilite"><pre><span></span><code>       int versionMajor = pConf-&gt;Read ( _T ( &quot;VersionMajor&quot; ), 0L );
+        int versionMinor = pConf-&gt;Read ( _T ( &quot;VersionMinor&quot; ), 0L );
+</code></pre></div>
+<p>Needed to change to:</p>
+<div class="codehilite"><pre><span></span><code>       int versionMajor = pConf-&gt;Read ( _T ( &quot;VersionMajor&quot; ), 20L );
+        int versionMinor = pConf-&gt;Read ( _T ( &quot;VersionMinor&quot; ), 20L );
+</code></pre></div>
+<p>Problem still with:</p>
+<div class="codehilite"><pre><span></span><code>if (consoles == wxEmptyString){ // no consoles configured
+               new Console(m_parent_window, &quot;JavaScript&quot;);
+                }
+            else {
+</code></pre></div>
+
+
+
+<a name="319929580"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/349785-JavaScript_pi/topic/JavaScript%20v2.0/near/319929580" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Tony Voss <a href="https://leamas.github.io/zulip-archive/stream/349785-JavaScript_pi/topic/JavaScript.20v2.2E0.html#319929580">(Jan 07 2023 at 09:59)</a>:</h4>
+<blockquote>
+<p>In loadConfig():</p>
+<div class="codehilite"><pre><span></span><code>   int versionMajor = pConf-&gt;Read ( _T ( &quot;VersionMajor&quot; ), 0L );
+    int versionMinor = pConf-&gt;Read ( _T ( &quot;VersionMinor&quot; ), 0L );
+</code></pre></div>
+
+<p>Needed to change to:</p>
+<div class="codehilite"><pre><span></span><code>   int versionMajor = pConf-&gt;Read ( _T ( &quot;VersionMajor&quot; ), 20L );
+    int versionMinor = pConf-&gt;Read ( _T ( &quot;VersionMinor&quot; ), 20L );
+</code></pre></div>
+
+</blockquote>
+<p>Why?  Defaulting to zero is desired behaviour.  Why default to 20?</p>
+
+
+
+<a name="319931075"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/349785-JavaScript_pi/topic/JavaScript%20v2.0/near/319931075" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Mike Rossiter <a href="https://leamas.github.io/zulip-archive/stream/349785-JavaScript_pi/topic/JavaScript.20v2.2E0.html#319931075">(Jan 07 2023 at 10:10)</a>:</h4>
+<blockquote>
+<p>Why default to 20?</p>
+</blockquote>
+<p>Not sure if the change is needed but to get to:</p>
+<div class="codehilite"><pre><span></span><code> if (consoles == wxEmptyString)
+</code></pre></div>
+<p>I needed to make this change. 20L is used in other plugins.<br>
+ I use <em>wxMessageBox("here")</em> placed in the code to locate a bug.</p>
+
+
+
+<a name="319932610"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/349785-JavaScript_pi/topic/JavaScript%20v2.0/near/319932610" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Tony Voss <a href="https://leamas.github.io/zulip-archive/stream/349785-JavaScript_pi/topic/JavaScript.20v2.2E0.html#319932610">(Jan 07 2023 at 10:22)</a>:</h4>
+<p>It seems like your .ini file says you have previously run the multi-console version (v &gt; 0.4) but there are zero consoles configured, which should not be.<br>
+But, of course, even if it is nonsense, it should not crash OCPN.<br>
+Please let me have a copy of the [PlugIns/JavaScript_pi] section of your .ini file that causes the crash.<br>
+Also can you see in the crash report  where in the console constructer it is crashing?</p>
+
+
+
+<a name="319934464"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/349785-JavaScript_pi/topic/JavaScript%20v2.0/near/319934464" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Mike Rossiter <a href="https://leamas.github.io/zulip-archive/stream/349785-JavaScript_pi/topic/JavaScript.20v2.2E0.html#319934464">(Jan 07 2023 at 10:37)</a>:</h4>
+<p>Tested with a blank .ini. As soon as JS is enabled the crash happens. No JS information in the .ini file as it has not yet run. It can't get past the loadConfig function.</p>
+<p>Log file not much help:<br>
+<a href="/user_uploads/33951/IhmQZsvPwtp3hXqLQ0bLVrua/opencpn.log">opencpn.log</a> <br>
+I will try --loglevel debug next.</p>
+
+
+
+<a name="319935365"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/349785-JavaScript_pi/topic/JavaScript%20v2.0/near/319935365" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Mike Rossiter <a href="https://leamas.github.io/zulip-archive/stream/349785-JavaScript_pi/topic/JavaScript.20v2.2E0.html#319935365">(Jan 07 2023 at 10:45)</a>:</h4>
+<blockquote>
+<p>--loglevel debug</p>
+</blockquote>
+<p>No help either. Same as the previous log.</p>
+
+
+
+<a name="319935731"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/349785-JavaScript_pi/topic/JavaScript%20v2.0/near/319935731" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Mike Rossiter <a href="https://leamas.github.io/zulip-archive/stream/349785-JavaScript_pi/topic/JavaScript.20v2.2E0.html#319935731">(Jan 07 2023 at 10:48)</a>:</h4>
+<p>Still believe the problem is with constructing a console if JS has never been run.</p>
+<div class="codehilite"><pre><span></span><code>if (consoles == wxEmptyString){ // no consoles configured
+               new Console(m_parent_window, &quot;JavaScript&quot;);
+                }
+            else {
+</code></pre></div>
+<p>I will now try and run v1.1b from the catalog and then try 2.0 again.</p>
+
+
+
+<a name="319938231"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/349785-JavaScript_pi/topic/JavaScript%20v2.0/near/319938231" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Mike Rossiter <a href="https://leamas.github.io/zulip-archive/stream/349785-JavaScript_pi/topic/JavaScript.20v2.2E0.html#319938231">(Jan 07 2023 at 11:07)</a>:</h4>
+<p>Same crash even when I have JS information in the .ini file. BTW I am now running Win 10 on a new computer. Security?</p>
+
+
+
+<a name="319941776"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/349785-JavaScript_pi/topic/JavaScript%20v2.0/near/319941776" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Tony Voss <a href="https://leamas.github.io/zulip-archive/stream/349785-JavaScript_pi/topic/JavaScript.20v2.2E0.html#319941776">(Jan 07 2023 at 11:34)</a>:</h4>
+<p>I am not aware of any such problem under MacOS.  I have run with no previous .ini entry and all is well.  Looks like a Windows issue or, possibly, something uninitialised that does not show up under MacOS.<br>
+The particular call to the constructor you are crashing on relies on default values more than a call with previous consoles.<br>
+When OCPN crashes under MacOS, the crash report includes a call trace back with code line numbers.  I would be able to see where in the console constructor the problem arises.  Is such a trace available under Windows?    We need to find where in the constructor the problem is arising.</p>
+
+
+
+<a name="319951134"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/349785-JavaScript_pi/topic/JavaScript%20v2.0/near/319951134" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Mike Rossiter <a href="https://leamas.github.io/zulip-archive/stream/349785-JavaScript_pi/topic/JavaScript.20v2.2E0.html#319951134">(Jan 07 2023 at 12:46)</a>:</h4>
+<p>No crash reports. No trace like the Mac as far as I know.<br>
+Using a 1.1. ini with 2.0:</p>
+<div class="codehilite"><pre><span></span><code>[PlugIns/JavaScript_pi]
+VersionMajor=1
+VersionMinor=1
+ShowJavaScriptIcon=1
+CurrentDirectory=D:\\Downloads\\JavaScript_pi-1.1\\JavaScript_pi-1.1\\Tests_scripts
+JavaScript\:ConsolePosX=491
+JavaScript\:ConsolePosY=193
+JavaScript\:DialogPosX=150
+JavaScript\:DialogPosY=100
+JavaScript\:AlertPosX=90
+JavaScript\:AlertPosY=20
+JavaScript\:AutoRun=0
+JavaScript\:LoadFile=D:\\Downloads\\JavaScript_pi-1.1\\JavaScript_pi-1.1\\Tests_scripts\\00_main.js
+Consoles=JavaScript
+</code></pre></div>
+<p>I get up to the line before this in <em>loadConfig</em>:</p>
+<div class="codehilite"><pre><span></span><code> new Console(m_parent_window, name, consolePosition, consoleSize, dialogPosition, alertPosition, fileString, autoRun, welcome);
+</code></pre></div>
+<p><em>JavaScript\:AlertPosX=90</em> Those back slashes look a little strange when the name of the console does not have one.</p>
+
+
+
+<a name="319951368"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/349785-JavaScript_pi/topic/JavaScript%20v2.0/near/319951368" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Mike Rossiter <a href="https://leamas.github.io/zulip-archive/stream/349785-JavaScript_pi/topic/JavaScript.20v2.2E0.html#319951368">(Jan 07 2023 at 12:47)</a>:</h4>
+<p>BTW - now using Visual Studio 2022 because this version will be used for 5.8.</p>
+
+
+
+<a name="319964173"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/349785-JavaScript_pi/topic/JavaScript%20v2.0/near/319964173" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Mike Rossiter <a href="https://leamas.github.io/zulip-archive/stream/349785-JavaScript_pi/topic/JavaScript.20v2.2E0.html#319964173">(Jan 07 2023 at 14:13)</a>:</h4>
+<p>Hoorah ... found it. Line 313 of <em>JavaScriptgui_impl.h</em>.<br>
+Needed to comment out:</p>
+<div class="codehilite"><pre><span></span><code> this-&gt;setMinWidth()
+</code></pre></div>
+<p>Now to run the tests.</p>
+
+
+
+<a name="319967212"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/349785-JavaScript_pi/topic/JavaScript%20v2.0/near/319967212" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Mike Rossiter <a href="https://leamas.github.io/zulip-archive/stream/349785-JavaScript_pi/topic/JavaScript.20v2.2E0.html#319967212">(Jan 07 2023 at 14:31)</a>:</h4>
+<p>Individual scripts are working fine so far. But the <em>main.js</em> script causes a crash.</p>
+
+
+
+<a name="319968107"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/349785-JavaScript_pi/topic/JavaScript%20v2.0/near/319968107" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Tony Voss <a href="https://leamas.github.io/zulip-archive/stream/349785-JavaScript_pi/topic/JavaScript.20v2.2E0.html#319968107">(Jan 07 2023 at 14:37)</a>:</h4>
+<p>My method <code>setMinWidth( ) </code>makes use of <code>wxSize</code> related aspects of wxWindow.  Wonder if there is a wxWidgets issue on Windows.<br>
+It also uses the constants set conditionally for Windows in consolePositioning.h</p>
+
+
+
+<a name="319970144"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/349785-JavaScript_pi/topic/JavaScript%20v2.0/near/319970144" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Mike Rossiter <a href="https://leamas.github.io/zulip-archive/stream/349785-JavaScript_pi/topic/JavaScript.20v2.2E0.html#319970144">(Jan 07 2023 at 14:52)</a>:</h4>
+<p>Adding <em>#include "wx/sizer.h"</em> did not help.</p>
+
+
+
+<a name="319970513"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/349785-JavaScript_pi/topic/JavaScript%20v2.0/near/319970513" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Tony Voss <a href="https://leamas.github.io/zulip-archive/stream/349785-JavaScript_pi/topic/JavaScript.20v2.2E0.html#319970513">(Jan 07 2023 at 14:55)</a>:</h4>
+<p>JavaScriptgui_imp.h line 1036 reads<br>
+<code> TRACE(4, wxString::Format("setMinWidth %s was minimised: %b\nNew min size to %dx%d", this-&gt;mConsoleName, newMinSize.x, newMinSize.y));</code><br>
+Should be<br>
+<code> TRACE(4, wxString::Format("setMinWidth %s was minimised: %b\nNew min size to %dx%d", this-&gt;mConsoleName, wasMinimized, newMinSize.x, newMinSize.y));</code><br>
+but that does not explain the crash because TRACEing is off</p>
+
+
+
+<a name="319970655"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/349785-JavaScript_pi/topic/JavaScript%20v2.0/near/319970655" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Tony Voss <a href="https://leamas.github.io/zulip-archive/stream/349785-JavaScript_pi/topic/JavaScript.20v2.2E0.html#319970655">(Jan 07 2023 at 14:56)</a>:</h4>
+<p>With <code>setMinWidth()</code> commented out, expect the console parking tests to not look right.</p>
+
+
+
+<a name="319971047"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/349785-JavaScript_pi/topic/JavaScript%20v2.0/near/319971047" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Tony Voss <a href="https://leamas.github.io/zulip-archive/stream/349785-JavaScript_pi/topic/JavaScript.20v2.2E0.html#319971047">(Jan 07 2023 at 15:00)</a>:</h4>
+<blockquote>
+<p>But the main.js script causes a crash.</p>
+</blockquote>
+<p>It should be possible to add print statements to the <code>main.js</code> to find where it is causing a crash.  I have radically reworked that script but it should not be able to crash OCPN.  Perhaps a problem with one of my APIs.</p>
+
+
+
+<a name="319971464"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/349785-JavaScript_pi/topic/JavaScript%20v2.0/near/319971464" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Mike Rossiter <a href="https://leamas.github.io/zulip-archive/stream/349785-JavaScript_pi/topic/JavaScript.20v2.2E0.html#319971464">(Jan 07 2023 at 15:02)</a>:</h4>
+<blockquote>
+<p>Those back slashes look a little strange</p>
+</blockquote>
+<p>Not so. Escaping the ":" character.</p>
+
+
+
+<a name="319971590"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/349785-JavaScript_pi/topic/JavaScript%20v2.0/near/319971590" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Mike Rossiter <a href="https://leamas.github.io/zulip-archive/stream/349785-JavaScript_pi/topic/JavaScript.20v2.2E0.html#319971590">(Jan 07 2023 at 15:03)</a>:</h4>
+<blockquote>
+<p>It should be possible to add print statements to the main.js</p>
+</blockquote>
+<p>I will see if I can do this.</p>
+
+
+
+<a name="319981481"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/349785-JavaScript_pi/topic/JavaScript%20v2.0/near/319981481" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Mike Rossiter <a href="https://leamas.github.io/zulip-archive/stream/349785-JavaScript_pi/topic/JavaScript.20v2.2E0.html#319981481">(Jan 07 2023 at 16:26)</a>:</h4>
+<p><em>setMinWidth();</em> Found a workaround for Windows:</p>
+<div class="codehilite"><pre><span></span><code>            wxSize size = this-&gt;GetSize();
+
+            if (size.x &lt; newMinSize.x) {
+                size.x = newMinSize.x;
+                this-&gt;SetSize(size);
+            } else {
+                this-&gt;SetSize(size);
+                return;
+            }
+</code></pre></div>
+<p>About line 1033 in <em>JavaScriptgui_impl.h</em>.<br>
+Running the latest tests. BBL.</p>
+
+
+
+<a name="319982773"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/349785-JavaScript_pi/topic/JavaScript%20v2.0/near/319982773" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Tony Voss <a href="https://leamas.github.io/zulip-archive/stream/349785-JavaScript_pi/topic/JavaScript.20v2.2E0.html#319982773">(Jan 07 2023 at 16:39)</a>:</h4>
+<p>Re your <code>setMinWidth()</code> code change...<br>
+My original code did not SetSize if there was no change.<br>
+You change resets the size even if no change.  Is that correct?  Why should it be necessary?  Strange that it fixes something.<br>
+Your return statement is not required.  It should return via the end, having perhaps having displayed the TRACE.</p>
+
+
+
+<a name="319987234"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/349785-JavaScript_pi/topic/JavaScript%20v2.0/near/319987234" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Mike Rossiter <a href="https://leamas.github.io/zulip-archive/stream/349785-JavaScript_pi/topic/JavaScript.20v2.2E0.html#319987234">(Jan 07 2023 at 17:19)</a>:</h4>
+<p>Ok, removed the return and commented out the trace. This also works.</p>
+
+
+
+<a name="319987459"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/349785-JavaScript_pi/topic/JavaScript%20v2.0/near/319987459" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Mike Rossiter <a href="https://leamas.github.io/zulip-archive/stream/349785-JavaScript_pi/topic/JavaScript.20v2.2E0.html#319987459">(Jan 07 2023 at 17:22)</a>:</h4>
+<p>Parking now ok. But consoles parked on top of each other.</p>
+
+
+
+<a name="319990840"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/349785-JavaScript_pi/topic/JavaScript%20v2.0/near/319990840" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Tony Voss <a href="https://leamas.github.io/zulip-archive/stream/349785-JavaScript_pi/topic/JavaScript.20v2.2E0.html#319990840">(Jan 07 2023 at 17:58)</a>:</h4>
+<blockquote>
+<p>Parking now ok. But consoles parked on top of each other.</p>
+</blockquote>
+<p>When a console is parked, checks to see if it is already parked  - no action<br>
+Then it looks to see what other consoles are already parked and places itself to the right of the rightmost parked console.<br>
+Issue is most likely that it is failing to determine whether a console is parked.  This could follow from issues you seem to be having with GetSize/SetSize.<br>
+The test is done in the function <code>duk_consolePark( )</code> to be found in JSextensions.cpp<br>
+The test is <br>
+line 593 for own console: <code>if (size.y &lt;= CONSOLE_MIN_HEIGHT){  // this console regarded as already parked </code></p>
+<p>line 602 for other consoles: <code>bool wasMinimized = (oldSize.y &lt;= CONSOLE_MIN_HEIGHT+1);  // allow for rounding error</code></p>
+<p>Note the + 1 added in case of rounding error.  <strong>If that test fails</strong>, it will not be recognized as already parked and the present console may be parked on top of it.</p>
+<p>If you need to see what values are being returned, you could turn on tracing by setting in trace.h some value like 1<br>
+<code>#define TRACE_LEVEL 0   // set to zero to omit all tracing code</code><br>
+and then insert TRACE(1, &lt;whatever to display&gt;);</p>
+
+
+
+<a name="319990920"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/349785-JavaScript_pi/topic/JavaScript%20v2.0/near/319990920" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Tony Voss <a href="https://leamas.github.io/zulip-archive/stream/349785-JavaScript_pi/topic/JavaScript.20v2.2E0.html#319990920">(Jan 07 2023 at 17:59)</a>:</h4>
+<p>No need to comment out TRACE.  If TRACE_LEVEL set to zero, no code is inserted - it just gets a warning when compiling.</p>
+
+
+
+<a name="320059987"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/349785-JavaScript_pi/topic/JavaScript%20v2.0/near/320059987" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Mike Rossiter <a href="https://leamas.github.io/zulip-archive/stream/349785-JavaScript_pi/topic/JavaScript.20v2.2E0.html#320059987">(Jan 08 2023 at 10:46)</a>:</h4>
+<blockquote>
+<p>No need to comment out TRACE</p>
+</blockquote>
+<p>Restored all your original code. To stop it crashing I still had to comment out TRACE.  No other changes to the code were needed. Now looking at parking.</p>
+
+
+
+<a name="320066154"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/349785-JavaScript_pi/topic/JavaScript%20v2.0/near/320066154" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Mike Rossiter <a href="https://leamas.github.io/zulip-archive/stream/349785-JavaScript_pi/topic/JavaScript.20v2.2E0.html#320066154">(Jan 08 2023 at 11:52)</a>:</h4>
+<p>For the parking test the consoles were not spread out. There is a test, line 603 of <em>JSExtensions.cpp</em>:</p>
+<div class="codehilite"><pre><span></span><code>            bool wasMinimized = (oldSize.y &lt;= CONSOLE_MIN_HEIGHT+1);    // allow for rounding error
+            if (!wasMinimized) continue;    // omit non-minimized from this
+</code></pre></div>
+<p>Removing the test (if (//!wasMinimized etc) allows the consoles to spread out across the canvas.<br>
+But ... the minimum width of console 2 does not take place.<br>
+This links to the problems with <em>setMinWidth()</em> where the same test is used.</p>
+
+
+
+<a name="320066555"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/349785-JavaScript_pi/topic/JavaScript%20v2.0/near/320066555" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Tony Voss <a href="https://leamas.github.io/zulip-archive/stream/349785-JavaScript_pi/topic/JavaScript.20v2.2E0.html#320066555">(Jan 08 2023 at 11:57)</a>:</h4>
+<p>Thanks - suggest you stand by on this - once out of bed <span aria-label="blush" class="emoji emoji-1f60a" role="img" title="blush">:blush:</span> I will complete revamped TRACE and let you have version with lots of helpful relevant debug tracing in it.</p>
+
+
+
+<a name="320078432"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/349785-JavaScript_pi/topic/JavaScript%20v2.0/near/320078432" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Tony Voss <a href="https://leamas.github.io/zulip-archive/stream/349785-JavaScript_pi/topic/JavaScript.20v2.2E0.html#320078432">(Jan 08 2023 at 13:48)</a>:</h4>
+<p>Just pushed Alpha3 to repository at 13:32</p>
+<ul>
+<li>Fixed that TRACE statement - I think.  Interesting an invalid %b in format string showed up in Windows but not MacOS</li>
+<li>Revamped tracing so can now trace a range of levels</li>
+<li>This build traces levels 25-30</li>
+<li>setMinWinth() and consolePark() have lots of tracing in them, which should help you find what your problem is.  You can always add extra trace detail if required.</li>
+</ul>
+<p>To keep things simple, rather than running the parking test script, simply run the one line script<br>
+<code>consolePark(); scriptResult();</code><br>
+in one or more windows.  Create extra windows with various name length with the tools console tab.</p>
+<p>To remove all tracing, in trace.h change line 20 to <code>#undef TRACE_YES</code></p>
+<p>Tip: To avoid confusing number of trace windows, close  before reinstalling plugin, when a new one will be created..</p>
+
+
+
+<a name="320086811"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/349785-JavaScript_pi/topic/JavaScript%20v2.0/near/320086811" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Mike Rossiter <a href="https://leamas.github.io/zulip-archive/stream/349785-JavaScript_pi/topic/JavaScript.20v2.2E0.html#320086811">(Jan 08 2023 at 15:06)</a>:</h4>
+<blockquote>
+<p>To remove all tracing, in trace.h change line 20 to #undef TRACE_YES</p>
+</blockquote>
+<p>On Windows this did not work for me. Still needed to comment out the line:<br>
+        //TRACE(4, wxString::Format("setMinWidth %s was minimised: %b\nNew min size to %dx%d", this-&gt;mConsoleName, newMinSize.x, newMinSize.y));</p>
+<p>Still the parking problem of  consoles not spreading out across the canvas and minimizing not working.</p>
+
+
+
+<a name="320087468"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/349785-JavaScript_pi/topic/JavaScript%20v2.0/near/320087468" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Tony Voss <a href="https://leamas.github.io/zulip-archive/stream/349785-JavaScript_pi/topic/JavaScript.20v2.2E0.html#320087468">(Jan 08 2023 at 15:12)</a>:</h4>
+<p>???<br>
+In JavaScriptgui_imp.h, the trace statement is now at line 1036 and reads:<br>
+<code>TRACE(28, wxString::Format("setMinWidth %s was minimised: %s\nNew min size to X:%i  Y:%i", this-&gt;mConsoleName, wasMinimized?"true":"false", newMinSize.x, newMinSize.y));</code><br>
+not what you just quoted.  Are you sure you have my latest src?</p>
+
+
+
+<a name="320087930"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/349785-JavaScript_pi/topic/JavaScript%20v2.0/near/320087930" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Mike Rossiter <a href="https://leamas.github.io/zulip-archive/stream/349785-JavaScript_pi/topic/JavaScript.20v2.2E0.html#320087930">(Jan 08 2023 at 15:16)</a>:</h4>
+<blockquote>
+<p>Are you sure you have my latest src?</p>
+</blockquote>
+<p>Checking.</p>
+
+
+
+<a name="320088323"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/349785-JavaScript_pi/topic/JavaScript%20v2.0/near/320088323" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Mike Rossiter <a href="https://leamas.github.io/zulip-archive/stream/349785-JavaScript_pi/topic/JavaScript.20v2.2E0.html#320088323">(Jan 08 2023 at 15:20)</a>:</h4>
+<p>Ah ... did not update my fork!</p>
+
+
+
+<a name="320089299"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/349785-JavaScript_pi/topic/JavaScript%20v2.0/near/320089299" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Tony Voss <a href="https://leamas.github.io/zulip-archive/stream/349785-JavaScript_pi/topic/JavaScript.20v2.2E0.html#320089299">(Jan 08 2023 at 15:29)</a>:</h4>
+<p>Just updated again at 15:24 - compiling now..<br>
+Previously, when no trace,  <code>TRACE(4, xxx);</code> compiled to <code>(4,xxx);</code> which got a compiler warning and might be causing your Windows problem.<br>
+Now using proper macro parameters  and when no trace it compiles to  ((void) 0);  No compiler warning.</p>
+
+
+
+<a name="320089454"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/349785-JavaScript_pi/topic/JavaScript%20v2.0/near/320089454" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Tony Voss <a href="https://leamas.github.io/zulip-archive/stream/349785-JavaScript_pi/topic/JavaScript.20v2.2E0.html#320089454">(Jan 08 2023 at 15:30)</a>:</h4>
+<p>PS the <code>(void)0</code> needed because there is a ; after so we need something</p>
+
+
+
+<a name="320089878"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/349785-JavaScript_pi/topic/JavaScript%20v2.0/near/320089878" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Mike Rossiter <a href="https://leamas.github.io/zulip-archive/stream/349785-JavaScript_pi/topic/JavaScript.20v2.2E0.html#320089878">(Jan 08 2023 at 15:35)</a>:</h4>
+<p>The trace now looks good. b4 your latest update I get this error message when running the parking.js script:</p>
+<div class="codehilite"><pre><span></span><code>Error
+findConsoleByCtx failed to match console
+</code></pre></div>
+
+
+
+<a name="320091123"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/349785-JavaScript_pi/topic/JavaScript%20v2.0/near/320091123" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Mike Rossiter <a href="https://leamas.github.io/zulip-archive/stream/349785-JavaScript_pi/topic/JavaScript.20v2.2E0.html#320091123">(Jan 08 2023 at 15:48)</a>:</h4>
+<p>Results of parking script.<br>
+Does not seem to detect that previous console is parked.<br>
+<a href="/user_uploads/33951/jPtDiS7SpMvnF4jLQS5RQSj2/parking.txt">parking.txt</a></p>
+
+
+
+<a name="320093391"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/349785-JavaScript_pi/topic/JavaScript%20v2.0/near/320093391" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Mike Rossiter <a href="https://leamas.github.io/zulip-archive/stream/349785-JavaScript_pi/topic/JavaScript.20v2.2E0.html#320093391">(Jan 08 2023 at 16:10)</a>:</h4>
+<blockquote>
+<p>consolePark(); scriptResult();</p>
+</blockquote>
+<p>With this the parking works and also the mini-console shrinks.</p>
+
+
+
+<a name="320095222"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/349785-JavaScript_pi/topic/JavaScript%20v2.0/near/320095222" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Mike Rossiter <a href="https://leamas.github.io/zulip-archive/stream/349785-JavaScript_pi/topic/JavaScript.20v2.2E0.html#320095222">(Jan 08 2023 at 16:26)</a>:</h4>
+<p>Not sure why but for the test:</p>
+<div class="codehilite"><pre><span></span><code>        bool wasMinimized = (oldSize.y &lt;= CONSOLE_MIN_HEIGHT+1);    // allow for rounding error
+</code></pre></div>
+<p>Changed to:</p>
+<div class="codehilite"><pre><span></span><code>        bool wasMinimized = (oldSize.y &gt;= CONSOLE_MIN_HEIGHT+1);    // allow for rounding error
+</code></pre></div>
+<p>And the consoles spread across the canvas AND the #2 console shrinks properly.<br>
+With the simple script:<br>
+<em>consolePark(); scriptResult();</em><br>
+The parking  works correctly as well.</p>
+
+
+
+<a name="320096053"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/349785-JavaScript_pi/topic/JavaScript%20v2.0/near/320096053" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Mike Rossiter <a href="https://leamas.github.io/zulip-archive/stream/349785-JavaScript_pi/topic/JavaScript.20v2.2E0.html#320096053">(Jan 08 2023 at 16:35)</a>:</h4>
+<p>My twisted logic is that we need wasMinimized to be true in order to minimise the console.</p>
+
+
+
+<a name="320099293"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/349785-JavaScript_pi/topic/JavaScript%20v2.0/near/320099293" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Tony Voss <a href="https://leamas.github.io/zulip-archive/stream/349785-JavaScript_pi/topic/JavaScript.20v2.2E0.html#320099293">(Jan 08 2023 at 17:11)</a>:</h4>
+<p>Clearly, the test is failing as written on Windows but not on MacOS.  Your kludge forces it to success - but always, even when it should not.<br>
+I suspect on Windows SetMinSize() is not setting it exactly as that.  Perhaps rounding, or perhaps allowing for some minimum minimum.<br>
+We need to find out what it is doing with it.<br>
+In JSExtensions.cpp please insert these extra lines after line 622   pConsole-&gt;SetSize(minSize);</p>
+<div class="codehilite"><pre><span></span><code>// temp
+        wxSize readBack  = pConsole-&gt;GetMinSize();
+        TRACE(25, wxString::Format(&quot;%s-&gt;consolePark() resize to X:%i  Y:%i readback is X:%i  Y:%i&quot;,
+            pConsole-&gt;mConsoleName, minSize.x, minSize.y, readBack.x, readBack.y));
+// end of temp
+</code></pre></div>
+<p>For me this shows I get back what was set:</p>
+<blockquote>
+<p>L25   PluginTests-&gt;consolePark() resize to X:183  Y:20 readback is X:183  Y:20</p>
+</blockquote>
+
+
+
+<a name="320100423"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/349785-JavaScript_pi/topic/JavaScript%20v2.0/near/320100423" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Mike Rossiter <a href="https://leamas.github.io/zulip-archive/stream/349785-JavaScript_pi/topic/JavaScript.20v2.2E0.html#320100423">(Jan 08 2023 at 17:24)</a>:</h4>
+<p>Without the kludge:</p>
+<div class="codehilite"><pre><span></span><code>L0  â€“â€“â€“â€“â€“â€“â€“â€“â€“â€“â€“â€“â€“â€“â€“ Run console Test
+L25 consolePark canvas position X:9  Y:32
+L25 consolePark parkingBase:20
+L25 Test-&gt;consolePark() on call position X:580  Y:149  size X:680  Y:700
+L25 Test-&gt;consolePark() to be parked
+L25 Test-&gt;consolePark() first to be parked
+L25 Test-&gt;consolePark() resize to X:0  Y:0 readback is X:90  Y:13
+L25 Test-&gt;consolePark() parked at position X:79  Y:20  size X:90  Y:13
+</code></pre></div>
+
+
+
+<a name="320101216"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/349785-JavaScript_pi/topic/JavaScript%20v2.0/near/320101216" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Mike Rossiter <a href="https://leamas.github.io/zulip-archive/stream/349785-JavaScript_pi/topic/JavaScript.20v2.2E0.html#320101216">(Jan 08 2023 at 17:33)</a>:</h4>
+<p>Back later.</p>
+
+
+
+<a name="320102182"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/349785-JavaScript_pi/topic/JavaScript%20v2.0/near/320102182" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Tony Voss <a href="https://leamas.github.io/zulip-archive/stream/349785-JavaScript_pi/topic/JavaScript.20v2.2E0.html#320102182">(Jan 08 2023 at 17:45)</a>:</h4>
+<p>So it seems that , under Windows, if the minimum size has never been set, GetMinSize( ) returns (0,0) although the documentation says it should take note of the sizers.<br>
+If a console is renamed with the tools, the minimum size gets set.  But if it has not been renamed, it will not have had its minimum size set explicitly.  So...  we better do that in the console constructor.<br>
+JavaScriptgui_impl.h after line 273: <code>mBrief.briefingConsoleName = wxEmptyString;</code> please insert:<br>
+<code>setMinWidth();</code><br>
+That method actually sets both  min width and height.</p>
+
+
+
+<a name="320102974"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/349785-JavaScript_pi/topic/JavaScript%20v2.0/near/320102974" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Mike Rossiter <a href="https://leamas.github.io/zulip-archive/stream/349785-JavaScript_pi/topic/JavaScript.20v2.2E0.html#320102974">(Jan 08 2023 at 17:54)</a>:</h4>
+<p>After the change:</p>
+<div class="codehilite"><pre><span></span><code>L28 setMinWidth Test was minimised: false
+New min size to X:90  Y:13
+L28 setMinWidth Test was minimised: false
+New min size to X:90  Y:13
+L0  â€“â€“â€“â€“â€“â€“â€“â€“â€“â€“â€“â€“â€“â€“â€“ Run console Test
+L25 consolePark canvas position X:9  Y:32
+L25 consolePark parkingBase:20
+L25 Test-&gt;consolePark() on call position X:61  Y:236  size X:680  Y:700
+L25 Test-&gt;consolePark() to be parked
+L25 Test-&gt;consolePark() first to be parked
+L25 Test-&gt;consolePark() resize to X:0  Y:0 readback is X:90  Y:13
+L25 Test-&gt;consolePark() parked at position X:79  Y:20  size X:90  Y:13
+</code></pre></div>
+
+
+
+<a name="320103855"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/349785-JavaScript_pi/topic/JavaScript%20v2.0/near/320103855" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Tony Voss <a href="https://leamas.github.io/zulip-archive/stream/349785-JavaScript_pi/topic/JavaScript.20v2.2E0.html#320103855">(Jan 08 2023 at 18:05)</a>:</h4>
+<p>Knocking off for Sunday evening.  Back tomorrow.  May need to read back in <code>setMinWidth()</code> to find out what is going on.</p>
+
+
+
+<a name="320107603"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/349785-JavaScript_pi/topic/JavaScript%20v2.0/near/320107603" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Tony Voss <a href="https://leamas.github.io/zulip-archive/stream/349785-JavaScript_pi/topic/JavaScript.20v2.2E0.html#320107603">(Jan 08 2023 at 18:49)</a>:</h4>
+<p>When you started testing JS v2 for me, parking worked OK, apart from needing some tweaking.  Issue with minSize not apparent.  So what has changed?  Different Windows?  Or are you testing the new OCPN with different wxWidgets?</p>
+
+
+
+<a name="320166558"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/349785-JavaScript_pi/topic/JavaScript%20v2.0/near/320166558" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Mike Rossiter <a href="https://leamas.github.io/zulip-archive/stream/349785-JavaScript_pi/topic/JavaScript.20v2.2E0.html#320166558">(Jan 09 2023 at 08:05)</a>:</h4>
+<blockquote>
+<p>So what has changed?</p>
+</blockquote>
+<p>Now on Win10, VS2022. wxWidgets still 3.1.2. MacOS uses 3.1.5. Before I was using VS2017, Win8.1.<br>
+Boating today but tomorrow I will flash up my old pc and see if things change.</p>
+
+
+
+<a name="320166852"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/349785-JavaScript_pi/topic/JavaScript%20v2.0/near/320166852" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Mike Rossiter <a href="https://leamas.github.io/zulip-archive/stream/349785-JavaScript_pi/topic/JavaScript.20v2.2E0.html#320166852">(Jan 09 2023 at 08:07)</a>:</h4>
+<p>Appveyor uses VS2017 so a new build in Cloudsmith would be useful for a test.</p>
+
+
+
+<a name="320292098"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/349785-JavaScript_pi/topic/JavaScript%20v2.0/near/320292098" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Tony Voss <a href="https://leamas.github.io/zulip-archive/stream/349785-JavaScript_pi/topic/JavaScript.20v2.2E0.html#320292098">(Jan 09 2023 at 18:09)</a>:</h4>
+<p>May be on to something... suggest stand by until further info.</p>
+
+
+
+<a name="320338560"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/349785-JavaScript_pi/topic/JavaScript%20v2.0/near/320338560" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Tony Voss <a href="https://leamas.github.io/zulip-archive/stream/349785-JavaScript_pi/topic/JavaScript.20v2.2E0.html#320338560">(Jan 09 2023 at 21:56)</a>:</h4>
+<p>I suspect problem with not recognising a parked console to do with settings in consolePositioning.h and different way Windows behaves if  a window is set smaller than Windows likes.  Am working on a way of reliably determining the values for a given platform.  But it will take a while and I have other calls on my time as well, so please stand by.  No point in you spending effort on it as there will be changes to support what I have in mind.</p>
+
+
+
+<a name="322082841"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/349785-JavaScript_pi/topic/JavaScript%20v2.0/near/322082841" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Mike Rossiter <a href="https://leamas.github.io/zulip-archive/stream/349785-JavaScript_pi/topic/JavaScript.20v2.2E0.html#322082841">(Jan 18 2023 at 15:36)</a>:</h4>
+<p>Your build system is about a year behind the last wx3.1.2 ShipDriver templates. Probably not worth worrying at this stage but for keeping in mind. sd3.1.4 was the last template for wx3.1.2/wx3.1.5. Alec and I are having some issues with Debian Bookworm builds for OpenCPN 5.7/5.8 but the sd3.2 series of templates are for wxWidgets 3.2.1.</p>
+
+
+
+<a name="322856953"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/349785-JavaScript_pi/topic/JavaScript%20v2.0/near/322856953" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Tony Voss <a href="https://leamas.github.io/zulip-archive/stream/349785-JavaScript_pi/topic/JavaScript.20v2.2E0.html#322856953">(Jan 22 2023 at 13:12)</a>:</h4>
+<p>Final? test  Alpha 6   built just now at 12:55.</p>
+<p><strong>New help page in tools with documentation links</strong> <br>
+This is available directly from the ? button top right in console.<br>
+On first run or update of plugin, help page automatically shown<br>
+Also from Preferences button in plugin entry in  OCPN Options list</p>
+<p><strong>StartStyling mask now wxWidgets version dependent rather than platform dependent</strong></p>
+<p><strong>Inclusion of '_' in plugin name now wxWidgets version dependent rather than platform dependent</strong></p>
+<p><strong>Compiler warnings all eliminated - at least on MacOS</strong></p>
+<p><strong>Linux dependencies we introduced all removed</strong></p>
+<p>Would appreciate your blessing.</p>
+
+
+
+<a name="322864901"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/349785-JavaScript_pi/topic/JavaScript%20v2.0/near/322864901" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Mike Rossiter <a href="https://leamas.github.io/zulip-archive/stream/349785-JavaScript_pi/topic/JavaScript.20v2.2E0.html#322864901">(Jan 22 2023 at 14:14)</a>:</h4>
+<blockquote>
+<p>Would appreciate your blessing.</p>
+</blockquote>
+<p>No blessings available here! I will have a play.</p>
+
+
+
+<a name="322868690"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/349785-JavaScript_pi/topic/JavaScript%20v2.0/near/322868690" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Mike Rossiter <a href="https://leamas.github.io/zulip-archive/stream/349785-JavaScript_pi/topic/JavaScript.20v2.2E0.html#322868690">(Jan 22 2023 at 14:44)</a>:</h4>
+<p>Cannot see an msvc tarball in Cloudsmith. Did the appveyor build fail for some reason. I had problems with #if def in consolePositioning.h. Used this to make it compile:</p>
+<div class="codehilite" data-code-language="#ifdef"><pre><span></span><code>#define CONSOLE_MIN_HEIGHT 20L
+#define CONSOLE_STUB 50L
+#define PARK_LEVEL 25L
+#define PARK_FIRST_X 70L
+#define PARK_SEP 8L
+
+
+#elif defined(__LINUX__)
+#define CONSOLE_MIN_HEIGHT 38L
+#define CONSOLE_STUB 79L
+#define PARK_LEVEL 48L
+#define PARK_FIRST_X 66L
+#define PARK_SEP 21L
+
+#else
+//includes MacOS
+#define CONSOLE_MIN_HEIGHT 29L
+#define CONSOLE_STUB 77L
+#define PARK_LEVEL 25L
+#define PARK_FIRST_X 3L
+#define PARK_SEP 6L
+
+#endif
+
+#endif      // consolePositioning_h
+</code></pre></div>
+
+
+
+<a name="322869689"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/349785-JavaScript_pi/topic/JavaScript%20v2.0/near/322869689" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Mike Rossiter <a href="https://leamas.github.io/zulip-archive/stream/349785-JavaScript_pi/topic/JavaScript.20v2.2E0.html#322869689">(Jan 22 2023 at 14:51)</a>:</h4>
+<p>Linux - all tests passed. Success.</p>
+
+
+
+<a name="322878811"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/349785-JavaScript_pi/topic/JavaScript%20v2.0/near/322878811" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Tony Voss <a href="https://leamas.github.io/zulip-archive/stream/349785-JavaScript_pi/topic/JavaScript.20v2.2E0.html#322878811">(Jan 22 2023 at 16:05)</a>:</h4>
+<p>Oops... yes should be using #elif - now fixed and pushed.  appveyor build was tripping on that but has now succeeded.<br>
+Please let me know when you are content with it all.</p>
+
+
+
+<a name="322880850"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/349785-JavaScript_pi/topic/JavaScript%20v2.0/near/322880850" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Mike Rossiter <a href="https://leamas.github.io/zulip-archive/stream/349785-JavaScript_pi/topic/JavaScript.20v2.2E0.html#322880850">(Jan 22 2023 at 16:22)</a>:</h4>
+<p>All looks good here. Go for it.</p>
+
+
+
+<hr><p>Last updated: Oct 05 2023 at 09:43 UTC</p>
+</html>

@@ -1,0 +1,1946 @@
+[
+    {
+        "content": "<p>A new stream for findings:<br>\nThe TCP GSV data from my server did in some way transferred bad data to Dashboard. \"Number of satellites\" was collected from a empty field. See pict.<br>\nWith this \"hack\" it was solved but may need a prof rework?<br>\nIn \"comm_decoder.cpp\" row; 221</p>\n<blockquote>\n<div class=\"codehilite\"><pre><span></span><code>if (m_NMEA0183.Gsv.MessageNumber == 1)\ntemp_data.n_satellites = m_NMEA0183.Gsv.SatsInView;\nelse return false; // Other msg numbers can be scrap\n</code></pre></div>\n\n</blockquote>\n<p><a href=\"/user_uploads/33951/t1oi6Aivf2JvDStVl7vjYWIQ/bild.png\">bild.png</a></p>\n<div class=\"message_inline_image\"><a href=\"/user_uploads/33951/t1oi6Aivf2JvDStVl7vjYWIQ/bild.png\" title=\"bild.png\"><img src=\"/user_uploads/33951/t1oi6Aivf2JvDStVl7vjYWIQ/bild.png\"></a></div>",
+        "id": 294148227,
+        "sender_full_name": "Håkan Svensson",
+        "timestamp": 1660848308
+    },
+    {
+        "content": "<p>Good catch. Not sure about the patch as as such.</p>\n<p>You can make PRs against the comm branch, it's one of the options when  submitting the PR. This one should be easy anyway, but just so you know.</p>\n<p>Sidenote: \"Test issues\" is  an \"issue\" in zulip parlance, not a stream. The stream is on a higher level, all these discussions takes place in the \"comms\" stream. There are other streams to the left, notably one for the manuals.</p>",
+        "id": 294158444,
+        "sender_full_name": "Alec Leamas",
+        "timestamp": 1660852204
+    },
+    {
+        "content": "<p>Hakan<br>\nHave not looked closely at Plugin interface for new message scheme yet.  Coming soon, bit by bit.</p>",
+        "id": 294199574,
+        "sender_full_name": "Dave Register",
+        "timestamp": 1660881350
+    },
+    {
+        "content": "<p><span class=\"user-mention\" data-user-id=\"517002\">@Dave Register</span> Not that an interface is available in ocpn_plugin.h</p>",
+        "id": 294214249,
+        "sender_full_name": "Alec Leamas",
+        "timestamp": 1660893701
+    },
+    {
+        "content": "<p>Dave..<br>\nIndependent of the plugin interface I do think we need to clean out possible null values in GSV message number &gt; 1. For example by my patch above?</p>",
+        "id": 294217591,
+        "sender_full_name": "Håkan Svensson",
+        "timestamp": 1660895757
+    },
+    {
+        "content": "<p>In comm_decoder.cpp:295</p>\n<blockquote>\n<p>if (ParseN2kPGN129029(v, SID, DaysSince1970, SecondsSinceMidnight,<br>\n                        Latitude, Longitude, Altitude,<br>\n                        GNSStype, GNSSmethod,<br>\n                        nSatellites, HDOP, PDOP, GeoidalSeparation,<br>\n                        nReferenceStations, ReferenceStationType, ReferenceSationID,<br>\n                        AgeOfCorrection<br>\n                        )) {</p>\n</blockquote>\n<p>Strange... If I compare this list with the info for PGN 129029 <a href=\"https://copperhilltech.com/content/NMEA2K_Network_Design_v2.pdf\">here</a> there are two more fields between GNSSmethod and  nSatellites. Either is my link not correct or I misunderstand the code?</p>",
+        "id": 294356960,
+        "sender_full_name": "Håkan Svensson",
+        "timestamp": 1660940438
+    },
+    {
+        "content": "<p>A strange message every time when starting O is present today.  The log file can't be removed.<br>\nIn English: err 32: The file can't be handled since it busy by another process.  ?? <br>\nHave we moved the log file renaming to log.log so it's already open?<br>\n<a href=\"/user_uploads/33951/w-AVEE5g3yeKQLFJfGRar1R7/bild.png\">bild.png</a></p>\n<div class=\"message_inline_image\"><a href=\"/user_uploads/33951/w-AVEE5g3yeKQLFJfGRar1R7/bild.png\" title=\"bild.png\"><img src=\"/user_uploads/33951/w-AVEE5g3yeKQLFJfGRar1R7/bild.png\"></a></div>",
+        "id": 294358638,
+        "sender_full_name": "Håkan Svensson",
+        "timestamp": 1660941225
+    },
+    {
+        "content": "<p>About ParseN2kPGN129029:  The order of arguments is not related to the order of the values in the message.  So, no problem.</p>",
+        "id": 294377451,
+        "sender_full_name": "Dave Register",
+        "timestamp": 1660953104
+    },
+    {
+        "content": "<p>The opencpn.log-file error message when the log file should be renamed to log.log (i.e. opencpn.log should be deleted?)<br>\nis happening here:<br>\nBasePlatform.cpp : 643</p>\n<blockquote>\n<p>g_logger = new OcpnLog(mlog_file.mb_str());<br>\n  m_Oldlogger = wxLog::SetActiveTarget(g_logger);</p>\n</blockquote>\n<p>Row 643 g_logger.... is executed.<br>\nthe error message appears when row 644 m_Oldlogger...is running.<br>\nThe new opencpn.log.log file is created but the old opencpn.log still remains.<br>\nI can't find the real problem. Are we missing to close to old log file?</p>",
+        "id": 294440906,
+        "sender_full_name": "Håkan Svensson",
+        "timestamp": 1661001681
+    },
+    {
+        "content": "<p>Related to last post about log file error or not..<br>\nWhen I stop O a number of messages are shown instead of print the info to the log file. See picts.</p>\n<p><a href=\"/user_uploads/33951/6i62BI4ZnL16rM9wYE3ZHSao/bild.png\">bild.png</a> <br>\n<a href=\"/user_uploads/33951/QBMra0E3c0jJvRk2QHKuNK0W/bild.png\">bild.png</a> <br>\n<a href=\"/user_uploads/33951/5th9yYoagl66aF6q7J2UQCPz/bild.png\">bild.png</a></p>\n<div class=\"message_inline_image\"><a href=\"/user_uploads/33951/6i62BI4ZnL16rM9wYE3ZHSao/bild.png\" title=\"bild.png\"><img src=\"/user_uploads/33951/6i62BI4ZnL16rM9wYE3ZHSao/bild.png\"></a></div><div class=\"message_inline_image\"><a href=\"/user_uploads/33951/QBMra0E3c0jJvRk2QHKuNK0W/bild.png\" title=\"bild.png\"><img src=\"/user_uploads/33951/QBMra0E3c0jJvRk2QHKuNK0W/bild.png\"></a></div><div class=\"message_inline_image\"><a href=\"/user_uploads/33951/5th9yYoagl66aF6q7J2UQCPz/bild.png\" title=\"bild.png\"><img src=\"/user_uploads/33951/5th9yYoagl66aF6q7J2UQCPz/bild.png\"></a></div>",
+        "id": 294441965,
+        "sender_full_name": "Håkan Svensson",
+        "timestamp": 1661002225
+    },
+    {
+        "content": "<p>I see the same.  Alec?</p>",
+        "id": 294446033,
+        "sender_full_name": "Dave Register",
+        "timestamp": 1661004410
+    },
+    {
+        "content": "<p>Later...</p>",
+        "id": 294447892,
+        "sender_full_name": "Alec Leamas",
+        "timestamp": 1661005402
+    },
+    {
+        "content": "<p>Look ahead mode..<br>\nWhen serial connected to either N0183 or N2K (using YDNU-02) the Look ahead mode is 180° false. So it could be called \"Look behind mode\" instead :)</p>",
+        "id": 294648217,
+        "sender_full_name": "Håkan Svensson",
+        "timestamp": 1661165013
+    },
+    {
+        "content": "<p>N2K uses SI units...<br>\nApparently SI units are used by the N2K standard.<br>\nWith this the SOG value shows correct data:</p>\n<blockquote>\n<div class=\"codehilite\"><pre><span></span><code>if (ParseN2kPGN129026(v, SID, ref, COG, SOG)) {\ntemp_data.gCog = GEODESIC_RAD2DEG(COG);\ntemp_data.gSog = MS2KNOTS(SOG);\nreturn true;\n</code></pre></div>\n\n<p>} </p>\n</blockquote>\n<p>So we may introduce these into comm_decoder?</p>\n<blockquote>\n<p>#define GEODESIC_RAD2DEG(r) ((r) * (180.0 / M_PI))<br>\n#define MS2KNOTS(r) ((r) * (1.9438444924406))</p>\n</blockquote>",
+        "id": 294821784,
+        "sender_full_name": "Håkan Svensson",
+        "timestamp": 1661242494
+    },
+    {
+        "content": "<blockquote>\n<p>So we may introduce these into comm_decoder?<br>\n#define</p>\n</blockquote>\n<p>Wouldn't   <code>static inline double GeodesicRadToDeg(double rads) {...}</code>  be a better option in this case?</p>",
+        "id": 294826108,
+        "sender_full_name": "Alec Leamas",
+        "timestamp": 1661244501
+    },
+    {
+        "content": "<p>I can't judge that.. I just copied a few examples from Dashboard.</p>",
+        "id": 294866662,
+        "sender_full_name": "Håkan Svensson",
+        "timestamp": 1661261775
+    },
+    {
+        "content": "<p>Those examples are basically code of  the 90'ies,   modern (since 20 years!) C++ does not use  macros in such situations.  The problem with macros is that the compiler cannot type check . There is no difference in generated code in an example like this.</p>",
+        "id": 294868585,
+        "sender_full_name": "Alec Leamas",
+        "timestamp": 1661262385
+    },
+    {
+        "content": "<blockquote>\n<p>There is no difference in generated code </p>\n</blockquote>\n<p>Well, the compiler could actually optimize any function, so also a <code>static inline</code>one. Which it certainly cannot do with a macro...</p>",
+        "id": 294870292,
+        "sender_full_name": "Alec Leamas",
+        "timestamp": 1661262895
+    },
+    {
+        "content": "<p>Done, by static inline.....</p>",
+        "id": 295051244,
+        "sender_full_name": "Dave Register",
+        "timestamp": 1661349011
+    },
+    {
+        "content": "<p>Very good. Issue \"SI-units\" closed.</p>",
+        "id": 295177288,
+        "sender_full_name": "Håkan Svensson",
+        "timestamp": 1661413641
+    },
+    {
+        "content": "<p><strong>Look ahead mode..</strong><br>\nI reported the the Look ahead mode for serial devices are +- 180° false.<br>\nNow I'm using N0183 network TCP (\"my\" server)  and the Look ahead is mode still false. <br>\nBut it may be my conclusion to say 180° false is not a correct description.<br>\nSince the boat symbol is always in the bottom part of the screen it may be the Look ahead function don't get correct COG (or heading) from the new code in the coom branch? The function seems to assume northerly (0°) course all time?</p>",
+        "id": 295597910,
+        "sender_full_name": "Håkan Svensson",
+        "timestamp": 1661607117
+    },
+    {
+        "content": "<p><strong>Network stability</strong>...<br>\nIf a network connection is established in O and the PC's network is temporarily disconnected or the network is changed to another card/wifi provider OCPN's connection is not reestablished but need a O restart. to connect again.</p>",
+        "id": 297221704,
+        "sender_full_name": "Håkan Svensson",
+        "timestamp": 1662382291
+    },
+    {
+        "content": "<p>The task list function in TODO list was nice.  <br>\nShould I use one here as well or move solved messages to a new topic: \"solved issues\"?</p>",
+        "id": 297222591,
+        "sender_full_name": "Håkan Svensson",
+        "timestamp": 1662382682
+    },
+    {
+        "content": "<p>Please do, it might indeed be useful.</p>",
+        "id": 297241350,
+        "sender_full_name": "Alec Leamas",
+        "timestamp": 1662390502
+    },
+    {
+        "content": "<p>There was an \"or\" in the sentence but suppose you answered to make a task list?</p>",
+        "id": 297243580,
+        "sender_full_name": "Håkan Svensson",
+        "timestamp": 1662391527
+    },
+    {
+        "content": "<p>I run into a O crash.<br>\nI built the code of today and run it with a serial connection from last run. No problem.<br>\nI then switched to a network TCP connection. The serial now went down nicely and the TCP connection was established. Very good!<br>\nThen I closed O and restated with the network TCP enabled in config. Crash after \"OnInitTimer...4\"<br>\nCal stack here: and debug exception pict. below</p>\n<blockquote>\n<div class=\"codehilite\"><pre><span></span><code> opencpn.exe!Multiplexer::HandleN0183(std::shared_ptr&lt;Nmea0183Msg const &gt; n0183_msg) Line 281 C++\nopencpn.exe!Multiplexer::{ctor}::__l2::&lt;lambda&gt;(ObservedEvt ev) Line 106    C++\nopencpn.exe!wxEventFunctorFunctor&lt;wxEventTypeTag&lt;ObservedEvt&gt;,void &lt;lambda&gt;(ObservedEvt) &gt;::operator()(wxEvtHandler * __formal, wxEvent &amp; event) Line 503   C++\n[External Code] \n[Frames below may be incorrect and/or missing, no symbols loaded for wxbase312u_vc_custom.dll]  Unknown\nopencpn.exe!NotifySetupOptionsPlugin(const PlugInContainer * pic) Line 2024 C++\nopencpn.exe!PlugInManager::NotifySetupOptions() Line 2039   C++\nopencpn.exe!options::CreateControls() Line 5823 C++\nopencpn.exe!options::options(MyFrame * parent, int id, const wxString &amp; caption, const wxPoint &amp; pos, const wxSize &amp; size, long style) Line 1600    C++\nopencpn.exe!MyFrame::OnInitTimer(wxTimerEvent &amp; event) Line 5277    C++\n[External Code] \nopencpn.exe!WinMain(HINSTANCE__ * hInstance, HINSTANCE__ * hPrevInstance, char * __formal, int nCmdShow) Line 947   C++\n[External Code]\n</code></pre></div>\n\n</blockquote>\n<p><a href=\"/user_uploads/33951/vVpEyLq1sB9Sz_QBdHVXSdQV/bild.png\">bild.png</a></p>\n<div class=\"message_inline_image\"><a href=\"/user_uploads/33951/vVpEyLq1sB9Sz_QBdHVXSdQV/bild.png\" title=\"bild.png\"><img src=\"/user_uploads/33951/vVpEyLq1sB9Sz_QBdHVXSdQV/bild.png\"></a></div>",
+        "id": 297596965,
+        "sender_full_name": "Håkan Svensson",
+        "timestamp": 1662558969
+    },
+    {
+        "content": "<p>The NMEA Debug window is now working again for all N0183. Serial or Network.  Thanks</p>",
+        "id": 297648834,
+        "sender_full_name": "Håkan Svensson",
+        "timestamp": 1662575141
+    },
+    {
+        "content": "<p><strong>Connection input filter...</strong><br>\nAlthough it's reported as functional in the NMEA Debug window, color is changed, the filter has no function neither for a Network nor a serial connection. <br>\nIf I for example filter out AIVDM on a TCP connection AIS targets are still updated.</p>",
+        "id": 297649416,
+        "sender_full_name": "Håkan Svensson",
+        "timestamp": 1662575355
+    },
+    {
+        "content": "<p>Trying to add a filter to a serial connection creates a O crash. </p>\n<blockquote>\n<div class=\"codehilite\"><pre><span></span><code>  535f5945()\n[Frames below may be incorrect and/or missing]\nopencpn.exe!CommDriverN0183SerialThread::Entry() Line 555   C++\n[External Code]\n</code></pre></div>\n\n</blockquote>",
+        "id": 297649915,
+        "sender_full_name": "Håkan Svensson",
+        "timestamp": 1662575520
+    },
+    {
+        "content": "<p><strong>No Position to plugins (Radar_pi)</strong><br>\nAlthough heading is nicely transferred to the  radar plugin position is not. I haven't yet checked other plugins.</p>",
+        "id": 297654143,
+        "sender_full_name": "Håkan Svensson",
+        "timestamp": 1662577022
+    },
+    {
+        "content": "<p>About crash on startup with TCP enabled:<br>\nDo you have only one enabled connection, your TCP server?</p>",
+        "id": 297661864,
+        "sender_full_name": "Dave Register",
+        "timestamp": 1662580019
+    },
+    {
+        "content": "<p>Is it always happening?  I am having no trouble...</p>",
+        "id": 297661980,
+        "sender_full_name": "Dave Register",
+        "timestamp": 1662580077
+    },
+    {
+        "content": "<p>Corrected N0183 input filtering and Debug Window functionality.<br>\nCould not reproduce any problems with setting filters...</p>",
+        "id": 297693500,
+        "sender_full_name": "Dave Register",
+        "timestamp": 1662597213
+    },
+    {
+        "content": "<p><span class=\"user-mention silent\" data-user-id=\"517002\">Dave Register</span> <a href=\"#narrow/stream/332168-comms/topic/Test.20issues/near/297661864\">said</a>:</p>\n<blockquote>\n<p>About crash on startup with TCP enabled:<br>\nDo you have only one enabled connection, your TCP server?</p>\n</blockquote>\n<p>Yes, only my TCP server.<br>\nYes, it happens all times. Both when running normal and Debug via VS2017.<br>\nDebug halts at multiplexer.cpp: 247  \"target_driver._Ptr was nullptr.\"<br>\nlog ends at:<br>\n08:40:34.500 MESSAGE ocpn_frame.cpp:5030 OnInitTimer...4<br>\n08:40:36.879 MESSAGE options.cpp:5331 options: got device count: 1</p>\n<p>The only way I can get O to start after that is to disable the TCP connection in config.<br>\nConfig settings before that:<br>\n|1;0;signalk.stupan.se;10112;0;;4800;1;0;1;;0;;3;0;1;0;1;Stupan TCP;0;|</p>\n<p>New call stack</p>\n<blockquote>\n<blockquote>\n<p>opencpn.exe!Multiplexer::HandleN0183(std::shared_ptr&lt;Nmea0183Msg const &gt; n0183_msg) Line 247    C++<br>\n    opencpn.exe!Multiplexer::{ctor}::__l2::&lt;lambda&gt;(ObservedEvt ev) Line 106    C++<br>\n    opencpn.exe!wxEventFunctorFunctor&lt;wxEventTypeTag&lt;ObservedEvt&gt;,void &lt;lambda&gt;(ObservedEvt) &gt;::operator()(wxEvtHandler * __formal, wxEvent &amp; event) Line 503   C++<br>\n    [External Code] <br>\n    [Frames below may be incorrect and/or missing, no symbols loaded for wxbase312u_vc_custom.dll]  Unknown<br>\n    opencpn.exe!NotifySetupOptionsPlugin(const PlugInContainer * pic) Line 2024 C++<br>\n    opencpn.exe!PlugInManager::NotifySetupOptions() Line 2039   C++<br>\n    opencpn.exe!options::CreateControls() Line 5823 C++<br>\n    opencpn.exe!options::options(MyFrame * parent, int id, const wxString &amp; caption, const wxPoint &amp; pos, const wxSize &amp; size, long style) Line 1600    C++<br>\n    opencpn.exe!MyFrame::OnInitTimer(wxTimerEvent &amp; event) Line 5270    C++<br>\n    [External Code] <br>\n    opencpn.exe!WinMain(HINSTANCE__ * hInstance, HINSTANCE__ * hPrevInstance, char * __formal, int nCmdShow) Line 947   C++<br>\n    [External Code]</p>\n</blockquote>\n</blockquote>",
+        "id": 297716562,
+        "sender_full_name": "Håkan Svensson",
+        "timestamp": 1662619531
+    },
+    {
+        "content": "<p><span class=\"user-mention silent\" data-user-id=\"517002\">Dave Register</span> <a href=\"#narrow/stream/332168-comms/topic/Test.20issues/near/297693500\">said</a>:</p>\n<blockquote>\n<p>Corrected N0183 input filtering and Debug Window functionality.<br>\nCould not reproduce any problems with setting filters...</p>\n</blockquote>\n<ol>\n<li>Yes very good, the N0183 filter function is now working on both network; TCP  and serial; COM3. (Test cases: exclude AIVDM or receive only AIVDM)</li>\n<li>I still can't change the filter settings for a serial(COM3) connection. Neither set nor clean out a filter.  See call stack below.<br>\nIf I though restart after the crash the filter settings are saved to config and functional.<br>\nNote: On a Network, TCP, connection I can change filter settings wo problems.</li>\n</ol>\n<p>CommDriverN0183SerialThread.cpp:554   <strong><em>\" Access violation executing location 0x535F5945.\"</em></strong><br>\ncall stack:</p>\n<blockquote>\n<div class=\"codehilite\"><pre><span></span><code>  535f5945()  Unknown\n[Frames below may be incorrect and/or missing]  Unknown\nopencpn.exe!CommDriverN0183SerialThread::Entry() Line 554   C++\n[External Code]\n</code></pre></div>\n\n</blockquote>",
+        "id": 297727732,
+        "sender_full_name": "Håkan Svensson",
+        "timestamp": 1662624805
+    },
+    {
+        "content": "<p><strong>Network stability...</strong><br>\nThe last changes has corrected the network stability.<br>\nWith an enabled TCP connection I can now disable the PC network and O's data is lost. When the wifi is again established the O TCP connection is reestablished.  <br>\nIssue solved. Thanks /H</p>",
+        "id": 297729399,
+        "sender_full_name": "Håkan Svensson",
+        "timestamp": 1662625476
+    },
+    {
+        "content": "<p>Alec..<br>\nThe issues on top of this topic regarding windows messaging instead of log entries and when .log is saved to .log.log is now corrected and it works as normal.<br>\nThansk /H</p>",
+        "id": 297729967,
+        "sender_full_name": "Håkan Svensson",
+        "timestamp": 1662625705
+    },
+    {
+        "content": "<p>Dave...<br>\nMore about the \"CommDriverN0183SerialThread.cpp\" crash at filter changes above.<br>\nI get a crash on exactly the same row (554) also when shifting from a serial N2K to a serial N0183 connection.<br>\nSo the filter change and connection change would run the same methods?</p>",
+        "id": 297733953,
+        "sender_full_name": "Håkan Svensson",
+        "timestamp": 1662627366
+    },
+    {
+        "content": "<p><strong>socketCAN...</strong><br>\nHow can I use the new checkbox in options?<br>\nI've a RPi with such a connection and can use my Garmin GNSS/Heading device there. <br>\nFor now it's connected to SignalK via the SK MCS _N2k plugin but that can be switched off. <br>\nSo please advice how to use in OCPN /H</p>",
+        "id": 297794529,
+        "sender_full_name": "Håkan Svensson",
+        "timestamp": 1662647522
+    },
+    {
+        "content": "<p>Hakan...<br>\nThe socketCAN interface will need to be setup from the cli.  This can be automated, so not needed manually on every reboot.  I am assuming our existing socketCAN users will know this, generally.  We will document the specifics of OCPN.</p>\n<p>Here are my preliminary notes, will become documentation eventually.</p>\n<p>With real hardware (Waveshare RS485 CAN hat)<br>\n<a href=\"https://www.pragmaticlinux.com/2021/10/can-communication-on-the-raspberry-pi-with-socketcan/\">https://www.pragmaticlinux.com/2021/10/can-communication-on-the-raspberry-pi-with-socketcan/</a></p>\n<div class=\"codehilite\"><pre><span></span><code>  Edit /boot/config.txt\n  Add the following two lines, then reboot.\n\n  dtparam=spi=on\n  dtoverlay=mcp2515-can0,oscillator=12000000,interrupt=25,spimaxfrequency=2000000\n\n  Enable SPI Interface\n  $ sudo raspi-config\n\n  From cli:\n\n  $ modprobe can\n  $ modprobe can_raw\n  $ sudo ip link set can0 type can bitrate 250000   // This number is critical for NMEA2000\n  $ sudo ip link set up can0\n\n  Test it:\n  pi@raspberrypi:~ $ candump can0\n  can0  0DF80501   [8]  A3 68 5D F5 EF D1 EA FD\n  can0  0DF80501   [8]  A4 FF FF FF FF 03 FC 00\n  can0  0DF80501   [8]  A5 B5 00 D2 01 3F F2 FF\n  can0  0DF80501   [8]  A6 FF 00 FF FF FF FF FF\n</code></pre></div>\n\n<p>In OCPN settings, just enable the socketCAN interface, specify interface as Can0.<br>\n   Check the logfile for problems starting the interface.</p>",
+        "id": 297861048,
+        "sender_full_name": "Dave Register",
+        "timestamp": 1662669349
+    },
+    {
+        "content": "<p>I'll check tomorrow noon if I understand this. (I've some other work to do before that)<br>\nOne Q: Should I add a new connection and click the socketCAN checkbox in the upper left corner? See pict<br>\n<a href=\"/user_uploads/33951/0nzPs-mpoc_eiKPEnflMvB-D/bild.png\">bild.png</a></p>\n<div class=\"message_inline_image\"><a href=\"/user_uploads/33951/0nzPs-mpoc_eiKPEnflMvB-D/bild.png\" title=\"bild.png\"><img src=\"/user_uploads/33951/0nzPs-mpoc_eiKPEnflMvB-D/bild.png\"></a></div>",
+        "id": 297862068,
+        "sender_full_name": "Håkan Svensson",
+        "timestamp": 1662669801
+    },
+    {
+        "content": "<p>The modprobe and ip commands described can and should IMHO be configured once they work in manual mode described here. It's about editing a file in /etc/modprobe.d (fixes  the modprobe command) and using nmcli to  create a persistent can0 device</p>",
+        "id": 297864625,
+        "sender_full_name": "Alec Leamas",
+        "timestamp": 1662670928
+    },
+    {
+        "content": "<p>Actually no. Since systemd, kernel modules to load are listed in ls /etc/modules-load.d. /etc/modprobe.d is not used for this purpose any more.</p>",
+        "id": 297865155,
+        "sender_full_name": "Alec Leamas",
+        "timestamp": 1662671179
+    },
+    {
+        "content": "<p>Hakan.<br>\nYes, select socketCAN interface, and choose \"can0\" as source.  The logfile will show failure if the cli commands mentioned have not been issued.</p>",
+        "id": 297865383,
+        "sender_full_name": "Dave Register",
+        "timestamp": 1662671302
+    },
+    {
+        "content": "<p>Alec...<br>\nIn production, we can edit /etc/modules-load.d (with user permission as we do with serial permissions now).  But current testers who have socketCAN hardware will know this stuff today.  Otherwise socketCAN does nothing.</p>",
+        "id": 297865626,
+        "sender_full_name": "Dave Register",
+        "timestamp": 1662671439
+    },
+    {
+        "content": "<p>Hakan...<br>\nCannot reproduce problem with look-ahead mode, in either COG-up, or HDT-up.  All looks fine here with your TCP feed.</p>",
+        "id": 297901946,
+        "sender_full_name": "Dave Register",
+        "timestamp": 1662694193
+    },
+    {
+        "content": "<p>Dave..<br>\n<strong>Look ahead mode</strong><br>\nFor head up, COG/HDT, all is fine. Agree. Then the ship symbol should be situated ~1/3 screen high from bottom.<br>\nIn north up mode however the ship symbol should be situated with 1/3 screen width from behind the boat. All seems OK using a northerly course. But see my picture. The ship is still in the bottom screen part although heading south.<br>\n<a href=\"/user_uploads/33951/dV5CoU4c-lqraqtOOcO1p5HQ/bild.png\">bild.png</a></p>\n<div class=\"message_inline_image\"><a href=\"/user_uploads/33951/dV5CoU4c-lqraqtOOcO1p5HQ/bild.png\" title=\"bild.png\"><img src=\"/user_uploads/33951/dV5CoU4c-lqraqtOOcO1p5HQ/bild.png\"></a></div>",
+        "id": 297968076,
+        "sender_full_name": "Håkan Svensson",
+        "timestamp": 1662728692
+    },
+    {
+        "content": "<p><strong>socketCAN</strong>  Not an issue but nice test info..</p>\n<p>N2K instrument is still the Garmin GNSS/HDT sensor.<br>\nRPi4 (Buster):<br>\nSince I already have a board with the MCP2515 CAN Bus Module the driver can0 is already present.<br>\nWorks like charm once socketCAN mode is selected and driver is default can0.<br>\nWin:<br>\nThe YDNU-02 is still on N2k-bus and simultaneously used on Win OCPN</p>\n<p>Now OCPN is a close to be part of the \"future\" game of NAV....  :)</p>",
+        "id": 298040377,
+        "sender_full_name": "Håkan Svensson",
+        "timestamp": 1662751754
+    },
+    {
+        "content": "<p><strong>Heading priority</strong><br>\nWhen shifting from e.g. a network N0183 TCP connection to a serial N0183 connection seems the priority for heading stuck to the TCP source and wont let the heading from the serial COM3 source to be used.<br>\nOne disturbing factor could be the TCP source contains HDM but the COM3 use HDT?<br>\n(I've tried to follow the prio logic but need more time to grasp it :))</p>",
+        "id": 298119305,
+        "sender_full_name": "Håkan Svensson",
+        "timestamp": 1662807648
+    },
+    {
+        "content": "<p><strong>Heading priority</strong>  - more info<br>\nIf I instead switch from a SignalK source to serial N0183 COM3 the prio logic is working as it should and heading is shown.</p>",
+        "id": 298127710,
+        "sender_full_name": "Håkan Svensson",
+        "timestamp": 1662811732
+    },
+    {
+        "content": "<p><strong>N0183 Input filtering also for plugins</strong><br>\nA connection's input filter e.g. \"Accept only sentences\"  is reflected for O core but sentences that should have been sorted out are still sent to Pluginmanager and further on to e.g. Dashboard.<br>\nExpectation: <br>\nA N0183 sentenced filtered out by multiplexer would not be transfererad to plugins.</p>",
+        "id": 298521655,
+        "sender_full_name": "Håkan Svensson",
+        "timestamp": 1663050827
+    },
+    {
+        "content": "<p>\"N0183 Input filtering also for plugins\"<br>\nCorrected in github now.</p>",
+        "id": 298883699,
+        "sender_full_name": "Dave Register",
+        "timestamp": 1663200203
+    },
+    {
+        "content": "<p>\"N0183 Input filtering also for plugins\"<br>\nThanks. Task closed</p>",
+        "id": 298909763,
+        "sender_full_name": "Håkan Svensson",
+        "timestamp": 1663223769
+    },
+    {
+        "content": "<p>On Win present comm code.<br>\nIf I enable a Signal K connection it can't be switched off.<br>\nI can in options disable the connection, click Apply and OK but the SK data is still flowing wo interruption until O is closed.</p>\n<p>TCP and serial connections are as normal in this matter.</p>",
+        "id": 299229084,
+        "sender_full_name": "Håkan Svensson",
+        "timestamp": 1663356828
+    },
+    {
+        "content": "<p>Corrected in github now.</p>",
+        "id": 299266516,
+        "sender_full_name": "Dave Register",
+        "timestamp": 1663382637
+    },
+    {
+        "content": "<p>Confirmed. Now also SK shuts down while disabled.</p>",
+        "id": 299276635,
+        "sender_full_name": "Håkan Svensson",
+        "timestamp": 1663395316
+    },
+    {
+        "content": "<p>Ship symbol heading.<br>\nSomething has recently happened with the ship symbol orientation.<br>\nIt's not following heading changes. See attached pict where the ship is not turning although HDT is changing.<br>\nCOG/SOG from the source (YDNU) is not changed. Still COG=--- SOG=0.<br>\nIf I restart O the first received HDT is directing the ship symbol but subsequent updates are not reflected.</p>\n<p>Dashboard's HDT instrument values are though nicely following any change from the source.</p>\n<p>The TCP feed is updating the ship but there we have valid COG/SOG all time.</p>\n<p><a href=\"/user_uploads/33951/_FYXOOe9RfJWjUlXbXVT2zOT/bild.png\">bild.png</a></p>\n<div class=\"message_inline_image\"><a href=\"/user_uploads/33951/_FYXOOe9RfJWjUlXbXVT2zOT/bild.png\" title=\"bild.png\"><img src=\"/user_uploads/33951/_FYXOOe9RfJWjUlXbXVT2zOT/bild.png\"></a></div>",
+        "id": 299286822,
+        "sender_full_name": "Håkan Svensson",
+        "timestamp": 1663402874
+    },
+    {
+        "content": "<p>Note to complete \"Ship symbol heading\"<br>\nIf I use N2K data instead of N0183 Dashboard gets no HDT</p>",
+        "id": 299288621,
+        "sender_full_name": "Håkan Svensson",
+        "timestamp": 1663403873
+    },
+    {
+        "content": "<p><span class=\"user-mention\" data-user-id=\"522486\">@Håkan Svensson</span>  Next step would be to add some static N2K testing. To that end, we'd  need some recorded data to replay, similar to the stuff you sent we for N0183.  That is, record the data from one or more N2K devices. Is this something you could do?</p>",
+        "id": 299314776,
+        "sender_full_name": "Alec Leamas",
+        "timestamp": 1663417554
+    },
+    {
+        "content": "<p>For that Dave would be the expert. He has some N2K captures able to play on Linux canplayer: Vcan0.<br>\nI haven't yet tested that function but may have to learn further on. Would be nice if I could include N2H data with my test server: Signalk.stupan?</p>",
+        "id": 299318235,
+        "sender_full_name": "Håkan Svensson",
+        "timestamp": 1663419441
+    },
+    {
+        "content": "<p>In any case, the first step is some recording(s)...</p>",
+        "id": 299320373,
+        "sender_full_name": "Alec Leamas",
+        "timestamp": 1663420650
+    },
+    {
+        "content": "<p>Probably you noticed on CF I asked for some candump recordings of rich n2k data streams.  Got a couple of useful submissions.<br>\nShall I post them somewhere?  Where?</p>",
+        "id": 299323665,
+        "sender_full_name": "Dave Register",
+        "timestamp": 1663422262
+    },
+    {
+        "content": "<p>Why not here? Just to attach.</p>",
+        "id": 299324403,
+        "sender_full_name": "Alec Leamas",
+        "timestamp": 1663422602
+    },
+    {
+        "content": "<p>OK, will do. In clean new topic.</p>",
+        "id": 299326144,
+        "sender_full_name": "Dave Register",
+        "timestamp": 1663423346
+    },
+    {
+        "content": "<p>Ship Symbol Heading:<br>\nI do not have an n2k dump with actual moving ownship.  Always recorded at anchor.  And I'm tied to a dock, static HDT, SOG=0, so no live data either.<br>\nI await your live data from this coming trip.</p>",
+        "id": 299326591,
+        "sender_full_name": "Dave Register",
+        "timestamp": 1663423629
+    },
+    {
+        "content": "<p>I think my described issue is when COG=nan and SOG=0. Then HDT is updated only once at connection init. As soon COG have got a value heading is also alive. <br>\nThis is O core so I could try to debug if you can imaging where it happens. (My compass can be rotated to test)</p>",
+        "id": 299329360,
+        "sender_full_name": "Håkan Svensson",
+        "timestamp": 1663424968
+    },
+    {
+        "content": "<p>Can you send me a candump -L file with rotating compass?</p>",
+        "id": 299359326,
+        "sender_full_name": "Dave Register",
+        "timestamp": 1663445125
+    },
+    {
+        "content": "<p>Hakan...<br>\nFor info: the candump file in topic \"N2K Recording...\" contains PGNs for Wind direction/speed.  Also HDT.  All works fine in Dashboard with your latest patch.  Thanks for the good code.</p>",
+        "id": 299372763,
+        "sender_full_name": "Dave Register",
+        "timestamp": 1663458229
+    },
+    {
+        "content": "<p>Ship symbol Heading:  Corrected in github now.<br>\nNo need for rotating compass candump file.</p>",
+        "id": 299374812,
+        "sender_full_name": "Dave Register",
+        "timestamp": 1663460584
+    },
+    {
+        "content": "<p><span class=\"user-mention\" data-user-id=\"522486\">@Håkan Svensson</span>  Is <a href=\"http://signalk.stupan.se\">signalk.stupan.se</a> down, do I have a network problems, me just dumb?</p>\n<div class=\"codehilite\"><pre><span></span><code>$ nc -v signalk.stupan.se 10112\nNcat: Version 7.92 ( https://nmap.org/ncat )\nNcat: No route to host.\n</code></pre></div>",
+        "id": 299441024,
+        "sender_full_name": "Alec Leamas",
+        "timestamp": 1663511295
+    },
+    {
+        "content": "<p>Dave..<br>\nShip symbol path I'll test later on.<br>\nNow in the boat after a days trip. A N2K boat close to. I'll make some \"live\" test. A lot instrument on board. I'll be back.</p>\n<p>Alec..<br>\nYes it's down since I have the RPi server on board to use it for make a candump. So no problem on your side!</p>",
+        "id": 299441304,
+        "sender_full_name": "Håkan Svensson",
+        "timestamp": 1663511455
+    },
+    {
+        "content": "<p>OK, thanks. Any idea when it's planned to be up again?</p>",
+        "id": 299442481,
+        "sender_full_name": "Alec Leamas",
+        "timestamp": 1663512122
+    },
+    {
+        "content": "<p>Alec..<br>\nI \"worst\" case Wednesday eve. At least for AIS targets since that feed goes to my router at home.  All depends how the tests are working here.</p>",
+        "id": 299443051,
+        "sender_full_name": "Håkan Svensson",
+        "timestamp": 1663512531
+    },
+    {
+        "content": "<p><span class=\"user-mention\" data-user-id=\"517002\">@Dave Register</span> <br>\nI'm in the friends boat testing.<br>\nI see a short glimt of most data but got a O crash. <br>\nSeems like when receiving some AIS data. Call stack  and picture below:<br>\nI also saw a strange air pressure value I'll try to check. But I still can't debug Dashboard so I don't know if that's the failure.<br>\nOn the net for Anydesk if desired.</p>\n<blockquote>\n<div class=\"codehilite\"><pre><span></span><code>  opencpn.exe!__report_gsfailure(...) Line 220    C\nopencpn.exe!AisDecoder::HandleN2K_129809(std::shared_ptr&lt;Nmea2000Msg const &gt; n2k_msg) Line 684  C++\n[Inline Frame] opencpn.exe!AisDecoder::InitCommListeners::__l2::&lt;lambda_8774a3ccfbb1d24e498ba41463bf9fae&gt;::operator()(ObservedEvt) Line 395 C++\nopencpn.exe!wxEventFunctorFunctor&lt;wxEventTypeTag&lt;ObservedEvt&gt;,&lt;lambda_8774a3ccfbb1d24e498ba41463bf9fae&gt; &gt;::operator()(wxEvtHandler * __formal, wxEvent &amp; event) Line 502    C++\n[External Code] \n[Frames below may be incorrect and/or missing, no symbols loaded for wxbase312u_vc_custom.dll]  Unknown\nopencpn.exe!NotifySetupOptionsPlugin(const PlugInContainer * pic) Line 2058 C++\nopencpn.exe!PlugInManager::NotifySetupOptions() Line 2073   C++\nopencpn.exe!options::CreateControls() Line 5823 C++\nopencpn.exe!options::options(MyFrame * parent, int id, const wxString &amp; caption, const wxPoint &amp; pos, const wxSize &amp; size, long style) Line 1600    C++\nopencpn.exe!MyFrame::OnInitTimer(wxTimerEvent &amp; event) Line 5270    C++\n[External Code] \nopencpn.exe!WinMain(HINSTANCE__ * hInstance, HINSTANCE__ * hPrevInstance, char * __formal, int nCmdShow) Line 946   C++\n[External Code]\n</code></pre></div>\n\n</blockquote>\n<p><a href=\"/user_uploads/33951/YrD9Ao1hjzvq-KegBmrSnJBK/bild.png\">bild.png</a></p>\n<div class=\"message_inline_image\"><a href=\"/user_uploads/33951/YrD9Ao1hjzvq-KegBmrSnJBK/bild.png\" title=\"bild.png\"><img src=\"/user_uploads/33951/YrD9Ao1hjzvq-KegBmrSnJBK/bild.png\"></a></div>",
+        "id": 299444681,
+        "sender_full_name": "Håkan Svensson",
+        "timestamp": 1663513520
+    },
+    {
+        "content": "<p>The crash would not be from DB since it's not loaded in debug mode.</p>",
+        "id": 299445702,
+        "sender_full_name": "Håkan Svensson",
+        "timestamp": 1663514061
+    },
+    {
+        "content": "<p>anydesk OK now.  New address, or old still good?</p>",
+        "id": 299446680,
+        "sender_full_name": "Dave Register",
+        "timestamp": 1663514667
+    },
+    {
+        "content": "<p><span class=\"user-mention\" data-user-id=\"399510\">@Alec Leamas</span> <br>\nI can test AIS targets with socketCAN vcan replay...</p>",
+        "id": 299446759,
+        "sender_full_name": "Dave Register",
+        "timestamp": 1663514715
+    },
+    {
+        "content": "<p>Please do!</p>",
+        "id": 299446906,
+        "sender_full_name": "Alec Leamas",
+        "timestamp": 1663514798
+    },
+    {
+        "content": "<p>Building now.</p>",
+        "id": 299451781,
+        "sender_full_name": "Dave Register",
+        "timestamp": 1663517741
+    },
+    {
+        "content": "<p>On branch comm-deps: AIS targets reporting just fine using vcan0 log replay.</p>",
+        "id": 299452080,
+        "sender_full_name": "Dave Register",
+        "timestamp": 1663517924
+    },
+    {
+        "content": "<p>OK,  lets go. I'll merge. Keep heads down...</p>",
+        "id": 299452404,
+        "sender_full_name": "Alec Leamas",
+        "timestamp": 1663518112
+    },
+    {
+        "content": "<p><span class=\"user-mention\" data-user-id=\"517002\">@Dave Register</span> <br>\nCandump from the real boat attached.<br>\nRather big but I want to be sure we get Atons. They are sent by base stations but not that often.</p>\n<p><a href=\"/user_uploads/33951/K9Zl0-JrNobgeosiCR387e0W/livetest_on_board.log\">livetest_on_board.log</a></p>",
+        "id": 299464410,
+        "sender_full_name": "Håkan Svensson",
+        "timestamp": 1663525692
+    },
+    {
+        "content": "<p>Dave..<br>\nTrue wind speed/angle:<br>\nI get no N2K true wind speed/angle from the boat I'm testing.<br>\nYou mention your test data was funktional also for wind. Can you verify you also got true wind in Dashboard from your test capture?</p>\n<p>The PGN 130306 here seems to send only \"WindReference\" = 2 and that's apparent wind. That's strange since the N0183 data contains also true wind (VWT).</p>",
+        "id": 299465941,
+        "sender_full_name": "Håkan Svensson",
+        "timestamp": 1663526871
+    },
+    {
+        "content": "<p>FWIW: These devices seen on the live boat (screen dump): <br>\nAnd the YDNU reports the same, no true wind, just apparent so DB is correct :)</p>\n<p><a href=\"/user_uploads/33951/hiGpzse8-fz1MGawuzttGs35/bild.png\">bild.png</a></p>\n<div class=\"message_inline_image\"><a href=\"/user_uploads/33951/hiGpzse8-fz1MGawuzttGs35/bild.png\" title=\"bild.png\"><img src=\"/user_uploads/33951/hiGpzse8-fz1MGawuzttGs35/bild.png\"></a></div>",
+        "id": 299467088,
+        "sender_full_name": "Håkan Svensson",
+        "timestamp": 1663527787
+    },
+    {
+        "content": "<p>PGN 129041 implemented for basic functionality.  I see two ATONS from the \"livetest_on_board.log\" recording.<br>\nIn github \"comm\" now.</p>",
+        "id": 299485860,
+        "sender_full_name": "Dave Register",
+        "timestamp": 1663546631
+    },
+    {
+        "content": "<p>PGN 130306:  I do not get anything other than \"Windreference=2\" on any of my logfiles.  I suppose it is up to the sensor to calculate true reference, based on other available data.  When we go to Alpha test, this will be a question for testers with full N2K instrumentation.<br>\nMore info:<br>\n<a href=\"https://mt.panbo.com/2012/11/nmea-wind-data-will-this-work.html\">https://mt.panbo.com/2012/11/nmea-wind-data-will-this-work.html</a></p>",
+        "id": 299486386,
+        "sender_full_name": "Dave Register",
+        "timestamp": 1663547311
+    },
+    {
+        "content": "<p>True wind:<br>\nDo we guess the YDNU is calculating this in N0183 mode? I doubt but values are there.<br>\nSo we better use our own calculation if not present in 130306. I'll have a look.</p>",
+        "id": 299512161,
+        "sender_full_name": "Håkan Svensson",
+        "timestamp": 1663571101
+    },
+    {
+        "content": "<p>\"PGN 129041 implemented for basic functionality\":<br>\nYes, Atons are there, very good.<br>\nBut still are base stations neither viewed on screen nor in the AIS target list.</p>",
+        "id": 299518051,
+        "sender_full_name": "Håkan Svensson",
+        "timestamp": 1663574147
+    },
+    {
+        "content": "<p>Dave..<br>\nWin crash:<br>\nIn Win I again get the crash like we investigated yesterday.<br>\nInvestigating...</p>",
+        "id": 299519368,
+        "sender_full_name": "Håkan Svensson",
+        "timestamp": 1663574684
+    },
+    {
+        "content": "<p>Dave..<br>\nIf I add your temp. patches from yesterday all is fine again:</p>\n<div class=\"codehilite\"><pre><span></span><code>@@ -692,8 +692,9 @@ bool AisDecoder::HandleN2K_129794( std::shared_ptr&lt;const Nmea2000Msg&gt; n2k_msg ){\n                         Beam, PosRefStbd, PosRefBow, ETAdate, ETAtime,\n                         Draught, Destination, AISversion, GNSStype,\n                         DTE, AISinfo) )\n     {\n+    Name[20] = Destination[20] = 0;\n     // Is this target already in the global target list?\n     //  Search the current AISTargetList for an MMSI match\n     int mmsi = UserID;\n     long mmsi_long = mmsi;\n@@ -731,12 +732,13 @@ bool AisDecoder::HandleN2K_129809( std::shared_ptr&lt;const Nmea2000Msg&gt; n2k_msg ){\n\n   uint8_t MessageID;\n   tN2kAISRepeat Repeat;\n   uint32_t UserID;\n-  char Name[20];\n+  char Name[21];\n\n   if (ParseN2kPGN129809(v, MessageID, Repeat, UserID, Name))\n   {\n+    Name[20] = 0;\n     // Is this target already in the global target list?\n     //  Search the current AISTargetList for an MMSI match\n     int mmsi = UserID;\n     long mmsi_long = mmsi;\n</code></pre></div>",
+        "id": 299523572,
+        "sender_full_name": "Håkan Svensson",
+        "timestamp": 1663576639
+    },
+    {
+        "content": "<p>(deleted)</p>",
+        "id": 299523772,
+        "sender_full_name": "Håkan Svensson",
+        "timestamp": 1663576744
+    },
+    {
+        "content": "<p>Dave..<br>\nAIS own ship target.<br>\nThe boat I'm testing in is named \"Windrus\".<br>\nAs can be seen om the pict, and probably in the N2K capture: \"Livetest on board.log\"  the own ship AIS target is drawn as well. Compare to show N0183 AIVDO. This will most likely create future trouble.<br>\nHave you investigated how own ship is handled in N2K AIS messages?</p>\n<p><a href=\"/user_uploads/33951/zuAU12GTkScuJbAmIggbeaOA/bild.png\">bild.png</a></p>\n<div class=\"message_inline_image\"><a href=\"/user_uploads/33951/zuAU12GTkScuJbAmIggbeaOA/bild.png\" title=\"bild.png\"><img src=\"/user_uploads/33951/zuAU12GTkScuJbAmIggbeaOA/bild.png\"></a></div>",
+        "id": 299557183,
+        "sender_full_name": "Håkan Svensson",
+        "timestamp": 1663591419
+    },
+    {
+        "content": "<p>N2K AIS: MMSI Properties not reflected<br>\nWhen any option in MMSI properties is set, like \"Ignore\" or \"Follower\" it's not reflected.<br>\nI tried to Ignore own ship's MMSI but no change.<br>\nAdded in ToDo list.</p>",
+        "id": 299571483,
+        "sender_full_name": "Håkan Svensson",
+        "timestamp": 1663596456
+    },
+    {
+        "content": "<p>Base stations:  We've to add decode for PGN 129793, not currently in Timo's library.   TODO....</p>",
+        "id": 299573063,
+        "sender_full_name": "Dave Register",
+        "timestamp": 1663597000
+    },
+    {
+        "content": "<p>AIS ownship target:<br>\nThe N2K PGN 129039 does not have information to indicate \"ownship\", or otherwise.  So we must filter away by ownship MMSI.  So, that means we must have a settings field (somewhere?) for the user to specify ownship MMSI.<br>\nThoughts?</p>",
+        "id": 299574607,
+        "sender_full_name": "Dave Register",
+        "timestamp": 1663597555
+    },
+    {
+        "content": "<p>MMSI properties:<br>\nProbably not yet implemented for N2K.  TODO...</p>",
+        "id": 299574747,
+        "sender_full_name": "Dave Register",
+        "timestamp": 1663597591
+    },
+    {
+        "content": "<p>Crash without string patch:<br>\nOoops.  forgot that.  In github now</p>",
+        "id": 299575966,
+        "sender_full_name": "Dave Register",
+        "timestamp": 1663598025
+    },
+    {
+        "content": "<p>Base stations: OK I make a todo task.</p>\n<p>Target String patch: Thought so. Easy done :)<br>\nConnected to this or not:<br>\nI've seen every time connected that after some 15 minutes os so all AIS targets are starting to randomly(?) disappear from the screen, shows up a short, 1 sek, glimt. Happens every second.  Randomly means some targets disappear some are left.  <br>\nAnother way to describe it would be: Once a target is received it's shown for 1 second and then gone. AIS target database filled up?....<br>\nIf I restart O all is fine another 15 minutes.<br>\nTry the live-capture if you see the same. Otherwise Anydesk here?</p>",
+        "id": 299588793,
+        "sender_full_name": "Håkan Svensson",
+        "timestamp": 1663602115
+    },
+    {
+        "content": "<p>AIS ownship target:</p>\n<blockquote>\n<p>The N2K PGN 129039 does not have information to indicate \"ownship\", or otherwise. So we must filter away by ownship MMSI. So, that means we must have a settings field (somewhere?) for the user to specify ownship MMSI.<br>\nThoughts?</p>\n</blockquote>\n<p>Not easy.. A \"ownship MMSI\" could do. With more or less sophisticated user reminder... (If AIS are received from N2K and no user setting -&gt; Ask?....)  <br>\nI suppose there's no N2K solution.  Also discussed on Panbo. It may be MFDs has to adapt to this in the way you suggest.<br>\nShould we discuss with more frequently N2K users like Steven, Timo, Hubert???</p>",
+        "id": 299596155,
+        "sender_full_name": "Håkan Svensson",
+        "timestamp": 1663603470
+    },
+    {
+        "content": "<p>Yes, we need more discussion.  But this can be deferred for discussion during Alpha test.</p>",
+        "id": 299599706,
+        "sender_full_name": "Dave Register",
+        "timestamp": 1663604642
+    },
+    {
+        "content": "<p>Agree</p>",
+        "id": 299599799,
+        "sender_full_name": "Håkan Svensson",
+        "timestamp": 1663604664
+    },
+    {
+        "content": "<p>Disappearing AIS targets:<br>\nCannot reproduce from live capture.  File ends, and targets disappear normally.<br>\nAnydesk?</p>",
+        "id": 299599874,
+        "sender_full_name": "Dave Register",
+        "timestamp": 1663604691
+    },
+    {
+        "content": "<p>Now finalizing N2K tests on board Vindrus. The boat owner is thanked from us. Packing my things. Heading home again. For any strange reason wind comes from ahead! :)</p>",
+        "id": 299740063,
+        "sender_full_name": "Håkan Svensson",
+        "timestamp": 1663677453
+    },
+    {
+        "content": "<p>For info is my test server ´´´signalk.stupan.se  TCP port: 10112´´´ now up and running again.</p>",
+        "id": 299967293,
+        "sender_full_name": "Håkan Svensson",
+        "timestamp": 1663770749
+    },
+    {
+        "content": "<p>Dear linux gurus:<br>\nIs there a way to send candumps to another PC via wifi?<br>\nsomething like: canplayer 192.168.1.255:10112=can0 -I name-of-the-log-file<br>\nIf so the text step would be to allow \"socketCan\" also on Win as UDP.</p>",
+        "id": 299976846,
+        "sender_full_name": "Håkan Svensson",
+        "timestamp": 1663772732
+    },
+    {
+        "content": "<p>Windows..<br>\nI've seen a bug in SignalK connection to plugins/Dashboard.<br>\nWhen O starts data is coming into O core but not to Dashboard. I need to enter Connections and re-enable to get data to Dashboard.<br>\nMethod to re create:</p>\n<ul>\n<li>\n<p>In options-&gt;connection enable a SK connection. I use my server port 3000.  (No automatic discovery) Klick OK or Apply<br>\n Now all data including Dashboard are received.</p>\n</li>\n<li>\n<p>Stop OCPN and restart.<br>\n Only O data like position and AIS targets are received, Nothing to Dashboard.</p>\n</li>\n<li>\n<p>In options-&gt;connection disable the SK connection. Klick Apply.</p>\n</li>\n<li>Again enable the SK connection and klick OK or Apply<br>\nNow all data including Dashboard are again received.</li>\n</ul>",
+        "id": 300084695,
+        "sender_full_name": "Håkan Svensson",
+        "timestamp": 1663828085
+    },
+    {
+        "content": "<p>I don't see the same on Linux RPi</p>",
+        "id": 300085852,
+        "sender_full_name": "Håkan Svensson",
+        "timestamp": 1663828735
+    },
+    {
+        "content": "<p>Well, now I see the same also on the RPi4</p>",
+        "id": 300087200,
+        "sender_full_name": "Håkan Svensson",
+        "timestamp": 1663829489
+    },
+    {
+        "content": "<p>Linux RPi4  New behavior. O upstart take considerable longer time.<br>\nWhen starting O there is only a black background and the spinning cursor for a looong time (10-15 s) until the normal view is shown with charts and menu icons.<br>\nDuring the black screen the status bar is though there but wo data.</p>",
+        "id": 300087520,
+        "sender_full_name": "Håkan Svensson",
+        "timestamp": 1663829682
+    },
+    {
+        "content": "<p>And to be clear.. You've to see the effect on Dashboard instrument receiving data from SK, like wind or depth or GNSS status. Data received from O core like SOG, COG, HDT via \"SetPositionFixEx()\" are well received all time.</p>",
+        "id": 300090079,
+        "sender_full_name": "Håkan Svensson",
+        "timestamp": 1663830927
+    },
+    {
+        "content": "<p><strong>N2K SOG irrelevant data protection.</strong><br>\nDave..<br>\nI've a couple of time seen a not valid SOG data of 613 knots ~= 1192 m/s. See pict.<br>\nIf I search around web other has seen the same as well.<br>\nOne protection would be like below. I can PR or you may have a better patch.</p>\n<blockquote>\n<p>@@ -449,9 +449,9 @@ bool CommBridge::HandleN2K_129026(std::shared_ptr&lt;const Nmea2000Msg&gt; n2k_msg) { <br>\n   if (!m_decoder.DecodePGN129026(v, temp_data))<br>\n     return false; <br>\n\"-\"  if (!N2kIsNA(temp_data.gSog) &amp;&amp; !N2kIsNA(temp_data.gCog)){<br>\n\"+\"  if (!N2kIsNA(temp_data.gSog) &amp;&amp; temp_data.gSog &lt; 1130 &amp;&amp; !N2kIsNA(temp_data.gCog)){</p>\n</blockquote>\n<p><a href=\"/user_uploads/33951/T4wEJSVxWu1j0MBUJ5xoGBaM/bild.png\">bild.png</a></p>\n<div class=\"message_inline_image\"><a href=\"/user_uploads/33951/T4wEJSVxWu1j0MBUJ5xoGBaM/bild.png\" title=\"bild.png\"><img src=\"/user_uploads/33951/T4wEJSVxWu1j0MBUJ5xoGBaM/bild.png\"></a></div>",
+        "id": 300114376,
+        "sender_full_name": "Håkan Svensson",
+        "timestamp": 1663841107
+    },
+    {
+        "content": "<p><strong><em>velocity_watchdog is not used?</em></strong><br>\nDave..<br>\nWhat I can see is the velocity_watchdog not counting down and also no code to \"empty\" gSog or gCog.<br>\nSo, whenever a COG and SOG is well received the last value is there also when the sensor reports \"nothing\" as many seems to do when ship is no longer moving.<br>\nI'll make a \"TODO\"</p>",
+        "id": 300115483,
+        "sender_full_name": "Håkan Svensson",
+        "timestamp": 1663841605
+    },
+    {
+        "content": "<p>\"Linux RPi4 New behavior. O upstart take considerable longer time.\"<br>\nCould this be due to slow network connection to server?  What happens with no connections enabled?</p>",
+        "id": 300163093,
+        "sender_full_name": "Dave Register",
+        "timestamp": 1663854399
+    },
+    {
+        "content": "<p>Slow network? If you mean network to e.g. my SK server it's the same machine. And it's the same if connected to can0 or serial port only. <br>\nMy imagination is this happens before any attempt to connect. The log file use 4-5 seconds from start log to \"Finalize Canvases\" so this new black screen may also be there before log file is opened?<br>\nThe last times it was a black O screen for six seconds \"only\" so it differs.</p>",
+        "id": 300209808,
+        "sender_full_name": "Håkan Svensson",
+        "timestamp": 1663867661
+    },
+    {
+        "content": "<p>The black screen behavior is the same wo any connections.</p>",
+        "id": 300212640,
+        "sender_full_name": "Håkan Svensson",
+        "timestamp": 1663868538
+    },
+    {
+        "content": "<p>Maybe some plugin load is slow?</p>",
+        "id": 300233842,
+        "sender_full_name": "Dave Register",
+        "timestamp": 1663875991
+    },
+    {
+        "content": "<p>Black screen:  For a test I checked out to a stage a week ago. The black screen lasted for 4 seconds. And then back to recent comm and now the same about 4 seconds. All time the same settings in O. So my previous observation of very slow start up didn't showed up again. Occasional? Well... let's forget it. Thanks for listening.</p>",
+        "id": 300287498,
+        "sender_full_name": "Håkan Svensson",
+        "timestamp": 1663908047
+    },
+    {
+        "content": "<p>Dave..<br>\nA Linux connection socketCAN won't disconnect when disabled. I think similar to a SK connection you corrected some week(s) ago.</p>",
+        "id": 300328760,
+        "sender_full_name": "Håkan Svensson",
+        "timestamp": 1663927592
+    },
+    {
+        "content": "<p>Dave..<br>\nAIS own ship detection.<br>\nCouldn't resist investigating Steven's  advice...<br>\nFor a test I added this:<br>\nAt ais_decoder: 532 if (ParseN2kPGN129039)</p>\n<blockquote>\n<div class=\"codehilite\"><pre><span></span><code> if (AISTransceiverInformation == 4) {\n  wxLogMessage(wxString::Format(_T(&quot; ***** AISTransceiverInformation: %d, mmsi: %d&quot;), AISTransceiverInformation, UserID));\n</code></pre></div>\n\n</blockquote>\n<p>Result:  AISTransceiverInformation = 4 would indicate own ship</p>\n<p>26581341 =  Vindrus = Own ship in the \"liverecorder\"</p>\n<blockquote>\n<p>20:15:13.711 MESSAGE ais_decoder.cpp:533  <strong>*</strong> AISTransceiverInformation: 4, mmsi: 265813410<br>\n20:15:14.732 MESSAGE ais_decoder.cpp:533  <strong>*</strong> AISTransceiverInformation: 4, mmsi: 265813410<br>\n20:15:15.744 MESSAGE ais_decoder.cpp:533  <strong>*</strong> AISTransceiverInformation: 4, mmsi: 265813410<br>\n20:15:16.751 MESSAGE ais_decoder.cpp:533  <strong>*</strong> AISTransceiverInformation: 4, mmsi: 265813410<br>\n20:15:17.772 MESSAGE ais_decoder.cpp:533  <strong>*</strong> AISTransceiverInformation: 4, mmsi: 265813410</p>\n</blockquote>\n<p>This result wo if (AISTransceiverInformation = 4)</p>\n<blockquote>\n<p>9:54:03.931 MESSAGE ais_decoder.cpp:534  <strong>*</strong> AISTransceiverInformation: 0, mmsi: 265797660<br>\n19:54:04.231 MESSAGE ais_decoder.cpp:534  <strong>*</strong> AISTransceiverInformation: 4, mmsi: 265813410<br>\n19:54:05.230 MESSAGE ais_decoder.cpp:534  <strong>*</strong> AISTransceiverInformation: 0, mmsi: 265669180<br>\n19:54:06.125 MESSAGE ais_decoder.cpp:534  <strong>*</strong> AISTransceiverInformation: 4, mmsi: 265813410</p>\n</blockquote>",
+        "id": 300427701,
+        "sender_full_name": "Håkan Svensson",
+        "timestamp": 1663957794
+    },
+    {
+        "content": "<p>Hakan...<br>\nOK, should be an easy fix, then.  There is much to learn about PGN decoding from those smarter than us....</p>",
+        "id": 300430988,
+        "sender_full_name": "Dave Register",
+        "timestamp": 1663959029
+    },
+    {
+        "content": "<p>PGN 129039 is class B. I wonder where the same info for class A lives.<br>\nBut it's strange with 129039  since it contains \"NavStat\" not applicable for class B?<br>\nMore to learn?</p>",
+        "id": 300437040,
+        "sender_full_name": "Håkan Svensson",
+        "timestamp": 1663961247
+    },
+    {
+        "content": "<p>Class A would be here ParseN2kPGN129794 but called: AISinfo. The same structure; 4 = own ship?</p>",
+        "id": 300438782,
+        "sender_full_name": "Håkan Svensson",
+        "timestamp": 1663962010
+    },
+    {
+        "content": "<p>Probably.  We need a Class A tester.</p>",
+        "id": 300447956,
+        "sender_full_name": "Dave Register",
+        "timestamp": 1663965819
+    },
+    {
+        "content": "<p>Yes and if not available by the alpha testers I can make a trip to the workshop where I sometimes have duties. There would be a new class A device I \"could test\" before a possible delivery. Keep it open for a time...<br>\nYou may make some code for class B to test as a start? And maybe for class A as well so we can test it's not disturbing what's not own ship until own ship \"filter\" is tested?</p>",
+        "id": 300541368,
+        "sender_full_name": "Håkan Svensson",
+        "timestamp": 1664027709
+    },
+    {
+        "content": "<p>\"You may make some code for class B to test as a start?\"<br>\nDone, in github now, for Class A/B</p>",
+        "id": 300594064,
+        "sender_full_name": "Dave Register",
+        "timestamp": 1664064031
+    },
+    {
+        "content": "<p>\"velocity_watchdog is not used?\"<br>\nCorrected in github now.</p>",
+        "id": 300596860,
+        "sender_full_name": "Dave Register",
+        "timestamp": 1664067355
+    },
+    {
+        "content": "<p>Implemented N2K PGN 129793 (Base Station)</p>",
+        "id": 300602043,
+        "sender_full_name": "Dave Register",
+        "timestamp": 1664073997
+    },
+    {
+        "content": "<p><span class=\"user-mention\" data-user-id=\"399510\">@Alec Leamas</span> <br>\nI am ready to merge comm into master now, if you have no objections.</p>",
+        "id": 300602071,
+        "sender_full_name": "Dave Register",
+        "timestamp": 1664074030
+    },
+    {
+        "content": "<p>A very short test (Not at home..)<br>\nvelocity WD OK.<br>\nBase stations OK.</p>\n<p>AIS own ship detection, class B - not working. (Class A not tested)<br>\nUsing \"livetest_on_board.log\" the own ship is still on screen.<br>\nI made a debug log:</p>\n<blockquote>\n<p>10:22:39.333 MESSAGE ais_decoder.cpp:586  <strong>*</strong> Vindrus, 265813410: b_Ownship: 1, AISTransceiverInformation 4</p>\n</blockquote>\n<p>So it should have worked?? Did you get it to work?<br>\nOne doubt: Now is b_OwnShip true if \"AISTransceiverInformation \"  != 0. How are the enum 1, 2,3 used?. Maybe we should set  b_OwnShip = true only if AISTransceiverInformation = 4 (N2kaisown_information_not_broadcast)?</p>",
+        "id": 300621548,
+        "sender_full_name": "Håkan Svensson",
+        "timestamp": 1664095067
+    },
+    {
+        "content": "<p><span class=\"user-mention\" data-user-id=\"517002\">@Dave Register</span>   Certainly no objections, it's time.</p>",
+        "id": 300643759,
+        "sender_full_name": "Alec Leamas",
+        "timestamp": 1664108476
+    },
+    {
+        "content": "<p>Done.<br>\nShifting to branch \"master\" for new work and testing.</p>",
+        "id": 300657193,
+        "sender_full_name": "Dave Register",
+        "timestamp": 1664116243
+    },
+    {
+        "content": "<p>\"AIS own ship detection, class B - not working. \"<br>\nCorrected in master.  Working too fast here. Thanks.</p>",
+        "id": 300658923,
+        "sender_full_name": "Dave Register",
+        "timestamp": 1664117180
+    },
+    {
+        "content": "<p>AIS own ship detection, class B - not working:<br>\nYes, now it works fine. Thanks.<br>\nI think we let the Todo task be left until class A is checked.</p>",
+        "id": 300684166,
+        "sender_full_name": "Håkan Svensson",
+        "timestamp": 1664134187
+    },
+    {
+        "content": "<p>Dave, no comments on this:</p>\n<blockquote>\n<p>Now is b_OwnShip true if \"AISTransceiverInformation \" != 0. How are the enum 1, 2,3 used?. Maybe we should set b_OwnShip = true only if AISTransceiverInformation = 4 (N2kaisown_information_not_broadcast)?</p>\n</blockquote>\n<p>or are you sure we will never see \"AISTransceiverInformation\" or \"AISinfo\" being 1, 2 or 3?</p>",
+        "id": 300684540,
+        "sender_full_name": "Håkan Svensson",
+        "timestamp": 1664134509
+    },
+    {
+        "content": "<p>\"Maybe we should set b_OwnShip = true only if AISTransceiverInformation = 4 (N2kaisown_information_not_broadcast)?\"<br>\nThat is what we do now.  All other values leave the b_OwnShip as false, as set when the pTargetData is created.</p>",
+        "id": 300713936,
+        "sender_full_name": "Dave Register",
+        "timestamp": 1664163951
+    },
+    {
+        "content": "<p>Yes of course! Fast logical error in my head only. Apologise.</p>",
+        "id": 300721628,
+        "sender_full_name": "Håkan Svensson",
+        "timestamp": 1664171425
+    },
+    {
+        "content": "<p>AIS Alert dialog not working.<br>\nWindows, TCP or SignalK connections.<br>\nAlthough enabled in options-&gt;ships the CPA alert dialog is not working. The CPA functions is though working so CPA point, lines and red color indication of actual ship are there.</p>",
+        "id": 300894882,
+        "sender_full_name": "Håkan Svensson",
+        "timestamp": 1664224316
+    },
+    {
+        "content": "<p>\" Linux connection socketCAN won't disconnect when disabled.\"<br>\nCorrected.  You will need to delete and re-add the socketCAN connection to pick up the correction in code.</p>",
+        "id": 300922690,
+        "sender_full_name": "Dave Register",
+        "timestamp": 1664240128
+    },
+    {
+        "content": "<p><span class=\"user-mention\" data-user-id=\"399510\">@Alec Leamas</span> <br>\nNot exactly sure what we are meant to do with Class \"AisInfoGui\".  I do not see it instantiated anywhere.  So we get no GUI AIS alerts.<br>\n???</p>",
+        "id": 300924300,
+        "sender_full_name": "Dave Register",
+        "timestamp": 1664241622
+    },
+    {
+        "content": "<p>\"Linux connection socketCan won't...........\"<br>\nYes, now working as expected. Thanks.</p>",
+        "id": 300943768,
+        "sender_full_name": "Håkan Svensson",
+        "timestamp": 1664259122
+    },
+    {
+        "content": "<p><strong><em>Connection type SignalK does not establish signal k data to dashboard at O restart.</em></strong></p>\n<p>For Win and RPi.<br>\nMethod to reproduce:</p>\n<ol>\n<li>In Options-&gt;connections enable a SignalK connection to ´´´signalk.stupan.se : 3000´´´ no automatic discovery. Click OK</li>\n<li>Now all data including SK-DB are shown.</li>\n<li>Close O and restart.</li>\n<li>\n<p>Now only DB data received from SetPositionFixEx(), POS/COG/SOG/HDT, are shown. Data from SK, via handleSKUpdate() are not shown.<br>\nO core has all needed data.</p>\n</li>\n<li>\n<p>In options-&gt;Connections disable the SK connection &gt; click Apply.</p>\n</li>\n<li>Enable the same SK connection &gt; Click OK. <br>\nNow all DB data including those from SK are shown.</li>\n</ol>\n<p>Note: On RPI if connected to SK local host, that's 192.168.1.73, instead of ´´´signalk.stupan.se´´´ I could not reproduce. Could there be some kind of time related issue upon O start up missing to forward to plugins when the connection takes more time to establish, like the external network?</p>",
+        "id": 300945112,
+        "sender_full_name": "Håkan Svensson",
+        "timestamp": 1664260069
+    },
+    {
+        "content": "<p><strong><em>Velocity watchdog</em></strong><br>\nNo works fine. Thanks</p>",
+        "id": 300945995,
+        "sender_full_name": "Håkan Svensson",
+        "timestamp": 1664260616
+    },
+    {
+        "content": "<p>Dave..<br>\nAbout on CF reported issues with scrap data like <a href=\"https://www.cruisersforum.com/forums/f134/opencpn-version-5-7-alpha-test-268872-3.html#post3684675\">this</a><br>\nWhat O version is distributed? Was it built before or after we introduced the N2kIsNA check? (commit: eb40f6c9be 2022-09-19)<br>\nIf after that we may introduce more data validation?</p>",
+        "id": 300952593,
+        "sender_full_name": "Håkan Svensson",
+        "timestamp": 1664264144
+    },
+    {
+        "content": "<p>PR to add more depth data validation pushed.</p>",
+        "id": 300956177,
+        "sender_full_name": "Håkan Svensson",
+        "timestamp": 1664265917
+    },
+    {
+        "content": "<p><span class=\"user-mention\" data-user-id=\"517002\">@Dave Register</span>  It was just one of my early sketches. Let's drop it.</p>",
+        "id": 300989081,
+        "sender_full_name": "Alec Leamas",
+        "timestamp": 1664279794
+    },
+    {
+        "content": "<p><strong><em>Linux screen updating</em></strong><br>\nOn my RPi when AIS targets should be marked as lost by the  crossing line and finally disappearing nothing is visible if the screen is not updated by a mouse drag or similar. <br>\nThe \"lost line\" is not seen and the target symbols are left on screen until I change it and force a screen update.<br>\nThis behavior would be new. I have anyway never seen it before. <br>\nThis is valid both for N0183 TCP and N2K can0 data.<br>\nOn Win all is as normal. All targets are marked as lost and later gone in due time even without manual screen updates.</p>",
+        "id": 300995606,
+        "sender_full_name": "Håkan Svensson",
+        "timestamp": 1664282128
+    },
+    {
+        "content": "<p>\"About on CF reported issues with scrap data\"<br>\nDo not know the details of Steve's data.  I have asked.<br>\nWe need more \"failing\" logfiles to debug the n2k library functions involved.  Do you have any failing candump files?  Can you make any from live data?<br>\nTheoretically, we should not need to validate data other than N2kIsNA().  But there seems to be something wrong going on with the N2K debug library functions.</p>",
+        "id": 301006943,
+        "sender_full_name": "Dave Register",
+        "timestamp": 1664285727
+    },
+    {
+        "content": "<p><span class=\"user-mention\" data-user-id=\"399510\">@Alec Leamas</span><br>\n\"Let's drop it.\"<br>\nUmm, don't think so.  This is the class that listens for AIS Alerts, and then creates the Alert GUI dialog.  Needs to be somewhere.  Maybe a simple global, instantiated at startup?  Possibly as a singleton?</p>",
+        "id": 301009470,
+        "sender_full_name": "Dave Register",
+        "timestamp": 1664286474
+    },
+    {
+        "content": "<p>Too quick... back later, must handle my yacht...</p>",
+        "id": 301021537,
+        "sender_full_name": "Alec Leamas",
+        "timestamp": 1664289918
+    },
+    {
+        "content": "<p>\"... issues with scrap data\"<br>\nWhat's in the \"livetest_on_board.log\" I don't know but no strange values seen when playing. If that's because all data is fine or our validation is working I don't know.<br>\nI've run with my Simrad GNSS/Heading device but not seen any oddities.</p>\n<p>The depth error reported on CF could theoretically come from a bad offset. Corrected in a PR.<br>\nThe strange true wind data could, far fetched?, come from a bug by me. Corrected in the same PR.</p>",
+        "id": 301041032,
+        "sender_full_name": "Håkan Svensson",
+        "timestamp": 1664293771
+    },
+    {
+        "content": "<p>(deleted)</p>",
+        "id": 301085058,
+        "sender_full_name": "Håkan Svensson",
+        "timestamp": 1664303245
+    },
+    {
+        "content": "<p>\"I've a couple of time seen a not valid SOG data of 613 knots ~= 1192 m/s\"<br>\nHave you seen this lately?  On live data, or a recording?  I have not seen this in any recordings I have.<br>\nThis is the case that we really need to understand.  That is, N2kIsNA()  has reported \"OK, valid data\",  but the data are clearly wrong.<br>\nSteve has also reported the same for lat/lon.  All these values come from core OCPN by plugin API, and not from N2K parsing in Dashboard.<br>\nPlease keep an eye out for this.</p>",
+        "id": 301137236,
+        "sender_full_name": "Dave Register",
+        "timestamp": 1664323294
+    },
+    {
+        "content": "<p>The last time I saw it was before you fixed the watchdog for SOG and more. That time the bad value, &gt;600 kn, was stuck to SOG probably because all subsequent data was -1*10^9 (7) and sorted out by N2kIsNA().<br>\nI assume, without evidence, these bad values comes when it goes from valid data to the NAN equality -1*10^9?<br>\nYesterday I tried to force a bad SOG by moving around with the sensor until a valid COG/SOG was received and then stay still. But during about ten minutes of that exercise nothing but relevant data was seen. I'll of course keep my eyes open to see it again.<br>\nThe N2kIsNA() check of AIS data was in my mind as well. Very good!</p>",
+        "id": 301170273,
+        "sender_full_name": "Håkan Svensson",
+        "timestamp": 1664349135
+    },
+    {
+        "content": "<p><strong><em>Route icons changed</em></strong><br>\nThis is a weird issue to nail.<br>\nSometimes, but not always, after updating O with new changes route WPs are changed. See picture.<br>\nOne way to reset the icons is in Options-&gt;Charts-&gt;Vector chart display change the Boundaries to Plain -&gt;Apply and back to Symbolized -&gt;OK. Then all icons in routes are reset to what's stated.  In my example Diamonds. <br>\nIf there's another way to reset I don't know, the way described was just a coincident.  <br>\n<a href=\"/user_uploads/33951/Ebe6tYvotvjSI-IfJdxck17c/bild.png\">bild.png</a></p>\n<div class=\"message_inline_image\"><a href=\"/user_uploads/33951/Ebe6tYvotvjSI-IfJdxck17c/bild.png\" title=\"bild.png\"><img src=\"/user_uploads/33951/Ebe6tYvotvjSI-IfJdxck17c/bild.png\"></a></div>",
+        "id": 301193060,
+        "sender_full_name": "Håkan Svensson",
+        "timestamp": 1664358472
+    },
+    {
+        "content": "<p>In Win as usual: Also icons in a temporary layer are not correct. Stated \"Marks-Mooring-Float\" is instead \"tempsud\"<br>\nOne file attached. (SE west coast where my server are cruising)<br>\n<a href=\"/user_uploads/33951/Y9QTsUVLi3qGapDBFFkP8qoa/SXKs-bojar-2022_nya_bjorko.gpx\">SXKs-bojar-2022_nya_bjorko.gpx</a></p>",
+        "id": 301215242,
+        "sender_full_name": "Håkan Svensson",
+        "timestamp": 1664367014
+    },
+    {
+        "content": "<p><strong><em>mmsitoname.csv is not populated</em></strong><br>\nRPi receiving N2k AIS targets.<br>\nIf I delete mmsitoname.csv and start O a new file is created but it's not populated. See pict:</p>\n<p><a href=\"/user_uploads/33951/leCF7XyCOFi0n5PskqybbBvE/bild.png\">bild.png</a></p>\n<div class=\"message_inline_image\"><a href=\"/user_uploads/33951/leCF7XyCOFi0n5PskqybbBvE/bild.png\" title=\"bild.png\"><img src=\"/user_uploads/33951/leCF7XyCOFi0n5PskqybbBvE/bild.png\"></a></div>",
+        "id": 301229425,
+        "sender_full_name": "Håkan Svensson",
+        "timestamp": 1664369730
+    },
+    {
+        "content": "<p>More for AIS targets: Even if the ship's name is received no other data like size and destination are printed to the AIS query dialog. My test source is \"livetest_on_board.log\" via vcan0=can0</p>",
+        "id": 301232264,
+        "sender_full_name": "Håkan Svensson",
+        "timestamp": 1664370584
+    },
+    {
+        "content": "<p><span class=\"user-mention\" data-user-id=\"522486\">@Håkan Svensson</span>  You can leave the messages to me. The code seems to work, but I cannot wrap my head around how this is possible given the state reported. Need some thinking, probably ending up in just removing the log message.</p>",
+        "id": 301253911,
+        "sender_full_name": "Alec Leamas",
+        "timestamp": 1664376732
+    },
+    {
+        "content": "<p><span class=\"user-mention\" data-user-id=\"517002\">@Dave Register</span> AisInfoGu.</p>\n<p>This class does not need to be visible from anywhere or anyone. It just listens to events and displays user feedback. Hence, the proper solution is to instantiate it together with other classes, probably in ocpn_app.  And that's basically it.</p>\n<p>If one  or two classes needs to know about it it's probably better to pass it to them in the CTOR rather than making it global. </p>\n<p>We should IMHO basically not create any new global classes at all. Singletons is an option, but this should basically also be avoided except in some cases which are sort of  \"well-known\" instances such as the message buses and  the registry.  That is, we should think twice before creating a new singleton, and in this case I think it could and should be avoided.</p>",
+        "id": 301257914,
+        "sender_full_name": "Alec Leamas",
+        "timestamp": 1664377820
+    },
+    {
+        "content": "<p>I predicted an answer like this.  And I agree, completely.  I'll instantiate it once in ocpn_app, never to be seen again.<br>\nThanks</p>",
+        "id": 301278661,
+        "sender_full_name": "Dave Register",
+        "timestamp": 1664383325
+    },
+    {
+        "content": "<p>\"You can leave the messages to me. \"<br>\nWhich messages?</p>",
+        "id": 301278730,
+        "sender_full_name": "Dave Register",
+        "timestamp": 1664383353
+    },
+    {
+        "content": "<p>Dave..<br>\nThe newly uploaded candump, ..Manfred.., may be worth to run.<br>\nThe hdt is well received. Var is -0.000100 so hdm is calculated by us since there's a Var and Var is not null/0 to let WMM do the job. The result is equalized HDT and HDM while the real VAR is 3.9° E</p>\n<p>I made some debug print from comm_decoder and Dashboard:</p>\n<blockquote>\n<p>ParseN2kPGN127250. Heading: 3.390800 Variation: -1000000000.000000 <br>\nParseN2kPGN127250. Heading: -1000000000.000000 Variation: -0.000100 <br>\nParseN2kPGN127250. Heading: 3.393900 Variation: -1000000000.000000 <br>\npfix.Hdt: 194.456146 pfix.Hdm: nan pfix.Var: -0.005730</p>\n</blockquote>",
+        "id": 301301042,
+        "sender_full_name": "Håkan Svensson",
+        "timestamp": 1664389993
+    },
+    {
+        "content": "<p>more: I also tested to validate the variation in comm_decoder:329<br>\nif(!N2kIsNA(Variation))temp_data.gVar = Variation;<br>\nBut no difference so here N2kIsNA() is naturally not a solution? <br>\nOr.. should we take care of this close to zero value (-0.000100) like we have done before.<br>\nOr.. Since the sensor says a value != 0.0 we claim the instrument and not O?</p>",
+        "id": 301302207,
+        "sender_full_name": "Håkan Svensson",
+        "timestamp": 1664390321
+    },
+    {
+        "content": "<blockquote>\n<p>Which messages?</p>\n</blockquote>\n<p>The \"duplicate listener\" log messages</p>",
+        "id": 301305719,
+        "sender_full_name": "Alec Leamas",
+        "timestamp": 1664391495
+    },
+    {
+        "content": "<p>Dave..<br>\nRunning \"candump-2022-06-28_Manfred_Part1.log\"<br>\nIf you look at ParseN2kPGN127250 in comm_decoder you'll se the \"ref\" is \"1\" and that's \"N2khr_magnetic=1\"<br>\nThat would indicate Hdm and not Hdt? Or do I get this wrong?<br>\nBtw: it's the same for livetest_on_board.log. \"ref\" = 1. Hmm...</p>",
+        "id": 301320051,
+        "sender_full_name": "Håkan Svensson",
+        "timestamp": 1664396663
+    },
+    {
+        "content": "<p>Hakan...<br>\nOn Manfred log, variation:<br>\nSteveAD in CF has it correctly decoded.  The Garmin device insists that the variation is (-0.0001).  This may be an error in Garmin firmware, or maybe we must interpret variation as being \"available, but not calibrated\", somehow. In any event, it is a valid report.  This n2k message arrives first in the log, so it is chosen as a legitimate priority source for gVar.</p>",
+        "id": 301354826,
+        "sender_full_name": "Dave Register",
+        "timestamp": 1664415316
+    },
+    {
+        "content": "<p>There is another potential source of gVar on the net.  It reports correctly \"unavailable\".  So the Garmin value is accepted for all further processing.<br>\nI do not like to make \"special cases\" for devices which we do not understand well.  So I think we must accept this situation as-is, and ask the user to verify that the Garmin equipment is functioning and programmed correctly.</p>",
+        "id": 301355123,
+        "sender_full_name": "Dave Register",
+        "timestamp": 1664415624
+    },
+    {
+        "content": "<p>More.<br>\nGood catch on tN2kHeadingReference value.  I think you are correct, and I have corrected 129250 parsing to reflect this parameter.<br>\nDid not fix the Manfred log essential problem with Garmin gVar validity, though.  HDT still same as HDM, because gVar is .0001.  I think we should not \"adjust\" a reported value that appears to be \"N2K valid\", even if we (you and I) think we know better.</p>",
+        "id": 301357314,
+        "sender_full_name": "Dave Register",
+        "timestamp": 1664417643
+    },
+    {
+        "content": "<p>Alec...<br>\nI was unable to easily follow our agreement regarding ais_info_gui.  There is too much tangle-up with ais_decoder, still.  So I took an easy way out, just to get the alert function testable.  Another giant FIXME, I'm afraid.</p>",
+        "id": 301359541,
+        "sender_full_name": "Dave Register",
+        "timestamp": 1664419821
+    },
+    {
+        "content": "<p><span class=\"user-mention\" data-user-id=\"522486\">@Håkan Svensson</span> <br>\nAIS Alert dialog fixed in github.</p>",
+        "id": 301359576,
+        "sender_full_name": "Dave Register",
+        "timestamp": 1664419860
+    },
+    {
+        "content": "<p>Dave...<br>\nN2kHeadingReference<br>\nThe change is working although I'm in some way doubtful. The new heading is even more misdirected.  See picture where the ship is in real parallel with the quay as the COG says.<br>\nWe need more data from other sources to verify this. <br>\n<a href=\"/user_uploads/33951/7gsVmJLFqch1VKS92VuaujB-/bild.png\">bild.png</a></p>\n<div class=\"message_inline_image\"><a href=\"/user_uploads/33951/7gsVmJLFqch1VKS92VuaujB-/bild.png\" title=\"bild.png\"><img src=\"/user_uploads/33951/7gsVmJLFqch1VKS92VuaujB-/bild.png\"></a></div>",
+        "id": 301361849,
+        "sender_full_name": "Håkan Svensson",
+        "timestamp": 1664422285
+    },
+    {
+        "content": "<p>I guess it seems to me that the source of HDM in the equipment has simply not been calibrated.  This needs confirmation, if possible.</p>",
+        "id": 301437686,
+        "sender_full_name": "Dave Register",
+        "timestamp": 1664457385
+    },
+    {
+        "content": "<p><strong><em>AIS alert dialog</em></strong><br>\nTested on Win for serial N0183, Network TCP and SignalK connections only.<br>\nThe AIS alert dialog works. </p>\n<ul>\n<li>But sounds work only once for the first target. Subsequent alerts for other targets does not play the sound.</li>\n<li>DSC alerts are not working. (It uses the same dialog.) </li>\n</ul>\n<p>On Rpi buster:<br>\nPlaying \"livetest_on_board.log\"  candump via vcan0.<br>\nThe Alert dialog works. But if I select option \"play sound\" O crashes, \"Segmentation fault\" at the alert.</p>",
+        "id": 301443935,
+        "sender_full_name": "Håkan Svensson",
+        "timestamp": 1664459274
+    },
+    {
+        "content": "<p>Corrected AIS name cache and vessel dimensions, in github now.</p>",
+        "id": 301447127,
+        "sender_full_name": "Dave Register",
+        "timestamp": 1664460106
+    },
+    {
+        "content": "<p>\"I guess it seems to me that the source of HDM in......\"<br>\nYes, that's the simple and first hand answer. My doubts is because this boat use to be \"in order\".   But I can't say for sure so that's why we need to get the heading confirmed by someone who know actual status.</p>",
+        "id": 301447928,
+        "sender_full_name": "Håkan Svensson",
+        "timestamp": 1664460289
+    },
+    {
+        "content": "<p>\"Corrected AIS name cache and vessel dimensions...\"<br>\nTested on RPi.<br>\nYes, the name cache is now populated as well as used. Good.</p>\n<p>The AIS target query now contain vessel dimensions but  are still missing data. </p>\n<ul>\n<li>For Class A; call sign, IMO, Vessel type, destination and ETA.  See picture for a object to test on.</li>\n<li>For Class B; call sign and vessel type.</li>\n<li>\"Vessel type\" for Atons are though there as well as in the AIS target list.</li>\n</ul>\n<p>From N2k:<br>\n<a href=\"/user_uploads/33951/e0rIpn7aCJ3a_9bxX61efdKm/bild.png\">bild.png</a></p>\n<div class=\"message_inline_image\"><a href=\"/user_uploads/33951/e0rIpn7aCJ3a_9bxX61efdKm/bild.png\" title=\"bild.png\"><img src=\"/user_uploads/33951/e0rIpn7aCJ3a_9bxX61efdKm/bild.png\"></a></div><p>From TCP:<br>\n<a href=\"/user_uploads/33951/N0-ZpcALclvIW5kd-fAJydOb/bild.png\">bild.png</a></p>\n<div class=\"message_inline_image\"><a href=\"/user_uploads/33951/N0-ZpcALclvIW5kd-fAJydOb/bild.png\" title=\"bild.png\"><img src=\"/user_uploads/33951/N0-ZpcALclvIW5kd-fAJydOb/bild.png\"></a></div>",
+        "id": 301454977,
+        "sender_full_name": "Håkan Svensson",
+        "timestamp": 1664462186
+    },
+    {
+        "content": "<p>\"Populate more fiddly static data\" seems simple enough for me to complete. I'll make a try if OK?</p>",
+        "id": 301457486,
+        "sender_full_name": "Håkan Svensson",
+        "timestamp": 1664462821
+    },
+    {
+        "content": "<p>Please do.<br>\nToday, I am dealing with outer effects of Hurricane Ian.  Flooding in my area, so fussing with land stuff (car, tools), dock lines, etc.<br>\nA real distraction from coding....</p>",
+        "id": 301462103,
+        "sender_full_name": "Dave Register",
+        "timestamp": 1664464041
+    },
+    {
+        "content": "<p>AIS alert sound management corrected, in github now.</p>",
+        "id": 301513683,
+        "sender_full_name": "Dave Register",
+        "timestamp": 1664478832
+    },
+    {
+        "content": "<p>So docks already secured? Good to see.<br>\nDave.. Alec..<br>\nI need help with this (or just leave this and push the rest?)<br>\nHow to calculate such a date / time format?</p>\n<blockquote>\n<p>From ParseN2k PGN 129794<br>\n    We have: uint16_t ETAdate  and  double ETAtime;<br>\n    printf(\"ETADate: %d  EATTime; %f\\n\", ETAdate, ETAtime);    <br>\n    Result:  Name: ADA   ETADate: 19465  EATTime; 61200.000000<br>\n     Should equal: Date: April 18 Time: 17:00<br>\n      or ETA_Mo = 4  ETA_Day = 18 ETA_Hr = 17  ETA_min = 00<br>\n    Result2: Name: RON  ETADate: 19408  EATTime; 39420.000000<br>\n    Should equal: Date: Feb 20  Time: 10:57</p>\n</blockquote>",
+        "id": 301519063,
+        "sender_full_name": "Håkan Svensson",
+        "timestamp": 1664480826
+    },
+    {
+        "content": "<p>AIS alert sound..<br>\nNow sounds is working on RPi. Thanks.<br>\nIt sounds once for every new alert. But do I remember correct if the alert sound should also be repeated for each target until \"Silence Alert\" or \"Acknowledge\"? In any case it doesn't.</p>",
+        "id": 301527406,
+        "sender_full_name": "Håkan Svensson",
+        "timestamp": 1664483862
+    },
+    {
+        "content": "<p>\"But do I remember correct... \"  I don't remember either.  Test and see, if you've time.<br>\nDate time:  Try this...<br>\nETADate : Probably is number of days since linux epoch began, January 1, 1970.<br>\nETAtime:  Probably number of seconds since midnight.</p>\n<p>Did I mention that this would all be fiddly?</p>",
+        "id": 301553041,
+        "sender_full_name": "Dave Register",
+        "timestamp": 1664497131
+    },
+    {
+        "content": "<p>\"fiddly\"? Not important or like tedious? :)<br>\nAnyhow: All are there except the date/time conversion.  I give it up a would appreciate studying your fix to this if you please?<br>\nA PR with a FIXME will come.</p>",
+        "id": 301611360,
+        "sender_full_name": "Håkan Svensson",
+        "timestamp": 1664533052
+    },
+    {
+        "content": "<p>\"fiddly\", like \"tedious fine detail\".</p>",
+        "id": 301654925,
+        "sender_full_name": "Dave Register",
+        "timestamp": 1664546746
+    },
+    {
+        "content": "<p><strong><em>AIS alert repeated sound</em></strong> until \"Silent Alert\" or \"no longer CPA-alert\"<br>\nDave.. Alec..<br>\nThe code is there but I think something has happened to \"ais_info_gui.cpp\": 135</p>\n<p><a href=\"/user_uploads/33951/NeQWOmTWtGjYZlsXyQBVkown/bild.png\">bild.png</a></p>\n<div class=\"message_inline_image\"><a href=\"/user_uploads/33951/NeQWOmTWtGjYZlsXyQBVkown/bild.png\" title=\"bild.png\"><img src=\"/user_uploads/33951/NeQWOmTWtGjYZlsXyQBVkown/bild.png\"></a></div>",
+        "id": 301666169,
+        "sender_full_name": "Håkan Svensson",
+        "timestamp": 1664549687
+    },
+    {
+        "content": "<p>Corrected, I think, in github now.</p>",
+        "id": 301707590,
+        "sender_full_name": "Dave Register",
+        "timestamp": 1664561854
+    },
+    {
+        "content": "<p>AIS ETA DateTime:<br>\nHow nice coding! And correct date and time! (I know since some ships don't bother to change after I installed the device. Fisherman you know? :)) <br>\nI feel excused to not get all parts of your logic from simply reading WxWidgets docs. One need some experience as well. Date, seconds + Time, seconds gives  total seconds. Clever. </p>\n<p>AIS alert sound.<br>\nWorks fine in both Win and RPi.<br>\nThanks!</p>",
+        "id": 301716326,
+        "sender_full_name": "Håkan Svensson",
+        "timestamp": 1664564778
+    },
+    {
+        "content": "<p>Just so you know, \"fiddling\" with date/time logic, especially time zones, is one of the most annoying programming tasks I ever do.</p>",
+        "id": 301723866,
+        "sender_full_name": "Dave Register",
+        "timestamp": 1664567644
+    },
+    {
+        "content": "<p>YDNU-N0183 HDT is not updated <br>\nWin10:<br>\nA test on another PC never seen the N2k - master code before. To install I successfully built a install package and used that on the other PC. No problem except first program close was hanged. Next restart wo obstacles. <br>\nIt works fine using serial N2k at COM3 with YDNU source.  All data are there and updated accordingly.<br>\nI disabled that connection. Changed port to COM2 and restarted O.<br>\nEnabled a new serial N0183 COM3 connection:<br>\nAll data except HDT are updated. <br>\nHDT is updated once when connection is enabled, or after O restart. But it's not updated after that.<br>\nIf I turn the compass HDM(G) is updated but neither ship symbol nor data to Dashboard, i.e pfix.Hdt.<br>\nCompare the picture where HDM is correct but not HDT even if correct received.<br>\nCould it be the same HDT failure a CF post reported?<br>\n<a href=\"/user_uploads/33951/XgbREpF9fhiZ4jpCog0sek3Q/bild.png\">bild.png</a></p>\n<div class=\"message_inline_image\"><a href=\"/user_uploads/33951/XgbREpF9fhiZ4jpCog0sek3Q/bild.png\" title=\"bild.png\"><img src=\"/user_uploads/33951/XgbREpF9fhiZ4jpCog0sek3Q/bild.png\"></a></div>",
+        "id": 301928640,
+        "sender_full_name": "Håkan Svensson",
+        "timestamp": 1664713313
+    },
+    {
+        "content": "<p>I can reproduce the above on the first Win10 and also on the Linux RPi if the YDNU is N0183 connected via a USB port</p>",
+        "id": 301931186,
+        "sender_full_name": "Håkan Svensson",
+        "timestamp": 1664714913
+    },
+    {
+        "content": "<p><strong><em>Layers: Icon failures and destroyed view port</em></strong><br>\nOn Win10 and O-charts chart files.<br>\nWhen loading a temporary layer the icons are not correct as mentioned before.<br>\nAlso is the whole chart view sometimes more or less destroyed when zooming. See pict for one example.<br>\nI couldn't reproduce the destroyed view on RPi but icons are also not correct.<br>\nA layer gpx-file to test on attached. <br>\n<a href=\"/user_uploads/33951/HmZV29nTiW5iEI0A7WLNvYEV/bild.png\">bild.png</a> <br>\n<a href=\"/user_uploads/33951/E8cv3R-8EDunqFXnWbisxFK9/SXKs-bojar-2020-OT.gpx\">SXKs-bojar-2020-OT.gpx</a></p>\n<div class=\"message_inline_image\"><a href=\"/user_uploads/33951/HmZV29nTiW5iEI0A7WLNvYEV/bild.png\" title=\"bild.png\"><img src=\"/user_uploads/33951/HmZV29nTiW5iEI0A7WLNvYEV/bild.png\"></a></div>",
+        "id": 302016339,
+        "sender_full_name": "Håkan Svensson",
+        "timestamp": 1664784397
+    },
+    {
+        "content": "<blockquote>\n<p>Could it be the GUI problem with icons and more described in Test issues has something to do with the split of \"code\" and GUI?</p>\n</blockquote>\n<p>It 's really hard to say \"it could not\"... Anyway, the icons are just not loaded, and I doubt the split is involved in that. That is not to say it is not possible.</p>\n<p>The way to be sure is to make a bisect.</p>",
+        "id": 302068959,
+        "sender_full_name": "Alec Leamas",
+        "timestamp": 1664805459
+    },
+    {
+        "content": "<p>Hakan...<br>\nI could not reproduce the layer-icon problem on linux.  More info:</p>\n<ol>\n<li>Since the icon name in the GPX file is unknown to OCPN, he uses a temporary internal substitution name \"tempsub\".  This is done to preserve the original icon name in the database, for possible later export.</li>\n<li>icon name \"tempsub\" is always drawn as a circle.</li>\n<li>You may follow and debug the logic in \"RoutePointGui::ReLoadIcon(void)\"<br>\nDave</li>\n</ol>",
+        "id": 302176506,
+        "sender_full_name": "Dave Register",
+        "timestamp": 1664846231
+    },
+    {
+        "content": "<p>Cannot reproduce the YDNU-02 N0183 mode update problem with HDT, since I have no HDT on n2k bus.<br>\nMaybe Anydesk?</p>",
+        "id": 302177730,
+        "sender_full_name": "Dave Register",
+        "timestamp": 1664847184
+    },
+    {
+        "content": "<p>Layer Icons:<br>\nCorrect, on Linux no graphical problem as said. This was for Win 10. Seen on two of mine and a third not my PC.</p>\n<ol>\n<li>The icon name in the file is \"Marks-Mooring-Float\" also present in \"C:\\Program Files (x86)\\OpenCPN\\uidata\\markicons\"  respective  \"/home/pi/.opencpn/iconCache\" so how come O can not find it now? No problem in 5.6.2.</li>\n</ol>",
+        "id": 302198150,
+        "sender_full_name": "Håkan Svensson",
+        "timestamp": 1664865176
+    },
+    {
+        "content": "<p>Layers:<br>\nThe Win10 graphical issue.<br>\nNow I can not reproduce it! So what's the difference?<br>\nFor a test I installed and loaded CM93 instead of O-Charts -&gt; No graph issues!<br>\nBack to O-Charts, still no issues. Hmm... <br>\nChecked on the other PC -&gt; Now as normal wo graphical issues. <br>\nWhat's the common difference? The one common activity is I did a chart database update??<br>\nThoughts?</p>",
+        "id": 302208971,
+        "sender_full_name": "Håkan Svensson",
+        "timestamp": 1664870397
+    },
+    {
+        "content": "<p>HDT serial N0183.<br>\nAnydesk, of course. Pls mail a suitable time.<br>\nWhat I can see is gHdt not updated from temp_data.gHdt due to some priority issue: comm_bridge.cpp: 611</p>",
+        "id": 302211270,
+        "sender_full_name": "Håkan Svensson",
+        "timestamp": 1664871263
+    },
+    {
+        "content": "<p>Hakan...<br>\nCorrected all three issues discussed yesterday on Anydesk.<br>\nGood luck.</p>",
+        "id": 302379439,
+        "sender_full_name": "Dave Register",
+        "timestamp": 1664938768
+    },
+    {
+        "content": "<p>HDT issue:<br>\nWorks fine. If received HDT it's used. If filtering out HDT it's flawless calculated from HDM(G) and back to HDT when not filtered. Great!</p>",
+        "id": 302603666,
+        "sender_full_name": "Håkan Svensson",
+        "timestamp": 1665044831
+    },
+    {
+        "content": "<p><strong><em>Extended icons:</em></strong><br>\nNow all icons are found. Normal and extended.<br>\nExtended icons are though bigger than before. Some scale issue? <br>\nSee picture where standard icons are marked.<br>\n<a href=\"/user_uploads/33951/_7KFk_5IH6jPSduCmKLyFznt/bild.png\">bild.png</a></p>\n<div class=\"message_inline_image\"><a href=\"/user_uploads/33951/_7KFk_5IH6jPSduCmKLyFznt/bild.png\" title=\"bild.png\"><img src=\"/user_uploads/33951/_7KFk_5IH6jPSduCmKLyFznt/bild.png\"></a></div>",
+        "id": 302604176,
+        "sender_full_name": "Håkan Svensson",
+        "timestamp": 1665045007
+    },
+    {
+        "content": "<p><strong><em>Windows: Strange O hang</em></strong><br>\nNot easy to describe but seems connected to scaling in some way.<br>\nWhile creating and viewing these big extended icons and dragging/zooming around there's an occasional \"unknown exception\" error message. Both in runtime and debug. See pict 1. <br>\nIn Debug Call stack, plugins are in some way affected in a way not seen before. See pict 2<br>\nWhen I stop the debug an exception occurs in a file: \"delete_scalar_size.cpp\". See pict 3 including pathway.</p>\n<p>This issue can be reproduced although not in a logic repeatable and easy to describe way. </p>\n<p>Pict1:<br>\n<a href=\"/user_uploads/33951/kamU6kXONIs6YHSMPTSuPwfc/bild.png\">bild.png</a> <br>\nPict2:<br>\n<a href=\"/user_uploads/33951/fGmMYtuyopCAdLjIOo56vXSo/bild.png\">bild.png</a> <br>\nPict3:<br>\n<a href=\"/user_uploads/33951/E5nJdxm1aAhj6ralAFJP7CDj/bild.png\">bild.png</a></p>\n<div class=\"message_inline_image\"><a href=\"/user_uploads/33951/kamU6kXONIs6YHSMPTSuPwfc/bild.png\" title=\"bild.png\"><img src=\"/user_uploads/33951/kamU6kXONIs6YHSMPTSuPwfc/bild.png\"></a></div><div class=\"message_inline_image\"><a href=\"/user_uploads/33951/fGmMYtuyopCAdLjIOo56vXSo/bild.png\" title=\"bild.png\"><img src=\"/user_uploads/33951/fGmMYtuyopCAdLjIOo56vXSo/bild.png\"></a></div><div class=\"message_inline_image\"><a href=\"/user_uploads/33951/E5nJdxm1aAhj6ralAFJP7CDj/bild.png\" title=\"bild.png\"><img src=\"/user_uploads/33951/E5nJdxm1aAhj6ralAFJP7CDj/bild.png\"></a></div>",
+        "id": 302608593,
+        "sender_full_name": "Håkan Svensson",
+        "timestamp": 1665046659
+    },
+    {
+        "content": "<p>scale icons:<br>\nHere's another layer file where the icons grow very big: (SE west coast as usual)<br>\n<a href=\"/user_uploads/33951/litc2Cy6-YpoUkr07Z-sKW6Z/Västkustens-Gästhamnar_Scale_500000.gpx\">Västkustens-Gästhamnar_Scale_500000.gpx</a></p>",
+        "id": 302618974,
+        "sender_full_name": "Håkan Svensson",
+        "timestamp": 1665050607
+    },
+    {
+        "content": "<p>Hakan...<br>\nI suspect radar_pi, something about the \"trail buffer\".  Is the failure ever seen without radar_pi?</p>",
+        "id": 302727275,
+        "sender_full_name": "Dave Register",
+        "timestamp": 1665085218
+    },
+    {
+        "content": "<p>No, not be me or heard of. <br>\nAnd why now when I started to test with layers? <br>\nAnd why only when layer using these extended icons are loaded? I've not seen the issue after layers where deleted.<br>\nAlso notice the radar_pi error in the task list comes after O has started to deactivate plugins. Would the first exception  start to close O due to some thread failure?<br>\nThe size or scaling of the extended icons may be the first thing to look at? If that is corrected we may see what happens to the radar_pi?<br>\nJust my fast thoughts...</p>",
+        "id": 302729316,
+        "sender_full_name": "Håkan Svensson",
+        "timestamp": 1665086029
+    },
+    {
+        "content": "<p>I will look at the scaling question.  But I cannot see how this relates to radar_pi memory model, unless layers are somehow corrupting global memory.  Are you using temp layer, or persistent?</p>",
+        "id": 302729608,
+        "sender_full_name": "Dave Register",
+        "timestamp": 1665086137
+    },
+    {
+        "content": "<p>This time it was persistent.</p>",
+        "id": 302729773,
+        "sender_full_name": "Håkan Svensson",
+        "timestamp": 1665086178
+    },
+    {
+        "content": "<p>The third picture is maybe what you call \"Global\"</p>",
+        "id": 302730149,
+        "sender_full_name": "Håkan Svensson",
+        "timestamp": 1665086298
+    },
+    {
+        "content": "<p>Second picture has the look of heap memory corruption.  I'll investigate scaling.</p>",
+        "id": 302731455,
+        "sender_full_name": "Dave Register",
+        "timestamp": 1665086735
+    },
+    {
+        "content": "<p>Dave..<br>\n<strong>*Icon scaling</strong><br>\nWith commit: \"Correct Extended Icon....\" the icon size is now as it should. Better than \"ever\"; Some history:<br>\nIn O 5.6.2 The size is already not correct but not as bad as it was before this commit.<br>\nIn a O version I have from master in June this year the icons are bad sized as before this commit.</p>",
+        "id": 302795715,
+        "sender_full_name": "Håkan Svensson",
+        "timestamp": 1665128430
+    },
+    {
+        "content": "<p><strong><em>Windows hang and \"unhandled exceptions\"</em></strong><br>\nThis is still present while handling icons.<br>\nWith radar_pi enabled I can still get the hang and the unexpected close event and DeactivateAllPlugIns(). When this happens radar_pi try to free a track memory but it's not available anymore. (Deleted by O??)<br>\nWithout understanding all this I've a observation that may be a track to follow:<br>\nWhen in icon's properties and change the icon symbol the general OCPN \"focus\" is changed. If I click OK after having changed the icon OCPN is not shown but instead a program window, like e.g. Firefox, from behind. <br>\nMethod to reproduce.</p>\n<ul>\n<li>Create a new mark.</li>\n<li>Right click the new mark and enter properties.</li>\n<li>Click OK without any changes.</li>\n<li>Now OCPN main window is shown.</li>\n<li>Right click again the new mark and enter properties.</li>\n<li>Open the icon symbols drop down list</li>\n<li>Select another icon - OK</li>\n<li>Now last Windows program is shown instead of OCPN.</li>\n</ul>\n<p>Far fetched? thoughts. Could a background thread be disturbed if  the \"OK\" is no longer refererad to OCPN memory heap but something else....<br>\nApart from my possible confused thoughts, the icon change - OK should take me back to OCPN and not anything else. Could we start there as the first step?</p>",
+        "id": 302800035,
+        "sender_full_name": "Håkan Svensson",
+        "timestamp": 1665130490
+    },
+    {
+        "content": "<p>radar_pi <br>\nBTW: the \"free(m_relative_trails);\" runs every two seconds (wonder why) so maybe not strange we run into this??</p>",
+        "id": 302810120,
+        "sender_full_name": "Håkan Svensson",
+        "timestamp": 1665134510
+    },
+    {
+        "content": "<p>Win10.<br>\nWin hangs after about 10 to 30 minutes.<br>\nTested on two PC here. (The same reported a week ago from another user)<br>\nAll with persistent layer(s) loaded. (Without or with radar_pi, no difference)<br>\nIt hangs in a not completely way. <br>\nPointer position in status bar is still updated. DB instruments, where source is not from O core, are working. <br>\nShip updating, chart move or zoom are not working.<br>\nEven if in debug mode on one PC nothing is shown there.</p>",
+        "id": 302859748,
+        "sender_full_name": "Håkan Svensson",
+        "timestamp": 1665151628
+    },
+    {
+        "content": "<p>Win hang.<br>\nOn one PC also Windows crashed when O GUI was hanged and I tried to close O. When O was closing and after a minute or so also Widows crashed. Some quick note about: \"unexpected store hand..... \"(disappeared!)  Now Windows is trying to \"repair..\"</p>\n<p>Without layer(s) O seems to live for ever.</p>",
+        "id": 302872294,
+        "sender_full_name": "Håkan Svensson",
+        "timestamp": 1665154862
+    },
+    {
+        "content": "<p>I corrected the problem with loss of window focus on routepoint dialog close.<br>\nUnfortunately, it seems to have no association with icons at all.  So likely not related to the hang/crash observed.<br>\nIf you can come up with a reproducible scenario for hang/crash, I think we must resort to some git bisect work to isolate the problem.<br>\nIs there such a reproducible action?<br>\nOne question is this:  Is the problem related to Extended (svg) icons, or is it related to layers?  That is, will it fail by dropping waypoints and assigning an extended icon only?  Or does it require layer activation to fail?</p>",
+        "id": 302960386,
+        "sender_full_name": "Dave Register",
+        "timestamp": 1665197168
+    },
+    {
+        "content": "<p>Window focus confirmed.  Thanks.<br>\nI'll be busy from now until evening today but some points:</p>\n<p>I've a O version built in July wo this hang issue. (99% reliance. Will secure)<br>\nI've used isolated, not in a layer, extended WPs without any hangs yesterday.<br>\nI have not yet tested a layer without extended WPs. <br>\nI have one PC using English and one Swedish so language probably not related. Do you have a pure Win10 machine  to check on?</p>",
+        "id": 302968976,
+        "sender_full_name": "Håkan Svensson",
+        "timestamp": 1665207536
+    },
+    {
+        "content": "<p>Yes, I have a real Win10 laptop, which I try to keep clean for testing.</p>",
+        "id": 303019994,
+        "sender_full_name": "Dave Register",
+        "timestamp": 1665236421
+    },
+    {
+        "content": "<p>Win hangs with persistent layer loaded:<br>\nI did some bisects but not ready. Time for bed. <br>\nI'll go on narrowing tomorrow unless you don't find a cause between commit \"dedeef7bf9\" and \"9f8149afed\"<br>\nSo far:</p>\n<blockquote>\n<p>Commit:<br>\nmaster                      hanged  <br>\n4dd2dde5d       21-sep   -  No layers shown. Neither temp nor persistent.<br>\ndedeef7bf9      20-sep  hanged  <br>\n9f8149afed      16-sep  works<br>\ne38b2725a               10-sep  works</p>\n</blockquote>",
+        "id": 303065470,
+        "sender_full_name": "Håkan Svensson",
+        "timestamp": 1665264846
+    },
+    {
+        "content": "<p>I do not see anything obviously strange in the github history between those \"works\" and \"hangs\" commits.  So please carry on with bisect.<br>\nThanks</p>",
+        "id": 303089586,
+        "sender_full_name": "Dave Register",
+        "timestamp": 1665288499
+    },
+    {
+        "content": "<p>I've done my best to bisect but a great number of suspect(?) commits won't build on VS2017.<br>\nCommit \"145bd9823bd   navutils: Move GpxDocument to navutils_base.\"  is the last where layers are working.<br>\nA lot changes possible touching layers starts at \"42332d29  Untangle Routeman, Track, Route and Routepoint\"  But I can't build to verify if the bug cause is here or any of the following 20 commits.<br>\nThe first that can build is \"232cb5c3894  Move GarminProtocolHandler -&gt; MODEL_SRC (windows needs it).\" and there are no layers shown.<br>\nMy bisect history attached.<br>\nSince the hang in master does not create a debug break I don't know how to proceed apart from you looking into the code starting at 42332d29..<br>\nOr is there a debug tool to show if there's a thread hanging or anything similar? I may lack knowledge here.</p>\n<p>Possible lessons learned for future bug findings(?):  Test every commit an all system before next step.</p>\n<p><a href=\"/user_uploads/33951/3HM32qAidhvp4cKj4SNupLLz/Bisect_layers.ods\">Bisect_layers.ods</a></p>",
+        "id": 303132871,
+        "sender_full_name": "Håkan Svensson",
+        "timestamp": 1665321476
+    },
+    {
+        "content": "<p>Please describe your test environment:  Plugins, steps to reproduce, etc.  I'll play around some...</p>",
+        "id": 303135347,
+        "sender_full_name": "Dave Register",
+        "timestamp": 1665323116
+    },
+    {
+        "content": "<p>I have a persistent layer loaded: \"Västkustens-Gästhamnar_Scale_500000.gpx\" linked  in this topic.<br>\nNo plugins except inbound.<br>\nSome kind of active navigation e.g. my TCP server or the N2k GNSS. (Don't know if necessary but haven't' tried without.)<br>\nStart O and let it run until screen updating hangs. It can to take 10 to 30 minutes. My is on hang just now but I don't know for how long. Been outside for a while.<br>\nWill restart again from VS in debug this time.</p>",
+        "id": 303143742,
+        "sender_full_name": "Håkan Svensson",
+        "timestamp": 1665328540
+    },
+    {
+        "content": "<p>Just now on hang in debug mode if you want to see. Welcome</p>",
+        "id": 303145344,
+        "sender_full_name": "Håkan Svensson",
+        "timestamp": 1665329522
+    },
+    {
+        "content": "<p>BTW: I used to have o-charts running but I don't think it's crucial.</p>",
+        "id": 303146369,
+        "sender_full_name": "Håkan Svensson",
+        "timestamp": 1665330181
+    },
+    {
+        "content": "<p>Worked on this one.  Definitely the commit \"Untangle Routeman, Track, Route and Routepoint.\" is the problem.  I found that memory used by OCPN is continually increasing when a persistent layer is shown.  Hide the layer, and memory stabilizes.  When/if the memory use gets too high, OCPN becomes unresponsive.<br>\nThe problem must be with icon loading.  I am tracking this down now, I hope.</p>",
+        "id": 303188602,
+        "sender_full_name": "Dave Register",
+        "timestamp": 1665369203
+    },
+    {
+        "content": "<p>Found it.  There was a serious memory leak on display of any RoutePoint, but especially when the point contains a name which is displayed. This is common on layers.  I think that OCPN It would eventually fail without any layer loaded, or name display disabled, just probably take much longer.<br>\nFixed in github master now.<br>\nThanks so much for narrowing down the problem.  I know that bisect process looking for a \"soft\" failure is quite tedious.</p>",
+        "id": 303191845,
+        "sender_full_name": "Dave Register",
+        "timestamp": 1665372925
+    },
+    {
+        "content": "<p>We need to exercise changing RoutePoint icons, icon scaling by options-&gt;User interface, etc.<br>\nAlso text color/size changes for RoutePoints in layers.</p>",
+        "id": 303191948,
+        "sender_full_name": "Dave Register",
+        "timestamp": 1665373061
+    },
+    {
+        "content": "<p>Yes, now I see the increasing memory use. I should probably have checked this before.<br>\nWith your correction it's gone.  Very good.<br>\nJust out of curiosity: Why is this, as it seems, general change  affecting Windows only and not Linux. On a RPi I don't see the leak although using the same layers? The RoutePointGui(RoutePoint&amp; point) : m_point(point) is used there as well I suppose, even if OpenGL is not used.</p>",
+        "id": 303234522,
+        "sender_full_name": "Håkan Svensson",
+        "timestamp": 1665397985
+    },
+    {
+        "content": "<p>This is a very good question. </p>\n<p>I don't know the exact answer. However, I'm very suspicious about code snippets like this in <em>routeman.cpp</em> around line 1120, indirectly called from <code>ReLoadIcon()</code>:</p>\n<div class=\"codehilite\"><pre><span></span><code>    else {\n      if (pmi-&gt;iconImage.IsOk()) {\n        pmi-&gt;piconBitmap = new wxBitmap(pmi-&gt;iconImage);\n        pret = pmi-&gt;piconBitmap;\n      }\n</code></pre></div>\n<p>wxBitmap is ref counted, so making <code>new wxBitmap()</code> is  basically a bug, as is storing wxBitmap* pointers -- the type is designed to use value semantics.</p>\n<p>This would not be the first  time we have a memory bug related to raw pointers which IMHO basically always should be considered a bug  except when creating widgets and such which are handled by wxWidgets.</p>",
+        "id": 303240475,
+        "sender_full_name": "Alec Leamas",
+        "timestamp": 1665400812
+    },
+    {
+        "content": "<p>Yes, opencpn is littered with <code>new wxBitmap(...)</code>. It doesn't matter, it's still a bug IMHO</p>",
+        "id": 303241264,
+        "sender_full_name": "Alec Leamas",
+        "timestamp": 1665401160
+    },
+    {
+        "content": "<p>Dave..<br>\nMarks exercise..<br>\nChanging marks font style and color does also affect marks in layers. So far no obstacle seen when I change these.<br>\nHow to change icons scaling? Neither User interface- nor Chart object -scale factor has any impact to layer icons.</p>",
+        "id": 303242875,
+        "sender_full_name": "Håkan Svensson",
+        "timestamp": 1665401886
+    },
+    {
+        "content": "<p>\"How to change icons scaling? Neither User interface- nor Chart object -scale factor has any impact to layer icons.\"<br>\nThat must be a bug.  I will investigate.</p>",
+        "id": 303260575,
+        "sender_full_name": "Dave Register",
+        "timestamp": 1665408629
+    },
+    {
+        "content": "<p>\"raw pointers which IMHO basically always should be considered a bug\"<br>\nBeg to differ, softly.  \"new\" is a language feature, so it is not a bug to use it as intended.  In c/c++, it is the responsibility of the designer  to manage object lifetimes, which is of course one of c/c++ least attractive features.  Failure to manage those lifetimes is truly a bug.<br>\nI agree that wxBitmap use should generally be by value semantics.</p>",
+        "id": 303261468,
+        "sender_full_name": "Dave Register",
+        "timestamp": 1665408966
+    },
+    {
+        "content": "<p>\"Why is this, as it seems, general change affecting Windows only and not Linux\"<br>\nI can see a memory leak on linux, using simple \"htop\" monitor..  The leak seems slower, maybe since the leakage involves OpenGL, so system implementation dependancy.</p>",
+        "id": 303262170,
+        "sender_full_name": "Dave Register",
+        "timestamp": 1665409251
+    },
+    {
+        "content": "<p><span class=\"user-mention\" data-user-id=\"517002\">@Dave Register</span> valgrind is the tool to use in cases like this. But I  don't have the test setup.</p>",
+        "id": 303262792,
+        "sender_full_name": "Alec Leamas",
+        "timestamp": 1665409498
+    },
+    {
+        "content": "<p>I was just about to fire up valgrind, but reading the code and some simple printfs led me to the problem much quicker.<br>\nI usually run valgrind on OCPN late in the Beta cycle, just as a check on all that object lifetime exposure.</p>",
+        "id": 303264680,
+        "sender_full_name": "Dave Register",
+        "timestamp": 1665410108
+    },
+    {
+        "content": "<p>Alec...<br>\nHave you noticed that full rebuild of OCPN on gcc is much, much slower than Windows (VS2022)?<br>\nI find that a big bisect session is very much faster on Windows than on linux.  One of the rare times I use Windows for real work...</p>",
+        "id": 303266257,
+        "sender_full_name": "Dave Register",
+        "timestamp": 1665410619
+    },
+    {
+        "content": "<p><span class=\"user-mention\" data-user-id=\"517002\">@Dave Register</span>  My speed comparisons are not fair, my Windows host is a VM with limited resources (CPUs, memory). And I'm just on VS2019. So I don't see this.</p>",
+        "id": 303270041,
+        "sender_full_name": "Alec Leamas",
+        "timestamp": 1665411947
+    },
+    {
+        "content": "<p><strong><em>Removed connection is not deactivated</em></strong><br>\nMethod to reproduce:</p>\n<ul>\n<li>Establish some incoming N0183 stream</li>\n<li>Create a Network connection UDP any port</li>\n<li>Set the connection no input and to output. Apply</li>\n<li>Check NMEA Debug window and see the data flowing out</li>\n<li>Remove the newly created UDP connection.  - Apply</li>\n<li>The data output is still flowing. </li>\n<li>Expected behavior would be the output is disabled before deletion.</li>\n<li>Create again the same UDP connection - Apply </li>\n<li>Disable the new connection. Now the stream is no longer in Debug window.</li>\n<li>Remove the new connection.</li>\n</ul>",
+        "id": 304299219,
+        "sender_full_name": "Håkan Svensson",
+        "timestamp": 1665921040
+    },
+    {
+        "content": "<p><strong><em>N0183 output via a serial port is not show in NMEA debug window.</em></strong><br>\nIf I activate a route, so the route consol window is shown, the outgoing data stream is not shown in NMEA Debug window.<br>\nNow I can detect in another program the data is actually transmitted according to the filter on a COM port set to output AP-data (ECxxx)<br>\nSo, outgoing data to a serial COM port is flowing although not visible in the NMEA Debug window.<br>\nThe same is valid for a network UDP/TCP connection</p>",
+        "id": 304299953,
+        "sender_full_name": "Håkan Svensson",
+        "timestamp": 1665921482
+    },
+    {
+        "content": "<p>\"Removed connection is not deactivated\"<br>\nCorrected in github master now.</p>",
+        "id": 304366601,
+        "sender_full_name": "Dave Register",
+        "timestamp": 1665970230
+    },
+    {
+        "content": "<p>Works, thanks. (Sorry to force a fixme item :) )</p>",
+        "id": 304389417,
+        "sender_full_name": "Håkan Svensson",
+        "timestamp": 1665988263
+    },
+    {
+        "content": "<p>I'm really impressed of all work you do now. If I understand it correct the new way to \"announce\" received desired data instead of all are constantly searching for \"is there anything for me\" would increase OCPN performance.<br>\nI'll try  also the latest commits as soon it builds for Win. I of course receive the same errors as Appveyor.</p>\n<p>In Debian RPi no position/voyage/GNSS is received neither by TCP/SignalK nor can0.<br>\nAIS decoder works fine though.</p>",
+        "id": 304626407,
+        "sender_full_name": "Håkan Svensson",
+        "timestamp": 1666079130
+    },
+    {
+        "content": "<p>Win10: <br>\nTested TCP and SignalK connections only. I'm not at home so no N2k available.<br>\nDashboard seems OK.<br>\nAIS decoder works.<br>\nNo Nav-data like Pos/Voyage/GNSS to OCPN core are working.</p>",
+        "id": 304888106,
+        "sender_full_name": "Håkan Svensson",
+        "timestamp": 1666161290
+    },
+    {
+        "content": "<p>The above is valid for Linux/Rpi as well.<br>\nNo visible POS/COG/SOG/GNSS in core O. <br>\nThe (grey) ship symbol is though correct positioned and moving on all system.</p>",
+        "id": 304896214,
+        "sender_full_name": "Håkan Svensson",
+        "timestamp": 1666165338
+    },
+    {
+        "content": "<p><span class=\"user-mention silent\" data-user-id=\"522486\">Håkan Svensson</span> <a href=\"#narrow/stream/332168-comms/topic/Test.20issues/near/304896214\">said</a>:</p>\n<blockquote>\n<p>The above is valid for Linux/Rpi as well.<br>\nNo visible POS/COG/SOG/GNSS in core O. <br>\nThe (grey) ship symbol is though correct positioned and moving on all system.</p>\n</blockquote>\n<p>I can confirm.  Something even worse happens in Windows for me (using wxWidgets 3.3 latest master).  The chart canvas does not repaint at all.  Also, the dashboard gadgets flash continuously as if being constantly erased and redrawn.<br>\nOn Linux RPi the chart appears and the ship moves but stays black with no nav info in status bar at all and dashboard works normally.</p>",
+        "id": 304934912,
+        "sender_full_name": "Dan Dickey",
+        "timestamp": 1666180113
+    },
+    {
+        "content": "<p>FWIW, it's actually the same as Rpi for me on an unsupported native Fedora build</p>",
+        "id": 304935700,
+        "sender_full_name": "Alec Leamas",
+        "timestamp": 1666180422
+    },
+    {
+        "content": "<p>Later I will try to spin up a F37 host (late beta) which has moved to wxW 3.2</p>",
+        "id": 304938908,
+        "sender_full_name": "Alec Leamas",
+        "timestamp": 1666181599
+    },
+    {
+        "content": "<p><span class=\"user-mention silent\" data-user-id=\"399510\">Alec Leamas</span> <a href=\"#narrow/stream/332168-comms/topic/Test.20issues/near/304935700\">said</a>:</p>\n<blockquote>\n<p>FWIW, it's actually the same as Rpi for me on an unsupported native Fedora build</p>\n</blockquote>\n<p>I rolled wxWidgets back to V3.2.0-rc2 and now the chart surface looks normal except for the aforementioned nav data making it to the core.  So I conclude the lastest wx master has some bugs.</p>",
+        "id": 305062180,
+        "sender_full_name": "Dan Dickey",
+        "timestamp": 1666225271
+    },
+    {
+        "content": "<p><span class=\"user-mention\" data-user-id=\"399510\">@Alec Leamas</span> <br>\n\"FWIW, it's actually the same as Rpi for me\"<br>\nThe problem here is that AppMsgBus seems dead.  Using n0183 serial data,</p>\n<p>the listener is configured thusly in ocpn_frame.cpp</p>\n<div class=\"codehilite\"><pre><span></span><code>  auto &amp;msgbus = AppMsgBus::GetInstance();\n\n  //  BasicNavData\n  AppMsg msg_basic(AppMsg::Type::BasicNavData);\n  listener_basic_navdata.Listen(msg_basic.name, this, EVT_BASIC_NAV_DATA);\n\n  Bind(EVT_BASIC_NAV_DATA, [&amp;](ObservedEvt ev) {\n    auto ptr = ev.GetSharedPtr();\n    auto basicnav_msg = std::static_pointer_cast&lt;const BasicNavDataMsg&gt;(ptr);\n    HandleBasicNavMsg( basicnav_msg );\n  });\n</code></pre></div>\n\n<p>And messages are being sent in comm_bridge.cpp</p>\n<div class=\"codehilite\"><pre><span></span><code>  // Populate a comm_appmsg with current global values\n  auto msg = std::make_shared&lt;BasicNavDataMsg&gt;(\n      gLat, gLon, gSog, gCog, gVar, gHdt, wxDateTime::Now().GetTicks());\n\n  // Notify the AppMsgBus of new data available\n  auto&amp; msgbus = AppMsgBus::GetInstance();\n  msgbus.Notify(std::move(msg));\n</code></pre></div>\n\n<p>But the lambda in ocpn_frame.cpp never gets hit.</p>\n<p>???</p>",
+        "id": 305063605,
+        "sender_full_name": "Dave Register",
+        "timestamp": 1666226615
+    },
+    {
+        "content": "<p>I'll have a look, later. Travellng now.</p>",
+        "id": 305099841,
+        "sender_full_name": "Alec Leamas",
+        "timestamp": 1666253610
+    },
+    {
+        "content": "<p><span class=\"user-mention\" data-user-id=\"517002\">@Dave Register</span>  Mystified. First of all, when I build current master the ship is green, using Håkan's server.</p>\n<p>But still, as you say say, the lambda on ocpn_frame.cpp:5401 is not reached. But this is not strange, since the code posting the event in comm_bridge.cpp:410 isnt reached either.</p>\n<p>So: nothing is sent (strange), nothing is received(not strange), everything seems to work (really strange). Digging further.</p>",
+        "id": 305212959,
+        "sender_full_name": "Alec Leamas",
+        "timestamp": 1666290685
+    },
+    {
+        "content": "<p>OK, I have it: I can see the message being sent but not received.</p>",
+        "id": 305218185,
+        "sender_full_name": "Alec Leamas",
+        "timestamp": 1666292469
+    },
+    {
+        "content": "<p><span class=\"user-mention\" data-user-id=\"517002\">@Dave Register</span>  One problem is that the listener uses the wrong key. For now, this is fixed by this patch:</p>\n<div class=\"codehilite\"><pre><span></span><code>--- a/src/ocpn_frame.cpp\n+++ b/src/ocpn_frame.cpp\n@@ -5395,7 +5395,7 @@ void MyFrame::InitAppMsgBusListener() {\n\n   //  BasicNavData\n   AppMsg msg_basic(AppMsg::Type::BasicNavData);\n-  listener_basic_navdata.Listen(msg_basic.name, this, EVT_BASIC_NAV_DATA);\n+  listener_basic_navdata.Listen(msg_basic.key(), this, EVT_BASIC_NAV_DATA);\n</code></pre></div>\n<p>However, this is not the first time the keys has caused problems and probably not the  last. I have a change in observable in my head which should resolve this. For now, just apply this patch.</p>",
+        "id": 305220216,
+        "sender_full_name": "Alec Leamas",
+        "timestamp": 1666293170
+    },
+    {
+        "content": "<blockquote>\n<p>The problem here is that AppMsgBus seems dead</p>\n</blockquote>\n<p>The truth is that there is no AppMsgBus, everything is messages sent through the same observable framework. Which has no idea what so ever if a message belongs to any \"bus\".</p>\n<p>That said, I think the navmsg_bus and appmsg_bus are useful abstractions which makes things somewhat more clear when we want to describe it. My  point is just that when a message fails, there is no bus involved, it's just the message and observable.</p>",
+        "id": 305237246,
+        "sender_full_name": "Alec Leamas",
+        "timestamp": 1666299666
+    },
+    {
+        "content": "<p>Filed <a href=\"https://github.com/OpenCPN/OpenCPN/pull/2794\">https://github.com/OpenCPN/OpenCPN/pull/2794</a> which removes the need to specify a key when doing Listen() and friends. Should  avoid these kind of errors in the future.</p>",
+        "id": 305251060,
+        "sender_full_name": "Alec Leamas",
+        "timestamp": 1666306209
+    },
+    {
+        "content": "<p>Latest PR (2794) merged, looks good.<br>\nThanks</p>",
+        "id": 305266124,
+        "sender_full_name": "Dave Register",
+        "timestamp": 1666314615
+    },
+    {
+        "content": "<p>Now  data are again flowing into OCPN. But when connection is disabled no watchdog s cleaning it out. So last received data including a red ship symbol is still present after disconnect.</p>",
+        "id": 305267592,
+        "sender_full_name": "Håkan Svensson",
+        "timestamp": 1666315055
+    },
+    {
+        "content": "<p>Master code as of today. Win10:<br>\nIt has happened a couple of times when starting O it crashes at once.<br>\nWhile debug I get the exception: see picture.<br>\nCall stack beolw.<br>\n<a href=\"/user_uploads/33951/UUjmEeFIDWrONkA2P_5jvcaO/bild.png\">bild.png</a> </p>\n<div class=\"message_inline_image\"><a href=\"/user_uploads/33951/UUjmEeFIDWrONkA2P_5jvcaO/bild.png\" title=\"bild.png\"><img src=\"/user_uploads/33951/UUjmEeFIDWrONkA2P_5jvcaO/bild.png\"></a></div><blockquote>\n<p>opencpn.exe!pugi::xml_writer_file::write(const void * data, unsigned int size) Line 4910    C++<br>\n    [Inline Frame] opencpn.exe!pugi::impl::<code>anonymous-namespace'::xml_buffered_writer::flush(const char * size, unsigned int) Line 3641 C++\n    opencpn.exe!pugi::impl::</code>anonymous namespace'::xml_buffered_writer::flush() Line 3634   C++<br>\n    opencpn.exe!pugi::impl::<code>anonymous namespace'::xml_buffered_writer::write_direct(const char * data, unsigned int length) Line 3659  C++\n    [Inline Frame] opencpn.exe!pugi::impl::</code>anonymous-namespace'::xml_buffered_writer::write_buffer(const char * length, unsigned int) Line 3697    C++<br>\n    opencpn.exe!pugi::impl::<code>anonymous namespace'::text_output_escaped(pugi::impl::</code>anonymous-namespace'::xml_buffered_writer &amp; writer, const char * s, pugi::impl::<code>anonymous-namespace'::chartypex_t type) Line 3822  C++\n    opencpn.exe!pugi::impl::</code>anonymous namespace'::text_output(pugi::impl::<code>anonymous-namespace'::xml_buffered_writer &amp; writer, const char * s, pugi::impl::</code>anonymous-namespace'::chartypex_t type, unsigned int flags) Line 3858  C++<br>\n    opencpn.exe!pugi::impl::<code>anonymous namespace'::node_output_simple(pugi::impl::</code>anonymous-namespace'::xml_buffered_writer &amp; writer, pugi::xml_node_struct * node, unsigned int flags) Line 4051  C++<br>\n    opencpn.exe!pugi::impl::<code>anonymous namespace'::node_output(pugi::impl::</code>anonymous-namespace'::xml_buffered_writer &amp; writer, pugi::xml_node_struct * root, const char * indent, unsigned int flags, unsigned int depth) Line 4122    C++<br>\n    opencpn.exe!pugi::xml_node::print(pugi::xml_writer &amp; writer, const char * indent, unsigned int flags, pugi::xml_encoding encoding, unsigned int depth) Line 6055    C++<br>\n    opencpn.exe!NavObjectChanges::AddRoute(Route * pr, const char * action) Line 1527   C++<br>\n    opencpn.exe!NavObjectChanges::DeleteConfigRoute(Route * pr) Line 1728   C++<br>\n    opencpn.exe!Routeman::DeleteRoute(Route * pRoute) Line 776  C++<br>\n    opencpn.exe!UpdateRouteA(Route * pTentRoute, NavObjectCollection1 * navobj) Line 1200   C++<br>\n    opencpn.exe!NavObjectChanges::ApplyChanges() Line 1654  C++<br>\n    opencpn.exe!MyConfig::LoadNavObjects() Line 1700    C++<br>\n    opencpn.exe!MyFrame::OnInitTimer(wxTimerEvent &amp; event) Line 5144    C++<br>\n    [External Code] <br>\n    [Frames below may be incorrect and/or missing, no symbols loaded for wxbase312u_vc_custom.dll]  Unknown<br>\n    opencpn.exe!WinMain(HINSTANCE__ * hInstance, HINSTANCE__ * hPrevInstance, char * __formal, int nCmdShow) Line 950   C++<br>\n    [External Code]</p>\n</blockquote>",
+        "id": 305304242,
+        "sender_full_name": "Håkan Svensson",
+        "timestamp": 1666341478
+    },
+    {
+        "content": "<p>\"no watchdog s cleaning it out\"<br>\nCorrected in github now.</p>",
+        "id": 305465423,
+        "sender_full_name": "Dave Register",
+        "timestamp": 1666397511
+    },
+    {
+        "content": "<p>Corrected occasional crash on startup, <a href=\"https://github.com/OpenCPN/OpenCPN/commit/76c6b8b95485fd0ad34993388dae04aa22a3aad5\">https://github.com/OpenCPN/OpenCPN/commit/76c6b8b95485fd0ad34993388dae04aa22a3aad5</a><br>\nProblem duplicated (before fix) as:</p>\n<ol>\n<li>Start O, create a route.</li>\n<li>Restart O</li>\n<li>Change the route in (1), e.g. move a waypoint.</li>\n<li>Cause O to crash (alt-f12 will do it)</li>\n<li>O will crash on next start, while applying uncommitted object changes from the \"changes\" file.<br>\nI am not too happy with my fix.  The refactor of navobj database methods left an exposure in application of \"changes\" file after a crash.  I could not follow the logic cleanly (mixed singleton and temp object instantiation of class \"NavObjectChanges\"), so I fixed the problem symptom another way.  It works, but...<br>\nAlec?</li>\n</ol>",
+        "id": 305468546,
+        "sender_full_name": "Dave Register",
+        "timestamp": 1666400030
+    },
+    {
+        "content": "<p>Dave..</p>\n<ul>\n<li>Watchdog fix confirmed. </li>\n<li>Thanks for the RPi OpenGl fix also reported here. So it was a bug and not intentional! </li>\n<li>The occasional crash I can't reproduce now. Not bad you manage to find the cause and effect. Now when described I can agree that's what may have happened.</li>\n</ul>",
+        "id": 305486844,
+        "sender_full_name": "Håkan Svensson",
+        "timestamp": 1666418541
+    },
+    {
+        "content": "<p><span class=\"user-mention\" data-user-id=\"517002\">@Dave Register</span> </p>\n<blockquote>\n<p>Corrected occasional crash on startup</p>\n</blockquote>\n<p>Will have a look later this weekend</p>\n<blockquote>\n<p>mixed singleton and temp object instantiation of class \"NavObjectChanges\"</p>\n</blockquote>\n<p>hmpf... smells bad.</p>",
+        "id": 305527862,
+        "sender_full_name": "Alec Leamas",
+        "timestamp": 1666441258
+    },
+    {
+        "content": "<p>Ale,,<br>\nThe \"bad smell\" may be  real. I still sometimes receive the exception.</p>",
+        "id": 305685532,
+        "sender_full_name": "Håkan Svensson",
+        "timestamp": 1666545310
+    },
+    {
+        "content": "<p>Running out of time now. Tomorrow... Assuming the same test case.</p>",
+        "id": 305697670,
+        "sender_full_name": "Alec Leamas",
+        "timestamp": 1666552571
+    },
+    {
+        "content": "<p><span class=\"user-mention\" data-user-id=\"522486\">@Håkan Svensson</span>  I have pushed a new branch <em>navobj</em> . This contains a what I think better patch for the \"crash after modifying route\" problem (the existing patch is reverted). Could you possibly test it a little more?</p>",
+        "id": 306328334,
+        "sender_full_name": "Alec Leamas",
+        "timestamp": 1666817479
+    },
+    {
+        "content": "<p><span class=\"user-mention\" data-user-id=\"518981\">@Github Bot</span>  #10e788f5c</p>",
+        "id": 306333428,
+        "sender_full_name": "Alec Leamas",
+        "timestamp": 1666818602
+    },
+    {
+        "content": "<p>** author: Alec Leamas at 2022-10-26T20:46:02Z<br>\nrouteman: Use actual NavObjectChanges instance.</p>\n<p>The assumption that there is only one NavObjectChanges instance, as<br>\nreturned by NavObjectChanges::getInstance() is not completely true,<br>\nduring initial setup there is a temporary instance.</p>\n<p>Add a NavObjectChanges parameter to methods updating the database<br>\nso the correct instance can be used.</p>\n<p>The basic problem here is that NavObjectChanges calls methods on<br>\nRouteman. The latter is an object above the database, so this call<br>\nshould really be replaced by a signal or so to untangle the<br>\nspaghetti.<br>\n<a href=\"https://github.com/OpenCPN/OpenCPN/commit/10e788f5c\">https://github.com/OpenCPN/OpenCPN/commit/10e788f5c</a></p>",
+        "id": 306333435,
+        "sender_full_name": "Github Bot",
+        "timestamp": 1666818603
+    },
+    {
+        "content": "<p>I guess your patch is not so much prettier than my earlier fix.  But all that can be done, wading in the spaghetti.  I understand the layer problem.</p>",
+        "id": 306364175,
+        "sender_full_name": "Dave Register",
+        "timestamp": 1666838356
+    },
+    {
+        "content": "<blockquote>\n<p>I guess your patch is not so much prettier than my earlier fix.</p>\n</blockquote>\n<p>There are some differences. For a starter, let's see if Håkan is happy with the new patch, he seemed to have some problems (crashes) with the old .</p>\n<blockquote>\n<p>I understand the layer problem.</p>\n</blockquote>\n<p>There are actually two problems: That NavObjectChanges calls (i. e, depends on) Routeman, and that Routeman  in this case contains code which belongs to RoutemanGui. The latter  could probably be fixed using a callback.</p>\n<p><span class=\"user-mention\" data-user-id=\"522486\">@Håkan Svensson</span> : I  have rebased the <em>navobj</em> branch on top of current master.</p>",
+        "id": 306398177,
+        "sender_full_name": "Alec Leamas",
+        "timestamp": 1666858992
+    },
+    {
+        "content": "<p><span class=\"user-mention\" data-user-id=\"399510\">@Alec Leamas</span> I'm on a boat working during the day- Let's see later on...</p>",
+        "id": 306403496,
+        "sender_full_name": "Håkan Svensson",
+        "timestamp": 1666861050
+    },
+    {
+        "content": "<p>OK. I'll keep the branch rebased.</p>",
+        "id": 306403643,
+        "sender_full_name": "Alec Leamas",
+        "timestamp": 1666861108
+    },
+    {
+        "content": "<p><span class=\"user-mention\" data-user-id=\"399510\">@Alec Leamas</span> Now home. Long day so today only some quick Data sharing comments. Tomorrow work at the same boat. It's hard being retired :)</p>",
+        "id": 306489281,
+        "sender_full_name": "Håkan Svensson",
+        "timestamp": 1666888440
+    },
+    {
+        "content": "<p>AIS targets not deleted when timed out.<br>\nA strange effect introduced, I think, last week.<br>\nTargets timed out are still visible on screen maybe due to some effect in AIS targets list. Such a timed out target is not sensible for \"mouse over\" or right menu click to show target query.<br>\nIt's though still listed in AIS Targets list and from there can the target query be opened. As I did for the attached picture where the target was last updated 18 minutes ago while the time out is 8 minutes. <br>\n<a href=\"/user_uploads/33951/MSyaRt22r3s2FLaFJVlKFaFD/bild.png\">bild.png</a></p>\n<div class=\"message_inline_image\"><a href=\"/user_uploads/33951/MSyaRt22r3s2FLaFJVlKFaFD/bild.png\" title=\"bild.png\"><img src=\"/user_uploads/33951/MSyaRt22r3s2FLaFJVlKFaFD/bild.png\"></a></div>",
+        "id": 307818530,
+        "sender_full_name": "Håkan Svensson",
+        "timestamp": 1667502540
+    },
+    {
+        "content": "<p><span class=\"user-mention silent\" data-user-id=\"522486\">Håkan Svensson</span> <a href=\"#narrow/stream/332168-comms/topic/Test.20issues/near/307818530\">said</a>:</p>\n<blockquote>\n<p>AIS targets not deleted when timed out.</p>\n</blockquote>\n<p>I'm looking at this code now.  It has a couple other minor problems.  I'll take the action to debug this and report back what I find.</p>",
+        "id": 307821496,
+        "sender_full_name": "Dan Dickey",
+        "timestamp": 1667503500
+    },
+    {
+        "content": "<p><span class=\"user-mention silent\" data-user-id=\"522486\">Håkan Svensson</span> <a href=\"#narrow/stream/332168-comms/topic/Test.20issues/near/307818530\">said</a>:</p>\n<blockquote>\n<p>AIS targets not deleted when timed out.</p>\n</blockquote>\n<p>Targets are not deleted when they first time out.  They are only deleted when 3X the timeout length has passed.  I think if you wait a bit longer, they should go away.  I tested it, with the patch I submitted yesterday, and it works as designed.</p>",
+        "id": 308141548,
+        "sender_full_name": "Dan Dickey",
+        "timestamp": 1667655219
+    },
+    {
+        "content": "<p>From another point of view: this is about combining two well established practices : bluetooth type pairing and the API key commonly used to control access to REST API:s.</p>\n<p>In the latter case, the keys I have encountered has always been 20 - 40 hexadecimal characters. I f we should go for something else, I guess we should have good reasons. Have we?</p>",
+        "id": 308159043,
+        "sender_full_name": "Alec Leamas",
+        "timestamp": 1667663240
+    },
+    {
+        "content": "<p>Not really.  If we are going to obfuscate, might as well use a long string.</p>",
+        "id": 308181580,
+        "sender_full_name": "Dave Register",
+        "timestamp": 1667678128
+    },
+    {
+        "content": "<p><strong>WP Icons are (again) over sized.</strong><br>\nToday's master branch. <br>\nWP properties Icon list has icons of different size.<br>\nIn my example below is \"Diamond\" selected.  <br>\nFrom \"C:\\Builds\\OCPN\\OpenCPN\\data\\svg\\markicons\" is another icon \"1st-Diamond.svg\" That one is scaled normally.<br>\nSo from where is the icon: \"Diamond\" and why are these not properly scaled?<br>\n<a href=\"/user_uploads/33951/ToNJx0j-wb0hUfXCcKUApe6E/bild.png\">bild.png</a></p>\n<div class=\"message_inline_image\"><a href=\"/user_uploads/33951/ToNJx0j-wb0hUfXCcKUApe6E/bild.png\" title=\"bild.png\"><img src=\"/user_uploads/33951/ToNJx0j-wb0hUfXCcKUApe6E/bild.png\"></a></div>",
+        "id": 308963005,
+        "sender_full_name": "Håkan Svensson",
+        "timestamp": 1668077677
+    },
+    {
+        "content": "<p><strong>Rollover text scaling from today's master</strong><br>\nThe most \"rollover\" has got very small font scaled size. <br>\nMy settings are not changed but text fonts are only half or 1/3 the size from before.  The yellow background is sized as before though.<br>\n<a href=\"/user_uploads/33951/YU0yNSnEd658XWiyUJ-YSkX2/bild.png\">bild.png</a></p>\n<div class=\"message_inline_image\"><a href=\"/user_uploads/33951/YU0yNSnEd658XWiyUJ-YSkX2/bild.png\" title=\"bild.png\"><img src=\"/user_uploads/33951/YU0yNSnEd658XWiyUJ-YSkX2/bild.png\"></a></div>",
+        "id": 308964450,
+        "sender_full_name": "Håkan Svensson",
+        "timestamp": 1668078245
+    },
+    {
+        "content": "<p>More scaling issues.<br>\nPlugin icons in Options-&gt;Plugins has grown. Strange things happens last days??</p>",
+        "id": 309061742,
+        "sender_full_name": "Håkan Svensson",
+        "timestamp": 1668108341
+    },
+    {
+        "content": "<p><span class=\"user-mention\" data-user-id=\"522729\">@Dan Dickey</span> </p>\n<blockquote>\n<p>Targets are not deleted when they first time out. They are only deleted when 3X the timeout length has passed. I think if you wait a bit longer, they should go away. I tested it, with the patch I submitted yesterday, and it works as designed.</p>\n</blockquote>\n<p>Dan,I could not find this PR. To not be forgotten I added the issue to the task list.</p>",
+        "id": 309355505,
+        "sender_full_name": "Håkan Svensson",
+        "timestamp": 1668267153
+    },
+    {
+        "content": "<p><span class=\"user-mention\" data-user-id=\"522486\">@Håkan Svensson</span> the patch was for something else. In my testing, the stale AIS targets disappear per the 3x timeout mentioned above. So, I believe there is no problem. If you check again and find a case of a target never leaving please let me know as much about the target as you can.</p>",
+        "id": 309370409,
+        "sender_full_name": "Dan Dickey",
+        "timestamp": 1668275753
+    },
+    {
+        "content": "<p>AIS target timeout fixed by 50424282d52ee93f9fc0d7678f25c49538ef3daf<br>\nTargets get strike-out, and disappear from screen correctly.  They then disappear from AIS Target List in 3x the target removal time,  as designed.</p>",
+        "id": 310121902,
+        "sender_full_name": "Dave Register",
+        "timestamp": 1668482701
+    },
+    {
+        "content": "<p>AIS target strike-out and disappearance in due time confirmed. Thanks.</p>",
+        "id": 310188210,
+        "sender_full_name": "Håkan Svensson",
+        "timestamp": 1668514605
+    },
+    {
+        "content": "<p><strong>Spontaneous false language</strong><br>\nWindows. <br>\nI've got reports from two users the normal Swedish language is suddenly changed to Spanish!<br>\nIf I show the language list in User interface there's a strange \"gap\", see picture. Some kind of explanation is that the gap is sometimes a seen as real post in the list and sometimes not. Since Spanish is the position just before Swedish a numbered list may sometimes point to Spanish instead of Swedish?<br>\nAlso are all languages in the list spelled in English and not local languages as normal.</p>\n<p>Linux (RPi)<br>\nThere's the list even worst. <br>\nList posts with only question marks and plenty of empty rows.<br>\nThough is the spelling in locals here.</p>\n<p><a href=\"/user_uploads/33951/MM8pynmzOZinYxk0J7OyJsXm/bild.png\">bild.png</a></p>\n<div class=\"message_inline_image\"><a href=\"/user_uploads/33951/MM8pynmzOZinYxk0J7OyJsXm/bild.png\" title=\"bild.png\"><img src=\"/user_uploads/33951/MM8pynmzOZinYxk0J7OyJsXm/bild.png\"></a></div>",
+        "id": 312195532,
+        "sender_full_name": "Håkan Svensson",
+        "timestamp": 1669385353
+    },
+    {
+        "content": "<p>Language list corrected. No empty rows and individual local languages used for each post in the list. <br>\nAnd.. All languages can now be used. Some O version back (5.0?) the choice was restricted to Eng(US) and machine language. Now restored. (If that was due to this commit or earlier I don't know. Haven't checked it for years.)<br>\nThanks.</p>",
+        "id": 312438036,
+        "sender_full_name": "Håkan Svensson",
+        "timestamp": 1669537753
+    },
+    {
+        "content": "<p>Look ahead mode is now corrected. After commit \"Correct Course-UP mode timer logic.\" also look ahead mode in \"north up\" do position the ship symbol as it should.</p>",
+        "id": 312438954,
+        "sender_full_name": "Håkan Svensson",
+        "timestamp": 1669538374
+    },
+    {
+        "content": "<p><strong>Windows Console data font scaling</strong><br>\nConsole route data font scaling also fails for Win scaled display. <br>\nThe console window itself is correct sized as is the label e.g. \"This leg\"<br>\n<a href=\"/user_uploads/33951/_ynLEH8aRmnuO7UEXprVWOQZ/bild.png\">bild.png</a></p>\n<div class=\"message_inline_image\"><a href=\"/user_uploads/33951/_ynLEH8aRmnuO7UEXprVWOQZ/bild.png\" title=\"bild.png\"><img src=\"/user_uploads/33951/_ynLEH8aRmnuO7UEXprVWOQZ/bild.png\"></a></div>",
+        "id": 313092301,
+        "sender_full_name": "Håkan Svensson",
+        "timestamp": 1669824017
+    },
+    {
+        "content": "<p>Hakan...<br>\nTake a look at concanv.cpp:469</p>",
+        "id": 313105247,
+        "sender_full_name": "Dave Register",
+        "timestamp": 1669827347
+    },
+    {
+        "content": "<p>Dave..<br>\nI scaled \"m_pvalueFont\" there but it seems later updated and destroyed by \"RefreshFonts()\" where I couldn't find a method to scale it wo obstacles.  Obviously over my head.</p>",
+        "id": 313253652,
+        "sender_full_name": "Håkan Svensson",
+        "timestamp": 1669893108
+    },
+    {
+        "content": "<p><strong>Rollover background is too big on scaled Win</strong><br>\nThe rollover text is still correct after last fix but now the background has grown big.<br>\nThis is valid for all rollover: Canvas meny tooltips, routes, tracks and AIS rollover.<br>\n<a href=\"/user_uploads/33951/fdRjP5NI64RpBAQRuSRHnLdD/bild.png\">bild.png</a></p>\n<div class=\"message_inline_image\"><a href=\"/user_uploads/33951/fdRjP5NI64RpBAQRuSRHnLdD/bild.png\" title=\"bild.png\"><img src=\"/user_uploads/33951/fdRjP5NI64RpBAQRuSRHnLdD/bild.png\"></a></div>",
+        "id": 313734020,
+        "sender_full_name": "Håkan Svensson",
+        "timestamp": 1670101582
+    },
+    {
+        "content": "<p>AIS/DCS-Alerts now working. \"TODO list, Alpha test\" task point completed..</p>",
+        "id": 313950453,
+        "sender_full_name": "Håkan Svensson",
+        "timestamp": 1670242694
+    },
+    {
+        "content": "<p>On Win (Scaled)<br>\nThe OCPNMessageBox() may also need some general scale tweaking.<br>\nI suppose it's about the icon in the massage box.<br>\nIf I change to \"wxOK_DEFAULT\" instead of present \"wxICON_INFORMATION\" the message box size is normal, see pictures.<br>\n<a href=\"/user_uploads/33951/T11iLRnLpvDZWulW2fgM0L8A/bild.png\">bild.png</a> <br>\n<a href=\"/user_uploads/33951/QylNbdTc_T5yBloo5RxEcK67/bild.png\">bild.png</a></p>\n<div class=\"message_inline_image\"><a href=\"/user_uploads/33951/T11iLRnLpvDZWulW2fgM0L8A/bild.png\" title=\"bild.png\"><img src=\"/user_uploads/33951/T11iLRnLpvDZWulW2fgM0L8A/bild.png\"></a></div><div class=\"message_inline_image\"><a href=\"/user_uploads/33951/QylNbdTc_T5yBloo5RxEcK67/bild.png\" title=\"bild.png\"><img src=\"/user_uploads/33951/QylNbdTc_T5yBloo5RxEcK67/bild.png\"></a></div>",
+        "id": 314217970,
+        "sender_full_name": "Håkan Svensson",
+        "timestamp": 1670326566
+    },
+    {
+        "content": "<p>All rollover scaling issues, AIS, tooltip, route, are now corrected.</p>",
+        "id": 314394488,
+        "sender_full_name": "Håkan Svensson",
+        "timestamp": 1670399240
+    },
+    {
+        "content": "<p>Console scaled font issue is now corrected by c007b845</p>",
+        "id": 315173507,
+        "sender_full_name": "Håkan Svensson",
+        "timestamp": 1670745829
+    },
+    {
+        "content": "<p>Made a MacOS build from the latest master. Neither ShipDriver or o-charts will import. Naming of o-charts tarball is suspect - wx315. Cannot find wx32 version.<br>\n<a href=\"https://github.com/Rasbats/shipdriver_pi/issues/475\">https://github.com/Rasbats/shipdriver_pi/issues/475</a><br>\nNothing in the catalog.</p>",
+        "id": 315462603,
+        "sender_full_name": "Mike Rossiter",
+        "timestamp": 1670878871
+    },
+    {
+        "content": "<p>Lots of tests:<br>\n<a href=\"https://github.com/Rasbats/shipdriver_pi/issues/475\">https://github.com/Rasbats/shipdriver_pi/issues/475</a><br>\n<span class=\"user-mention\" data-user-id=\"517002\">@Dave Register</span> Should we move to homebrew wxWidgets for the MacOS? My own build of MacOS OpenCPN using these allowed me to import a ShipDriver tarball, also built with homebrew wxWidgets. <br>\nAlternative that worked was to keep using the <a href=\"http://opencpn.org\">opencpn.org</a> wxWidgets, as in the master code and compile ShipDriver using <a href=\"http://opencpn.org\">opencpn.org</a> version of wxWidgets as well. This also worked.</p>",
+        "id": 315684157,
+        "sender_full_name": "Mike Rossiter",
+        "timestamp": 1670964954
+    },
+    {
+        "content": "<p>We should first sort out what the actual problem is/was when using plugin+homebrew before jumping to conclusions.</p>",
+        "id": 315686961,
+        "sender_full_name": "Alec Leamas",
+        "timestamp": 1670965871
+    },
+    {
+        "content": "<p>The actual problem is this</p>\n<div class=\"codehilite\"><pre><span></span><code>17:29:53.180 ERROR dlunix.cpp:120 Failed to load shared library &#39;/Users/mikerossiter/Library/ApplicationSupport/OpenCPN/Contents/PlugIns/libShipDriver_pi.dylib&#39;:dlopen(/Users/mikerossiter/Library/ApplicationSupport/OpenCPN/Contents/PlugIns/libShipDriver_pi.dylib, 2): Symbol not found:_wxTheAssertHandler\nReferenced from: /Users/mikerossiter/Library/ApplicationSupport/OpenCPN/Contents/PlugIns/libShipDriver_pi.dylib\n</code></pre></div>\n<p>Needs  investigation. At a glance, looks like a symbol which should be provided by any wxWidgets library.</p>",
+        "id": 315687904,
+        "sender_full_name": "Alec Leamas",
+        "timestamp": 1670966220
+    },
+    {
+        "content": "<p>At least we need to sort out things described in <a href=\"https://stackoverflow.com/questions/42036606\">https://stackoverflow.com/questions/42036606</a>. This is basically about the compiler flags used when compiling, both for homebrew and our custom build.</p>\n<p><span class=\"user-mention\" data-user-id=\"517002\">@Dave Register</span>  should know about the flags used when compiling the custom build. I will look into homebrew  tomorrow, late here now.</p>",
+        "id": 315689490,
+        "sender_full_name": "Alec Leamas",
+        "timestamp": 1670966895
+    },
+    {
+        "content": "<p>It was actually simple. Below  is the homebrew wxwidgets formula with all configure options.</p>\n<p><span class=\"user-mention\" data-user-id=\"517002\">@Dave Register</span>  Which are the corresponding options used for the custom build?</p>\n<div class=\"codehilite\"><pre><span></span><code>class Wxwidgets &lt; Formula\n  desc &quot;Cross-platform C++ GUI toolkit&quot;\n  homepage &quot;https://www.wxwidgets.org&quot;\n  url &quot;https://github.com/wxWidgets/wxWidgets/releases/download/v3.1.5/wxWidgets-3.1.5.tar.bz2&quot;\n  sha256 &quot;d7b3666de33aa5c10ea41bb9405c40326e1aeb74ee725bb88f90f1d50270a224&quot;\n  license &quot;wxWindows&quot;\n  head &quot;https://github.com/wxWidgets/wxWidgets.git&quot;, branch: &quot;master&quot;\n\n  livecheck do\n    url :stable\n    regex(/^v?(\\d+(?:\\.\\d+)+)$/i)\n  end\n\n  bottle do\n    sha256 cellar: :any,                 arm64_monterey: &quot;64286e7122dfb5fb4a2ff013f2a9ef10595f404d036908ca6279c2821f02cf43&quot;\n    sha256 cellar: :any,                 arm64_big_sur:  &quot;00b2086f68be587c6ee848954845a81e1e4bda964dc4a8b8ec117d6acb54c833&quot;\n    sha256 cellar: :any,                 monterey:       &quot;ee0ae69ee883fe648eec49b00c39780e1ccecf11dd8b1e1fd58ef01c92b08f03&quot;\n    sha256 cellar: :any,                 big_sur:        &quot;b75599c4bb938ce01b3ddcce13c8cea3d7f329db85a1a63672eca1266621e857&quot;\n    sha256 cellar: :any,                 catalina:       &quot;a9de66ca781fe633b958a0a7745b47fecd4ffb3fc9d7302757b057ded6c88e22&quot;\n    sha256 cellar: :any,                 mojave:         &quot;974046c7307cca6cb5eec6ef6b06c57817f42782ef1cfa03ff1f4bb4a97190bd&quot;\n    sha256 cellar: :any_skip_relocation, x86_64_linux:   &quot;f20b0033ce08592ade30d821da88010582c6107e7269e112ab3bbd48ec887f66&quot;\n  end\n\n  depends_on &quot;jpeg&quot;\n  depends_on &quot;libpng&quot;\n  depends_on &quot;libtiff&quot;\n\n  on_linux do\n    depends_on &quot;pkg-config&quot; =&gt; :build\n    depends_on &quot;gtk+3&quot;\n    depends_on &quot;libsm&quot;\n    depends_on &quot;mesa-glu&quot;\n  end\n\n  def install\n    args = [\n      &quot;--prefix=#{prefix}&quot;,\n      &quot;--enable-clipboard&quot;,\n      &quot;--enable-controls&quot;,\n      &quot;--enable-dataviewctrl&quot;,\n      &quot;--enable-display&quot;,\n      &quot;--enable-dnd&quot;,\n      &quot;--enable-graphics_ctx&quot;,\n      &quot;--enable-std_string&quot;,\n      &quot;--enable-svg&quot;,\n      &quot;--enable-unicode&quot;,\n      &quot;--enable-webviewwebkit&quot;,\n      &quot;--with-expat&quot;,\n      &quot;--with-libjpeg&quot;,\n      &quot;--with-libpng&quot;,\n      &quot;--with-libtiff&quot;,\n      &quot;--with-opengl&quot;,\n      &quot;--with-zlib&quot;,\n      &quot;--disable-precomp-headers&quot;,\n      # This is the default option, but be explicit\n      &quot;--disable-monolithic&quot;,\n    ]\n\n    if OS.mac?\n      # Set with-macosx-version-min to avoid configure defaulting to 10.5\n      args &lt;&lt; &quot;--with-macosx-version-min=#{MacOS.version}&quot;\n      args &lt;&lt; &quot;--with-osx_cocoa&quot;\n      args &lt;&lt; &quot;--with-libiconv&quot;\n    end\n\n    system &quot;./configure&quot;, *args\n    system &quot;make&quot;, &quot;install&quot;\n\n    # wx-config should reference the public prefix, not wxwidgets&#39;s keg\n    # this ensures that Python software trying to locate wxpython headers\n    # using wx-config can find both wxwidgets and wxpython headers,\n    # which are linked to the same place\n    inreplace &quot;#{bin}/wx-config&quot;, prefix, HOMEBREW_PREFIX\n\n    # For consistency with the versioned wxwidgets formulae\n    bin.install_symlink &quot;#{bin}/wx-config&quot; =&gt; &quot;wx-config-#{version.major_minor}&quot;\n    (share/&quot;wx&quot;/version.major_minor).install share/&quot;aclocal&quot;, share/&quot;bakefile&quot;\n  end\n\n  test do\n    system bin/&quot;wx-config&quot;, &quot;--libs&quot;\n  end\nend\n</code></pre></div>",
+        "id": 315692703,
+        "sender_full_name": "Alec Leamas",
+        "timestamp": 1670968031
+    },
+    {
+        "content": "<p>\"my\" bundled version was built with the following autotools config options:</p>\n<div class=\"codehilite\"><pre><span></span><code> $ ../configure --with-cxx=11 --with-macosx-version-min=10.10 --enable-unicode --with-osx-cocoa --enable-aui --disable-debug --with-opengl --without-subdirs --prefix=/tmp/wx321_opencpn50_macos1010\n</code></pre></div>",
+        "id": 315716619,
+        "sender_full_name": "Dave Register",
+        "timestamp": 1670978991
+    },
+    {
+        "content": "<p>This config setup has been known to work for many OCPN and wx versions, for years.  I'll be resistant to change, at least in OCPN core.</p>",
+        "id": 315722194,
+        "sender_full_name": "Dave Register",
+        "timestamp": 1670982694
+    },
+    {
+        "content": "<p>It would take some time finding out which of the options causing the linkage error. Not much to discuss until we either do this or just use use the private build. </p>\n<p>Obviously, I hesitate to use the private build for reasons already explained  and IMHO easily fixed.</p>",
+        "id": 315766663,
+        "sender_full_name": "Alec Leamas",
+        "timestamp": 1671008853
+    },
+    {
+        "content": "<p>What can I say?  Our plates are full, and the existing method has worked for 8 years....</p>",
+        "id": 315831442,
+        "sender_full_name": "Dave Register",
+        "timestamp": 1671028032
+    },
+    {
+        "content": "<p>I'll see  if I can do anything about this. Not suggesting anyone else should.</p>",
+        "id": 315852250,
+        "sender_full_name": "Alec Leamas",
+        "timestamp": 1671033337
+    },
+    {
+        "content": "<p>We have just merged shipdriver  code which rebuilds wxWidgets from source. This makes for a clear trace to the actually used sources, avoiding the questions whcih always could arise around a binary download without docs.</p>\n<p>The build is cached, so the current macos build is actually much faster than it was besides the initial run (macos now completes more or less in the same time as other platforms).</p>",
+        "id": 316125806,
+        "sender_full_name": "Alec Leamas",
+        "timestamp": 1671133640
+    },
+    {
+        "content": "<p><a href=\"https://github.com/Rasbats/shipdriver_pi/pull/479\">https://github.com/Rasbats/shipdriver_pi/pull/479</a></p>",
+        "id": 316126320,
+        "sender_full_name": "Alec Leamas",
+        "timestamp": 1671133801
+    },
+    {
+        "content": "<p>Please help.   <span class=\"user-mention\" data-user-id=\"399510\">@Alec Leamas</span>  (?)<br>\nThis code in nav_object_database.cpp : 1421 has probably lost it's link(?).  See <a href=\"https://www.cruisersforum.com/forums/f134/opencpn-version-5-7-1-beta-test-1-a-271518-5.html#post3726720\">CF Post</a><br>\nI think the idea is the (root().name()) is supposed to have some length after first data print to the NavObject.<br>\nThat's we only want to print the header once. Now name() is empty all time we run the function.<br>\nIs there a easy fix (I or.. could push) or should i make an issue?</p>\n<blockquote>\n<p>void NavObjectCollection1::SetRootGPXNode(void) {<br>\n  if (!strlen(root().name())) {<br>\n    pugi::xml_node gpx_root = append_child(\"gpx\");<br>\n    gpx_root.append_attribute(\"version\") = \"1.1\";<br>\n    gpx_root.append_attribute(\"creator\") = \"OpenCPN\";</p>\n</blockquote>",
+        "id": 319791340,
+        "sender_full_name": "Håkan Svensson",
+        "timestamp": 1673015155
+    },
+    {
+        "content": "<p>At a glance, this looks broken by design. This code  sets data in  a child named \"gpx\", but uses  <code>name()</code> to find out whether the \"gpx\" child is set. Why not check if there is a \"gpx\" child instead? Making assumptions like \"if name() is defined there is no need to create the \"gpx\" child\" seems really  odd, especially since SetRootGPXNode() does not set that name...</p>\n<p>Thoughts?</p>",
+        "id": 319813391,
+        "sender_full_name": "Alec Leamas",
+        "timestamp": 1673022031
+    },
+    {
+        "content": "<p>Furthermore, that function creates a node, but does not insert it anywhere. Nor does it return anything.  The bad commit seems to be 6ff5bf4abef80fce3 \" Refactor navobj XML file handling.\" which was quite late (Dec 17...)</p>",
+        "id": 319814018,
+        "sender_full_name": "Alec Leamas",
+        "timestamp": 1673022241
+    },
+    {
+        "content": "<p>I could probably do something about this. However, it might make more sense that Dave takes a look at it,  he has been working recently with this code and has the complete picture to the refactoring taking place here.</p>",
+        "id": 319814467,
+        "sender_full_name": "Alec Leamas",
+        "timestamp": 1673022365
+    },
+    {
+        "content": "<p><span class=\"user-mention\" data-user-id=\"517002\">@Dave Register</span>  ^</p>",
+        "id": 319814523,
+        "sender_full_name": "Alec Leamas",
+        "timestamp": 1673022382
+    },
+    {
+        "content": "<p>The \"refactor...\" commit was a work on bugs in routes last month.  <br>\nThanks for your \"glance\"</p>",
+        "id": 319814781,
+        "sender_full_name": "Håkan Svensson",
+        "timestamp": 1673022478
+    },
+    {
+        "content": "<p>After good guidance from Alec and some trial and error this works as expected:</p>\n<blockquote>\n<p>void NavObjectCollection1::SetRootGPXNode(void) {<br>\n  if (!strlen(first_child().name())) {</p>\n</blockquote>\n<p>If no further objections a PR to come.<br>\nThanks.</p>",
+        "id": 319862864,
+        "sender_full_name": "Håkan Svensson",
+        "timestamp": 1673038833
+    },
+    {
+        "content": "<p>hm... You should probably not go for first child, it could basically be anything. The trick would be to look for a child named \"GPX\".</p>\n<p>And the other issue is still there. The node created is not inserted anywhere if I understand this code right.</p>",
+        "id": 319867191,
+        "sender_full_name": "Alec Leamas",
+        "timestamp": 1673040874
+    },
+    {
+        "content": "<p>Using  <code>child(const char* name)</code> is probably the way to go for the first thing, see <a href=\"https://pugixml.org/docs/manual.html#access.contents\">https://pugixml.org/docs/manual.html#access.contents</a></p>",
+        "id": 319867714,
+        "sender_full_name": "Alec Leamas",
+        "timestamp": 1673041132
+    },
+    {
+        "content": "<p>Ah... OK. NavObjectCollection1 is a pugi::xml_document, so <code>append_child()</code> appends to <code>this</code>.  Case closed, the new node is actually appended implicitly. Sorry  for that noise.</p>",
+        "id": 319868174,
+        "sender_full_name": "Alec Leamas",
+        "timestamp": 1673041364
+    },
+    {
+        "content": "<p>PM. Plugin version presentation.<br>\nWould we correct the inconsistency for shown version number for a imported plugin before 5.8?<br>\nThis was discussed earlier but I don't remember what was said.<br>\nPM and plugin preferences shows different version when the plugin is imported. PM shows only last catalog update and not what's actually installed.<br>\n<a href=\"/user_uploads/33951/jnbh1AAMgc8z4oOZTk2inRef/bild.png\">bild.png</a></p>\n<div class=\"message_inline_image\"><a href=\"/user_uploads/33951/jnbh1AAMgc8z4oOZTk2inRef/bild.png\" title=\"bild.png\"><img src=\"/user_uploads/33951/jnbh1AAMgc8z4oOZTk2inRef/bild.png\"></a></div>",
+        "id": 339020574,
+        "sender_full_name": "Håkan Svensson",
+        "timestamp": 1677741827
+    },
+    {
+        "content": "<p>I. e., this is a general problem, not just about o-charts, right?</p>",
+        "id": 339022201,
+        "sender_full_name": "Alec Leamas",
+        "timestamp": 1677742473
+    },
+    {
+        "content": "<p>I suppose it's general. o-charts is an example. Since neither \"Debian-arm64:11\" nor \"Debian-armhf:11\" is available in master catalog I use to build them locally and import the Tarball. That's why I noticed.</p>",
+        "id": 339029325,
+        "sender_full_name": "Håkan Svensson",
+        "timestamp": 1677744980
+    },
+    {
+        "content": "<p>To complete the picture for possible bug trace:<br>\nIf I import a tarball e.g. v2.0.0.38 PM shows that version correct.<br>\nAlso if I close PM and reopen the correct v.38 is shown.<br>\nBut as soon I update catalog master the o-charts version switches to last catalog install 1.0.0.29</p>",
+        "id": 339031672,
+        "sender_full_name": "Håkan Svensson",
+        "timestamp": 1677745727
+    },
+    {
+        "content": "<p>No time right now, perhaps later. </p>\n<p>This should IMHO be filed as a bug. Having the discussion here is still a good practise, this way we can avoid clobbering down the bugs with all the details and chit-chat which is necessary.</p>\n<p>If you file a bug you can link to zulip discussions using <a href=\"https://leamas.github.io/zulip-archive/\">https://leamas.github.io/zulip-archive/</a></p>",
+        "id": 339034923,
+        "sender_full_name": "Alec Leamas",
+        "timestamp": 1677746821
+    },
+    {
+        "content": "<p>While debug another task I saw a lot of  the exceptions below. I fact one every second.<br>\nIs this a Debug issue, although not seen before, or something we need to address?<br>\nThe whole story in attached file.<br>\nSE: \"servern är inte tillgänglig.\"  &gt;&gt; \"RPC- server is not available/accessible\"</p>\n<blockquote>\n<p>Exception thrown at 0x774CE4B2 (KernelBase.dll) in opencpn.exe: 0x000006BA: RPC-servern är inte tillgänglig.<br>\nException thrown at 0x774CE4B2 (KernelBase.dll) in opencpn.exe: 0x000006BA: RPC-servern är inte tillgänglig.<br>\nException thrown at 0x774CE4B2 in opencpn.exe: Microsoft C++ exception: serial::IOException at memory location 0x0D54F1A0.<br>\nException thrown at 0x774CE4B2 in opencpn.exe: Microsoft C++ exception: serial::IOException at memory location 0x0D54F1A0.</p>\n</blockquote>\n<p><a href=\"/user_uploads/33951/__cg_0nE2pq_ncGEpB7ige2S/Debug-thread-exceptions.txt\">Debug-thread-exceptions.txt</a></p>",
+        "id": 340339985,
+        "sender_full_name": "Håkan Svensson",
+        "timestamp": 1678276681
+    }
+]

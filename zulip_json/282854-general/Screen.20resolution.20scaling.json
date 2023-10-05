@@ -1,0 +1,32 @@
+[
+    {
+        "content": "<p>To handle high resolution screens, some builds need to be aware.<br>\nwxWidgets provides methods <code>GetDPIScaleFactor()</code>, <code>FromDIP()</code> and <code>ToDPI()</code> for this.</p>\n<p><strong>Windows</strong><br>\nThis works as expected.</p>\n<p><strong>MacOS</strong><br>\nMacOS takes care of screen resolution at system level, so no action is needed.<br>\n<code>FromDIP()</code> and <code>ToDPI()</code> simply return the same wxPoint or wxSize unchanged.<br>\nSurprisingly, <code>GetDPIScaleFactor()</code> does return the screen resolution (2 for a Retina display) so we have to not use that for MacOS.</p>\n<p><strong>Bullseye</strong><br>\nSome builds are OK (wx32 ones) but some fail (armhf, arm64)</p>\n<p><strong>Buster-armhf </strong><br>\nFails</p>\n<p>The reason for the fails is that the <code>GetDPIScaleFactor()</code>, <code>FromDIP()</code> and <code>ToDPI()</code> methods are not implemented in some cases.</p>\n<p>I have dozens of these calls in the JavaScript plugin and to conditional compilation of each is not practical.  For my derived classes, I could provide dummy methods that do nothing.<br>\nHowever, I sometimes use a class 'as is' such as the OCPN canvas window or wxWindow or wxFrame.<br>\nTo have to derive a class from these so that I can add the dummy methods seems unfortunate work and complication.</p>\n<p>Any wisdom, please?  And how does OCPN cope with this inconsistency?</p>",
+        "id": 350791426,
+        "sender_full_name": "Tony Voss",
+        "timestamp": 1681826561
+    },
+    {
+        "content": "<p>I am a bit out of the loop, but perhaps you can provide your own wrapper of GetDPIScaleFactor, eg ocpnGetDPIScaleFactor as a global function, or a member of a global class instead?</p>",
+        "id": 350795491,
+        "sender_full_name": "sean d'epagnier",
+        "timestamp": 1681827469
+    },
+    {
+        "content": "<p>On those Linux builds without wx32 any high resolution screen will not work properly, for years I'd see OpenCPN charts tucked into one quarter of the window. So on those platforms, a dummy method that just returns \"1\" or the original wxPoint/wxSize would be OK I think.</p>",
+        "id": 350804011,
+        "sender_full_name": "Kees Verruijt",
+        "timestamp": 1681829282
+    },
+    {
+        "content": "<p>But sorry, no direct answer to your question.</p>",
+        "id": 350805436,
+        "sender_full_name": "Kees Verruijt",
+        "timestamp": 1681829607
+    },
+    {
+        "content": "<p>I have never worked with this suff. That said, I think I'd leave buster and bullseye-wx30 builds out of the loop initially, focus on wx32 for now. wx30 is old and will not be updated in any way now when wx32 is out.</p>",
+        "id": 350824409,
+        "sender_full_name": "Alec Leamas",
+        "timestamp": 1681833893
+    }
+]

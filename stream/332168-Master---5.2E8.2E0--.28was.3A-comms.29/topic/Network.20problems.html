@@ -1,0 +1,1493 @@
+<html>
+<head><meta charset="utf-8"><title>Network problems · Master - 5.8.0  (was: comms) · Zulip Chat Archive</title></head>
+<h2>Stream: <a href="https://leamas.github.io/zulip-archive/stream/332168-Master---5.2E8.2E0--.28was.3A-comms.29/index.html">Master - 5.8.0  (was: comms)</a></h2>
+<h3>Topic: <a href="https://leamas.github.io/zulip-archive/stream/332168-Master---5.2E8.2E0--.28was.3A-comms.29/topic/Network.20problems.html">Network problems</a></h3>
+
+<hr>
+
+<base href="https://opencpn.zulipchat.com">
+
+<head><link href="https://leamas.github.io/zulip-archive/style.css" rel="stylesheet"></head>
+
+<a name="320328001"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332168-Master%20-%205.8.0%20%20%28was%3A%20comms%29/topic/Network%20problems/near/320328001" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Alec Leamas <a href="https://leamas.github.io/zulip-archive/stream/332168-Master---5.2E8.2E0--.28was.3A-comms.29/topic/Network.20problems.html#320328001">(Jan 09 2023 at 20:48)</a>:</h4>
+<p>DAve wrote: <br>
+New top, interleaved, if you do not mind.<br>
+Hakan and I are working a linux network problem. Simplest scenario we can contrive:</p>
+<p>One machine, linux or Win, transmitting UDP, 1 Hz N0183 position data.<br>
+One linux machine, receiving UDP N0183 data, initially working fine, as expected.<br>
+After 19-20 minutes, the linux receiver seems to stall for about 15 seconds, eventually picking up and processing a lot of queued traffic.<br>
+This feels like some buffer overflow/rearrangement in linux side. Wireshark logs show no interruption in UDP output from (1).<br>
+As you might understand, this causes watchdog starvation on receiver side.<br>
+Additionally, we can reproduce on OCPN 562, so not (probably) related to new O571 network stack.<br>
+Also seen on socketCAN, understandable since socketCAN probably uses the linux internal socket stack.<br>
+The strangest thing is, even if we increase the traffic, by using a VDR playback of a complex environment, using TCP, the effect still occurs. 19-20 minutes is the magic number.<br>
+Thoughts?</p>
+
+
+
+<a name="320328117"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332168-Master%20-%205.8.0%20%20%28was%3A%20comms%29/topic/Network%20problems/near/320328117" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Alec Leamas <a href="https://leamas.github.io/zulip-archive/stream/332168-Master---5.2E8.2E0--.28was.3A-comms.29/topic/Network.20problems.html#320328117">(Jan 09 2023 at 20:49)</a>:</h4>
+<p><span class="user-mention" data-user-id="517002">@Dave Register</span>  <span class="user-mention" data-user-id="522486">@Håkan Svensson</span>  ^</p>
+
+
+
+<a name="320328387"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332168-Master%20-%205.8.0%20%20%28was%3A%20comms%29/topic/Network%20problems/near/320328387" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Alec Leamas <a href="https://leamas.github.io/zulip-archive/stream/332168-Master---5.2E8.2E0--.28was.3A-comms.29/topic/Network.20problems.html#320328387">(Jan 09 2023 at 20:50)</a>:</h4>
+<p>hm... let's focus on the UDP case.   TCP adds buffering, sliding windows, socket and what not, it's just more complicated. UDP is the simple case.</p>
+
+
+
+<a name="320328794"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332168-Master%20-%205.8.0%20%20%28was%3A%20comms%29/topic/Network%20problems/near/320328794" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Alec Leamas <a href="https://leamas.github.io/zulip-archive/stream/332168-Master---5.2E8.2E0--.28was.3A-comms.29/topic/Network.20problems.html#320328794">(Jan 09 2023 at 20:53)</a>:</h4>
+<p>And... UDP is not buffered in any way, it's just a best effort attempt to deliver a packet. If it's lost, it's lost.</p>
+<p>Could it it be a network problem? Is a router involved, or is it traffic on a single segment?</p>
+
+
+
+<a name="320328958"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332168-Master%20-%205.8.0%20%20%28was%3A%20comms%29/topic/Network%20problems/near/320328958" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Alec Leamas <a href="https://leamas.github.io/zulip-archive/stream/332168-Master---5.2E8.2E0--.28was.3A-comms.29/topic/Network.20problems.html#320328958">(Jan 09 2023 at 20:54)</a>:</h4>
+<p>Or, in  other words: can this be reproduced in two different networks, or are you sharing a common test setup?</p>
+
+
+
+<a name="320330110"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332168-Master%20-%205.8.0%20%20%28was%3A%20comms%29/topic/Network%20problems/near/320330110" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Dave Register <a href="https://leamas.github.io/zulip-archive/stream/332168-Master---5.2E8.2E0--.28was.3A-comms.29/topic/Network.20problems.html#320330110">(Jan 09 2023 at 21:01)</a>:</h4>
+<p>Yes, that is why we simplified to UDP.<br>
+Started on Hakan's setup.  I have started some tests here, but inconclusive.  One CF post on Beta#2 suggests the same thing, data drop after 19 minutes on socketCAN.</p>
+
+
+
+<a name="320330648"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332168-Master%20-%205.8.0%20%20%28was%3A%20comms%29/topic/Network%20problems/near/320330648" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Dave Register <a href="https://leamas.github.io/zulip-archive/stream/332168-Master---5.2E8.2E0--.28was.3A-comms.29/topic/Network.20problems.html#320330648">(Jan 09 2023 at 21:04)</a>:</h4>
+<p>UDP test are done on single local subnet/segment.</p>
+
+
+
+<a name="320331029"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332168-Master%20-%205.8.0%20%20%28was%3A%20comms%29/topic/Network%20problems/near/320331029" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Håkan Svensson <a href="https://leamas.github.io/zulip-archive/stream/332168-Master---5.2E8.2E0--.28was.3A-comms.29/topic/Network.20problems.html#320331029">(Jan 09 2023 at 21:07)</a>:</h4>
+<p>I can use the same TCP or UDP source for two Win and one Rpi4-32-Buster. All these shows no time out like this.<br>
+The RPi400 -64- Debian 11 using the same source time out after about 20 minutes. <br>
+Massive short  "lost network" and  "established network" until it halts for nearly a minute. Then ok until next about 20 minutes.<br>
+(My friends RPi400 suffer the same)</p>
+
+
+
+<a name="320331285"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332168-Master%20-%205.8.0%20%20%28was%3A%20comms%29/topic/Network%20problems/near/320331285" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Dave Register <a href="https://leamas.github.io/zulip-archive/stream/332168-Master---5.2E8.2E0--.28was.3A-comms.29/topic/Network.20problems.html#320331285">(Jan 09 2023 at 21:09)</a>:</h4>
+<p>Common thread may be debian 11?</p>
+
+
+
+<a name="320332122"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332168-Master%20-%205.8.0%20%20%28was%3A%20comms%29/topic/Network%20problems/near/320332122" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Håkan Svensson <a href="https://leamas.github.io/zulip-archive/stream/332168-Master---5.2E8.2E0--.28was.3A-comms.29/topic/Network.20problems.html#320332122">(Jan 09 2023 at 21:14)</a>:</h4>
+<p>It may be common Debian 11 but I'm not 100% sure about my friends. But I'm sure it's -64 b</p>
+
+
+
+<a name="320332149"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332168-Master%20-%205.8.0%20%20%28was%3A%20comms%29/topic/Network%20problems/near/320332149" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Alec Leamas <a href="https://leamas.github.io/zulip-archive/stream/332168-Master---5.2E8.2E0--.28was.3A-comms.29/topic/Network.20problems.html#320332149">(Jan 09 2023 at 21:14)</a>:</h4>
+<p><span class="user-mention" data-user-id="517002">@Dave Register</span>  Just edit the topic name as you like. "It's easier be be forgiven than to get a permission"</p>
+
+
+
+<a name="320332304"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332168-Master%20-%205.8.0%20%20%28was%3A%20comms%29/topic/Network%20problems/near/320332304" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Dave Register <a href="https://leamas.github.io/zulip-archive/stream/332168-Master---5.2E8.2E0--.28was.3A-comms.29/topic/Network.20problems.html#320332304">(Jan 09 2023 at 21:15)</a>:</h4>
+<p>This is a network problem, so I'm happy.</p>
+
+
+
+<a name="320332713"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332168-Master%20-%205.8.0%20%20%28was%3A%20comms%29/topic/Network%20problems/near/320332713" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Håkan Svensson <a href="https://leamas.github.io/zulip-archive/stream/332168-Master---5.2E8.2E0--.28was.3A-comms.29/topic/Network.20problems.html#320332713">(Jan 09 2023 at 21:18)</a>:</h4>
+<p>Anyone of you having a -64-Debian (11) to test on my server: <a href="http://signalk.stupan.se">signalk.stupan.se</a>  TCP port:10112</p>
+
+
+
+<a name="320332725"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332168-Master%20-%205.8.0%20%20%28was%3A%20comms%29/topic/Network%20problems/near/320332725" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Dave Register <a href="https://leamas.github.io/zulip-archive/stream/332168-Master---5.2E8.2E0--.28was.3A-comms.29/topic/Network.20problems.html#320332725">(Jan 09 2023 at 21:18)</a>:</h4>
+<p>I have asked LeaseOnLife  the CF OP for this issue, for his config.  He will wake up soon.  Pretty sure it is RPi hardware.</p>
+
+
+
+<a name="320332800"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332168-Master%20-%205.8.0%20%20%28was%3A%20comms%29/topic/Network%20problems/near/320332800" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Dave Register <a href="https://leamas.github.io/zulip-archive/stream/332168-Master---5.2E8.2E0--.28was.3A-comms.29/topic/Network.20problems.html#320332800">(Jan 09 2023 at 21:19)</a>:</h4>
+<p>I will try to setup a test tonight.</p>
+
+
+
+<a name="320333035"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332168-Master%20-%205.8.0%20%20%28was%3A%20comms%29/topic/Network%20problems/near/320333035" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Alec Leamas <a href="https://leamas.github.io/zulip-archive/stream/332168-Master---5.2E8.2E0--.28was.3A-comms.29/topic/Network.20problems.html#320333035">(Jan 09 2023 at 21:20)</a>:</h4>
+<p>I haev some 64-bit RPis around, perhaps Fedora flatpak, perhaps Debian 11 or sid.  Will take som time to check, stay tuned.</p>
+
+
+
+<a name="320333472"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332168-Master%20-%205.8.0%20%20%28was%3A%20comms%29/topic/Network%20problems/near/320333472" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Dave Register <a href="https://leamas.github.io/zulip-archive/stream/332168-Master---5.2E8.2E0--.28was.3A-comms.29/topic/Network.20problems.html#320333472">(Jan 09 2023 at 21:23)</a>:</h4>
+<p>Late in SE.  To be continued...</p>
+
+
+
+<a name="320333547"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332168-Master%20-%205.8.0%20%20%28was%3A%20comms%29/topic/Network%20problems/near/320333547" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Håkan Svensson <a href="https://leamas.github.io/zulip-archive/stream/332168-Master---5.2E8.2E0--.28was.3A-comms.29/topic/Network.20problems.html#320333547">(Jan 09 2023 at 21:23)</a>:</h4>
+<p>Yes. See you..</p>
+
+
+
+<a name="320333967"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332168-Master%20-%205.8.0%20%20%28was%3A%20comms%29/topic/Network%20problems/near/320333967" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Alec Leamas <a href="https://leamas.github.io/zulip-archive/stream/332168-Master---5.2E8.2E0--.28was.3A-comms.29/topic/Network.20problems.html#320333967">(Jan 09 2023 at 21:25)</a>:</h4>
+<p><span class="user-mention" data-user-id="522486">@Håkan Svensson</span>  I'm about to be late. What is the test, exactly? I have 64-bit Debian running, but nothing installed on it</p>
+
+
+
+<a name="320334834"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332168-Master%20-%205.8.0%20%20%28was%3A%20comms%29/topic/Network%20problems/near/320334834" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Alec Leamas <a href="https://leamas.github.io/zulip-archive/stream/332168-Master---5.2E8.2E0--.28was.3A-comms.29/topic/Network.20problems.html#320334834">(Jan 09 2023 at 21:30)</a>:</h4>
+<p>Stuck on cloning the sources, github hickup</p>
+
+
+
+<a name="320335727"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332168-Master%20-%205.8.0%20%20%28was%3A%20comms%29/topic/Network%20problems/near/320335727" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Håkan Svensson <a href="https://leamas.github.io/zulip-archive/stream/332168-Master---5.2E8.2E0--.28was.3A-comms.29/topic/Network.20problems.html#320335727">(Jan 09 2023 at 21:36)</a>:</h4>
+<p><span class="user-mention" data-user-id="399510">@Alec Leamas</span>    The test is run OCPN and for example use my server. A good indicator is a Dashboard panel with "Wind history graph".<br>
+It shall fill the whole graph without reset after 20 minutes or so. O from present master has a watchdog for the graph on 40 seconds so it should stand a lot without data reset and restart from an empty graph.</p>
+
+
+
+<a name="320336484"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332168-Master%20-%205.8.0%20%20%28was%3A%20comms%29/topic/Network%20problems/near/320336484" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Alec Leamas <a href="https://leamas.github.io/zulip-archive/stream/332168-Master---5.2E8.2E0--.28was.3A-comms.29/topic/Network.20problems.html#320336484">(Jan 09 2023 at 21:42)</a>:</h4>
+<p>That is:</p>
+<ul>
+<li>Set up a new data connection to your server <a href="http://signalk.stupan.se">signalk.stupan.se</a> TCP port:10112. Have you an UDP sourcd as well?</li>
+<li>Start the dashboard plugin panel with "Wind History Graph" (black magic)</li>
+<li>Wait for about 20 minutes until the whole graph is filled. </li>
+</ul>
+<p>Good result: filled graph<br>
+Bad result:  graph reset and restarted</p>
+<p>OK?</p>
+
+
+
+<a name="320337047"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332168-Master%20-%205.8.0%20%20%28was%3A%20comms%29/topic/Network%20problems/near/320337047" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Alec Leamas <a href="https://leamas.github.io/zulip-archive/stream/332168-Master---5.2E8.2E0--.28was.3A-comms.29/topic/Network.20problems.html#320337047">(Jan 09 2023 at 21:46)</a>:</h4>
+<p>building...</p>
+
+
+
+<a name="320346500"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332168-Master%20-%205.8.0%20%20%28was%3A%20comms%29/topic/Network%20problems/near/320346500" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Alec Leamas <a href="https://leamas.github.io/zulip-archive/stream/332168-Master---5.2E8.2E0--.28was.3A-comms.29/topic/Network.20problems.html#320346500">(Jan 09 2023 at 22:51)</a>:</h4>
+<p><span class="user-mention" data-user-id="517002">@Dave Register</span> I have a 64-bit debian 11.5  running with current master. However, I don't understand how to tweak the dashboard panel to show also history. I can see the actual value of for example Apparent Wind Direction, but that's basically it. </p>
+<p>Any ideas?</p>
+
+
+
+<a name="320347325"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332168-Master%20-%205.8.0%20%20%28was%3A%20comms%29/topic/Network%20problems/near/320347325" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Alec Leamas <a href="https://leamas.github.io/zulip-archive/stream/332168-Master---5.2E8.2E0--.28was.3A-comms.29/topic/Network.20problems.html#320347325">(Jan 09 2023 at 22:58)</a>:</h4>
+<p>night...</p>
+
+
+
+<a name="320353730"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332168-Master%20-%205.8.0%20%20%28was%3A%20comms%29/topic/Network%20problems/near/320353730" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Dave Register <a href="https://leamas.github.io/zulip-archive/stream/332168-Master---5.2E8.2E0--.28was.3A-comms.29/topic/Network.20problems.html#320353730">(Jan 09 2023 at 23:53)</a>:</h4>
+<p>The only "history" instrument available is "WindHistory".</p>
+<ol start="0">
+<li>Show a dashboard.</li>
+<li>Right click on a dashboard panel, select Preferences.</li>
+<li>Add an instrument.  Select WindHistory.</li>
+<li>OK.</li>
+</ol>
+
+
+
+<a name="320389895"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332168-Master%20-%205.8.0%20%20%28was%3A%20comms%29/topic/Network%20problems/near/320389895" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Håkan Svensson <a href="https://leamas.github.io/zulip-archive/stream/332168-Master---5.2E8.2E0--.28was.3A-comms.29/topic/Network.20problems.html#320389895">(Jan 10 2023 at 07:27)</a>:</h4>
+<blockquote>
+<div class="codehilite"><pre><span></span><code>Have you an UDP sourcd as well?
+</code></pre></div>
+
+</blockquote>
+<p>No not on that server for the time being. The way I test UDP is to connect some N0183 sensors to another PC and send all out on a UDP connection. Then receive UDP on the other machines. <br>
+I suppose I could arrange a UDP channel on the SK server if desired?</p>
+
+
+
+<a name="320397145"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332168-Master%20-%205.8.0%20%20%28was%3A%20comms%29/topic/Network%20problems/near/320397145" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Håkan Svensson <a href="https://leamas.github.io/zulip-archive/stream/332168-Master---5.2E8.2E0--.28was.3A-comms.29/topic/Network.20problems.html#320397145">(Jan 10 2023 at 08:23)</a>:</h4>
+<p>For info I receive the same data interruption at the RPi400 after ~20 minutes when using SignalK mode.<br>
+Although no connection lost log entry only the "GPS Watchdog....."</p>
+
+
+
+<a name="320397481"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332168-Master%20-%205.8.0%20%20%28was%3A%20comms%29/topic/Network%20problems/near/320397481" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Håkan Svensson <a href="https://leamas.github.io/zulip-archive/stream/332168-Master---5.2E8.2E0--.28was.3A-comms.29/topic/Network.20problems.html#320397481">(Jan 10 2023 at 08:25)</a>:</h4>
+<p>LoL reported he's using RPi4 -32 - Debian 12. Strange combination 32 b and Debian 12?</p>
+
+
+
+<a name="320407794"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332168-Master%20-%205.8.0%20%20%28was%3A%20comms%29/topic/Network%20problems/near/320407794" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Alec Leamas <a href="https://leamas.github.io/zulip-archive/stream/332168-Master---5.2E8.2E0--.28was.3A-comms.29/topic/Network.20problems.html#320407794">(Jan 10 2023 at 09:29)</a>:</h4>
+<p>Good morning</p>
+<p>After building from current master  b0b37adf9fa89 I don't have any WindHistory available. OTOH, I do have a Barometer History, looks like below after running over the night</p>
+<p><a href="/user_uploads/33951/mdQuGldazTOfvXR2g-LvTLnF/image.png">image.png</a></p>
+<div class="message_inline_image"><a href="/user_uploads/33951/mdQuGldazTOfvXR2g-LvTLnF/image.png" title="image.png"><img src="/user_uploads/33951/mdQuGldazTOfvXR2g-LvTLnF/image.png"></a></div>
+
+
+
+<a name="320409797"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332168-Master%20-%205.8.0%20%20%28was%3A%20comms%29/topic/Network%20problems/near/320409797" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Alec Leamas <a href="https://leamas.github.io/zulip-archive/stream/332168-Master---5.2E8.2E0--.28was.3A-comms.29/topic/Network.20problems.html#320409797">(Jan 10 2023 at 09:41)</a>:</h4>
+<p>Now I actually found that WindHistory.  Tired yesterday? Running now</p>
+
+
+
+<a name="320410777"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332168-Master%20-%205.8.0%20%20%28was%3A%20comms%29/topic/Network%20problems/near/320410777" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Håkan Svensson <a href="https://leamas.github.io/zulip-archive/stream/332168-Master---5.2E8.2E0--.28was.3A-comms.29/topic/Network.20problems.html#320410777">(Jan 10 2023 at 09:47)</a>:</h4>
+<p>And you need to use history graphs in a single Dashboard to be able to extend it. Not in a board with other small instruments.<br>
+To make a new Dashboard use the + icon down left in preferences. It use to be convenient to rename the new board.<br>
+<a href="/user_uploads/33951/QsjXgYw_FkyJKxPVCvzouBNh/bild.png">bild.png</a></p>
+<div class="message_inline_image"><a href="/user_uploads/33951/QsjXgYw_FkyJKxPVCvzouBNh/bild.png" title="bild.png"><img src="/user_uploads/33951/QsjXgYw_FkyJKxPVCvzouBNh/bild.png"></a></div>
+
+
+
+<a name="320411145"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332168-Master%20-%205.8.0%20%20%28was%3A%20comms%29/topic/Network%20problems/near/320411145" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Håkan Svensson <a href="https://leamas.github.io/zulip-archive/stream/332168-Master---5.2E8.2E0--.28was.3A-comms.29/topic/Network.20problems.html#320411145">(Jan 10 2023 at 09:49)</a>:</h4>
+<p>To check for network obstacle using TCP you can also inspect the log file for lost connection and GPS watchdog.</p>
+
+
+
+<a name="320411469"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332168-Master%20-%205.8.0%20%20%28was%3A%20comms%29/topic/Network%20problems/near/320411469" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Alec Leamas <a href="https://leamas.github.io/zulip-archive/stream/332168-Master---5.2E8.2E0--.28was.3A-comms.29/topic/Network.20problems.html#320411469">(Jan 10 2023 at 09:51)</a>:</h4>
+<p>OK, the single dasboard is running.</p>
+<blockquote>
+<p>To check for network obstacle using TCP you can also inspect the log file for lost connection and GPS watchdog.</p>
+</blockquote>
+<p>Have you any examples so I can grep for them?</p>
+
+
+
+<a name="320411623"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332168-Master%20-%205.8.0%20%20%28was%3A%20comms%29/topic/Network%20problems/near/320411623" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Alec Leamas <a href="https://leamas.github.io/zulip-archive/stream/332168-Master---5.2E8.2E0--.28was.3A-comms.29/topic/Network.20problems.html#320411623">(Jan 10 2023 at 09:52)</a>:</h4>
+<p>Away for some minutes.</p>
+
+
+
+<a name="320412586"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332168-Master%20-%205.8.0%20%20%28was%3A%20comms%29/topic/Network%20problems/near/320412586" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Håkan Svensson <a href="https://leamas.github.io/zulip-archive/stream/332168-Master---5.2E8.2E0--.28was.3A-comms.29/topic/Network.20problems.html#320412586">(Jan 10 2023 at 09:57)</a>:</h4>
+<p>Examples:</p>
+<blockquote>
+<div class="codehilite"><pre><span></span><code>13:13:52.381 MESSAGE comm_drv_n0183_net.cpp:330     TCP NetworkDataStream watchdog timeout: TCP:signalk.stupan.se:10112
+</code></pre></div>
+
+<p>13:13:57.384 MESSAGE comm_bridge.cpp:190    ***GPS Watchdog timeout at Lat:57.7458   Lon: 11.6482<br>
+13:13:57.885 MESSAGE comm_drv_n0183_net.cpp:512 TCP NetworkDataStream connection established: TCP:signalk.stupan.se:10112<br>
+13:14:45.174 MESSAGE comm_drv_n0183_net.cpp:330     TCP NetworkDataStream watchdog timeout: TCP:signalk.stupan.se:10112<br>
+13:14:49.419 MESSAGE comm_bridge.cpp:190    ***GPS Watchdog timeout at Lat:57.7468   Lon: 11.6449<br>
+13:14:50.274 MESSAGE comm_drv_n0183_net.cpp:512 TCP NetworkDataStream connection established: TCP:signalk.stupan.se:10112<br>
+13:16:41.366 MESSAGE comm_drv_n0183_net.cpp:330     TCP NetworkDataStream watchdog timeout: TCP:signalk.stupan.se:10112<br>
+13:16:45.494 MESSAGE comm_bridge.cpp:190    ***GPS Watchdog timeout at Lat:57.749   Lon: 11.6375<br>
+13:16:46.373 MESSAGE comm_drv_n0183_net.cpp:512 TCP NetworkDataStream connection established: TCP:signalk.stupan.se:10112</p>
+</blockquote>
+
+
+
+<a name="320413284"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332168-Master%20-%205.8.0%20%20%28was%3A%20comms%29/topic/Network%20problems/near/320413284" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Håkan Svensson <a href="https://leamas.github.io/zulip-archive/stream/332168-Master---5.2E8.2E0--.28was.3A-comms.29/topic/Network.20problems.html#320413284">(Jan 10 2023 at 10:01)</a>:</h4>
+<p>Also away to handle firewood storage.</p>
+
+
+
+<a name="320416791"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332168-Master%20-%205.8.0%20%20%28was%3A%20comms%29/topic/Network%20problems/near/320416791" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Alec Leamas <a href="https://leamas.github.io/zulip-archive/stream/332168-Master---5.2E8.2E0--.28was.3A-comms.29/topic/Network.20problems.html#320416791">(Jan 10 2023 at 10:21)</a>:</h4>
+<p>I have those <em>connection established:</em> here and there in the log, but nothing like every 20 minute. The window is filled, so I guess it's fair to say I don't have this bug on my setup.<br>
+<a href="/user_uploads/33951/hkPQk6aBlAqsp85jak21oSia/image.png">image.png</a></p>
+<div class="message_inline_image"><a href="/user_uploads/33951/hkPQk6aBlAqsp85jak21oSia/image.png" title="image.png"><img src="/user_uploads/33951/hkPQk6aBlAqsp85jak21oSia/image.png"></a></div>
+
+
+
+<a name="320424028"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332168-Master%20-%205.8.0%20%20%28was%3A%20comms%29/topic/Network%20problems/near/320424028" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Alec Leamas <a href="https://leamas.github.io/zulip-archive/stream/332168-Master---5.2E8.2E0--.28was.3A-comms.29/topic/Network.20problems.html#320424028">(Jan 10 2023 at 11:00)</a>:</h4>
+<p>All  looks OK in my logs. Question then is about differences between our two setups. The obvious is 64-bit vs 32, theoretically it shouldn't matter. That aside:</p>
+<ul>
+<li>I have built opencpn from source, current master at b0b37adf9. What version are you using?</li>
+<li>I have a fully updated OS. What about you?</li>
+</ul>
+
+
+
+<a name="320434619"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332168-Master%20-%205.8.0%20%20%28was%3A%20comms%29/topic/Network%20problems/near/320434619" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Håkan Svensson <a href="https://leamas.github.io/zulip-archive/stream/332168-Master---5.2E8.2E0--.28was.3A-comms.29/topic/Network.20problems.html#320434619">(Jan 10 2023 at 12:04)</a>:</h4>
+<blockquote>
+<div class="codehilite"><pre><span></span><code> have those connection established: here and there in the log
+</code></pre></div>
+
+</blockquote>
+<p>So why does the connection fail and need to reestablish?? That's the main issue here.<br>
+I also have these but about every 20 minutes or so the "gap" is longer than 40 seconds causing the wind history to reset. Shorter delays he will survive. The wind history as such is not the main trouble. I use it as a indicator to not have to look for delays all time. </p>
+<p>I've O from master all time.<br>
+OS updated all time.</p>
+
+
+
+<a name="320436390"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332168-Master%20-%205.8.0%20%20%28was%3A%20comms%29/topic/Network%20problems/near/320436390" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Alec Leamas <a href="https://leamas.github.io/zulip-archive/stream/332168-Master---5.2E8.2E0--.28was.3A-comms.29/topic/Network.20problems.html#320436390">(Jan 10 2023 at 12:14)</a>:</h4>
+<p>... and your  are using a RPI-4, but with a 32-bit kernel I guess. To be precise: What does <code>uname -a</code>say on your box?  I have </p>
+<div class="codehilite"><pre><span></span><code>$ uname -a
+Linux raspberrypi 5.15.76-v8+ #1597 SMP PREEMPT Fri Nov 4 12:16:41 GMT 2022 aarch64 GNU/Linux
+</code></pre></div>
+
+
+
+<a name="320437691"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332168-Master%20-%205.8.0%20%20%28was%3A%20comms%29/topic/Network%20problems/near/320437691" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Alec Leamas <a href="https://leamas.github.io/zulip-archive/stream/332168-Master---5.2E8.2E0--.28was.3A-comms.29/topic/Network.20problems.html#320437691">(Jan 10 2023 at 12:21)</a>:</h4>
+<p>In the end, I see two possible explanations here. The first would be something related to the OS,  the other something about the network. The way to find out which would be to run both 32-bit and 64-bit on the same network i. e., that I spin up a 32-bit host or you spin up a 64-bit. </p>
+<p>If we have the same situation (64-bit works, 32-bit not)  we can exclude the network setup. It's then either about the OS or some bug in opencpn which only is visible in 32-bit mode.</p>
+<p>Can we make the same test on 5.6.2 and check?</p>
+
+
+
+<a name="320438822"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332168-Master%20-%205.8.0%20%20%28was%3A%20comms%29/topic/Network%20problems/near/320438822" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Alec Leamas <a href="https://leamas.github.io/zulip-archive/stream/332168-Master---5.2E8.2E0--.28was.3A-comms.29/topic/Network.20problems.html#320438822">(Jan 10 2023 at 12:27)</a>:</h4>
+<p><span class="user-mention" data-user-id="522486">@Håkan Svensson</span> </p>
+<blockquote>
+<p>Can we make the same test on 5.6.2 and check?</p>
+</blockquote>
+<p>"We" really meaning you or <span class="user-mention" data-user-id="517002">@Dave Register</span>  since I so far cannot reproduce the error.</p>
+
+
+
+<a name="320449863"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332168-Master%20-%205.8.0%20%20%28was%3A%20comms%29/topic/Network%20problems/near/320449863" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Håkan Svensson <a href="https://leamas.github.io/zulip-archive/stream/332168-Master---5.2E8.2E0--.28was.3A-comms.29/topic/Network.20problems.html#320449863">(Jan 10 2023 at 13:26)</a>:</h4>
+<p>I did yesterday. Using O 5.6.2 installed by Openplotter.<br>
+The same "gaps" occurred on the RPi400.</p>
+
+
+
+<a name="320451151"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332168-Master%20-%205.8.0%20%20%28was%3A%20comms%29/topic/Network%20problems/near/320451151" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Håkan Svensson <a href="https://leamas.github.io/zulip-archive/stream/332168-Master---5.2E8.2E0--.28was.3A-comms.29/topic/Network.20problems.html#320451151">(Jan 10 2023 at 13:32)</a>:</h4>
+<blockquote>
+<div class="codehilite"><pre><span></span><code> and your are using a RPI-4, but with a 32-bit kernel I guess. To be precise: What does uname -asay on your box? I have
+</code></pre></div>
+
+</blockquote>
+<p>No it's 64 Debian 11 and called RPi400<br>
+uname -a<br>
+Linux RPi400 5.15.84-v8+ #1613 SMP PREEMPT Thu Jan 5 12:03:08 GMT 2023 aarch64 GNU/Linux</p>
+
+
+
+<a name="320453269"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332168-Master%20-%205.8.0%20%20%28was%3A%20comms%29/topic/Network%20problems/near/320453269" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Håkan Svensson <a href="https://leamas.github.io/zulip-archive/stream/332168-Master---5.2E8.2E0--.28was.3A-comms.29/topic/Network.20problems.html#320453269">(Jan 10 2023 at 13:42)</a>:</h4>
+<p>And again....<br>
+All running simultaneously the same TCP source e.g. my server:<br>
+Several Win are working.<br>
+RPi4 32 Buster is working<br>
+Rpi400 -64-Debian 11, only, is suffering the interruptions discussed. i.e. using O 5.6.2 or 5.7.1</p>
+
+
+
+<a name="320454207"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332168-Master%20-%205.8.0%20%20%28was%3A%20comms%29/topic/Network%20problems/near/320454207" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Håkan Svensson <a href="https://leamas.github.io/zulip-archive/stream/332168-Master---5.2E8.2E0--.28was.3A-comms.29/topic/Network.20problems.html#320454207">(Jan 10 2023 at 13:47)</a>:</h4>
+<p>And to exclude my server being the cause I done the same simultaneous run but UDP feed from a Win PC using two serial sensors as data source.<br>
+The same result as above</p>
+
+
+
+<a name="320461026"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332168-Master%20-%205.8.0%20%20%28was%3A%20comms%29/topic/Network%20problems/near/320461026" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Alec Leamas <a href="https://leamas.github.io/zulip-archive/stream/332168-Master---5.2E8.2E0--.28was.3A-comms.29/topic/Network.20problems.html#320461026">(Jan 10 2023 at 14:18)</a>:</h4>
+<p>Which would mean:</p>
+<ul>
+<li>We are both on fully updated Raspbian/Debian 11.</li>
+<li>We are both on opencpn current master, built from source  and installed using <code>make install</code> (?)</li>
+<li>We are both using the same server and basically the same internet.</li>
+<li>You have a more recent kernel <em>Linux RPi400 5.15.84-v8+</em>  versus my <em>5.15.76-v8+ #1597</em>, probably something tailored specifically for RPi400.</li>
+</ul>
+<p>Besides the different kernels the only thing I can think of is thus what's  between our RPIs  and internet i. e., local network problems.  No idea what that could be.</p>
+<p>We need input from <span class="user-mention" data-user-id="517002">@Dave Register</span>  about what kernel he is on.</p>
+<p>Thoughts?</p>
+
+
+
+<a name="320462939"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332168-Master%20-%205.8.0%20%20%28was%3A%20comms%29/topic/Network%20problems/near/320462939" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Alec Leamas <a href="https://leamas.github.io/zulip-archive/stream/332168-Master---5.2E8.2E0--.28was.3A-comms.29/topic/Network.20problems.html#320462939">(Jan 10 2023 at 14:27)</a>:</h4>
+<p>Perhaps this is about kernel + hardware rather than opencpn. But in that case we should be able to reproduce this without involving opencpn, using nc or so. </p>
+<p>I need some food. BBL</p>
+
+
+
+<a name="320474887"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332168-Master%20-%205.8.0%20%20%28was%3A%20comms%29/topic/Network%20problems/near/320474887" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Dave Register <a href="https://leamas.github.io/zulip-archive/stream/332168-Master---5.2E8.2E0--.28was.3A-comms.29/topic/Network.20problems.html#320474887">(Jan 10 2023 at 15:18)</a>:</h4>
+<p>I am building fresh on RPi4.  Takes awhile.<br>
+Linux raspberrypi 5.10.103-v8+ #1530 SMP PREEMPT Tue Mar 8 13:06:35 GMT 2022 aarch64 GNU/Linux</p>
+
+
+
+<a name="320475780"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332168-Master%20-%205.8.0%20%20%28was%3A%20comms%29/topic/Network%20problems/near/320475780" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Alec Leamas <a href="https://leamas.github.io/zulip-archive/stream/332168-Master---5.2E8.2E0--.28was.3A-comms.29/topic/Network.20problems.html#320475780">(Jan 10 2023 at 15:20)</a>:</h4>
+<p><span class="user-mention" data-user-id="522486">@Håkan Svensson</span>  <span class="user-mention" data-user-id="517002">@Dave Register</span> </p>
+<p>Here is a oneliner which should reveal if we are dealing with a hardware/kernel  problem rather than a opencpn issue. It dumps input from Håkan's server to a file. If the connection is reset is should be possible to detect this,  either if nc aborts or if there is a "gap" in the log. The latter might require some post processing if ther need arises.</p>
+<p>I'll start this on my host now and run for at least 30 minutes. If everything is as expected, I'll get a log without any gaps. The question is what happens on an RPi 400.</p>
+<p>The netcat package is required, install using <code>sudo apt install netcat-traditional</code>.</p>
+<p>The oneliner:</p>
+<div class="codehilite"><pre><span></span><code>nc signalk.stupan.se 10112 | bash -c &#39;while read; do echo $(date) $REPLY; done&#39;  &gt; stupan.log
+</code></pre></div>
+<p>OK?</p>
+
+
+
+<a name="320477106"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332168-Master%20-%205.8.0%20%20%28was%3A%20comms%29/topic/Network%20problems/near/320477106" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Alec Leamas <a href="https://leamas.github.io/zulip-archive/stream/332168-Master---5.2E8.2E0--.28was.3A-comms.29/topic/Network.20problems.html#320477106">(Jan 10 2023 at 15:25)</a>:</h4>
+<p><span class="user-mention" data-user-id="517002">@Dave Register</span> You seem to be on a "real" RPI4 like me, but on an older kernel. Have you updated your system?</p>
+
+
+
+<a name="320478521"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332168-Master%20-%205.8.0%20%20%28was%3A%20comms%29/topic/Network%20problems/near/320478521" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Dave Register <a href="https://leamas.github.io/zulip-archive/stream/332168-Master---5.2E8.2E0--.28was.3A-comms.29/topic/Network.20problems.html#320478521">(Jan 10 2023 at 15:31)</a>:</h4>
+<p>No recent update. I'll get a datapoint here, then consider update.</p>
+
+
+
+<a name="320478929"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332168-Master%20-%205.8.0%20%20%28was%3A%20comms%29/topic/Network%20problems/near/320478929" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Alec Leamas <a href="https://leamas.github.io/zulip-archive/stream/332168-Master---5.2E8.2E0--.28was.3A-comms.29/topic/Network.20problems.html#320478929">(Jan 10 2023 at 15:33)</a>:</h4>
+<p>OK, seems reasonable.</p>
+
+
+
+<a name="320479119"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332168-Master%20-%205.8.0%20%20%28was%3A%20comms%29/topic/Network%20problems/near/320479119" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Alec Leamas <a href="https://leamas.github.io/zulip-archive/stream/332168-Master---5.2E8.2E0--.28was.3A-comms.29/topic/Network.20problems.html#320479119">(Jan 10 2023 at 15:34)</a>:</h4>
+<p>but you can still run the test above to check the OS....</p>
+
+
+
+<a name="320480478"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332168-Master%20-%205.8.0%20%20%28was%3A%20comms%29/topic/Network%20problems/near/320480478" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Håkan Svensson <a href="https://leamas.github.io/zulip-archive/stream/332168-Master---5.2E8.2E0--.28was.3A-comms.29/topic/Network.20problems.html#320480478">(Jan 10 2023 at 15:41)</a>:</h4>
+<p>Running it now...</p>
+
+
+
+<a name="320489821"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332168-Master%20-%205.8.0%20%20%28was%3A%20comms%29/topic/Network%20problems/near/320489821" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Håkan Svensson <a href="https://leamas.github.io/zulip-archive/stream/332168-Master---5.2E8.2E0--.28was.3A-comms.29/topic/Network.20problems.html#320489821">(Jan 10 2023 at 16:22)</a>:</h4>
+<p>Half an hour &gt;&gt; 5 MB  I haven't checked every time span but regular ~10 empty rows but all within a second or two.<br>
+Between empty rows always a message: $PMCAG,900,3-D,L*5B  I don't recognize. I'll check more later.</p>
+
+
+
+<a name="320490818"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332168-Master%20-%205.8.0%20%20%28was%3A%20comms%29/topic/Network%20problems/near/320490818" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Alec Leamas <a href="https://leamas.github.io/zulip-archive/stream/332168-Master---5.2E8.2E0--.28was.3A-comms.29/topic/Network.20problems.html#320490818">(Jan 10 2023 at 16:27)</a>:</h4>
+<p>ok, should not be a os problem then.  let's wait for Dave testing master</p>
+
+
+
+<a name="320520122"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332168-Master%20-%205.8.0%20%20%28was%3A%20comms%29/topic/Network%20problems/near/320520122" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Håkan Svensson <a href="https://leamas.github.io/zulip-archive/stream/332168-Master---5.2E8.2E0--.28was.3A-comms.29/topic/Network.20problems.html#320520122">(Jan 10 2023 at 18:46)</a>:</h4>
+<p>I've searched the file for time spans &gt;10 seconds between rows. Nothing found.  <br>
+I suppose empty rows is not a problem although present as a regular pattern.<br>
+like this:<br>
+Tue 10 Jan 17:10:19 CET 2023 !AIVDM,1,1,,B,13u?qPP0000nI&gt;TQ0g=&lt;v1BT00Rs,0*26<br>
+Tue 10 Jan 17:10:19 CET 2023 <br>
+Tue 10 Jan 17:10:19 CET 2023 <br>
+Tue 10 Jan 17:10:19 CET 2023 <br>
+Tue 10 Jan 17:10:19 CET 2023 <br>
+Tue 10 Jan 17:10:19 CET 2023 $PMCAG,900,3-D,L*5B<br>
+Tue 10 Jan 17:10:19 CET 2023 <br>
+Tue 10 Jan 17:10:19 CET 2023 <br>
+Tue 10 Jan 17:10:19 CET 2023 <br>
+Tue 10 Jan 17:10:19 CET 2023 <br>
+Tue 10 Jan 17:10:19 CET 2023 $PMCAG,900,3-D,L*5B<br>
+Tue 10 Jan 17:10:19 CET 2023 <br>
+Tue 10 Jan 17:10:19 CET 2023 <br>
+Tue 10 Jan 17:10:19 CET 2023 $GPGSV,3,1,11,32,11,236,36,6,18,33,34,20,6,91,,11,38,70,38*4B</p>
+
+
+
+<a name="320526259"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332168-Master%20-%205.8.0%20%20%28was%3A%20comms%29/topic/Network%20problems/near/320526259" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Alec Leamas <a href="https://leamas.github.io/zulip-archive/stream/332168-Master---5.2E8.2E0--.28was.3A-comms.29/topic/Network.20problems.html#320526259">(Jan 10 2023 at 19:17)</a>:</h4>
+<p>Empty rows just reflects that nc got  some  extra newlines from your server.  Let's drop this for now, assuming that the OS is ok until we get more input from <span class="user-mention" data-user-id="517002">@Dave Register</span></p>
+
+
+
+<a name="320530894"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332168-Master%20-%205.8.0%20%20%28was%3A%20comms%29/topic/Network%20problems/near/320530894" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Håkan Svensson <a href="https://leamas.github.io/zulip-archive/stream/332168-Master---5.2E8.2E0--.28was.3A-comms.29/topic/Network.20problems.html#320530894">(Jan 10 2023 at 19:42)</a>:</h4>
+<p>For info I just spoke to friend Gunnar also running a similar Rpi400 as me. Using present master code he experienced just now the same gap causing wind history graph to reset after ~20 minutes. He's also using my TCP (or SK?) server.</p>
+
+
+
+<a name="320534540"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332168-Master%20-%205.8.0%20%20%28was%3A%20comms%29/topic/Network%20problems/near/320534540" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Alec Leamas <a href="https://leamas.github.io/zulip-archive/stream/332168-Master---5.2E8.2E0--.28was.3A-comms.29/topic/Network.20problems.html#320534540">(Jan 10 2023 at 20:01)</a>:</h4>
+<p>Different local network for Gunnar, otherwise the same.</p>
+<p>We are on different hardware. Dave and I are on a "real" RPi-4,  you and Gunnar are  on RPi-400.</p>
+<p>So far, I am the only one which cannot reproduce this. I  am also the only one on the   <em>5.15.76-v8+</em> kernel version.  I have no better idea than that <span class="user-mention" data-user-id="517002">@Dave Register</span>  first checks his build and verifies that it's the same status i. e.,  with gaps.   Next step would be either be to update Dave's box  and check if the problem is gone when he is on the same configuration as me. </p>
+<p>The alternative would be that I formatted a new SD card with a fresh installation and uses that to see if the old kernel triggers the error. This is many hours of work, so I'd prefer not to.</p>
+
+
+
+<a name="320550906"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332168-Master%20-%205.8.0%20%20%28was%3A%20comms%29/topic/Network%20problems/near/320550906" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Dave Register <a href="https://leamas.github.io/zulip-archive/stream/332168-Master---5.2E8.2E0--.28was.3A-comms.29/topic/Network.20problems.html#320550906">(Jan 10 2023 at 21:45)</a>:</h4>
+<p>Here I am on RPi4, running something labeled RaspiOS Bullseye/64.  Connected to Hakan's TCP server.<br>
+Live test result on OCPN/master, with WindHistory.<br>
+<strong>Result:  WindHistory instrument resets after 19 minutes.  Repeatable.</strong><br>
+Conclusion:  No behavioral difference between RPi4 and RPi 400<br>
+Hmmmm</p>
+
+
+
+<a name="320551708"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332168-Master%20-%205.8.0%20%20%28was%3A%20comms%29/topic/Network%20problems/near/320551708" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Dave Register <a href="https://leamas.github.io/zulip-archive/stream/332168-Master---5.2E8.2E0--.28was.3A-comms.29/topic/Network.20problems.html#320551708">(Jan 10 2023 at 21:50)</a>:</h4>
+<p>Alec, where did you get your RPi image?  A download, or homemade?</p>
+
+
+
+<a name="320561916"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332168-Master%20-%205.8.0%20%20%28was%3A%20comms%29/topic/Network%20problems/near/320561916" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Alec Leamas <a href="https://leamas.github.io/zulip-archive/stream/332168-Master---5.2E8.2E0--.28was.3A-comms.29/topic/Network.20problems.html#320561916">(Jan 10 2023 at 23:02)</a>:</h4>
+<blockquote>
+<p>Alec, where did you get your RPi image? A download, or homemade?</p>
+</blockquote>
+<p>Don't remember exactly. However, I <strong>think</strong> I just  used rpi-imager, a tool from Raspbian and selected 64-bit. I think it was pretty close to the point in time when the 64-bit release was dubbed official and no longer a  beta.</p>
+<p>But I have done  changes after that, notably updated using apt. Also removed the VNC server bundled with the OS which is IMHO broken . </p>
+<p>Anyone using the bundled VNC server?</p>
+
+
+
+<a name="320561984"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332168-Master%20-%205.8.0%20%20%28was%3A%20comms%29/topic/Network%20problems/near/320561984" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Alec Leamas <a href="https://leamas.github.io/zulip-archive/stream/332168-Master---5.2E8.2E0--.28was.3A-comms.29/topic/Network.20problems.html#320561984">(Jan 10 2023 at 23:03)</a>:</h4>
+<p>That is, the image was not homemade.</p>
+
+
+
+<a name="320578468"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332168-Master%20-%205.8.0%20%20%28was%3A%20comms%29/topic/Network%20problems/near/320578468" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Dave Register <a href="https://leamas.github.io/zulip-archive/stream/332168-Master---5.2E8.2E0--.28was.3A-comms.29/topic/Network.20problems.html#320578468">(Jan 11 2023 at 01:51)</a>:</h4>
+<p>For verification, on same hardware, I tested also using O562, bone stock package installed from launchpad repo.  No changes to OCPN configuration files.<br>
+<strong>Result:  Same reset of WindHistory every 19-20 minutes</strong>.  Leave it run, and will repeat forever.</p>
+
+
+
+<a name="320578571"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332168-Master%20-%205.8.0%20%20%28was%3A%20comms%29/topic/Network%20problems/near/320578571" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Dave Register <a href="https://leamas.github.io/zulip-archive/stream/332168-Master---5.2E8.2E0--.28was.3A-comms.29/topic/Network.20problems.html#320578571">(Jan 11 2023 at 01:52)</a>:</h4>
+<p>So, probably we can eliminate the new 571 comm stack from the question.</p>
+
+
+
+<a name="320656626"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332168-Master%20-%205.8.0%20%20%28was%3A%20comms%29/topic/Network%20problems/near/320656626" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Alec Leamas <a href="https://leamas.github.io/zulip-archive/stream/332168-Master---5.2E8.2E0--.28was.3A-comms.29/topic/Network.20problems.html#320656626">(Jan 11 2023 at 09:47)</a>:</h4>
+<p><span class="user-mention" data-user-id="517002">@Dave Register</span> </p>
+<blockquote>
+<p>So, probably we can eliminate the new 571 comm stack from the question.</p>
+</blockquote>
+<p>Yes. But can we eliminate the kernel and the overall update status of the system? That is, have you updated your system using apt so it comes into same state as mine?</p>
+
+
+
+<a name="320665141"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332168-Master%20-%205.8.0%20%20%28was%3A%20comms%29/topic/Network%20problems/near/320665141" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Håkan Svensson <a href="https://leamas.github.io/zulip-archive/stream/332168-Master---5.2E8.2E0--.28was.3A-comms.29/topic/Network.20problems.html#320665141">(Jan 11 2023 at 10:36)</a>:</h4>
+<p>A minor comment:<br>
+Don't explicitly look for the ~19 minutes. Five or more minutes before that there are a increasingly number of "gaps" shorter than the 40 seconds needed to reset W-hist. Study another instrument where the watchdog is 10 seconds. e.g. App &amp; True wind. <br>
+After the long gap, @~19 min, the stream is rather stable for say 15 minutes.</p>
+
+
+
+<a name="320982411"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332168-Master%20-%205.8.0%20%20%28was%3A%20comms%29/topic/Network%20problems/near/320982411" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Dave Register <a href="https://leamas.github.io/zulip-archive/stream/332168-Master---5.2E8.2E0--.28was.3A-comms.29/topic/Network.20problems.html#320982411">(Jan 12 2023 at 16:39)</a>:</h4>
+<p>Updating my kernel now.  Takes a while...</p>
+
+
+
+<a name="320987665"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332168-Master%20-%205.8.0%20%20%28was%3A%20comms%29/topic/Network%20problems/near/320987665" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Dave Register <a href="https://leamas.github.io/zulip-archive/stream/332168-Master---5.2E8.2E0--.28was.3A-comms.29/topic/Network.20problems.html#320987665">(Jan 12 2023 at 17:02)</a>:</h4>
+<p><span class="user-mention" data-user-id="399510">@Alec Leamas</span>  <br>
+Hmmm...<br>
+After<br>
+$ sudo apt update<br>
+$ sudo apt upgrade</p>
+<p>I still have my older kernel.<br>
+Linux raspberrypi 5.10.103-v8+ <a href="https://github.com/opencpn/OpenCPN/issues/1530">#1530</a> SMP PREEMPT Tue Mar 8 13:06:35 GMT 2022 aarch64 GNU/Linux</p>
+<p>Suggestions?</p>
+
+
+
+<a name="320989591"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332168-Master%20-%205.8.0%20%20%28was%3A%20comms%29/topic/Network%20problems/near/320989591" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Alec Leamas <a href="https://leamas.github.io/zulip-archive/stream/332168-Master---5.2E8.2E0--.28was.3A-comms.29/topic/Network.20problems.html#320989591">(Jan 12 2023 at 17:10)</a>:</h4>
+<p>Have you rebooted after upgrade?</p>
+
+
+
+<a name="320993832"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332168-Master%20-%205.8.0%20%20%28was%3A%20comms%29/topic/Network%20problems/near/320993832" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Dave Register <a href="https://leamas.github.io/zulip-archive/stream/332168-Master---5.2E8.2E0--.28was.3A-comms.29/topic/Network.20problems.html#320993832">(Jan 12 2023 at 17:31)</a>:</h4>
+<p><span class="user-mention" data-user-id="399510">@Alec Leamas</span> <br>
+Palm on forehead....<br>
+Now I get:</p>
+<p>Linux raspberrypi 5.15.84-v8+ <a href="https://github.com/opencpn/OpenCPN/issues/1613">#1613</a> SMP PREEMPT Thu Jan 5 12:03:08 GMT 2023 aarch64 GNU/Linux<br>
+Will test now.</p>
+
+
+
+<a name="320994770"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332168-Master%20-%205.8.0%20%20%28was%3A%20comms%29/topic/Network%20problems/near/320994770" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Alec Leamas <a href="https://leamas.github.io/zulip-archive/stream/332168-Master---5.2E8.2E0--.28was.3A-comms.29/topic/Network.20problems.html#320994770">(Jan 12 2023 at 17:35)</a>:</h4>
+<p><span aria-label="smile" class="emoji emoji-1f642" role="img" title="smile">:smile:</span></p>
+
+
+
+<a name="321034939"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332168-Master%20-%205.8.0%20%20%28was%3A%20comms%29/topic/Network%20problems/near/321034939" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Dave Register <a href="https://leamas.github.io/zulip-archive/stream/332168-Master---5.2E8.2E0--.28was.3A-comms.29/topic/Network.20problems.html#321034939">(Jan 12 2023 at 21:09)</a>:</h4>
+<p>Hakan...<br>
+Did you mean 40 seconds on WindHistory reset?  Where in the code is this set?</p>
+
+
+
+<a name="321035144"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332168-Master%20-%205.8.0%20%20%28was%3A%20comms%29/topic/Network%20problems/near/321035144" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Alec Leamas <a href="https://leamas.github.io/zulip-archive/stream/332168-Master---5.2E8.2E0--.28was.3A-comms.29/topic/Network.20problems.html#321035144">(Jan 12 2023 at 21:11)</a>:</h4>
+<p><span class="user-mention" data-user-id="522486">@Håkan Svensson</span>  ^</p>
+
+
+
+<a name="321068123"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332168-Master%20-%205.8.0%20%20%28was%3A%20comms%29/topic/Network%20problems/near/321068123" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Dave Register <a href="https://leamas.github.io/zulip-archive/stream/332168-Master---5.2E8.2E0--.28was.3A-comms.29/topic/Network.20problems.html#321068123">(Jan 13 2023 at 01:39)</a>:</h4>
+<p>Tested RPi4/64  on new kernel.  Hakan's TCP stream. Results:</p>
+<ol>
+<li>WindHistory resets every ~20/25 minutes.</li>
+<li>netcat shows a number of 3-4 second gaps, nothing longer.<br>
+hmmmmm...</li>
+</ol>
+
+
+
+<a name="321076633"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332168-Master%20-%205.8.0%20%20%28was%3A%20comms%29/topic/Network%20problems/near/321076633" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Håkan Svensson <a href="https://leamas.github.io/zulip-archive/stream/332168-Master---5.2E8.2E0--.28was.3A-comms.29/topic/Network.20problems.html#321076633">(Jan 13 2023 at 03:31)</a>:</h4>
+<blockquote>
+<p>40 seconds on WindHistory reset? Where in the code is this set?</p>
+</blockquote>
+<p>dashboard.h: 86<br>
+// SignalK motor &amp; environ instr defaults 30 sec update frequency<br>
+#define no_nav_watchdog_timeout_ticks 40</p>
+
+
+
+<a name="321355963"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332168-Master%20-%205.8.0%20%20%28was%3A%20comms%29/topic/Network%20problems/near/321355963" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Alec Leamas <a href="https://leamas.github.io/zulip-archive/stream/332168-Master---5.2E8.2E0--.28was.3A-comms.29/topic/Network.20problems.html#321355963">(Jan 14 2023 at 13:21)</a>:</h4>
+<blockquote>
+<p>WindHistory resets every ~20/25 minutes.</p>
+</blockquote>
+<p>The thing is what differs between my and your system. They have the same OS, same hardware, same user space code. And still...</p>
+<p>If you want I can arrange so you can access my box over ssh and vnc so you can compare the details. Just let me know and I'll set it up.</p>
+
+
+
+<a name="321355999"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332168-Master%20-%205.8.0%20%20%28was%3A%20comms%29/topic/Network%20problems/near/321355999" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Alec Leamas <a href="https://leamas.github.io/zulip-archive/stream/332168-Master---5.2E8.2E0--.28was.3A-comms.29/topic/Network.20problems.html#321355999">(Jan 14 2023 at 13:21)</a>:</h4>
+<p><span class="user-mention" data-user-id="517002">@Dave Register</span>  ^</p>
+
+
+
+<a name="321514114"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332168-Master%20-%205.8.0%20%20%28was%3A%20comms%29/topic/Network%20problems/near/321514114" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Dave Register <a href="https://leamas.github.io/zulip-archive/stream/332168-Master---5.2E8.2E0--.28was.3A-comms.29/topic/Network.20problems.html#321514114">(Jan 15 2023 at 17:41)</a>:</h4>
+<p><span class="user-mention" data-user-id="399510">@Alec Leamas</span> <br>
+I am not sure where to look, frankly.  Next step is to try some Wireshark on UDP, I think.  This I can do locally.</p>
+
+
+
+<a name="322699732"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332168-Master%20-%205.8.0%20%20%28was%3A%20comms%29/topic/Network%20problems/near/322699732" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Håkan Svensson <a href="https://leamas.github.io/zulip-archive/stream/332168-Master---5.2E8.2E0--.28was.3A-comms.29/topic/Network.20problems.html#322699732">(Jan 21 2023 at 10:41)</a>:</h4>
+<p>Some observations FWIW:<br>
+The RPi400 is connected to can0 where POS and SAT are prio 0<br>
+It's also connected to TCP stupan wher POS and SAT are prio1 and wind, depth and more are used by plugin Dashboard.</p>
+<p>Before the long timeout, detected by Wind history 40 seconds reset, other 10 seconds watchdog instruments are timed out several times. That's nothing new.<br>
+But I saw all 10 sec instruments are timed out. Including the SAT data from can0! Although CanBus-can0 is not a IP network it's in some way still handled by the network driver, or?<br>
+I also noticed the long timeout is always released and network reconnected immediately when the 40 seconds Dashboard watchdog has counted down and the wind history is reset. That's kind of strange? Why is the data stream always reestablished just when the watchdog has timed out and not some arbitrary time after that? </p>
+<p>Could it still be something in OCPN and the data channel to Plugin Dashboard creating this all network halt or if it's about some filled up buffer function. Why any function in OCPN should react like this only with this specific 64 bit Debian kernel I can't imagine. It's just a thought based on what I noticed and described above. <br>
+You can also notice I don't have the right words to discuss the technical and programmable details but my thoughts may be able to transfer to "your" language?</p>
+<p>Abstract questions:</p>
+<ul>
+<li>Why are all "network" data streams affected, also can0?</li>
+<li>Why are all "network" reestablished the same second Dashboard watchdog(s) has counted down?</li>
+</ul>
+
+
+
+<a name="323119746"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332168-Master%20-%205.8.0%20%20%28was%3A%20comms%29/topic/Network%20problems/near/323119746" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Håkan Svensson <a href="https://leamas.github.io/zulip-archive/stream/332168-Master---5.2E8.2E0--.28was.3A-comms.29/topic/Network.20problems.html#323119746">(Jan 23 2023 at 21:17)</a>:</h4>
+<p>Statistics about kernel and more.<br>
+I updated my RPi4-32- Buster to the same kernel as on the RPi400-64-Bullseye<br>
+But still no network "gap" on the RPi4. So it may not be the kernel as such disturbing our socket? It's another combination.<br>
+I'll see if I can update the RPi4 to -64 and Bullseye in two steps and test in between.</p>
+<p>cat /etc/os-release<br>
+PRETTY_NAME="Raspbian GNU/Linux 10 (buster)"<br>
+pi@RPi4:~ $ uname -a<br>
+Linux RPi4 5.15.89-v7l+ <a href="https://github.com/opencpn/OpenCPN/issues/1620">#1620</a> SMP Wed Jan 18 12:22:20 GMT 2023 armv7l GNU/Linux</p>
+<p>cat /etc/os-release<br>
+PRETTY_NAME="Debian GNU/Linux 11 (bullseye)"<br>
+pi@RPi400:~/Builds/OpenCPN/build $ uname -a<br>
+Linux RPi400 5.15.89-v8+ <a href="https://github.com/opencpn/OpenCPN/issues/1620">#1620</a> SMP PREEMPT Wed Jan 18 12:26:08 GMT 2023 aarch64 GNU/Linux</p>
+
+
+
+<a name="323498994"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332168-Master%20-%205.8.0%20%20%28was%3A%20comms%29/topic/Network%20problems/near/323498994" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Håkan Svensson <a href="https://leamas.github.io/zulip-archive/stream/332168-Master---5.2E8.2E0--.28was.3A-comms.29/topic/Network.20problems.html#323498994">(Jan 25 2023 at 14:29)</a>:</h4>
+<p>More about the test to update the RPi4 to at what stage the network "Gap" appears.<br>
+The kernel as such, 5.1.5.89, was not causing the socket(?) to time out every 20 minutes.<br>
+Next step was to update to 64 bit OS, still on Buster:</p>
+<blockquote>
+<p>Linux RPi4 5.15.89-v8+ <a href="https://github.com/opencpn/OpenCPN/issues/1620">#1620</a> SMP PREEMPT Wed Jan 18 12:26:08 GMT 2023 aarch64 GNU/Linux</p>
+</blockquote>
+<p>OCPN though still say's it's armhf:</p>
+<blockquote>
+<p>wxWidgets version: wxWidgets 3.0.4 Linux 32 bit wxGTK<br>
+OCPN_OSDetail:  armhf ; Raspbian GNU/Linux ; 10 ; raspbian ; debian</p>
+</blockquote>
+<p>Still no socket "gaps" detected.<br>
+So then next step was to try BullsEye. Not succeed.<br>
+Since Bullseye is the last step to conclude what combination leads to the socket "gaps" I can't say for sure it's so since it's not verified.</p>
+<p>Debian 10 to 11:<br>
+I made a SD card backup copy. (Sadly, I  didn't tried this and that ignorance cost me a lot)<br>
+Followed advises on the Raspberry site I made a switch from Buster to Bullseye.<br>
+A long story made short: </p>
+<ul>
+<li>Python need an alias.</li>
+<li>wifi is not started after reboot although rfkill is cleaned.</li>
+<li>Anydesk doesn't work. (Known issue.)</li>
+<li>OCPN crashes although while starting he still log: "OSDetail:  armhf"<br>
+Using a fresh build with new dependencies dgb claim:<blockquote>
+<p>.... Opened 2 sockets for mDNS service<br>
+Service mDNS: opencpn-object-control-service.:8000<br>
+Hostname: RPi4<br>
+Sending announce<br>
+warning: JITed object file architecture armv8-a is not compatible with target architecture armv6.<br>
+[New Thread 0xd45b9a40 (LWP 13971)]<br>
+[Detaching after fork from child process 13979] <br>
+---Sigfault<br>
+So now I've to redo everything from a fresh Openplotter 64b image.  (-Do never touch a working system!!)<br>
+Hopefully I can copy all SignalK settings from the config files...</p>
+</blockquote>
+</li>
+</ul>
+
+
+
+<a name="324157656"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332168-Master%20-%205.8.0%20%20%28was%3A%20comms%29/topic/Network%20problems/near/324157656" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Håkan Svensson <a href="https://leamas.github.io/zulip-archive/stream/332168-Master---5.2E8.2E0--.28was.3A-comms.29/topic/Network.20problems.html#324157656">(Jan 27 2023 at 21:32)</a>:</h4>
+<p><span class="user-mention" data-user-id="517002">@Dave Register</span>  <span class="user-mention" data-user-id="399510">@Alec Leamas</span> <br>
+Maybe a step forward to find out what's causing the network gaps or 20 minutes time out.</p>
+<p>My updated RPi4 to 64b Bullseye is not good but OCPN is now running without network timeouts!<br>
+The difference here from a "official" 64 - Bullseye is that OCPN don't recognize it's 64 bit.<br>
+Conclusions/Thoughts?</p>
+<p>RPi4 without gaps:<br>
+Linux RPi4 5.15.89-v8+ <a href="https://github.com/opencpn/OpenCPN/issues/1620">#1620</a> SMP PREEMPT Wed Jan 18 12:26:08 GMT 2023 aarch64 GNU/Linux<br>
+wxWidgets version: wxWidgets 3.0.4 Linux 32 bit wxGTK<br>
+OCPN_OSDetail: armhf ; Raspbian GNU/Linux ; 10 ; raspbian ; debian<br>
+cmake don't build for aarch64 but for armhf?</p>
+<p>Rpi400 where the gaps are present:<br>
+Linux RPi400 5.15.89-v8+ <a href="https://github.com/opencpn/OpenCPN/issues/1620">#1620</a> SMP PREEMPT Wed Jan 18 12:26:08 GMT 2023 aarch64 GNU/Linux<br>
+OCPN_OSDetail:  arm64 ; Debian GNU/Linux ; 11 ; debian ;</p>
+
+
+
+<a name="324158838"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332168-Master%20-%205.8.0%20%20%28was%3A%20comms%29/topic/Network%20problems/near/324158838" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Dave Register <a href="https://leamas.github.io/zulip-archive/stream/332168-Master---5.2E8.2E0--.28was.3A-comms.29/topic/Network.20problems.html#324158838">(Jan 27 2023 at 21:40)</a>:</h4>
+<p>Two things here:</p>
+<ol>
+<li>Why does OCPN get built as armhf on a clearly aarch64 system?</li>
+<li>Why does OCNP built for ARMHF not timeout, but when built for AARCH64, it does timeout?</li>
+</ol>
+<p>Have I got this right?</p>
+
+
+
+<a name="324159183"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332168-Master%20-%205.8.0%20%20%28was%3A%20comms%29/topic/Network%20problems/near/324159183" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Dave Register <a href="https://leamas.github.io/zulip-archive/stream/332168-Master---5.2E8.2E0--.28was.3A-comms.29/topic/Network.20problems.html#324159183">(Jan 27 2023 at 21:43)</a>:</h4>
+<p>And another, related:<br>
+On RPI4, why does OCPN os-detail report version 10?  Is this device for sure Bullseye (11)/64?</p>
+
+
+
+<a name="324403024"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332168-Master%20-%205.8.0%20%20%28was%3A%20comms%29/topic/Network%20problems/near/324403024" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Håkan Svensson <a href="https://leamas.github.io/zulip-archive/stream/332168-Master---5.2E8.2E0--.28was.3A-comms.29/topic/Network.20problems.html#324403024">(Jan 29 2023 at 09:05)</a>:</h4>
+<p><span class="user-mention" data-user-id="517002">@Dave Register</span> </p>
+<blockquote>
+<p>On RPI4, why does OCPN os-detail report version 10? Is this device for sure Bullseye (11)/64?</p>
+</blockquote>
+<p>Sorry my bad. Copy-past error. These are the data for the RPi4</p>
+<blockquote>
+<p>Linux RPi4 5.15.89-v8+ <a href="https://github.com/opencpn/OpenCPN/issues/1621">#1621</a> SMP PREEMPT Tue Jan 24 11:12:35 GMT 2023 aarch64 GNU/Linux<br>
+MESSAGE ocpn_app.cpp:1228 wxWidgets version: wxWidgets 3.0.5 Linux 64 bit wxGTK<br>
+MESSAGE ocpn_app.cpp:1247 OCPN_OSDetail:  armhf ; Raspbian GNU/Linux ; 11 ; raspbian ; debian</p>
+</blockquote>
+<p>Why O claims it's armhf and not arm64 I don't know. It's probably due my change from Buster to Bullseye "On the fly".  This is not so important for this issue. I wont keep that image.<br>
+The useful info here would be the network/socket "Gaps" are not present. All data flows wo timeouts.<br>
+A conclusion may be:<br>
+Network/socket does not work wo gaps on: Kernel 5.15.89, arm64 and Debian 11 <br>
+Network/socket does work on: Kernel 5.15.89, armhf and Debian 11</p>
+
+
+
+<a name="324413620"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332168-Master%20-%205.8.0%20%20%28was%3A%20comms%29/topic/Network%20problems/near/324413620" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Alec Leamas <a href="https://leamas.github.io/zulip-archive/stream/332168-Master---5.2E8.2E0--.28was.3A-comms.29/topic/Network.20problems.html#324413620">(Jan 29 2023 at 10:38)</a>:</h4>
+<p><span class="user-mention" data-user-id="522486">@Håkan Svensson</span>  When you updated from Buster -&gt; Bullseye, was the starting point armhf?</p>
+<blockquote>
+<p>A conclusion may be:<br>
+Network/socket does not work wo gaps on: Kernel 5.15.89, arm64 and Debian 11<br>
+Network/socket does work on: Kernel 5.15.89, armhf and Debian 11</p>
+</blockquote>
+<p>I. e., a 64-bit bug somewhere... Not impossible, for sure.</p>
+
+
+
+<a name="324419497"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332168-Master%20-%205.8.0%20%20%28was%3A%20comms%29/topic/Network%20problems/near/324419497" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Håkan Svensson <a href="https://leamas.github.io/zulip-archive/stream/332168-Master---5.2E8.2E0--.28was.3A-comms.29/topic/Network.20problems.html#324419497">(Jan 29 2023 at 11:29)</a>:</h4>
+<p>Alec..<br>
+From Buster to Bullseye? -  Yes!</p>
+<blockquote>
+<p>I. e., a 64-bit bug somewhere... Not impossible, for sure.</p>
+</blockquote>
+<p>Most probably so.<br>
+So what's left? OCPN network/socket handler? Since the used network traffic sniffers show no "gaps" the link between the network and O multiplexer would be the cause in some way? 64 bits handler??</p>
+
+
+
+<a name="324605766"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332168-Master%20-%205.8.0%20%20%28was%3A%20comms%29/topic/Network%20problems/near/324605766" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Alec Leamas <a href="https://leamas.github.io/zulip-archive/stream/332168-Master---5.2E8.2E0--.28was.3A-comms.29/topic/Network.20problems.html#324605766">(Jan 30 2023 at 13:27)</a>:</h4>
+<blockquote>
+<p>From Buster to Bullseye? - Yes!</p>
+</blockquote>
+<p>Well, if you update an armhf system, the updated system is still armhf. You cannot "update" to another architecture, no way.</p>
+
+
+
+<a name="324606425"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332168-Master%20-%205.8.0%20%20%28was%3A%20comms%29/topic/Network%20problems/near/324606425" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Alec Leamas <a href="https://leamas.github.io/zulip-archive/stream/332168-Master---5.2E8.2E0--.28was.3A-comms.29/topic/Network.20problems.html#324606425">(Jan 30 2023 at 13:30)</a>:</h4>
+<blockquote>
+<p>So what's left? </p>
+</blockquote>
+<p>Basically everything... Could certainly be the low-level ocpn code, some part of it. Has anyone checked for memory leaks using valgrind?</p>
+
+
+
+<a name="324612040"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332168-Master%20-%205.8.0%20%20%28was%3A%20comms%29/topic/Network%20problems/near/324612040" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Håkan Svensson <a href="https://leamas.github.io/zulip-archive/stream/332168-Master---5.2E8.2E0--.28was.3A-comms.29/topic/Network.20problems.html#324612040">(Jan 30 2023 at 13:56)</a>:</h4>
+<blockquote>
+<p>You cannot "update" to another architecture, no way.</p>
+</blockquote>
+<p>I read something about that. uname though reports aarch64?  OCPN does not report arm64 but armhf. He's not using "uname" to query the architecture then I suppose?<br>
+Nevertheless:<br>
+Still we may have narrowed this issue to network gaps are visible on arm64 but not on armhf.<br>
+No I have not searched for memory leaks. Not clear how to do that.</p>
+
+
+
+<a name="325457308"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332168-Master%20-%205.8.0%20%20%28was%3A%20comms%29/topic/Network%20problems/near/325457308" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Håkan Svensson <a href="https://leamas.github.io/zulip-archive/stream/332168-Master---5.2E8.2E0--.28was.3A-comms.29/topic/Network.20problems.html#325457308">(Feb 02 2023 at 17:39)</a>:</h4>
+<blockquote>
+<div class="codehilite"><pre><span></span><code>Has anyone checked for memory leaks using valgrind?
+</code></pre></div>
+
+</blockquote>
+<p><span class="user-mention" data-user-id="399510">@Alec Leamas</span>  Well, I tried. After 30 minutes Valgrind hasn't succeed to load and start OCPN. I haven't used that tool before. Can you use it on the RPI?</p>
+
+
+
+<a name="325609252"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332168-Master%20-%205.8.0%20%20%28was%3A%20comms%29/topic/Network%20problems/near/325609252" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Pavel Kalian <a href="https://leamas.github.io/zulip-archive/stream/332168-Master---5.2E8.2E0--.28was.3A-comms.29/topic/Network.20problems.html#325609252">(Feb 03 2023 at 11:52)</a>:</h4>
+<p><span class="user-mention silent" data-user-id="522486">Håkan Svensson</span> <a href="#narrow/stream/332168-Master---5.2E8.2E0--.28was.3A-comms.29/topic/Network.20problems/near/325457308">said</a>:</p>
+<blockquote>
+<blockquote>
+<div class="codehilite"><pre><span></span><code>Has anyone checked for memory leaks using valgrind?
+</code></pre></div>
+
+</blockquote>
+<p><span class="user-mention silent" data-user-id="399510">Alec Leamas</span>  Well, I tried. After 30 minutes Valgrind hasn't succeed to load and start OCPN. I haven't used that tool before. Can you use it on the RPI?</p>
+</blockquote>
+<p>It is probably better to build with address sanitizer, the resulting binary performs by an order of magnitude better than running under Vlagrind and IMO it is also better at detecting the leaks.</p>
+
+
+
+<a name="326120014"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332168-Master%20-%205.8.0%20%20%28was%3A%20comms%29/topic/Network%20problems/near/326120014" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Håkan Svensson <a href="https://leamas.github.io/zulip-archive/stream/332168-Master---5.2E8.2E0--.28was.3A-comms.29/topic/Network.20problems.html#326120014">(Feb 06 2023 at 13:15)</a>:</h4>
+<p>On the RPI400 arm64 an observation I did may need to be investigated:<br>
+If Dashboard are hid my means of click the Dashboard button in tools all instruments are kept updated "in background".<br>
+Also the wind history data lists[3000] are populated. <br>
+When instruments are displayed the history graph lists are reset due to the data stream "gap"  after ~20 minutes. That's about 2/3 of a full graph.<br>
+Now I noticed when Dashboard instruments are not shown the graph is actually filled up completely wo gaps. When Dashboard is shown by the tools button the graph is fully populated! But soon after start display the "gap" is present and all instrument are emptied by its 10 sec watchdog. Also the history graph after the 40 seconds WD. When also the 40 sec WD is reach all data are recovered and the stream flows again as before.</p>
+<p>My conclusion is something in the DB data collection from O multiplexer to DB wind history graph is filled up and block the data stream. <br>
+"Silly" questions:<br>
+Can a thread be blocked if data is not forwarded.<br>
+Can the 64b architecture destroy a data list in any way? (Badly initialized?) On Debian alike only?</p>
+
+
+
+<a name="326246470"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332168-Master%20-%205.8.0%20%20%28was%3A%20comms%29/topic/Network%20problems/near/326246470" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Håkan Svensson <a href="https://leamas.github.io/zulip-archive/stream/332168-Master---5.2E8.2E0--.28was.3A-comms.29/topic/Network.20problems.html#326246470">(Feb 06 2023 at 22:01)</a>:</h4>
+<p><span class="user-mention" data-user-id="517002">@Dave Register</span> <br>
+Now I need help to understand.<br>
+Pls have look at DB: wind_history.cpp  The value for WIND_RECORD_COUNT is defined to 3000.<br>
+That's used to size a couple of list for the history sample.<br>
+I've logged the population of the lists when the graph is reset caused by data stream "gaps".<br>
+All reset was done when about 2650-2700 records have been collected. <br>
+See log file snippet below. Look for "SampleCount"</p>
+<p>If I change the WIND_RECORD_COUNT size to 2500 no graph reset and we never disturb the OCPN TCP network stream. And no GPS WatchDog logs from comm_bridge.cpp.<br>
+This would in some way be related to arm64 but I can't imagine how. (And why not Win-64)<br>
+Should e.g. double m_ArrayWindHistory[WIND_RECORD_COUNT]  be changed to a "real" array to fit Debian-64?<br>
+And why???<br>
+I suppose you can test yourself on the RPi400 if needed.</p>
+<blockquote>
+<div class="codehilite"><pre><span></span><code>20:53:13.971 MESSAGE comm_bridge.cpp:181    ***GPS Watchdog timeout at Lat:58.2262   Lon: 11.7626
+</code></pre></div>
+
+<p>20:53:19.069 MESSAGE comm_bridge.cpp:181    ***GPS Watchdog timeout at Lat:58.2262   Lon: 11.7626<br>
+20:53:24.139 MESSAGE comm_bridge.cpp:181    ***GPS Watchdog timeout at Lat:58.2262   Lon: 11.7626<br>
+20:53:29.262 MESSAGE comm_bridge.cpp:181    ***GPS Watchdog timeout at Lat:58.2262   Lon: 11.7626<br>
+20:53:34.366 MESSAGE comm_bridge.cpp:181    ***GPS Watchdog timeout at Lat:58.2262   Lon: 11.7626<br>
+20:53:39.496 MESSAGE comm_bridge.cpp:181    ***GPS Watchdog timeout at Lat:58.2262   Lon: 11.7626<br>
+20:53:44.588 MESSAGE comm_bridge.cpp:181    ***GPS Watchdog timeout at Lat:58.2262   Lon: 11.7626<br>
+20:53:44.588 MESSAGE wind_history.cpp:192  <strong>*</strong> WD Reset m_SampleCount: 2680, Minute: 53<br>
+20:53:44.826 MESSAGE comm_drv_n0183_net.cpp:512 TCP NetworkDataStream connection established: TCP:192.168.1.73:10110<br>
+21:00:00.291 MESSAGE ocpn_frame.cpp:5593 LOGBOOK:  2023-02-06 20:00:00 UTC  GPS Lat   58.22621 Lon   11.76264 COG ----- SOG   0.00 kts<br>
+21:17:06.664 MESSAGE comm_drv_n0183_net.cpp:330     TCP NetworkDataStream watchdog timeout: TCP:192.168.1.73:10110<br>
+21:17:17.116 MESSAGE comm_drv_n0183_net.cpp:512 TCP NetworkDataStream connection established: TCP:192.168.1.73:10110<br>
+21:18:05.267 MESSAGE comm_drv_n0183_net.cpp:330     TCP NetworkDataStream watchdog timeout: TCP:192.168.1.73:10110<br>
+21:18:11.756 MESSAGE comm_drv_n0183_net.cpp:512 TCP NetworkDataStream connection established: TCP:192.168.1.73:10110<br>
+21:18:46.485 MESSAGE comm_drv_n0183_net.cpp:330     TCP NetworkDataStream watchdog timeout: TCP:192.168.1.73:10110<br>
+21:18:51.587 MESSAGE comm_bridge.cpp:181    ***GPS Watchdog timeout at Lat:58.2262   Lon: 11.7626<br>
+21:18:56.664 MESSAGE comm_bridge.cpp:181    ***GPS Watchdog timeout at Lat:58.2262   Lon: 11.7626<br>
+21:19:00.813 MESSAGE comm_drv_n0183_net.cpp:512 TCP NetworkDataStream connection established: TCP:192.168.1.73:10110<br>
+21:19:06.313 MESSAGE comm_drv_n0183_net.cpp:330     TCP NetworkDataStream watchdog timeout: TCP:192.168.1.73:10110<br>
+21:19:10.424 MESSAGE comm_bridge.cpp:181    ***GPS Watchdog timeout at Lat:58.2262   Lon: 11.7626<br>
+21:19:14.543 MESSAGE comm_drv_n0183_net.cpp:512 TCP NetworkDataStream connection established: TCP:192.168.1.73:10110<br>
+21:19:21.212 MESSAGE comm_drv_n0183_net.cpp:330     TCP NetworkDataStream watchdog timeout: TCP:192.168.1.73:10110<br>
+21:19:31.726 MESSAGE comm_bridge.cpp:181    ***GPS Watchdog timeout at Lat:58.2262   Lon: 11.7626<br>
+21:19:32.761 MESSAGE comm_drv_n0183_net.cpp:512 TCP NetworkDataStream connection established: TCP:192.168.1.73:10110<br>
+21:19:41.505 MESSAGE comm_drv_n0183_net.cpp:330     TCP NetworkDataStream watchdog timeout: TCP:192.168.1.73:10110<br>
+21:19:54.015 MESSAGE comm_bridge.cpp:181    ***GPS Watchdog timeout at Lat:58.2262   Lon: 11.7626<br>
+21:19:59.134 MESSAGE comm_bridge.cpp:181    ***GPS Watchdog timeout at Lat:58.2262   Lon: 11.7626<br>
+21:20:04.324 MESSAGE comm_bridge.cpp:181    ***GPS Watchdog timeout at Lat:58.2262   Lon: 11.7626<br>
+21:20:09.520 MESSAGE comm_bridge.cpp:181    ***GPS Watchdog timeout at Lat:58.2262   Lon: 11.7626<br>
+21:20:14.666 MESSAGE comm_bridge.cpp:181    ***GPS Watchdog timeout at Lat:58.2262   Lon: 11.7626<br>
+21:20:17.783 MESSAGE wind_history.cpp:192  <strong>*</strong> WD Reset m_SampleCount: 2663, Minute: 20<br>
+21:20:17.963 MESSAGE comm_drv_n0183_net.cpp:512 TCP NetworkDataStream connection established: TCP:192.168.1.73:10110</p>
+</blockquote>
+
+
+
+<a name="326274396"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332168-Master%20-%205.8.0%20%20%28was%3A%20comms%29/topic/Network%20problems/near/326274396" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Dave Register <a href="https://leamas.github.io/zulip-archive/stream/332168-Master---5.2E8.2E0--.28was.3A-comms.29/topic/Network.20problems.html#326274396">(Feb 07 2023 at 02:44)</a>:</h4>
+<p><span class="user-mention" data-user-id="522486">@Håkan Svensson</span> <br>
+I believe you are on to something here, but I don't know what yet.<br>
+Are you saying that if the history is 2500 elements, then there is no gap or reset at all?  And all works correctly?<br>
+But if the history is 3000 elements, then we get watchdog timeouts and reset?<br>
+If that is correct, this looks like some kind of buffer overflow problem.</p>
+
+
+
+<a name="326276719"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332168-Master%20-%205.8.0%20%20%28was%3A%20comms%29/topic/Network%20problems/near/326276719" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Dave Register <a href="https://leamas.github.io/zulip-archive/stream/332168-Master---5.2E8.2E0--.28was.3A-comms.29/topic/Network.20problems.html#326276719">(Feb 07 2023 at 03:20)</a>:</h4>
+<p>On thinking more, it must be some stall in the "drawing" methods, if the data capture in background seems normal when hidden.</p>
+
+
+
+<a name="326290584"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332168-Master%20-%205.8.0%20%20%28was%3A%20comms%29/topic/Network%20problems/near/326290584" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Håkan Svensson <a href="https://leamas.github.io/zulip-archive/stream/332168-Master---5.2E8.2E0--.28was.3A-comms.29/topic/Network.20problems.html#326290584">(Feb 07 2023 at 06:33)</a>:</h4>
+<p>Yes, when the  history is less than ~2600 elements there are no network trouble and no wind history reset. All works fine.<br>
+"Some stall in the drawing method". Yes, could be. Only present on Linux 64 bits?</p>
+
+
+
+<a name="326306075"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332168-Master%20-%205.8.0%20%20%28was%3A%20comms%29/topic/Network%20problems/near/326306075" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Håkan Svensson <a href="https://leamas.github.io/zulip-archive/stream/332168-Master---5.2E8.2E0--.28was.3A-comms.29/topic/Network.20problems.html#326306075">(Feb 07 2023 at 08:35)</a>:</h4>
+<p>Thoughts: This would boil down to:<br>
+Instrument.cpp: OnPaint()  can possible halt on row 125 Draw() that's waiting for<br>
+either of four occasions where SampleCount &gt; 2600 matter: <br>
+Wind_history.cpp: 565, 589, 649 or 674.<br>
+Which of the instructions there can be "destroyed" related to Linux 64bits data format? I can't tell. More data format knowledge needed.</p>
+
+
+
+<a name="326456544"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332168-Master%20-%205.8.0%20%20%28was%3A%20comms%29/topic/Network%20problems/near/326456544" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Håkan Svensson <a href="https://leamas.github.io/zulip-archive/stream/332168-Master---5.2E8.2E0--.28was.3A-comms.29/topic/Network.20problems.html#326456544">(Feb 07 2023 at 20:57)</a>:</h4>
+<p>Problem solved. Issue closed.<br>
+Old inefficient code in WindHistory consumed up to 1000 ms when data was drawn every second. No wonder why all including comm_bridge was heavily disturbed. Thanks to Dave, why does it seems so "simple" when you hack :),  the 1000 ms is now down to 30 ms.<br>
+<span class="user-mention" data-user-id="517002">@Dave Register</span>  <br>
+I'll finalize and PR. Maybe make it draw every second turn instead. This resolution is not needed here.<br>
+The BaroHistory graph is a copy of WindHistory. A PR for that will come as well.</p>
+
+
+
+<a name="326459400"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332168-Master%20-%205.8.0%20%20%28was%3A%20comms%29/topic/Network%20problems/near/326459400" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Dave Register <a href="https://leamas.github.io/zulip-archive/stream/332168-Master---5.2E8.2E0--.28was.3A-comms.29/topic/Network.20problems.html#326459400">(Feb 07 2023 at 21:15)</a>:</h4>
+<p>Very good news.<br>
+OCPN has many, many opportunities for "peephole optimization".  Especially performance issues that only surface on slow devices like RPi.<br>
+I look forward to the PR's.</p>
+
+
+
+<a name="374613436"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332168-Master%20-%205.8.0%20%20%28was%3A%20comms%29/topic/Network%20problems/near/374613436" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Håkan Svensson <a href="https://leamas.github.io/zulip-archive/stream/332168-Master---5.2E8.2E0--.28was.3A-comms.29/topic/Network.20problems.html#374613436">(Jul 12 2023 at 13:07)</a>:</h4>
+<p><span class="user-mention" data-user-id="517002">@Dave Register</span>  A Windows TCP issue.<br>
+I've a device feeding serial data to wifi TCP (Elfvin-EW10). Sometimes O losses the connection and don't reconnect.<br>
+The many times repeated log message is: </p>
+<blockquote>
+<p>MESSAGE comm_drv_n0183_net.cpp:340     TCP NetworkDataStream watchdog timeout: TCP:192.168.1.144:10120. Reconnection is disabled, waiting another 5 seconds.</p>
+</blockquote>
+<p>If I disable and enable the connection it's always established again.<br>
+If I compare to SignalK, using the same connection he succeed to reconnect.<br>
+Is there anything to do in OCPN so an automatic reconnection appear also there and why "Reconnection is disabled"?<br>
+For more details see attached log file extract.<br>
+SignalK log says: "7/7/2023, 10:14:57 AM Reconnected 192.168.144 10120 retry 0 delay 100"  ||  "Connected to 192.168.144 10120"<br>
+OCPN logs for the same time:<br>
+<a href="/user_uploads/33951/c9R1SOeujcjsafYAsUqTT9s_/OCPN_log_TCP-timeout.txt">OCPN_log_TCP-timeout.txt</a></p>
+
+
+
+<a name="375480661"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332168-Master%20-%205.8.0%20%20%28was%3A%20comms%29/topic/Network%20problems/near/375480661" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Håkan Svensson <a href="https://leamas.github.io/zulip-archive/stream/332168-Master---5.2E8.2E0--.28was.3A-comms.29/topic/Network.20problems.html#375480661">(Jul 15 2023 at 08:52)</a>:</h4>
+<p><span class="user-mention" data-user-id="517002">@Dave Register</span> <br>
+More tests and discussion:</p>
+<p>I changed the config files settings for "NoDataReconnect" from "0" to "1" for TCP:192.168.1.144<br>
+Now when the connection is temporary halted new connection attempt are made until succeeded.<br>
+Note: The Elfin-EW10 seems to halt for a while every time its list of connected clients are decreased, e.g. one PC disconnected. Bad behavior, I agree, but we would be able to handle that?</p>
+<blockquote>
+<p>First test:<br>
+09:31:03.700 MESSAGE comm_drv_n0183_net.cpp:343     TCP NetworkDataStream watchdog timeout: TCP:192.168.1.144:10120.<br>
+09:31:07.700 MESSAGE comm_bridge.cpp:186    ***GPS Watchdog timeout at Lat:58.2262   Lon: 11.7625<br>
+09:31:08.700 MESSAGE comm_drv_n0183_net.cpp:523 TCP NetworkDataStream connection established: TCP:192.168.1.144:10120<br>
+09:31:13.700 MESSAGE comm_drv_n0183_net.cpp:343     TCP NetworkDataStream watchdog timeout: TCP:192.168.1.144:10120.<br>
+09:31:18.699 MESSAGE comm_drv_n0183_net.cpp:523 TCP NetworkDataStream connection established: TCP:192.168.1.144:10120<br>
+09:31:23.699 MESSAGE comm_drv_n0183_net.cpp:343     TCP NetworkDataStream watchdog timeout: TCP:192.168.1.144:10120.<br>
+09:31:28.699 MESSAGE comm_drv_n0183_net.cpp:523 TCP NetworkDataStream connection established: TCP:192.168.1.144:10120<br>
+09:31:33.698 MESSAGE comm_drv_n0183_net.cpp:343     TCP NetworkDataStream watchdog timeout: TCP:192.168.1.144:10120.<br>
+09:31:38.713 MESSAGE comm_drv_n0183_net.cpp:523 TCP NetworkDataStream connection established: TCP:192.168.1.144:10120<br>
+Second test:<br>
+09:47:13.867 MESSAGE comm_drv_n0183_net.cpp:343     TCP NetworkDataStream watchdog timeout: TCP:192.168.1.144:10120.<br>
+09:47:18.882 MESSAGE comm_bridge.cpp:186    ***GPS Watchdog timeout at Lat:58.2262   Lon: 11.7625<br>
+09:47:18.945 MESSAGE comm_drv_n0183_net.cpp:523 TCP NetworkDataStream connection established: TCP:192.168.1.144:10120<br>
+09:47:23.945 MESSAGE comm_drv_n0183_net.cpp:343     TCP NetworkDataStream watchdog timeout: TCP:192.168.1.144:10120.<br>
+09:47:28.944 MESSAGE comm_drv_n0183_net.cpp:523 TCP NetworkDataStream connection established: TCP:192.168.1.144:10120<br>
+09:47:33.944 MESSAGE comm_drv_n0183_net.cpp:343     TCP NetworkDataStream watchdog timeout: TCP:192.168.1.144:10120.<br>
+09:47:38.944 MESSAGE comm_drv_n0183_net.cpp:523 TCP NetworkDataStream connection established: TCP:192.168.1.144:10120<br>
+09:47:43.943 MESSAGE comm_drv_n0183_net.cpp:343     TCP NetworkDataStream watchdog timeout: TCP:192.168.1.144:10120.<br>
+09:47:48.943 MESSAGE comm_drv_n0183_net.cpp:523 TCP NetworkDataStream connection established: TCP:192.168.1.144:10120</p>
+</blockquote>
+<p>Questions/discussion about the code philosophy:</p>
+<ol>
+<li>
+<p>Why is "NoDataReconnect" set to false for a new connection? (Strange variable name? Opposite function?) <br>
+   Or is the condition at comm_drv_n0183_net.cpp:336 a reversed "if not"?</p>
+</li>
+<li>
+<p>Why is the data stream watchdog set to 5 seconds only?</p>
+</li>
+<li>Would we increase, double?, the watchdog time for every unsuccessful reconnection and set it back again after success?</li>
+</ol>
+
+
+
+<a name="375548649"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332168-Master%20-%205.8.0%20%20%28was%3A%20comms%29/topic/Network%20problems/near/375548649" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Dave Register <a href="https://leamas.github.io/zulip-archive/stream/332168-Master---5.2E8.2E0--.28was.3A-comms.29/topic/Network.20problems.html#375548649">(Jul 15 2023 at 13:28)</a>:</h4>
+<p><span class="user-mention" data-user-id="522486">@Håkan Svensson</span> <br>
+<span class="user-mention" data-user-id="573239">@Pavel Kalian</span> <br>
+ This config variable was added by Nohal, in commit <a href="https://github.com/opencpn/OpenCPN/commit/be7527d081f313af127e7c4e41df01cecc44be6c">be7527d081f313af127e7c4e41df01cecc44be6c</a>.<br>
+As I recall, it was done to avoid flooding a local network with repeated connection attempts when there is a TCP device on the net that may be transient, coming and going.  Sounds like exactly what you are seeing.<br>
+I searched for the gihub issue discussion,  could not find it.<br>
+I think we could do something as you suggest.  Arrange to make a "few" connection attempts, before giving up.  Not enough to flood, but enough to handle occasional network dropouts transparently.<br>
+Perhaps Pavel has some insight...</p>
+
+
+
+<a name="375593798"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332168-Master%20-%205.8.0%20%20%28was%3A%20comms%29/topic/Network%20problems/near/375593798" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Pavel Kalian <a href="https://leamas.github.io/zulip-archive/stream/332168-Master---5.2E8.2E0--.28was.3A-comms.29/topic/Network.20problems.html#375593798">(Jul 15 2023 at 16:52)</a>:</h4>
+<p><a href="https://github.com/OpenCPN/OpenCPN/issues/2824">https://github.com/OpenCPN/OpenCPN/issues/2824</a> is the original issue. In short, fragile TCP servers fail if being reconnected to "too frequently". We are probably most interested in the reason why the device actually stops sending the data feed while not closing the connection. Anyway, we do have a mechanism to handle it, just not in the UI as we agreed not to put it there.</p>
+
+
+
+<a name="375606390"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332168-Master%20-%205.8.0%20%20%28was%3A%20comms%29/topic/Network%20problems/near/375606390" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Håkan Svensson <a href="https://leamas.github.io/zulip-archive/stream/332168-Master---5.2E8.2E0--.28was.3A-comms.29/topic/Network.20problems.html#375606390">(Jul 15 2023 at 18:05)</a>:</h4>
+<p>OK, thanks.<br>
+The "issue" is now it's not working. When the flag "NoDataReconnect" is "false" the reconnection don't happens and the log floods as of my attached log above.<br>
+If I set NoDataReconnect to "1" the connections is always established again after a delay. See my second post above.</p>
+
+
+
+<a name="375635934"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332168-Master%20-%205.8.0%20%20%28was%3A%20comms%29/topic/Network%20problems/near/375635934" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Pavel Kalian <a href="https://leamas.github.io/zulip-archive/stream/332168-Master---5.2E8.2E0--.28was.3A-comms.29/topic/Network.20problems.html#375635934">(Jul 15 2023 at 22:45)</a>:</h4>
+<p>I know, that is how it should work. I'm not sure breaking which broken server is the lesser evil here though.</p>
+
+
+
+<a name="375679874"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332168-Master%20-%205.8.0%20%20%28was%3A%20comms%29/topic/Network%20problems/near/375679874" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Håkan Svensson <a href="https://leamas.github.io/zulip-archive/stream/332168-Master---5.2E8.2E0--.28was.3A-comms.29/topic/Network.20problems.html#375679874">(Jul 16 2023 at 06:16)</a>:</h4>
+<p>The "broken" server here seems to use not more than a delay in data feed for about 60 seconds. I'd say we would arrange to survive that? Say five minutes before giving up? (And stop flooding the log when we gave up)</p>
+<p>The "NetworkDataStream watchdog timeout" is now 5 seconds. That's only half the time of the position watchdog. So here we will brake the connection in 5 seconds even if we can navigate without data in 10 seconds without notice.<br>
+I've also seen devices sending data at 0.2 Hz, 20 seconds. If that's the only data we're waiting for the NetworkDataStream watchdog timeout will close the connection before next data transmit. That's not how we want it I suppose?</p>
+
+
+
+<a name="375697580"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332168-Master%20-%205.8.0%20%20%28was%3A%20comms%29/topic/Network%20problems/near/375697580" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Håkan Svensson <a href="https://leamas.github.io/zulip-archive/stream/332168-Master---5.2E8.2E0--.28was.3A-comms.29/topic/Network.20problems.html#375697580">(Jul 16 2023 at 08:25)</a>:</h4>
+<p>More observations: </p>
+<ol>
+<li>
+<p>This TCP server data delay may be a Windows issue? I noticed no problem if one PC's OCPN is closing normally or shut down. But if the Win PC goes to sleep/hibernation the EW10 TCP server make a delay causing our NetworkDataStream watchdog to timeout.<br>
+And since the flag "NoDataReconnect" has a opposite function O will never reconnect. (The log message "<em>Reconnection is disabled, waiting another %d seconds</em>"  seems false?)</p>
+</li>
+<li>
+<p>If I first change:   <em>if (!GetParams().NoDataReconnect)</em>   to comply with the variable name and read <br>
+<em>if (GetParams().NoDataReconnect)</em>   O will try to connect again after the timeout.</p>
+</li>
+<li>
+<p>I also changed the N_DOG_TIMEOUT to 15 seconds. That's to explain by the log file why a possible GPS watchdog timed out.</p>
+</li>
+</ol>
+<p>With these changes it works here. O will reconnect even if a Win-sleep is disturbing the TCP router.<br>
+Please, you're the experts, would these changes disturb anything else or can I PR?</p>
+
+
+
+<a name="375716748"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332168-Master%20-%205.8.0%20%20%28was%3A%20comms%29/topic/Network%20problems/near/375716748" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Håkan Svensson <a href="https://leamas.github.io/zulip-archive/stream/332168-Master---5.2E8.2E0--.28was.3A-comms.29/topic/Network.20problems.html#375716748">(Jul 16 2023 at 10:09)</a>:</h4>
+<p>With the above changes I also tried to power off and later on the TCP server. Reconnection still works.</p>
+<blockquote>
+<p>12:01:13.272 MESSAGE comm_bridge.cpp:186    ***GPS Watchdog timeout at Lat:58.2263   Lon: 11.7625<br>
+12:01:19.283 MESSAGE comm_drv_n0183_net.cpp:343     TCP NetworkDataStream watchdog timeout: TCP:192.168.1.144:10121.<br>
+12:03:03.394 MESSAGE comm_drv_n0183_net.cpp:523 TCP NetworkDataStream connection established: TCP:192.168.1.144:10121</p>
+</blockquote>
+<p>Thoughts?</p>
+
+
+
+<a name="375825327"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332168-Master%20-%205.8.0%20%20%28was%3A%20comms%29/topic/Network%20problems/near/375825327" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Håkan Svensson <a href="https://leamas.github.io/zulip-archive/stream/332168-Master---5.2E8.2E0--.28was.3A-comms.29/topic/Network.20problems.html#375825327">(Jul 16 2023 at 19:26)</a>:</h4>
+<p><span class="user-mention" data-user-id="517002">@Dave Register</span>  <span class="user-mention" data-user-id="573239">@Pavel Kalian</span> <br>
+One fundamental question about this:<br>
+Wat's the reason we timeout the TCP connection if it's up and running but no NMEA data received?<br>
+It could actually be connected to a sensor sending data very rarely.  (e.g. a air temperature or a tank level.)<br>
+Again comparing to SignalK he is just waiting.</p>
+
+
+
+<a name="375833371"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332168-Master%20-%205.8.0%20%20%28was%3A%20comms%29/topic/Network%20problems/near/375833371" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Pavel Kalian <a href="https://leamas.github.io/zulip-archive/stream/332168-Master---5.2E8.2E0--.28was.3A-comms.29/topic/Network.20problems.html#375833371">(Jul 16 2023 at 20:31)</a>:</h4>
+<p>But this is exactly what we do now. We just have an optional mechanism to reestablish the connection (Which was the default until 5.6.2 and caused fragile servers to fail)</p>
+
+
+
+<a name="375885517"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332168-Master%20-%205.8.0%20%20%28was%3A%20comms%29/topic/Network%20problems/near/375885517" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Håkan Svensson <a href="https://leamas.github.io/zulip-archive/stream/332168-Master---5.2E8.2E0--.28was.3A-comms.29/topic/Network.20problems.html#375885517">(Jul 17 2023 at 04:35)</a>:</h4>
+<p>Yes, we are waiting, agree, flooding the log every 5 seconds. That's a lot if data is sent only every 40 seconds.<br>
+So my Q remains. Why do we have the TCP watchdog? Unless one hack the config file, e.g. set NoDataReconnect = 1,  it has no meaning.</p>
+
+
+
+<a name="375961453"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332168-Master%20-%205.8.0%20%20%28was%3A%20comms%29/topic/Network%20problems/near/375961453" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Pavel Kalian <a href="https://leamas.github.io/zulip-archive/stream/332168-Master---5.2E8.2E0--.28was.3A-comms.29/topic/Network.20problems.html#375961453">(Jul 17 2023 at 10:09)</a>:</h4>
+<p>Because there are cases where (broken) servers stop sending data without actually closing the network socket. If the only problem you have is the log file entries, those can sure be handled.</p>
+
+
+
+<a name="375961577"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332168-Master%20-%205.8.0%20%20%28was%3A%20comms%29/topic/Network%20problems/near/375961577" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Tony Voss <a href="https://leamas.github.io/zulip-archive/stream/332168-Master---5.2E8.2E0--.28was.3A-comms.29/topic/Network.20problems.html#375961577">(Jul 17 2023 at 10:10)</a>:</h4>
+<p>Is this related?  <a href="https://github.com/OpenCPN/OpenCPN/issues/3237">https://github.com/OpenCPN/OpenCPN/issues/3237</a></p>
+
+
+
+<a name="375961880"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332168-Master%20-%205.8.0%20%20%28was%3A%20comms%29/topic/Network%20problems/near/375961880" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Håkan Svensson <a href="https://leamas.github.io/zulip-archive/stream/332168-Master---5.2E8.2E0--.28was.3A-comms.29/topic/Network.20problems.html#375961880">(Jul 17 2023 at 10:11)</a>:</h4>
+<p>Yes, he log file flooding can be handled, agree.<br>
+I did more tests here:<br>
+If we keep the function when NoDataReconnect  = false to protect the fragile servers you refer to we may as well try some tweak to overcome the servers I'm testing. That's when Win does: "System is going to suspend." Then the EW10 server halts for a minute or so making all connected OCPN to partly timeout connection.  (SK don't care though.)<br>
+So, If I change N_DOG_TIMEOUT from 5 to 90 seconds the problem is solved. Then the TCP server is again up and send its data.</p>
+
+
+
+<a name="375962356"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332168-Master%20-%205.8.0%20%20%28was%3A%20comms%29/topic/Network%20problems/near/375962356" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Pavel Kalian <a href="https://leamas.github.io/zulip-archive/stream/332168-Master---5.2E8.2E0--.28was.3A-comms.29/topic/Network.20problems.html#375962356">(Jul 17 2023 at 10:12)</a>:</h4>
+<p>I might be dumb, but what is the actual problem, except the fact that you do not want the messages in the log?</p>
+
+
+
+<a name="375963492"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332168-Master%20-%205.8.0%20%20%28was%3A%20comms%29/topic/Network%20problems/near/375963492" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Pavel Kalian <a href="https://leamas.github.io/zulip-archive/stream/332168-Master---5.2E8.2E0--.28was.3A-comms.29/topic/Network.20problems.html#375963492">(Jul 17 2023 at 10:16)</a>:</h4>
+<p><span class="user-mention" data-user-id="554731">@Tony Voss</span> I was never able to reproduce that issue, as stated there.</p>
+
+
+
+<a name="375963910"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332168-Master%20-%205.8.0%20%20%28was%3A%20comms%29/topic/Network%20problems/near/375963910" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Håkan Svensson <a href="https://leamas.github.io/zulip-archive/stream/332168-Master---5.2E8.2E0--.28was.3A-comms.29/topic/Network.20problems.html#375963910">(Jul 17 2023 at 10:18)</a>:</h4>
+<p>When N_DOG_TIMEOUT  is down to zero and NoDataReconnect = false the connection is not established again. <br>
+If I set NoDataReconnect =true it's restarted again.<br>
+If the timer is 90 seconds we do nothing but wait and then it's working after about 60 seconds.</p>
+
+
+
+<a name="375964372"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332168-Master%20-%205.8.0%20%20%28was%3A%20comms%29/topic/Network%20problems/near/375964372" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Pavel Kalian <a href="https://leamas.github.io/zulip-archive/stream/332168-Master---5.2E8.2E0--.28was.3A-comms.29/topic/Network.20problems.html#375964372">(Jul 17 2023 at 10:19)</a>:</h4>
+<p>Yes, that is the design. So the problem is the length of the timeout?</p>
+
+
+
+<a name="375964518"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332168-Master%20-%205.8.0%20%20%28was%3A%20comms%29/topic/Network%20problems/near/375964518" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Håkan Svensson <a href="https://leamas.github.io/zulip-archive/stream/332168-Master---5.2E8.2E0--.28was.3A-comms.29/topic/Network.20problems.html#375964518">(Jul 17 2023 at 10:20)</a>:</h4>
+<p>Yes, as it seems now.</p>
+
+
+
+<a name="375964724"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332168-Master%20-%205.8.0%20%20%28was%3A%20comms%29/topic/Network%20problems/near/375964724" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Tony Voss <a href="https://leamas.github.io/zulip-archive/stream/332168-Master---5.2E8.2E0--.28was.3A-comms.29/topic/Network.20problems.html#375964724">(Jul 17 2023 at 10:21)</a>:</h4>
+<p><span class="user-mention silent" data-user-id="573239">Pavel Kalian</span> <a href="#narrow/stream/332168-Master---5.2E8.2E0--.28was.3A-comms.29/topic/Network.20problems/near/375963492">said</a>:</p>
+<blockquote>
+<p><span class="user-mention silent" data-user-id="554731">Tony Voss</span> I was never able to reproduce that issue, as stated there.</p>
+</blockquote>
+<p>I am not seeing it regularly.  When I prepare to sail, I turn on the router and maybe 8 out of 10 times all is well.  Otherwise I have to turn off the connection, apply, turn it back on and apply again.  Then all is well.</p>
+
+
+
+<a name="375965313"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332168-Master%20-%205.8.0%20%20%28was%3A%20comms%29/topic/Network%20problems/near/375965313" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Pavel Kalian <a href="https://leamas.github.io/zulip-archive/stream/332168-Master---5.2E8.2E0--.28was.3A-comms.29/topic/Network.20problems.html#375965313">(Jul 17 2023 at 10:23)</a>:</h4>
+<p><span class="user-mention" data-user-id="522486">@Håkan Svensson</span>  But that is the design, it informs you in the log that there is no data, and based on your <code>NoDataReconnect</code> settings either tries to resolve it be actively resetting the connection or not. So IMHO it still boils down that the only "problem" is that we "log too much"</p>
+
+
+
+<a name="375965611"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332168-Master%20-%205.8.0%20%20%28was%3A%20comms%29/topic/Network%20problems/near/375965611" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Pavel Kalian <a href="https://leamas.github.io/zulip-archive/stream/332168-Master---5.2E8.2E0--.28was.3A-comms.29/topic/Network.20problems.html#375965611">(Jul 17 2023 at 10:24)</a>:</h4>
+<p>Increasing the timeout is IMHO not a good solution for it and there will likely be people not happy about it</p>
+
+
+
+<a name="375966504"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332168-Master%20-%205.8.0%20%20%28was%3A%20comms%29/topic/Network%20problems/near/375966504" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Håkan Svensson <a href="https://leamas.github.io/zulip-archive/stream/332168-Master---5.2E8.2E0--.28was.3A-comms.29/topic/Network.20problems.html#375966504">(Jul 17 2023 at 10:27)</a>:</h4>
+<p>No, it's more than the log. When the the timer is out it seems we doing more than wait since the data is never seen again until restart of the connection.<br>
+If the don't runs out we receive the data when it shows up again.</p>
+
+
+
+<a name="375966788"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332168-Master%20-%205.8.0%20%20%28was%3A%20comms%29/topic/Network%20problems/near/375966788" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Håkan Svensson <a href="https://leamas.github.io/zulip-archive/stream/332168-Master---5.2E8.2E0--.28was.3A-comms.29/topic/Network.20problems.html#375966788">(Jul 17 2023 at 10:28)</a>:</h4>
+<p>If the timer don't run out it should be...</p>
+
+
+
+<a name="375967486"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332168-Master%20-%205.8.0%20%20%28was%3A%20comms%29/topic/Network%20problems/near/375967486" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Håkan Svensson <a href="https://leamas.github.io/zulip-archive/stream/332168-Master---5.2E8.2E0--.28was.3A-comms.29/topic/Network.20problems.html#375967486">(Jul 17 2023 at 10:30)</a>:</h4>
+<p>I don't see why a longer timeout can be a big problem. For GPS and position we have watchdogs so not a navigational issue?</p>
+
+
+
+<a name="375968385"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332168-Master%20-%205.8.0%20%20%28was%3A%20comms%29/topic/Network%20problems/near/375968385" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Håkan Svensson <a href="https://leamas.github.io/zulip-archive/stream/332168-Master---5.2E8.2E0--.28was.3A-comms.29/topic/Network.20problems.html#375968385">(Jul 17 2023 at 10:33)</a>:</h4>
+<p>And again: The can be servers feeding data only every 40 seconds or more. That's not a failure and we should not close the connection.</p>
+
+
+
+<a name="375969525"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332168-Master%20-%205.8.0%20%20%28was%3A%20comms%29/topic/Network%20problems/near/375969525" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Pavel Kalian <a href="https://leamas.github.io/zulip-archive/stream/332168-Master---5.2E8.2E0--.28was.3A-comms.29/topic/Network.20problems.html#375969525">(Jul 17 2023 at 10:36)</a>:</h4>
+<p>We are not closing the connection. By default. That is the change between 5.8 and 5.6. 5.6 did close the connection, always, when there was no data received for the timeout period of time.</p>
+
+
+
+<a name="375969797"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332168-Master%20-%205.8.0%20%20%28was%3A%20comms%29/topic/Network%20problems/near/375969797" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Pavel Kalian <a href="https://leamas.github.io/zulip-archive/stream/332168-Master---5.2E8.2E0--.28was.3A-comms.29/topic/Network.20problems.html#375969797">(Jul 17 2023 at 10:37)</a>:</h4>
+<p>In 5.8, unless configured otherwise, we simply do nothing at all and wait.</p>
+
+
+
+<a name="375969964"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332168-Master%20-%205.8.0%20%20%28was%3A%20comms%29/topic/Network%20problems/near/375969964" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Pavel Kalian <a href="https://leamas.github.io/zulip-archive/stream/332168-Master---5.2E8.2E0--.28was.3A-comms.29/topic/Network.20problems.html#375969964">(Jul 17 2023 at 10:38)</a>:</h4>
+<p>"Nothing at all" = "Write log message and do nothing at all"</p>
+
+
+
+<a name="375970744"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332168-Master%20-%205.8.0%20%20%28was%3A%20comms%29/topic/Network%20problems/near/375970744" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Håkan Svensson <a href="https://leamas.github.io/zulip-archive/stream/332168-Master---5.2E8.2E0--.28was.3A-comms.29/topic/Network.20problems.html#375970744">(Jul 17 2023 at 10:41)</a>:</h4>
+<p>"We are not closing the connection" -  But something happens. When timer is 5 seconds the data is never seen again. If I set to 90 seconds data is again received after about 60 seconds. Some kind of difference it is. But I can do more testing of that?</p>
+
+
+
+<a name="375971445"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332168-Master%20-%205.8.0%20%20%28was%3A%20comms%29/topic/Network%20problems/near/375971445" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Håkan Svensson <a href="https://leamas.github.io/zulip-archive/stream/332168-Master---5.2E8.2E0--.28was.3A-comms.29/topic/Network.20problems.html#375971445">(Jul 17 2023 at 10:43)</a>:</h4>
+<p>The problem is so to say solved also if I in the config file set NoDataReconnect = true for that connection.<br>
+That's an option for me but not really for every user.</p>
+
+
+
+<a name="375972151"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332168-Master%20-%205.8.0%20%20%28was%3A%20comms%29/topic/Network%20problems/near/375972151" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Pavel Kalian <a href="https://leamas.github.io/zulip-archive/stream/332168-Master---5.2E8.2E0--.28was.3A-comms.29/topic/Network.20problems.html#375972151">(Jul 17 2023 at 10:45)</a>:</h4>
+<p><code>NoDataReconnect=true</code> means we DO reset the socket.<br>
+<a href="https://github.com/OpenCPN/OpenCPN/blob/c2ffb36ebca8c3777f03ea4d42e24f897aa62609/src/comm_drv_n0183_net.cpp#L332-L343">https://github.com/OpenCPN/OpenCPN/blob/c2ffb36ebca8c3777f03ea4d42e24f897aa62609/src/comm_drv_n0183_net.cpp#L332-L343</a></p>
+
+
+
+<a name="375972426"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332168-Master%20-%205.8.0%20%20%28was%3A%20comms%29/topic/Network%20problems/near/375972426" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Pavel Kalian <a href="https://leamas.github.io/zulip-archive/stream/332168-Master---5.2E8.2E0--.28was.3A-comms.29/topic/Network.20problems.html#375972426">(Jul 17 2023 at 10:46)</a>:</h4>
+<p>You can see that nothing at all is done if the setting is <code>false</code>, we simply hit the <code>return</code> at line 341</p>
+
+
+
+<a name="375973825"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332168-Master%20-%205.8.0%20%20%28was%3A%20comms%29/topic/Network%20problems/near/375973825" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Håkan Svensson <a href="https://leamas.github.io/zulip-archive/stream/332168-Master---5.2E8.2E0--.28was.3A-comms.29/topic/Network.20problems.html#375973825">(Jul 17 2023 at 10:51)</a>:</h4>
+<p>I know. But still he can be there for hours. See my first post about this and the attached log file. But I'll verify it again.<br>
+I'll be back.</p>
+
+
+
+<a name="375974521"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332168-Master%20-%205.8.0%20%20%28was%3A%20comms%29/topic/Network%20problems/near/375974521" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Pavel Kalian <a href="https://leamas.github.io/zulip-archive/stream/332168-Master---5.2E8.2E0--.28was.3A-comms.29/topic/Network.20problems.html#375974521">(Jul 17 2023 at 10:53)</a>:</h4>
+<p>Yes, we can be there for hours, if the socket is not reset by the server or the server does not start to send data for whichever reason. That is when you switch <code>NoDataReconnect</code> to <code>true</code> and OpenCPN handles it for you.</p>
+
+
+
+<a name="375974928"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332168-Master%20-%205.8.0%20%20%28was%3A%20comms%29/topic/Network%20problems/near/375974928" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Pavel Kalian <a href="https://leamas.github.io/zulip-archive/stream/332168-Master---5.2E8.2E0--.28was.3A-comms.29/topic/Network.20problems.html#375974928">(Jul 17 2023 at 10:55)</a>:</h4>
+<p>The price of course is the timeout may be too short for many valid scenarios</p>
+
+
+
+<a name="375974980"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332168-Master%20-%205.8.0%20%20%28was%3A%20comms%29/topic/Network%20problems/near/375974980" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Pavel Kalian <a href="https://leamas.github.io/zulip-archive/stream/332168-Master---5.2E8.2E0--.28was.3A-comms.29/topic/Network.20problems.html#375974980">(Jul 17 2023 at 10:55)</a>:</h4>
+<p>Or too long, if we make it longer.</p>
+
+
+
+<a name="375979624"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332168-Master%20-%205.8.0%20%20%28was%3A%20comms%29/topic/Network%20problems/near/375979624" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Håkan Svensson <a href="https://leamas.github.io/zulip-archive/stream/332168-Master---5.2E8.2E0--.28was.3A-comms.29/topic/Network.20problems.html#375979624">(Jul 17 2023 at 11:10)</a>:</h4>
+<p>We are talking around. Maybe another suggestion to discuss:<br>
+What if we have waited for more than say two minutes. Could we give up and make a reconnect instead?</p>
+
+
+
+<a name="375980210"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332168-Master%20-%205.8.0%20%20%28was%3A%20comms%29/topic/Network%20problems/near/375980210" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Pavel Kalian <a href="https://leamas.github.io/zulip-archive/stream/332168-Master---5.2E8.2E0--.28was.3A-comms.29/topic/Network.20problems.html#375980210">(Jul 17 2023 at 11:12)</a>:</h4>
+<p>We sure could</p>
+
+
+
+<a name="375981020"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332168-Master%20-%205.8.0%20%20%28was%3A%20comms%29/topic/Network%20problems/near/375981020" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Håkan Svensson <a href="https://leamas.github.io/zulip-archive/stream/332168-Master---5.2E8.2E0--.28was.3A-comms.29/topic/Network.20problems.html#375981020">(Jul 17 2023 at 11:15)</a>:</h4>
+<p><span aria-label="+1" class="emoji emoji-1f44d" role="img" title="+1">:+1:</span>  Your the expert! Would you mind doing it? Or should I make a try?</p>
+
+
+
+<a name="375984359"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332168-Master%20-%205.8.0%20%20%28was%3A%20comms%29/topic/Network%20problems/near/375984359" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Pavel Kalian <a href="https://leamas.github.io/zulip-archive/stream/332168-Master---5.2E8.2E0--.28was.3A-comms.29/topic/Network.20problems.html#375984359">(Jul 17 2023 at 11:26)</a>:</h4>
+<p>I may, but not fast. On vacation in Europe with very limited time.</p>
+
+
+
+<a name="375985647"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332168-Master%20-%205.8.0%20%20%28was%3A%20comms%29/topic/Network%20problems/near/375985647" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Håkan Svensson <a href="https://leamas.github.io/zulip-archive/stream/332168-Master---5.2E8.2E0--.28was.3A-comms.29/topic/Network.20problems.html#375985647">(Jul 17 2023 at 11:30)</a>:</h4>
+<p>Ok, we have no hurry since no release in near sight.<br>
+I can meanwhile make a try. Probably not a nice solution but I can at least test such a function.<br>
+Thanks. Enjoy  the vacation.</p>
+
+
+
+<a name="376068813"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332168-Master%20-%205.8.0%20%20%28was%3A%20comms%29/topic/Network%20problems/near/376068813" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Håkan Svensson <a href="https://leamas.github.io/zulip-archive/stream/332168-Master---5.2E8.2E0--.28was.3A-comms.29/topic/Network.20problems.html#376068813">(Jul 17 2023 at 15:30)</a>:</h4>
+<p>Log result after my test to add another timer:</p>
+<blockquote>
+<p>17:23:41.713 MESSAGE comm_drv_n0183_net.cpp:347  TCP NetworkDataStream watchdog timeout: TCP:192.168.1.144:10121. Reconnection is disabled, waiting another 5 seconds.<br>
+17:23:46.704 MESSAGE comm_bridge.cpp:186    ***GPS Watchdog timeout at Lat:58.2263   Lon: 11.7625<br>
+17:23:46.708 MESSAGE comm_drv_n0183_net.cpp:347  TCP NetworkDataStream watchdog timeout: TCP:192.168.1.144:10121. Reconnection is disabled, waiting another 5 seconds.<br>
+17:23:51.717 MESSAGE comm_drv_n0183_net.cpp:347  TCP NetworkDataStream watchdog timeout: TCP:192.168.1.144:10121. Reconnection is disabled, waiting another 5 seconds.<br>
+17:23:56.718 MESSAGE comm_drv_n0183_net.cpp:347  TCP NetworkDataStream watchdog timeout: TCP:192.168.1.144:10121. Reconnection is disabled, waiting another 5 seconds.<br>
+17:24:01.716 MESSAGE comm_drv_n0183_net.cpp:347  TCP NetworkDataStream watchdog timeout: TCP:192.168.1.144:10121. Reconnection is disabled, waiting another 5 seconds.<br>
+17:24:06.711 MESSAGE comm_drv_n0183_net.cpp:347  TCP NetworkDataStream watchdog timeout: TCP:192.168.1.144:10121. Reconnection is disabled, waiting another 5 seconds.<br>
+17:24:11.714 MESSAGE comm_drv_n0183_net.cpp:347  TCP NetworkDataStream watchdog timeout: TCP:192.168.1.144:10121. Reconnection is disabled, waiting another 5 seconds.<br>
+17:24:16.707 MESSAGE comm_drv_n0183_net.cpp:347  TCP NetworkDataStream watchdog timeout: TCP:192.168.1.144:10121. Reconnection is disabled, waiting another 5 seconds.<br>
+17:24:21.713 MESSAGE comm_drv_n0183_net.cpp:347  TCP NetworkDataStream watchdog timeout: TCP:192.168.1.144:10121. Reconnection is disabled, waiting another 5 seconds.<br>
+17:24:26.712 MESSAGE comm_drv_n0183_net.cpp:347  TCP NetworkDataStream watchdog timeout: TCP:192.168.1.144:10121. Reconnection is disabled, waiting another 5 seconds.<br>
+17:24:31.708 MESSAGE comm_drv_n0183_net.cpp:347  TCP NetworkDataStream watchdog timeout: TCP:192.168.1.144:10121. Reconnection is disabled, waiting another 5 seconds.<br>
+17:24:36.718 MESSAGE comm_drv_n0183_net.cpp:347  TCP NetworkDataStream watchdog timeout: TCP:192.168.1.144:10121. Reconnection is disabled, waiting another 5 seconds.<br>
+17:24:41.713 MESSAGE comm_drv_n0183_net.cpp:347  TCP NetworkDataStream watchdog timeout: TCP:192.168.1.144:10121. Reconnection is disabled, waiting another 5 seconds.<br>
+17:24:46.713 MESSAGE comm_drv_n0183_net.cpp:347  TCP NetworkDataStream watchdog timeout: TCP:192.168.1.144:10121. Reconnection is disabled, waiting another 5 seconds.<br>
+17:24:51.713 MESSAGE comm_drv_n0183_net.cpp:347  TCP NetworkDataStream watchdog timeout: TCP:192.168.1.144:10121. Reconnection is disabled, waiting another 5 seconds.<br>
+17:24:56.715 MESSAGE comm_drv_n0183_net.cpp:347  TCP NetworkDataStream watchdog timeout: TCP:192.168.1.144:10121. Reconnection is disabled, waiting another 5 seconds.<br>
+17:25:01.706 MESSAGE comm_drv_n0183_net.cpp:347  TCP NetworkDataStream watchdog timeout: TCP:192.168.1.144:10121. Reconnection is disabled, waiting another 5 seconds.<br>
+17:25:06.709 MESSAGE comm_drv_n0183_net.cpp:347  TCP NetworkDataStream watchdog timeout: TCP:192.168.1.144:10121. Reconnection is disabled, waiting another 5 seconds.<br>
+17:25:11.724 MESSAGE comm_drv_n0183_net.cpp:347  TCP NetworkDataStream watchdog timeout: TCP:192.168.1.144:10121. Reconnection is disabled, waiting another 5 seconds.<br>
+17:25:16.737 MESSAGE comm_drv_n0183_net.cpp:347  TCP NetworkDataStream watchdog timeout: TCP:192.168.1.144:10121. Reconnection is disabled, waiting another 5 seconds.<br>
+17:25:21.724 MESSAGE comm_drv_n0183_net.cpp:347  TCP NetworkDataStream watchdog timeout: TCP:192.168.1.144:10121. Reconnection is disabled, waiting another 5 seconds.<br>
+17:25:26.733 MESSAGE comm_drv_n0183_net.cpp:347  TCP NetworkDataStream watchdog timeout: TCP:192.168.1.144:10121. Reconnection is disabled, waiting another 5 seconds.<br>
+17:25:31.726 MESSAGE comm_drv_n0183_net.cpp:347  TCP NetworkDataStream watchdog timeout: TCP:192.168.1.144:10121. Reconnection is disabled, waiting another 5 seconds.<br>
+17:25:36.732 MESSAGE comm_drv_n0183_net.cpp:347  TCP NetworkDataStream watchdog timeout: TCP:192.168.1.144:10121. Reconnection is disabled, waiting another 5 seconds.<br>
+17:25:41.736 MESSAGE comm_drv_n0183_net.cpp:354  TCP NetworkDataStream watchdog timeout: TCP:192.168.1.144:10121. Now we have waited for 120 seconds. Try to reconnect instead.<br>
+17:25:46.749 MESSAGE comm_drv_n0183_net.cpp:534 TCP NetworkDataStream connection established: TCP:192.168.1.144:10121</p>
+</blockquote>
+
+
+
+<a name="376309853"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332168-Master%20-%205.8.0%20%20%28was%3A%20comms%29/topic/Network%20problems/near/376309853" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Håkan Svensson <a href="https://leamas.github.io/zulip-archive/stream/332168-Master---5.2E8.2E0--.28was.3A-comms.29/topic/Network.20problems.html#376309853">(Jul 18 2023 at 11:16)</a>:</h4>
+<p><span class="user-mention silent" data-user-id="554731">Tony Voss</span> <a href="#narrow/stream/332168-Master---5.2E8.2E0--.28was.3A-comms.29/topic/Network.20problems/near/375961577">said</a>:</p>
+<blockquote>
+<p>Is this related?  <a href="https://github.com/OpenCPN/OpenCPN/issues/3237">https://github.com/OpenCPN/OpenCPN/issues/3237</a></p>
+</blockquote>
+<p>If you receive a similar opencpn.log message as me this may be solved by PR: <a href="https://github.com/opencpn/OpenCPN/issues/3356">#3356</a></p>
+<blockquote>
+<p>MESSAGE comm_drv_n0183_net.cpp:340 TCP NetworkDataStream watchdog timeout: TCP:192.168.1.144:10120. Reconnection is disabled, waiting another 5 seconds.</p>
+</blockquote>
+
+
+
+<a name="380227113"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332168-Master%20-%205.8.0%20%20%28was%3A%20comms%29/topic/Network%20problems/near/380227113" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Alec Leamas <a href="https://leamas.github.io/zulip-archive/stream/332168-Master---5.2E8.2E0--.28was.3A-comms.29/topic/Network.20problems.html#380227113">(Jul 31 2023 at 07:51)</a>:</h4>
+<p><span class="user-mention" data-user-id="522486">@Håkan Svensson</span> If you want to link to zulip discussions in for example github there is <a href="https://leamas.github.io/zulip-archive/">https://leamas.github.io/zulip-archive/</a>. The purpose of this archive is to make it possible to create links (it's also visible to the google crawlers etc so it  can be googled)</p>
+
+
+
+<a name="382562436"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332168-Master%20-%205.8.0%20%20%28was%3A%20comms%29/topic/Network%20problems/near/382562436" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Alec Leamas <a href="https://leamas.github.io/zulip-archive/stream/332168-Master---5.2E8.2E0--.28was.3A-comms.29/topic/Network.20problems.html#382562436">(Aug 07 2023 at 09:50)</a>:</h4>
+<p><span class="user-mention" data-user-id="517002">@Dave Register</span>  <a href="https://github.com/opencpn/OpenCPN/issues/3391">#3391</a> looks non-trivial to me...</p>
+
+
+
+<a name="384118757"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332168-Master%20-%205.8.0%20%20%28was%3A%20comms%29/topic/Network%20problems/near/384118757" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Alec Leamas <a href="https://leamas.github.io/zulip-archive/stream/332168-Master---5.2E8.2E0--.28was.3A-comms.29/topic/Network.20problems.html#384118757">(Aug 12 2023 at 00:30)</a>:</h4>
+<p><span class="user-mention" data-user-id="517002">@Dave Register</span>  ocpn_plugin.h: problems. After API 118 update anything including ocpn_plugin.h generates tons of warnings. The root cause is  RenderGLOverlayMultiCanvas() and RenderOverlay().</p>
+<p>Situation for RenderGLOverlayMultiCanvas():</p>
+<div class="codehilite"><pre><span></span><code>$ grep -U2 -A 3 RenderGLOverlayMultiCanvas ../libs/api-18/ocpn_plugin.h
+  opencpn_plugin_116(void *pmgr);
+  virtual ~opencpn_plugin_116();
+  virtual bool RenderGLOverlayMultiCanvas(wxGLContext *pcontext,
+                                          PlugIn_ViewPort *vp, int canvasIndex);
+  virtual bool RenderOverlayMultiCanvas(wxDC &amp;dc, PlugIn_ViewPort *vp,
+                                        int canvasIndex);
+--
+  /// when priority is OVERLAY_LEGACY (0)
+  /// \return true if overlay was rendered, false otherwise
+  virtual bool RenderGLOverlayMultiCanvas(wxGLContext *pcontext,
+                                          PlugIn_ViewPort *vp,
+                                          int canvasIndex,
+                                          int priority = -1) ;
+</code></pre></div>
+<p>Here,  the compiler rightfully complains about the latter signature shadowing  the first one <strong>without</strong> overriding it. The problem is of course  <code>int priority = -1</code>which can be omitted and when so, produces the  same signature as the first one in 116.  The situation is the same for RenderOverlay.</p>
+<p>We really need to sort this out, the number of warnings is insane (34 lines for a simple plugin).</p>
+<p>My idea is that we could add the same parameter <code>int priority = -1</code>  also to the first definition, update the corresponding code with a matching <code>int priority</code> parameter which is ignored. That should not break any eggs in existing code.</p>
+<p>Thoughts?</p>
+
+
+
+<a name="393537644"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332168-Master%20-%205.8.0%20%20%28was%3A%20comms%29/topic/Network%20problems/near/393537644" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Håkan Svensson <a href="https://leamas.github.io/zulip-archive/stream/332168-Master---5.2E8.2E0--.28was.3A-comms.29/topic/Network.20problems.html#393537644">(Sep 27 2023 at 17:17)</a>:</h4>
+<p><span class="user-mention" data-user-id="517002">@Dave Register</span>  <span class="user-mention" data-user-id="573239">@Pavel Kalian</span>  <span class="user-mention" data-user-id="399510">@Alec Leamas</span> <br>
+About Windows suspend/hibernation issues for TCP connections.<br>
+We have some discussions on the CF and more about this.<br>
+It's of course connected to the general (Win?) timeout issue where I after diskussions with Pavel made the PR <a href="https://github.com/opencpn/OpenCPN/issues/3356">#3356</a>.<br>
+Now to test if Win suspend is well detected I made some test hacks that's working good. TCP connections are restarted after a suspend resume.  See attached Git diff.<br>
+The ideas mentioned in ocpn_frame.cpp: 6955:<br>
+      g_pMUX-&gt;ClearStreams();    and  g_pMUX-&gt;StartAllStreams();<br>
+would of course be two valuable funktions if established.</p>
+<p>My ideas with the hack in the diff file is just to verify the detection of the Win suspend method. <br>
+The result is clear from the log:  (the "Reconnect after Windows suspend" comes from my hack.)<br>
+So, I think the Win hibernation issue would be rather easy to solve?</p>
+<div class="codehilite"><pre><span></span><code>12:47:53.407 MESSAGE ocpn_frame.cpp:6936 System is going to suspend.
+17:23:46.757 MESSAGE ocpn_frame.cpp:6949 System resumed from suspend.
+17:24:00.653 MESSAGE ocpn_frame.cpp:6952 Restarting streams.
+.....
+.....
+17:24:01.533 MESSAGE comm_drv_n0183_net.cpp:350  TCP NetworkDataStream watchdog timeout: TCP:signalk.stupan.se:10112. Reconnection is disabled, waiting another 5 seconds.
+17:24:03.062 MESSAGE comm_drv_n0183_net.cpp:361 Reconnect after Windows suspend
+17:24:07.226 MESSAGE comm_bridge.cpp:186    ***GPS Watchdog timeout at Lat:57.6413   Lon: 11.6637
+17:24:08.072 MESSAGE comm_drv_n0183_net.cpp:541 TCP NetworkDataStream connection established: TCP:signalk.stupan.se:10112
+</code></pre></div>
+<p><a href="/user_uploads/33951/SsV6DAOsUefzMnpcfppKm59X/suspend_diff.txt">suspend_diff.txt</a></p>
+
+
+
+<a name="394892978"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332168-Master%20-%205.8.0%20%20%28was%3A%20comms%29/topic/Network%20problems/near/394892978" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Håkan Svensson <a href="https://leamas.github.io/zulip-archive/stream/332168-Master---5.2E8.2E0--.28was.3A-comms.29/topic/Network.20problems.html#394892978">(Oct 04 2023 at 18:12)</a>:</h4>
+<p>I can see also a SignalK connection doesn't reconnect  after a Win hibernation/suspend. Bu there I can't find a watchdog handling to "hack" in the same way as for TCP(N0183)?</p>
+
+
+
+<hr><p>Last updated: Oct 05 2023 at 09:43 UTC</p>
+</html>

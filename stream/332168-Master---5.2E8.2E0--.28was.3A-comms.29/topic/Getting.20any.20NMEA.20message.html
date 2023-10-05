@@ -1,0 +1,57 @@
+<html>
+<head><meta charset="utf-8"><title>Getting any NMEA message · Master - 5.8.0  (was: comms) · Zulip Chat Archive</title></head>
+<h2>Stream: <a href="https://leamas.github.io/zulip-archive/stream/332168-Master---5.2E8.2E0--.28was.3A-comms.29/index.html">Master - 5.8.0  (was: comms)</a></h2>
+<h3>Topic: <a href="https://leamas.github.io/zulip-archive/stream/332168-Master---5.2E8.2E0--.28was.3A-comms.29/topic/Getting.20any.20NMEA.20message.html">Getting any NMEA message</a></h3>
+
+<hr>
+
+<base href="https://opencpn.zulipchat.com">
+
+<head><link href="https://leamas.github.io/zulip-archive/style.css" rel="stylesheet"></head>
+
+<a name="353261988"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332168-Master%20-%205.8.0%20%20%28was%3A%20comms%29/topic/Getting%20any%20NMEA%20message/near/353261988" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Tony Voss <a href="https://leamas.github.io/zulip-archive/stream/332168-Master---5.2E8.2E0--.28was.3A-comms.29/topic/Getting.20any.20NMEA.20message.html#353261988">(Apr 27 2023 at 12:18)</a>:</h4>
+<p>The new messaging architecture allows for the creation of a message-specify method to handle a given message, e.g. through the NMEA0183Id and NMEA2000id.<br>
+This makes for clean code if you know what messages you want to handle.</p>
+<p>But it does not (I think) make it possible to examine all traffic, when you might want to look at what is being sent on an NMEA network.<br>
+For example, there is a JavaScript <a href="https://github.com/antipole2/JavaScripts-shared/blob/main/MessageNMEAsampling/MessageNMEAsampling.adoc">MessageNMEAsampling</a> that examines all NMEA0183 received over the old mechanism and catalogues it.</p>
+<p>Is this possible with the new architecture?  Or does it require, perhaps, a special NMEA0183Id to receive anything?</p>
+<p><strong>NMEA2000</strong><br>
+I have heard of users wanting to receive all manner of NMEA2000 messages (engine revs, fuel gauges etc. etc.). This has, rightly, been turned own as irrelevant for a navigation program.  It would lead to severe bloat.<br>
+But it could be possible for users to meet such requirements via JavaScript in which they could do their own thing.<br>
+I hope to find time to look at decoding non-OCPN-supported PGNs.</p>
+<p>But like with NMEA0183, it would be useful to be able to receive and catalogue all NMEA2000 traffic.<br>
+Is it possible to receive any NMEA2000 message?  Or does it require a special NMEA2000id for this purpose?</p>
+<p><strong>SignalK</strong><br>
+Might the same issue arise for SignalK?  I am not familiar enough with it to know.</p>
+<p>Do the above requirements need additions to the present capabilities? I could raise RFEs in the light of input here.</p>
+
+
+
+<a name="353731289"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332168-Master%20-%205.8.0%20%20%28was%3A%20comms%29/topic/Getting%20any%20NMEA%20message/near/353731289" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Alec Leamas <a href="https://leamas.github.io/zulip-archive/stream/332168-Master---5.2E8.2E0--.28was.3A-comms.29/topic/Getting.20any.20NMEA.20message.html#353731289">(Apr 28 2023 at 08:44)</a>:</h4>
+<blockquote>
+<p>Is this possible with the new architecture?</p>
+</blockquote>
+<p>For N2k? No.</p>
+<blockquote>
+<p>Or does it require, perhaps, a special NMEA0183Id to receive anything?</p>
+</blockquote>
+<p>It is not just about a new id to receive anything. It would also mean that each and every driver needs to be patched to notify also this new id. I don't see this happening unless there is a really strong need.</p>
+
+
+
+<a name="353731848"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332168-Master%20-%205.8.0%20%20%28was%3A%20comms%29/topic/Getting%20any%20NMEA%20message/near/353731848" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Alec Leamas <a href="https://leamas.github.io/zulip-archive/stream/332168-Master---5.2E8.2E0--.28was.3A-comms.29/topic/Getting.20any.20NMEA.20message.html#353731848">(Apr 28 2023 at 08:45)</a>:</h4>
+<p>For 0183 it might be possible, but  in this case it's perhaps easier to just use the "old" API.</p>
+
+
+
+<a name="353753060"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332168-Master%20-%205.8.0%20%20%28was%3A%20comms%29/topic/Getting%20any%20NMEA%20message/near/353753060" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Alec Leamas <a href="https://leamas.github.io/zulip-archive/stream/332168-Master---5.2E8.2E0--.28was.3A-comms.29/topic/Getting.20any.20NMEA.20message.html#353753060">(Apr 28 2023 at 09:31)</a>:</h4>
+<p>signalK is a different beast. Also in the new API there is just a single id, so a plugin will receive all messages</p>
+
+
+
+<hr><p>Last updated: Oct 05 2023 at 09:43 UTC</p>
+</html>

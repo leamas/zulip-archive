@@ -1,0 +1,59 @@
+<html>
+<head><meta charset="utf-8"><title>Other applications · DataSharing · Zulip Chat Archive</title></head>
+<h2>Stream: <a href="https://leamas.github.io/zulip-archive/stream/349652-DataSharing/index.html">DataSharing</a></h2>
+<h3>Topic: <a href="https://leamas.github.io/zulip-archive/stream/349652-DataSharing/topic/Other.20applications.html">Other applications</a></h3>
+
+<hr>
+
+<base href="https://opencpn.zulipchat.com">
+
+<head><link href="https://leamas.github.io/zulip-archive/style.css" rel="stylesheet"></head>
+
+<a name="303777259"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/349652-DataSharing/topic/Other%20applications/near/303777259" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Alec Leamas <a href="https://leamas.github.io/zulip-archive/stream/349652-DataSharing/topic/Other.20applications.html#303777259">(Oct 13 2022 at 08:06)</a>:</h4>
+<p>Just somewhat related sidenote: Have been looking at can-utils: canplay, candump, etc. Tempted to create something similar on the OpenCPN driver level which could log and replay arbitrary data cross-platform. The  http interface created here could then be used to start/stop logging,  otherwise complicated.</p>
+
+
+
+<a name="303989695"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/349652-DataSharing/topic/Other%20applications/near/303989695" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Tony Voss <a href="https://leamas.github.io/zulip-archive/stream/349652-DataSharing/topic/Other.20applications.html#303989695">(Oct 14 2022 at 09:03)</a>:</h4>
+<blockquote>
+<p>Server side:<br>
+OCPN will implement a RESTful server with HTTP(s) accessibility.<br>
+A subset of the standard verbs (GET, PUT, POST) will be supported.</p>
+</blockquote>
+<p>Will also need ability to send a command for remote execution, such as <em>Activate route</em> or <em>Deactivate route</em>.  With a suitable API that would allow a plugin to respond to a remote command.</p>
+
+
+
+<a name="304024522"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/349652-DataSharing/topic/Other%20applications/near/304024522" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Alec Leamas <a href="https://leamas.github.io/zulip-archive/stream/349652-DataSharing/topic/Other.20applications.html#304024522">(Oct 14 2022 at 12:51)</a>:</h4>
+<p><span class="user-mention" data-user-id="554731">@Tony Voss</span>  This would be yet another example how we could use the http server API. However, implementing it would not require changes to the basic server which would accept at least http PUT and POST, it would just be about creating new "endpoints" in the REST API parlance i. e., new http addresses which would manipulate the OpenCPN instance.</p>
+<p>Moving your message to what I think is the proper topic.</p>
+
+
+
+<a name="304034791"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/349652-DataSharing/topic/Other%20applications/near/304034791" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Dave Register <a href="https://leamas.github.io/zulip-archive/stream/349652-DataSharing/topic/Other.20applications.html#304034791">(Oct 14 2022 at 13:42)</a>:</h4>
+<p>One of the implementation challenges is that the server code runs in a separate thread, and we cannot use any wxWidgets GUI there.  So we need to pop back to main app thread to process the requested task, then coordinate with the server thread to send a response code, thus completing the server cycle.  Probably need a mutex or semaphore of some sort.  I'm on it..<br>
+Add new endpoints is no problem.  When we get the basic flow working, I'll call for help defining the final API.</p>
+
+
+
+<a name="304044498"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/349652-DataSharing/topic/Other%20applications/near/304044498" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Alec Leamas <a href="https://leamas.github.io/zulip-archive/stream/349652-DataSharing/topic/Other.20applications.html#304044498">(Oct 14 2022 at 14:27)</a>:</h4>
+<blockquote>
+<p>One of the implementation challenges is that the server code runs in a separate thread,</p>
+</blockquote>
+<p>We should probably look into using the c++11 <code>std::future</code> and <code>std::promise</code>, these are an elegant and simple way to handle things like this.</p>
+
+
+
+<a name="304050562"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/349652-DataSharing/topic/Other%20applications/near/304050562" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Dave Register <a href="https://leamas.github.io/zulip-archive/stream/349652-DataSharing/topic/Other.20applications.html#304050562">(Oct 14 2022 at 14:55)</a>:</h4>
+<p>Yep, that's where I am now.  Also std::condition_variable.</p>
+
+
+
+<hr><p>Last updated: Oct 05 2023 at 09:43 UTC</p>
+</html>

@@ -1,0 +1,263 @@
+<html>
+<head><meta charset="utf-8"><title>Hard to diagnose bugs · Master - 5.8.0  (was: comms) · Zulip Chat Archive</title></head>
+<h2>Stream: <a href="https://leamas.github.io/zulip-archive/stream/332168-Master---5.2E8.2E0--.28was.3A-comms.29/index.html">Master - 5.8.0  (was: comms)</a></h2>
+<h3>Topic: <a href="https://leamas.github.io/zulip-archive/stream/332168-Master---5.2E8.2E0--.28was.3A-comms.29/topic/Hard.20to.20diagnose.20bugs.html">Hard to diagnose bugs</a></h3>
+
+<hr>
+
+<base href="https://opencpn.zulipchat.com">
+
+<head><link href="https://leamas.github.io/zulip-archive/style.css" rel="stylesheet"></head>
+
+<a name="307085754"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332168-Master%20-%205.8.0%20%20%28was%3A%20comms%29/topic/Hard%20to%20diagnose%20bugs/near/307085754" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Notification Bot <a href="https://leamas.github.io/zulip-archive/stream/332168-Master---5.2E8.2E0--.28was.3A-comms.29/topic/Hard.20to.20diagnose.20bugs.html#307085754">(Oct 31 2022 at 11:50)</a>:</h4>
+<p><strong>Public</strong> stream created by <span class="user-mention silent" data-user-id="522729">Dan Dickey</span>. <strong>Description:</strong></p>
+<blockquote>
+<p>Discuss noticed bugs that are hard to diagnose</p>
+</blockquote>
+
+
+
+<a name="307086756"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332168-Master%20-%205.8.0%20%20%28was%3A%20comms%29/topic/Hard%20to%20diagnose%20bugs/near/307086756" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Dan Dickey <a href="https://leamas.github.io/zulip-archive/stream/332168-Master---5.2E8.2E0--.28was.3A-comms.29/topic/Hard.20to.20diagnose.20bugs.html#307086756">(Oct 31 2022 at 11:56)</a>:</h4>
+<p>I have been running latest master branch on Windows and some Linux variants.  On Windows only I have seen a couple of troubling crashes.  Here is one example:</p>
+<p>in pluginmanager.cpp there is this code snippet:</p>
+<p>Bind(EVT_PLUGMGR_AIS_MSG,  <a href="http://wxCommandEvent&amp;%20ev">&amp;</a> {<br>
+    auto pTarget = static_cast&lt;AisTargetData*&gt;(ev.GetClientData());<br>
+    SendAisJsonMessage(pTarget); });</p>
+<p>In the observed case, the pointer created from the event client data points to uninitialized memory.  The call to send the message to the plugins crashes O because the data within the structure is gibberish.  It's really hard to figure out how this happened because the pointer comes to this place via the event queue, so there isn't a good way to know when the pointer was created or why the structure was not initialized after creation.</p>
+
+
+
+<a name="307122374"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332168-Master%20-%205.8.0%20%20%28was%3A%20comms%29/topic/Hard%20to%20diagnose%20bugs/near/307122374" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Dave Register <a href="https://leamas.github.io/zulip-archive/stream/332168-Master---5.2E8.2E0--.28was.3A-comms.29/topic/Hard.20to.20diagnose.20bugs.html#307122374">(Oct 31 2022 at 14:30)</a>:</h4>
+<p>Dan..<br>
+Is this reproducible?  Or random?</p>
+
+
+
+<a name="307218758"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332168-Master%20-%205.8.0%20%20%28was%3A%20comms%29/topic/Hard%20to%20diagnose%20bugs/near/307218758" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Alec Leamas <a href="https://leamas.github.io/zulip-archive/stream/332168-Master---5.2E8.2E0--.28was.3A-comms.29/topic/Hard.20to.20diagnose.20bugs.html#307218758">(Oct 31 2022 at 23:03)</a>:</h4>
+<p><span class="user-mention" data-user-id="522729">@Dan Dickey</span>  Debugging that thing... looking for  EVT_PLUGMGR_AIS_MSG you will find:</p>
+<div class="codehilite"><pre><span></span><code>evt_ais_json_listener.Listen(g_pAIS-&gt;plugin_msg, this,
+                               EVT_PLUGMGR_AIS_MSG);
+</code></pre></div>
+<p>That is, the EVT_PLUGMGR_AIS_MSG is generated when something is invoking <code>Notify()</code> on <code>g_pAIS-&gt;plugin_msg</code>.   Looking for that I see</p>
+<div class="codehilite"><pre><span></span><code>$ git grep plugin_msg ../..
+../../include/ais_decoder.h:  EventVar plugin_msg;
+../../src/ais_decoder.cpp:      plugin_msg.Notify(pTargetData);
+../../src/ais_decoder.cpp:        plugin_msg.Notify(td);
+../../src/ais_decoder.cpp:          plugin_msg.Notify(td);
+../../src/ais_decoder.cpp:          plugin_msg.Notify(td);
+</code></pre></div>
+<p>If the pointer in the event is indeed garbage it should mean that the pointer used as argument to <code>plugin_msg.Notify()</code> is broken.  HTH</p>
+
+
+
+<a name="307219004"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332168-Master%20-%205.8.0%20%20%28was%3A%20comms%29/topic/Hard%20to%20diagnose%20bugs/near/307219004" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Notification Bot <a href="https://leamas.github.io/zulip-archive/stream/332168-Master---5.2E8.2E0--.28was.3A-comms.29/topic/Hard.20to.20diagnose.20bugs.html#307219004">(Oct 31 2022 at 23:05)</a>:</h4>
+<p>This topic was moved here from <a class="stream-topic" data-stream-id="352497" href="/#narrow/stream/352497-Hard-to-diagnose-bugs/topic/stream.20events">#Hard to diagnose bugs &gt; stream events</a> by <span class="user-mention silent" data-user-id="399510">Alec Leamas</span>.</p>
+
+
+
+<a name="307221149"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332168-Master%20-%205.8.0%20%20%28was%3A%20comms%29/topic/Hard%20to%20diagnose%20bugs/near/307221149" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Alec Leamas <a href="https://leamas.github.io/zulip-archive/stream/332168-Master---5.2E8.2E0--.28was.3A-comms.29/topic/Hard.20to.20diagnose.20bugs.html#307221149">(Oct 31 2022 at 23:24)</a>:</h4>
+<p>Quick look into AisDecoder... is this about AisDecoder::OnTimerAIS ? Someone needs to check that we do not send a pointer td to Notify() and later deletes that pointer in the same function.  If so, it will be deleted when the message is processed, it happens later...</p>
+<p>EDIT: That is a  220 lines function, no wonder if we lose track on things here...</p>
+
+
+
+<a name="307268141"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332168-Master%20-%205.8.0%20%20%28was%3A%20comms%29/topic/Hard%20to%20diagnose%20bugs/near/307268141" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Dan Dickey <a href="https://leamas.github.io/zulip-archive/stream/332168-Master---5.2E8.2E0--.28was.3A-comms.29/topic/Hard.20to.20diagnose.20bugs.html#307268141">(Nov 01 2022 at 08:45)</a>:</h4>
+<p>It's not easily reproduced.  But I think it is a bug. </p>
+<p>This code will delete the pointer td even though it may have just posted an event using it:</p>
+<div class="codehilite"><pre><span></span><code>  for (unsigned int i = 0; i &lt; remove_array.size(); i++) {
+    auto itd = current_targets.find(remove_array[i]);
+    if (itd != current_targets.end()) {
+      AisTargetData *td = itd-&gt;second;
+      current_targets.erase(itd);
+      delete td;  &lt;&lt;&lt;&lt;&lt;&lt;&lt; we just posted this to an event handler
+    }
+  }
+</code></pre></div>
+<p>One solution is to let the event handler delete the pointer.  It can know if it should be deleted by the member <code>td-&gt;b_removed == true;</code></p>
+
+
+
+<a name="307273608"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332168-Master%20-%205.8.0%20%20%28was%3A%20comms%29/topic/Hard%20to%20diagnose%20bugs/near/307273608" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Dan Dickey <a href="https://leamas.github.io/zulip-archive/stream/332168-Master---5.2E8.2E0--.28was.3A-comms.29/topic/Hard.20to.20diagnose.20bugs.html#307273608">(Nov 01 2022 at 09:26)</a>:</h4>
+<p>See what you think of this patch:</p>
+<div class="codehilite"><pre><span></span><code>diff --git a/src/ais_decoder.cpp b/src/ais_decoder.cpp
+index b19467f91..b4e37a670 100644
+--- a/src/ais_decoder.cpp
++++ b/src/ais_decoder.cpp
+@@ -3710,7 +3710,7 @@ void AisDecoder::OnTimerAIS(wxTimerEvent &amp;event) {
+     for (unsigned int i = 0; i &lt; g_MMSI_Props_Array.GetCount(); i++) {
+       MmsiProperties *props = g_MMSI_Props_Array[i];
+       if (td-&gt;MMSI == props-&gt;MMSI) {
+-        if (props-&gt;m_bignore) {
++        if (props-&gt;m_bignore &amp;&amp; !td-&gt;b_removed) {
+           remove_array.push_back(td-&gt;MMSI);  // Add this target to removal list
+           td-&gt;b_removed = true;
+           plugin_msg.Notify(td);
+@@ -3726,9 +3726,7 @@ void AisDecoder::OnTimerAIS(wxTimerEvent &amp;event) {
+   for (unsigned int i = 0; i &lt; remove_array.size(); i++) {
+     auto itd = current_targets.find(remove_array[i]);
+     if (itd != current_targets.end()) {
+-      AisTargetData *td = itd-&gt;second;
+       current_targets.erase(itd);
+-      delete td;
+     }
+   }
+
+diff --git a/src/pluginmanager.cpp b/src/pluginmanager.cpp
+index 416851b0e..a5aad7430 100644
+--- a/src/pluginmanager.cpp
++++ b/src/pluginmanager.cpp
+@@ -1274,7 +1274,9 @@ void PlugInManager::HandlePluginLoaderEvents() {
+                                     EVT_PLUGMGR_ROUTEMAN_MSG);
+   Bind(EVT_PLUGMGR_AIS_MSG,  [&amp;](wxCommandEvent&amp; ev) {
+     auto pTarget = static_cast&lt;AisTargetData*&gt;(ev.GetClientData());
+-    SendAisJsonMessage(pTarget); });
++    SendAisJsonMessage(pTarget);
++    if (pTarget-&gt;b_removed) delete pTarget;
++  });
+   Bind(EVT_PLUGMGR_ROUTEMAN_MSG,  [&amp;](ObservedEvt&amp; ev) {
+     auto msg = UnpackEvtPointer&lt;wxJSONValue&gt;(ev);
+     SendJSONMessageToAllPlugins(ev.GetString(), *msg); });
+</code></pre></div>
+
+
+
+<a name="307274267"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332168-Master%20-%205.8.0%20%20%28was%3A%20comms%29/topic/Hard%20to%20diagnose%20bugs/near/307274267" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Alec Leamas <a href="https://leamas.github.io/zulip-archive/stream/332168-Master---5.2E8.2E0--.28was.3A-comms.29/topic/Hard.20to.20diagnose.20bugs.html#307274267">(Nov 01 2022 at 09:32)</a>:</h4>
+<p>That was the same thing I saw at a glance which I thought would need a check. Seems that we agree that this is a bug.</p>
+<p>Letting the event handler do the delete is scary. When we post a message we are basically broadcasting it, and if something else listens to the same EventVar we lose. We should hence basically treat resources passed through the  observable machinery as read-only.</p>
+<p>IMHO, this happens because we are using raw pointers --  using them is basically a bug. A cleaner solution would be to use a shared_ptr. The event system  allows for passing such pointers, and that creates the shared ownership we have here. But that requires that the pointer is pointing to an object with a proper destructor.</p>
+<p>We need <span class="user-mention" data-user-id="517002">@Dave Register</span> in the loop here as well.</p>
+
+
+
+<a name="307319016"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332168-Master%20-%205.8.0%20%20%28was%3A%20comms%29/topic/Hard%20to%20diagnose%20bugs/near/307319016" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Dave Register <a href="https://leamas.github.io/zulip-archive/stream/332168-Master---5.2E8.2E0--.28was.3A-comms.29/topic/Hard.20to.20diagnose.20bugs.html#307319016">(Nov 01 2022 at 14:07)</a>:</h4>
+<p>I agree that TargetData pointer should be passed as a shared_ptr.  This is essentially required for all data object pointers used in our new "observable" event management.<br>
+Patch to implement this would be very welcome.</p>
+
+
+
+<a name="307343220"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332168-Master%20-%205.8.0%20%20%28was%3A%20comms%29/topic/Hard%20to%20diagnose%20bugs/near/307343220" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Alec Leamas <a href="https://leamas.github.io/zulip-archive/stream/332168-Master---5.2E8.2E0--.28was.3A-comms.29/topic/Hard.20to.20diagnose.20bugs.html#307343220">(Nov 01 2022 at 15:53)</a>:</h4>
+<p><span class="user-mention" data-user-id="522729">@Dan Dickey</span> Do you want to make such a patch?</p>
+
+
+
+<a name="307437170"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332168-Master%20-%205.8.0%20%20%28was%3A%20comms%29/topic/Hard%20to%20diagnose%20bugs/near/307437170" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Dan Dickey <a href="https://leamas.github.io/zulip-archive/stream/332168-Master---5.2E8.2E0--.28was.3A-comms.29/topic/Hard.20to.20diagnose.20bugs.html#307437170">(Nov 02 2022 at 01:47)</a>:</h4>
+<p>Yes, I will work it out.  Been a bit busy but will post a solution this week.</p>
+
+
+
+<a name="307493093"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332168-Master%20-%205.8.0%20%20%28was%3A%20comms%29/topic/Hard%20to%20diagnose%20bugs/near/307493093" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Alec Leamas <a href="https://leamas.github.io/zulip-archive/stream/332168-Master---5.2E8.2E0--.28was.3A-comms.29/topic/Hard.20to.20diagnose.20bugs.html#307493093">(Nov 02 2022 at 10:34)</a>:</h4>
+<p>OK. I just wanted to make sure it wasn't on my desk.</p>
+
+
+
+<a name="307507719"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332168-Master%20-%205.8.0%20%20%28was%3A%20comms%29/topic/Hard%20to%20diagnose%20bugs/near/307507719" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Dan Dickey <a href="https://leamas.github.io/zulip-archive/stream/332168-Master---5.2E8.2E0--.28was.3A-comms.29/topic/Hard.20to.20diagnose.20bugs.html#307507719">(Nov 02 2022 at 12:05)</a>:</h4>
+<p>PR <a href="https://github.com/OpenCPN/OpenCPN/pull/2802">https://github.com/OpenCPN/OpenCPN/pull/2802</a> submitted.  Waiting for CI builds to finish.</p>
+
+
+
+<a name="307525464"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332168-Master%20-%205.8.0%20%20%28was%3A%20comms%29/topic/Hard%20to%20diagnose%20bugs/near/307525464" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Alec Leamas <a href="https://leamas.github.io/zulip-archive/stream/332168-Master---5.2E8.2E0--.28was.3A-comms.29/topic/Hard.20to.20diagnose.20bugs.html#307525464">(Nov 02 2022 at 13:43)</a>:</h4>
+<p>hm.. will this work?</p>
+<p>There is still a raw pointer a . k.  a.   pTargetData. The shared_ptr points to the same memory, memory which is deleted later on.</p>
+<p>As I understand it, the way  to fix this properly is to go back to  AisTargetDataMaker::Create and let it return a shared_ptr instead of a raw. That  would lead to some serious work, but the compiler should be able to handle it properly. </p>
+<p>Don't get me wrong, I really wish there is a better alternative...</p>
+
+
+
+<a name="307525758"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332168-Master%20-%205.8.0%20%20%28was%3A%20comms%29/topic/Hard%20to%20diagnose%20bugs/near/307525758" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Alec Leamas <a href="https://leamas.github.io/zulip-archive/stream/332168-Master---5.2E8.2E0--.28was.3A-comms.29/topic/Hard.20to.20diagnose.20bugs.html#307525758">(Nov 02 2022 at 13:44)</a>:</h4>
+<p>Perhaps one could add a new function CreateShared instead, to be used at least here?</p>
+
+
+
+<a name="307528894"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332168-Master%20-%205.8.0%20%20%28was%3A%20comms%29/topic/Hard%20to%20diagnose%20bugs/near/307528894" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Dan Dickey <a href="https://leamas.github.io/zulip-archive/stream/332168-Master---5.2E8.2E0--.28was.3A-comms.29/topic/Hard.20to.20diagnose.20bugs.html#307528894">(Nov 02 2022 at 13:58)</a>:</h4>
+<p>I think the pointer passed to the notify function uses a copy of the shared pointer which increases the use count.  So only when the use count drops to zero does the memory actually get freed.  Isn't that how these work?</p>
+
+
+
+<a name="307529514"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332168-Master%20-%205.8.0%20%20%28was%3A%20comms%29/topic/Hard%20to%20diagnose%20bugs/near/307529514" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Alec Leamas <a href="https://leamas.github.io/zulip-archive/stream/332168-Master---5.2E8.2E0--.28was.3A-comms.29/topic/Hard.20to.20diagnose.20bugs.html#307529514">(Nov 02 2022 at 14:00)</a>:</h4>
+<p>Yes. But as I understand this mechanism will fail if the same memory is deleted using the raw pointer. The shared_ptr needs to the only one handling the memory.</p>
+<p>Or, am I missing simething?</p>
+
+
+
+<a name="307531964"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332168-Master%20-%205.8.0%20%20%28was%3A%20comms%29/topic/Hard%20to%20diagnose%20bugs/near/307531964" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Dan Dickey <a href="https://leamas.github.io/zulip-archive/stream/332168-Master---5.2E8.2E0--.28was.3A-comms.29/topic/Hard.20to.20diagnose.20bugs.html#307531964">(Nov 02 2022 at 14:09)</a>:</h4>
+<p>Ok, I'll look at it tonight.  I think there is a simple fix.</p>
+
+
+
+<a name="307572783"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332168-Master%20-%205.8.0%20%20%28was%3A%20comms%29/topic/Hard%20to%20diagnose%20bugs/near/307572783" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Alec Leamas <a href="https://leamas.github.io/zulip-archive/stream/332168-Master---5.2E8.2E0--.28was.3A-comms.29/topic/Hard.20to.20diagnose.20bugs.html#307572783">(Nov 02 2022 at 17:00)</a>:</h4>
+<p>My suggestion for simple fix:</p>
+<div class="codehilite"><pre><span></span><code>diff --git a/src/ais_decoder.cpp b/src/ais_decoder.cpp
+index 0b059893b..1b0e6b4b0 100644
+--- a/src/ais_decoder.cpp
++++ b/src/ais_decoder.cpp
+@@ -3620,7 +3620,7 @@ void AisDecoder::OnTimerAIS(wxTimerEvent &amp;event) {
+       current_targets.erase(it);
+       break;  // leave the loop
+     }
+-    std::shared_ptr&lt;AisTargetData&gt; td(std::make_shared&lt;AisTargetData&gt;(*it-&gt;second));
++    auto td = std::make_shared&lt;AisTargetData&gt;(*it-&gt;second.Clone());
+
+     int target_posn_age = now.GetTicks() - td-&gt;PositionReportTicks;
+     int target_static_age = now.GetTicks() - td-&gt;StaticReportTicks;
+</code></pre></div>
+<p>and then implement AisTargetData::Clone as a deep copy. That would make td an independent copy, not affected by the delete on the raw pointer later on. </p>
+<p>Implementing Clone() would require a lot of writing, but should otherwise be trivial.</p>
+
+
+
+<a name="307694597"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332168-Master%20-%205.8.0%20%20%28was%3A%20comms%29/topic/Hard%20to%20diagnose%20bugs/near/307694597" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Dan Dickey <a href="https://leamas.github.io/zulip-archive/stream/332168-Master---5.2E8.2E0--.28was.3A-comms.29/topic/Hard.20to.20diagnose.20bugs.html#307694597">(Nov 03 2022 at 10:22)</a>:</h4>
+<p>What about a simpler fix.  The notification function translates the AIS object into a JSON object using a subset of the AIS object fields.  Why not create that JSON object first then send the pointer to that?  Then we have no need to deep clone the AIS object. A second benefit, it is always ok for the notification function to delete the JSON object pointer when it is finished because the sending function has no other use for it.</p>
+
+
+
+<a name="307721790"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332168-Master%20-%205.8.0%20%20%28was%3A%20comms%29/topic/Hard%20to%20diagnose%20bugs/near/307721790" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Alec Leamas <a href="https://leamas.github.io/zulip-archive/stream/332168-Master---5.2E8.2E0--.28was.3A-comms.29/topic/Hard.20to.20diagnose.20bugs.html#307721790">(Nov 03 2022 at 12:54)</a>:</h4>
+<p>Om Phone my ISP has some major problem</p>
+<p>One could argue that encoding and decoding JSON Is quite complicated.</p>
+<p>That said I think it's possible, the logic is basically the same as behind Clone (). However, it must still be handled by a shared_ptt since we don't know how many listeners there are.</p>
+<p>A variant could be to create a new type, a subset of AisTargetData and use that instead of the (complicated) JSON object. That also brings some compiler checks.</p>
+<p>A perhaps better variant: make AisTarget Data be a descendant of say BaseAisTargetData, move the things we need into the base class and implement Clone on that instead...</p>
+
+
+
+<a name="307723856"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332168-Master%20-%205.8.0%20%20%28was%3A%20comms%29/topic/Hard%20to%20diagnose%20bugs/near/307723856" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Alec Leamas <a href="https://leamas.github.io/zulip-archive/stream/332168-Master---5.2E8.2E0--.28was.3A-comms.29/topic/Hard.20to.20diagnose.20bugs.html#307723856">(Nov 03 2022 at 13:05)</a>:</h4>
+<p>Made a test shot.Perhaps a Clone isn't that complicated. The compiler can make a shallow copy using <em>clone=</em>this, and then it's "just" to fix the items which are "deep" so to speak</p>
+
+
+
+<a name="307724293"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332168-Master%20-%205.8.0%20%20%28was%3A%20comms%29/topic/Hard%20to%20diagnose%20bugs/near/307724293" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Alec Leamas <a href="https://leamas.github.io/zulip-archive/stream/332168-Master---5.2E8.2E0--.28was.3A-comms.29/topic/Hard.20to.20diagnose.20bugs.html#307724293">(Nov 03 2022 at 13:07)</a>:</h4>
+<p>Sorry for mangled stars, clone = this. I think you get it anyway ..</p>
+
+
+
+<a name="307869865"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332168-Master%20-%205.8.0%20%20%28was%3A%20comms%29/topic/Hard%20to%20diagnose%20bugs/near/307869865" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Dan Dickey <a href="https://leamas.github.io/zulip-archive/stream/332168-Master---5.2E8.2E0--.28was.3A-comms.29/topic/Hard.20to.20diagnose.20bugs.html#307869865">(Nov 04 2022 at 01:40)</a>:</h4>
+<p><span class="user-mention" data-user-id="399510">@Alec Leamas</span>  have a look at <a href="https://github.com/OpenCPN/OpenCPN/pull/2804">https://github.com/OpenCPN/OpenCPN/pull/2804</a>.  I tested this for 24 hours and it did not leak or crash.  I think it solves the issue.  If you have any suggestions let me know.</p>
+
+
+
+<hr><p>Last updated: Oct 05 2023 at 09:43 UTC</p>
+</html>

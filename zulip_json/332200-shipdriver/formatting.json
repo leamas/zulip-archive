@@ -1,0 +1,68 @@
+[
+    {
+        "content": "<p>Formatting seems to be on the agenda. I have thought about this earlier, but did want to bother you. However, it's now on the table.</p>\n<p>As I said in your PR, the tool used in the OpenCPN core is clang-format. Looking at shipdriver, .clang-format is already in place so it should be simple to use it.  Using a single tool is just much simpler than trying to define formatting rules.</p>\n<p>The question is just how to best apply this to windows users whcih are lost in VS :). However, there seems to be a clang-format plugin available for VS. Perhaps you could make a test with that one, formatting some files?.</p>\n<p>Be prepared to that the formatting rules feels a bit awkward in the beginning, that was my experience. However, one get's used to it quite fast, took some days for me. And nothing in this formatting is set in stone, it's only about .clang-format which could be tweaked in all sorts of ways. However,  better to avoid that.</p>",
+        "id": 389414042,
+        "sender_full_name": "Alec Leamas",
+        "timestamp": 1694005023
+    },
+    {
+        "content": "<p>As for line ends: Have you had any actual problems with this lately?</p>",
+        "id": 389414114,
+        "sender_full_name": "Alec Leamas",
+        "timestamp": 1694005054
+    },
+    {
+        "content": "<p><span class=\"user-mention\" data-user-id=\"399559\">@Mike Rossiter</span>  ^</p>",
+        "id": 389414621,
+        "sender_full_name": "Alec Leamas",
+        "timestamp": 1694005230
+    },
+    {
+        "content": "<blockquote>\n<p>As for line ends: Have you had any actual problems with this lately?</p>\n</blockquote>\n<p>No.  Github Desktop now seems to be set up to avoid these.</p>\n<p>Had a look at VS formatting.  Google style works but using .clang-format does not.</p>\n<p><a href=\"/user_uploads/33951/rCnofcU9i7j16JAKFrJsNqk1/.clang-format-not-working.jpg\">.clang-format-not-working.jpg</a></p>\n<div class=\"message_inline_image\"><a href=\"/user_uploads/33951/rCnofcU9i7j16JAKFrJsNqk1/.clang-format-not-working.jpg\" title=\".clang-format-not-working.jpg\"><img src=\"/user_uploads/33951/rCnofcU9i7j16JAKFrJsNqk1/.clang-format-not-working.jpg\"></a></div>",
+        "id": 389426622,
+        "sender_full_name": "Mike Rossiter",
+        "timestamp": 1694008332
+    },
+    {
+        "content": "<p>VS talks about using a custom clang-format.exe file.</p>",
+        "id": 389426932,
+        "sender_full_name": "Mike Rossiter",
+        "timestamp": 1694008411
+    },
+    {
+        "content": "<p>Indentation with Google style is 3 spaces.</p>",
+        "id": 389428265,
+        "sender_full_name": "Mike Rossiter",
+        "timestamp": 1694008700
+    },
+    {
+        "content": "<p>.clang-format file differs in ShipDriver cf OpenCPN. <em>IndentWidth:     2</em> in OpenCPN, <em>IndentWidth:     4</em> in ShipDriver clang-format file.</p>",
+        "id": 389430320,
+        "sender_full_name": "Mike Rossiter",
+        "timestamp": 1694009057
+    },
+    {
+        "content": "<blockquote>\n<p>VS talks about using a custom clang-format.exe file.</p>\n</blockquote>\n<p>well, that would then mean that the \"plugin\" just is a thin wrapper for the proper clang-format which you then need to install. Here is some docs which may  work: <a href=\"https://www.dynamsoft.com/codepool/vscode-format-c-code-windows-linux.html\">https://www.dynamsoft.com/codepool/vscode-format-c-code-windows-linux.html</a></p>\n<blockquote>\n<p>No. Github Desktop now seems to be set up to avoid these.</p>\n</blockquote>\n<p>It's actually not so much GD, the conversion to/from CRLF &lt;-&gt; LF is governed by the .gitattributes file.. Anyway, we can put this behind us as I presumed.</p>\n<blockquote>\n<p>Indentation with Google style is 3 spaces.</p>\n</blockquote>\n<p>No, it's 2, see <a href=\"https://google.github.io/styleguide/cppguide.html\">https://google.github.io/styleguide/cppguide.html</a>. If it is anything else, it's not google.  The core issue here is that .clang-format isn't used, probably  because the VS plugin tries to mimic clang-format rather than actuallly running it. Installing clang-format as of above should do the trick</p>",
+        "id": 389440480,
+        "sender_full_name": "Alec Leamas",
+        "timestamp": 1694010858
+    },
+    {
+        "content": "<p>Think .clang-format is now being used. Installed the clang tools. <br>\nNow ... should we copy the .clang-format file from OpenCPN to ShipDriver?</p>",
+        "id": 389450884,
+        "sender_full_name": "Mike Rossiter",
+        "timestamp": 1694013239
+    },
+    {
+        "content": "<blockquote>\n<p>Now ... should we copy the .clang-format file from OpenCPN to ShipDriver?</p>\n</blockquote>\n<p>Yes, we should.</p>",
+        "id": 390287260,
+        "sender_full_name": "Alec Leamas",
+        "timestamp": 1694430789
+    },
+    {
+        "content": "<blockquote>\n<p>Now ... should we copy the .clang-format file from OpenCPN to ShipDriver?<br>\nYes, we should.</p>\n</blockquote>\n<p>Done. Pushed to master.</p>",
+        "id": 390319056,
+        "sender_full_name": "Mike Rossiter",
+        "timestamp": 1694441403
+    }
+]

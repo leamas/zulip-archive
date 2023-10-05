@@ -1,0 +1,68 @@
+[
+    {
+        "content": "<p>I have been messing with the new OCPN v5.7 Beta 3 which I ran on another Mac (Intel) to avoid conflicts.  Never mind about that now but somehow I have messed up my build script on my main machine (Apple Silicon and hence Arm64.<br>\nNow when I do a local build, it builds for Arm64 rather than X86.  And it fails to load into OCPN v5.6 which is X86.<br>\nIs there a switch in the build script or something?  Cannot see anything in <code>circleci-build-macos.sh</code></p>",
+        "id": 322045998,
+        "sender_full_name": "Tony Voss",
+        "timestamp": 1674046756
+    },
+    {
+        "content": "<p>PS I had to update to the latest cMake.  Might that have spotted I am on an Arm64 machine and set up to build for that?</p>",
+        "id": 322048557,
+        "sender_full_name": "Tony Voss",
+        "timestamp": 1674047522
+    },
+    {
+        "content": "<p>Found it.  I need to do this:<br>\n<code>set(CMAKE_OSX_ARCHITECTURES \"x86_64\")</code><br>\nJust need to find where it goes.</p>",
+        "id": 322049200,
+        "sender_full_name": "Tony Voss",
+        "timestamp": 1674047726
+    },
+    {
+        "content": "<p>The new build scripts set the architecture to X86 but also wx32, so cannot use those for wx3.1.<br>\nI think I need to patch the old script?  But where?</p>",
+        "id": 322054725,
+        "sender_full_name": "Tony Voss",
+        "timestamp": 1674049247
+    },
+    {
+        "content": "<p>Probably cannot help much. For local builds I run the script <em>circleci_macos_build.sh.</em> The second part makes the tarball for the import.</p>",
+        "id": 322056644,
+        "sender_full_name": "Mike Rossiter",
+        "timestamp": 1674049809
+    },
+    {
+        "content": "<blockquote>\n<p>set(CMAKE_OSX_ARCHITECTURES \"x86_64\")<br>\nJust need to find where it goes.</p>\n</blockquote>\n<p><a href=\"https://stackoverflow.com/questions/69803659/what-is-the-proper-way-to-build-for-macos-x86-64-using-cmake-on-apple-m1-arm\">https://stackoverflow.com/questions/69803659/what-is-the-proper-way-to-build-for-macos-x86-64-using-cmake-on-apple-m1-arm</a></p>\n<p>Perhaps before line 54 of <em>cicleci-build-macos.sh</em> (before \"cmake \\\")</p>",
+        "id": 322060081,
+        "sender_full_name": "Mike Rossiter",
+        "timestamp": 1674050701
+    },
+    {
+        "content": "<p>Or after \"cmake\\\":<br>\n-DCMAKE_OSX_ARCHITECTURES=x86_64 \\</p>",
+        "id": 322062679,
+        "sender_full_name": "Mike Rossiter",
+        "timestamp": 1674051341
+    },
+    {
+        "content": "<p>That last has done it.  Thanks <span aria-label=\"smile\" class=\"emoji emoji-1f642\" role=\"img\" title=\"smile\">:smile:</span> <br>\nThe tarball name is still has arm64 but it loads OK so isn't.<br>\n<code>javascript-2.0.0-alpha+2301181428.3ec7362_darwin-wx315-10.13.6-arm64</code></p>",
+        "id": 322066541,
+        "sender_full_name": "Tony Voss",
+        "timestamp": 1674052320
+    },
+    {
+        "content": "<p>Should I post a warning somewhere that if you update Cmake and are building locally, you need to fix this?</p>",
+        "id": 322066818,
+        "sender_full_name": "Tony Voss",
+        "timestamp": 1674052395
+    },
+    {
+        "content": "<p>Might be worth an alpha build to see if the metadata file has the same file name. If so it may fail to be recognised for inclusion in a catalog. I suspect that making the alpha build will produce a tarball with name showing x86_64.</p>",
+        "id": 322069277,
+        "sender_full_name": "Mike Rossiter",
+        "timestamp": 1674052972
+    },
+    {
+        "content": "<blockquote>\n<p>Should I post a warning somewhere</p>\n</blockquote>\n<p>Your alpha builds look good. There is a lot of work going on at the minute. Perhaps a discussion point in your github repo.</p>",
+        "id": 322078577,
+        "sender_full_name": "Mike Rossiter",
+        "timestamp": 1674055230
+    }
+]

@@ -1,0 +1,734 @@
+[
+    {
+        "content": "<p>Dave said:</p>\n<hr>\n<p>@Alec Leamas<br>\nOn the \"jailing\" of unloadable plugins:<br>\n\"The logic for now is to show the message once in each session i. e. once when opencpn is started. I think this is the right thing to do, user could either live with the message or uninstall the plugin.\"</p>\n<p>I am not in full agreement with this policy.<br>\nIt is not nice when a plugin finds itself in the plugin directory without a metadata entry in the catalog. Could happen...<br>\nIt is one thing for you or me to \"uninstall a plugin\". Quite another for a novice user to find the (possibly hidden e.g. Windows) plugin directory, and delete the offending .so or .dll file.<br>\nAs running now, i it is unfriendly to novice users. I'd like to see the option in the message to actually delete the incompatible library file, and be done with it.</p>\n<hr>",
+        "id": 327719863,
+        "sender_full_name": "Alec Leamas",
+        "timestamp": 1676364680
+    },
+    {
+        "content": "<p>Alec said:</p>\n<hr>\n<p>10:34 AM</p>\n<blockquote>\n<p>As running now, it is unfriendly to novice users.</p>\n</blockquote>\n<p>Agreed.</p>\n<blockquote>\n<p>It is not nice when a plugin finds itself in the plugin directory without a metadata entry in the catalog. Could happen...</p>\n</blockquote>\n<p>This is IMHO the core issue which becomes visible after removing this jailing stuff. It actually happens after something which should be supported: user first imports plugin -&gt; plugin data and metadata in place. And then updates the catalog.</p>\n<p>At this point the imported plugin files and installation data is still in place, but the metadata entry is lost. Overall an inconsistent state which breaks both logic and user experience.</p>\n<p>Other things like my kitchen ongoing today. Thoughts?</p>\n<hr>",
+        "id": 327720244,
+        "sender_full_name": "Alec Leamas",
+        "timestamp": 1676364806
+    },
+    {
+        "content": "<p>Dave said:</p>\n<hr>\n<p>Sorry, I am not clearly following your scenario for breakage.<br>\nAfter importing a plugin from remote tarball, is the system left in an inconsistent state? I think not, but I may be naive.<br>\nSo then how does it become broken when the catalog is updated, presumably with the same catalog entry as was imported?</p>\n<hr>",
+        "id": 327720322,
+        "sender_full_name": "Alec Leamas",
+        "timestamp": 1676364841
+    },
+    {
+        "content": "<p>Alec said:</p>\n<hr>\n<p>11:11 AM<br>\n@Dave Register</p>\n<blockquote>\n<p>presumably with the same catalog entry as was imported?</p>\n</blockquote>\n<p>If we should clear this out, we cannot make any assumptions about whether the plugin imported is in the catalog, or if the catalog entry matches the imported plugin. Unfortunately, this is true even if the imported plugin and the catalog entry has the same name and version.</p>\n<p>Scenario, more details:</p>\n<p>User imports plugin foo version 1.1. This adds a new entry named \"foo\" version 1.1 to the catalog.<br>\nUser installs plugin using the catalog entry. This creates the files plugindir/.../libfoo.so and plugindir/.../data with plugin contents. It also creates config_dir/plugins/install_data/foo.files which lists all files installed with this plugin.<br>\nUser uninstalls plugin. The things involved are the catalog entry (GUI underpinnings) and foo.files which is used to find out what to remove. As a final step, also foo.files is removed<br>\nSo far, all is well. However, if user instead of 3. updates the catalog, the existing catalog containing the imported metadata is replaced with a catalog without this imported metadata. The result is that the metadata in the catalog does not relate to the imported plugin in any way.</p>\n<p>If it's missing, there is no way for a user to remove the plugin. There just isn't any entry in the GUI which user can select to uninstall it, leaving files like <a href=\"http://libfoo.so\">libfoo.so</a> without any GUI hooks to be removed and user lose.</p>\n<p>It there is an entry, it's unreliable. It was created for something else. I. e., it refers to what can be downloaded through the catalog download url, not the actually installed, imported plugin. For example, metadata added by a developer for testing purposes will not be visible.</p>\n<p>IMHO, this means that the state is inconsistent.</p>\n<hr>",
+        "id": 327720516,
+        "sender_full_name": "Alec Leamas",
+        "timestamp": 1676364898
+    },
+    {
+        "content": "<p>Dave said:</p>\n<hr>\n<p>OK, I have the scenario in mind.<br>\nThinking....</p>\n<hr>",
+        "id": 327720602,
+        "sender_full_name": "Alec Leamas",
+        "timestamp": 1676364927
+    },
+    {
+        "content": "<p>Alec said: </p>\n<hr>\n<p>When I think about it, the only way to actually fix this is to keep the imported metadata until the imported plugin is removed. Which might mean that:</p>\n<ul>\n<li>Imported metadata is kept in a separate place in the config directory</li>\n<li>Imported metadata basically is immutable, removed when uninstalling only.</li>\n<li>The used catalog is the result of merging the downloaded catalog with the imported metadata. This could either be done when updating or when parsing -- to do it when updating and then be done with it seems like the best option. Importing is the same as updating in this context.</li>\n<li>Plugins which are imported are marked as such. This is needed when uninstalling, but would also make sense in the GUI as an icon.</li>\n<li>Importing a plugin with a given name should not be allowed if this plugin is already imported. Either the existing plugin is implicitly removed, or user is forced to remove it first. Since implicit remove is a Bad Thing, it's probably better if user has to remove the existing first.</li>\n</ul>\n<p>Trying to wrap my head around what it means if the imported plugin and the plugin in the catalog has the same name and version. No success.</p>\n<hr>",
+        "id": 327720994,
+        "sender_full_name": "Alec Leamas",
+        "timestamp": 1676365044
+    },
+    {
+        "content": "<p>Dave said:</p>\n<hr>\n<p>I came to a variation of the same thing. Not sure how to \"mark\" the import. Maybe add a XML tag \" on-the-fly\", while importing?<br>\nAlso, we can safely refuse to import a plugin if the same already exists in catalog (common name, target, and version). With UI message to that effect.<br>\nI like the idea of a subtly different icon in the UI for \"imported\" plugins.</p>\n<hr>",
+        "id": 327721160,
+        "sender_full_name": "Alec Leamas",
+        "timestamp": 1676365088
+    },
+    {
+        "content": "<p>Alec said:</p>\n<hr>\n<p>We don't really need to mark the xml, we know that the xml is imported because it lives in a separate location. Marking should be done in PlugInContainer, perhaps by just adding a kind of status item in PluginStatus.</p>\n<p>However, this would mean that we cannot update an imported plugin. Might be better with a simple bool in PlugInContainer.</p>\n<blockquote>\n<p>Also, we can safely refuse to import a plugin if the same already exists in catalog (common name, target, and version).</p>\n</blockquote>\n<p>Can still mess up if we first import the the plugin (no collision with catalog) and then updates the catalog and the updated catalog contains something identical to the imported one. Which actually is an expected use case.</p>\n<p>11:30 PM</p>\n<hr>",
+        "id": 327721292,
+        "sender_full_name": "Alec Leamas",
+        "timestamp": 1676365131
+    },
+    {
+        "content": "<p>Alec said:</p>\n<hr>\n<p>After a night's sleep I see two ways to handle conflicts (same name &amp; version) between the catalog and an imported plugin.</p>\n<p>One way would be to fully block all ways this could happen. This means blocking import of a plugin conflicting with the catalog as you said. It would also mean blocking a catalog update leading a conflict with a user message like \"imported plugin foo must be uninstalled before catalog is updated\" or so.</p>\n<p>Another way would be to tweak the version for the imported plugin. This could be done by adding an \"epoch\" to the version in the same ways as distributions. Adding an epoch would mean that the complete version 1.2.3 could bee 0:1.2.3-beta+deadbeef. Here, the new item is 0:, commonly named \"epoch\"</p>\n<p>The epoch would be 0 by default. This means that no existing code would be affected: version comparing, creating and parsing proceeds as always.</p>\n<p>However , we could set the epoch to 1 for plugins. Following the standard logic, epoch beats all other version components when comparing. That is, 1:0.0.0 is a later version than 0:1.1.1. This would mean that the plugin version would never be the same as in the catalog. It would also mean that an imported plugin always has a later version than the same plugin in the catalog.</p>\n<p>More text on the epoch thing, more to explain. However, I have no clear preference on the way to go here: blocking conflicts or live with them used a tweaked version. Perhaps there are other ways.</p>\n<hr>",
+        "id": 327721454,
+        "sender_full_name": "Alec Leamas",
+        "timestamp": 1676365181
+    },
+    {
+        "content": "<p>Dave said:</p>\n<hr>\n<p>\"t would also mean blocking a catalog update leading a conflict with a user message like \"imported plugin foo must be uninstalled before catalog is updated\" or so.\"<br>\nThere is potentially another way here.<br>\nDuring catalog update, we parse each entry in the new catalog looking for conflicts with previously imported plugins. We know that a plugin is an import, since it is stored in a \"special\" location. If there is an exact conflict, we can drop the catalog update metadata for this plugin, and retain the imported plugin metadata. Result: logically still consistent.<br>\nThis would be somewhat slower than normal, but only happens if there are actually any imported plugins to consider.</p>\n<hr>",
+        "id": 327721590,
+        "sender_full_name": "Alec Leamas",
+        "timestamp": 1676365212
+    },
+    {
+        "content": "<p>Alec said:</p>\n<hr>\n<p>Right... but it would hide the possible update in the catalog. Might be worth it.</p>\n<p>On my way out, perhaps back later today, otherwise tomorrow.</p>\n<p>At a second thought: Wouldn't this be a new inconsistency, where the complete catalog isn't available? I</p>\n<hr>",
+        "id": 327721687,
+        "sender_full_name": "Alec Leamas",
+        "timestamp": 1676365241
+    },
+    {
+        "content": "<p>Dave said:</p>\n<hr>\n<p>OK, then the completely automatic way is :</p>\n<p>If an incoming catalog plugin is equal to or later than an existing imported plugin, then quietly uninstall the imported plugin. This will leave the target plugin in an uninstalled state. Post user message to that effect. \"Please reinstall \"foo\", updating imported version\", or so.</p>\n<hr>",
+        "id": 327721836,
+        "sender_full_name": "Alec Leamas",
+        "timestamp": 1676365295
+    },
+    {
+        "content": "<p>Alec said:</p>\n<hr>\n<p>If the catalog and the imported plugin has different versions we could just proceed as normal. It doesn't matter if the catalog entry is later then the imported plugin -- the catalog will have two entries, one for the imported plugin, one for the catalog version. The imported is most likely also installed, but not necessarily. But as long as the versions are different I see no problem.</p>\n<p>But if the versions are the same, you are right. This would then mean that we should uninstall the imported plugin if it is installed and then remove the imported metadata before updating the catalog. This is doable, reasonably simple and consistent. A user message like \"imported plugin foo replaced by version from the catalog\" or so might make sense.</p>\n<p>However, user would not be able to re-import the tarball since it has the same name+version (NVR) as the catalog entry. We must block this if we walk this path. This is a downside. The only way I can see avoiding this is tweaking the version, for example like described above.</p>\n<hr>",
+        "id": 327721897,
+        "sender_full_name": "Alec Leamas",
+        "timestamp": 1676365319
+    },
+    {
+        "content": "<p>Dave said:</p>\n<hr>\n<p>Of course there is no accounting for users, but...<br>\nWhy would a user want to import a plugin that has the same NVR as existing plugin? Seems OK to dis-allow this, with a message.</p>\n<hr>",
+        "id": 327722074,
+        "sender_full_name": "Alec Leamas",
+        "timestamp": 1676365364
+    },
+    {
+        "content": "<p>Alec said:</p>\n<hr>\n<p>TL;DR probably.</p>\n<p>However, the use case:</p>\n<ul>\n<li>Developer creates a tarball, hands it to user for test</li>\n<li>User tests and is happy, reports back</li>\n<li>Developer makes some final changes and publishes using the same version.</li>\n<li>User updates, runs into problems, cannot verify if previous, imported version works.</li>\n</ul>\n<p>I. e., it's not only about users but also devs.</p>\n<p>The rabbit hole is deep. We have so far only defined \"uninstalling\" a plugin. Looking at this mess, it seems that we need to define a new operation \"remove\". This means removing the metadata, after first uninstalling and removing any tarballs in cache referenced by the metadata. This is necessary when importing an already imported plugin. Might be triggered by user or automatically, but nevertheless needed.</p>\n<p>We might allow importing a plugin present in the catalog by simply tweaking the version number. foo 1.0.0 becomes foo 1.0.0.1, the normal case. Corner case 1.0.0.1 becomes 1.0.0.2. The imported version is actually not that interesting, there is only one imported foo. Using the fourth digit this way also sorts OK: the imported version of 1.0.0 is an update of 1.0.0, but will be replaced with 1.0.1 when it's published in the catalog.</p>\n<p>In the first step, just blocking the import of a NVR present in catalog seems logical.</p>\n<hr>",
+        "id": 327722264,
+        "sender_full_name": "Alec Leamas",
+        "timestamp": 1676365432
+    },
+    {
+        "content": "<p>@Dave Register @Håkan Svensson above is a copy of the private messages between me and Dave on this. Let's keep further discussion here.</p>\n<p>We need to finish this. Seems that we are close, but not really there.</p>",
+        "id": 327723489,
+        "sender_full_name": "Alec Leamas",
+        "timestamp": 1676365809
+    },
+    {
+        "content": "<p>I've closed the issue about bad messages creating a hang in Win since the causing code is deleted.<br>\nA view from the issue is though copied here:<br>\nIn the case OCPN is disturbed by old plugin binaries not able to load we may inform the user and offer to delete the files. Since a OCPN plugin package installer or the Plugin Manager using Catalog/Import has once installed the file(s) the same OCPN program would also take responsibility to delete them.</p>",
+        "id": 327867407,
+        "sender_full_name": "Håkan Svensson",
+        "timestamp": 1676406414
+    },
+    {
+        "content": "<p>We need to  some conclusions here. Trying to summarize.</p>\n<p>Here is two, separate issues. One is that due to current design, users have unloadable plugin library files. We need a way to get rid of these.</p>\n<p>The other is that perfectly normal use of OpenCPN will lead to orphaned library files which cannot be removed by users.  The basic scenario is about imported plugins, which are installed with no metadata available after a catalog update. We need to make sure that this does not happen.</p>",
+        "id": 327879823,
+        "sender_full_name": "Alec Leamas",
+        "timestamp": 1676411153
+    },
+    {
+        "content": "<p><strong>Handling existing bad plugins</strong></p>\n<p>When they are detected, user should be offered to remove them.  This means removing them both from the file system and the installation data. If possible, related data files and translations should also be removed i. e., the complete plugin, not just the library.</p>",
+        "id": 327880192,
+        "sender_full_name": "Alec Leamas",
+        "timestamp": 1676411314
+    },
+    {
+        "content": "<p><strong>Handling lost metadata for imported plugins (user cannot uninstall them, or get's wrong info)</strong></p>\n<p>Like this:</p>\n<ul>\n<li>Imported metadata is saved in the configuration directory,  immutable  until the imported plugin is removed</li>\n<li>The effective catalog displayed for users is the result of merging the \"real\" catalog with imported plugins metadata.</li>\n<li>There can only be one imported version of a given plugin, user must remove existing version before importing again.</li>\n<li>A plugin with the same name and version (NVR) as a catalog entry cannot be imported.</li>\n<li>An update of the catalog which contains the same NVR as an imported plugin is blocked, user has to remove the imported plugin first.</li>\n<li>Imported plugins have a visible indication in the GUI showing their status.</li>\n</ul>\n<p>The constraints on catalog updates and imported plugins with a conflicting NVRs can probably be lifted at a later point. But, perhaps keeping it simple like this in a first round. It's still a lot of work.</p>\n<p>We will need a new \"remove\" operation for imported plugins. That is, not just uninstalling them but also removing the otherwise immutable, imported metadata.</p>",
+        "id": 327881742,
+        "sender_full_name": "Alec Leamas",
+        "timestamp": 1676411967
+    },
+    {
+        "content": "<p><span class=\"user-mention\" data-user-id=\"517002\">@Dave Register</span>  <span class=\"user-mention\" data-user-id=\"522486\">@Håkan Svensson</span>  ^ Thoughts?</p>",
+        "id": 327881771,
+        "sender_full_name": "Alec Leamas",
+        "timestamp": 1676411982
+    },
+    {
+        "content": "<p>The first question: <strong>Handling existing bad plugins.</strong><br>\nThis is the most urgent thing to fix.  Will happen for virtually every Windows and Mac user updating from O562 to O58.  Here is how:</p>\n<ol>\n<li>Before update, user has a bunch of plugins built for wx31, all in catalog.  All is well.</li>\n<li>User updates to O58, and immediately fetches new catalog.  </li>\n<li>New catalog may not have entries for now legacy wx31 plugins, but has only wx32 target plugins.</li>\n<li>OCPN tries valiantly to load any plugin found in the stipulated directory, even plugins with no metadata in the catalog.  Without metadata, there is no way to do target matching (e.g wx32).  So all O can do is try the load.</li>\n<li>Result:  No surprise, the wx31 plugins will not load.  Also, the legacy plugin metadata is now gone.  So no reasonable way for user to delete from PIM.</li>\n</ol>",
+        "id": 327902414,
+        "sender_full_name": "Dave Register",
+        "timestamp": 1676421658
+    },
+    {
+        "content": "<p>So, in this case we need to automatically use the manifest data to uninstall and remove completely the now useless wx31 plugins.<br>\nFull stop.  Let's work this out before extending to imports.</p>",
+        "id": 327902838,
+        "sender_full_name": "Dave Register",
+        "timestamp": 1676421882
+    },
+    {
+        "content": "<p>Fair enough. Who does what?</p>",
+        "id": 327940426,
+        "sender_full_name": "Alec Leamas",
+        "timestamp": 1676446730
+    },
+    {
+        "content": "<p>Good. A comment, maybe covered in your earlier discussion.</p>\n<blockquote>\n<p>Handling existing bad plugins.</p>\n</blockquote>\n<p>For plugins where binaries are in (Win) ..Users,,\\AppData\\Local\\opencpn\\plugins<br>\nI se no problem deleting all files and empty folders if deleting only files listed in xxx.files, e.g. weatherrouting.files.  <br>\nIf for any case the \"xxx.files\" -file is not present we would not delete folders since user files may present that shall be used in the updated plugin. In the (rare) case xxx.files is missing we would delete only the binaries. The rest , like .mo files, will overwritten?</p>\n<p>For Plugins where binaries are in (Win) C:\\Program Files (x86)\\OpenCPN\\plugins.<br>\nIf they disturb OCPN: delete the binaries and, if present, corresponding folder.</p>",
+        "id": 327940859,
+        "sender_full_name": "Håkan Svensson",
+        "timestamp": 1676446871
+    },
+    {
+        "content": "<blockquote>\n<p>New catalog may not have entries for now legacy wx31 plugins, but has only wx32 target plugins.</p>\n</blockquote>\n<p>Yes... this is actually  the same case as with imported plugins. We remove metadata for installed plugins. Something in this model is really broken.</p>",
+        "id": 327940947,
+        "sender_full_name": "Alec Leamas",
+        "timestamp": 1676446913
+    },
+    {
+        "content": "<blockquote>\n<p>I see no problem deleting all files and empty folders if deleting only files listed in xxx.files, e.g. weatherrouting.files.</p>\n</blockquote>\n<p>Part of the picture is keeping the installer consistent. The installer tracks installed files in <em>configuration directory/plugins/install_data</em>, and we need to make sure that this data matches the realities, otherwise all sorts of bad things might happen.  </p>\n<p>So, we need to remove all files listed for a plugin in <em>.../install_data</em> together with the data as such. That is, find the install_data for a given plugin, sort of an interesting exercise.</p>",
+        "id": 327941682,
+        "sender_full_name": "Alec Leamas",
+        "timestamp": 1676447239
+    },
+    {
+        "content": "<ul>\n<li>If install_data is found for a specific plugin then remove listed files.</li>\n<li>If install_data is not found, ore is useless, remove only what's disturbing O. I we leave some leftovers; no big trouble.  Won't brake disc space.</li>\n</ul>",
+        "id": 327942657,
+        "sender_full_name": "Håkan Svensson",
+        "timestamp": 1676447731
+    },
+    {
+        "content": "<p><span class=\"user-mention\" data-user-id=\"522486\">@Håkan Svensson</span>  yes</p>",
+        "id": 327942767,
+        "sender_full_name": "Alec Leamas",
+        "timestamp": 1676447765
+    },
+    {
+        "content": "<blockquote>\n<p>New catalog may not have entries for now legacy wx31 plugins, but has only wx32 target plugins.</p>\n</blockquote>\n<p><del>Which actually means that on update we should uninstall all plugins which are not present in the new catalog.</del></p>",
+        "id": 327943205,
+        "sender_full_name": "Alec Leamas",
+        "timestamp": 1676447957
+    },
+    {
+        "content": "<p>No... (sorry, thinking aloud). This would make us remove plugins where the catalog just is a regular update. What we should do on catalog updates  is to uninstall all installed plugins which does not have an matching ABI i. e., they fail the <code>isCompatible()</code> test. This happens on ABI breaks only, and we haven't really made a design for this.</p>\n<p>The imported case would a natural extension: uninstall plugins which does not exist at all in any version in the catalog on catalog update.</p>",
+        "id": 327944242,
+        "sender_full_name": "Alec Leamas",
+        "timestamp": 1676448317
+    },
+    {
+        "content": "<p>Agree on above.<br>\nA maybe late entrance Q:<br>\nFor now I can say to tester: Install O <a href=\"http://5.7.1.xxx\">5.7.1.xxx</a> for a test, no problem. You can always reinstall O 5.6.2 and all is fine.<br>\nBut if we remove legacy plugins the old O will not work as before. Correct? Thoughts?</p>",
+        "id": 327944951,
+        "sender_full_name": "Håkan Svensson",
+        "timestamp": 1676448523
+    },
+    {
+        "content": "<blockquote>\n<p>But if we remove legacy plugins the old O will not work as before. Correct? Thoughts?</p>\n</blockquote>\n<p>I think it will actually work. The catalog entries for the old, legacy versions are still there. User would have to reinstall plugins, but nothing worse.</p>",
+        "id": 327945596,
+        "sender_full_name": "Alec Leamas",
+        "timestamp": 1676448734
+    },
+    {
+        "content": "<p>Yes good, if still present in Plugins metadata...   Leave it! Not that rat hole here  :)</p>",
+        "id": 327946552,
+        "sender_full_name": "Håkan Svensson",
+        "timestamp": 1676449053
+    },
+    {
+        "content": "<blockquote>\n<p>Yes good, if still present in Plugins metadata... Leave it! Not that rat hole here :)</p>\n</blockquote>\n<p>Not leave it installed. That would mean OpenCPN tries to load it, and new dialogs for user which will need to eventually blacklist or remove  it. Much simpler and cleaner to uninstall i. e., that the set of installed plugins  should be guaranteed to have the right ABI.  For users, re-installing plugins on OpenCPN   downgrades/upgrades over ABI breaking versions is not that much of a problem.</p>\n<p>If we put more effort on it, we could handle at least the normal upgrade situation by first uninstalling the wx31 version as incompatible and then try to locate the corresponding wx32 version and install that i. e., making an automatic update. That should work in almost all cases.</p>\n<p>With more work, it could work on downgrades as well.</p>",
+        "id": 327947584,
+        "sender_full_name": "Alec Leamas",
+        "timestamp": 1676449450
+    },
+    {
+        "content": "<blockquote>\n<p>Not that rat hole here</p>\n</blockquote>\n<p>Alice in Wonderland entered a deep rabbit hole, no rats involved ;)</p>",
+        "id": 327948845,
+        "sender_full_name": "Alec Leamas",
+        "timestamp": 1676449929
+    },
+    {
+        "content": "<p>So, two cases to take care about. The first is about failed updates, failed imports and what not leading to incompatible plugin libraries. We know how to deal with it (new dialog, user can remove library preferably also making a proper uninstall fixing install_data)</p>\n<p>The other case is  about  making sure that ABI breaking updates of opencpn works in a sane way Could be:</p>\n<ol>\n<li>On startup, opencpn checks for installed plugins with  incompatible ABI:s (<del>in parallel thread, not delaying start up</del>  This test should be cached to not delay normal start up).  </li>\n<li>If such are found and the catalog is too old to have new, wx32 entries user get a chance to update the catalog  (modal dialog).</li>\n<li>All incompatible plugins are uninstalled.</li>\n<li>For plugins uninstalled, we look for compatible entries with same name in the catalog. If existing, this is installed. If there are multiple matches the one with highest version number is used. </li>\n<li>Possibly, a dialog informs user about update actions (\"The  following plugins have been updated\")</li>\n</ol>\n<p>This should make the normal update scenario work without  creating unloadable libraries.  It would actually work on downgrades as well.</p>",
+        "id": 327954149,
+        "sender_full_name": "Alec Leamas",
+        "timestamp": 1676451578
+    },
+    {
+        "content": "<p>Here is a race condition between the possible update and initial plugin loading to handle</p>",
+        "id": 327954628,
+        "sender_full_name": "Alec Leamas",
+        "timestamp": 1676451721
+    },
+    {
+        "content": "<p><span class=\"user-mention\" data-user-id=\"517002\">@Dave Register</span>  OK? Who does what? </p>\n<p>I can start with the first dialog for already existing, unloadable libs if you don't want to do it yourself.</p>",
+        "id": 327960191,
+        "sender_full_name": "Alec Leamas",
+        "timestamp": 1676453504
+    },
+    {
+        "content": "<p><span class=\"user-mention\" data-user-id=\"399510\">@Alec Leamas</span> <br>\nPlease do.  I'm buried in regression bugs at the moment.</p>",
+        "id": 328038324,
+        "sender_full_name": "Dave Register",
+        "timestamp": 1676474764
+    },
+    {
+        "content": "<p><span class=\"user-mention\" data-user-id=\"399510\">@Alec Leamas</span> <br>\nAny progress here?</p>",
+        "id": 328747270,
+        "sender_full_name": "Dave Register",
+        "timestamp": 1676770885
+    },
+    {
+        "content": "<p>Working on it  estimated ETA mo- tu</p>",
+        "id": 328768148,
+        "sender_full_name": "Alec Leamas",
+        "timestamp": 1676791144
+    },
+    {
+        "content": "<p>I have pushed a branch <em>unloadable-3011</em>  to my  opencpn clone, available at <a href=\"https://github.com/leamas/opencpn/tree/unloadable-3011\">https://github.com/leamas/opencpn/tree/unloadable-3011</a>. I have done some basic testing, but would really appreciate help with more tests.</p>\n<p><span class=\"user-mention\" data-user-id=\"522486\">@Håkan Svensson</span>  Any chance you have some time for this?</p>",
+        "id": 329117757,
+        "sender_full_name": "Alec Leamas",
+        "timestamp": 1676963621
+    },
+    {
+        "content": "<p>BTW: One way to build from that branch:</p>\n<div class=\"codehilite\"><pre><span></span><code>   &gt;  git remote add leamas  https://github.com/leamas/OpenCPN.git\n   &gt;  git remote update leamas\n   &gt;  git fetch leamas unloadable-3011:unloadable-3011\n   &gt;  git checkout unloadable-3011\n</code></pre></div>\n<p>It's git, there are all sorts of other ways as well...</p>",
+        "id": 329122546,
+        "sender_full_name": "Alec Leamas",
+        "timestamp": 1676965252
+    },
+    {
+        "content": "<p><span class=\"user-mention\" data-user-id=\"399510\">@Alec Leamas</span> <br>\nEventually home and saw this.<br>\nBuilt and run on W10 wo trouble. <br>\nI got a bunch of messages.  Now it was able to answer on the topmost and walk though the list. <br>\nThought: Since there are no single choice to make for the user. Only a OK button on each message .  You could list all files for deletion on one message instead? That would make a better overview for what's ongoing and one OK only.</p>\n<p>The log is flooded with deletion errors. Some strange empty path like \"ERROR filefn.cpp:1086 Directory '' couldn't....\"<br>\nLog snippet for the uninstall sequence attached.</p>\n<p>Pluginmanager, imported files:<br>\nIf related to this change: PM seems to not read correct plugin version for a imported plugin. See pict. below. o-charts is (imported)v .36 but reported as v.35!</p>\n<p><a href=\"/user_uploads/33951/1vdWO7ryDUZMO0tPvSvKnzA7/bild.png\">bild.png</a> <br>\n<a href=\"/user_uploads/33951/1aLu5VH0tQCR3t710yac065j/bild.png\">bild.png</a><br>\n<a href=\"/user_uploads/33951/FYsKEy1APvXDJZo1BLjYjhq7/opencpn_unloadable-3011.log\">opencpn_unloadable-3011.log</a></p>\n<div class=\"message_inline_image\"><a href=\"/user_uploads/33951/1vdWO7ryDUZMO0tPvSvKnzA7/bild.png\" title=\"bild.png\"><img src=\"/user_uploads/33951/1vdWO7ryDUZMO0tPvSvKnzA7/bild.png\"></a></div><div class=\"message_inline_image\"><a href=\"/user_uploads/33951/1aLu5VH0tQCR3t710yac065j/bild.png\" title=\"bild.png\"><img src=\"/user_uploads/33951/1aLu5VH0tQCR3t710yac065j/bild.png\"></a></div>",
+        "id": 329289347,
+        "sender_full_name": "Håkan Svensson",
+        "timestamp": 1677012746
+    },
+    {
+        "content": "<p><span class=\"user-mention\" data-user-id=\"522486\">@Håkan Svensson</span>  Thanks!</p>\n<p>I will look into the flooded log, have an idea what it is about.</p>\n<p>As for collecting everything to a single dialog it is certainly possible. That said, I think I will make a PR first for two reasons. The first is that your use case is not that typical for most ordinary users which only have a small number of plugins installed. </p>\n<p>The other is that we need to get the basic changes to plugin_loader in place so they can get some more testing.  That is, make small steps.</p>",
+        "id": 329366493,
+        "sender_full_name": "Alec Leamas",
+        "timestamp": 1677055046
+    },
+    {
+        "content": "<p><a href=\"https://github.com/OpenCPN/OpenCPN/pull/3024\">https://github.com/OpenCPN/OpenCPN/pull/3024</a></p>",
+        "id": 329376720,
+        "sender_full_name": "Alec Leamas",
+        "timestamp": 1677058321
+    },
+    {
+        "content": "<p>Windows 10. Installed o-charts on my build of unloadable-3011. No plugins. Runs fine.<br>\nMove to 5.6.2 and re-install the version of o-charts for wx30. Close 5.6.2.<br>\nRun 5.7.1 and OpenCPN crashes at start </p>\n<p><a href=\"/user_uploads/33951/cUZFW7Dfbs1clz2ZP2BKu0H0/opencpn.log.o-charts.txt\">opencpn.log.o-charts.txt</a> .</p>",
+        "id": 329400226,
+        "sender_full_name": "Mike Rossiter",
+        "timestamp": 1677064970
+    },
+    {
+        "content": "<p>Debug log coming.</p>",
+        "id": 329401632,
+        "sender_full_name": "Mike Rossiter",
+        "timestamp": 1677065324
+    },
+    {
+        "content": "<p><a href=\"/user_uploads/33951/uttLCmuloW4Z0JL3zydtX8W0/opencpn.debug.log\">opencpn.debug.log</a></p>",
+        "id": 329402573,
+        "sender_full_name": "Mike Rossiter",
+        "timestamp": 1677065582
+    },
+    {
+        "content": "<blockquote>\n<p>The first is that your use case is not that typical for most ordinary users which only have a small number of plugins installed</p>\n</blockquote>\n<p>I think my case is not typical but in the opposite direction. Most users on Win updating from 5.6.2 will have more plugins to update than me. Four plugins and more are not at all unusual. So I still see a list instead of single messages valuable for most users.</p>",
+        "id": 329415046,
+        "sender_full_name": "Håkan Svensson",
+        "timestamp": 1677069104
+    },
+    {
+        "content": "<p><span class=\"user-mention\" data-user-id=\"399559\">@Mike Rossiter</span> Thanks, good catch! No time now, will try to find som late today</p>",
+        "id": 329416742,
+        "sender_full_name": "Alec Leamas",
+        "timestamp": 1677069585
+    },
+    {
+        "content": "<p><span class=\"user-mention\" data-user-id=\"399559\">@Mike Rossiter</span>  BTW, any chance you could post a stack trace?</p>",
+        "id": 329417328,
+        "sender_full_name": "Alec Leamas",
+        "timestamp": 1677069734
+    },
+    {
+        "content": "<blockquote>\n<p>post a stack trace?</p>\n</blockquote>\n<p>With a program that crashes on starting? Tried Process Explorer without success.</p>",
+        "id": 329421200,
+        "sender_full_name": "Mike Rossiter",
+        "timestamp": 1677070756
+    },
+    {
+        "content": "<p>WinDbg:<br>\n<a href=\"/user_uploads/33951/bQfp5xfvnVz8PQPFI4gA7fyu/unloadable-3011.stack.txt\">unloadable-3011.stack.txt</a></p>",
+        "id": 329437367,
+        "sender_full_name": "Mike Rossiter",
+        "timestamp": 1677075236
+    },
+    {
+        "content": "<p>First was answering <em>yes</em> to safemode. This is with <em>no</em> - use plugins present.<br>\n<a href=\"/user_uploads/33951/7tSGWqfUX1spzqY1v_8rcIhY/unloadable-3011.stack2.txt\">unloadable-3011.stack2.txt</a></p>",
+        "id": 329438927,
+        "sender_full_name": "Mike Rossiter",
+        "timestamp": 1677075599
+    },
+    {
+        "content": "<p><span class=\"user-mention\" data-user-id=\"399559\">@Mike Rossiter</span>  thanks for all help! Currently making dinner for eight persons, so... </p>\n<p>So this happens in PluginNameCase, but unfortunately the stacktrace does not contain line numbers. If you have time,  could you try a patch like below to figure out where in PluginNameCase it happens?</p>\n<div class=\"codehilite\"><pre><span></span><code>diff --git a/src/plugin_handler.cpp b/src/plugin_handler.cpp\nindex b7230ceb0..0d628166b 100644\n--- a/src/plugin_handler.cpp\n+++ b/src/plugin_handler.cpp\n@@ -1135,22 +1135,29 @@ static std::string FindMatchingLibFile(std::regex name_re) {\n /** Best effort to return plugin name with correct case. */\n static std::string PluginNameCase(const std::string&amp; name) {\n   using namespace std;\n+wxLogDebug(&quot;PluginNameCase:1&quot;);\n   const string lc_name = ocpn::tolower(name);\n+wxLogDebug(&quot;PluginNameCase:2&quot;);\n   regex name_re(lc_name, regex_constants::icase | regex_constants::ECMAScript);\n+wxLogDebug(&quot;PluginNameCase:3&quot;);\n\n   // Look for matching plugin in list of installed and available.\n   // This often fails since the lists are not yet available when\n   // plugins are loaded, but is otherwise a safe bet.\n+wxLogDebug(&quot;PluginNameCase:4&quot;);\n   for (const auto&amp; plugin : PluginHandler::getInstance()-&gt;getInstalled()) {\n     if (ocpn::tolower(plugin.name) == lc_name) return plugin.name;\n   }\n+wxLogDebug(&quot;PluginNameCase:5&quot;);\n   for (const auto&amp; plugin : PluginHandler::getInstance()-&gt;getAvailable()) {\n     if (ocpn::tolower(plugin.name) == lc_name) return plugin.name;\n   }\n\n+wxLogDebug(&quot;PluginNameCase:6&quot;);\n   string match = FindMatchingDataDir(name_re);\n   if (match != &quot;&quot;) return match;\n\n+wxLogDebug(&quot;PluginNameCase:7&quot;);\n   match = FindMatchingLibFile(name_re);\n   return match != &quot;&quot; ? match : name;\n }\n</code></pre></div>",
+        "id": 329457858,
+        "sender_full_name": "Alec Leamas",
+        "timestamp": 1677079798
+    },
+    {
+        "content": "<p><span class=\"user-mention\" data-user-id=\"399510\">@Alec Leamas</span> <br>\n<a href=\"/user_uploads/33951/jr1oEjwebz63LRPSRENoBg1M/opencpn.3011.log\">opencpn.3011.log</a></p>",
+        "id": 329485198,
+        "sender_full_name": "Mike Rossiter",
+        "timestamp": 1677086331
+    },
+    {
+        "content": "<p>WinDbg stopped at the last line of this snippet in <em>xstring</em>.<br>\n<a href=\"/user_uploads/33951/FBzgcwjrX0Lt9oU1i6iAWh3l/3011.xtring.txt\">3011.xtring.txt</a></p>",
+        "id": 329491663,
+        "sender_full_name": "Mike Rossiter",
+        "timestamp": 1677087950
+    },
+    {
+        "content": "<p><span class=\"user-mention\" data-user-id=\"399559\">@Mike Rossiter</span> </p>\n<p>Unfortunatley, this does not help that much, it's too deep down the stack. The real question is frame <a href=\"https://github.com/opencpn/OpenCPN/issues/3\">#3</a>, the address is  <em>opencpn!PluginNameCase + 0x3f6</em>.  Have you any tools which convert this to a line number? Any decent debugger should be able to do that, for sure.</p>\n<p>If not, I will need to start up my windows biuld chain again.</p>",
+        "id": 329578525,
+        "sender_full_name": "Alec Leamas",
+        "timestamp": 1677097145
+    },
+    {
+        "content": "<p><span class=\"user-mention\" data-user-id=\"399510\">@Alec Leamas</span> Looking but not hopeful.</p>",
+        "id": 329656508,
+        "sender_full_name": "Mike Rossiter",
+        "timestamp": 1677141858
+    },
+    {
+        "content": "<p>Don't spend much time on it. If you have the time, it's probably better spent by adding the log statements above. That should give us a quick feedback on what's going on here. Slightly revised patch:</p>\n<div class=\"codehilite\"><pre><span></span><code>diff --git a/src/plugin_handler.cpp b/src/plugin_handler.cpp\nindex b7230ceb0..0d628166b 100644\n--- a/src/plugin_handler.cpp\n+++ b/src/plugin_handler.cpp\n@@ -1135,22 +1135,29 @@ static std::string FindMatchingLibFile(std::regex name_re) {\n /** Best effort to return plugin name with correct case. */\n static std::string PluginNameCase(const std::string&amp; name) {\n   using namespace std;\n+wxLogDebug(&quot;PluginNameCase: enter: %s&quot;, name.c_str());\n   const string lc_name = ocpn::tolower(name);\n+wxLogDebug(&quot;PluginNameCase:2&quot;);\n   regex name_re(lc_name, regex_constants::icase | regex_constants::ECMAScript);\n+wxLogDebug(&quot;PluginNameCase:3&quot;);\n\n   // Look for matching plugin in list of installed and available.\n   // This often fails since the lists are not yet available when\n   // plugins are loaded, but is otherwise a safe bet.\n+wxLogDebug(&quot;PluginNameCase:4&quot;);\n   for (const auto&amp; plugin : PluginHandler::getInstance()-&gt;getInstalled()) {\n     if (ocpn::tolower(plugin.name) == lc_name) return plugin.name;\n   }\n+wxLogDebug(&quot;PluginNameCase:5&quot;);\n   for (const auto&amp; plugin : PluginHandler::getInstance()-&gt;getAvailable()) {\n     if (ocpn::tolower(plugin.name) == lc_name) return plugin.name;\n   }\n\n+wxLogDebug(&quot;PluginNameCase:6&quot;);\n   string match = FindMatchingDataDir(name_re);\n   if (match != &quot;&quot;) return match;\n\n+wxLogDebug(&quot;PluginNameCase:7&quot;);\n   match = FindMatchingLibFile(name_re);\n   return match != &quot;&quot; ? match : name;\n }\n</code></pre></div>",
+        "id": 329657492,
+        "sender_full_name": "Alec Leamas",
+        "timestamp": 1677142201
+    },
+    {
+        "content": "<p>Think I have it ... line number 1158:<br>\nFAULTING_SOURCE_LINE_NUMBER:  1158</p>",
+        "id": 329657815,
+        "sender_full_name": "Mike Rossiter",
+        "timestamp": 1677142285
+    },
+    {
+        "content": "<p>Right... but in which file?</p>",
+        "id": 329657948,
+        "sender_full_name": "Alec Leamas",
+        "timestamp": 1677142308
+    },
+    {
+        "content": "<p><em>plugin_handler.cpp</em></p>",
+        "id": 329658574,
+        "sender_full_name": "Mike Rossiter",
+        "timestamp": 1677142459
+    },
+    {
+        "content": "<p>Yea, I figured... this is indeed a clue, but...</p>",
+        "id": 329658776,
+        "sender_full_name": "Alec Leamas",
+        "timestamp": 1677142514
+    },
+    {
+        "content": "<div class=\"codehilite\"><pre><span></span><code>STACK_COMMAND:  ~0s; .ecxr ; kb\n\nFAULTING_SOURCE_LINE:  D:\\Documents\\Github\\OpenCPN\\src\\plugin_handler.cpp\n\nFAULTING_SOURCE_FILE:  D:\\Documents\\Github\\OpenCPN\\src\\plugin_handler.cpp\n\nFAULTING_SOURCE_LINE_NUMBER:  1158\n\nSYMBOL_NAME:  opencpn!PluginNameCase+db5\n\nMODULE_NAME: opencpn\n\nIMAGE_NAME:  opencpn.exe\n\nFAILURE_BUCKET_ID:  NULL_POINTER_READ_c0000005_opencpn.exe!PluginNameCase\n\nOSPLATFORM_TYPE:  x86\n\nOSNAME:  Windows 10\n</code></pre></div>",
+        "id": 329658824,
+        "sender_full_name": "Mike Rossiter",
+        "timestamp": 1677142530
+    },
+    {
+        "content": "<p>Greta info, exactly what I looked for!</p>",
+        "id": 329658913,
+        "sender_full_name": "Alec Leamas",
+        "timestamp": 1677142555
+    },
+    {
+        "content": "<p>However, this is a comment line:</p>\n<div class=\"codehilite\"><pre><span></span><code>/**  map[key] = list-of-files given path to file containing paths. */\n</code></pre></div>\n<p>Questions:  what does these commands say?</p>\n<ul>\n<li><code>git branch</code></li>\n<li><code>git rev-parse HEAD</code></li>\n<li><code>git status</code></li>\n</ul>",
+        "id": 329659535,
+        "sender_full_name": "Alec Leamas",
+        "timestamp": 1677142743
+    },
+    {
+        "content": "<p><span class=\"user-mention\" data-user-id=\"399559\">@Mike Rossiter</span>  i. e., plugin_handler.cpp:1158 is that comment line. Ping?</p>",
+        "id": 329665050,
+        "sender_full_name": "Alec Leamas",
+        "timestamp": 1677144122
+    },
+    {
+        "content": "<p>Sorry ... because of the patch edits:<br>\n1158:  <code>match = FindMatchingLibFile(name_re);</code></p>",
+        "id": 329666883,
+        "sender_full_name": "Mike Rossiter",
+        "timestamp": 1677144665
+    },
+    {
+        "content": "<div class=\"codehilite\"><pre><span></span><code>Mike@DESKTOP-0OLHJEQ MINGW64 /d/Documents/Github/OpenCPN (unloadable-3011)\n$ git branch\n  master\n* unloadable-3011\n\nMike@DESKTOP-0OLHJEQ MINGW64 /d/Documents/Github/OpenCPN (unloadable-3011)\n$ git rev-parse HEAD\ndf28c020691a3c35e58f163054650965d51ac98e\n\nMike@DESKTOP-0OLHJEQ MINGW64 /d/Documents/Github/OpenCPN (unloadable-3011)\n$ git status\nRefresh index: 100% (4357/4357), done.\nOn branch unloadable-3011\nYour branch is up to date with &#39;origin/unloadable-3011&#39;.\n\nChanges not staged for commit:\n  (use &quot;git add &lt;file&gt;...&quot; to update what will be committed)\n  (use &quot;git restore &lt;file&gt;...&quot; to discard changes in working directory)\n        modified:   src/plugin_handler.cpp\n\nUntracked files:\n  (use &quot;git add &lt;file&gt;...&quot; to include in what will be committed)\n        leamas.OpenCPN.bat\n\nno changes added to commit (use &quot;git add&quot; and/or &quot;git commit -a&quot;)\n</code></pre></div>",
+        "id": 329667774,
+        "sender_full_name": "Mike Rossiter",
+        "timestamp": 1677144911
+    },
+    {
+        "content": "<p>ah... The pot thickens.</p>\n<p>there is this code:</p>\n<div class=\"codehilite\"><pre><span></span><code>  string match = FindMatchingDataDir(name_re);\n  if (match != &quot;&quot;) return match;\n\n  match = FindMatchingLibFile(name_re);\n  return match != &quot;&quot; ? match : name;\n</code></pre></div>\n<p>name_re seems to be sound, it works in line above. Thinking...</p>",
+        "id": 329673583,
+        "sender_full_name": "Alec Leamas",
+        "timestamp": 1677146541
+    },
+    {
+        "content": "<p>Ok... if you have time. First, get rid of the printouts now when we know where it happens using <code>git checkout .</code> from the top directory. Verify using <code>git status</code>that there is no diff.</p>\n<p>Then, apply this patch. It is just to streamline to what worked in the two lines above while making sure that nothing bad happens to name_re:</p>\n<div class=\"codehilite\"><pre><span></span><code>iff --git a/src/plugin_handler.cpp b/src/plugin_handler.cpp\nindex b7230ceb0..4a92eaa81 100644\n--- a/src/plugin_handler.cpp\n+++ b/src/plugin_handler.cpp\n@@ -1085,7 +1085,7 @@ using PluginMap = std::unordered_map&lt;std::string, std::vector&lt;std::string&gt;&gt;;\n  * existing, but all plugins does not have a data directory.\n  * @return Matched directory name or &quot;&quot; if not found.\n  */\n-static std::string FindMatchingDataDir(std::regex name_re) {\n+static std::string FindMatchingDataDir(const std::regex&amp; name_re) {\n   using namespace std;\n   wxString data_dirs(g_BasePlatform-&gt;GetPluginDataPath());\n   wxStringTokenizer tokens(data_dirs, &quot;;&quot;);\n@@ -1113,7 +1113,7 @@ static std::string FindMatchingDataDir(std::regex name_re) {\n  * Look in library dirs for matching .dll/.so/.dylib and use matched name.\n  * @return matched part of found library name or &quot;&quot; if not found\n  */\n-static std::string FindMatchingLibFile(std::regex name_re) {\n+static std::string FindMatchingLibFile(const std::regex&amp; name_re) {\n   using namespace std;\n   for (const auto&amp; lib : PluginPaths::getInstance()-&gt;Libdirs()) {\n     wxDir dir(lib);\n@@ -1152,7 +1152,9 @@ static std::string PluginNameCase(const std::string&amp; name) {\n   if (match != &quot;&quot;) return match;\n\n   match = FindMatchingLibFile(name_re);\n-  return match != &quot;&quot; ? match : name;\n+  if (match != &quot;&quot;) return match;\n+\n+  return &quot;&quot;;\n</code></pre></div>\n<p>I'm worried we are facing some strange compiler (language?) issue here.</p>",
+        "id": 329674550,
+        "sender_full_name": "Alec Leamas",
+        "timestamp": 1677146845
+    },
+    {
+        "content": "<p>Working on this.</p>",
+        "id": 329676162,
+        "sender_full_name": "Mike Rossiter",
+        "timestamp": 1677147293
+    },
+    {
+        "content": "<p><code>1&gt;D:\\Documents\\Github\\OpenCPN\\src\\plugin_handler.cpp(1133): warning C4715: 'FindMatchingLibFile': not all control paths return a value</code></p>\n<p>Now to add the patch.</p>",
+        "id": 329676884,
+        "sender_full_name": "Mike Rossiter",
+        "timestamp": 1677147495
+    },
+    {
+        "content": "<blockquote>\n<p>1&gt;D:\\Documents\\Github\\OpenCPN\\src\\plugin_handler.cpp(1133): warning C4715: 'FindMatchingLibFile': not all control paths return a value</p>\n</blockquote>\n<p>hm... That is probably the issue. Almost certainly fixed by this:</p>\n<div class=\"codehilite\"><pre><span></span><code>iff --git a/src/plugin_handler.cpp b/src/plugin_handler.cpp\nindex b7230ceb0..f5357f9e5 100644\n--- a/src/plugin_handler.cpp\n+++ b/src/plugin_handler.cpp\n@@ -1130,6 +1130,7 @@ static std::string FindMatchingLibFile(std::regex name_re) {\n       cont = dir.GetNext(&amp;filename);\n     }\n   }\n+  return &quot;&quot;;\n }\n</code></pre></div>",
+        "id": 329684719,
+        "sender_full_name": "Alec Leamas",
+        "timestamp": 1677149428
+    },
+    {
+        "content": "<p>Yes ...  Also suggestion from VS2022:</p>\n<div class=\"codehilite\"><pre><span></span><code>for (auto c : sm) ss &lt;&lt; c;\n        return ss.str();\n</code></pre></div>\n<p>Change to :</p>\n<div class=\"codehilite\"><pre><span></span><code>for (auto &amp;c : sm) ss &lt;&lt; c;\n        return ss.str();\n</code></pre></div>",
+        "id": 329686023,
+        "sender_full_name": "Mike Rossiter",
+        "timestamp": 1677149840
+    },
+    {
+        "content": "<p>Used the suggestion and your <code>return \"\";</code><br>\nSuccess - no crash.</p>",
+        "id": 329687083,
+        "sender_full_name": "Mike Rossiter",
+        "timestamp": 1677150148
+    },
+    {
+        "content": "<p>Many, many thanks!  Owe you a beer!</p>",
+        "id": 329687739,
+        "sender_full_name": "Alec Leamas",
+        "timestamp": 1677150319
+    },
+    {
+        "content": "<blockquote>\n<p>for (auto c : sm) ss &lt;&lt; c;<br>\n        return ss.str();</p>\n</blockquote>\n<p>That's a worth-wile optimization, I'll include it.</p>",
+        "id": 329688006,
+        "sender_full_name": "Alec Leamas",
+        "timestamp": 1677150389
+    },
+    {
+        "content": "<p>Two plugins - o-charts andShipDriver.<br>\nInstall the plugins. Close 5.6.2<br>\nThen start 5.7.1 - detects and removes o-charts.<br>\nit detects the incompatible ShipDriver plugin  (<em>opencpn.log</em>) but does not offer to remove it. Only happens when OpenCPN is restarted. Loop problem?</p>",
+        "id": 329692521,
+        "sender_full_name": "Mike Rossiter",
+        "timestamp": 1677151710
+    },
+    {
+        "content": "<p>I'll look into it later. Should not block the PR, but should be fixed.</p>",
+        "id": 329702105,
+        "sender_full_name": "Alec Leamas",
+        "timestamp": 1677154456
+    },
+    {
+        "content": "<p><code>Dropping overflowed notification: ShipDriver</code> showing in the debug log.<br>\nThis is the second plugin for removal.<br>\n<a href=\"/user_uploads/33951/FAjcJ-8MqIARNC9EAu6o-izj/opencpn.overflow.log\">opencpn.overflow.log</a></p>",
+        "id": 329777954,
+        "sender_full_name": "Mike Rossiter",
+        "timestamp": 1677173251
+    },
+    {
+        "content": "<p><em>plugin_loader.cpp</em><br>\nLine 214:</p>\n<div class=\"codehilite\"><pre><span></span><code>if (deferred_notifies.size() &gt; 0) {\n       wxLogDebug(&quot;Dropping overflowed notification: %s&quot;, s.c_str());\n       return;\n    }\n</code></pre></div>\n<p>Line 228:</p>\n<div class=\"codehilite\"><pre><span></span><code>if (deferred_notifies.size() &gt; 0) {\n       wxLogDebug(&quot;Dropping overflowed notification:  %s&quot;,  p-&gt;name.c_str());\n       return;\n    }\n</code></pre></div>\n<p>Remove these two sections and we get dialogs to remove each plugin, in turn.</p>",
+        "id": 329782008,
+        "sender_full_name": "Mike Rossiter",
+        "timestamp": 1677174391
+    },
+    {
+        "content": "<p>I saw in Crowdin quit a number of wxLogMessage marked for translation. <br>\nOne example: Key: PlugInManager: Cannot load symbol create_pi:<br>\n#: src/plugin_loader.cpp:1236<br>\nWe haven't so far translated log messages. That may be difficult to understand sending log file to developers?<br>\nI suggest to make all \"wxLogMessage\" not translatable?</p>",
+        "id": 336489043,
+        "sender_full_name": "Håkan Svensson",
+        "timestamp": 1677247029
+    },
+    {
+        "content": "<p>I basically agree, there should be no messages only used in he log which are translated. MIght be an oversight, or (some cases)  a message which is used both in the log and in the GUI</p>",
+        "id": 336526937,
+        "sender_full_name": "Alec Leamas",
+        "timestamp": 1677255922
+    },
+    {
+        "content": "<p>So if used in wxLogMessage  please don't make it being translated. What if you got a log file in Chinese to investigate?</p>",
+        "id": 336561025,
+        "sender_full_name": "Håkan Svensson",
+        "timestamp": 1677265290
+    },
+    {
+        "content": "<blockquote>\n<p>or (some cases) a message which is used both in the log and in the GUI</p>\n</blockquote>\n<p>In that case I suggest you use two different text strings. One in English for the log and one translated for the user interface.</p>",
+        "id": 337886832,
+        "sender_full_name": "Håkan Svensson",
+        "timestamp": 1677273028
+    },
+    {
+        "content": "<p><span class=\"user-mention\" data-user-id=\"399559\">@Mike Rossiter</span>  This is a work around for otherwise colliding when trying to run two modal dialogs concurrently. It's about how the events are handled in the gui. Need to investigate further.</p>",
+        "id": 337893231,
+        "sender_full_name": "Alec Leamas",
+        "timestamp": 1677275510
+    },
+    {
+        "content": "<p><span class=\"user-mention\" data-user-id=\"522486\">@Håkan Svensson</span>  Actually, walking your path with a common dialog for all load errors would resolve the race conditions behind <span class=\"user-mention\" data-user-id=\"399559\">@Mike Rossiter</span> 's observation. This is a major redesign,  but probably worth the effort.  I'll  try to find some time for  it.</p>",
+        "id": 337946951,
+        "sender_full_name": "Alec Leamas",
+        "timestamp": 1677310781
+    },
+    {
+        "content": "<p><span class=\"user-mention\" data-user-id=\"517002\">@Dave Register</span> ^</p>",
+        "id": 337946967,
+        "sender_full_name": "Alec Leamas",
+        "timestamp": 1677310790
+    },
+    {
+        "content": "<p><span class=\"user-mention\" data-user-id=\"522486\">@Håkan Svensson</span>  <span class=\"user-mention\" data-user-id=\"399559\">@Mike Rossiter</span> <span class=\"user-mention\" data-user-id=\"517002\">@Dave Register</span>  I have updated <a href=\"https://github.com/OpenCPN/OpenCPN/pull/3024\">https://github.com/OpenCPN/OpenCPN/pull/3024</a> with a more or less complete rewrite of the handling of unloadable plugins. GUI-wise, here is now a single dialog with all reported errors and plugins/libs to remove (see below). It's still a bit rough, but should be testable.</p>\n<p><a href=\"/user_uploads/33951/74i_TpP2dEp4reWS-M7Dlo16/image.png\">image.png</a></p>\n<div class=\"message_inline_image\"><a href=\"/user_uploads/33951/74i_TpP2dEp4reWS-M7Dlo16/image.png\" title=\"image.png\"><img src=\"/user_uploads/33951/74i_TpP2dEp4reWS-M7Dlo16/image.png\"></a></div>",
+        "id": 338198878,
+        "sender_full_name": "Alec Leamas",
+        "timestamp": 1677441432
+    },
+    {
+        "content": "<p><span class=\"user-mention\" data-user-id=\"399510\">@Alec Leamas</span> <br>\nShall I accept the PR now?</p>",
+        "id": 338231289,
+        "sender_full_name": "Dave Register",
+        "timestamp": 1677467429
+    },
+    {
+        "content": "<blockquote>\n<p>You might want to reinstall them after updating the catalog</p>\n</blockquote>\n<p>Small point but how about:<br>\n<em>You might want to install a newer version after updating the catalog.</em></p>",
+        "id": 338261924,
+        "sender_full_name": "Tony Voss",
+        "timestamp": 1677485682
+    },
+    {
+        "content": "<p>I have done the testing I can. However, both <span class=\"user-mention\" data-user-id=\"522486\">@Håkan Svensson</span>  and <span class=\"user-mention\" data-user-id=\"399559\">@Mike Rossiter</span>  have been able to find important issues. Let's at least give them time over today to see if they have time and test cases , their last finding was extremely useful. </p>\n<p>If nothing happens over the day here in Europe I suggest you merge late your time.</p>",
+        "id": 338262522,
+        "sender_full_name": "Alec Leamas",
+        "timestamp": 1677485861
+    },
+    {
+        "content": "<p>It's not working as expected in Win10. See comments on the PR <a href=\"https://github.com/opencpn/OpenCPN/issues/3024\">#3024</a></p>",
+        "id": 338264884,
+        "sender_full_name": "Håkan Svensson",
+        "timestamp": 1677486645
+    },
+    {
+        "content": "<p>Crash here as well. Win10. Using a fork of <em>leamas/unloadable-3011</em>. No edits.<br>\n<a href=\"/user_uploads/33951/DKhQEpL0u0gCM0uTVUnhkblj/unloadable-3011.stack3.txt\">unloadable-3011.stack3.txt</a></p>",
+        "id": 338313298,
+        "sender_full_name": "Mike Rossiter",
+        "timestamp": 1677500803
+    },
+    {
+        "content": "<p>Like <span class=\"user-mention\" data-user-id=\"522486\">@Håkan Svensson</span>  I see a deleted plugin remaining in the list (WeatherFax).</p>",
+        "id": 338314137,
+        "sender_full_name": "Mike Rossiter",
+        "timestamp": 1677501094
+    },
+    {
+        "content": "<p>Due to <em>weatherfax.files</em> remaining in <em>install_data</em>?</p>",
+        "id": 338315577,
+        "sender_full_name": "Mike Rossiter",
+        "timestamp": 1677501538
+    },
+    {
+        "content": "<p>WeatherFax has the same version number in both master catalogs - 5.6.2/5.7.1.</p>",
+        "id": 338318466,
+        "sender_full_name": "Mike Rossiter",
+        "timestamp": 1677502292
+    },
+    {
+        "content": "<p><span class=\"user-mention\" data-user-id=\"399559\">@Mike Rossiter</span>  Can you re-check after the latest changes?</p>",
+        "id": 338394980,
+        "sender_full_name": "Alec Leamas",
+        "timestamp": 1677517414
+    },
+    {
+        "content": "<p><span class=\"user-mention\" data-user-id=\"399510\">@Alec Leamas</span> : Will do.</p>",
+        "id": 338397483,
+        "sender_full_name": "Mike Rossiter",
+        "timestamp": 1677518029
+    },
+    {
+        "content": "<p>Slightly different workflow. Using a parallel installation and moving between 5.6.2 and 5.7.1.</p>\n<p>No crashes with the latest 5.7.1 from <em>unloadable-3011</em> but WeatherFax remains in the list with the jigsaw icon after it is deleted in 5.7.1. Remains in the list after a restart.</p>\n<p>WeatherFax is the outlier cannot make it happen with Calculator, ais-vd or PhotoLayer.</p>",
+        "id": 338412524,
+        "sender_full_name": "Mike Rossiter",
+        "timestamp": 1677521066
+    },
+    {
+        "content": "<p>THanks! WIll try tp reproduce, but first need to make my bread...</p>",
+        "id": 338428898,
+        "sender_full_name": "Alec Leamas",
+        "timestamp": 1677525445
+    },
+    {
+        "content": "<p><span class=\"user-mention\" data-user-id=\"399559\">@Mike Rossiter</span>   Sorry, cannot reproduce...  have you a weatherfax plugin for flatpak/22.08 available in some cloudsmith repo?</p>",
+        "id": 338526468,
+        "sender_full_name": "Alec Leamas",
+        "timestamp": 1677573305
+    },
+    {
+        "content": "<p>Pushed some changes after discussion with Håkan, but I doubt these are related to the weatherfax problem. A helpful thing would be a <em>--loglevel debug</em> log from a run where you  (try to)  remove weatherfax. If you have time, that is.</p>",
+        "id": 338526871,
+        "sender_full_name": "Alec Leamas",
+        "timestamp": 1677573458
+    },
+    {
+        "content": "<p>Top of the list here?:<br>\n<a href=\"https://cloudsmith.io/~opencpn/repos/weatherfax-prod/packages/?q=flatpak\">https://cloudsmith.io/~opencpn/repos/weatherfax-prod/packages/?q=flatpak</a></p>",
+        "id": 338527986,
+        "sender_full_name": "Mike Rossiter",
+        "timestamp": 1677573883
+    },
+    {
+        "content": "<p>There is an unknown error against weatherfax and <em>weatherfax.files</em> remains in <em>plugins/install_data</em>. Tried to uninstall which resulted in extra debugging stuff as it check compatibility.<br>\n<a href=\"/user_uploads/33951/864PC59cB1nJ5CJpXKcrCR59/opencpn.weatherfax.log.txt\">opencpn.weatherfax.log.txt</a></p>",
+        "id": 338530002,
+        "sender_full_name": "Mike Rossiter",
+        "timestamp": 1677574586
+    },
+    {
+        "content": "<p>hm... so, after that run, is the file <em>C:\\ProgramData\\opencpn\\\\plugins\\install_data\\weatherfax.files</em> still there?</p>",
+        "id": 338548678,
+        "sender_full_name": "Alec Leamas",
+        "timestamp": 1677579998
+    },
+    {
+        "content": "<p>Yes it is. Same happens with <em>ais-vd.files</em> but <em>ais-vd</em> is not shown in the list with a jigsaw icon.</p>",
+        "id": 338549434,
+        "sender_full_name": "Mike Rossiter",
+        "timestamp": 1677580234
+    },
+    {
+        "content": "<p>No warning from the compiler in the plugins area when opencpn was rebuilt.</p>",
+        "id": 338550861,
+        "sender_full_name": "Mike Rossiter",
+        "timestamp": 1677580654
+    },
+    {
+        "content": "<p>Can you try this patch? It might be about silly windows restricted file access...</p>\n<div class=\"codehilite\"><pre><span></span><code>diff --git a/src/plugin_handler.cpp b/src/plugin_handler.cpp\nindex 03bf35024..461bb1913 100644\n--- a/src/plugin_handler.cpp\n+++ b/src/plugin_handler.cpp\n@@ -1056,6 +1056,7 @@ bool PluginHandler::uninstall(const std::string plugin_name) {\n     files.getline(line, sizeof(line));\n     plug_paths.push_back(line);\n   }\n+  files.close();\n   for (const auto&amp; p : plug_paths) {\n     if (isRegularFile(p.c_str())) {\n       int r = remove(p.c_str());\n</code></pre></div>",
+        "id": 338551243,
+        "sender_full_name": "Alec Leamas",
+        "timestamp": 1677580783
+    },
+    {
+        "content": "<p>That solved the issue. Many thanks.</p>",
+        "id": 338555450,
+        "sender_full_name": "Mike Rossiter",
+        "timestamp": 1677581938
+    },
+    {
+        "content": "<p>I actually owe you a beer... thanks for all testing!</p>",
+        "id": 338555565,
+        "sender_full_name": "Alec Leamas",
+        "timestamp": 1677581980
+    },
+    {
+        "content": "<p><span class=\"user-mention\" data-user-id=\"517002\">@Dave Register</span> <span class=\"user-mention\" data-user-id=\"399510\">@Alec Leamas</span> <br>\nI'm coming back to an old issue after visiting a friends Win10.<br>\nThe unsupported plugin message was replayed every time he opened OCPN. Also if he all times answered OK on the \"...will be removed\" dialog.<br>\nI may understand what's it's all about but he didn't. See picture:<br>\nIf old plugins in \"Program files...\" can't be removed we either have to change the message to \"Please manually delete the listed files since OCPN can't remove files in a protected folder\"  or don't message for files that not will be loaded and won't disturb.</p>\n<p><a href=\"/user_uploads/33951/oNutvXnq7AUZM83vOxPmplVm/bild.png\">bild.png</a></p>\n<div class=\"message_inline_image\"><a href=\"/user_uploads/33951/oNutvXnq7AUZM83vOxPmplVm/bild.png\" title=\"bild.png\"><img src=\"/user_uploads/33951/oNutvXnq7AUZM83vOxPmplVm/bild.png\"></a></div>",
+        "id": 340212539,
+        "sender_full_name": "Håkan Svensson",
+        "timestamp": 1678222713
+    },
+    {
+        "content": "<p><span class=\"user-mention\" data-user-id=\"522486\">@Håkan Svensson</span> <br>\nI agree.  Unfriendly behavior.<br>\nThis method to validate plugins should not be concerned about \"old\" plugins in \"Program Files/...\".  They are dormant, except for the 4 in-built plugins.<br>\nA simple thing to do is to check if offending \"Program Files/...\" plugins are in the list of four standard plugins.  If not, simply ignore them, since we cannot remove them inline without elevation to Admin permissions.<br>\n<span class=\"user-mention\" data-user-id=\"399510\">@Alec Leamas</span> <br>\nAny reason not to do this?</p>",
+        "id": 340220384,
+        "sender_full_name": "Dave Register",
+        "timestamp": 1678225640
+    },
+    {
+        "content": "<p>no, just short of time</p>",
+        "id": 340220599,
+        "sender_full_name": "Alec Leamas",
+        "timestamp": 1678225711
+    },
+    {
+        "content": "<p>however. it  will be clumsy code taking three platforms into consideration</p>",
+        "id": 340220749,
+        "sender_full_name": "Alec Leamas",
+        "timestamp": 1678225780
+    },
+    {
+        "content": "<p>Yes.  Not so pretty.  OK, I'll take crack at it tonight.</p>",
+        "id": 340220905,
+        "sender_full_name": "Dave Register",
+        "timestamp": 1678225830
+    },
+    {
+        "content": "<p><span class=\"user-mention\" data-user-id=\"399510\">@Alec Leamas</span> <br>\nI implemented as discussed.  Not so ugly after all, the parts were already built.<br>\nBut in testing, I did discover what I think is a bug, and attempted correction in <a href=\"https://github.com/opencpn/OpenCPN/commit/b06d73f8943434a09934d91e4894df3a5075bef8\">b06d73f8943434a09934d91e4894df3a5075bef8</a><br>\nPlease review and comment.</p>",
+        "id": 340267940,
+        "sender_full_name": "Dave Register",
+        "timestamp": 1678251186
+    },
+    {
+        "content": "<p>Dated plugins in \"C:\\Program Files (x86)\\OpenCPN\\plugins\" now nicely ignored. Both by messaging and loading functions. One row in the log file for anyone to use while house holding the disk.<br>\nThanks.</p>",
+        "id": 340286924,
+        "sender_full_name": "Håkan Svensson",
+        "timestamp": 1678261326
+    }
+]

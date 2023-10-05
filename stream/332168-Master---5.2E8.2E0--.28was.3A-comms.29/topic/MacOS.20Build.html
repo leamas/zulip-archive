@@ -1,0 +1,519 @@
+<html>
+<head><meta charset="utf-8"><title>MacOS Build · Master - 5.8.0  (was: comms) · Zulip Chat Archive</title></head>
+<h2>Stream: <a href="https://leamas.github.io/zulip-archive/stream/332168-Master---5.2E8.2E0--.28was.3A-comms.29/index.html">Master - 5.8.0  (was: comms)</a></h2>
+<h3>Topic: <a href="https://leamas.github.io/zulip-archive/stream/332168-Master---5.2E8.2E0--.28was.3A-comms.29/topic/MacOS.20Build.html">MacOS Build</a></h3>
+
+<hr>
+
+<base href="https://opencpn.zulipchat.com">
+
+<head><link href="https://leamas.github.io/zulip-archive/style.css" rel="stylesheet"></head>
+
+<a name="320578817"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332168-Master%20-%205.8.0%20%20%28was%3A%20comms%29/topic/MacOS%20Build/near/320578817" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Dave Register <a href="https://leamas.github.io/zulip-archive/stream/332168-Master---5.2E8.2E0--.28was.3A-comms.29/topic/MacOS.20Build.html#320578817">(Jan 11 2023 at 01:55)</a>:</h4>
+<p>New Topic to discuss MacOS build process</p>
+
+
+
+<a name="320578909"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332168-Master%20-%205.8.0%20%20%28was%3A%20comms%29/topic/MacOS%20Build/near/320578909" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Dave Register <a href="https://leamas.github.io/zulip-archive/stream/332168-Master---5.2E8.2E0--.28was.3A-comms.29/topic/MacOS.20Build.html#320578909">(Jan 11 2023 at 01:56)</a>:</h4>
+<p>It will help to review the MacOS build process.<br>
+The build starts with normal compile and link.  Nothing special here.<br>
+The next steps, however, are very Mac specific.<br>
+A MacOS app is shipped as a bundle, containing all of the libraries required to run the app that are not normally found on a bare metal machine.  Call these libraries "special". The list includes things like wxWidgets, SSL, etc. This strategy is part of the way Apple avoids trouble when they make frequent ABI changes to libraries.  The app builder (us) needs to ensure that the build machine has appropriate versions of libraries needed at run time.  And also ensure that they get copied into the bundle.</p>
+<p>After the conventional compile/link, the process of building the bundle belongs to an Apple authored script called "fixup_bundle".  His first job is to execute a test link/load of the app, something like "ldd" on linux. Using the results, he attempts to locate and move/copy the required "special" libraries to the target bundle location.  This way, they will be known to be present on whatever system the target runs on, and are known to be compatible with the app.  Libraries bundled in the app take precedence over any similarly named libraries on the target system.</p>
+<p>The next step is to prepare a release package.  There are two conventional formats:</p>
+<ol>
+<li>DMG (Disk image) format.  The format makes a mountable disk image of the entire bundle, which may be copied onto the target system, and thereby run.  Important to note that the DMG contains a verbatim copy of the constructed bundle.</li>
+<li>PKG (Package) format.  The PKG format distributable app is itself an installer executable, similar to NSIS install found on Windows.  Most apps are distributed in this format, because is is more intuitive to end users.  This is the method we prefer for OCPN, although we build DMG images also, for completeness.</li>
+</ol>
+<p>There is one key difference in the two distribution formats.  A DMG by default contains a verbatim copy of the bundle. However, the PKG format is created from a script maintained as part of the OCPN source tree.  Due to the nature of the app that builds the PKG (cleverly called Packages), each library, symlink, and resource present in the constructed bundle must be explicitely specified in the script template.  This has implications.</p>
+<p>Historically, OCPN built for various MacOS versions has ended up using the same set of "special" libraries and resources.  So it is simple to hard-code that list into the script template, and build for whatever version is required.  But MacOS 11+ changed that.  In MacOS 11, "the fixup_bundle" utility ends up including one or more libraries that are required by MacOS 11, but are not required (or even available) for MacOS 10.  So this happens:  If we code the PKG script to include all libs required for 11, it will fail when building a PKG for 10, since some files may not be present on 10.  Conversely, if we leave the "missing" libs out of the script, the MacOS 11 will fail at runtime, since it needs the "missing" library.</p>
+<p>Stepping back to the DMG format.  The DMG built for MacOS 11 will install and run on both MacOS 10.x and MacOS 11.  Why does this work? The "missing" file needed for MacOS 11 is in the DMG, and is simply ignored on MacOS 10.  So we can conclude from this that we have a simple packaging problem, no more involved than that.</p>
+<p>So, how to fix this? Two possiblities:</p>
+<p>If we want a single PKG distributable for both MacOS 10 and 11, the simplest thing is to include correctly named "dummy" files in the MacOS 10 bundle, and let the Packages script copy these dummies into the PKG installer, where they will do no harm.  On the MacOS 11 build, we of course use the real files.<br>
+This solution has the feel of a hack, but gives us a single PKG that will run on both systems.</p>
+<p>..or..</p>
+<p>We could build a clever script that will do this:</p>
+<ol>
+<li>Read the contents of the constructed bundle, especially the location of the required special libraries ("Framework")</li>
+<li>edit (sed?) the Packages scrip template to include exactly the special files found in the constructed bundle.</li>
+<li>Using CMake, probably, convert the script template into actual script, making appropriate envirnment substitutions as is done today.</li>
+<li>Run Packages against this script.</li>
+</ol>
+<p>This process will of course build a different package for MacOS 10 than for MacOS 11.  This may not be what we want, but it is the "correct" solution.</p>
+<p>Thoughts, all?</p>
+
+
+
+<a name="320656934"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332168-Master%20-%205.8.0%20%20%28was%3A%20comms%29/topic/MacOS%20Build/near/320656934" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Alec Leamas <a href="https://leamas.github.io/zulip-archive/stream/332168-Master---5.2E8.2E0--.28was.3A-comms.29/topic/MacOS.20Build.html#320656934">(Jan 11 2023 at 09:49)</a>:</h4>
+<p>Question 1: when  is <span class="user-mention" data-user-id="573239">@Pavel Kalian</span>  back from Antarctica? ^</p>
+
+
+
+<a name="320659846"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332168-Master%20-%205.8.0%20%20%28was%3A%20comms%29/topic/MacOS%20Build/near/320659846" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Alec Leamas <a href="https://leamas.github.io/zulip-archive/stream/332168-Master---5.2E8.2E0--.28was.3A-comms.29/topic/MacOS.20Build.html#320659846">(Jan 11 2023 at 10:07)</a>:</h4>
+<p>Q 2: Should we still ship both .dmg and .pkg installers? It seems like quite some work with little upside.</p>
+<p>Q3: Should we  continue on the current approach to patch the  installer "script" or rather configuration file or try to run some tool which creates  a pkg directly from either the bundle directory or the dmg , both of which created by cmake? Seems like a more robust approach if we could make it work.</p>
+<p>Q4: If we continue the current approach, wouldn't it be easier to have two templates: one for "oldest" (10.15) and one for "current" ,  for now macos-11 in GA? Should minimize the need to patch.</p>
+
+
+
+<a name="320661782"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332168-Master%20-%205.8.0%20%20%28was%3A%20comms%29/topic/MacOS%20Build/near/320661782" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Alec Leamas <a href="https://leamas.github.io/zulip-archive/stream/332168-Master---5.2E8.2E0--.28was.3A-comms.29/topic/MacOS.20Build.html#320661782">(Jan 11 2023 at 10:19)</a>:</h4>
+<p>On a sidenote we  IMHO  really should start building macos-12  instead of 11 on GA. With Macos-13 already in the wild, it seems strange not being able to build for 12. Not  suggesting we should build both all three, just 10.15 and 12.</p>
+
+
+
+<a name="320749384"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332168-Master%20-%205.8.0%20%20%28was%3A%20comms%29/topic/MacOS%20Build/near/320749384" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Dave Register <a href="https://leamas.github.io/zulip-archive/stream/332168-Master---5.2E8.2E0--.28was.3A-comms.29/topic/MacOS.20Build.html#320749384">(Jan 11 2023 at 16:53)</a>:</h4>
+<p>Quick, more later.<br>
+It seems that our CI build for MacOS 11 works everywhere tested so far.  So why do we need system version-dependent MacOS builds, anyway?  Best if we have only one, that works everywhere.</p>
+
+
+
+<a name="320790558"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332168-Master%20-%205.8.0%20%20%28was%3A%20comms%29/topic/MacOS%20Build/near/320790558" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Alec Leamas <a href="https://leamas.github.io/zulip-archive/stream/332168-Master---5.2E8.2E0--.28was.3A-comms.29/topic/MacOS.20Build.html#320790558">(Jan 11 2023 at 20:25)</a>:</h4>
+<p>I think the logic for two builds is clear. The "old " is what works everywhere, the latest build (12 or 13 today) is about picking up and handling changes in os and tools when they happen in good order. The alternative is to just build for say 10.15 and face an uphill battle when it's time to move on.</p>
+
+
+
+<a name="320820896"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332168-Master%20-%205.8.0%20%20%28was%3A%20comms%29/topic/MacOS%20Build/near/320820896" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Dave Register <a href="https://leamas.github.io/zulip-archive/stream/332168-Master---5.2E8.2E0--.28was.3A-comms.29/topic/MacOS.20Build.html#320820896">(Jan 12 2023 at 00:06)</a>:</h4>
+<p>Hmmm....<br>
+Ok, that is some good logic, though I cannot remember seeing it stated so before now.</p>
+<p>On the other hand, I am focused on shipping one PKG that runs on all versions, from a reasonable legacy version (2-3 years old) through to current MacOS release at the time we ship.  One PKG.</p>
+<p>So, if our build for 10.15 will do that, then we should defer the 11/12/13 optimizations until:<br>
+a)  we have no choice, since we cannot run , say on 13+, without a new build for that version, or<br>
+b) enough time passes that we can safely drop some legacy support, and shift minimum supported version to 11 or so.</p>
+<p>Another wrinkle.  When/if we learn how, we want someday to publish an Apple-silicon native version, not relying on Rosetta emulater, for M1/M2 archs.  Hopefully this could be done with a "universal" binary package, of some sort.</p>
+<p>Perhaps we should today focus on the 10.15 build, and test on all possible MacOS versions we can get out hands on.  I will start some of that.  I have access to several MacOS versions.  To do that, we will need to adopt your Q4 suggestion above.  No problem, just more to maintain.....</p>
+
+
+
+<a name="320821843"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332168-Master%20-%205.8.0%20%20%28was%3A%20comms%29/topic/MacOS%20Build/near/320821843" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Dave Register <a href="https://leamas.github.io/zulip-archive/stream/332168-Master---5.2E8.2E0--.28was.3A-comms.29/topic/MacOS.20Build.html#320821843">(Jan 12 2023 at 00:14)</a>:</h4>
+<p>And to answer your questions, IMHO:</p>
+<ol>
+<li>Don't know.  Summer down there, could be awhile. We need to move forward from where we are.</li>
+<li>Traditionally, I have dropped the DMG production from the script at production release.  Agree there is no need for it when the PKG works.  OTOH, it is just one line in the script, and has never been seen to fail on OCPN project.</li>
+<li>I would not want to try and replicate the functions of the Packages app that builds the PKG.  There is a GUI involved, as with NSIS.  Might make sense to see if there is improved version of Packages available, with say file globbing support....</li>
+<li>Two templates: Agree, so at least both 10.15 and 11 builds will complete without error on GA, and work at runtime, too.</li>
+</ol>
+
+
+
+<a name="320945654"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332168-Master%20-%205.8.0%20%20%28was%3A%20comms%29/topic/MacOS%20Build/near/320945654" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Alec Leamas <a href="https://leamas.github.io/zulip-archive/stream/332168-Master---5.2E8.2E0--.28was.3A-comms.29/topic/MacOS.20Build.html#320945654">(Jan 12 2023 at 14:06)</a>:</h4>
+<blockquote>
+<p>then we should defer the 11/12/13 optimizations until:</p>
+</blockquote>
+<p>It's not so much about optimizations  as making sure we don't do things which does not work in later versions. Even if the produced binary works, we might start doing things build-time things which works in the old environment, but not in later ones. In short, it's about staying on track</p>
+
+
+
+<a name="320948274"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332168-Master%20-%205.8.0%20%20%28was%3A%20comms%29/topic/MacOS%20Build/near/320948274" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Alec Leamas <a href="https://leamas.github.io/zulip-archive/stream/332168-Master---5.2E8.2E0--.28was.3A-comms.29/topic/MacOS.20Build.html#320948274">(Jan 12 2023 at 14:15)</a>:</h4>
+<blockquote>
+<p>I would not want to try and replicate the functions of the Packages app that builds the PKG.</p>
+</blockquote>
+<p>Nor would I. However, there seems to be tools out there .  For example, isn't the standard <em>pkgbuild(1)</em> assumed to do this?</p>
+
+
+
+<a name="320971073"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332168-Master%20-%205.8.0%20%20%28was%3A%20comms%29/topic/MacOS%20Build/near/320971073" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Dave Register <a href="https://leamas.github.io/zulip-archive/stream/332168-Master---5.2E8.2E0--.28was.3A-comms.29/topic/MacOS.20Build.html#320971073">(Jan 12 2023 at 15:49)</a>:</h4>
+<p>I do not know what pkgbuild(1) does on MacOS.  I'll check.</p>
+
+
+
+<a name="321026728"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332168-Master%20-%205.8.0%20%20%28was%3A%20comms%29/topic/MacOS%20Build/near/321026728" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Alec Leamas <a href="https://leamas.github.io/zulip-archive/stream/332168-Master---5.2E8.2E0--.28was.3A-comms.29/topic/MacOS.20Build.html#321026728">(Jan 12 2023 at 20:19)</a>:</h4>
+<p>Working in the the build directory after a successful  build this seems to create something:</p>
+<div class="codehilite"><pre><span></span><code> pkgbuild \
+  --root  $PWD/OpenCPN.app  \
+  --install-location /Applications/OpenCPN.app/  \
+  --identifier opencpn \
+  opencpn.pkg
+</code></pre></div>
+<p>It basically just installs everything in <a href="http://OpenCPN.app">OpenCPN.app</a>. Too simple?</p>
+
+
+
+<a name="321026908"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332168-Master%20-%205.8.0%20%20%28was%3A%20comms%29/topic/MacOS%20Build/near/321026908" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Alec Leamas <a href="https://leamas.github.io/zulip-archive/stream/332168-Master---5.2E8.2E0--.28was.3A-comms.29/topic/MacOS.20Build.html#321026908">(Jan 12 2023 at 20:20)</a>:</h4>
+<p><span class="user-mention" data-user-id="517002">@Dave Register</span>  ^</p>
+
+
+
+<a name="321032627"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332168-Master%20-%205.8.0%20%20%28was%3A%20comms%29/topic/MacOS%20Build/near/321032627" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Alec Leamas <a href="https://leamas.github.io/zulip-archive/stream/332168-Master---5.2E8.2E0--.28was.3A-comms.29/topic/MacOS.20Build.html#321032627">(Jan 12 2023 at 20:55)</a>:</h4>
+<p>However, the pkg created by pkgbuild seems pretty low-level. Perhaps <em>productbuild(1)</em> is a better choice, it seems to be more focused on our  use case. Sample invocation, still  in  build dir.</p>
+<div class="codehilite"><pre><span></span><code>productbuild  \
+  --root /Users/al/src/OpenCPN/build/OpenCPN.app/ /Applications/OpenCPN.app \
+  opencpn.pkg
+</code></pre></div>
+<p>I <strong>think</strong> this might be a better approach. However,  the pkg file created this way does not seem to respect  MACOSX_DEPLOYMENT_TARGET, so the resulting pkg cannot start OpenCPN, it seems to think it requires 12.0 which is not available on my build host.</p>
+<p>It can be started on the command line. I'm (almost) sure there is some knob which could be used instead of MACOSX_DEPLOYMENT_TARGET, but I do not find it.</p>
+
+
+
+<a name="321039138"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332168-Master%20-%205.8.0%20%20%28was%3A%20comms%29/topic/MacOS%20Build/near/321039138" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Alec Leamas <a href="https://leamas.github.io/zulip-archive/stream/332168-Master---5.2E8.2E0--.28was.3A-comms.29/topic/MacOS.20Build.html#321039138">(Jan 12 2023 at 21:38)</a>:</h4>
+<p><span class="user-mention" data-user-id="517002">@Dave Register</span>  I think I'm  on track to solve this. It seems to be about using a distribution file, and define the allowed version. </p>
+<p>Going to bed, so writing some things here mostly for myself. But if you have time and interest... If not, I'll try a little more tomorrow.</p>
+<div class="codehilite"><pre><span></span><code>$ pkgbuild \
+  --root /Users/al/src/OpenCPN/build/OpenCPN.app  \
+  --install-location /Applications/OpenCPN.app/  \
+  --identifier opencpn \
+  OpenCPN.app.pkg
+
+$ productbuild --synthesize  --package OpenCPN.app.pkg  distro.xml
+
+Edit distro.xml, add:
+     &lt;allowed-os-versions&gt;
+        &lt;os-version min=&quot;10.10&quot;/&gt;
+     &lt;/allowed-os-versions&gt;
+
+$  productbuild  --distribution distro.xml OpenCPN.pkg
+
+ ```
+</code></pre></div>
+
+
+
+<a name="321039583"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332168-Master%20-%205.8.0%20%20%28was%3A%20comms%29/topic/MacOS%20Build/near/321039583" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Notification Bot <a href="https://leamas.github.io/zulip-archive/stream/332168-Master---5.2E8.2E0--.28was.3A-comms.29/topic/MacOS.20Build.html#321039583">(Jan 12 2023 at 21:41)</a>:</h4>
+<p>A message was moved here from <a class="stream-topic" data-stream-id="332168" href="/#narrow/stream/332168-Master---5.2E8.2E0--.28was.3A-comms.29/topic/Network.20problems">#Master - 5.8.0  (was: comms) &gt; Network problems</a> by <span class="user-mention silent" data-user-id="399510">Alec Leamas</span>.</p>
+
+
+
+<a name="321076513"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332168-Master%20-%205.8.0%20%20%28was%3A%20comms%29/topic/MacOS%20Build/near/321076513" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Dave Register <a href="https://leamas.github.io/zulip-archive/stream/332168-Master---5.2E8.2E0--.28was.3A-comms.29/topic/MacOS.20Build.html#321076513">(Jan 13 2023 at 03:29)</a>:</h4>
+<p>I am focused on getting 10.15 build in shape for further user testing.</p>
+
+
+
+<a name="321185204"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332168-Master%20-%205.8.0%20%20%28was%3A%20comms%29/topic/MacOS%20Build/near/321185204" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Alec Leamas <a href="https://leamas.github.io/zulip-archive/stream/332168-Master---5.2E8.2E0--.28was.3A-comms.29/topic/MacOS.20Build.html#321185204">(Jan 13 2023 at 15:12)</a>:</h4>
+<p>So have I been, exploring the pkgbuild/productbuild path. <a href="https://github.com/OpenCPN/OpenCPN/pull/2924">https://github.com/OpenCPN/OpenCPN/pull/2924</a></p>
+
+
+
+<a name="321185250"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332168-Master%20-%205.8.0%20%20%28was%3A%20comms%29/topic/MacOS%20Build/near/321185250" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Alec Leamas <a href="https://leamas.github.io/zulip-archive/stream/332168-Master---5.2E8.2E0--.28was.3A-comms.29/topic/MacOS.20Build.html#321185250">(Jan 13 2023 at 15:12)</a>:</h4>
+<p><span class="user-mention" data-user-id="517002">@Dave Register</span> ^</p>
+
+
+
+<a name="321300588"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332168-Master%20-%205.8.0%20%20%28was%3A%20comms%29/topic/MacOS%20Build/near/321300588" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Dave Register <a href="https://leamas.github.io/zulip-archive/stream/332168-Master---5.2E8.2E0--.28was.3A-comms.29/topic/MacOS.20Build.html#321300588">(Jan 14 2023 at 04:55)</a>:</h4>
+<p><span class="user-mention" data-user-id="399510">@Alec Leamas</span> <br>
+I did find a way to generate the PKG "script" file so that it simply includes everything in the constructed bundle.  Less fiddly now, no need to manually edit, nor any sed scripting required.<br>
+Also, I added an environment variable ("PKG_MOD") to MacOS GA build.  Value will be "10" or "11".  So if you would like to:</p>
+<ol>
+<li>Rebase, and add your new PKG procedure for MacOS 11 builds only, using the environment variable.</li>
+<li>Help me figure out how to rename and retain both PKGs in the Cloudsmith upload step, so that old and new can co-exist for 10.15 and 11, respectively.</li>
+</ol>
+
+
+
+<a name="321301925"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332168-Master%20-%205.8.0%20%20%28was%3A%20comms%29/topic/MacOS%20Build/near/321301925" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Dave Register <a href="https://leamas.github.io/zulip-archive/stream/332168-Master---5.2E8.2E0--.28was.3A-comms.29/topic/MacOS.20Build.html#321301925">(Jan 14 2023 at 05:16)</a>:</h4>
+<p>This is all pretty shaky at the moment. It built a PKG for MacOS 10.15, but I have not tested yet.<br>
+ Late now, more tomorrow.</p>
+
+
+
+<a name="321355453"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332168-Master%20-%205.8.0%20%20%28was%3A%20comms%29/topic/MacOS%20Build/near/321355453" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Alec Leamas <a href="https://leamas.github.io/zulip-archive/stream/332168-Master---5.2E8.2E0--.28was.3A-comms.29/topic/MacOS.20Build.html#321355453">(Jan 14 2023 at 13:17)</a>:</h4>
+<p>OK, will do, but probably not until tomorrow -- weekend things happening over here</p>
+
+
+
+<a name="321355480"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332168-Master%20-%205.8.0%20%20%28was%3A%20comms%29/topic/MacOS%20Build/near/321355480" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Alec Leamas <a href="https://leamas.github.io/zulip-archive/stream/332168-Master---5.2E8.2E0--.28was.3A-comms.29/topic/MacOS.20Build.html#321355480">(Jan 14 2023 at 13:17)</a>:</h4>
+<p>That said, should not be complicated.</p>
+
+
+
+<a name="321358334"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332168-Master%20-%205.8.0%20%20%28was%3A%20comms%29/topic/MacOS%20Build/near/321358334" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Alec Leamas <a href="https://leamas.github.io/zulip-archive/stream/332168-Master---5.2E8.2E0--.28was.3A-comms.29/topic/MacOS.20Build.html#321358334">(Jan 14 2023 at 13:39)</a>:</h4>
+<p>Forgot to say:</p>
+<blockquote>
+<p>I did find a way to generate the PKG "script" file so that it simply includes everything in the constructed bundle. </p>
+</blockquote>
+<p>This seems great. That I  explored the pkgbuild path was about this, that our way up to now to handle  the <a href="http://pkgproj.in">pkgproj.in</a> file feels (felt) way too hacky.</p>
+
+
+
+<a name="321380144"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332168-Master%20-%205.8.0%20%20%28was%3A%20comms%29/topic/MacOS%20Build/near/321380144" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Dave Register <a href="https://leamas.github.io/zulip-archive/stream/332168-Master---5.2E8.2E0--.28was.3A-comms.29/topic/MacOS.20Build.html#321380144">(Jan 14 2023 at 16:18)</a>:</h4>
+<p><span class="user-mention" data-user-id="399510">@Alec Leamas</span> <br>
+Smoke test results:  MacOS 10.15 build starts and runs on MacOS versions from 10.14 - 12.1(M1).</p>
+
+
+
+<a name="321488367"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332168-Master%20-%205.8.0%20%20%28was%3A%20comms%29/topic/MacOS%20Build/near/321488367" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Alec Leamas <a href="https://leamas.github.io/zulip-archive/stream/332168-Master---5.2E8.2E0--.28was.3A-comms.29/topic/MacOS.20Build.html#321488367">(Jan 15 2023 at 13:51)</a>:</h4>
+<p>Have been looking at making the "new" .pkg file on MaOS 11. After some sleep I think th trick is to make it on 12 instead. This should work around the need for <code>--min-os-version</code> which is not availablebefore 13 (I think). Working on it.</p>
+
+
+
+<a name="321538878"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332168-Master%20-%205.8.0%20%20%28was%3A%20comms%29/topic/MacOS%20Build/near/321538878" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Alec Leamas <a href="https://leamas.github.io/zulip-archive/stream/332168-Master---5.2E8.2E0--.28was.3A-comms.29/topic/MacOS.20Build.html#321538878">(Jan 15 2023 at 22:50)</a>:</h4>
+<p><span class="user-mention" data-user-id="517002">@Dave Register</span> <br>
+<a href="https://github.com/OpenCPN/OpenCPN/pull/2924">https://github.com/OpenCPN/OpenCPN/pull/2924</a></p>
+
+
+
+<a name="321561189"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332168-Master%20-%205.8.0%20%20%28was%3A%20comms%29/topic/MacOS%20Build/near/321561189" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Dave Register <a href="https://leamas.github.io/zulip-archive/stream/332168-Master---5.2E8.2E0--.28was.3A-comms.29/topic/MacOS.20Build.html#321561189">(Jan 16 2023 at 04:36)</a>:</h4>
+<p><span class="user-mention" data-user-id="399510">@Alec Leamas</span> <br>
+After merge, the production build (with upload  API key) worked fine on MacOS10.15 build. <br>
+However, though MacOS  11 build also completed, the uploaded .pkg contained only ~700 bytes of some metadata.<br>
+<a href="https://dl.cloudsmith.io/public/david-register/opencpn-unstable/raw/files/OpenCPN_5.7.1+69.cf35537-11.pkg">https://dl.cloudsmith.io/public/david-register/opencpn-unstable/raw/files/OpenCPN_5.7.1+69.cf35537-11.pkg</a></p>
+<p>Sorry.</p>
+
+
+
+<a name="321606920"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332168-Master%20-%205.8.0%20%20%28was%3A%20comms%29/topic/MacOS%20Build/near/321606920" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Alec Leamas <a href="https://leamas.github.io/zulip-archive/stream/332168-Master---5.2E8.2E0--.28was.3A-comms.29/topic/MacOS.20Build.html#321606920">(Jan 16 2023 at 10:33)</a>:</h4>
+<p>I'll look into it, was tired yesterday. Should not be hard, but busy  with shipdriver right now.</p>
+
+
+
+<a name="321718204"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332168-Master%20-%205.8.0%20%20%28was%3A%20comms%29/topic/MacOS%20Build/near/321718204" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Alec Leamas <a href="https://leamas.github.io/zulip-archive/stream/332168-Master---5.2E8.2E0--.28was.3A-comms.29/topic/MacOS.20Build.html#321718204">(Jan 16 2023 at 21:09)</a>:</h4>
+<p><span class="user-mention" data-user-id="517002">@Dave Register</span> <br>
+<a href="https://github.com/OpenCPN/OpenCPN/pull/2934">https://github.com/OpenCPN/OpenCPN/pull/2934</a></p>
+
+
+
+<a name="321722443"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332168-Master%20-%205.8.0%20%20%28was%3A%20comms%29/topic/MacOS%20Build/near/321722443" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Alec Leamas <a href="https://leamas.github.io/zulip-archive/stream/332168-Master---5.2E8.2E0--.28was.3A-comms.29/topic/MacOS.20Build.html#321722443">(Jan 16 2023 at 21:48)</a>:</h4>
+<p><span class="user-mention" data-user-id="517002">@Dave Register</span>  Could you take a look at the liblzma.5.dylib  handling?</p>
+<p>As of now,  find_library()  locates "somewhere", probably in /usr/local/lib. If this is the one we should use we should probablye just remove this:</p>
+<div class="codehilite"><pre><span></span><code>  install(CODE &quot;
+    include(BundleUtilities)
+    copy_resolved_item_into_bundle(\&quot;${LIBLZMA_LIBRARIES}\&quot; \&quot;\${CMAKE_INSTALL_PREFIX}/bin/OpenCPN.app/Contents/Frameworks\&quot;)
+    &quot;
+    COMPONENT Runtime
+  )
+</code></pre></div>
+<p>Note that as written, the above just installs ${LIBLZMA_LIBRARIES} which is what find_library() located. That's what makes this redundant in this case, the libraries we link to will get bundled anyway.</p>
+<p>OTOH, if we should use some other  library for example in /opt/local we should handle it like we do with mpg123 i. e., force find_library() to look in the right place.  Also in this case the code above should be removed.</p>
+<p>I could do the dirty work here it  you want. The core question is which  liblzma  we should use, both when compiling and linking.  /usr/local/lib? /opt/local/something? something else?</p>
+
+
+
+<a name="321723669"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332168-Master%20-%205.8.0%20%20%28was%3A%20comms%29/topic/MacOS%20Build/near/321723669" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Dave Register <a href="https://leamas.github.io/zulip-archive/stream/332168-Master---5.2E8.2E0--.28was.3A-comms.29/topic/MacOS.20Build.html#321723669">(Jan 16 2023 at 22:00)</a>:</h4>
+<p>I'll take a look tonight, more info tomorrow.</p>
+
+
+
+<a name="321725288"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332168-Master%20-%205.8.0%20%20%28was%3A%20comms%29/topic/MacOS%20Build/near/321725288" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Dave Register <a href="https://leamas.github.io/zulip-archive/stream/332168-Master---5.2E8.2E0--.28was.3A-comms.29/topic/MacOS.20Build.html#321725288">(Jan 16 2023 at 22:16)</a>:</h4>
+<p>BTW, smoke test of Macos 11 build after latest patch (81ae..) loads/starts/runs on MacOS  11.7 and 12.1(M1).<br>
+Does not install on MacOS 10.14. "This app requires MacOS 10.15 or later".<br>
+Did not test on MacOS 10.15 yet.</p>
+<p>I'm pretty sure it will run on 10.14, if the metadata will allow installation.  Maybe even earlier 10,xx</p>
+
+
+
+<a name="321725912"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332168-Master%20-%205.8.0%20%20%28was%3A%20comms%29/topic/MacOS%20Build/near/321725912" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Alec Leamas <a href="https://leamas.github.io/zulip-archive/stream/332168-Master---5.2E8.2E0--.28was.3A-comms.29/topic/MacOS.20Build.html#321725912">(Jan 16 2023 at 22:22)</a>:</h4>
+<p>This is what I have talked about earlier. To force it as usable on anything lower than today the  pkgbuild <code>--min-os-version</code> option is required. This is only available on xcode 14.2. Practically, this means that it must be built on circleci in a very modern  builder, more or less monterey I guess. This is tested and works.</p>
+<p>Without this option, it seems like pkgbuild looks to the target of the bundled libraries and uses the lowest value which matches all. Not sure, but this is what it looks like. I have tried quite hard, but do not find any way around this. There are plenty of options to productbuild, but they seems to be  unable to override the value from pkgconfig.</p>
+
+
+
+<a name="321727122"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332168-Master%20-%205.8.0%20%20%28was%3A%20comms%29/topic/MacOS%20Build/near/321727122" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Alec Leamas <a href="https://leamas.github.io/zulip-archive/stream/332168-Master---5.2E8.2E0--.28was.3A-comms.29/topic/MacOS.20Build.html#321727122">(Jan 16 2023 at 22:33)</a>:</h4>
+<p>Making a quick test on GA using a macos-12 builder.  Running now</p>
+
+
+
+<a name="321729603"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332168-Master%20-%205.8.0%20%20%28was%3A%20comms%29/topic/MacOS%20Build/near/321729603" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Alec Leamas <a href="https://leamas.github.io/zulip-archive/stream/332168-Master---5.2E8.2E0--.28was.3A-comms.29/topic/MacOS.20Build.html#321729603">(Jan 16 2023 at 22:59)</a>:</h4>
+<p>OK, patch below makes it if you want to make a try. It builds on macos-12. I cannot see that this should be any difference from building at 11. The code we compile is governed by MACOSX_DEPLOYMENT_TARGET, and the bundled libraries are the same.</p>
+<div class="codehilite"><pre><span></span><code>commit 5d3b795978ef50cbbf5eb42b173043d721e392f8 (HEAD -&gt; master)
+Author: Alec Leamas &lt;leamas.alec@nowhere.net&gt;
+Date:   Mon Jan 16 23:31:56 2023 +0100
+
+    ci: macos: try to build on macos-12 for 10.10
+
+diff --git a/.github/workflows/MacOS.yaml b/.github/workflows/MacOS.yaml
+index 43ad8ecd8..855f4a6a9 100644
+--- a/.github/workflows/MacOS.yaml
++++ b/.github/workflows/MacOS.yaml
+@@ -31,9 +31,9 @@ jobs:
+           #   cmake_defines: -DCMAKE_CXX_STANDARD=11
+           #   use_homebrew: 1
+           - name: macOS 11 wxOSX
+-            runner: macos-11
++            runner: macos-12
+             pkg_mod: 11
+-            MACOSX_DEPLOYMENT_TARGET: 11.0
++            MACOSX_DEPLOYMENT_TARGET: 10.10
+           - name: macOS 10.15 wxOSX
+             runner: macos-10.15
+             pkg_mod: 10
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+index dc7791c2c..1fc79f781 100644
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -3015,6 +3015,7 @@ if (APPLE)
+       --root /tmp/opencpn/bin/OpenCPN.app
+       --identifier org.opencpn
+       --install-location /Applications/OpenCPN.app
++      --min-os-version 10.10
+       OpenCPN.app.pkg
+   )
+   add_dependencies(component-pkg show-bundled-libs pkg-tmp)
+</code></pre></div>
+
+
+
+<a name="321754184"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332168-Master%20-%205.8.0%20%20%28was%3A%20comms%29/topic/MacOS%20Build/near/321754184" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Dave Register <a href="https://leamas.github.io/zulip-archive/stream/332168-Master---5.2E8.2E0--.28was.3A-comms.29/topic/MacOS.20Build.html#321754184">(Jan 17 2023 at 04:55)</a>:</h4>
+<p>What I know so far on liblzma:<br>
+1.find_library() finds a .tbd  file, which generally points to a MacOS standard library in /usr/lib, or some such.  The "tdb" get resolved at compile and link time.  Mac uses TDB files so that their SDK does not need to contain verbatim copies of libraries known to be present in a base system.</p>
+<ol start="2">
+<li>In the OCPN build script, we install a copy of liblzma.5.dylib in /usr/local/opt/xz, apparently as part of "xz" package installed by brew.</li>
+<li>In fixup_bundle, he for some reason prefers the copy in /usr/loca/opt/xz over the system library, and that is the one that ends up in the bundle.</li>
+<li>I do not know yet whether MacOS versions earlier than 10.15 have lzma as a standard library.  Waiting on build to check this.</li>
+</ol>
+<p>What I have done:<br>
+I removed the offending directive from CMakeLists.txt, since it did not seem to be doing anything useful anyway.<br>
+I also shifted MacOS 11 pkg build host to MacOS 12.<br>
+Finally, I shifted all MacOS min versions to 10.13, which is 5 years old now.  Seems like a reasonable deployment target.</p>
+<p>More as I know it.</p>
+
+
+
+<a name="321755431"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332168-Master%20-%205.8.0%20%20%28was%3A%20comms%29/topic/MacOS%20Build/near/321755431" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Dave Register <a href="https://leamas.github.io/zulip-archive/stream/332168-Master---5.2E8.2E0--.28was.3A-comms.29/topic/MacOS.20Build.html#321755431">(Jan 17 2023 at 05:14)</a>:</h4>
+<p>The latest build as described above:</p>
+<ol>
+<li>"10.15" build worked fine on MacOS 10.14.</li>
+<li>"12" build pkg would not install on MacOS 10.14.  Same message as before "...requires 10.15 or later."</li>
+</ol>
+
+
+
+<a name="321755553"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332168-Master%20-%205.8.0%20%20%28was%3A%20comms%29/topic/MacOS%20Build/near/321755553" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Dave Register <a href="https://leamas.github.io/zulip-archive/stream/332168-Master---5.2E8.2E0--.28was.3A-comms.29/topic/MacOS.20Build.html#321755553">(Jan 17 2023 at 05:17)</a>:</h4>
+<p><span class="user-mention" data-user-id="399510">@Alec Leamas</span> <br>
+Thinking a bit more about liblzma...<br>
+I suppose if we want to be more explicit, we could direct find_library to look in "/usr/local/opt/xz" for liblzma, and avoid the ambiguity of the XCode TBD file.  Not sure if there is any advantage.<br>
+Thoughts on all this?</p>
+
+
+
+<a name="321782586"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332168-Master%20-%205.8.0%20%20%28was%3A%20comms%29/topic/MacOS%20Build/near/321782586" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Alec Leamas <a href="https://leamas.github.io/zulip-archive/stream/332168-Master---5.2E8.2E0--.28was.3A-comms.29/topic/MacOS.20Build.html#321782586">(Jan 17 2023 at 09:08)</a>:</h4>
+<blockquote>
+<p>I suppose if we want to be more explicit, we could direct find_library to look in "/usr/local/opt/xz" for liblzma,</p>
+</blockquote>
+<p>I think we should direct find_library() to locate the correct version, and link to that. If fixup_bundle  does it's work properly it should then bundle the version we link to.</p>
+<p>A possible explanation to current mischief is that find_library() finds the system library, at least when it exists, and links to that. fixup_bundle then rightfully bundles this library rather than brew's.</p>
+<p>However, we should also use the correct header. Currently, it seems that  the header is selected more or less randomly.</p>
+
+
+
+<a name="321784650"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332168-Master%20-%205.8.0%20%20%28was%3A%20comms%29/topic/MacOS%20Build/near/321784650" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Alec Leamas <a href="https://leamas.github.io/zulip-archive/stream/332168-Master---5.2E8.2E0--.28was.3A-comms.29/topic/MacOS.20Build.html#321784650">(Jan 17 2023 at 09:19)</a>:</h4>
+<blockquote>
+<p>Finally, I shifted all MacOS min versions to 10.13, which is 5 years old now. Seems like a reasonable deployment target.</p>
+</blockquote>
+<p>Right. However, I missed one part, the <em>buildosx/distro.xml</em> which basically is the productbuild setup. Here, there is also a 10.15 minimum which needs to be patched.</p>
+<p>It looks confusing, but see it this way: each package produced by pkgbuild has a minimum version, here defined by <code>--min-os-version</code>. productbuild is able to combine several pkgbuild packages to a single product package with more metadata. Doing so, productbuild will refuse to create a product with a too low version w r t the pkgbuild  packages but might very well raise it. </p>
+<p>So, pkgbuild defines what is possible. productbuild sets the final minimum version within the pkgbuild ramifications.</p>
+<p>Patch :</p>
+<div class="codehilite"><pre><span></span><code>diff --git a/buildosx/distro.plist b/buildosx/distro.plist
+index 24f687773..73b8eeb01 100644
+--- a/buildosx/distro.plist
++++ b/buildosx/distro.plist
+@@ -16,7 +16,7 @@
+         &lt;pkg-ref id=&quot;org.opencpn&quot;/&gt;
+     &lt;/choice&gt;
+     &lt;allowed-os-versions&gt;
+-        &lt;os-version min=&quot;10.15&quot;/&gt;
++        &lt;os-version min=&quot;10.13&quot;/&gt;
+     &lt;/allowed-os-versions&gt;
+     &lt;pkg-ref id=&quot;org.opencpn&quot; version=&quot;0&quot; onConclusion=&quot;none&quot;&gt;
+         OpenCPN.app.pkg
+</code></pre></div>
+
+
+
+<a name="321784972"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332168-Master%20-%205.8.0%20%20%28was%3A%20comms%29/topic/MacOS%20Build/near/321784972" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Alec Leamas <a href="https://leamas.github.io/zulip-archive/stream/332168-Master---5.2E8.2E0--.28was.3A-comms.29/topic/MacOS.20Build.html#321784972">(Jan 17 2023 at 09:20)</a>:</h4>
+<blockquote>
+<p>If fixup_bundle does it's work properly it should then bundle the version we link to.</p>
+</blockquote>
+<p>An interesting question is if fixup_bundle is able to resolve a tbd file...</p>
+
+
+
+<a name="321786951"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332168-Master%20-%205.8.0%20%20%28was%3A%20comms%29/topic/MacOS%20Build/near/321786951" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Alec Leamas <a href="https://leamas.github.io/zulip-archive/stream/332168-Master---5.2E8.2E0--.28was.3A-comms.29/topic/MacOS.20Build.html#321786951">(Jan 17 2023 at 09:32)</a>:</h4>
+<p>fiixup_bundle and tbd files: <a href="https://stackoverflow.com/questions/11875442">https://stackoverflow.com/questions/11875442</a></p>
+
+
+
+<a name="321789289"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332168-Master%20-%205.8.0%20%20%28was%3A%20comms%29/topic/MacOS%20Build/near/321789289" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Alec Leamas <a href="https://leamas.github.io/zulip-archive/stream/332168-Master---5.2E8.2E0--.28was.3A-comms.29/topic/MacOS.20Build.html#321789289">(Jan 17 2023 at 09:46)</a>:</h4>
+<p>that is, we should use only the brew version. Full stop</p>
+
+
+
+<a name="321925250"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332168-Master%20-%205.8.0%20%20%28was%3A%20comms%29/topic/MacOS%20Build/near/321925250" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Dave Register <a href="https://leamas.github.io/zulip-archive/stream/332168-Master---5.2E8.2E0--.28was.3A-comms.29/topic/MacOS.20Build.html#321925250">(Jan 17 2023 at 21:01)</a>:</h4>
+<p>I patched distro.plist, as suggested. Tested the resulting pkg built by MacOS 12 method on MacOS v10.14, real hardware.<br>
+It installs OK, as expected.  But we get the dreaded "(load command 0x80000034 is unknown)" message at runtime for libmpg123.dylib.  Also, many warnings on the build.  This is apparently a new linker directive, embedded in the library, that was introduced by Apple for MacOS 10.15.<br>
+I surmise that the Brew is the culprit here.  Brew detects that our build host is MacOS 12, and so installs the most recent version of libmpg123.dylib.  And it fails to load on pre-10.15 machines.<br>
+Sigh...Hmmmm...</p>
+
+
+
+<a name="321933361"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332168-Master%20-%205.8.0%20%20%28was%3A%20comms%29/topic/MacOS%20Build/near/321933361" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Alec Leamas <a href="https://leamas.github.io/zulip-archive/stream/332168-Master---5.2E8.2E0--.28was.3A-comms.29/topic/MacOS.20Build.html#321933361">(Jan 17 2023 at 21:56)</a>:</h4>
+<p>I have had a bad feeling about these libraries since long. Brew definitely does not support anything before Big Sur i. e., it supports the two latest versions.</p>
+<p>We probably need to build these libraries from source with MACOSX_DEPLOYMENT_TARGET set to 10.13.  We do have the brew recipes available , so it should not be that bad. But  prebuilt libraries are generally a pain. </p>
+<p>We need all input we can get from <span class="user-mention" data-user-id="573239">@Pavel Kalian</span> ...</p>
+
+
+
+<a name="321933676"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332168-Master%20-%205.8.0%20%20%28was%3A%20comms%29/topic/MacOS%20Build/near/321933676" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Dave Register <a href="https://leamas.github.io/zulip-archive/stream/332168-Master---5.2E8.2E0--.28was.3A-comms.29/topic/MacOS.20Build.html#321933676">(Jan 17 2023 at 21:58)</a>:</h4>
+<p>I see no general problem building any library from source, with the correct TARGET, other than the effort required.  Do you?</p>
+
+
+
+<a name="321933936"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332168-Master%20-%205.8.0%20%20%28was%3A%20comms%29/topic/MacOS%20Build/near/321933936" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Alec Leamas <a href="https://leamas.github.io/zulip-archive/stream/332168-Master---5.2E8.2E0--.28was.3A-comms.29/topic/MacOS.20Build.html#321933936">(Jan 17 2023 at 22:00)</a>:</h4>
+<blockquote>
+<p>Do you?</p>
+</blockquote>
+<p>No. But that is not to say they don't exist, just that I don't see them</p>
+
+
+
+<a name="321934584"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332168-Master%20-%205.8.0%20%20%28was%3A%20comms%29/topic/MacOS%20Build/near/321934584" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Alec Leamas <a href="https://leamas.github.io/zulip-archive/stream/332168-Master---5.2E8.2E0--.28was.3A-comms.29/topic/MacOS.20Build.html#321934584">(Jan 17 2023 at 22:04)</a>:</h4>
+<p>But.... <strong>if</strong> we decide to build from source, there must be better traceability than just an opaque download url. One idea could be a github repo which contains everything needed to build the libs together with the compiled stuff. could just be cloned when used.</p>
+
+
+
+<a name="321957723"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332168-Master%20-%205.8.0%20%20%28was%3A%20comms%29/topic/MacOS%20Build/near/321957723" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Dave Register <a href="https://leamas.github.io/zulip-archive/stream/332168-Master---5.2E8.2E0--.28was.3A-comms.29/topic/MacOS.20Build.html#321957723">(Jan 18 2023 at 01:12)</a>:</h4>
+<p>Actually, I meant an inline build, as part of the CI process.  Just as we build libarchive now.  This is certainly traceable.</p>
+
+
+
+<hr><p>Last updated: Oct 05 2023 at 09:43 UTC</p>
+</html>

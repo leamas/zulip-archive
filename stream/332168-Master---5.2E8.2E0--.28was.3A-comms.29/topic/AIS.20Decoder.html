@@ -1,0 +1,302 @@
+<html>
+<head><meta charset="utf-8"><title>AIS Decoder · Master - 5.8.0  (was: comms) · Zulip Chat Archive</title></head>
+<h2>Stream: <a href="https://leamas.github.io/zulip-archive/stream/332168-Master---5.2E8.2E0--.28was.3A-comms.29/index.html">Master - 5.8.0  (was: comms)</a></h2>
+<h3>Topic: <a href="https://leamas.github.io/zulip-archive/stream/332168-Master---5.2E8.2E0--.28was.3A-comms.29/topic/AIS.20Decoder.html">AIS Decoder</a></h3>
+
+<hr>
+
+<base href="https://opencpn.zulipchat.com">
+
+<head><link href="https://leamas.github.io/zulip-archive/style.css" rel="stylesheet"></head>
+
+<a name="297400638"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332168-Master%20-%205.8.0%20%20%28was%3A%20comms%29/topic/AIS%20Decoder/near/297400638" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Dave Register <a href="https://leamas.github.io/zulip-archive/stream/332168-Master---5.2E8.2E0--.28was.3A-comms.29/topic/AIS.20Decoder.html#297400638">(Sep 06 2022 at 14:43)</a>:</h4>
+<p><span class="user-mention" data-user-id="399510">@Alec Leamas</span>  <br>
+ I am working to convince myself that AIVDO is always a single-part message, only one fragment.  If that is so, then the DecodeSingleVDO() method could be static, and the class could be singleton.<br>
+More:  If AIVDO is multipart, the additional information is not used by O core in any way.  So, safe to ignore AIVDO if multipart?</p>
+<p>Thoughts?</p>
+
+
+
+<a name="297418187"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332168-Master%20-%205.8.0%20%20%28was%3A%20comms%29/topic/AIS%20Decoder/near/297418187" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Alec Leamas <a href="https://leamas.github.io/zulip-archive/stream/332168-Master---5.2E8.2E0--.28was.3A-comms.29/topic/AIS.20Decoder.html#297418187">(Sep 06 2022 at 14:49)</a>:</h4>
+<blockquote>
+<p>safe to ignore AIVDO if multipart?</p>
+</blockquote>
+<p>Basically a question above my pay grade. However,state  required to parse multipart messages  could be part of  <code>AisDecodeCtx ctx</code>, right?</p>
+<blockquote>
+<p>and the class could be singleton.</p>
+</blockquote>
+<p>A stateless class does IMHO not need to be a singleton, it could be instantiated when required.</p>
+
+
+
+<a name="297419054"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332168-Master%20-%205.8.0%20%20%28was%3A%20comms%29/topic/AIS%20Decoder/near/297419054" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Alec Leamas <a href="https://leamas.github.io/zulip-archive/stream/332168-Master---5.2E8.2E0--.28was.3A-comms.29/topic/AIS.20Decoder.html#297419054">(Sep 06 2022 at 14:53)</a>:</h4>
+<blockquote>
+<p>A stateless class does IMHO not need to be a singleton,</p>
+</blockquote>
+<p>Actually, a stateless class is not really required, we could use free functions instead to simplify.</p>
+
+
+
+<a name="297432475"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332168-Master%20-%205.8.0%20%20%28was%3A%20comms%29/topic/AIS%20Decoder/near/297432475" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Dave Register <a href="https://leamas.github.io/zulip-archive/stream/332168-Master---5.2E8.2E0--.28was.3A-comms.29/topic/AIS.20Decoder.html#297432475">(Sep 06 2022 at 15:46)</a>:</h4>
+<p>I have never seen, in all the VDR recording I have stored, a multipart AIVDO.<br>
+If we assume that AIVDO is only single part, and add an ASSERT to verify, then Beta testing might surface a case.<br>
+Without state requirement, then DecodeSingleVDO() could be a simple function in comm_decoder.</p>
+<p>More:  DecodeSingleVDO() can be significantly simplified, in any case.  <br>
+So, if we keep it as a class, I can instantiate as needed in comm_bridge, on the stack.  No need for persistent global.<br>
+Or we move it to comm_decoder as simple function.</p>
+<p>Should the function be moved to comm_decoder?  How does this affect testing?</p>
+
+
+
+<a name="297437474"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332168-Master%20-%205.8.0%20%20%28was%3A%20comms%29/topic/AIS%20Decoder/near/297437474" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Alec Leamas <a href="https://leamas.github.io/zulip-archive/stream/332168-Master---5.2E8.2E0--.28was.3A-comms.29/topic/AIS.20Decoder.html#297437474">(Sep 06 2022 at 16:10)</a>:</h4>
+<blockquote>
+<p>Should the function be moved to comm_decoder? How does this affect testing?</p>
+</blockquote>
+<p>It actually works anyway, AIS_Decoder is part of the testing scenario.  That said, I think i makes sense to make a difference between  the stateful AIS_decoder and  stateless underpinnings like this function -- it's basically sort of ais_utils or so. Personally, I like small, well defined interfaces and ais_msg_decoder has this (the class should be dropped, or the functions should be static). So I still prefer a separate file like in comm-ais.</p>
+<p>Having it in comm_decoder would  IMHO expand that interface in a unlucky way.  Adding functions this way is how well-defined stuff rottens.</p>
+
+
+
+<a name="297455274"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332168-Master%20-%205.8.0%20%20%28was%3A%20comms%29/topic/AIS%20Decoder/near/297455274" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Dave Register <a href="https://leamas.github.io/zulip-archive/stream/332168-Master---5.2E8.2E0--.28was.3A-comms.29/topic/AIS.20Decoder.html#297455274">(Sep 06 2022 at 17:46)</a>:</h4>
+<p>OK, I'll make a comm-ais pair, with static (or classless) interface, in comm branch.</p>
+
+
+
+<a name="297457838"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332168-Master%20-%205.8.0%20%20%28was%3A%20comms%29/topic/AIS%20Decoder/near/297457838" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Dave Register <a href="https://leamas.github.io/zulip-archive/stream/332168-Master---5.2E8.2E0--.28was.3A-comms.29/topic/AIS.20Decoder.html#297457838">(Sep 06 2022 at 17:58)</a>:</h4>
+<p>correction:  comm_ais.h/cpp</p>
+
+
+
+<a name="297463257"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332168-Master%20-%205.8.0%20%20%28was%3A%20comms%29/topic/AIS%20Decoder/near/297463257" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Håkan Svensson <a href="https://leamas.github.io/zulip-archive/stream/332168-Master---5.2E8.2E0--.28was.3A-comms.29/topic/AIS.20Decoder.html#297463257">(Sep 06 2022 at 18:29)</a>:</h4>
+<p><span class="user-mention silent" data-user-id="517002">Dave Register</span> <a href="#narrow/stream/332168-comms/topic/AIS.20Decoder/near/297400638">said</a>:</p>
+<blockquote>
+<p><span class="user-mention silent" data-user-id="399510">Alec Leamas</span>  <br>
+ I am working to convince myself that AIVDO is always a single-part message, only one fragment.  If that is so, then the DecodeSingleVDO() method could be static, and the class could be singleton.<br>
+More:  If AIVDO is multipart, the additional information is not used by O core in any way.  So, safe to ignore AIVDO if multipart?</p>
+<p>Thoughts?</p>
+</blockquote>
+<p>I'm not sure I understand the discussion but AIVDO is possible to use in the MMSI properties function:<br>
+<a href="/user_uploads/33951/3LuXt-HVclv2zj_fxSDXplXh/bild.png">bild.png</a></p>
+<div class="message_inline_image"><a href="/user_uploads/33951/3LuXt-HVclv2zj_fxSDXplXh/bild.png" title="bild.png"><img src="/user_uploads/33951/3LuXt-HVclv2zj_fxSDXplXh/bild.png"></a></div>
+
+
+
+<a name="297465469"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332168-Master%20-%205.8.0%20%20%28was%3A%20comms%29/topic/AIS%20Decoder/near/297465469" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Dave Register <a href="https://leamas.github.io/zulip-archive/stream/332168-Master---5.2E8.2E0--.28was.3A-comms.29/topic/AIS.20Decoder.html#297465469">(Sep 06 2022 at 18:43)</a>:</h4>
+<p>Hakan...<br>
+We are working on plumbing to simplify the class structure, allowing for better testability.  Essentially, we want to be able to decode AIVDO in a cli (non-GUI) environment.  This change will allow us to do that.<br>
+I think the point you raise will be OK, but will test.</p>
+
+
+
+<a name="297465777"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332168-Master%20-%205.8.0%20%20%28was%3A%20comms%29/topic/AIS%20Decoder/near/297465777" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Dave Register <a href="https://leamas.github.io/zulip-archive/stream/332168-Master---5.2E8.2E0--.28was.3A-comms.29/topic/AIS.20Decoder.html#297465777">(Sep 06 2022 at 18:45)</a>:</h4>
+<p>And comm_ais done, smoke tested, and pushed.<br>
+Alec, you probably want to review CMakeLists.txt, especially "UNITTEST_SRC"</p>
+
+
+
+<a name="297467110"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332168-Master%20-%205.8.0%20%20%28was%3A%20comms%29/topic/AIS%20Decoder/near/297467110" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Dave Register <a href="https://leamas.github.io/zulip-archive/stream/332168-Master---5.2E8.2E0--.28was.3A-comms.29/topic/AIS.20Decoder.html#297467110">(Sep 06 2022 at 18:53)</a>:</h4>
+<p>By the way, the VDR plugin is now connected to the NavMsgBus, so it works.</p>
+
+
+
+<a name="297567197"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332168-Master%20-%205.8.0%20%20%28was%3A%20comms%29/topic/AIS%20Decoder/near/297567197" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Alec Leamas <a href="https://leamas.github.io/zulip-archive/stream/332168-Master---5.2E8.2E0--.28was.3A-comms.29/topic/AIS.20Decoder.html#297567197">(Sep 07 2022 at 11:12)</a>:</h4>
+<p>Hm...  AIS test still fails. The global target list g_pAIS is empty after processing one  AIVDO message.</p>
+<p>Looking at the code in CommBridge::HandleN0183_AIVDO I'm a little confused. As I understand it, an AIVDO message is data about an AIS target. However, it seems that this data is used  to update the global "own ship" items like gLat, gLon, etc.</p>
+<p>What am I missing?</p>
+
+
+
+<a name="297588200"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332168-Master%20-%205.8.0%20%20%28was%3A%20comms%29/topic/AIS%20Decoder/near/297588200" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Dave Register <a href="https://leamas.github.io/zulip-archive/stream/332168-Master---5.2E8.2E0--.28was.3A-comms.29/topic/AIS.20Decoder.html#297588200">(Sep 07 2022 at 13:22)</a>:</h4>
+<p>AIVDO is a message generated by an AIS transponder to be used locally.  It is effectively a position report for "ownship" as generated by the transponder's internal GPS receiver.  I always  remember that the "O" in AIVDO stands for "ownship".  AIVDM is a message describing a remote target.</p>
+
+
+
+<a name="297599587"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332168-Master%20-%205.8.0%20%20%28was%3A%20comms%29/topic/AIS%20Decoder/near/297599587" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Alec Leamas <a href="https://leamas.github.io/zulip-archive/stream/332168-Master---5.2E8.2E0--.28was.3A-comms.29/topic/AIS.20Decoder.html#297599587">(Sep 07 2022 at 14:11)</a>:</h4>
+<p>Right, my bad.  So the test should be fixed, will do. Next step would be to add a test for AIVDM which doesn't seem to be implemented.</p>
+
+
+
+<a name="297599622"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332168-Master%20-%205.8.0%20%20%28was%3A%20comms%29/topic/AIS%20Decoder/near/297599622" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Alec Leamas <a href="https://leamas.github.io/zulip-archive/stream/332168-Master---5.2E8.2E0--.28was.3A-comms.29/topic/AIS.20Decoder.html#297599622">(Sep 07 2022 at 14:11)</a>:</h4>
+<p>BTW: thanks!</p>
+
+
+
+<a name="297604009"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332168-Master%20-%205.8.0%20%20%28was%3A%20comms%29/topic/AIS%20Decoder/near/297604009" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Dave Register <a href="https://leamas.github.io/zulip-archive/stream/332168-Master---5.2E8.2E0--.28was.3A-comms.29/topic/AIS.20Decoder.html#297604009">(Sep 07 2022 at 14:36)</a>:</h4>
+<p>We do not need AIVDM in core OCPN basic nav info.  Could it be a GUI feature, only?  All we do with targets is show/query on GUI interface.</p>
+
+
+
+<a name="297604891"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332168-Master%20-%205.8.0%20%20%28was%3A%20comms%29/topic/AIS%20Decoder/near/297604891" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Alec Leamas <a href="https://leamas.github.io/zulip-archive/stream/332168-Master---5.2E8.2E0--.28was.3A-comms.29/topic/AIS.20Decoder.html#297604891">(Sep 07 2022 at 14:41)</a>:</h4>
+<p>Basically, the comm part updates g_pAIS, right? I could look at it, using the alternative approach we have discussed, just to see where it takes us?</p>
+
+
+
+<a name="297650386"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332168-Master%20-%205.8.0%20%20%28was%3A%20comms%29/topic/AIS%20Decoder/near/297650386" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Dave Register <a href="https://leamas.github.io/zulip-archive/stream/332168-Master---5.2E8.2E0--.28was.3A-comms.29/topic/AIS.20Decoder.html#297650386">(Sep 07 2022 at 18:34)</a>:</h4>
+<p>"Decode and handle AIVDM"<br>
+Can you not send an AIVDM message to AIS_Decoder, and get a target in the global target list?</p>
+
+
+
+<a name="297650824"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332168-Master%20-%205.8.0%20%20%28was%3A%20comms%29/topic/AIS%20Decoder/near/297650824" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Alec Leamas <a href="https://leamas.github.io/zulip-archive/stream/332168-Master---5.2E8.2E0--.28was.3A-comms.29/topic/AIS.20Decoder.html#297650824">(Sep 07 2022 at 18:37)</a>:</h4>
+<p>Let me  try some paths tomorrow, I need to tinker with the code and think.</p>
+
+
+
+<a name="298195201"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332168-Master%20-%205.8.0%20%20%28was%3A%20comms%29/topic/AIS%20Decoder/near/298195201" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Dave Register <a href="https://leamas.github.io/zulip-archive/stream/332168-Master---5.2E8.2E0--.28was.3A-comms.29/topic/AIS.20Decoder.html#298195201">(Sep 11 2022 at 02:11)</a>:</h4>
+<p><span class="user-mention" data-user-id="399510">@Alec Leamas</span> <br>
+Now we come to AIS targets received by n2k.  No N0183 AIVDM. The decode is quite simple, we have it available in the n2k decoder library.<br>
+questions are:  Where to decode? And how to inject the decoded target data into the global target list?<br>
+My thoughts, as you might expect: listen in comm_bridge for n2k message from driver.  Decode there. Define some sort of AIS target message, notify on it, and have AIS_decoder listen for it.  Something like BasicNavMsg.<br>
+Other ideas?  And would this be testable?</p>
+<p>I do not have n2k AIS receiver.  But Hakan is going to borrow one to capture some logs.</p>
+
+
+
+<a name="298232455"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332168-Master%20-%205.8.0%20%20%28was%3A%20comms%29/topic/AIS%20Decoder/near/298232455" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Alec Leamas <a href="https://leamas.github.io/zulip-archive/stream/332168-Master---5.2E8.2E0--.28was.3A-comms.29/topic/AIS.20Decoder.html#298232455">(Sep 11 2022 at 10:27)</a>:</h4>
+<p>hm... yes. Building on what we have it seems reasonable. </p>
+<p>I'm heading to refactor ais_decoder::Decode, but this is a very bumpy road before I get here, if ever. Obviosly, it does two things: Decodes the message, and updates the global state. GIven that the global state should be the same after receiving via N2K or N0183  the lastpart should be a common thing, broken out from monstrous Decode() function.</p>
+<p>I have had the same idea: An AppMsg reflecting AIS target info. But to be consistent, this should be sent also when receiving via N0183.  We should really have:</p>
+<p>drivers (0183, N2k)  -&gt; Decode(0183, N2k) -&gt; Update state(common part). </p>
+<p>But this means indeed refactoring current ais_decoder into two parts. It would also mean that the N2k decoding takes part in some separate lib, but this is of course a simple fact anyway.</p>
+<p>AisDecoder is testable, so it should be fine from that POV. I just cannot fathom there are GUI deps in the N2k library...</p>
+
+
+
+<a name="298244572"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332168-Master%20-%205.8.0%20%20%28was%3A%20comms%29/topic/AIS%20Decoder/near/298244572" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Alec Leamas <a href="https://leamas.github.io/zulip-archive/stream/332168-Master---5.2E8.2E0--.28was.3A-comms.29/topic/AIS.20Decoder.html#298244572">(Sep 11 2022 at 12:28)</a>:</h4>
+<p>Sidenote: comm_bridge is perhaps, and should be kept as,  handling own ship data only. If so, it might make sense to rename it (own_ship_decoder?). Names matters.</p>
+<p>The exception is the priority stuff, but this could definitely be split out.</p>
+
+
+
+<a name="298256406"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332168-Master%20-%205.8.0%20%20%28was%3A%20comms%29/topic/AIS%20Decoder/near/298256406" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Dave Register <a href="https://leamas.github.io/zulip-archive/stream/332168-Master---5.2E8.2E0--.28was.3A-comms.29/topic/AIS.20Decoder.html#298256406">(Sep 11 2022 at 14:22)</a>:</h4>
+<p>I took a read through ais_decoder::Decode().  Does not look awful to me (relatively speaking), should be possible to adapt to n2k interface.  Of of course, Decode() definitely needs refactor, making smaller functional methods instead of a giant embedded switch-type thing.<br>
+Anyway, I'll take a crack at adapting to common interface method, so I can proceed with n2k AIS work.</p>
+
+
+
+<a name="298257916"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332168-Master%20-%205.8.0%20%20%28was%3A%20comms%29/topic/AIS%20Decoder/near/298257916" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Alec Leamas <a href="https://leamas.github.io/zulip-archive/stream/332168-Master---5.2E8.2E0--.28was.3A-comms.29/topic/AIS.20Decoder.html#298257916">(Sep 11 2022 at 14:37)</a>:</h4>
+<blockquote>
+<p>Of of course, Decode() definitely needs refactor, m</p>
+</blockquote>
+<p>Indeed, that's the awful part. Just too long.</p>
+
+
+
+<a name="298404100"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332168-Master%20-%205.8.0%20%20%28was%3A%20comms%29/topic/AIS%20Decoder/near/298404100" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Dave Register <a href="https://leamas.github.io/zulip-archive/stream/332168-Master---5.2E8.2E0--.28was.3A-comms.29/topic/AIS.20Decoder.html#298404100">(Sep 12 2022 at 15:27)</a>:</h4>
+<p>I took a shot at n2k AIS processing.<br>
+Please have a look, and see if you agree with my approach.  If so, I will continue with more messages.</p>
+
+
+
+<a name="298405896"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332168-Master%20-%205.8.0%20%20%28was%3A%20comms%29/topic/AIS%20Decoder/near/298405896" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Dave Register <a href="https://leamas.github.io/zulip-archive/stream/332168-Master---5.2E8.2E0--.28was.3A-comms.29/topic/AIS.20Decoder.html#298405896">(Sep 12 2022 at 15:35)</a>:</h4>
+<p>I split out the "updates the global state" part into a common method called "CommitAISTarget()".  Gets called by both n2k and n0183 decoders.</p>
+
+
+
+<a name="298434962"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332168-Master%20-%205.8.0%20%20%28was%3A%20comms%29/topic/AIS%20Decoder/near/298434962" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Alec Leamas <a href="https://leamas.github.io/zulip-archive/stream/332168-Master---5.2E8.2E0--.28was.3A-comms.29/topic/AIS.20Decoder.html#298434962">(Sep 12 2022 at 18:05)</a>:</h4>
+<p>NO time right now,  will try tomorrow.</p>
+
+
+
+<a name="298500149"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332168-Master%20-%205.8.0%20%20%28was%3A%20comms%29/topic/AIS%20Decoder/near/298500149" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Håkan Svensson <a href="https://leamas.github.io/zulip-archive/stream/332168-Master---5.2E8.2E0--.28was.3A-comms.29/topic/AIS.20Decoder.html#298500149">(Sep 13 2022 at 00:50)</a>:</h4>
+<p>Dave..<br>
+For info: Using my TCP or SignalK server; No Atons shown after last commit.</p>
+
+
+
+<a name="298502223"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332168-Master%20-%205.8.0%20%20%28was%3A%20comms%29/topic/AIS%20Decoder/near/298502223" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Dave Register <a href="https://leamas.github.io/zulip-archive/stream/332168-Master---5.2E8.2E0--.28was.3A-comms.29/topic/AIS.20Decoder.html#298502223">(Sep 13 2022 at 01:24)</a>:</h4>
+<p>Class A targets only, to start.</p>
+
+
+
+<a name="298516286"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332168-Master%20-%205.8.0%20%20%28was%3A%20comms%29/topic/AIS%20Decoder/near/298516286" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Håkan Svensson <a href="https://leamas.github.io/zulip-archive/stream/332168-Master---5.2E8.2E0--.28was.3A-comms.29/topic/AIS.20Decoder.html#298516286">(Sep 13 2022 at 05:35)</a>:</h4>
+<p>OK, but since class B is shown for N0183 TCP and SK I thought the class A comment was for coming N2K only.</p>
+
+
+
+<a name="298581121"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332168-Master%20-%205.8.0%20%20%28was%3A%20comms%29/topic/AIS%20Decoder/near/298581121" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Dave Register <a href="https://leamas.github.io/zulip-archive/stream/332168-Master---5.2E8.2E0--.28was.3A-comms.29/topic/AIS.20Decoder.html#298581121">(Sep 13 2022 at 13:11)</a>:</h4>
+<p>OK, I misread your comment (too fast).  I will check on TCP feed.  This is known to have ATONS reported by AIS?</p>
+
+
+
+<a name="298585384"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332168-Master%20-%205.8.0%20%20%28was%3A%20comms%29/topic/AIS%20Decoder/near/298585384" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Håkan Svensson <a href="https://leamas.github.io/zulip-archive/stream/332168-Master---5.2E8.2E0--.28was.3A-comms.29/topic/AIS.20Decoder.html#298585384">(Sep 13 2022 at 13:35)</a>:</h4>
+<p>Yes there are several. (And the server is now up again if you tried)<br>
+Strange, my RPi using today's code does show Atons.<br>
+My Win O though won't fully start for the moment. It hangs after having received AIS from the TCP server. The ship icon is positioned and heading predictor arrow is there but ship symbol is still grey and GNSS icon is red. Cursor is all time "busy". I'll rebuild from scratch and try again.</p>
+
+
+
+<a name="298588599"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332168-Master%20-%205.8.0%20%20%28was%3A%20comms%29/topic/AIS%20Decoder/near/298588599" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Dave Register <a href="https://leamas.github.io/zulip-archive/stream/332168-Master---5.2E8.2E0--.28was.3A-comms.29/topic/AIS.20Decoder.html#298588599">(Sep 13 2022 at 13:51)</a>:</h4>
+<p>On linux, your TCP feed, I see at least one ATON,  "Klaveskar SW", off Goeteborg.</p>
+
+
+
+<a name="298592577"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332168-Master%20-%205.8.0%20%20%28was%3A%20comms%29/topic/AIS%20Decoder/near/298592577" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Håkan Svensson <a href="https://leamas.github.io/zulip-archive/stream/332168-Master---5.2E8.2E0--.28was.3A-comms.29/topic/AIS.20Decoder.html#298592577">(Sep 13 2022 at 14:03)</a>:</h4>
+<p>Yes, RPi is fine.<br>
+On Win all is normal when using serial N0183 via YDNU-02 and N2k.<br>
+Once switching to network TCP or SignalK O is irresponsible/extremely slow. <br>
+Starting up with TCP the log "hangs" here:</p>
+<blockquote>
+<p>15:38:01.291 MESSAGE ocpn_frame.cpp:5031 OnInitTimer...3<br>
+15:38:40.658 MESSAGE ocpn_frame.cpp:5031 OnInitTimer...4</p>
+</blockquote>
+<p>???  Don't understand and neither where to debug.</p>
+
+
+
+<a name="298593653"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332168-Master%20-%205.8.0%20%20%28was%3A%20comms%29/topic/AIS%20Decoder/near/298593653" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Håkan Svensson <a href="https://leamas.github.io/zulip-archive/stream/332168-Master---5.2E8.2E0--.28was.3A-comms.29/topic/AIS.20Decoder.html#298593653">(Sep 13 2022 at 14:09)</a>:</h4>
+<p>Hmm. Saw some background messages in VS looking for Win symbol dll's. Never seen before. I may rebuilt from scratch.</p>
+
+
+
+<a name="298606125"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332168-Master%20-%205.8.0%20%20%28was%3A%20comms%29/topic/AIS%20Decoder/near/298606125" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Håkan Svensson <a href="https://leamas.github.io/zulip-archive/stream/332168-Master---5.2E8.2E0--.28was.3A-comms.29/topic/AIS.20Decoder.html#298606125">(Sep 13 2022 at 15:05)</a>:</h4>
+<p>Forget my complains about slow Win. My bad. My test OCPN on the server was stressing SK to send close to 5000 deltas/sec. OCPN is forgiven trying to swallow that. Sorry to disturb you. <br>
+And now Atons are there on Win as well. I'll try not being so eager reporting? Phuu..</p>
+
+
+
+<a name="302646100"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332168-Master%20-%205.8.0%20%20%28was%3A%20comms%29/topic/AIS%20Decoder/near/302646100" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Håkan Svensson <a href="https://leamas.github.io/zulip-archive/stream/332168-Master---5.2E8.2E0--.28was.3A-comms.29/topic/AIS.20Decoder.html#302646100">(Oct 06 2022 at 13:00)</a>:</h4>
+<p>Also Class A own ship detection is working. Had the opportunity to test a A transceiver.  TOD:task list cleared.<br>
+A Class A candump uploaded to  N2K recording. Unfortunately not meny targets received. I'm located in a dip with mountains around.</p>
+
+
+
+<hr><p>Last updated: Oct 05 2023 at 09:43 UTC</p>
+</html>

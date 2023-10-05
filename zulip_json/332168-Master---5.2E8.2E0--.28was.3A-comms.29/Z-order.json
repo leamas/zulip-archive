@@ -1,0 +1,80 @@
+[
+    {
+        "content": "<p>The JavaScript plugin utilises multiple non-modal windows which, under OCPN 5.6, stay on top of the main frame.  The plugin has  code to keep its window with focus on top of its others windows.</p>\n<p>Under OCPN 5.8 the main frame moves on top of everything else as soon as it comes into focus.  Even moving the cursor over the toolbar is sufficient - presumably because OCPN acts on this to pop up the toolbar item names.</p>\n<p><strong>Question:</strong> has something changed in OCPN 5.8 to bring it on top?  Otherwise it could be a change stemming from wx32. I need to know in order to know where to look.  It is a serious issue for the plugin.</p>",
+        "id": 338334671,
+        "sender_full_name": "Tony Voss",
+        "timestamp": 1677506549
+    },
+    {
+        "content": "<p>z-order on macOS is total hell and wx is not doing a spectacular job there, are you using <code>wxFRAME_FLOAT_ON_PARENT</code> style for your windows?</p>",
+        "id": 338584353,
+        "sender_full_name": "Pavel Kalian",
+        "timestamp": 1677590358
+    },
+    {
+        "content": "<p>I don't think it is me.<br>\nThe same issue exists with at lease wmm plugin.   Open WMM via the toolbar and move the canvas around.  The WMM window fails to move with it, as it does under OCPN5.6.2 and easily gets covered by the frame.<br>\nWindows/dialogues are not being attached to the parent frame on MacOS but are under Windows Mike tells me.<br>\nI suspect that the API GetOCPNCanvasWindow(); is returning nullptr/zero, which would explain the behaviour.<br>\nI have implemented code to confirm this but am unable to compile it just yet because of sd template problems.</p>",
+        "id": 338598497,
+        "sender_full_name": "Tony Voss",
+        "timestamp": 1677593870
+    },
+    {
+        "content": "<blockquote>\n<p>not being attached to the parent frame on MacOS but are under Windows Mike tells me</p>\n</blockquote>\n<p>Re-checked. Not attached to the parent frame on Windows as well.</p>",
+        "id": 338603385,
+        "sender_full_name": "Mike Rossiter",
+        "timestamp": 1677595028
+    },
+    {
+        "content": "<p>Have not yet found a plugin that allows this.</p>",
+        "id": 338604418,
+        "sender_full_name": "Mike Rossiter",
+        "timestamp": 1677595267
+    },
+    {
+        "content": "<p>I would say that on macOS at least, the non-modal windows not moving with the main window and losing focus is the normal behavior, at least that is what I see when I open eg. Safari or <a href=\"http://Mail.app\">Mail.app</a> preferences window and give the main window focus. If other behavior is required, it must be implemented by the application. I have never noticed a problem with <code>GetOCPNCanvasWindow()</code> and actually quickly looking at the code don't see any way it could return NULL once the application is initialised.</p>",
+        "id": 338612845,
+        "sender_full_name": "Pavel Kalian",
+        "timestamp": 1677597202
+    },
+    {
+        "content": "<p><span class=\"user-mention silent\" data-user-id=\"573239\">Pavel Kalian</span> <a href=\"#narrow/stream/332168-Master---5.2E8.2E0--.28was.3A-comms.29/topic/Z-order/near/338612845\">said</a>:</p>\n<blockquote>\n<p>I would say that on macOS at least, the non-modal windows not moving with the main window and losing focus is the normal behavior, at least that is what I see when I open eg. Safari or <a href=\"http://Mail.app\">Mail.app</a> preferences window and give the main window focus. </p>\n</blockquote>\n<p>Under OCPN5.6 and 5.6.2 dialogues and windows created using GetOCPNCanvasWindow() as parent follow the frame.  You can see this with wmm as an example.  Something has changed with OCPN5.7.1.</p>",
+        "id": 338616993,
+        "sender_full_name": "Tony Voss",
+        "timestamp": 1677598076
+    },
+    {
+        "content": "<p>A lot changed in 5.7.1, most importantly we switched to wx3.2, which changed a lot from wx3.0...</p>",
+        "id": 338618627,
+        "sender_full_name": "Pavel Kalian",
+        "timestamp": 1677598464
+    },
+    {
+        "content": "<p>I have raised this as a <a href=\"https://github.com/OpenCPN/OpenCPN/issues/3041\">bug issue</a>.</p>",
+        "id": 338916986,
+        "sender_full_name": "Tony Voss",
+        "timestamp": 1677694078
+    },
+    {
+        "content": "<p>And I again explained it is not a bug there...</p>",
+        "id": 338918607,
+        "sender_full_name": "Pavel Kalian",
+        "timestamp": 1677694498
+    },
+    {
+        "content": "<p><span class=\"user-mention\" data-user-id=\"573239\">@Pavel Kalian</span>  You have explained in my bug report that this is the corrected behaviour.  I was not previously aware  of that and thought the change might have crept in unintended.  Thanks for the clarification.<br>\nCan you point me to relevant documentation on wxFLOAT_ON_PARENT ?  I have not found it in the wxWidgets reference pages nor anything helpful through a search.  I have tried adding it to a wxDialog style but it is reported as an undeclared identifier.</p>",
+        "id": 338924374,
+        "sender_full_name": "Tony Voss",
+        "timestamp": 1677695964
+    },
+    {
+        "content": "<p>Sorry, it should be <code>wxFRAME_FLOAT_ON_PARENT</code>, the only relevant documentation i can think of is <a href=\"https://docs.wxwidgets.org/3.2/classwx_frame.html\">https://docs.wxwidgets.org/3.2/classwx_frame.html</a>, but it is simply nothing but a style flag modifying the behavior of the window.</p>",
+        "id": 338926062,
+        "sender_full_name": "Pavel Kalian",
+        "timestamp": 1677696413
+    },
+    {
+        "content": "<p>I think <code>wxFRAME_FLOAT_ON_PARENT</code> is relevent to frames only.  It is not available as a style for wxDialog.<br>\nDocumention seems very scarce for such a significant change.</p>",
+        "id": 338935692,
+        "sender_full_name": "Tony Voss",
+        "timestamp": 1677698827
+    }
+]

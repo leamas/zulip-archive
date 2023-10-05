@@ -1,0 +1,59 @@
+<html>
+<head><meta charset="utf-8"><title>Screen resolution scaling · general · Zulip Chat Archive</title></head>
+<h2>Stream: <a href="https://leamas.github.io/zulip-archive/stream/282854-general/index.html">general</a></h2>
+<h3>Topic: <a href="https://leamas.github.io/zulip-archive/stream/282854-general/topic/Screen.20resolution.20scaling.html">Screen resolution scaling</a></h3>
+
+<hr>
+
+<base href="https://opencpn.zulipchat.com">
+
+<head><link href="https://leamas.github.io/zulip-archive/style.css" rel="stylesheet"></head>
+
+<a name="350791426"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/282854-general/topic/Screen%20resolution%20scaling/near/350791426" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Tony Voss <a href="https://leamas.github.io/zulip-archive/stream/282854-general/topic/Screen.20resolution.20scaling.html#350791426">(Apr 18 2023 at 14:02)</a>:</h4>
+<p>To handle high resolution screens, some builds need to be aware.<br>
+wxWidgets provides methods <code>GetDPIScaleFactor()</code>, <code>FromDIP()</code> and <code>ToDPI()</code> for this.</p>
+<p><strong>Windows</strong><br>
+This works as expected.</p>
+<p><strong>MacOS</strong><br>
+MacOS takes care of screen resolution at system level, so no action is needed.<br>
+<code>FromDIP()</code> and <code>ToDPI()</code> simply return the same wxPoint or wxSize unchanged.<br>
+Surprisingly, <code>GetDPIScaleFactor()</code> does return the screen resolution (2 for a Retina display) so we have to not use that for MacOS.</p>
+<p><strong>Bullseye</strong><br>
+Some builds are OK (wx32 ones) but some fail (armhf, arm64)</p>
+<p><strong>Buster-armhf </strong><br>
+Fails</p>
+<p>The reason for the fails is that the <code>GetDPIScaleFactor()</code>, <code>FromDIP()</code> and <code>ToDPI()</code> methods are not implemented in some cases.</p>
+<p>I have dozens of these calls in the JavaScript plugin and to conditional compilation of each is not practical.  For my derived classes, I could provide dummy methods that do nothing.<br>
+However, I sometimes use a class 'as is' such as the OCPN canvas window or wxWindow or wxFrame.<br>
+To have to derive a class from these so that I can add the dummy methods seems unfortunate work and complication.</p>
+<p>Any wisdom, please?  And how does OCPN cope with this inconsistency?</p>
+
+
+
+<a name="350795491"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/282854-general/topic/Screen%20resolution%20scaling/near/350795491" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> sean d&#x27;epagnier <a href="https://leamas.github.io/zulip-archive/stream/282854-general/topic/Screen.20resolution.20scaling.html#350795491">(Apr 18 2023 at 14:17)</a>:</h4>
+<p>I am a bit out of the loop, but perhaps you can provide your own wrapper of GetDPIScaleFactor, eg ocpnGetDPIScaleFactor as a global function, or a member of a global class instead?</p>
+
+
+
+<a name="350804011"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/282854-general/topic/Screen%20resolution%20scaling/near/350804011" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Kees Verruijt <a href="https://leamas.github.io/zulip-archive/stream/282854-general/topic/Screen.20resolution.20scaling.html#350804011">(Apr 18 2023 at 14:48)</a>:</h4>
+<p>On those Linux builds without wx32 any high resolution screen will not work properly, for years I'd see OpenCPN charts tucked into one quarter of the window. So on those platforms, a dummy method that just returns "1" or the original wxPoint/wxSize would be OK I think.</p>
+
+
+
+<a name="350805436"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/282854-general/topic/Screen%20resolution%20scaling/near/350805436" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Kees Verruijt <a href="https://leamas.github.io/zulip-archive/stream/282854-general/topic/Screen.20resolution.20scaling.html#350805436">(Apr 18 2023 at 14:53)</a>:</h4>
+<p>But sorry, no direct answer to your question.</p>
+
+
+
+<a name="350824409"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/282854-general/topic/Screen%20resolution%20scaling/near/350824409" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Alec Leamas <a href="https://leamas.github.io/zulip-archive/stream/282854-general/topic/Screen.20resolution.20scaling.html#350824409">(Apr 18 2023 at 16:04)</a>:</h4>
+<p>I have never worked with this suff. That said, I think I'd leave buster and bullseye-wx30 builds out of the loop initially, focus on wx32 for now. wx30 is old and will not be updated in any way now when wx32 is out.</p>
+
+
+
+<hr><p>Last updated: Oct 05 2023 at 09:43 UTC</p>
+</html>

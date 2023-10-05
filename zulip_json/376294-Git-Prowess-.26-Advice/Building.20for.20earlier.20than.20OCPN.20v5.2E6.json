@@ -1,0 +1,80 @@
+[
+    {
+        "content": "<p>So finally, I am building remotely for all relevant platforms - thank you for your patience and support.</p>\n<p>Now a user of the JS plugin still on OCPN 5.6.2 has hit a snag.  I started doing sensibility checks on outgoing NMEA0186 sentences and check they start with $.  This has stopped him sending AIS sentences which start with !<br>\nEasy to fix code-wise but...<br>\nWhen on Github Desktop  I attempted to switch back to the relevant branch (and wx3.1.5) I get the error:</p>\n<div class=\"codehilite\"><pre><span></span><code>fatal: failed to unpack tree object 6369d95ca4c42053ec2ccb1f880e19aadda1e820\nerror: Submodule &#39;opencpn-libs&#39; could not be updated.\nerror: Cannot update submodule:\n    opencpn-libs\nAborting\n</code></pre></div>\n<p>So how do I now go back?</p>",
+        "id": 341151709,
+        "sender_full_name": "Tony Voss",
+        "timestamp": 1678551075
+    },
+    {
+        "content": "<p>Sorry, long essay ahead.</p>\n<p>Part of this problem is the use of Github Desktop (GD).  Im saying this without even testing it. However, I have used git since it started to become popular and have seen multiple attempts to create a git GUI. They have all failed, as I think this also will. </p>\n<p>There are two reasons. One is that as soon as you need to do something more advanced or just uncommon, the GUI does not support it. It just cannot, since the underlying data model is too complex ti be visible in a GUI. The net result becomes that one does the simple work in GD and more complicated tasks in the CLI. But what is the point with a GUI for the simple tasks, tasks which are simple also in the CLI?</p>\n<p>The other reasons is how to get help. Trying to google what you described here is probably hard, the search terms are not that specific. OTOH, if you use the command line the command you want to do is something you can search for and get usable results. And, important, this way you will reach out also to the git experts which definitely does not nedd ur use any gui like GD.</p>\n<p>TL;DR: Don't use Github Desktop. (more coming)</p>",
+        "id": 341331908,
+        "sender_full_name": "Alec Leamas",
+        "timestamp": 1678652286
+    },
+    {
+        "content": "<p>As for your problem it seems that you are in a bad place w r t opencpn-libs.  Assuming you have the branches <em>new</em> and <em>old</em>; you have checked out <em>new</em> and want to checkout <em>old</em>.  What happens when you do <code>git checkout -f --no-recurse-submodules old</code>? Actually assuming more or less the same thing, but we need a starting point</p>",
+        "id": 341332692,
+        "sender_full_name": "Alec Leamas",
+        "timestamp": 1678652891
+    },
+    {
+        "content": "<p>Building for wx3.1.5 from Terminal (so Alec happy).<br>\nBut it is not recompiling my src edits.<br>\nIt does use the updated PKG_VERSION from Plugin.cmake - this appears in the build and in the details when loaded by the plugin manager.  But the changed code in src not updated.<br>\n$git status confirms on correct branch and nothing to commit and tree clean.<br>\nWhen I look on-line on github, the changes are there.<br>\nPerhaps the old compiled code is cached?<br>\nHow can I clear the cache for sd3.1.4 build pease?  There is no  macos-cache-stamp file with this version.</p>",
+        "id": 341458219,
+        "sender_full_name": "Tony Voss",
+        "timestamp": 1678713463
+    },
+    {
+        "content": "<p>Could you be more specific about what you are doing? local build? for what platform? What exactly is not updated? </p>\n<p>I did not say not to use IDEs in general, they can be very useful. Just not for git source management.</p>",
+        "id": 341477994,
+        "sender_full_name": "Alec Leamas",
+        "timestamp": 1678717826
+    },
+    {
+        "content": "<p>Nothing is cached when it comes to the \"real\" source (unless some unknown tool plays tricks with you).  Caching is only made for dependencies on some platforms.</p>",
+        "id": 341478462,
+        "sender_full_name": "Alec Leamas",
+        "timestamp": 1678717923
+    },
+    {
+        "content": "<p>More questions:</p>\n<ul>\n<li>Which git repository? (url)</li>\n<li>which branch ?</li>\n</ul>",
+        "id": 341479762,
+        "sender_full_name": "Alec Leamas",
+        "timestamp": 1678718175
+    },
+    {
+        "content": "<p>I am trying to update the JavaScript used by OCPN5.6.2.<br>\nThe branch is v2.0.3 in my repository.<br>\nIf I build locally, all is well.<br>\nIf I build remotely the builds are delivered into <a href=\"https://cloudsmith.io/~opencpn/repos/javascript-prod/packages/\">my repository</a> correctly.  If I download the MacOS tarball and import it, the  metadata is correct (updated version number as expected but the plugin code has not been updated.  The code changes have not happened.<br>\nsrc/version.h includes the line<br>\n<code>#define     PLUGIN_VERSION_DATE \"2023:03:13\"</code><br>\nThis date is displayed in a new console script.  What actually appears is <code>2023:02:03</code> which is from an earlier version.<br>\nOther updates to functional changes in the code are not active.</p>\n<p>I wondered whether my branches have got in a twist, so I have now created a new branch <code>v2.0.4-wx3.1.2</code>, fetched it to my  local copy, edited the version in <code>Plugin.cmake</code> and <code>src/version.h </code>file and pushed it up.  Same thing - the version number from <code>Plugin.cmake</code> is updated but not that from version.h nor the changes in <code>OCPNapis.cpp</code></p>",
+        "id": 341499124,
+        "sender_full_name": "Tony Voss",
+        "timestamp": 1678721996
+    },
+    {
+        "content": "<p>Sorry, life takes some toll.  Two important things:</p>\n<ul>\n<li>What does <code>git rev-parse v2.0.3</code>say?</li>\n<li>I need a link to the build logs...</li>\n</ul>",
+        "id": 341582373,
+        "sender_full_name": "Alec Leamas",
+        "timestamp": 1678745149
+    },
+    {
+        "content": "<p>Thanks so much for looking into this, Alec.</p>\n<div class=\"codehilite\"><pre><span></span><code>tony@Janov JavaScript_pi % git rev-parse v2.0.3-wx3.1.2\n3a5521ad71a66b2e93eddb42a433335348b7e905\ntony@Janov JavaScript_pi % git rev-parse v2.0.4-wx3.1.2\n10ae0189a8cca0dc8c03e5945106b4b2fc13cdbd\n</code></pre></div>\n<p><a href=\"https://app.circleci.com/pipelines/github/antipole2/JavaScript_pi/248/workflows/9f3f3431-c9f6-4908-a0b6-daad998af8ec\">Builds here.</a></p>",
+        "id": 341590093,
+        "sender_full_name": "Tony Voss",
+        "timestamp": 1678748414
+    },
+    {
+        "content": "<p>if you look into the build step logs, there is a <em>Checkout code</em> step. In the link you provided, this says it has checked out  10ae018 i. e., v2.0.4-wx3.1.2  according to what you provided above.</p>\n<p>git has a very strong commitment: a given hash is always refers to the same code. That is, if you check out v2.0.4-wx3.1.2 locally  and verify that it indeed is 10ae018 you have the same code as the remote build.  You could then track down what the scripts in ci/ does and make the same steps locally. </p>\n<p>Bottom line: 10ae018 is always the same code, local or remote. If there are differences, it's about what's done with this code. That is, some build script like <em>ci/circleci-build-macos.sh</em> and you make different things. What such a difference would be is hard for me to tell.</p>",
+        "id": 341636157,
+        "sender_full_name": "Alec Leamas",
+        "timestamp": 1678777954
+    },
+    {
+        "content": "<p><strong>Mystery solved - kind of..</strong>.<br>\nThe build does use the correct commit 10ae018...<br>\nI did a local build and got the same peculiar result... new version imported and installed and old code run.<br>\nInspection of the OCPN log shows as expected.<br>\nI then did a restart of OpenCPN5.6.2 and all well thereafter!<br>\nSo, it seems, OCPN5.6.2 was apparently re-installing the plugin and saying so and logging that but is not unloading the old code and then using it instead of the updated code <span aria-label=\"face with spiral eyes\" class=\"emoji emoji-1f635-200d-1f4ab\" role=\"img\" title=\"face with spiral eyes\">:face_with_spiral_eyes:</span> <br>\nSorry to take you on a wild goose chase Alec.<br>\nMaybe an obscure bug in OCPN5.6.2 which will die with that version.</p>",
+        "id": 341700750,
+        "sender_full_name": "Tony Voss",
+        "timestamp": 1678796050
+    },
+    {
+        "content": "<p>Glad to help, and happy that it works for you.  </p>\n<p>I think that what this is all about it just some more hours in the git trenches to get combat experience, so to speak.</p>",
+        "id": 341787415,
+        "sender_full_name": "Alec Leamas",
+        "timestamp": 1678799182
+    }
+]

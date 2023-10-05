@@ -1,0 +1,146 @@
+[
+    {
+        "content": "<p>Do we want to do something about the ARMHF Raspbian Buster plugins, which we currently sometimes build for many plugins, but never publish? There still seem to be people who would need them, like <a href=\"https://www.cruisersforum.com/forums/f134/opencpn-version-5-8-0-released-274781-7.html#post3768978\">https://www.cruisersforum.com/forums/f134/opencpn-version-5-8-0-released-274781-7.html#post3768978</a></p>",
+        "id": 351728053,
+        "sender_full_name": "Pavel Kalian",
+        "timestamp": 1682109381
+    },
+    {
+        "content": "<p>good question... The current state is \"frozen\" which means that there are no buster/armhf/wx32 plugins available. </p>\n<p>The buster/armhf combination is really old these days. Personally, I don't think a single user report (or a few) is reason enough to rebuild buster/armhf/wx32 plugins. But then again, that's just me.</p>",
+        "id": 351786183,
+        "sender_full_name": "Alec Leamas",
+        "timestamp": 1682143905
+    },
+    {
+        "content": "<p>Well, they seem to be somewhat more numerous than I thought. I don't know where they come from, but as they talk about some \"OpenCPN installer\" thing it might be some older OpenPlotter.</p>",
+        "id": 351823521,
+        "sender_full_name": "Pavel Kalian",
+        "timestamp": 1682154990
+    },
+    {
+        "content": "<p>The other thing is we do deliver the core app package for that platform. But we currently do not deliver the user experience expected.</p>",
+        "id": 351825188,
+        "sender_full_name": "Pavel Kalian",
+        "timestamp": 1682155339
+    },
+    {
+        "content": "<p>So, assuming this basically is about RPis it would leave us with two options: to rebuild plugins also for buster/wx32/armhf, or tell the users to update their platform. </p>\n<blockquote>\n<p>The other thing is we do deliver the core app package for that platform. But we currently do not deliver the user experience expected.</p>\n</blockquote>\n<p>Indeed.  This is a mess.</p>",
+        "id": 351833346,
+        "sender_full_name": "Alec Leamas",
+        "timestamp": 1682157404
+    },
+    {
+        "content": "<p>AFAICT it is buster/wx30, but yes, we would have to perform the builds, push them to cloudsmith and update the plugin catalog accordingly. If it works as it should, it seems to be about changing two lines in <code>build-conf.rc</code> and the time spent on updating the catalogs. Not horrible.</p>",
+        "id": 351836950,
+        "sender_full_name": "Pavel Kalian",
+        "timestamp": 1682158463
+    },
+    {
+        "content": "<p>Of course you are right, buster Iis wx30. My bad, sorry. <br>\nBut since it is, we could just publish existing builds as-is. This was actually the original plan, to just use existing plugins. The build-conf.rc loophole was just aimed for situations when  we had to fix some bad bug on an existing plugin ( on phone ..)</p>",
+        "id": 351848474,
+        "sender_full_name": "Alec Leamas",
+        "timestamp": 1682161649
+    },
+    {
+        "content": "<p>Oh yes, we can publish them, my question is more \"Do we want to or do we want to officially abandon this platform?\" I don't care, just will need to trigger new builds everywhere as I simply don't have anything older to publish, but as said before, it is not horrible amount of work.</p>",
+        "id": 351851679,
+        "sender_full_name": "Pavel Kalian",
+        "timestamp": 1682162433
+    },
+    {
+        "content": "<p>As I understand, Buster is not completely dead yet, so we probably should prefer to keep the support in 5.8 cycle.</p>",
+        "id": 351851849,
+        "sender_full_name": "Pavel Kalian",
+        "timestamp": 1682162507
+    },
+    {
+        "content": "<p>The idea is that buster is \"frozen\". This means that existing plugins should be published, but no fresh builds. </p>\n<p>Note that builf-conf.rc is shipdriver specific, no idea how testplugin handles it.</p>",
+        "id": 351853972,
+        "sender_full_name": "Alec Leamas",
+        "timestamp": 1682163142
+    },
+    {
+        "content": "<p>This of course also means that since the plugins seems missing they need to be re-published</p>",
+        "id": 351855142,
+        "sender_full_name": "Alec Leamas",
+        "timestamp": 1682163582
+    },
+    {
+        "content": "<p>If we considered Buster/Bionic frozen, we would not publish O5.8 for them in the PPA, woud we? As we did publish it, we kind of made ourselves responsable to also deliver the correspponding plugins for it. At least I think so. And again, I have absolutely no problem doing it. And the main testplugin based plugin, which is Draw is still not done, so I don't expect too many problems there neither.</p>",
+        "id": 351855290,
+        "sender_full_name": "Pavel Kalian",
+        "timestamp": 1682163617
+    },
+    {
+        "content": "<p>well, the old plugins should work just fine for 5.8, right?</p>",
+        "id": 351868004,
+        "sender_full_name": "Alec Leamas",
+        "timestamp": 1682167519
+    },
+    {
+        "content": "<p>Dunno, I don't have any such system.</p>",
+        "id": 351868102,
+        "sender_full_name": "Pavel Kalian",
+        "timestamp": 1682167545
+    },
+    {
+        "content": "<p>this is basically the compatibility promise: old plugins should work on new opencpn, besides ABI breaks like gtk3 and wx32</p>",
+        "id": 351868441,
+        "sender_full_name": "Alec Leamas",
+        "timestamp": 1682167621
+    },
+    {
+        "content": "<p>But the \"old plugins\" still need to be added to the catalog (If they exist, there for example are no \"old\" packages for any of my own plugins at all). As a publisher of plugins, for me it is simpler to support Buster fully than to play the frozen game.</p>",
+        "id": 351869058,
+        "sender_full_name": "Pavel Kalian",
+        "timestamp": 1682167803
+    },
+    {
+        "content": "<blockquote>\n<p>But the \"old plugins\" still need to be added to the catalog (If they exist, there for example are no \"old\" packages for any of my own plugins at all)</p>\n</blockquote>\n<p>Agreed</p>\n<blockquote>\n<p>As a publisher of plugins, for me it is simpler to support Buster fully than to play the frozen game.</p>\n</blockquote>\n<p>This has been discussed, and so far we settled for \"playing the frozen game\", it's been part of the overall effort to keep down the number of builds. And of course whatever problems which might occur when the plugin moves forward using deps not necessarily found in buster.</p>\n<p>But OTOH, when it comes to plugins you maintain it is, as you say, basically just a matter of a line in <em>build-conf.rc</em>, as long as you are using the shipdriver template.</p>",
+        "id": 351888023,
+        "sender_full_name": "Alec Leamas",
+        "timestamp": 1682173568
+    },
+    {
+        "content": "<p><span class=\"user-mention\" data-user-id=\"399559\">@Mike Rossiter</span>  ^</p>",
+        "id": 351893203,
+        "sender_full_name": "Alec Leamas",
+        "timestamp": 1682175188
+    },
+    {
+        "content": "<p>Could <em>sd3.1.x templates</em> be modified to build the old plugins (with some adjustments?) How much would  <em>OpenCPN/plugins</em> need to change to accept these plugins into the catalog for O5.6?  This would cater for the plugins sliding off the Cloudsmith lifecycle. The old plugins could be rebuilt on request.</p>",
+        "id": 351895387,
+        "sender_full_name": "Mike Rossiter",
+        "timestamp": 1682175855
+    },
+    {
+        "content": "<p>But we are talking about Buster OpenCPN 5.8.0 I think.</p>",
+        "id": 351896136,
+        "sender_full_name": "Mike Rossiter",
+        "timestamp": 1682176099
+    },
+    {
+        "content": "<p>As  pavel said, also 3.2  can build  buster.   It's just a configurstion issue  in <em>build-conf.rc</em>. Of course, this is if current sources actually build on buster. I exppect this  to be the case for most plugins, but perhaps not all</p>",
+        "id": 351896236,
+        "sender_full_name": "Alec Leamas",
+        "timestamp": 1682176136
+    },
+    {
+        "content": "<p>And would they be accepted for the catalog?</p>",
+        "id": 351896537,
+        "sender_full_name": "Mike Rossiter",
+        "timestamp": 1682176228
+    },
+    {
+        "content": "<blockquote>\n<p>But we are talking about Buster OpenCPN 5.8.0 I think.</p>\n</blockquote>\n<p>There is really no such thing, it's only a question about the plugin API  used.   And a  buster plugin must not use  anything above  the API which is available in at least 5.6, since   we don't know  if the user  actually is  running  5.8.0 or 5.6.2. </p>\n<p>This is  one of those things  which might  make  it impossible  to build  current  plugin sources  for buster. The best would probably  be if the old builds still are  available in cloudsmith, that would be an  easy and clean path to add..</p>",
+        "id": 351897333,
+        "sender_full_name": "Alec Leamas",
+        "timestamp": 1682176476
+    },
+    {
+        "content": "<blockquote>\n<p>and would they be accepted for the catalog?</p>\n</blockquote>\n<p>Yes.  The automated tests might give some false positives, but it should be possible to  merge anyway after  reviewing  the test  results.</p>",
+        "id": 351897645,
+        "sender_full_name": "Alec Leamas",
+        "timestamp": 1682176574
+    }
+]

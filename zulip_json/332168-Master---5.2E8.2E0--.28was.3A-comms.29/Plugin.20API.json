@@ -1,0 +1,278 @@
+[
+    {
+        "content": "<p>Looking into the API after  memory leak hunt. We need to export  <code>ObservedEvt</code>, it is required to transfer a shared_ptr in a safe way to any consumer.  I thought I could work around this, but Dan proved me wrong.</p>\n<p>First step is to make it a separate file. It will have to be pasted into ocpn_plugin.h, but that's just life.</p>",
+        "id": 294222533,
+        "sender_full_name": "Alec Leamas",
+        "timestamp": 1660898279
+    },
+    {
+        "content": "<p>I have updated the Plugin API</p>\n<ul>\n<li>Accommodated  the new memory leak changes which requires a new event type.  Duplicated code in ocpn_plugin.h and observable_evt.h, sigh.  </li>\n<li>Added handling of decoded data.</li>\n</ul>\n<p>The API seems  export the necessary parts without exposing too much of internal structure (?). The intended usage is in MESSAGES.adoc at top level.</p>",
+        "id": 294234180,
+        "sender_full_name": "Alec Leamas",
+        "timestamp": 1660904008
+    },
+    {
+        "content": "<p>Closing the \"Design API\" task. we will certainly need to revise this before done, but we do have a basic design in place.</p>",
+        "id": 294234452,
+        "sender_full_name": "Alec Leamas",
+        "timestamp": 1660904138
+    },
+    {
+        "content": "<p>Tried to implement n2k listener in Dashboard plugin, following the recipe inMESSAGES.adoc.<br>\nDid not compile.</p>\n<div class=\"codehilite\"><pre><span></span><code>  wxDEFINE_EVENT(PEVT_N2K_129540, wxCommandEvent);\n NMEA2000Id id_129540 = NMEA2000Id(129540);\n listener = std::move(GetListener(id_129540, PEVT_N2K_129540, this);\n\n Bind(PEVT_N2K_129540, [&amp;](wxCommandEvent ev) {\n   HandleN2K_129540();\n });\n</code></pre></div>\n\n<p>Error is:<br>\nopencpn/plugins/dashboard_pi/src/dashboard_pi.cpp:555:68: error: no matching function for call to ‘GetListener(NMEA2000Id&amp;, const wxEventTypeTag&lt;wxCommandEvent&gt;&amp;, dashboard_pi*)’</p>\n<p>Which, of course, there is not.  The second parameter of GetListener is \"ObservedEvt ev\".<br>\nbtw, I had to change the third parameter from \"wxEvtHandler handler\" to wxEvtHandler *handler.  Needs a pointer, not an object.<br>\n???</p>",
+        "id": 298502627,
+        "sender_full_name": "Dave Register",
+        "timestamp": 1663032690
+    },
+    {
+        "content": "<p>My bad, sorry. The GetListener() signature was plain wrong, fixed it in recent commit  0405210.</p>\n<p>A more fundamental problem is that while this will compile, it won't link since it is not implemented :(</p>",
+        "id": 298530615,
+        "sender_full_name": "Alec Leamas",
+        "timestamp": 1663055520
+    },
+    {
+        "content": "<p>Furthermore, MESSAGES.adoc needed more review. I have pushed some bugfixes, the most important being wxCommandEvt -&gt; ObservedEvt.</p>",
+        "id": 298539200,
+        "sender_full_name": "Alec Leamas",
+        "timestamp": 1663059128
+    },
+    {
+        "content": "<p>OK, can I help?  Or should I just wait for implementation?</p>",
+        "id": 298605952,
+        "sender_full_name": "Dave Register",
+        "timestamp": 1663081477
+    },
+    {
+        "content": "<p>I have plans to make it late today or early tomorrow. Can it wait until then?</p>",
+        "id": 298606727,
+        "sender_full_name": "Alec Leamas",
+        "timestamp": 1663081697
+    },
+    {
+        "content": "<p>Sure.</p>",
+        "id": 298613438,
+        "sender_full_name": "Dave Register",
+        "timestamp": 1663083670
+    },
+    {
+        "content": "<p>Pushed an untested implementation.</p>",
+        "id": 298673354,
+        "sender_full_name": "Alec Leamas",
+        "timestamp": 1663105945
+    },
+    {
+        "content": "<p>Works, with very slight patch to ocpn_plugin.h, pushed.  (f99820c)<br>\nI am able to catch and process N2K Satellite Info messages in Dashboard plugin.  I'm sure other message types will work as well.<br>\nThis patch is not quite right though, since it needs to include core file \"observable.h\".  So no good for plugins built out of core source tree.<br>\nHow to fix?</p>",
+        "id": 298689889,
+        "sender_full_name": "Dave Register",
+        "timestamp": 1663118777
+    },
+    {
+        "content": "<p>Also made slight correction to MESSAGES.adoc</p>",
+        "id": 298690246,
+        "sender_full_name": "Dave Register",
+        "timestamp": 1663119172
+    },
+    {
+        "content": "<p>And also some hacks to \"observable.h\" to satisfy the brain-dead MSW linker. You will probably want to edit this...<br>\nBut anyway, this gets us further along, and we learn.</p>",
+        "id": 298695648,
+        "sender_full_name": "Dave Register",
+        "timestamp": 1663124740
+    },
+    {
+        "content": "<p>I may run into that humble judgement of VS's capabilities trying to build here.  :)</p>",
+        "id": 298709580,
+        "sender_full_name": "Håkan Svensson",
+        "timestamp": 1663136732
+    },
+    {
+        "content": "<blockquote>\n<p>patch is not quite right though, since it needs to include core file \"observable.h\".</p>\n</blockquote>\n<p>This is a hole below water line. Need to revise the whole API.</p>",
+        "id": 298710738,
+        "sender_full_name": "Alec Leamas",
+        "timestamp": 1663137372
+    },
+    {
+        "content": "<p>OK, a quick fix was  's/unique_ptr/shared_ptr/' .  It turns out that using <code>unique_ptr</code>with an incomplete type is extremely messy.</p>\n<p>I'm not really happy with this change,  theoretically it opens up a hole for two concurrent listener instances. However,  performance should not be a problem here, pointers are only assigned on initialization. And \"normal\" usage patterns should not generate two instances. </p>\n<p>However, this gives me a bad feeling and I plan to come back to it later.  API can be changed before the release....</p>",
+        "id": 298714733,
+        "sender_full_name": "Alec Leamas",
+        "timestamp": 1663139476
+    },
+    {
+        "content": "<p>Now also VS linked ok and build succeeded.  <br>\nThanks</p>",
+        "id": 298719116,
+        "sender_full_name": "Håkan Svensson",
+        "timestamp": 1663141677
+    },
+    {
+        "content": "<p>FWIW: I read about  MESSAGES.adoc and \"<em>EVT_SHIPDRIVER_ for each received GPGGA message</em>\".<br>\nJust be careful to not accidentally call for explicit \"GPGGA\" using the talker \"GP\". According to the NMEA standard GGA talker can be \"GP\" if the GPS system only is used for position fix. Otherwise talker \"GN\" would be used. (\"GNGGA\")<br>\nThe same goes for GSV. (GPGSV, GNGSV, GAGSV and more)</p>",
+        "id": 298719823,
+        "sender_full_name": "Håkan Svensson",
+        "timestamp": 1663142013
+    },
+    {
+        "content": "<p>We need probably to think more about this, it was not clear to me at all when I wrote it (code and docs).</p>\n<p>Now, these docs are just about how the messaging system works and should IMHO be kept as simple as possible. What you talk about now probably needs another document.</p>\n<p>Should we just match on GGA instead i. e.,  ignore the talker?  This is what we do for 0183, so it might make sense. Thoughts?</p>",
+        "id": 298722476,
+        "sender_full_name": "Alec Leamas",
+        "timestamp": 1663143242
+    },
+    {
+        "content": "<blockquote>\n<p>Should we just match on GGA instead i. e., ignore the talker? </p>\n</blockquote>\n<p>Yes, talker in general, except for GGA and GSV is sender dependent for info. But for these two we need to know and in some cases, Dashboard(--GSV), react on used talker, as done today. For user individuell use the talker can though be used in mux filters.  For instance filter out $ECGGA and use others like GPGGA/GNGGA.</p>",
+        "id": 298771983,
+        "sender_full_name": "Håkan Svensson",
+        "timestamp": 1663162517
+    },
+    {
+        "content": "<p>It's hard and most likely wrong to split this to special cases. We should really, really either ignore the talker or not.</p>\n<p>Suggestion: we ignore the  talker when listening i. e. the listener gets all messages of given type. And add ssupport in Nmea2000Msg to retrieve the talker id, so the listening part (typically a plugin) can check the the talker id do whatever needed. </p>\n<p>OK?</p>",
+        "id": 298787055,
+        "sender_full_name": "Alec Leamas",
+        "timestamp": 1663167343
+    },
+    {
+        "content": "<p>I suppose you mean N0183Msg ?  Talker not defined in N2K.</p>",
+        "id": 298790078,
+        "sender_full_name": "Dave Register",
+        "timestamp": 1663168358
+    },
+    {
+        "content": "<p>Suggestion: we ignore the talker when listening i. e. the listener gets all messages of given type<br>\nAgree.</p>",
+        "id": 298790136,
+        "sender_full_name": "Dave Register",
+        "timestamp": 1663168377
+    },
+    {
+        "content": "<p>Yes, e.g. $--GGA is a N0183 message. Nothing else.<br>\nAgree!</p>",
+        "id": 298793315,
+        "sender_full_name": "Håkan Svensson",
+        "timestamp": 1663169327
+    },
+    {
+        "content": "<p>My bad. not focused as I should. just disregard</p>",
+        "id": 298793951,
+        "sender_full_name": "Alec Leamas",
+        "timestamp": 1663169527
+    },
+    {
+        "content": "<p>And btw, recall that no existing plugins will need to listen to N0183, anyway.  They already get the full N0183 stream by legacy plugin API.</p>",
+        "id": 298798865,
+        "sender_full_name": "Dave Register",
+        "timestamp": 1663170979
+    },
+    {
+        "content": "<p>Read my lips: sooner or later someone will try...</p>",
+        "id": 298801978,
+        "sender_full_name": "Alec Leamas",
+        "timestamp": 1663171925
+    },
+    {
+        "content": "<p>And we want them to, for new work.</p>",
+        "id": 298829834,
+        "sender_full_name": "Dave Register",
+        "timestamp": 1663181266
+    },
+    {
+        "content": "<p>On a sidenote we should probably keep MESSAGES.adoc in the opencn git repo, while still integrating it in the main manual.  This is how the plugin manuals work, and it's a good setup.  </p>\n<p>Suffering from degraded health -- covid?. Not much work...</p>",
+        "id": 298842733,
+        "sender_full_name": "Alec Leamas",
+        "timestamp": 1663185895
+    },
+    {
+        "content": "<p>Hope not covid.  Take good care....</p>",
+        "id": 298883058,
+        "sender_full_name": "Dave Register",
+        "timestamp": 1663199651
+    },
+    {
+        "content": "<p>When merged Dashboard would now read N2k to update GNSS Status instrument.<br>\nDave.. <br>\nPlease check with your Garmin so it's working also there.<br>\nBTW: Did you get any value on SID from Garmin?  Just \"0\" from my Simrad!</p>",
+        "id": 298971736,
+        "sender_full_name": "Håkan Svensson",
+        "timestamp": 1663249553
+    },
+    {
+        "content": "<p>New dashboard GNSS instrument works fine with my Garmin GPS receiver, YDNU interface.<br>\nSID:  Garmin reports values, increasing by \"5\" at each callback, like:  \"145, 150, 155, 160...\"</p>",
+        "id": 299064547,
+        "sender_full_name": "Dave Register",
+        "timestamp": 1663282521
+    },
+    {
+        "content": "<p>SID: So your Garmin use it but my Simrad not. Obviously not a parameter we can rely on to e.g. check if various PGN are time connected. If anywhere important we better check update time span.</p>",
+        "id": 299094893,
+        "sender_full_name": "Håkan Svensson",
+        "timestamp": 1663307403
+    },
+    {
+        "content": "<p><span class=\"user-mention\" data-user-id=\"517002\">@Dave Register</span> <br>\nDashboard wont get Heading when connected to N2K.<br>\nInstead of call a whole new PGN to DB my thought is to instead use the heading available in O core.<br>\nBut for that we need to upgrade DB from \"opencpn_plugin_16\" to \"opencpn_plugin_18\" and use SetPositionFixEx(PlugIn_Position_Fix_Ex &amp;pfix) where Hdt is included.</p>\n<p>If you think this a good idea please help to update DB to opencpn_plugin_18. I tried but didn't succeeded. Haven't done this before so it's obviously more than a simple change to opencpn_plugin_18 inside DB. <br>\nI need to study how you do it.</p>",
+        "id": 299296974,
+        "sender_full_name": "Håkan Svensson",
+        "timestamp": 1663408680
+    },
+    {
+        "content": "<p>Dave..<br>\nGot it. found the third place to change to API version 18. So now Hdt is nicely passed.<br>\nSo if the idea is good(?) I'll commit together with other changes?</p>",
+        "id": 299314484,
+        "sender_full_name": "Håkan Svensson",
+        "timestamp": 1663417399
+    },
+    {
+        "content": "<p>Yes, good.  Dashboard will be updated to API 18 for the new listener/notify signaling.<br>\nI await your PR.</p>",
+        "id": 299322445,
+        "sender_full_name": "Dave Register",
+        "timestamp": 1663421662
+    },
+    {
+        "content": "<p>Will do today. <br>\nFor info: I'll take the boat tomorrow and have access to N2K-boat  with \"a lot instrument\" so I can test DB N2K and try to make a candump with all. The latter implies my server will be down a couple of days since that's the RPi4 I'll use.</p>",
+        "id": 299323546,
+        "sender_full_name": "Håkan Svensson",
+        "timestamp": 1663422226
+    },
+    {
+        "content": "<p>OK, good.</p>",
+        "id": 299323926,
+        "sender_full_name": "Dave Register",
+        "timestamp": 1663422347
+    },
+    {
+        "content": "<p>Dave..<br>\nChanges pushed. I you've wind and depth in your captures you may want to test?</p>",
+        "id": 299332904,
+        "sender_full_name": "Håkan Svensson",
+        "timestamp": 1663426849
+    },
+    {
+        "content": "<p><strong><em>Crash at language change</em></strong><br>\nWhen I change language O crashes. In my debug it seems related to Plugins, see below.<br>\nAlso is the language list in User Interface not nice. Empty rows and question marks and other signs.  Both Win and RPi <br>\nWe may have other things now? I make a Todo task.<br>\nCall stack:</p>\n<blockquote>\n<p>radar_pi.dll!RadarPlugin::RadarInfo::GetInfoStatus() Line 1456  C++<br>\n    radar_pi.dll!RadarPlugin::MessageBoxW::CreateControls() Line 135    C++<br>\n    radar_pi.dll!RadarPlugin::MessageBoxW::Create(wxWindow * parent, RadarPlugin::radar_pi * pi) Line 100   C++<br>\n    radar_pi.dll!RadarPlugin::radar_pi::Init() Line 258 C++<br>\n    opencpn.exe!PluginLoader::UpdatePlugIns() Line 515  C++<br>\n    opencpn.exe!ApplyLocale() Line 8694 C++<br>\n    opencpn.exe!MyFrame::DoOptionsDialog() Line 4586    C++<br>\n    opencpn.exe!MyFrame::DoSettings() Line 3247 C++<br>\n    opencpn.exe!ChartCanvas::OnKeyDown(wxKeyEvent &amp; event) Line 3109    C++<br>\n    [External Code] <br>\n    [Frames below may be incorrect and/or missing, no symbols loaded for wxbase312u_vc_custom.dll]  Unknown<br>\n    opencpn.exe!WinMain(HINSTANCE__ * hInstance, HINSTANCE__ * hPrevInstance, char * __formal, int nCmdShow) Line 949   C++<br>\n    [External Code]</p>\n</blockquote>",
+        "id": 301216605,
+        "sender_full_name": "Håkan Svensson",
+        "timestamp": 1664367499
+    },
+    {
+        "content": "<p>Gents, a problem was reported that the radar plugin 5.5.0-beta + O 5.7.1RC isn't showing AIS targets on the radar PPI (the separate OpenGL canvas). We use <code>PlugInAISDraw()</code> for that, which has been in the API for ages (1.14 I believe). I'm setting up an OpenCPN build environment (hadn't needed one for a long time, and new laptop etc.) to check what broke here. As far as I can tell we're calling <code>PlugInAISDraw()</code> exactly the same way as before, and on first sight the changes in <code>ais.cpp</code> aren't that big (nothing major screams out). I'm saying this as a) a heads up that this bug remains, and it may very well be in O not the plugin; b) maybe one of you has an idea on why this might be?</p>",
+        "id": 345986334,
+        "sender_full_name": "Kees Verruijt",
+        "timestamp": 1680276624
+    },
+    {
+        "content": "<p>A message was moved here from <a class=\"stream-topic\" data-stream-id=\"332168\" href=\"/#narrow/stream/332168-Master---5.2E8.2E0--.28was.3A-comms.29/topic/Documentation\">#Master - 5.8.0  (was: comms) &gt; Documentation</a> by <span class=\"user-mention silent\" data-user-id=\"493038\">Kees Verruijt</span>.</p>",
+        "id": 346336580,
+        "sender_full_name": "Notification Bot",
+        "timestamp": 1680432688
+    },
+    {
+        "content": "<p><span class=\"user-mention\" data-user-id=\"517002\">@Dave Register</span>  ^</p>",
+        "id": 346395878,
+        "sender_full_name": "Alec Leamas",
+        "timestamp": 1680458287
+    },
+    {
+        "content": "<p>Are you here now?</p>",
+        "id": 346412355,
+        "sender_full_name": "Dave Register",
+        "timestamp": 1680468403
+    },
+    {
+        "content": "<p>yup</p>",
+        "id": 346413083,
+        "sender_full_name": "Alec Leamas",
+        "timestamp": 1680468896
+    },
+    {
+        "content": "<p><span class=\"user-mention\" data-user-id=\"517002\">@Dave Register</span> thanks for fixing this so quickly. For others, see <a href=\"https://github.com/opencpn-radar-pi/radar_pi/issues/224\">https://github.com/opencpn-radar-pi/radar_pi/issues/224</a> and <a href=\"https://github.com/OpenCPN/OpenCPN/commit/0d019bc72003e01863791f30c5abdea5a1294cd6\">https://github.com/OpenCPN/OpenCPN/commit/0d019bc72003e01863791f30c5abdea5a1294cd6</a></p>",
+        "id": 347323961,
+        "sender_full_name": "Kees Verruijt",
+        "timestamp": 1680766335
+    }
+]

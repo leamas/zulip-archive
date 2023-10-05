@@ -1,0 +1,572 @@
+[
+    {
+        "content": "<p>We've just found out that when O is compiled with wx3.2.2 that plugins built with wx3.2.1 no longer work, at least <code>radar_pi</code> on Linux. See <a href=\"https://github.com/opencpn-radar-pi/radar_pi/issues/225\">https://github.com/opencpn-radar-pi/radar_pi/issues/225</a></p>",
+        "id": 347886784,
+        "sender_full_name": "Kees Verruijt",
+        "timestamp": 1680968168
+    },
+    {
+        "content": "<p><span class=\"user-mention\" data-user-id=\"517002\">@Dave Register</span> suggests going back to wx3.2.1 -- short term that is the easiest solution, but there are a number of fixes that might make sense to have. From the release notes for wx3.2.2:</p>\n<blockquote>\n<p>Better window resizing on DPI change in wxMSW.<br>\nFix using native icons returned by wxArtProvider.<br>\nFix menu items using custom font in high DPI.<br>\nHigh resolution icons support in wxGenericTreeCtrl and wxGenericListCtrl.</p>\n</blockquote>\n<p>Do we build with wx3.2.2 on Windows? Does the same problem happen there?</p>",
+        "id": 347887225,
+        "sender_full_name": "Kees Verruijt",
+        "timestamp": 1680968400
+    },
+    {
+        "content": "<p>Yes, the least intrusive solution probably is to build the core app against 3.2.1, but I'm a bit affraid that we will get stuck with it then. AFAICT at the moment, there is no problem on any other platform.<br>\nWhat is interesting is that radar_pi is the only affected, although my plugins also link against the OpenGL libs and draw on the canvas, so the symbols should be there.</p>",
+        "id": 347887666,
+        "sender_full_name": "Pavel Kalian",
+        "timestamp": 1680968594
+    },
+    {
+        "content": "<p>Checking macOS now. AFAICS that was already using wx3.2.2 for O, checking radar_pi plugin now.</p>",
+        "id": 347887931,
+        "sender_full_name": "Kees Verruijt",
+        "timestamp": 1680968712
+    },
+    {
+        "content": "<p>Windows and Mac bundle wx3.2.2  <br>\nWe particularly needed: Fix menu items using custom font in high DPI.</p>",
+        "id": 347888475,
+        "sender_full_name": "Dave Register",
+        "timestamp": 1680968982
+    },
+    {
+        "content": "<p>MacOS seems fine. Both O and plugin have a dependency on <code>__ZNK12wxWindowBase15IsShownOnScreenEv</code>. Note how this is WindowBase, not GLCanvasEGL15.</p>",
+        "id": 347888638,
+        "sender_full_name": "Kees Verruijt",
+        "timestamp": 1680969039
+    },
+    {
+        "content": "<p><span class=\"user-mention\" data-user-id=\"493038\">@Kees Verruijt</span> <br>\nFor info, if we build radar_pi against wx322 on linux, does this resolve the load problem?</p>",
+        "id": 347888652,
+        "sender_full_name": "Dave Register",
+        "timestamp": 1680969053
+    },
+    {
+        "content": "<p>I'll check that with a local build.</p>",
+        "id": 347888767,
+        "sender_full_name": "Kees Verruijt",
+        "timestamp": 1680969106
+    },
+    {
+        "content": "<p>Echoing Nohal, my o-charts_pi builds against wx321, and works OK.</p>",
+        "id": 347889229,
+        "sender_full_name": "Dave Register",
+        "timestamp": 1680969297
+    },
+    {
+        "content": "<p>Maybe if we build radar_pi against 3.2.2 it works against 3.2.1 as well.<br>\nI fear I started a local build of O that hasn't pulled in the proper wx version. A quick pointer to how the O build pulls in a particular wx version would be helpful. All I see in <code>ci/generic-build-debian.sh</code> is <code>sudo apt-get install -q devscripts equivs</code> and <code>if [[ \"$EXTRA_BUILD_OPTS\" == *OCPN_FORCE_GTK3=ON* ]]; then\n    sudo update-alternatives --set wx-config \\\n        /usr/lib/*-linux-*/wx/config/gtk3-unicode-3.0\nfi</code></p>",
+        "id": 347891358,
+        "sender_full_name": "Kees Verruijt",
+        "timestamp": 1680970343
+    },
+    {
+        "content": "<p>The ABI between the two wx packages sure changed - running the opencpn binary from <a href=\"https://launchpad.net/~opencpn/+archive/ubuntu/opencpn/+files/opencpn_5.7.5+325505d71~ubuntu22.04.1_amd64.deb\">https://launchpad.net/~opencpn/+archive/ubuntu/opencpn/+files/opencpn_5.7.5+325505d71~ubuntu22.04.1_amd64.deb</a> on system with wx from <a href=\"https://launchpad.net/~bdbcat/+archive/ubuntu/opencpn/+sourcepub/14159268/+listing-archive-extra\">https://launchpad.net/~bdbcat/+archive/ubuntu/opencpn/+sourcepub/14159268/+listing-archive-extra</a> results in exactly the same missing symbol as reported for radar_pi.</p>",
+        "id": 347891388,
+        "sender_full_name": "Pavel Kalian",
+        "timestamp": 1680970368
+    },
+    {
+        "content": "<p>FWIW, none of the reported \"fixes\" present in wx322 seem to affect us in any way on linux builds.  So this suggests the \"safe\" move is to revert to wx321 on PPA builds.<br>\nBut I want to hear from <span class=\"user-mention\" data-user-id=\"399510\">@Alec Leamas</span>  before deciding, as relates to native debian builds.</p>",
+        "id": 347892073,
+        "sender_full_name": "Dave Register",
+        "timestamp": 1680970737
+    },
+    {
+        "content": "<p>Looking at the launchpad build logs, there is a difference in the 3.2.1 and 3.2.2 build, the later added <code>--disable-glcanvasegl</code> to <code>dh_auto_configure</code> parameters.</p>",
+        "id": 347892538,
+        "sender_full_name": "Pavel Kalian",
+        "timestamp": 1680970940
+    },
+    {
+        "content": "<p>More clue:<br>\nAFIK, radar_pi is the only plugin that constructs a private wxglCanvas (for PPI).</p>",
+        "id": 347897807,
+        "sender_full_name": "Dave Register",
+        "timestamp": 1680973732
+    },
+    {
+        "content": "<p>It looks as if the compatibility <em>does</em> work the other way. I installed a Bookworm and Sid debian VM and in Sid there is an O 5.6.2 package (maintained by Alec) built against wxWidgets 3.2.2 and this installs the beta radar_pi plugin built against 3.2.1 just fine.</p>",
+        "id": 347909765,
+        "sender_full_name": "Kees Verruijt",
+        "timestamp": 1680981418
+    },
+    {
+        "content": "<p>And yes, if I use a plugin built against 3.2.2 (on Debian Sid) this works against Dave's 5.7.5 Ubuntu PPN build. The external symbols required are:</p>\n<div class=\"codehilite\"><pre><span></span><code>    $ nm libradar_pi.so | grep IsShownOnScreen\n                 U _ZNK12wxWindowBase15IsShownOnScreenEv@WXU_3.2\n                 U _ZNK13wxGLCanvasX1115IsShownOnScreenEv@WXU_3.2\n</code></pre></div>",
+        "id": 347912051,
+        "sender_full_name": "Kees Verruijt",
+        "timestamp": 1680983115
+    },
+    {
+        "content": "<p>Maybe, just maybe, this means that there is something we can do on the plugin side so it is compatible with both 3.2.1 and 3.2.2. Longer term this might be needed anyway on Debian: if Debian Sid uses 3.2.2 and older versions use 3.2.1 then we are up shit creek as the catalog system doesn't make a difference between the two. Unless we change that.</p>",
+        "id": 347912485,
+        "sender_full_name": "Kees Verruijt",
+        "timestamp": 1680983474
+    },
+    {
+        "content": "<p><span class=\"user-mention\" data-user-id=\"573239\">@Pavel Kalian</span> was right: the problem is EGL vs GLX. The default compilation path for wx is to use EGL, as that is \"the future of OpenGL\" (<a href=\"https://wiki.archlinux.org/title/User:CodingKoopa/Direct_Rendering_Infrastructure\">https://wiki.archlinux.org/title/User:CodingKoopa/Direct_Rendering_Infrastructure</a> and <a href=\"https://www.reddit.com/r/opengl/comments/11q0oz/what_is_the_difference_between_eglglxogl_and_gles/\">https://www.reddit.com/r/opengl/comments/11q0oz/what_is_the_difference_between_eglglxogl_and_gles/</a> ).</p>\n<p>Debian has chosen to go with GLX instead of EGL for wx 3.2.2: <a href=\"https://bugs.debian.org/cgi-bin/bugreport.cgi?bug=1024147\">https://bugs.debian.org/cgi-bin/bugreport.cgi?bug=1024147</a></p>\n<p>So we are now in a bad place whatever way we go:</p>\n<ul>\n<li>the wx 3.2.2 libraries that come with Debian Sid are compiled with <code>--disable-glcanvasegl</code>. Indeed if I compile the plugin on Sid I get a dependency on <code>_ZNK13wxGLCanvasX1115IsShownOnScreenEv@WXU_3.2</code>. Not sure where <span class=\"user-mention\" data-user-id=\"517002\">@Dave Register</span>  got his wx 3.2.2 for Ubuntu 22.04, but according to the changelog for Ubuntu they just pull Debian: <a href=\"http://changelogs.ubuntu.com/changelogs/pool/universe/w/wxwidgets3.2/wxwidgets3.2_3.2.2+dfsg-2build1/changelog\">http://changelogs.ubuntu.com/changelogs/pool/universe/w/wxwidgets3.2/wxwidgets3.2_3.2.2+dfsg-2build1/changelog</a> </li>\n<li>the wx 3.2.1 libraries compiled by Alec that most plugins are compiled agains _do_ use EGL (because he probably used the default compiler flags...)</li>\n</ul>\n<p>So ... if we want to stand a chance of supporting O and radar_pi in the O 5.8 timeframe on Debian/Ubuntu, we need to recompile the plugin to use <code>--disable-glcanvasegl</code> (and keep the O production PPA as it is.)</p>\n<p>In other words, in my opinion, the O \"production\" PPA is correct and we need to fix the plugins to use <code>--disable-glcanvasegl</code> as well.</p>",
+        "id": 347918701,
+        "sender_full_name": "Kees Verruijt",
+        "timestamp": 1680988318
+    },
+    {
+        "content": "<p>Info...<br>\nThe wx322 build on OCPN Production PPA is a simple copy from <span class=\"user-mention\" data-user-id=\"399510\">@Alec Leamas</span>  PPA.  I know he recently rebuilt (two days ago), but not sure of the build configuration used.<br>\nThe thought process was: \"Let's use the most recent upstreams of wx32 for OCPN production, since we are assured of ABI compatibility between wx321 and 322.\"<br>\nOuch....</p>",
+        "id": 347938190,
+        "sender_full_name": "Dave Register",
+        "timestamp": 1681002111
+    },
+    {
+        "content": "<p>Kees...<br>\nI think you are on the right track.  If we rebuilt radar_pi for wx322 with --disable-glcanvasegl, and OCPN production is built against the same wx322, then we would be OK on ubuntu 22.04, and Sid.  I think that this will be only two configs in the plugin matrix (Jammy and Debian 12), so not terribly intrusive.  Some conditionals in the plugin template, I guess...<br>\nAFAICT, no other plugins are affected, since none other than radar_pi create a private glCanvas, where the EGL stuff is hit.<br>\nCould we try that?</p>",
+        "id": 347942152,
+        "sender_full_name": "Dave Register",
+        "timestamp": 1681005104
+    },
+    {
+        "content": "<p>To rebuild the plugins against the 3.2.2 ABI libs the easiest solution would be to upload the 3.2.2 debs to Alec's cloudsmith repo, then all that's needed is changing one line in the CI scripts for the plugins.</p>",
+        "id": 347949714,
+        "sender_full_name": "Pavel Kalian",
+        "timestamp": 1681011476
+    },
+    {
+        "content": "<p>I share Kees' analysis, it looks  sound also to me.</p>\n<blockquote>\n<p>The wx322 build on OCPN Production PPA is a simple copy from @Alec Leamas PPA. </p>\n</blockquote>\n<p>My PPA build was actually a late evening exercise  with the sole purpose to support Dave.  I really just had to bump the  version, but felt that I should update to latest available while I was on it. </p>\n<blockquote>\n<p>and in Sid there is an O 5.6.2 package (maintained by Alec) built against wxWidgets 3.2.2</p>\n</blockquote>\n<p>Note that  when I submitted it was built against 3.2.1. Over time Debian has upgraded to 3.2.2. </p>\n<p>However, the testing/bookworm branch is now frozen and should not receive any new versions. If there is a need they might cherry-pick patches from 3.2.3+, but that should be it.   </p>\n<blockquote>\n<p>To rebuild the plugins against the 3.2.2 ABI libs the easiest solution would be to upload the 3.2.2 debs to Alec's cloudsmith repo</p>\n</blockquote>\n<p>The sources are available in <a href=\"https://gitlab.com/leamas/wxwidgets3.2\">https://gitlab.com/leamas/wxwidgets3.2</a>, the <em>ubuntu-jammy</em> branch. I can easily  rebuild those for x86_64. With some effort (move to new SD card with more space) I can also rebuild aarch64. However, no way to fix armhf builds. I anyone else can make builds, please speak up so we can coordinate.</p>\n<p>The sources is basically the official Debian 3.2.2  source package with minimal changes to build on Jammy.</p>",
+        "id": 347965626,
+        "sender_full_name": "Alec Leamas",
+        "timestamp": 1681022407
+    },
+    {
+        "content": "<p>Attaching the debdiff  against Debian source package. The bulk of the changes are about dropping the media and docs package which I could not build on Jammy  (at least in the -docs case it should be possible to fix, I think). <a href=\"/user_uploads/33951/zYg9QAyZhgyuCXS3TVNBJXfh/debdiff.txt\">debdiff.txt</a></p>",
+        "id": 347968260,
+        "sender_full_name": "Alec Leamas",
+        "timestamp": 1681023832
+    },
+    {
+        "content": "<p>Slept on it, and one alternative is that I find out why this dependency is there in the first place, as the plugin doesn't make any <code>IsShownOnScreen</code> calls.</p>",
+        "id": 347981485,
+        "sender_full_name": "Kees Verruijt",
+        "timestamp": 1681029700
+    },
+    {
+        "content": "<p>I hadn't realised, and probably the wx people didn't either, that just adding a class based on <code>wxGLCanvas</code> seems to already bring in this dependency, because this is a virtual function override. I see no simple way to avoid this.</p>\n<p>I will update the plugin manually to use wx3.2.2 without EGL.</p>",
+        "id": 348010124,
+        "sender_full_name": "Kees Verruijt",
+        "timestamp": 1681039543
+    },
+    {
+        "content": "<p>Bummer, I just don't see how I can build this in a simple manner. The plugin uses the shipdriver templates, and thus builds debian-wx32;11;x86_64 on Debian 11. I can't load the wxWidgets .deb packages that Alec built for OpenCPN's PPA, as these Ubuntu .debs cannot be loaded (unsupported zstd compression) on Debian Bullseye.</p>\n<p>Any ideas? If I build this on Ubuntu it's hardly a Debian 11 package anymore. </p>\n<p>What is the point of the debian-wx32;11 release anyway if nobody can use it on Debian as there are no wx3.2.2 libraries available from deb repos?</p>",
+        "id": 348052781,
+        "sender_full_name": "Kees Verruijt",
+        "timestamp": 1681054142
+    },
+    {
+        "content": "<p>Kees..<br>\nHave not looked closely at radar_pi, but...<br>\nWould it be possible to derive your PPI canvas from wxglCanvas, and \"stub-in\" the missing functions somehow?<br>\nThis thinking blue sky...</p>",
+        "id": 348058047,
+        "sender_full_name": "Dave Register",
+        "timestamp": 1681056258
+    },
+    {
+        "content": "<p>Dave, I tried that for a few hours but I got nowhere. Not helped by my ignorance on how C++  virtual methods map to compiled code. Or .deb packaging, for that matter. <br>\nI am now trying to build wx3.2.2 from the debian source package, in Debian 11.</p>",
+        "id": 348070797,
+        "sender_full_name": "Kees Verruijt",
+        "timestamp": 1681061912
+    },
+    {
+        "content": "<p><span class=\"user-mention\" data-user-id=\"399510\">@Alec Leamas</span> <br>\nFor info to all:<br>\nO58 Release is ready pending resolution of the radar_pi wx32 conundrum.<br>\nDo we consider resolution of this problem blocking to O58?<br>\nMy opinion:  We resolve it now, or we will need to resolve it later when more distros begin offering wx322 in their default repos.  So we should consider the wx322 build in OCPN Prod repo(-disable-glcanvasegl) as the golden target.<br>\nThoughts, all?</p>",
+        "id": 348077270,
+        "sender_full_name": "Dave Register",
+        "timestamp": 1681065052
+    },
+    {
+        "content": "<p><span class=\"user-mention\" data-user-id=\"517002\">@Dave Register</span> yes, I think all -wx32 targets should use the wx 3.2.2 (GLX) dependency. Not sure but I think this only applies to debian-wx32;11;{arm64,armhf,amd64}.</p>\n<p>I have just successfully built <code>amd64</code> and will now create VMs for <code>armhf</code> and <code>arm64</code> so I can rebuild wx from source there as well. <span class=\"user-mention\" data-user-id=\"399510\">@Alec Leamas</span> once I have rebuilt those, shall we store them on your cloudsmith repo and update the shipdriver templates? Or point to a different cloudsmith repo?</p>",
+        "id": 348085541,
+        "sender_full_name": "Kees Verruijt",
+        "timestamp": 1681069861
+    },
+    {
+        "content": "<p>To be clear, what have you built?  wx322, I think.  What config options?<br>\nAnd how shall you use them?</p>",
+        "id": 348088531,
+        "sender_full_name": "Dave Register",
+        "timestamp": 1681071870
+    },
+    {
+        "content": "<p>No problem to use the cloudsmith repo. However, the sources are really important...</p>",
+        "id": 348090100,
+        "sender_full_name": "Alec Leamas",
+        "timestamp": 1681072894
+    },
+    {
+        "content": "<p>More time tomorrow, late here now..</p>",
+        "id": 348090232,
+        "sender_full_name": "Alec Leamas",
+        "timestamp": 1681072974
+    },
+    {
+        "content": "<p>Let me know what you have done until tomorrow. If you are not done, I can help with a build or two</p>",
+        "id": 348090346,
+        "sender_full_name": "Alec Leamas",
+        "timestamp": 1681073043
+    },
+    {
+        "content": "<p><span class=\"user-mention\" data-user-id=\"493038\">@Kees Verruijt</span>  ^</p>",
+        "id": 348133309,
+        "sender_full_name": "Alec Leamas",
+        "timestamp": 1681102143
+    },
+    {
+        "content": "<div class=\"codehilite\"><pre><span></span><code>&gt;Do we consider resolution of this problem blocking to O58?\n</code></pre></div>\n\n<p>Although most of the Linux stuff here is above my head it seems all is related to radar_pi and not O so the O5.8 release would continue?</p>",
+        "id": 348152718,
+        "sender_full_name": "Håkan Svensson",
+        "timestamp": 1681111807
+    },
+    {
+        "content": "<p>Not that simple. The solution means upgrading the wxWidgwets package used, and such an update would affect all plugins. The update  is already done on the  OpenCPN side, and for things to stay consistent we need to</p>\n<ol>\n<li>Make sure that  wxwidgets 3.2.1 is replaced with 3.2.2 in OpenCPN (done) and all plugins (work to do).</li>\n<li>Radar_pi must be  updated to match 3.2.2</li>\n</ol>\n<p>Part of the issue is that  that upcoming Debian packages also will use  3.2.2. Since  3.2.2 and 3.2.1  are  supposed to be binnary compatible they have the same SONAME which basically makes  it impossible to use  3.2.1 on a Debian system without going  back to static linkage; we most definitely don't want to do that.</p>",
+        "id": 348160873,
+        "sender_full_name": "Alec Leamas",
+        "timestamp": 1681115047
+    },
+    {
+        "content": "<p><span class=\"user-mention silent\" data-user-id=\"399510\">Alec Leamas</span> <a href=\"#narrow/stream/332168-Master---5.2E8.2E0--.28was.3A-comms.29/topic/wx3.2E2.2E2.20compatibility/near/348160873\">said</a>:</p>\n<blockquote>\n<p>Part of the issue is that  that upcoming Debian packages also will use  3.2.2. Since  3.2.2 and 3.2.1  are  supposed to be binnary compatible they have the same SONAME which basically makes  it impossible to use  3.2.1 on a Debian system without going  back to static linkage; we most definitely don't want to do that.</p>\n</blockquote>\n<p>Actually, the SONAME for wx 3.2.1 changed from 3.2-0 to 3.2-1 halfway through when the GLX/EGL change was made and the ABI changed:</p>\n<blockquote>\n<p>wxwidgets3.2 (3.2.1+dfsg-2) experimental; urgency=medium</p>\n<p>[ Debian Janitor ]</p>\n<p>* Remove constraints unnecessary since buster (oldstable):<br>\n    + Build-Depends: Drop versioned constraint on dpkg-dev and g++.</p>\n<p>[ Scott Talbert ]</p>\n<p>* Rebuild with wxGLCanvas using GLX (changes ABI) (Closes: <a href=\"https://github.com/opencpn/OpenCPN/issues/1024147\">#1024147</a>)<br>\n  * Reintroduce patch to force X11 when wxGLCanvas is used<br>\n  * Move gl library to its own binary package</p>\n</blockquote>\n<p>so I think as long as we make O and the plugins depend on 3.2-1 it will work. (In practice we will ask for wx 3.2.2 with SO 3.2-1).</p>",
+        "id": 348181542,
+        "sender_full_name": "Kees Verruijt",
+        "timestamp": 1681122342
+    },
+    {
+        "content": "<p>My builds are extremely simple, just use the current Debian source package. When building this on Debian 11.6 I get zero errors (unlike your experience). The script to build is:</p>\n<div class=\"codehilite\"><pre><span></span><code>echo &quot;deb-src http://deb.debian.org/debian sid main&quot; | sudo bash -c &#39;cat &gt;&gt; /etc/apt/sources.list&#39;\nsudo apt-get update\nsudo apt-get -y upgrade\nsudo apt-get -y install devscripts dpkg-dev make\nsudo apt-get -y build-dep wxwidgets3.2/sid\nexport EMAIL=&#39;kees@verruijt.net&#39;\napt-get source wxwidgets3.2/sid\ncd wx*/\ndch --bpo\nsudo debuild -b -uc -us\n</code></pre></div>\n<p>This gives me packages <code>libwxbase3.2-1_3.2.2+dfsg-2~bpo11+1_arm64.deb</code> etc.</p>",
+        "id": 348182618,
+        "sender_full_name": "Kees Verruijt",
+        "timestamp": 1681122753
+    },
+    {
+        "content": "<p>amd64 and arm64 are done, armhf is running on a 4 core AmpereOne Oracle Cloud system running qemu tcg, so slooooow.... We can easily snapshot the source package, of course, if you think this is needed.</p>",
+        "id": 348184477,
+        "sender_full_name": "Kees Verruijt",
+        "timestamp": 1681123405
+    },
+    {
+        "content": "<p>I found out that my Mac M1 can't run armhf directly, it needs to run through qemu tcg as well, as the M1 doesn't have armhf instructions. I had hoped that the Ampere would, but I can't get nested KVM working there.</p>",
+        "id": 348184733,
+        "sender_full_name": "Kees Verruijt",
+        "timestamp": 1681123507
+    },
+    {
+        "content": "<p>Will try to put clean Debian 11.6 on a RPi3b that I had around...</p>",
+        "id": 348184820,
+        "sender_full_name": "Kees Verruijt",
+        "timestamp": 1681123547
+    },
+    {
+        "content": "<p>Duplicated work here... I have a new cloudsmith repository at <a href=\"https://cloudsmith.io/~alec-leamas/repos/wxwidgets3-2/packages/\">https://cloudsmith.io/~alec-leamas/repos/wxwidgets3-2/packages/</a>. There is x86_64/amd64  and armhf packages in place.  The source package is  in  <a href=\"https://cloudsmith.io/~alec-leamas/repos/wxwidgets32-src/packages/\">https://cloudsmith.io/~alec-leamas/repos/wxwidgets32-src/packages/</a></p>\n<p>aarch64 build is under way. There is by the way no need  to create full-fledged VM:s to make the cross build,  a simple  docker continer + qemu  does the job just fine</p>",
+        "id": 348195574,
+        "sender_full_name": "Alec Leamas",
+        "timestamp": 1681127059
+    },
+    {
+        "content": "<p>Hmm but have you fixed the SONAME in these so that they are no longer identical to the older 3.2.1 release? From the opencpn ppa that installs 5.7.5:</p>\n<div class=\"codehilite\"><pre><span></span><code>$ ldd /usr/bin/opencpn | grep libwx_baseu_net\n    libwx_baseu_net-3.2.so.0 =&gt; /lib/x86_64-linux-gnu/libwx_baseu_net-3.2.so.0 (0x00007f50efdbf000)\n</code></pre></div>\n<p>where that same library in the packages I built have <code>so.0.2.0</code>:</p>\n<div class=\"codehilite\"><pre><span></span><code>$ ls /usr/lib/x86_64-linux-gnu/libwx_baseu_net*\n/usr/lib/x86_64-linux-gnu/libwx_baseu_net-3.2.so.0.2.0\n</code></pre></div>",
+        "id": 348201592,
+        "sender_full_name": "Kees Verruijt",
+        "timestamp": 1681128910
+    },
+    {
+        "content": "<p>So the current build of O is not good enough: it still refers to <code>3.2.so.0</code> where it should be <code>3.2.so.0.2.0</code>.</p>",
+        "id": 348201781,
+        "sender_full_name": "Kees Verruijt",
+        "timestamp": 1681128984
+    },
+    {
+        "content": "<p><span class=\"user-mention silent\" data-user-id=\"399510\">Alec Leamas</span> <a href=\"#narrow/stream/332168-Master---5.2E8.2E0--.28was.3A-comms.29/topic/wx3.2E2.2E2.20compatibility/near/348195574\">said</a>:</p>\n<blockquote>\n<p>Duplicated work here... I have a new cloudsmith repository at <a href=\"https://cloudsmith.io/~alec-leamas/repos/wxwidgets3-2/packages/\">https://cloudsmith.io/~alec-leamas/repos/wxwidgets3-2/packages/</a>. There is x86_64/amd64  and armhf packages in place.  The source package is  in  <a href=\"https://cloudsmith.io/~alec-leamas/repos/wxwidgets32-src/packages/\">https://cloudsmith.io/~alec-leamas/repos/wxwidgets32-src/packages/</a></p>\n</blockquote>\n<p>Well, you said you werent able to build. So I started on this, but happy to use your version. I see this has the updated SONAME so all good.</p>",
+        "id": 348202968,
+        "sender_full_name": "Kees Verruijt",
+        "timestamp": 1681129277
+    },
+    {
+        "content": "<p>Shall I update the radar_pi ci files or shall I wait for a SD template update?</p>",
+        "id": 348203128,
+        "sender_full_name": "Kees Verruijt",
+        "timestamp": 1681129315
+    },
+    {
+        "content": "<blockquote>\n<p>Hmm but have you fixed the SONAME in these so that they are no longer identical to the older 3.2.1 release?</p>\n</blockquote>\n<p>Actually not even considered it. The official, Debain truth is that 3.2.2  is  binary   compatible with  3.2.1. We know this is not true, but I don't think  it matters. We  are pulling the 3.2.1 and 3.2.2  packages from testing a. k. a.  Bookworm. Once  bookworm is released, the package will  be locked to 3.2.2 (it is locked down already since  bookworm is frozen)</p>\n<p>OTOH, when  we  use packagess from testing we must be prepared to follow Debian  if  the package is updated.  Which is what we are doing.</p>\n<p>Bottom line: There will  be no 3.2.1 package in any released Debian  or Ubuntu version, only 3.2.2</p>",
+        "id": 348216968,
+        "sender_full_name": "Alec Leamas",
+        "timestamp": 1681133270
+    },
+    {
+        "content": "<blockquote>\n<p>Shall I update the radar_pi ci files or shall I wait for a SD template update?</p>\n</blockquote>\n<p>I would really appreciate if you could do a test.</p>",
+        "id": 348217137,
+        "sender_full_name": "Alec Leamas",
+        "timestamp": 1681133312
+    },
+    {
+        "content": "<p>I have uploaded also the aaarch64/arm64  packages, the thing now should be complete.</p>",
+        "id": 348217789,
+        "sender_full_name": "Alec Leamas",
+        "timestamp": 1681133547
+    },
+    {
+        "content": "<p>OK, with your packages I was able to build radar_pi on circleCI (and locally). I did have to remove the \"patch\" in <a href=\"http://circleci-build-debian.sh\">circleci-build-debian.sh</a>, not sure if this is still needed? The comment says this would not be needed in wx 3.2.3 ... but the patch did not take so I removed it (I have not looked at what it is trying to do and thus also not whether it is still relevant.)</p>\n<p>With the build radar_pi it now refuses to load with O 5.7.1 (good) and loads fine with O 5.7.5 (also good). I tested just AMD64 so far, but the principle is therefore sound. I will now build plugin for and test arm64 + armhf as well. See, I'd new those VMs would come in handy :-)</p>",
+        "id": 348223394,
+        "sender_full_name": "Kees Verruijt",
+        "timestamp": 1681135212
+    },
+    {
+        "content": "<p>Oh, one note, I did not see any wxsvg files in your new repo -- now radar_pi doesn't need those, but some other plugin might?</p>",
+        "id": 348223856,
+        "sender_full_name": "Kees Verruijt",
+        "timestamp": 1681135342
+    },
+    {
+        "content": "<p>wxsvg should not be needed anymore, unless used directly by the plugin. With wx3.2 we switched all the API calls processing SVG to use <code>wxBitmapBundle</code>.</p>",
+        "id": 348226133,
+        "sender_full_name": "Pavel Kalian",
+        "timestamp": 1681135905
+    },
+    {
+        "content": "<p>As a practical matter, we can say that any plugin that does not create a private wxglCanvas does load and run correctly on wx3.2.1.  IOW, the ABI break affects only wxglCanvas.  So there is no super urgency to rebuild all plugins before O58 release.  Only radar_pi.</p>",
+        "id": 348228333,
+        "sender_full_name": "Dave Register",
+        "timestamp": 1681136415
+    },
+    {
+        "content": "<p>We will need new plugin builds all around for Bookworm, I think.</p>",
+        "id": 348229237,
+        "sender_full_name": "Dave Register",
+        "timestamp": 1681136607
+    },
+    {
+        "content": "<p><span class=\"user-mention\" data-user-id=\"399510\">@Alec Leamas</span> <br>\nDo we need to update the wx322 build used in the PPA for O58 production?  SONAMES correct?</p>",
+        "id": 348233336,
+        "sender_full_name": "Dave Register",
+        "timestamp": 1681137546
+    },
+    {
+        "content": "<p>I would prefer to. Although I <em>think</em> it will work as-is it is <br>\nneedleesly complicated with a too large diff against the official 3.2.2 <br>\n(ths was caused by my jammy VM being broken + the fact that I did this <br>\nbuild in a late evening).</p>\n<p>New build underqay, it will show uo in my PPA Real Soon (tm).</p>\n<p>--a</p>",
+        "id": 348236158,
+        "sender_full_name": "Alec Leamas",
+        "timestamp": 1681138240
+    },
+    {
+        "content": "<p>uploaded, build ongoing</p>",
+        "id": 348239240,
+        "sender_full_name": "Alec Leamas",
+        "timestamp": 1681139052
+    },
+    {
+        "content": "<p>I'm starting to like flatpak more and more :-)</p>",
+        "id": 348240951,
+        "sender_full_name": "Kees Verruijt",
+        "timestamp": 1681139546
+    },
+    {
+        "content": "<blockquote>\n<p>I'm starting to like flatpak more and more :-)</p>\n</blockquote>\n<p>Yes, it does win over time. If we started with a clean sheet, the best solution would probably have been to use Flatpak for all Linux builds except 32bit armhf, which is targeting boards with less memory.</p>\n<p>But then again, we don't start with a clean sheet, we have a legacy.</p>",
+        "id": 348246823,
+        "sender_full_name": "Alec Leamas",
+        "timestamp": 1681141022
+    },
+    {
+        "content": "<p><span class=\"user-mention\" data-user-id=\"399510\">@Alec Leamas</span> <br>\nI will try a different strategy this time.  Instead of copying your packages to my PPA, I will inform my PPA to use your PPA (~leamas-alec/ubuntu/wxwidgets) to satisfy dependencies.  We'll see how that works...</p>",
+        "id": 348248419,
+        "sender_full_name": "Dave Register",
+        "timestamp": 1681141489
+    },
+    {
+        "content": "<p>Waiting for your PPA to publish...</p>",
+        "id": 348248610,
+        "sender_full_name": "Dave Register",
+        "timestamp": 1681141560
+    },
+    {
+        "content": "<p>OK, on ubuntu 22.04 arm64 the radar_pi plugin works as well with O 5.7.5, but ... that O build has compatibility set to <code>ubuntu-wx32-arm64:11</code> so I had to enable CatalogExpert then set the Compatibility to <code>debian-wx32-arm64:11</code> before I could load the .tar.gz file.</p>\n<p>I think this because the Ubuntu/Debian match code doesn't care for the <code>-wx32</code> bit on the end of the <code>ubuntu</code> value. We can publish this as a known bug, or do we want to fix this in O 5.8?</p>",
+        "id": 348250079,
+        "sender_full_name": "Kees Verruijt",
+        "timestamp": 1681142034
+    },
+    {
+        "content": "<p>BTW, the fact that the 5.7.5 release still says 5.7.1 in the window title (but correctly says 5.7.5 in the About window) is a build artifact that won't carry over to 5.8?</p>",
+        "id": 348250553,
+        "sender_full_name": "Kees Verruijt",
+        "timestamp": 1681142185
+    },
+    {
+        "content": "<p>\"won't carry over to 5.8?\"<br>\nCorrect.  Prod PPA is in flux, testing user install process via dpkg.  Some tweaks still required for final release.</p>",
+        "id": 348258711,
+        "sender_full_name": "Dave Register",
+        "timestamp": 1681144603
+    },
+    {
+        "content": "<blockquote>\n<p>so I had to enable CatalogExpert then set the Compatibility to debian-wx32-arm64:11 before I could load the .tar.gz file.</p>\n</blockquote>\n<p>If so, this is a bug. If Opencpn does not find  a ubuntu- plugin it shall fall back to using debian automatically. Stay tuned...</p>",
+        "id": 348264076,
+        "sender_full_name": "Alec Leamas",
+        "timestamp": 1681146261
+    },
+    {
+        "content": "<p><span class=\"user-mention\" data-user-id=\"517002\">@Dave Register</span>  The nug is in plugin_handler around line 221:</p>\n<div class=\"codehilite\"><pre><span></span><code> bool is_debian_plugin_compatible(const Plugin&amp; plugin) const {\n    if (!ocpn::startswith(m_abi, &quot;ubuntu&quot;)) return false;\n    static const std::vector&lt;std::string&gt; compat_versions = {\n        // clang-format: off\n        &quot;debian-x86_64;11;ubuntu-gtk3-x86_64;20.04&quot;,\n        &quot;debian-wx32-x86_64;11;ubuntu-wx32-x86_64;22.04&quot;,\n        &quot;debian-x86_64;12;ubuntu-x86_64;23.04&quot;,\n        &quot;debian-x86_64;12;ubuntu-x86_64;23.10&quot;,\n        &quot;debian-x86_64;12;ubuntu-x86_64;24.04&quot;,\n        &quot;debian-x86_64;sid;ubuntu-x86_64;24.04&quot;};  // clang-format: on\n</code></pre></div>\n<p>we just care about x86_64, not aarch64 or armhf. That table needs a sleeve of new entries</p>",
+        "id": 348264601,
+        "sender_full_name": "Alec Leamas",
+        "timestamp": 1681146397
+    },
+    {
+        "content": "<p>something like this, of course untested:</p>\n<div class=\"codehilite\"><pre><span></span><code>diff --git a/src/plugin_handler.cpp b/src/plugin_handler.cpp\nindex 833af2766..1826a841b 100644\n--- a/src/plugin_handler.cpp\n+++ b/src/plugin_handler.cpp\n@@ -220,7 +220,23 @@ class Host {\n         &quot;debian-x86_64;12;ubuntu-x86_64;23.04&quot;,\n         &quot;debian-x86_64;12;ubuntu-x86_64;23.10&quot;,\n         &quot;debian-x86_64;12;ubuntu-x86_64;24.04&quot;,\n-        &quot;debian-x86_64;sid;ubuntu-x86_64;24.04&quot;};  // clang-format: on\n+        &quot;debian-x86_64;sid;ubuntu-x86_64;24.04&quot;,\n+\n+        &quot;debian-arm64;11;ubuntu-gtk3-arm64;20.04&quot;,\n+        &quot;debian-wx32-arm64;11;ubuntu-wx32-arm64;22.04&quot;,\n+        &quot;debian-arm64;12;ubuntu-arm64;23.04&quot;,\n+        &quot;debian-arm64;12;ubuntu-arm64;23.10&quot;,\n+        &quot;debian-arm64;12;ubuntu-arm64;24.04&quot;,\n+        &quot;debian-arm64;sid;ubuntu-arm64;24.04&quot;,\n+\n+        &quot;debian-armhf;11;ubuntu-gtk3-armhf;20.04&quot;,\n+        &quot;debian-wx32-armhf;11;ubuntu-wx32-armhf;22.04&quot;,\n+        &quot;debian-armhf;12;ubuntu-armhf;23.04&quot;,\n+        &quot;debian-armhf;12;ubuntu-armhf;23.10&quot;,\n+        &quot;debian-armhf;12;ubuntu-armhf;24.04&quot;,\n+        &quot;debian-armhf;sid;ubuntu-armhf;24.04&quot;}; //clang-format: on\n+\n+\n</code></pre></div>\n<p>Some unit tests here would have been nice...</p>",
+        "id": 348266245,
+        "sender_full_name": "Alec Leamas",
+        "timestamp": 1681146941
+    },
+    {
+        "content": "<p><span class=\"user-mention\" data-user-id=\"399510\">@Alec Leamas</span> <br>\nDone, in build now. Thanks</p>",
+        "id": 348298752,
+        "sender_full_name": "Dave Register",
+        "timestamp": 1681158389
+    },
+    {
+        "content": "<p><span class=\"user-mention\" data-user-id=\"399510\">@Alec Leamas</span> <br>\nre:<br>\n<em>I will try a different strategy this time. Instead of copying your packages to my PPA, I will inform my PPA to use your PPA (~leamas-alec/ubuntu/wxwidgets) to satisfy dependencies. We'll see how that works...</em></p>\n<p>Results:  Not great for our use case.  The resulting build requires wx322 libs, which are only available in your PPA.  So a user would need to add your PPA to her apt sources.list.  Not ideal.<br>\nSo I have reverted to a simple copy from your PPA to OCPN Prod PPA.  Works as expected.  Required wx322 olibs available from the same PPA that contains OCPN package itself.</p>",
+        "id": 348343254,
+        "sender_full_name": "Dave Register",
+        "timestamp": 1681183165
+    },
+    {
+        "content": "<p><span class=\"user-mention\" data-user-id=\"493038\">@Kees Verruijt</span> <br>\nOCPN 5.7.10 available in Production PPA.  Includes late patch for ubuntu=&gt;debian matching. AFAIK, this is functionally equivalent to the pending release of O58.  Only change required is id strings.<br>\nIf you could post links for radar_pi tarballs, or simply update the Beta catalog by pr, I can test on u22.04/x86 and Bullseye/Arm64.</p>",
+        "id": 348343677,
+        "sender_full_name": "Dave Register",
+        "timestamp": 1681183453
+    },
+    {
+        "content": "<p><span class=\"user-mention\" data-user-id=\"517002\">@Dave Register</span>  right. Took some time off after spending too many hours building packages. The only important thing is that it works. We don't expect to maintain this that much, but perhaps Debian will add some patches. We will need to keep an eye on what's happening in debian, in particular before the Bookworm release.</p>\n<blockquote>\n<p>We will need new plugin builds all around for Bookworm, I think.</p>\n</blockquote>\n<p>Indeed. TP will have to sort out things before that, though: <a href=\"https://github.com/jongough/testplugin_pi/issues/299\">https://github.com/jongough/testplugin_pi/issues/299</a></p>",
+        "id": 348364877,
+        "sender_full_name": "Alec Leamas",
+        "timestamp": 1681194145
+    },
+    {
+        "content": "<p><span class=\"user-mention\" data-user-id=\"517002\">@Dave Register</span> I am on board now to fix one last request for radar_pi, adding an extra control for HALO, before I will prepare a PR for Beta and master plugin catalogs. In the mean time you can use whatever is latest on <a href=\"https://cloudsmith.io/~opencpn-radar-pi/repos/opencpn-radar-pi-unstable/packages/\">https://cloudsmith.io/~opencpn-radar-pi/repos/opencpn-radar-pi-unstable/packages/</a></p>",
+        "id": 348375343,
+        "sender_full_name": "Kees Verruijt",
+        "timestamp": 1681197623
+    },
+    {
+        "content": "<p>A PR has just been made to merge radar_pi beta into the Beta catalog.</p>",
+        "id": 348442711,
+        "sender_full_name": "Kees Verruijt",
+        "timestamp": 1681214988
+    },
+    {
+        "content": "<p><span class=\"user-mention\" data-user-id=\"399510\">@Alec Leamas</span> I had to tweak a few files in <code>.circleci/</code> and <code>ci/</code> to get the proper target set for Debian-wx32-A32, see <a href=\"/user_uploads/33951/nxRDcVDDn4tfyXaV-9t4qhuX/ci-fix.diff\">ci-fix.diff</a> -- I think these are relevant for the SD templates.</p>",
+        "id": 348443273,
+        "sender_full_name": "Kees Verruijt",
+        "timestamp": 1681215128
+    },
+    {
+        "content": "<p>Note that those tweaks fix old issues in the ci code, not new ones caused by the wx3.2.1-&gt;wx3.2.2 transition.</p>",
+        "id": 348443596,
+        "sender_full_name": "Kees Verruijt",
+        "timestamp": 1681215184
+    },
+    {
+        "content": "<p>Yes... I'll have a look. These parts are actually a mess,  using  both OCPN_WX_ABI and OCPN_TARGET_TUPLE makes things more complicated than they should be. Thanks for heads-up!</p>",
+        "id": 348444461,
+        "sender_full_name": "Alec Leamas",
+        "timestamp": 1681215390
+    },
+    {
+        "content": "<p>BTW: What was the exact error you had to fix? Symptoms?</p>",
+        "id": 348444716,
+        "sender_full_name": "Alec Leamas",
+        "timestamp": 1681215463
+    },
+    {
+        "content": "<p>That is, I can follow that you fix the broken  TARGET_TUPLE, and that is an important fix. However, what is this about  OCPN_WX_ABI_OPT, ending up in a -D=wx32 option? \"confused\"</p>",
+        "id": 348446011,
+        "sender_full_name": "Alec Leamas",
+        "timestamp": 1681215753
+    },
+    {
+        "content": "<p><a href=\"https://github.com/Rasbats/shipdriver_pi/issues/511\">https://github.com/Rasbats/shipdriver_pi/issues/511</a></p>",
+        "id": 348447614,
+        "sender_full_name": "Alec Leamas",
+        "timestamp": 1681216201
+    },
+    {
+        "content": "<p>Hey, I didn't invent this <span aria-label=\"wink\" class=\"emoji emoji-1f609\" role=\"img\" title=\"wink\">:wink:</span> just copied it from <code>ci/circleci-build-debian.sh</code> which is what is used for <code>x86_64</code>.</p>\n<p>Setting BUILD_WX32 results in a <code>-DOCPN_WX_ABI=wx32</code> passed to cmake, which results in <code>set(_wx_abi \".${OCPN_WX_ABI}\")</code> being set to wx32, and this in turns results in <code>pkg_displayname</code> and <code>pkg_tarname</code> gaining <code>.wx32</code>. It's also messing slightly with flatpak package name. </p>\n<p>The result is still messy, as the list of my .xml files shows:</p>\n<div class=\"codehilite\"><pre><span></span><code>Radar-v5.5.0-beta2-darwin-wx32-10.xml\nRadar-v5.5.0-beta2-debian-11.xml\nRadar-v5.5.0-beta2-debian-12.xml\nRadar-v5.5.0-beta2-debian-A32-11.xml\nRadar-v5.5.0-beta2-debian-A32-12.xml\nRadar-v5.5.0-beta2-debian-A64-11.xml\nRadar-v5.5.0-beta2-debian-A64-12.xml\nRadar-v5.5.0-beta2-debian-wx32-A64-11.xml\nRadar-v5.5.0-beta2-debian-wx32.wx32-11.xml\nRadar-v5.5.0-beta2-debian-wx32.wx32-A32-11.xml\nRadar-v5.5.0-beta2-flatpak-22.08.xml\nRadar-v5.5.0-beta2-flatpak-A64-22.08.xml\nRadar-v5.5.0-beta2-msvc-wx32-10.xml\n</code></pre></div>\n<p>Note how the A32 and x86_64 (no arch in name) both have wx32 in the package name <em>twice</em>. </p>\n<p>Could it be that this OCPN_WX_ABI_OPT was used more in the past? At the moment it's only used in <code>./cmake/Metadata.cmake</code> to fiddle with package and tar names. I think the better approach is to use only OCPN_TARGET_TUPLE. As a fail-safe the CMake files could verify that a tuple including -wx32 is indeed using wx3.2.</p>\n<p>What do you prefer? Fixing this yourself in SD or me preparing a change in <code>radar_pi</code>? A simple fix would be to remove the double <code>.wx32</code> name from the filenames, but I would prefer to make a better fix so we don't have this confusion/double code at all.</p>",
+        "id": 348468907,
+        "sender_full_name": "Kees Verruijt",
+        "timestamp": 1681221305
+    },
+    {
+        "content": "<p><span class=\"user-mention silent\" data-user-id=\"399510\">Alec Leamas</span> <a href=\"#narrow/stream/332168-Master---5.2E8.2E0--.28was.3A-comms.29/topic/wx3.2E2.2E2.20compatibility/near/348444716\">said</a>:</p>\n<blockquote>\n<p>BTW: What was the exact error you had to fix? Symptoms?</p>\n</blockquote>\n<p>There was only one uploaded version of Debian;11;armhf and it was a race between the non-wx32 and the wx32 version to see which one ended up in cloudsmith (the last one won...)</p>",
+        "id": 348469936,
+        "sender_full_name": "Kees Verruijt",
+        "timestamp": 1681221541
+    },
+    {
+        "content": "<blockquote>\n<p>I think the better approach is to use only OCPN_TARGET_TUPLE</p>\n</blockquote>\n<p>Agreed. We are seing differences between the current 3.2 barnch and the shipdriver master branch. The basic message is that at least in master this is solved, and we should use explicit OCPN_TARGET_TUPLE for all debian builds.</p>\n<blockquote>\n<p>As a fail-safe the CMake files could verify that a tuple including -wx32 is indeed using wx3.2.</p>\n</blockquote>\n<p>Actually, we should probably issue a warning or perhaps even just fail if the OCPN_TARGET_TUPLE is missing. And deprecate  the whole OCPN_WX_ABI_OPT thing.</p>",
+        "id": 348470548,
+        "sender_full_name": "Alec Leamas",
+        "timestamp": 1681221654
+    },
+    {
+        "content": "<p>OK goal clear, who will do this? I could try working on a fork of SD to make the code changes cleaner, but I'd like some hints then what your workflow is (possibly trivial.)</p>",
+        "id": 348471296,
+        "sender_full_name": "Kees Verruijt",
+        "timestamp": 1681221795
+    },
+    {
+        "content": "<p>(instead of me working further on radar_pi and then you needing to cherry-pick back to SD)</p>",
+        "id": 348471636,
+        "sender_full_name": "Kees Verruijt",
+        "timestamp": 1681221850
+    },
+    {
+        "content": "<p>I can then immediately test this on radar_pi, and I've got time so happy to do this.</p>",
+        "id": 348471850,
+        "sender_full_name": "Kees Verruijt",
+        "timestamp": 1681221902
+    },
+    {
+        "content": "<p><span class=\"user-mention\" data-user-id=\"493038\">@Kees Verruijt</span> </p>\n<ol>\n<li>Merged your Beta pr.  Checksum errors on trying to install radar_pi.</li>\n<li>Imported tarballs, 5.5.0-beta, git commit 297bdc0.  Works fine on ubuntu 22.04/x86 and Rpi/Bullseye/A64.</li>\n</ol>",
+        "id": 348480483,
+        "sender_full_name": "Dave Register",
+        "timestamp": 1681223776
+    },
+    {
+        "content": "<p>Thanks, Dave.Saw that this morning and verified the plugin on MacOS and Ubuntu 22.04. Unfortunately Douwe found a small but irritating display issue so I will push a Beta4 soon.</p>\n<p>We are now 100% complete on HALO features; the last command missing that I added yesterday is allow setting of the Doppler Speed Threshold.</p>\n<p>I was developing + testing this on board yesterday, when I saw a huge doppler-highlighted raincloud coming near very quickly, so I jumped off and hurried back home where the log fire was burning (it's still quite cold here). If I hadn't, I would have probably caught that display issue (that only shows up with a working radar).</p>",
+        "id": 348780892,
+        "sender_full_name": "Kees Verruijt",
+        "timestamp": 1681317136
+    },
+    {
+        "content": "<p><span class=\"user-mention\" data-user-id=\"517002\">@Dave Register</span> thanks for the Beta merge. I found a few issues with the <code>pre-commit</code> hook checker; so I created another pull request. You may want to take a closer look at this since it is not a metadata file update. Also, I guess this needs to go to master as well.</p>",
+        "id": 348826883,
+        "sender_full_name": "Kees Verruijt",
+        "timestamp": 1681331225
+    },
+    {
+        "content": "<p><span class=\"user-mention\" data-user-id=\"493038\">@Kees Verruijt</span> <br>\nI'll hold this in my queue for a few days, pending O58 release.<br>\nThanks</p>",
+        "id": 348828006,
+        "sender_full_name": "Dave Register",
+        "timestamp": 1681331605
+    },
+    {
+        "content": "<p>Yes, that's fine. Just wanted to give you the heads up.</p>",
+        "id": 348828102,
+        "sender_full_name": "Kees Verruijt",
+        "timestamp": 1681331640
+    },
+    {
+        "content": "<p>Whoaaa, I just had another checksum difference (now caught by pre-commit hook). Unfortunately, this time on Windows so I can't ssh in to appveyor. Rebuilding now to see if that  fixes it. Nope it doesn't.<br>\nFor now, I don't have time for a few days so I manually fixed the .xml file to contain the proper checksum.</p>",
+        "id": 349059084,
+        "sender_full_name": "Kees Verruijt",
+        "timestamp": 1681379569
+    },
+    {
+        "content": "<p><span class=\"user-mention\" data-user-id=\"493038\">@Kees Verruijt</span>  <span class=\"user-mention\" data-user-id=\"517002\">@Dave Register</span> </p>\n<div class=\"codehilite\"><pre><span></span><code>&gt;I&#39;ll hold this in my queue for a few days, pending O58 release.\n</code></pre></div>\n\n<p>So, where are we on getting radar_pi to master. I understand the actual PR to Plugins is overdue by now. Could we release a fresh metadata update for working system at least?</p>",
+        "id": 350204811,
+        "sender_full_name": "Håkan Svensson",
+        "timestamp": 1681584876
+    },
+    {
+        "content": "<p>Done.</p>",
+        "id": 350214647,
+        "sender_full_name": "Dave Register",
+        "timestamp": 1681591926
+    },
+    {
+        "content": "<p><span class=\"user-mention silent\" data-user-id=\"517002\">Dave Register</span> <a href=\"#narrow/stream/332168-Master---5.2E8.2E0--.28was.3A-comms.29/topic/wx3.2E2.2E2.20compatibility/near/350214647\">said</a>:</p>\n<blockquote>\n<p>Done.</p>\n</blockquote>\n<p>Thanks. We had complaints on CF.</p>",
+        "id": 350220677,
+        "sender_full_name": "Kees Verruijt",
+        "timestamp": 1681596896
+    }
+]

@@ -1,0 +1,316 @@
+<html>
+<head><meta charset="utf-8"><title>Rants · Master - 5.8.0  (was: comms) · Zulip Chat Archive</title></head>
+<h2>Stream: <a href="https://leamas.github.io/zulip-archive/stream/332168-Master---5.2E8.2E0--.28was.3A-comms.29/index.html">Master - 5.8.0  (was: comms)</a></h2>
+<h3>Topic: <a href="https://leamas.github.io/zulip-archive/stream/332168-Master---5.2E8.2E0--.28was.3A-comms.29/topic/Rants.html">Rants</a></h3>
+
+<hr>
+
+<base href="https://opencpn.zulipchat.com">
+
+<head><link href="https://leamas.github.io/zulip-archive/style.css" rel="stylesheet"></head>
+
+<a name="293816106"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332168-Master%20-%205.8.0%20%20%28was%3A%20comms%29/topic/Rants/near/293816106" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Dave Register <a href="https://leamas.github.io/zulip-archive/stream/332168-Master---5.2E8.2E0--.28was.3A-comms.29/topic/Rants.html#293816106">(Aug 16 2022 at 23:19)</a>:</h4>
+<p>Ack</p>
+
+
+
+<a name="293838996"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332168-Master%20-%205.8.0%20%20%28was%3A%20comms%29/topic/Rants/near/293838996" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Alec Leamas <a href="https://leamas.github.io/zulip-archive/stream/332168-Master---5.2E8.2E0--.28was.3A-comms.29/topic/Rants.html#293838996">(Aug 17 2022 at 05:53)</a>:</h4>
+<p>Except, of course, when providing objects to the wxWidgets API. But this is not that bad since these pointers are managed by wxWidgets.</p>
+
+
+
+<a name="295303015"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332168-Master%20-%205.8.0%20%20%28was%3A%20comms%29/topic/Rants/near/295303015" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Alec Leamas <a href="https://leamas.github.io/zulip-archive/stream/332168-Master---5.2E8.2E0--.28was.3A-comms.29/topic/Rants.html#295303015">(Aug 25 2022 at 20:09)</a>:</h4>
+<p>An obvious goal is to make AIS_decoder testable i. e., to decouple it from the GUI. After all, decoding AIS messages should not have anything to do with the gui.</p>
+<p>First, there is a dialog. This could be split out, and connected through a EventVar. This gets rid of the gFrame dependency. So far. so good.</p>
+<p>However, the decoder still depends on ais.h. After cleaning up things the remaining dep is  navutil.h.   The dependency is to add a new  waypoint and a track representing the decoded value.   Perfectly sane, but pulling in navutil mean pulling in <strong>lots</strong> of gui.  I could refactor this, basically splitting out the waypoints/tracks/routes database from navutil.</p>
+<p>This reveals the disgusting fact that at the very, very bottom of this  in the form of RoutePoint, Route, TrackPoint and Track there is  GUI dependencies.  They basically know about layers and viewport, and I'm close to giving up.  Sigh, let's see what some sleep might do</p>
+<p>Thanks for listening, if you read all this...</p>
+
+
+
+<a name="295304103"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332168-Master%20-%205.8.0%20%20%28was%3A%20comms%29/topic/Rants/near/295304103" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Alec Leamas <a href="https://leamas.github.io/zulip-archive/stream/332168-Master---5.2E8.2E0--.28was.3A-comms.29/topic/Rants.html#295304103">(Aug 25 2022 at 20:17)</a>:</h4>
+<p><span class="user-mention" data-user-id="517002">@Dave Register</span>  : The basic problem is that for example a RoutePoint has a <code>m_bIsInLayer</code> property which is tested  when inserted into the database.  Same for the others.  What is this about?  Any ideas how this could be refactored?</p>
+<p>EDIT: The obvious fix would be to check before calling for example <code>AddNewRoute()</code> However, this is also done in AIS_Decoder... Is it possible to make a safe assumption about <code>m_bIsInLayer</code> being  true in this case?  The other places it used in is no problem, they are gui parts.</p>
+
+
+
+<a name="295305114"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332168-Master%20-%205.8.0%20%20%28was%3A%20comms%29/topic/Rants/near/295305114" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Alec Leamas <a href="https://leamas.github.io/zulip-archive/stream/332168-Master---5.2E8.2E0--.28was.3A-comms.29/topic/Rants.html#295305114">(Aug 25 2022 at 20:25)</a>:</h4>
+<p>Nope, not  <code>AddNewRoute()</code> but  <code>AddNewWayPoin()</code>.  If I just could fix that one....</p>
+
+
+
+<a name="295305316"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332168-Master%20-%205.8.0%20%20%28was%3A%20comms%29/topic/Rants/near/295305316" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Alec Leamas <a href="https://leamas.github.io/zulip-archive/stream/332168-Master---5.2E8.2E0--.28was.3A-comms.29/topic/Rants.html#295305316">(Aug 25 2022 at 20:26)</a>:</h4>
+<p>...and   <code>&gt;AddNewTrack() </code></p>
+
+
+
+<a name="295309699"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332168-Master%20-%205.8.0%20%20%28was%3A%20comms%29/topic/Rants/near/295309699" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Alec Leamas <a href="https://leamas.github.io/zulip-archive/stream/332168-Master---5.2E8.2E0--.28was.3A-comms.29/topic/Rants.html#295309699">(Aug 25 2022 at 20:59)</a>:</h4>
+<p>... as I said: thanks for listening. Writing this made me sort out things. In short, the value of  <code>m_bIsInLayer</code> is known in AIS_decoder. I should be able to untangle this mess. Good night.</p>
+
+
+
+<a name="297139385"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332168-Master%20-%205.8.0%20%20%28was%3A%20comms%29/topic/Rants/near/297139385" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Dave Register <a href="https://leamas.github.io/zulip-archive/stream/332168-Master---5.2E8.2E0--.28was.3A-comms.29/topic/Rants.html#297139385">(Sep 04 2022 at 20:41)</a>:</h4>
+<p><span class="user-mention" data-user-id="399510">@Alec Leamas</span> <br>
+ This darned smart pointers are too smart for me.</p>
+<p>I have a shared pointer to abstract comm driver.<br>
+I want to cast this pointer to a particular driver, and then call a method on it.  Something like:</p>
+<div class="codehilite"><pre><span></span><code>       std::shared_ptr&lt;const AbstractCommDriver&gt; target_driver = FindDriver(drivers, source);
+
+        const std::shared_ptr&lt;const CommDriverN0183Net&gt; drv_net = std::dynamic_pointer_cast&lt;const CommDriverN0183Net&gt;(target_driver);
+     if (drv_net){
+       params = drv_net-&gt;GetParams();
+</code></pre></div>
+
+
+
+<a name="297139419"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332168-Master%20-%205.8.0%20%20%28was%3A%20comms%29/topic/Rants/near/297139419" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Dave Register <a href="https://leamas.github.io/zulip-archive/stream/332168-Master---5.2E8.2E0--.28was.3A-comms.29/topic/Rants.html#297139419">(Sep 04 2022 at 20:41)</a>:</h4>
+<p>But of course it does not work.</p>
+<p>What is wrong, please?</p>
+
+
+
+<a name="297139802"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332168-Master%20-%205.8.0%20%20%28was%3A%20comms%29/topic/Rants/near/297139802" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Alec Leamas <a href="https://leamas.github.io/zulip-archive/stream/332168-Master---5.2E8.2E0--.28was.3A-comms.29/topic/Rants.html#297139802">(Sep 04 2022 at 20:47)</a>:</h4>
+<p>If you are really sure you can use "static_pointer_cast&lt;&gt;". IIRC, it does not make any  run time checks</p>
+
+
+
+<a name="297140264"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332168-Master%20-%205.8.0%20%20%28was%3A%20comms%29/topic/Rants/near/297140264" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Alec Leamas <a href="https://leamas.github.io/zulip-archive/stream/332168-Master---5.2E8.2E0--.28was.3A-comms.29/topic/Rants.html#297140264">(Sep 04 2022 at 20:55)</a>:</h4>
+<p>But... I miss some context. FindDriver does indeed include an AbstractCommDriver. Why do you need the derived driver?  Is it that we missed something needed in AbstractCommDriver, is the solution to expand it?</p>
+
+
+
+<a name="297140756"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332168-Master%20-%205.8.0%20%20%28was%3A%20comms%29/topic/Rants/near/297140756" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Alec Leamas <a href="https://leamas.github.io/zulip-archive/stream/332168-Master---5.2E8.2E0--.28was.3A-comms.29/topic/Rants.html#297140756">(Sep 04 2022 at 21:02)</a>:</h4>
+<p>No... you don't know that its'a net driver...   Can you share the compiler output ( the top up to the reference to the source line)</p>
+
+
+
+<a name="297141393"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332168-Master%20-%205.8.0%20%20%28was%3A%20comms%29/topic/Rants/near/297141393" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Alec Leamas <a href="https://leamas.github.io/zulip-archive/stream/332168-Master---5.2E8.2E0--.28was.3A-comms.29/topic/Rants.html#297141393">(Sep 04 2022 at 21:14)</a>:</h4>
+<p>That said, <code>dynamic_pointer_cast</code>works fine in simple examples done by expanding an existing test:</p>
+<div class="codehilite"><pre><span></span><code>  auto found = FindDriver(drivers, &quot;bar&quot;);
+  auto file_drv = std::dynamic_pointer_cast&lt;const FileCommDriver&gt;(found);
+  EXPECT_NE(file_drv.get(), nullptr);
+</code></pre></div>
+
+
+
+<a name="297141638"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332168-Master%20-%205.8.0%20%20%28was%3A%20comms%29/topic/Rants/near/297141638" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Alec Leamas <a href="https://leamas.github.io/zulip-archive/stream/332168-Master---5.2E8.2E0--.28was.3A-comms.29/topic/Rants.html#297141638">(Sep 04 2022 at 21:19)</a>:</h4>
+<p>Hm... digging more.  One suspicious thing is that header declares the default CTOR <code>CommDriverN0183Net::CommDriverN0183Net()</code>, but this is is not implemented (commented out) in the cpp file.</p>
+
+
+
+<a name="297142160"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332168-Master%20-%205.8.0%20%20%28was%3A%20comms%29/topic/Rants/near/297142160" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Alec Leamas <a href="https://leamas.github.io/zulip-archive/stream/332168-Master---5.2E8.2E0--.28was.3A-comms.29/topic/Rants.html#297142160">(Sep 04 2022 at 21:29)</a>:</h4>
+<p>And... what does <em>But of course it does not work.</em> exactly mean here? compile time or runtime error? which is?</p>
+
+
+
+<a name="297143580"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332168-Master%20-%205.8.0%20%20%28was%3A%20comms%29/topic/Rants/near/297143580" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Dave Register <a href="https://leamas.github.io/zulip-archive/stream/332168-Master---5.2E8.2E0--.28was.3A-comms.29/topic/Rants.html#297143580">(Sep 04 2022 at 21:57)</a>:</h4>
+<p>error is:</p>
+<div class="codehilite"><pre><span></span><code>          params = drv_net-&gt;GetParams();
+
+/home/dsr/Projects/opencpn/src/multiplexer.cpp:233:39: error: passing ‘std::__shared_ptr_access&lt;const CommDriverN0183Net, (__gnu_cxx::_Lock_policy)2, false, false&gt;::element_type {aka const CommDriverN0183Net}’ as ‘this’ argument discards qualifiers [-fpermissive]
+</code></pre></div>
+
+
+
+<a name="297143702"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332168-Master%20-%205.8.0%20%20%28was%3A%20comms%29/topic/Rants/near/297143702" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Dave Register <a href="https://leamas.github.io/zulip-archive/stream/332168-Master---5.2E8.2E0--.28was.3A-comms.29/topic/Rants.html#297143702">(Sep 04 2022 at 21:59)</a>:</h4>
+<p>Context:<br>
+I need to access some driver-specific fields that are not in the abstract base class.  This will appear in several places, moving forward.</p>
+
+
+
+<a name="297146512"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332168-Master%20-%205.8.0%20%20%28was%3A%20comms%29/topic/Rants/near/297146512" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Dave Register <a href="https://leamas.github.io/zulip-archive/stream/332168-Master---5.2E8.2E0--.28was.3A-comms.29/topic/Rants.html#297146512">(Sep 04 2022 at 23:03)</a>:</h4>
+<p>Note: You will not find "GetParams()" in any driver, yet.  Local  WIP, not pushed yet.</p>
+
+
+
+<a name="297158821"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332168-Master%20-%205.8.0%20%20%28was%3A%20comms%29/topic/Rants/near/297158821" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Dave Register <a href="https://leamas.github.io/zulip-archive/stream/332168-Master---5.2E8.2E0--.28was.3A-comms.29/topic/Rants.html#297158821">(Sep 05 2022 at 03:33)</a>:</h4>
+<p>Some progress on mulitplexer.  A misplaced "const" declaration.  Sigh...  But now stuck on SendMessage().<br>
+I pushed some changes, and core still builds. "tests" build broken.<br>
+Anyway, if you could take a look at multiplexer.cpp, un-comment line 247, and help me understand why this fails to compile.  I would sure appreciate it.<br>
+This convoluted access to derived drivers is something we need to get working, and be able to document clearly.  Some plugins will need direct access like this (e.g. N2k autopilot)</p>
+
+
+
+<a name="297573550"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332168-Master%20-%205.8.0%20%20%28was%3A%20comms%29/topic/Rants/near/297573550" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Alec Leamas <a href="https://leamas.github.io/zulip-archive/stream/332168-Master---5.2E8.2E0--.28was.3A-comms.29/topic/Rants.html#297573550">(Sep 07 2022 at 11:54)</a>:</h4>
+<p>Global variables brain-dump ahead...</p>
+<p>We have all sorts of global variables. This is a pain we basically have to live with,  the work to get rid of them would be overwhelming. However, we could IMHO enhance the situation without rewriting everything.</p>
+<p>We have five sets of globals with some intersections:</p>
+<ol>
+<li>The own ship state: gLat, gLon, etc... These  should be collected into a single, possibly separate file with a corresponding header.  The header could be commented, and would make it easier to use them in other files.</li>
+<li>All sorts of configuration variables  stored in the config file. These should be collected into file with a corresponding header. Might be navutils_base.</li>
+<li>Some pointers to singleton classes. These  should be replaced with proper static <code>getInstance()</code> factories. This ties the use to the header, and sorts out ownership and initialization once and for all.</li>
+<li>Other global state flags, hopefully not too many... These should be collected in yet another file with header, most likely separate.</li>
+<li>For obvious reasons we should be careful to not change things defined in ocpn_plugin.h. </li>
+</ol>
+<p>If we did something like above things would IMHO improve considerably.</p>
+
+
+
+<a name="297594358"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332168-Master%20-%205.8.0%20%20%28was%3A%20comms%29/topic/Rants/near/297594358" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Dave Register <a href="https://leamas.github.io/zulip-archive/stream/332168-Master---5.2E8.2E0--.28was.3A-comms.29/topic/Rants.html#297594358">(Sep 07 2022 at 13:41)</a>:</h4>
+<p>Yes, I agree with the idea.<br>
+We can polish forever, I suppose.  And we should.  But right now I am focused on functionality, especially regression breakage in the small dark corners of legacy behavior.  Time to think seriously of merging comm-&gt;master, and starting some sort of Alpha test.</p>
+
+
+
+<a name="297603768"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332168-Master%20-%205.8.0%20%20%28was%3A%20comms%29/topic/Rants/near/297603768" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Alec Leamas <a href="https://leamas.github.io/zulip-archive/stream/332168-Master---5.2E8.2E0--.28was.3A-comms.29/topic/Rants.html#297603768">(Sep 07 2022 at 14:35)</a>:</h4>
+<p>As I said, just a brain dump. No prio now, agreed.</p>
+
+
+
+<a name="298244952"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332168-Master%20-%205.8.0%20%20%28was%3A%20comms%29/topic/Rants/near/298244952" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Alec Leamas <a href="https://leamas.github.io/zulip-archive/stream/332168-Master---5.2E8.2E0--.28was.3A-comms.29/topic/Rants.html#298244952">(Sep 11 2022 at 12:30)</a>:</h4>
+<p>Still trying to untangle the basic stuff: Tracks routes, etc.  With most of things under control I stumble into RouteMan, a data base which includes and calls each and every gui component. Argh...</p>
+
+
+
+<a name="298261638"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332168-Master%20-%205.8.0%20%20%28was%3A%20comms%29/topic/Rants/near/298261638" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Håkan Svensson <a href="https://leamas.github.io/zulip-archive/stream/332168-Master---5.2E8.2E0--.28was.3A-comms.29/topic/Rants.html#298261638">(Sep 11 2022 at 15:17)</a>:</h4>
+<p>Routeman and other plugins are also using PushNMEA() (To autopilot) but for now the mux won't let it out.</p>
+
+
+
+<a name="299009160"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332168-Master%20-%205.8.0%20%20%28was%3A%20comms%29/topic/Rants/near/299009160" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Alec Leamas <a href="https://leamas.github.io/zulip-archive/stream/332168-Master---5.2E8.2E0--.28was.3A-comms.29/topic/Rants.html#299009160">(Sep 15 2022 at 16:40)</a>:</h4>
+<p>Doing the comm-deps work, it becomes clear what a mess the global variables are. Just to be evil: here is the list in console/src.cpp</p>
+<div class="codehilite"><pre><span></span><code>BasePlatform* g_BasePlatform = 0;
+bool g_bportable = false;
+wxString g_winPluginDir;
+wxConfigBase* pBaseConfig = 0;
+void* g_pi_manager = reinterpret_cast&lt;void*&gt;(1L);
+wxString g_compatOS = PKG_TARGET;
+wxString g_compatOsVersion = PKG_TARGET_VERSION;
+
+wxString g_catalog_custom_url;
+wxString g_catalog_channel;
+wxLog* g_logger;
+
+bool g_bAIS_ACK_Timeout;
+bool g_bAIS_CPA_Alert_Suppress_Moored;
+bool g_bCPAMax;
+bool g_bCPAWarn;
+bool g_bHideMoored;
+bool g_bTCPA_Max;
+double g_AckTimeout_Mins;
+double g_CPAMax_NM;
+double g_CPAWarn_NM;
+double g_ShowMoored_Kts;
+double g_TCPA_Max;
+bool g_bShowMag;
+bool g_bShowTrue;
+bool bGPSValid;
+bool g_bInlandEcdis;
+bool g_bRemoveLost;
+bool g_bMarkLost;
+bool g_bShowScaled;
+bool g_bAllowShowScaled;
+bool g_bAISRolloverShowCOG;
+bool g_bAISRolloverShowCPA;
+bool g_bAISShowTracks;
+bool g_bAISRolloverShowClass;
+bool g_bAIS_CPA_Alert;
+double g_RemoveLost_Mins;
+double g_MarkLost_Mins;
+double g_AISShowTracks_Mins;
+
+
+std::vector&lt;Track*&gt; g_TrackList;
+wxString AISTargetNameFileName;
+AISTargetAlertDialog* g_pais_alert_dialog_active;
+Route* pAISMOBRoute;
+int g_WplAction;
+Select* pSelectAIS;
+
+/* comm_bridge context. */
+
+double gCog;
+double gHdm;
+double gHdt;
+double gLat;
+double gLon;
+double gSog;
+double gVar;
+double g_UserVar;
+int gps_watchdog_timeout_ticks;
+bool g_bHDT_Rx;
+int g_nNMEADebug;
+bool g_bSatValid;
+bool g_bVAR_Rx;
+int g_NMEAAPBPrecision;
+int g_SatsInView;
+int g_priSats;
+int sat_watchdog_timeout_ticks = 12;
+
+wxString gRmcTime;
+wxString gRmcDate;
+
+wxString g_TalkerIdText;
+
+Select* pSelect;
+double g_n_arrival_circle_radius;
+double g_PlanSpeed;
+bool g_bTrackDaily;
+int g_trackFilterMax;
+wxString g_default_routepoint_icon;
+double g_TrackDeltaDistance;
+float g_fWaypointRangeRingsStep;
+float g_ChartScaleFactorExp;
+wxString g_default_wp_icon;
+bool g_btouch;
+int g_iWaypointRangeRingsNumber;
+int g_iWaypointRangeRingsStepUnits;
+wxColour g_colourWaypointRangeRingsColour;
+float g_selection_radius_mm;
+bool g_bUseWptScaMin;
+int g_iWpt_ScaMin;
+int g_LayerIdx;
+bool g_bOverruleScaMin;
+float g_selection_radius_touch_mm;
+int g_nTrackPrecision;
+bool g_bIsNewLayer;
+RouteList *pRouteList;
+WayPointman* pWayPointMan;
+int g_route_line_width;
+int g_track_line_width;
+RoutePoint* pAnchorWatchPoint1 = 0;
+RoutePoint* pAnchorWatchPoint2 = 0;
+bool g_bAllowShipToActive;
+wxRect g_blink_rect;
+int g_maxWPNameLength;
+CommN0183Out* g_comm_out;
+bool g_bMagneticAPB;
+
+Routeman* g_pRouteMan;
+</code></pre></div>
+
+
+
+<a name="299009802"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332168-Master%20-%205.8.0%20%20%28was%3A%20comms%29/topic/Rants/near/299009802" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Alec Leamas <a href="https://leamas.github.io/zulip-archive/stream/332168-Master---5.2E8.2E0--.28was.3A-comms.29/topic/Rants.html#299009802">(Sep 15 2022 at 16:43)</a>:</h4>
+<p>This  list is only  the subset needed for the non-gui cli context. More than 100 random variables, no header, unclear ownership, no docs.IMHO it's  just not maintainable.</p>
+
+
+
+<hr><p>Last updated: Oct 05 2023 at 09:43 UTC</p>
+</html>

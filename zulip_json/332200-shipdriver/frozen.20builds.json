@@ -1,0 +1,74 @@
+[
+    {
+        "content": "<p>OK, feeling better. I think there is something lurking around when it comes to keeping the old, frozen builds in place while still purging old builds which should be overridden by new after merging the auto branch. B Ut is was too early, I need to think more before there is anything to discuss. So, just let's drop this for now.</p>",
+        "id": 322535801,
+        "sender_full_name": "Alec Leamas",
+        "timestamp": 1674227293
+    },
+    {
+        "content": "<p>I see the problem. In my haste with adding ShipDriver to the master catalog I deleted the old xml files. Now there are no references for the wxWidgets 3.1.2 artifacts. </p>\n<p>As updates are made for wx32 plugins the old artifacts in Cloudsmith slip further down the heap until they are eventually deleted by Cloudsmith.</p>",
+        "id": 322687970,
+        "sender_full_name": "Mike Rossiter",
+        "timestamp": 1674292581
+    },
+    {
+        "content": "<p>OK, we have some common understanding. I think we should be able to handle this with some git-fu, basically put the old, fro</p>",
+        "id": 322753801,
+        "sender_full_name": "Alec Leamas",
+        "timestamp": 1674319529
+    },
+    {
+        "content": "<blockquote>\n<p>some git-fu, basically put the old, frozen entries in a separate branch.</p>\n</blockquote>\n<p>Lot's of things missing here, we can take it later.</p>",
+        "id": 322755239,
+        "sender_full_name": "Alec Leamas",
+        "timestamp": 1674320203
+    },
+    {
+        "content": "<p><span class=\"user-mention\" data-user-id=\"399559\">@Mike Rossiter</span> <br>\nhm, yes, there is also the  problem that Cloudsmith will remove the untagged builds. Did not think of it.</p>\n<p>What if we create a new branch with a  fancy name like <em>frozen</em>? This could be used in two ways:</p>\n<ul>\n<li>we could tag the builds in this branch, thus  make them uploaded to a stable Cloudsmith repo  where they won't be removed over time.</li>\n<li>When making the PR we could proceed as we always do, remove all old builds, keeping the new. However, as a final step we could merge the <em>frozen</em> branch. This will make sure all frozen builds are in place as they should before making a PR. </li>\n</ul>\n<p>Thoughts?</p>",
+        "id": 322897745,
+        "sender_full_name": "Alec Leamas",
+        "timestamp": 1674415002
+    },
+    {
+        "content": "<blockquote>\n<p>the problem that Cloudsmith will remove the untagged builds</p>\n</blockquote>\n<p>But existing artifacts in beta or prod will always be tagged??? Isn't the issue the lifecyle of the Cloudsmith repo and the number of packages in the repo? Excess (old) wx3.0 packages being deleted.</p>\n<blockquote>\n<p>create a new branch with a fancy name like frozen? <br>\n uploaded to a stable Cloudsmith repo where they won't be removed over time.</p>\n</blockquote>\n<p>We are still faced with the issue of the lifecycle. The Cloudsmith api allows deletion of an artifact. Can this be used to ensure that the number of packages is kept within the limit number?  Tackle the issue as one of Cloudsmith house-keeping. Manual deletion of packages could also be used.</p>\n<p>For the new ABI I have increased the major version number of a plugin other than ShipDriver by 1. It is easy to recognise the new versions in the metadata list. Leaving old wx3.0 versions when pruning is pretty simple, if you remember to do it!</p>\n<blockquote>\n<p>as a final step we could merge the frozen branch</p>\n</blockquote>\n<p>What repo is this a branch of? Sounds like OpenCPN/plugins, where we make the PR to the master branch. A backup here would be useful. </p>\n<p>In the actual plugin a branch with the old wx30 version is useful for backup builds. I need to do this for my plugins anyway.</p>\n<p>To fix my problem of missing wx30 metadata files. Can I find a commit of fork OpenCPN/plugins with the wx3.0 xml files for the relevant plugins. Copy the xml files from here to the latest fork OpenCPN/plugins directory and then make the PR? The artifacts will still be in Cloudsmith at this stage.</p>",
+        "id": 322988713,
+        "sender_full_name": "Mike Rossiter",
+        "timestamp": 1674470945
+    },
+    {
+        "content": "<blockquote>\n<p>To fix my problem of missing wx30 metadata files. Can I find a commit of fork OpenCPN/plugins with the wx3.0 xml files for the relevant plugins. Copy the xml files from here to the latest fork OpenCPN/plugins directory and then make the PR? The artifacts will still be in Cloudsmith at this stage.</p>\n</blockquote>\n<p><span class=\"user-mention\" data-user-id=\"399510\">@Alec Leamas</span> ^^</p>",
+        "id": 323083871,
+        "sender_full_name": "Mike Rossiter",
+        "timestamp": 1674496829
+    },
+    {
+        "content": "<p>Well, you have it in the history, right? Just checkout the version before you removed  them...</p>",
+        "id": 323084100,
+        "sender_full_name": "Alec Leamas",
+        "timestamp": 1674496890
+    },
+    {
+        "content": "<p>(let me know if you need more)</p>",
+        "id": 323084470,
+        "sender_full_name": "Alec Leamas",
+        "timestamp": 1674496986
+    },
+    {
+        "content": "<p>That's fine. I just wanted to check there were no side effects from just dealing with the .xml files.</p>",
+        "id": 323101380,
+        "sender_full_name": "Mike Rossiter",
+        "timestamp": 1674502271
+    },
+    {
+        "content": "<p>The manual: The bottom of the page Plugin-Adaptation.adoc contains a list of files/dirs affected. Personally I don't think it's possible to maintain in it's current form which is really hard to maintain and thus needs an update.</p>\n<p>An alternative would be to just list some important files and directories and their role, without any suggestion what so ever that the list is complete.</p>\n<p><span class=\"user-mention\" data-user-id=\"399559\">@Mike Rossiter</span>  :  thoughts?</p>",
+        "id": 325600319,
+        "sender_full_name": "Alec Leamas",
+        "timestamp": 1675422500
+    },
+    {
+        "content": "<blockquote>\n<p>An alternative would be to just list some important files and directories and their role, without any suggestion what so ever that the list is complete.</p>\n</blockquote>\n<p>Most of us have updated with templates at least once  and the necessary files/directories are in place. Your alternative looks like the best way forward.</p>",
+        "id": 325637709,
+        "sender_full_name": "Mike Rossiter",
+        "timestamp": 1675432814
+    }
+]

@@ -1,0 +1,1070 @@
+[
+    {
+        "content": "<p>Can you please advise how I build for the new OCPN?  I want to do local builds at first and I guess I need a different <a href=\"http://circleci-build-macos.sh\">circleci-build-macos.sh</a> and maybe other stuff too?  As I understand it, we need to use later versions of wxWidgets.<br>\nThe test suite now reports the configuration so we can be sure we have the right components.</p>",
+        "id": 319650767,
+        "sender_full_name": "Tony Voss",
+        "timestamp": 1672944827
+    },
+    {
+        "content": "<p>You have the update-templates script in your repo. You run it with <em>sd3.2.1</em> i.e. </p>\n<div class=\"codehilite\"><pre><span></span><code>$bash update-templates sd3.2.1\n</code></pre></div>\n<p>It will push the wxWidgets 3.2 builds to Cloudsmith.</p>\n<p>You get a new  <em>circleci-build-macos.sh</em>. You can use this script to build a local tarball for OpenCPN 5.8. I had problems with the icons in the toolbar. Interested to see if that problem has gone away.</p>",
+        "id": 319738455,
+        "sender_full_name": "Mike Rossiter",
+        "timestamp": 1672994605
+    },
+    {
+        "content": "<p>So we end up with both wx312 and wx32 builds in the repository.  For alpha, selecting the right one to install is a manual matter.<br>\nFor beta and release, does the OCPN catalogue update know which to look for?</p>",
+        "id": 319746059,
+        "sender_full_name": "Tony Voss",
+        "timestamp": 1672997825
+    },
+    {
+        "content": "<blockquote>\n<p>For beta and release, does the OCPN catalogue update know which to look for?</p>\n</blockquote>\n<p>Yes it does. The metadata xml files for these plugins includes the string 'wx32' and the catalog knows which plugins are then available for 5.7/5.8.</p>",
+        "id": 319751320,
+        "sender_full_name": "Mike Rossiter",
+        "timestamp": 1673000067
+    },
+    {
+        "content": "<p>Tried a build using the sd3.2.2 template. On Winodws the toolbar images do not appear. <br>\n<a href=\"https://cloudsmith.io/~mike-rossiter/repos/javascript-alpha/packages/\">https://cloudsmith.io/~mike-rossiter/repos/javascript-alpha/packages/</a><br>\nHolds my alpha builds.</p>",
+        "id": 322088064,
+        "sender_full_name": "Mike Rossiter",
+        "timestamp": 1674057464
+    },
+    {
+        "content": "<p><span class=\"user-mention silent\" data-user-id=\"399559\">Mike Rossiter</span> <a href=\"#narrow/stream/349785-JavaScript_pi/topic/Building.20for.20later.20than.20OCPN.20v5.2E6/near/319738455\">said</a>:</p>\n<blockquote>\n<p>You have the update-templates script in your repo. You run it with <em>sd3.2.1</em> i.e. </p>\n<div class=\"codehilite\"><pre><span></span><code>$bash update-templates sd3.2.1\n</code></pre></div>\n<p>It will push the wxWidgets 3.2 builds to Cloudsmith.</p>\n<p>You get a new  <em>circleci-build-macos.sh</em>. You can use this script to build a local tarball for OpenCPN 5.8. I had problems with the icons in the toolbar. Interested to see if that problem has gone away.</p>\n</blockquote>\n<p>Is this still the way to build for 3.2?  (Things might have moved on since Jan 5)</p>",
+        "id": 324049477,
+        "sender_full_name": "Tony Voss",
+        "timestamp": 1674825888
+    },
+    {
+        "content": "<p>We found some isssues with sd3.2.1. Latest tag to update is sd3.2.2-beta1.</p>",
+        "id": 324085725,
+        "sender_full_name": "Mike Rossiter",
+        "timestamp": 1674834730
+    },
+    {
+        "content": "<p>Well, I ran b<code>ash update-templates sd3.2.1</code>, and reran it as instructed<br>\nThen ran <code>circleci-build-macos.sh</code>which gave errors:</p>\n<blockquote>\n<p>git submodule update --init opencpn-libs<br>\nerror: pathspec 'opencpn-libs' did not match any file(s) known to git</p>\n</blockquote>\n<p>and</p>\n<blockquote>\n<p>CMake Error at CMakeLists.txt:40 (add_subdirectory):<br>\n add_subdirectory given source \"opencpn-libs/api-17\" which is not an existing directory.</p>\n</blockquote>\n<p>I note that api-17 resides in libs and not opencpn-libs<br>\nNot sure where to go from here.<br>\nI attach the Terminal log.  Pleas can you advise?<br>\n<a href=\"/user_uploads/33951/v1b5M6X6LQCzUoeat0CjkLl-/Terminal-Saved-Output.txt\">Terminal-Saved-Output.txt</a></p>",
+        "id": 324119761,
+        "sender_full_name": "Tony Voss",
+        "timestamp": 1674842361
+    },
+    {
+        "content": "<p>BBL</p>",
+        "id": 324121318,
+        "sender_full_name": "Mike Rossiter",
+        "timestamp": 1674842766
+    },
+    {
+        "content": "<p>It is all about adding a git sub-module, opencpn-libs.</p>",
+        "id": 324121435,
+        "sender_full_name": "Mike Rossiter",
+        "timestamp": 1674842810
+    },
+    {
+        "content": "<p>Sorry - you will have to spell that out for me<br>\nBy the way,  OCPN5.7 used API18, does it not?</p>",
+        "id": 324122864,
+        "sender_full_name": "Tony Voss",
+        "timestamp": 1674843222
+    },
+    {
+        "content": "<p>5.7 has API 18. Mainly functions to work with communications like NMEA2000.<br>\nIf you look in my ShipDriver repo you will find an opencpn-libs folder. README.md has instructions for adding the git sub-module. Alec's idea was to try and get consistency across the many libs the plugins use.</p>",
+        "id": 324138723,
+        "sender_full_name": "Mike Rossiter",
+        "timestamp": 1674848074
+    },
+    {
+        "content": "<p>As Mike said: In  local build you need to clone the sources according to the instructions in README.md (there are other ways to achieve the same result, this is what's documented).</p>",
+        "id": 324413224,
+        "sender_full_name": "Alec Leamas",
+        "timestamp": 1674988520
+    },
+    {
+        "content": "<p><span class=\"user-mention\" data-user-id=\"554731\">@Tony Voss</span>  Oops, not README.md but INSTALL.md. Sorry.</p>",
+        "id": 324413788,
+        "sender_full_name": "Alec Leamas",
+        "timestamp": 1674988830
+    },
+    {
+        "content": "<p>I have managed to get to local build using the new sd3.1.4  and attempting to build for latest OCPN I have, which is  5.7.1+dd8acc0 (later than public beta 2 because that crashes on MacOS).<br>\nI am building on a M2 MacBook but testing on an X86.<br>\nFirst local build says it was x86 but when Plugin Manager tried to install, it said it was incompatible arm.  (The message flashes up too briefly to study).<br>\nI then patched <a href=\"http://circi-build-macos.sh\">circi-build-macos.sh</a>  thus:</p>\n<div class=\"codehilite\" data-code-language=\"CMake\"><pre><span></span><code><span class=\"w\">  </span><span class=\"err\">-DCMAKE_BUILD_TYPE=Release</span><span class=\"w\"> </span><span class=\"err\">\\</span>\n<span class=\"w\">  </span><span class=\"err\">-DCMAKE_INSTALL_PREFIX=</span><span class=\"w\"> </span><span class=\"err\">\\</span>\n<span class=\"w\">  </span><span class=\"err\">-DCMAKE_OSX_DEPLOYMENT_TARGET=10.10</span><span class=\"w\"> </span><span class=\"err\">\\</span>\n<span class=\"w\">  </span><span class=\"err\">-DOCPN_TARGET_TUPLE=\"darwin-wx32;10;x86_64\"</span><span class=\"w\"> </span><span class=\"err\">\\</span>\n<span class=\"w\">  </span><span class=\"err\">-DCMAKE_OSX_ARCHITECTURES=x86_64</span><span class=\"w\"> </span><span class=\"err\">\\</span><span class=\"w\">                </span><span class=\"err\">***</span><span class=\"w\"> </span><span class=\"err\">Tony</span><span class=\"w\"> </span><span class=\"err\">added</span><span class=\"w\"> </span><span class=\"err\">this</span><span class=\"w\"> </span><span class=\"err\">line***</span>\n<span class=\"w\">  </span><span class=\"err\">..</span>\n</code></pre></div>\n<p>This time Plugin Manager accepted it and started to activate it.  Lots of stuff logged in OCPN log file ending with</p>\n<div class=\"codehilite\"><pre><span></span><code>11:45:24.640    INFO plugin_loader.cpp:1394 PlugInManager:  /Users/Tony/Library/Application Support/OpenCPN/Contents/PlugIns/libJavaScript_pi.dylib\n11:45:24.640    INFO plugin_loader.cpp:1395         Plugin common name: javascript\n11:45:24.640    INFO plugin_loader.cpp:1397         API Version detected: 117\n11:45:24.640    INFO plugin_loader.cpp:1398         PlugIn Version detected: 2.0.0\n</code></pre></div>\n<p>whereupon OCPN crashed -  somewhere in wxWidgets - I think getting fonts.<br>\nSo it looks like Plugin Manager got as far as interrogating the plugin  for its details</p>\n<p>Should I report this elsewhere or is this sufficient?</p>",
+        "id": 324898350,
+        "sender_full_name": "Tony Voss",
+        "timestamp": 1675168092
+    },
+    {
+        "content": "<p>It might be worth updating to <em>sd3.2.2</em>. This will produce builds for all supported OS and may change other stuff which will allow the plugin to be loaded. Saw that Hakan did this for <em>ais-vd_pi</em>.</p>",
+        "id": 324900817,
+        "sender_full_name": "Mike Rossiter",
+        "timestamp": 1675168855
+    },
+    {
+        "content": "<p>That commit is unfortunately not the complete truth. TL;DR Use darwin-wx32.</p>\n<p>Background: We have since long moved to using wx315 on MacOS without changing the ABI name. That is, \"no suffix\" means wx315 on MAcOS.  OTOH, we now have also wx32 plugins, these are the only ones we build.  To make it possible for core opencpn to distinguish these  we use a API named ´darwin-wx32` for the new plugins.</p>\n<p>The complete truth is in the plugins project, in the file <em>ocpn-plugin.xsd</em>. Look for \"xs:element name=\"target\". Note that only the master branch is fully  updated; it is this branch which is used when validating.</p>",
+        "id": 324901699,
+        "sender_full_name": "Alec Leamas",
+        "timestamp": 1675169144
+    },
+    {
+        "content": "<blockquote>\n<p>What do I need to do to take advantage of your fix Mike? Update script? Rebuild?</p>\n</blockquote>\n<p>It's in <em>UPDATE_TEMPLATES.md</em>. If you have the file in the top directory you don't need to bother with the first step Bootstrapping, just go straight to <em>2. Run Script</em></p>",
+        "id": 324902894,
+        "sender_full_name": "Alec Leamas",
+        "timestamp": 1675169518
+    },
+    {
+        "content": "<p>Well, then that is a bug... can you file it?</p>",
+        "id": 324903300,
+        "sender_full_name": "Alec Leamas",
+        "timestamp": 1675169613
+    },
+    {
+        "content": "<p>OTOH, we won't update 3.1 any more... and this is not an issue for main opencpn since it won't load the old plugins anyway.</p>",
+        "id": 324903646,
+        "sender_full_name": "Alec Leamas",
+        "timestamp": 1675169704
+    },
+    {
+        "content": "<p>I will do that.</p>",
+        "id": 324903650,
+        "sender_full_name": "Mike Rossiter",
+        "timestamp": 1675169705
+    },
+    {
+        "content": "<p>Yes, please do. We need to think this through.</p>",
+        "id": 324904142,
+        "sender_full_name": "Alec Leamas",
+        "timestamp": 1675169853
+    },
+    {
+        "content": "<p><span class=\"user-mention\" data-user-id=\"554731\">@Tony Voss</span> I suggest that you just replace <em>darwin-wx-32</em> with <em>darwin</em> for now. That should make it. IN all cases using <em>darwin-wx32</em> is plain wrong since 3.1 builds the \"old\" wxWidgets version.</p>",
+        "id": 324904659,
+        "sender_full_name": "Alec Leamas",
+        "timestamp": 1675169995
+    },
+    {
+        "content": "<p>Updated to SD3.2.2, added <code> -DCMAKE_OSX_ARCHITECTURES=x86_64</code> to <a href=\"http://circi-build-macos.sh\">circi-build-macos.sh</a> as above.<br>\nLocal build ran fine.  Imported into OCPN beta 3.<br>\nOn plugin activation it crashed  within plugin manager as before after logging</p>\n<div class=\"codehilite\"><pre><span></span><code>PlugIns/libJavaScript_pi.dylib\n17:15:51.790    INFO plugin_loader.cpp:1395         Plugin common name: javascript\n17:15:51.790    INFO plugin_loader.cpp:1397         API Version detected: 117\n17:15:51.790    INFO plugin_loader.cpp:1398         PlugIn Version detected: 2.0.0\n</code></pre></div>\n<p>Not sure why it says v2.0.0 as the tarball is v2.0.1and that's what plugin manager sees when importing it.  Anyhow, that is minor.</p>\n<p>BTW, if I set the API to 118 <a href=\"http://circi-build-macos.sh\">circi-build-macos.sh</a> fails to find the 118 lib.</p>",
+        "id": 325686209,
+        "sender_full_name": "Tony Voss",
+        "timestamp": 1675445337
+    },
+    {
+        "content": "<p><span class=\"user-mention\" data-user-id=\"399559\">@Mike Rossiter</span>  Now able to build JS plugin for OCPN 5.7 but it still crashes when being loaded.<br>\nLog shows</p>\n<div class=\"codehilite\"><pre><span></span><code>PlugIns/libJavaScript_pi.dylib\n14:15:51.790    INFO plugin_loader.cpp:1395         Plugin common name: javascript\n14:15:51.790    INFO plugin_loader.cpp:1397         API Version detected: 118\n14:15:51.790    INFO plugin_loader.cpp:1398         PlugIn Version detected: 2.0.0\n</code></pre></div>\n<p>So PluginLoader has been able to construct the plugin and  interrogate the plugin OK but before it gets to call init() it crashes.  See log extract.<br>\nPluginLoader is in LoadPluginCandidate, which has called<br>\n<code>wxImage: :SaveFile(wxString const&amp;, wxString const&amp;)</code><br>\nI seem to recall you had issues with finding images/icons??  Any clues?<br>\n<a href=\"/user_uploads/33951/928hcsmrHxCb8nkSOyJjwItN/Screenshot-2023-02-04-at-15.19.10.png\">Screenshot-2023-02-04-at-15.19.10.png</a></p>\n<div class=\"message_inline_image\"><a href=\"/user_uploads/33951/928hcsmrHxCb8nkSOyJjwItN/Screenshot-2023-02-04-at-15.19.10.png\" title=\"Screenshot-2023-02-04-at-15.19.10.png\"><img src=\"/user_uploads/33951/928hcsmrHxCb8nkSOyJjwItN/Screenshot-2023-02-04-at-15.19.10.png\"></a></div>",
+        "id": 325844105,
+        "sender_full_name": "Tony Voss",
+        "timestamp": 1675524361
+    },
+    {
+        "content": "<p>My JS built locally installs fine. Just the icon missing in the toolbar. I will flash up my Mac Mini.</p>",
+        "id": 325848140,
+        "sender_full_name": "Mike Rossiter",
+        "timestamp": 1675525992
+    },
+    {
+        "content": "<p>Unable to load a local build into the latest beta <a href=\"https://github.com/opencpn/OpenCPN/issues/3\">#3</a>. Plugin is incompatible. We had this a long time ago. Also the plugin is \"jailed\", where I thought this had been taken out of the code.</p>",
+        "id": 325867913,
+        "sender_full_name": "Mike Rossiter",
+        "timestamp": 1675535061
+    },
+    {
+        "content": "<p>So where now?</p>",
+        "id": 325874604,
+        "sender_full_name": "Tony Voss",
+        "timestamp": 1675539237
+    },
+    {
+        "content": "<p>The first step is to run opencpn with --loglevel debug and post opencpn.log. this should show why the plugin is deemed incompatible.</p>",
+        "id": 325878020,
+        "sender_full_name": "Alec Leamas",
+        "timestamp": 1675541891
+    },
+    {
+        "content": "<p><span class=\"user-mention silent\" data-user-id=\"399559\">Mike Rossiter</span> <a href=\"#narrow/stream/349785-JavaScript_pi/topic/Building.20for.20later.20than.20OCPN.20v5.2E6/near/325867913\">said</a>:</p>\n<blockquote>\n<p>Unable to load a local build into the latest beta <a href=\"https://github.com/opencpn/OpenCPN/issues/3\">#3</a>. Plugin is incompatible. We had this a long time ago. Also the plugin is \"jailed\", where I thought this had been taken out of the code.</p>\n</blockquote>\n<p>Mike... you are not seeing what I am seeing. (I assume this is when you run on MacOS.)<br>\nIf you look in the log file you will probably see why it is deemed incompatible.  Likely you omitted to add<br>\n<code>-DCMAKE_OSX_ARCHITECTURES=x86_64</code> to <a href=\"http://circi-build-macos.sh\">circi-build-macos.sh</a> as above and hence built an arm version - which is indeed incompatible.  (Ignore the x86 in the tarball name - it can be arm inside.)<br>\nWhen I build an x86 one, it is deemed compatible but crashes during activation as I described.</p>",
+        "id": 325884943,
+        "sender_full_name": "Tony Voss",
+        "timestamp": 1675547848
+    },
+    {
+        "content": "<p>The x86_64   in  <code> -DOCPN_TARGET_TUPLE=\"darwin-wx32;10;x86_64\"</code> does not work to get x86 code.</p>",
+        "id": 325889637,
+        "sender_full_name": "Tony Voss",
+        "timestamp": 1675551500
+    },
+    {
+        "content": "<blockquote>\n<p>omitted to add<br>\n-DCMAKE_OSX_ARCHITECTURES=x86_64</p>\n</blockquote>\n<p>I am using a clone of your repo. <em>circleci-build-macos.sh</em> already edited.<br>\nLog shows:</p>\n<div class=\"codehilite\" data-code-language=\"18\"><pre><span></span><code>Users/mikerossiter/Library/Application Support/OpenCPN/Contents/\nPlugIns/libJavaScript_pi.dylib': dlopen(/Users/mikerossiter/Library/\nApplication Support/OpenCPN/Contents/PlugIns/libJavaScript_pi.dylib,\n2): Symbol not found: _wxTheAssertHandler\nReferenced from: /Users/mikerossiter/Library/Application Support/\nOpenCPN/Contents/PlugIns/libJavaScript_pi.dylib\nExpected in: /Applications/OpenCPN.app/Contents/MacOS/../\nFrameworks/libwx_baseu-3.2.dylib\nin /Users/mikerossiter/Library/Application Support/OpenCPN/\nContents/PlugIns/libJavaScript_pi.dylib```\n\n\nI am using Homebrew wxWidgets to compile the plugin. Wonder if that is the problem. We have been here before.\n</code></pre></div>",
+        "id": 325936776,
+        "sender_full_name": "Mike Rossiter",
+        "timestamp": 1675592963
+    },
+    {
+        "content": "<p>A private build of wxWidgets for the MacOS build of OpenCPN 5.7.1 is being used:<br>\n<a href=\"https://download.opencpn.org/s/Djqm4SXzYjF8nBw/download\">https://download.opencpn.org/s/Djqm4SXzYjF8nBw/download</a><br>\nIs this wxWidgets 3.2.0 or 3.2.1?<br>\nWe had this problem with Windows and resolved it by using official binaries for 3.2.1.<br>\n<span class=\"user-mention\" data-user-id=\"399510\">@Alec Leamas</span> : Help please!</p>",
+        "id": 325938329,
+        "sender_full_name": "Mike Rossiter",
+        "timestamp": 1675593805
+    },
+    {
+        "content": "<p>On my way out...</p>\n<p>We use a wxWidgets 3.2 built from source.  In main opencpn Dave has made a build which is downloaded as an anonymous binary.</p>\n<p>In shipdriver we rebuild from sources, but caches the result. Ww cannot use pre-built sources sonce the compilation  flags must match -- the flags we use are synchronized with Dave.</p>\n<p>You can see what't going on in the file  <em>cmake/MacosWxwidgets.cmake</em>. This build is cached in the circleci build environment and also reused when making local builds</p>",
+        "id": 325938948,
+        "sender_full_name": "Alec Leamas",
+        "timestamp": 1675594156
+    },
+    {
+        "content": "<p>... I'm talking about 5.7 beta/5.8 now,  nothing else</p>",
+        "id": 325939143,
+        "sender_full_name": "Alec Leamas",
+        "timestamp": 1675594249
+    },
+    {
+        "content": "<p>... and yes, this is tested. But, Dave has a habit of unannounced changes...</p>",
+        "id": 325939671,
+        "sender_full_name": "Alec Leamas",
+        "timestamp": 1675594485
+    },
+    {
+        "content": "<p>The crash reports are not consistently the same but frequently follow an ominously long list of repeating</p>\n<div class=\"codehilite\"><pre><span></span><code>11 libwx_osx_cocoau_core-3.1.2.0.0.dylib           0x141cbf904 wxStockGDI::GetFont(wxStockGDI::Item) + 228\n12  libwx_osx_cocoau_core-3.1.2.0.0.dylib          0x141cbf924 wxStockGDI::GetFont(wxStockGDI::Item) + 260\n13  libwx_osx_cocoau_core-3.1.2.0.0.dylib          0x141c4d8ed wxSystemSettingsNative::GetFont(wxSystemFont) + 45\n</code></pre></div>\n<p>so it looks like an issue setting wxWidgets up.  There is an ancient 2007 post on this <a href=\"https://forums.wxwidgets.org/viewtopic.php?t=14039\">here</a> but  our situation is surely different now.</p>",
+        "id": 325954194,
+        "sender_full_name": "Tony Voss",
+        "timestamp": 1675601287
+    },
+    {
+        "content": "<p>Finally compiled wxWidgets for MacOS using the same parameters as Dave. And then JavaScript_pi, which installed.<br>\nUsed a modified: <em>cmake/MacosWxwidgets.cmake</em> as part of the build process.<br>\nIf you already have wxWidgets installed the script normally finds and tries to use it, from usr/local/lib <code> ($(wxStatus) EQUAL 0 )</code><br>\nIf you comment out \"return ()\" in <em>cmake/MacosWxwidgets.cmake</em> it assumes you will compile wxWidgets again. This results in an updated wxWidgets in usr/local/lib, compiled with Dave's parameters. Running <a href=\"http://circleci-build-macos.sh\">circleci-build-macos.sh</a> then uses these wxWidgets and the build runs and the plugin installs/runs ok, for me. The icons blanked out problem remains.<br>\nThis is a total hack, but similar to the game we played with Windows.</p>",
+        "id": 325967870,
+        "sender_full_name": "Mike Rossiter",
+        "timestamp": 1675607345
+    },
+    {
+        "content": "<p>Mike... did as you said and commented out that return() and re-ran <a href=\"http://circleci-build-macos.sh\">circleci-build-macos.sh</a>.<br>\nOn the make tarball thereafter it did a big compile and installed new libraries in /usr/local/lib<br>\nbefore erroring out with <br>\n<code>Undefined symbols for architecture arm64:</code><br>\nfor a load of symbols including TIFF in their names.<br>\nAnyhow, I restored the return() statement and ran <a href=\"http://circleci-build-macos.sh\">circleci-build-macos.sh</a>  again and then make tarball.<br>\nThis appeared to work but the plugin crashed on load:</p>\n<div class=\"codehilite\"><pre><span></span><code>libc++.1.dylib                      0x7ff812462f77 std::__1::basic_string&lt;wchar_t, std::__1::char_traits&lt;wchar_t&gt;, std::__1::allocator&lt;wchar_t&gt; &gt;::operator=(std::__1::basic_string&lt;wchar_t, std::__1::char_traits&lt;wchar_t&gt;, std::__1::allocator&lt;wchar_t&gt; &gt; const&amp;) + 9\n1   libwx_baseu-3.1.2.0.0.dylib            0x13672b4f8 wxArrayString::Add(wxString const&amp;, unsigned long) + 232\n2   libwx_osx_cocoau_core-3.1.2.0.0.dylib          0x13d42902c wxImage::SaveFile(wxString const&amp;, wxString const&amp;) const + 108\n3   OpenCPN                                0x1095bb256 PluginLoader::LoadPluginCandidate(wxString, bool) + 4454\n4   OpenCPN                                0x1095b7892 PluginLoader::LoadPlugInDirectory(wxString const&amp;, bool) + 1874\n5   OpenCPN                                0x1095b5264 PluginLoader::LoadAllPlugIns(bool) + 1268\n6   OpenCPN                                0x109376121 run_update_dialog(PluginListPanel*, PlugInContainer*, bool, char const*, bool) + 5505\n7   OpenCPN                                0x1093739ee pluginUtilHandler::OnPluginUtilAction(wxCommandEvent&amp;) + 206\n8   libwx_baseu-3.2.0.1.0.dylib            0x10a4ba4df wxEventHashTable::HandleEvent(wxEvent&amp;, wxEvtHandler*) + 367\n9   libwx_baseu-3.2.0.1.0.dylib            0x10a4bb23a wxEvtHandler::ProcessEventLocally(wxEvent&amp;) + 90\n</code></pre></div>\n<p>Now what is interesting here is that OCPN was called from libwx_baseu-3.2.0.1.0.dylib but when LoadPluginCandidate called wxImage::SaveFile, it used code from a wx3.1.2 dylib <span aria-label=\"oh no\" class=\"emoji emoji-1f615\" role=\"img\" title=\"oh no\">:oh_no:</span> <br>\nChecking back - I am definitely using sd3.2.2 but the build appears to be using wx3.1.2:</p>\n<div class=\"codehilite\"><pre><span></span><code>Tony@Laing build-osx % make tarball\n[100%] Generating tarball-conf-stamp\n-- Cmake version: 3.25.1.\n-- Build uses 8 processors\n-- Building: tarball\n-- Building for target-release darwin-wx32-10\n-- Selected upload repository: o p e n c p n / j a v a s c r i p t - a l p h a\n&#39;wx-config&#39; &#39;--version&#39;\n3.1.2\n-- Found Gettext: /usr/local/opt/gettext/bin/msgmerge (found version &quot;0.21&quot;)\n-- Found OpenGL: /Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX13.1.sdk/System/Library/Frameworks/OpenGL.framework\n-- Found wxWidgets: -L/usr/local/lib;;;-framework IOKit;-framework Carbon;-framework Cocoa;-framework AudioToolbox;-framework System;-framework OpenGL;-lwx_baseu-3.1;-lwx_osx_cocoau_core-3.1;-lwx_baseu_net-3.1;-lwx_baseu_xml-3.1;-lwx_osx_cocoau_html-3.1;-lwx_osx_cocoau_stc-3.1;-lwx_osx_cocoau_aui-3.1;-lwx_osx_cocoau_gl-3.1 (found version &quot;3.1.2&quot;)\n-- Using bundled tinyxml\n-- Configuring done\n-- Generating done\n-- Build files have been written to: /Users/Tony/OpenCPN_project/JavaScript-project/JavaScript_pi/build-osx\n</code></pre></div>\n<p>and later</p>\n<div class=\"codehilite\"><pre><span></span><code>fix-macos-libs.sh: Revised library paths:\n    @executable_path/../Frameworks//libwx_baseu-3.1.dylib (compatibility version 1.0.0, current version 1.0.0)\n    @executable_path/../Frameworks//libwx_osx_cocoau_core-3.1.dylib (compatibility version 1.0.0, current version 1.0.0)\n    @executable_path/../Frameworks//libwx_baseu_net-3.1.dylib (compatibility version 1.0.0, current version 1.0.0)\n    @executable_path/../Frameworks//libwx_baseu_xml-3.1.dylib (compatibility version 1.0.0, current version 1.0.0)\n    @executable_path/../Frameworks//libwx_osx_cocoau_html-3.1.dylib (compatibility version 1.0.0, current version 1.0.0)\n    @executable_path/../Frameworks//libwx_osx_cocoau_stc-3.1.dylib (compatibility version 1.0.0, current version 1.0.0)\n    @executable_path/../Frameworks//libwx_osx_cocoau_aui-3.1.dylib (compatibility version 1.0.0, current version 1.0.0)\n    @executable_path/../Frameworks//libwx_osx_cocoau_gl-3.1.dylib (compatibility version 1.0.0, current version 1.0.0)\n</code></pre></div>\n<p>'Nuff said.</p>",
+        "id": 325994567,
+        "sender_full_name": "Tony Voss",
+        "timestamp": 1675619994
+    },
+    {
+        "content": "<blockquote>\n<p>If you comment out \"return ()\" in cmake/MacosWxwidgets.cmake it assumes you will compile wxWidgets again</p>\n</blockquote>\n<p>What that code does is to run the wx-config command. This is installed  when wxWidgets is installed, that it runs means there is a wxWidgets installation available. My thinking has been that either this should be used or removed. </p>\n<p>You seem to have a case which should run a recompilation even though there is a wxWidgets installation in place. This might be a bit hairy, I'm not  convinced that the installation routines removes the old libs before installing the new. The result <strong>might</strong> be that both the old system and the new are installed in  parallel. </p>\n<p>Needless to say, this seems risky. Wouldn't it be better to remove the existing wxWidgets installation first if it shouldn't be used?</p>",
+        "id": 326002585,
+        "sender_full_name": "Alec Leamas",
+        "timestamp": 1675624382
+    },
+    {
+        "content": "<p>Another aspect is that the cmake code might need some comments...</p>",
+        "id": 326002641,
+        "sender_full_name": "Alec Leamas",
+        "timestamp": 1675624416
+    },
+    {
+        "content": "<p><span class=\"user-mention\" data-user-id=\"399559\">@Mike Rossiter</span>  ^</p>",
+        "id": 326002873,
+        "sender_full_name": "Alec Leamas",
+        "timestamp": 1675624565
+    },
+    {
+        "content": "<p>On Windows we can keep the wxWidgets installations well separated and use as required for local builds.<br>\nOn MacOS I only had wxWidgets 3.2.1 installed. I think Tony has other wxWidgets in <em>usr/local</em>, which are not removed. The wxWidgets build  from cmake starts by putting the wxWidgets libs in the <em>_deps</em> directory of the plugin repo, I think. Is it possible to use these libs iso already installed ones, when <em>cirecleci-macos-build.sh</em> is run?</p>",
+        "id": 326063183,
+        "sender_full_name": "Mike Rossiter",
+        "timestamp": 1675671205
+    },
+    {
+        "content": "<p>Boating jobs today.</p>",
+        "id": 326063253,
+        "sender_full_name": "Mike Rossiter",
+        "timestamp": 1675671233
+    },
+    {
+        "content": "<p>The \"build form source\" macos code installs into /usr/local, effectively colliding with other installations. This is probably something to fix. We could make an installation into some directory local to the project and use that. Some work, but doable.</p>\n<p>We should probably add a  cmake variable which forces a rebuild even if there is an installation in /usr/local, like FORCE_WX_BUILD. </p>\n<p>The test that there is a wxWidgets installation in the beginning could be enhanced so it not just checked that it exists but also that it is actually 3.2, forcing a rebuild otherwise.</p>",
+        "id": 326081668,
+        "sender_full_name": "Alec Leamas",
+        "timestamp": 1675677472
+    },
+    {
+        "content": "<p><span class=\"user-mention\" data-user-id=\"399559\">@Mike Rossiter</span>  <a href=\"https://github.com/Rasbats/shipdriver_pi/issues/495\">https://github.com/Rasbats/shipdriver_pi/issues/495</a></p>",
+        "id": 326082764,
+        "sender_full_name": "Alec Leamas",
+        "timestamp": 1675677813
+    },
+    {
+        "content": "<blockquote>\n<p>checked that it exists but also that it is actually 3.2</p>\n</blockquote>\n<p>Even if 3.2 is present it may not have been made with the same parameters as Dave. For instance I used Homebrew wxWidgets (3.2.1) . These allowed a build of JavaScript_pi but the result was not compatible with OpenCPN 5.7.1 beta 3.</p>",
+        "id": 326185635,
+        "sender_full_name": "Mike Rossiter",
+        "timestamp": 1675701241
+    },
+    {
+        "content": "<p>Yes, that is the reason we need also something like FORCE_WX_BUILD, see above</p>",
+        "id": 326186688,
+        "sender_full_name": "Alec Leamas",
+        "timestamp": 1675701511
+    },
+    {
+        "content": "<p>Hope I am not jumping the gun here... have given tags: sd3.2.1-beta1 / sd3.2.3-beta1 a whirl.<br>\nStill got <em>arm</em> conflict as the <a href=\"http://circleci-build-macos.sh\">circleci-build-macos.sh</a> file does not have <code>-DCMAKE_OSX_ARCHITECTURES=x86_64</code> in it after the template update.  The <code>-DOCPN_TARGET_TUPLE=\"darwin-wx32;10;x86_64\"</code> does not seem to fix all places x86 is needed.</p>\n<p>Having tried to build the tarball when I discovered this, it seems I had to reinstall the template and fix the build file as above before attempting to make a tarball (when lots gets compiled).</p>\n<p>$ make tarball comes up with two errors.Fairly early on I got</p>\n<div class=\"codehilite\" data-code-language=\"CMake\"><pre><span></span><code><span class=\"w\">  </span><span class=\"err\">math</span><span class=\"w\"> </span><span class=\"err\">does</span><span class=\"w\"> </span><span class=\"err\">not</span><span class=\"w\"> </span><span class=\"err\">recognize</span><span class=\"w\"> </span><span class=\"err\">sub-command</span><span class=\"w\"> </span><span class=\"err\">_nproc</span>\n<span class=\"err\">Call</span><span class=\"w\"> </span><span class=\"nb\">Stack</span><span class=\"w\"> </span><span class=\"p\">(</span><span class=\"s\">most</span><span class=\"w\"> </span><span class=\"s\">recent</span><span class=\"w\"> </span><span class=\"s\">call</span><span class=\"w\"> </span><span class=\"s\">first</span><span class=\"p\">)</span><span class=\"err\">:</span>\n<span class=\"w\">  </span><span class=\"err\">CMakeLists.txt:</span><span class=\"nb\">84</span><span class=\"w\"> </span><span class=\"p\">(</span><span class=\"s\">include</span><span class=\"p\">)</span>\n</code></pre></div>\n<p>and at the end I then got (probably consequentially),</p>\n<div class=\"codehilite\"><pre><span></span><code>wx_osx_cocoau_core-3.2.0.1.0.dylib] Error 1\nCMake Error at cmake/MacosWxwidgets.cmake:98 (message):\n  Cannot locate wx-config tool at\n  /Users/Tony/OpenCPN_project/JavaScript-project/JavaScript_pi/cache/lib/wx/config/osx_cocoa-unicode-3.2\nCall Stack (most recent call first):\n  CMakeLists.txt:84 (include)\n\n-- Configuring incomplete, errors occurred!\n</code></pre></div>\n<p>Should I have done something about installing a sub-module, like I was told to do a while back?  I think it got lost when I went back to the old build system.</p>",
+        "id": 327801413,
+        "sender_full_name": "Tony Voss",
+        "timestamp": 1676387783
+    },
+    {
+        "content": "<blockquote>\n<p>sd3.2.3-beta1</p>\n</blockquote>\n<p>Testing here for my fork of JS_pi. ShipDriver is building ok with this template, online.</p>",
+        "id": 327807486,
+        "sender_full_name": "Mike Rossiter",
+        "timestamp": 1676389224
+    },
+    {
+        "content": "<p><span class=\"user-mention silent\" data-user-id=\"399559\">Mike Rossiter</span> <a href=\"#narrow/stream/349785-JavaScript_pi/topic/Building.20for.20later.20than.20OCPN.20v5.2E6/near/327807486\">said</a>:</p>\n<blockquote>\n<blockquote>\n<p>sd3.2.3-beta1</p>\n</blockquote>\n<p>Testing here for my fork of JS_pi. ShipDriver is building ok with this template, online.</p>\n</blockquote>\n<p>What tag do I have to use to get sd3.2.3-beta1?  Just [sd3.2.3-beta1] ?</p>",
+        "id": 327817146,
+        "sender_full_name": "Tony Voss",
+        "timestamp": 1676391711
+    },
+    {
+        "content": "<p>bash update-templates sd3.2.3-beta1</p>\n<p>I am having errors with branch v2.1.0-wx3.2. What branch should I be using?</p>",
+        "id": 327817853,
+        "sender_full_name": "Mike Rossiter",
+        "timestamp": 1676391877
+    },
+    {
+        "content": "<p>v2.1.0 is my start on making use of OCPN5.8 - not been able to test anything yet. Please leave that.</p>\n<p>Have created a branch v2.0.2-wx32, which uses sd3.2.3 to build latest sound version.<br>\nIt builds - the alphas are in my repositary.  You could try the Windows build.</p>\n<p>However, the MacOS tarball will not import.  Plugin Loader just says <em>incompatible plugin</em> and puts nothing in the log as to why <span aria-label=\"face exhaling\" class=\"emoji emoji-1f62e-200d-1f4a8\" role=\"img\" title=\"face exhaling\">:face_exhaling:</span> <br>\nI have checked and the remote circleci-build-macos file has my patch for x86 in it.</p>\n<p>My text editor insists on displaying the name of <code>MacosWxwidgets.cmake</code> in red.  It doesn't like it and probably finds it invalid cmake.<br>\nThis could explain the error I got (detailed above) when trying a local build.</p>",
+        "id": 327831038,
+        "sender_full_name": "Tony Voss",
+        "timestamp": 1676395355
+    },
+    {
+        "content": "<blockquote>\n<p>However, the MacOS tarball will not import. Plugin Loader just says incompatible plugin and puts nothing in the log as to why <span aria-label=\"face exhaling\" class=\"emoji emoji-1f62e-200d-1f4a8\" role=\"img\" title=\"face exhaling\">:face_exhaling:</span></p>\n</blockquote>\n<p>Please run with --loglevel debug, try to import the plugin, exit opencpn and attach the log file here. I'm sure it tells us what's wrong.</p>",
+        "id": 327832944,
+        "sender_full_name": "Alec Leamas",
+        "timestamp": 1676395892
+    },
+    {
+        "content": "<blockquote>\n<p>Have created a branch v2.0.2-wx32, which uses sd3.2.3 to build latest sound version.</p>\n</blockquote>\n<p>That is  v2.0.2-wx3.2, right?</p>\n<blockquote>\n<p>My text editor insists on displaying the name of MacosWxwidgets.cmake in red. It doesn't like it and probably finds it invalid cmake.<br>\nThis could explain the error I got (detailed above) when trying a local build.</p>\n</blockquote>\n<p>Probably not. It builds locally for me, and cmake is by definition platform agnostic. It might be about your editor barfing on some constructs it doesn't recognize</p>",
+        "id": 327833841,
+        "sender_full_name": "Alec Leamas",
+        "timestamp": 1676396144
+    },
+    {
+        "content": "<p>On a sidenote you have just too many compilation warnings, you need to take care of them. Sooner or later one of them will turn out as being important.</p>",
+        "id": 327834163,
+        "sender_full_name": "Alec Leamas",
+        "timestamp": 1676396224
+    },
+    {
+        "content": "<p>New data point: v2.0.2-wx3.2 builds OK on circleci.  Flatpak and Android builds fails on known bugs fixed in later versions. I'll if I can make a PR for you .,</p>",
+        "id": 327837937,
+        "sender_full_name": "Alec Leamas",
+        "timestamp": 1676397225
+    },
+    {
+        "content": "<p>Yes <code>v2.0.2-wx3.2</code><br>\n<code>I'll if I can make a PR for you .</code> <span aria-label=\"+1\" class=\"emoji emoji-1f44d\" role=\"img\" title=\"+1\">:+1:</span><br>\nSorry Alec... am struggling to launch OCPN from terminal - not done it before.<br>\nWith applications folder as terminal cd<br>\n<code>Open OpenCPN --args --loglevel debug</code><br>\nsays no such file.  Will work on it but am going out tonight.  Back tomorrow.</p>",
+        "id": 327841265,
+        "sender_full_name": "Tony Voss",
+        "timestamp": 1676398186
+    },
+    {
+        "content": "<p>If you have installed from a package, it is in /Applications. That is,  start it with <code>/Applications/OpenCPN.app/Contents/MacOS/OpenCPN --loglevel debug</code></p>",
+        "id": 327845659,
+        "sender_full_name": "Alec Leamas",
+        "timestamp": 1676399417
+    },
+    {
+        "content": "<p>One the command line, there is no need for Open. Just run the binary...</p>",
+        "id": 327845866,
+        "sender_full_name": "Alec Leamas",
+        "timestamp": 1676399477
+    },
+    {
+        "content": "<p>Able to launch now but cannot find any way to have a Toolbar when launched from Terminal with or without debug.<br>\nLaunching normally -&gt; Toolbar<br>\nLaunch from Terminal -&gt; No Toolbar to be seen anywhere</p>",
+        "id": 327994552,
+        "sender_full_name": "Tony Voss",
+        "timestamp": 1676463973
+    },
+    {
+        "content": "<p>your installation is certainly broken. What version have you installed, and how?</p>",
+        "id": 328007866,
+        "sender_full_name": "Alec Leamas",
+        "timestamp": 1676467576
+    },
+    {
+        "content": "<p>I have installed a package from \"some\" 5.7.1 build. Now building current master, will be able to install it later.</p>\n<p>If you have installed it from a .pkg file (like the official 5.6.2 distribution) it is seemingly installed in /usr/local i. e., use <code>/usr/local/bin/OpenCPN.app/Contents/MacOS/OpenCPN --loglevel debug</code>. This would mean that you have a somehow broken installation in /Applications/OpenCPN.</p>\n<p>Off for a while.</p>",
+        "id": 328014819,
+        "sender_full_name": "Alec Leamas",
+        "timestamp": 1676468904
+    },
+    {
+        "content": "<p>Only a very ancient OCPN in /usr/local/bin from 2020 which I have now removed to avoid any complications.<br>\nI installed Beta <a href=\"https://github.com/opencpn/OpenCPN/issues/3\">#3</a> from the link which downloaded a .pkg.  This puts it in /Applications and puts nothing in /usr/local/bin<br>\nAm using a separate account to avoid the preference fils and plugins tangling with my 5.6.2 installation.<br>\nBut I have just re-downloaded it onto a different (Mac Venturer) computer and still see the same problem.  No toolbar when launched via terminal but OK if launched directly.<br>\nI can launch OCPN5.5.2 from Terminal and see the toolbar OK<br>\nBut if I launch Beta <a href=\"https://github.com/opencpn/OpenCPN/issues/3\">#3</a> directly, I see the toolbar.  But if I launch via Terminal, no toolbar.</p>",
+        "id": 328032747,
+        "sender_full_name": "Tony Voss",
+        "timestamp": 1676473475
+    },
+    {
+        "content": "<p><span class=\"user-mention silent\" data-user-id=\"399510\">Alec Leamas</span> <a href=\"#narrow/stream/349785-JavaScript_pi/topic/Building.20for.20later.20than.20OCPN.20v5.2E6/near/327834163\">said</a>:</p>\n<blockquote>\n<p>On a sidenote you have just too many compilation warnings, you need to take care of them. Sooner or later one of them will turn out as being important.</p>\n</blockquote>\n<p>Yes... annoying.  But most are from compiling the duktape JavaScript engine  so outside my control and I don't think it wise to go in and rework it.  Hopefully, some future update to that will eliminate them.  The others are from Xcode elements.<br>\nI think I have dealt with mine since JS v2.0.1. <br>\nI do read through them before to check for things I ought to deal with.</p>",
+        "id": 328037071,
+        "sender_full_name": "Tony Voss",
+        "timestamp": 1676474463
+    },
+    {
+        "content": "<p>Having a problem with the toolbar icon showing for Windows. It appears black,  then grey when toggled. non-svg is ok. Still playing.</p>",
+        "id": 328041232,
+        "sender_full_name": "Mike Rossiter",
+        "timestamp": 1676475450
+    },
+    {
+        "content": "<p><span class=\"user-mention\" data-user-id=\"554731\">@Tony Voss</span> on phone, busy until late today or tomorrow BBL</p>",
+        "id": 328049008,
+        "sender_full_name": "Alec Leamas",
+        "timestamp": 1676477347
+    },
+    {
+        "content": "<p>Hm... I have downloaded the latest beta found at  <a href=\"https://dl.cloudsmith.io/public/david-register/opencpn-unstable/raw/files/OpenCPN_5.7.1.pkg\">https://dl.cloudsmith.io/public/david-register/opencpn-unstable/raw/files/OpenCPN_5.7.1.pkg</a>. It works for me in my virtual (virtualbox) Catalina machine.</p>\n<p>However, there are no working  OpenGL drivers on this box, I get a message <em>Unable to create basic Accelerated OpenGL renderer</em>  and <em>Core image is now using the software  OpenGL renderer. This will be slow</em></p>\n<p>Given <span class=\"user-mention\" data-user-id=\"399559\">@Mike Rossiter</span> 's comment above., is this the reason it works for me? What happens if you use not only <em>--loglevel debug</em> but also <em>-no_opengl</em> ?</p>",
+        "id": 328100515,
+        "sender_full_name": "Alec Leamas",
+        "timestamp": 1676492219
+    },
+    {
+        "content": "<p><span class=\"user-mention silent\" data-user-id=\"399510\">Alec Leamas</span> <a href=\"#narrow/stream/349785-JavaScript_pi/topic/Building.20for.20later.20than.20OCPN.20v5.2E6/near/328100515\">said</a>:</p>\n<blockquote>\n<p>What happens if you use not only <em>--loglevel debug</em> but also <em>-no_opengl</em> ?</p>\n</blockquote>\n<p>No difference</p>",
+        "id": 328124601,
+        "sender_full_name": "Tony Voss",
+        "timestamp": 1676501963
+    },
+    {
+        "content": "<p>Seems to be about your machine then, somehow.</p>\n<p>Things to do: start with --loglevel debug, bring OpenCPN into focus (click on it). Then exit, and submit opencpn.log here so we can have a look.</p>",
+        "id": 328171416,
+        "sender_full_name": "Alec Leamas",
+        "timestamp": 1676533790
+    },
+    {
+        "content": "<p>Attached are the log and terminal outputs.<br>\nTo keep things simple, this was on an Intel MacBook with no attached screen.<br>\nThanks for looking into it.</p>\n<p><a href=\"/user_uploads/33951/1gTW5mCKkYGuWNaPmMPv9qKQ/terminal.txt\">terminal.txt</a><br>\n<a href=\"/user_uploads/33951/M9ctoQ36CRX-gktJZ11LVUbr/log.txt\">log.txt</a></p>\n<p>Will be away for a bit this morning.</p>",
+        "id": 328187836,
+        "sender_full_name": "Tony Voss",
+        "timestamp": 1676539522
+    },
+    {
+        "content": "<p>My problem (Windows):</p>\n<p><a href=\"/user_uploads/33951/l3G4oxcObk7mFIVNMoPyFS_-/missing-icon1.png\">missing-icon1.png</a> <a href=\"/user_uploads/33951/WlN5n6b1nzy9WpxzvAjKV218/missing-icon2.png\">missing-icon2.png</a> <a href=\"/user_uploads/33951/33jMAtypg39P5IJ95X0YAOiA/opencpn.log.txt\">opencpn.log.txt</a></p>\n<div class=\"message_inline_image\"><a href=\"/user_uploads/33951/l3G4oxcObk7mFIVNMoPyFS_-/missing-icon1.png\" title=\"missing-icon1.png\"><img src=\"/user_uploads/33951/l3G4oxcObk7mFIVNMoPyFS_-/missing-icon1.png\"></a></div><div class=\"message_inline_image\"><a href=\"/user_uploads/33951/WlN5n6b1nzy9WpxzvAjKV218/missing-icon2.png\" title=\"missing-icon2.png\"><img src=\"/user_uploads/33951/WlN5n6b1nzy9WpxzvAjKV218/missing-icon2.png\"></a></div>",
+        "id": 328210821,
+        "sender_full_name": "Mike Rossiter",
+        "timestamp": 1676546398
+    },
+    {
+        "content": "<p>Same issue if I import the tarball from Cloudsmith.</p>",
+        "id": 328211132,
+        "sender_full_name": "Mike Rossiter",
+        "timestamp": 1676546499
+    },
+    {
+        "content": "<p><span class=\"user-mention\" data-user-id=\"554731\">@Tony Voss</span>   Just s shot in the dark: Did you see this:?</p>\n<div class=\"codehilite\"><pre><span></span><code>09:18:14.805   ERROR fileconf.cpp:608 file &#39;/Users/Tony/Library/Preferences/opencpn/opencpn.ini&#39;, line 154: &#39;=&#39; expected.\n</code></pre></div>",
+        "id": 328219456,
+        "sender_full_name": "Alec Leamas",
+        "timestamp": 1676549147
+    },
+    {
+        "content": "<p>Another  thing: You are now using an installation in /Applications, right? If so, it might make sense  to make sure there is nothing left in /usr/local/bin -- not really sure how MacOS loads things, but multiple installations certainly <strong>could</strong> be a problem.</p>",
+        "id": 328234295,
+        "sender_full_name": "Alec Leamas",
+        "timestamp": 1676553532
+    },
+    {
+        "content": "<p>Line 154 contained <code>Sometest:asd</code>.  No idea how it got there but have removed it.  No difference.<br>\nThe other system I am testing on did not have that erroneous line anywhere in the .ini file.<br>\nI have tried starting with no .ini file at all, forcing it to create one from scratch.  Terminal launch problem still there.<br>\nI have also tried removing the opencpn folder from Preferences, forcing it to create a new one.  Terminal launch problem still there.</p>",
+        "id": 328235112,
+        "sender_full_name": "Tony Voss",
+        "timestamp": 1676553734
+    },
+    {
+        "content": "<p><span class=\"user-mention silent\" data-user-id=\"399510\">Alec Leamas</span> <a href=\"#narrow/stream/349785-JavaScript_pi/topic/Building.20for.20later.20than.20OCPN.20v5.2E6/near/328234295\">said</a>:</p>\n<blockquote>\n<p>Another  thing: You are now using an installation in /Applications, right? If so, it might make sense  to make sure there is nothing left in /usr/local/bin -- not really sure how MacOS loads things, but multiple installations certainly <strong>could</strong> be a problem.</p>\n</blockquote>\n<p>Yes - in /Applications. No OpenCPN in /local/bin.<br>\nNote that OCPN5.6.2 behaves as expected including when launched by Terminal.<br>\nOCPN5.7B3 is OK when launched normally but not when from Terminal.  I suspect OCPN5.7, at least B3.</p>",
+        "id": 328265949,
+        "sender_full_name": "Tony Voss",
+        "timestamp": 1676560988
+    },
+    {
+        "content": "<p>yes... is B3 the same link as I used (see above)?</p>",
+        "id": 328281220,
+        "sender_full_name": "Alec Leamas",
+        "timestamp": 1676564960
+    },
+    {
+        "content": "<p>The one in your link was of slightly later date.  I have installed that and it is no different.  No toolbar if launched via terminal.</p>",
+        "id": 328290714,
+        "sender_full_name": "Tony Voss",
+        "timestamp": 1676567547
+    },
+    {
+        "content": "<p>You should file a bug about this. I cannot really help you since I cannot reproduce.</p>",
+        "id": 328623118,
+        "sender_full_name": "Alec Leamas",
+        "timestamp": 1676707579
+    },
+    {
+        "content": "<p><a href=\"https://github.com/OpenCPN/OpenCPN/issues/3014\">https://github.com/OpenCPN/OpenCPN/issues/3014</a></p>",
+        "id": 328639415,
+        "sender_full_name": "Tony Voss",
+        "timestamp": 1676715943
+    },
+    {
+        "content": "<p><span class=\"user-mention silent\" data-user-id=\"399510\">Alec Leamas</span> <a href=\"#narrow/stream/349785-JavaScript_pi/topic/Building.20for.20later.20than.20OCPN.20v5.2E6/near/327832944\">said</a>:</p>\n<blockquote>\n<blockquote>\n<p>However, the MacOS tarball will not import. Plugin Loader just says incompatible plugin and puts nothing in the log as to why <span aria-label=\"face exhaling\" class=\"emoji emoji-1f62e-200d-1f4a8\" role=\"img\" title=\"face exhaling\">:face_exhaling:</span></p>\n</blockquote>\n<p>Please run with --loglevel debug, try to import the plugin, exit opencpn and attach the log file here. I'm sure it tells us what's wrong.</p>\n</blockquote>\n<p>Managed to try and load plugin with trace by using old Mac running Catalina.  Log from moment of attempting to load plugin is as follows.  Not much to go on.</p>\n<div class=\"codehilite\"><pre><span></span><code>12:50:42.820 MESSAGE comm_bridge.cpp:181    ***GPS Watchdog timeout at Lat:57.494   Lon: -4.2344\n12:50:47.406   DEBUG plugin_handler.cpp:311 Plugin compatibility check Final: REJECTED:  javascript\n12:50:47.820 MESSAGE comm_bridge.cpp:181    ***GPS Watchdog timeout at Lat:57.494   Lon: -4.2344\n12:50:52.819 MESSAGE comm_bridge.cpp:181    ***GPS Watchdog timeout at Lat:57.494   Lon: -4.2344\n12:50:57.819 MESSAGE comm_bridge.cpp:181    ***GPS Watchdog timeout at Lat:57.494   Lon: -4.2344\n12:51:00.757 MESSAGE chcanv.cpp:2393 Metrics:  m_display_size_mm: 331     g_Platform-&gt;getDisplaySize():  1440:900\n12:51:00.758 MESSAGE chcanv.cpp:2398 wxDisplaySize(): 1440 900\n12:51:00.794 MESSAGE glChartCanvas.cpp:554 BuildFBO 3\n12:51:00.794 MESSAGE glChartCanvas.cpp:1009 OpenGL-&gt; Framebuffer OK, size = 1964\n12:51:00.802 MESSAGE glChartCanvas.cpp:554 BuildFBO 3\n12:51:00.802 MESSAGE glChartCanvas.cpp:1009 OpenGL-&gt; Framebuffer OK, size = 1964\n12:51:00.806 MESSAGE glChartCanvas.cpp:554 BuildFBO 3\n12:51:00.807 MESSAGE glChartCanvas.cpp:1009 OpenGL-&gt; Framebuffer OK, size = 1964\n12:51:00.815 MESSAGE glChartCanvas.cpp:554 BuildFBO 3\n12:51:00.815 MESSAGE glChartCanvas.cpp:1009 OpenGL-&gt; Framebuffer OK, size = 1964\n12:51:02.819 MESSAGE comm_bridge.cpp:181    ***GPS Watchdog timeout at Lat:57.494   Lon: -4.2344\n12:51:05.235 MESSAGE ocpn_frame.cpp:5456 Got quitflag from SIGNAL\n12:51:05.335 MESSAGE plugin_loader.cpp:553 PlugInManager: Deactivating PlugIn: /Users/tony/Library/Application Support/OpenCPN/Contents/PlugIns/libJavaScript_pi.dylib\n12:51:05.343 MESSAGE ocpn_frame.cpp:1776 opencpn::MyFrame exiting cleanly.\n</code></pre></div>",
+        "id": 328663370,
+        "sender_full_name": "Tony Voss",
+        "timestamp": 1676725134
+    },
+    {
+        "content": "<p>Crazy but ...<br>\nYour icons use text (alphanumeric symbols) e.g. {JS} when the svg is constructed. These are not recognised by Windows (blank icons).<br>\nRaised an issue with <span class=\"user-mention\" data-user-id=\"517002\">@Dave Register</span> :<br>\n<a href=\"https://github.com/OpenCPN/OpenCPN/issues/3025\">https://github.com/OpenCPN/OpenCPN/issues/3025</a><br>\nThe reason may be that cairo is no longer available in the installation for Windows.<br>\n<a href=\"https://forums.wxwidgets.org/viewtopic.php?t=44708\">https://forums.wxwidgets.org/viewtopic.php?t=44708</a><br>\nMay need another set of icons if the bug cannot be fixed.</p>",
+        "id": 338017812,
+        "sender_full_name": "Mike Rossiter",
+        "timestamp": 1677337848
+    },
+    {
+        "content": "<p>We need another set of icons!!! May be another route but is it worth it?</p>",
+        "id": 338019246,
+        "sender_full_name": "Mike Rossiter",
+        "timestamp": 1677338316
+    },
+    {
+        "content": "<p><span class=\"user-mention silent\" data-user-id=\"399559\">Mike Rossiter</span> <a href=\"#narrow/stream/349785-JavaScript_pi/topic/Building.20for.20later.20than.20OCPN.20v5.2E6/near/338019246\">said</a>:</p>\n<blockquote>\n<p>We need another set of icons!!! May be another route but is it worth it?</p>\n</blockquote>\n<p>Bit in your hands here, Mike, as you built the icons for me. <br>\nIf I understand it right, problem arises because the icon was generated from text chars {JS} rather than an image?  And even though ther is no mention of Cairo in the .svg file, wxWidgets uses that to implement it?  SO all text-based icons are a no no?</p>\n<p>Other plugins have what is clearly image-based icons.  Should I produce image files for the icons?<br>\nWhat file format and what sizes?<br>\nYou got me to convert to monochrome for the tool bar to conform with a convention but I note that many of the icons in the plugins panes are coloured - so presumably some colour is allowed there.</p>",
+        "id": 338024295,
+        "sender_full_name": "Tony Voss",
+        "timestamp": 1677340138
+    },
+    {
+        "content": "<p>The icons used to work fine! </p>\n<blockquote>\n<p>You got me to convert to monochrome for the tool bar to conform with a convention but I note that many of the icons in the plugins panes are coloured</p>\n</blockquote>\n<p>From Dave, I think, there was an attempt to standardise on a narrow range of monochrome colours for the toolbar. Obviously not so for the options panel. Not sure if this is still the case.</p>\n<p>I tried using a bitmap but no luck with this so far. And I think the quality will not be good. Still playing with this.</p>",
+        "id": 338026642,
+        "sender_full_name": "Mike Rossiter",
+        "timestamp": 1677340994
+    },
+    {
+        "content": "<p>I can turn text into png etc. if that helps.  Let me know if I can help.  For the options panel I fancy going back to red as in the documentation.</p>",
+        "id": 338028372,
+        "sender_full_name": "Tony Voss",
+        "timestamp": 1677341671
+    },
+    {
+        "content": "<p>Thanks. The icons for options and toolbar are all 32x32. If you could come up with some png to use that would help.</p>",
+        "id": 338029184,
+        "sender_full_name": "Mike Rossiter",
+        "timestamp": 1677342000
+    },
+    {
+        "content": "<p>Here's a sample in different formats - actually 64x64 in red.  Let me know which format is best and I can generate the monochrome ones.  `do you want them only 32x32 or shall I give you 64x64 to keep quality up until you do whatever you do? <a href=\"/user_uploads/33951/Z4djQqYzX4T-qpw-Cp-DQVbg/JS_icons.zip\">JS_icons.zip</a></p>",
+        "id": 338034558,
+        "sender_full_name": "Tony Voss",
+        "timestamp": 1677344288
+    },
+    {
+        "content": "<p>Thanks again. I think we could just use bitmaps iso svg, which could improve the quality for the toolbar.</p>",
+        "id": 338035164,
+        "sender_full_name": "Mike Rossiter",
+        "timestamp": 1677344537
+    },
+    {
+        "content": "<p>Is this any good?<br>\n<a href=\"/user_uploads/33951/NutBUPa4vzRgIcQpH_vdixOw/JS_icon_64_red-1.svg\">JS_icon_64_red-1.svg</a></p>",
+        "id": 338041017,
+        "sender_full_name": "Tony Voss",
+        "timestamp": 1677347375
+    },
+    {
+        "content": "<p>Yes. Compiling now. No more SVG!</p>",
+        "id": 338041114,
+        "sender_full_name": "Mike Rossiter",
+        "timestamp": 1677347406
+    },
+    {
+        "content": "<p>Cannot make the icons in the toolbar toggle. API does not allow with bitmaps. Does it matter? <a href=\"/user_uploads/33951/cq8T28w_GDmLbpPikqbzSUGW/icon_data.zip\">icon_data.zip</a></p>",
+        "id": 338045534,
+        "sender_full_name": "Mike Rossiter",
+        "timestamp": 1677349673
+    },
+    {
+        "content": "<p>I will update my repo on github to allow a build in my cloudsmith alpha. You should then be able to see the changes made.</p>",
+        "id": 338045672,
+        "sender_full_name": "Mike Rossiter",
+        "timestamp": 1677349761
+    },
+    {
+        "content": "<p><a href=\"https://github.com/Rasbats/JavaScript_pi/tree/v2.0.2-wx3.2\">https://github.com/Rasbats/JavaScript_pi/tree/v2.0.2-wx3.2</a></p>\n<p>Changes made in icons.cpp/h and JavaScript_pi.cpp.</p>",
+        "id": 338048269,
+        "sender_full_name": "Mike Rossiter",
+        "timestamp": 1677351236
+    },
+    {
+        "content": "<p>Tarball now made on my cloudsmith:<br>\n<a href=\"https://cloudsmith.io/~mike-rossiter/repos/javascript-alpha/packages/\">https://cloudsmith.io/~mike-rossiter/repos/javascript-alpha/packages/</a></p>",
+        "id": 338048657,
+        "sender_full_name": "Mike Rossiter",
+        "timestamp": 1677351467
+    },
+    {
+        "content": "<p>While messing I moved to api-18!</p>",
+        "id": 338048784,
+        "sender_full_name": "Mike Rossiter",
+        "timestamp": 1677351508
+    },
+    {
+        "content": "<p>Dinner and wine are calling.</p>",
+        "id": 338048929,
+        "sender_full_name": "Mike Rossiter",
+        "timestamp": 1677351586
+    },
+    {
+        "content": "<p>Mike... can you clarify for me.  It seems</p>\n<ol>\n<li>svg no longer needed?  We can now use png icons for all platforms?  So you have removed the svg stuff.</li>\n<li>You have, in  consequence,  removed the JAVASCRIPT_USE_SVG parameter</li>\n<li>But there is now a ocpnUSE_SVG parameter?  Why, given the above?</li>\n</ol>",
+        "id": 338156279,
+        "sender_full_name": "Tony Voss",
+        "timestamp": 1677421120
+    },
+    {
+        "content": "<p>Can I pull your changes back, reviewing them, or should I merge by hand?</p>",
+        "id": 338166422,
+        "sender_full_name": "Tony Voss",
+        "timestamp": 1677425083
+    },
+    {
+        "content": "<blockquote>\n<p>But there is now a ocpnUSE_SVG </p>\n</blockquote>\n<p>Not sure how that got in there. Not needed. And Plugin.cmake needs the JAVASCRIPT_USE_SVG  stuff removing as well. </p>\n<blockquote>\n<p>We can now use png icons for all platforms? </p>\n</blockquote>\n<p>Yes.  wmm_pi does this.</p>\n<blockquote>\n<p>Can I pull your changes back, reviewing them, or should I merge by hand?</p>\n</blockquote>\n<p>Not sure if I made other mess. Probably better to merge by hand.</p>",
+        "id": 338180894,
+        "sender_full_name": "Mike Rossiter",
+        "timestamp": 1677431725
+    },
+    {
+        "content": "<p>My remote builds are failing for some platforms.  Should they be succeeding, or are they non-viable/obsolete?<br>\nI have captured the log for each class</p>\n<table>\n<thead>\n<tr>\n<th>platform</th>\n<th>errors</th>\n</tr>\n</thead>\n<tbody>\n<tr>\n<td>flatpak</td>\n<td>error: org.freedesktop.Sdk/x86_64/20.08 not installed + signature error</td>\n</tr>\n<tr>\n<td>bookworm</td>\n<td>signature error</td>\n</tr>\n<tr>\n<td>android</td>\n<td>loads of compile errors re wxWidgets</td>\n</tr>\n</tbody>\n</table>",
+        "id": 339297419,
+        "sender_full_name": "Tony Voss",
+        "timestamp": 1677837514
+    },
+    {
+        "content": "<p>flatpak: the yaml file does not match the one for ShipDriver. Template problem?</p>\n<p>bookwork: template sd3.2.3-beta1 should have fixed this ?????</p>",
+        "id": 339299403,
+        "sender_full_name": "Mike Rossiter",
+        "timestamp": 1677838054
+    },
+    {
+        "content": "<p>android not relevant for this plugin, I think.</p>",
+        "id": 339299482,
+        "sender_full_name": "Mike Rossiter",
+        "timestamp": 1677838079
+    },
+    {
+        "content": "<p><span class=\"user-mention silent\" data-user-id=\"399559\">Mike Rossiter</span> <a href=\"#narrow/stream/349785-JavaScript_pi/topic/Building.20for.20later.20than.20OCPN.20v5.2E6/near/339299482\">said</a>:</p>\n<blockquote>\n<p>android not relevant for this plugin, I think.</p>\n</blockquote>\n<p>Fine.  Any way of avoiding that build and hence getting the error messages?  I know I could edit the build files but I would need to remember each time the template is updated.</p>",
+        "id": 339319878,
+        "sender_full_name": "Tony Voss",
+        "timestamp": 1677843571
+    },
+    {
+        "content": "<p><span class=\"user-mention silent\" data-user-id=\"399559\">Mike Rossiter</span> <a href=\"#narrow/stream/349785-JavaScript_pi/topic/Building.20for.20later.20than.20OCPN.20v5.2E6/near/339299403\">said</a>:</p>\n<blockquote>\n<p>flatpak: the yaml file does not match the one for ShipDriver. Template problem?</p>\n<p>bookwork: template sd3.2.3-beta1 should have fixed this ?????</p>\n</blockquote>\n<p>What action do you advise?  I am using  latest, I think</p>\n<blockquote>\n<p>% cat cmake/TemplateVersion<br>\n # Created by update-templates<br>\ndate: 2023-02-03 15:53 UTC<br>\ncommit: ff0ae9c<br>\ntags: sd3.2.2<br>\nsd3.2.2-beta<br>\nsd3.2.2-beta1</p>\n</blockquote>",
+        "id": 339321276,
+        "sender_full_name": "Tony Voss",
+        "timestamp": 1677843942
+    },
+    {
+        "content": "<p>Sorry - hold that last. Need to update to sd3.2.3</p>",
+        "id": 339328267,
+        "sender_full_name": "Tony Voss",
+        "timestamp": 1677845750
+    },
+    {
+        "content": "<p>Android: Only way I can see is to remove the android sections in <em>.circleci/config.yml</em> each time the template is used:</p>\n<div class=\"codehilite\"><pre><span></span><code>build-android-arm64:\n    docker:\n      - image: circleci/android:api-28-ndk\n    environment:\n      - OCPN_TARGET: android-aarch64\n      - CMAKE_BUILD_PARALLEL_LEVEL: 2\n    steps:\n      - checkout\n      - run: ci/circleci-build-android.sh\n      - run: ci/maybe-push-upload.sh\n\n  build-android-armhf:\n    docker:\n      - image: circleci/android:api-28-ndk\n    environment:\n      - OCPN_TARGET: android-armhf\n      - CMAKE_BUILD_PARALLEL_LEVEL: 2\n    steps:\n      - checkout\n      - run: ci/circleci-build-android.sh\n      - run: ci/maybe-push-upload.sh\n</code></pre></div>",
+        "id": 339331105,
+        "sender_full_name": "Mike Rossiter",
+        "timestamp": 1677846560
+    },
+    {
+        "content": "<p>Have updated to sd3.2.3-beta1<br>\nGetting:</p>\n<blockquote>\n<p>CMake Error at CMakeLists.txt:44 (target_link_libraries):<br>\nTarget \"JavaScript_pi\" links to:<br>\nocpn::api<br>\nbut the target was not found. </p>\n</blockquote>\n<p>CMakeLists.txt around line 44 has:<br>\n<code>if (${PKG_NAME} MATCHES wx32)\n  target_link_libraries(${CMAKE_PROJECT_NAME} ocpn::api_wx32)\nelse ()\n  target_link_libraries(${CMAKE_PROJECT_NAME} ocpn::api)\nendif ()</code><br>\nSo, clearly, <code>PKG_NAME</code> not being set to <code>wx32</code>.<br>\nIndeed it is not.  Only place it is set is in Plugin.cmake:<br>\n<code>set(PKG_NAME JavaScript_pi)</code></p>\n<p>I'm confused, and so is the script, I guess <span aria-label=\"face with spiral eyes\" class=\"emoji emoji-1f635-200d-1f4ab\" role=\"img\" title=\"face with spiral eyes\">:face_with_spiral_eyes:</span></p>",
+        "id": 339334957,
+        "sender_full_name": "Tony Voss",
+        "timestamp": 1677847682
+    },
+    {
+        "content": "<p>This should be in <em>opencpn-libs/api-18/CMakeLists.txt</em> at line 16:<br>\n<code>add_library(ocpn::api ALIAS OCPN_API_WX32)</code></p>\n<p>May need to update opencpn-libs. You are at the bleeding edge I think.</p>",
+        "id": 339336982,
+        "sender_full_name": "Mike Rossiter",
+        "timestamp": 1677848265
+    },
+    {
+        "content": "<p>Here's what is in that file for me:</p>\n<div class=\"codehilite\"><pre><span></span><code> #\n # Include API header and, on win32, link import libs. Set API_VERSION  and\n # API_OCPN_MIN_VERSION\n #\ncmake_minimum_required(VERSION 3.1)\n\nif (TARGET ocpn::api)\n  return ()\nendif ()\n\nset(API_VERSION &quot;1.18&quot; PARENT_SCOPE)\nset(API_OCPN_MIN_VERSION &quot;5.7.0&quot; PARENT_SCOPE)\n\nadd_library(OCPN_API_WX32 INTERFACE)\nadd_library(ocpn::api_wx32 ALIAS OCPN_API_WX32)\ntarget_include_directories(\n  OCPN_API_WX32\n    INTERFACE &quot;${CMAKE_CURRENT_SOURCE_DIR}&quot;\n)\nif (WIN32 AND MSVC)\n  target_link_libraries(\n    OCPN_API_WX32\n      INTERFACE &quot;${CMAKE_CURRENT_SOURCE_DIR}/msvc-wx32/opencpn.lib&quot;\n  )\n  # Assuming unicode build, required for mingw headers\n  target_compile_definitions(OCPN_API_WX32 INTERFACE -DUNICODE)\nendif ()\n</code></pre></div>\n<p>Do I still add as you say above?</p>",
+        "id": 339339674,
+        "sender_full_name": "Tony Voss",
+        "timestamp": 1677848889
+    },
+    {
+        "content": "<p>Problem is I don't think my edit will work when you push to the repo. You need to update <em>opencpn-libs</em>.<br>\nIn <em>opencpn-libs/README.md</em> is the instruction for updating <em>opencpn-libs</em>.<br>\nFrom the root of JavaScript_pi do the <em>git submodule upate</em> bit.</p>",
+        "id": 339355447,
+        "sender_full_name": "Mike Rossiter",
+        "timestamp": 1677852708
+    },
+    {
+        "content": "<p>etc, etc.</p>",
+        "id": 339355534,
+        "sender_full_name": "Mike Rossiter",
+        "timestamp": 1677852726
+    },
+    {
+        "content": "<div class=\"codehilite\"><pre><span></span><code>tony@Janov JavaScript_pi % git submodule update --remote --merge opencpn-libs\nfatal: Needed a single revision\nUnable to find current origin/master revision in submodule path &#39;opencpn-libs&#39;\n</code></pre></div>",
+        "id": 339358892,
+        "sender_full_name": "Tony Voss",
+        "timestamp": 1677853619
+    },
+    {
+        "content": "<p>Hang  on - I had trouble with the .git stuff when merging earlier.  Will try reinstalling.</p>",
+        "id": 339359412,
+        "sender_full_name": "Tony Voss",
+        "timestamp": 1677853739
+    },
+    {
+        "content": "<p>It says it is already installed - so back to the error message.</p>",
+        "id": 339360118,
+        "sender_full_name": "Tony Voss",
+        "timestamp": 1677853920
+    },
+    {
+        "content": "<p>Or can I uninstall the sub-module and start fresh?</p>",
+        "id": 339360298,
+        "sender_full_name": "Tony Voss",
+        "timestamp": 1677853963
+    },
+    {
+        "content": "<p>Your branch v2.0.3-wx3.2 already has the correct line:<br>\n<code>add_library(ocpn::api ALIAS OCPN_API_WX32</code><br>\nin <em>opencpn-libs/api-18</em>.</p>\n<p>Let me work with your fork and see what I get here.</p>",
+        "id": 339360466,
+        "sender_full_name": "Mike Rossiter",
+        "timestamp": 1677854004
+    },
+    {
+        "content": "<p>I have switched to my master branch now.  When I switched, it faulted trying to move the submodule .git stuff - said a folder was not empty.  So I had to delete it.  Suggest you work with my Master branch.</p>",
+        "id": 339361294,
+        "sender_full_name": "Tony Voss",
+        "timestamp": 1677854174
+    },
+    {
+        "content": "<p>Will do.</p>",
+        "id": 339361528,
+        "sender_full_name": "Mike Rossiter",
+        "timestamp": 1677854229
+    },
+    {
+        "content": "<p>Just pushed master to remote. 14:38</p>",
+        "id": 339361972,
+        "sender_full_name": "Tony Voss",
+        "timestamp": 1677854338
+    },
+    {
+        "content": "<p>Took the fork of your master branch. To avoid github desktop errors I went back to <code>git clone --recursive`` etc. The </code>--recursive``` is to bring in the sub-module <em>opencpn-libs</em>.<br>\nUpdated the template to <em>sd3.2.3-beta1</em>. <br>\nbuild-macos taking forever as it has to make a cache of wxWidgets built in the same way as for OpenCPN. Took 30m the other day. Will be quicker next time as it does not have to rebuild the cache.<br>\nAll builds, apart from android are good.<br>\nBuilds arrive in my cloudsmith repo:<br>\n<a href=\"https://cloudsmith.io/~mike-rossiter/repos/javascript-alpha/packages/\">https://cloudsmith.io/~mike-rossiter/repos/javascript-alpha/packages/</a><br>\nbecause I used <em>mike-rossiter</em>/ in <em>plugin.cmake</em> iso <em>opencpn</em>.</p>",
+        "id": 339374117,
+        "sender_full_name": "Mike Rossiter",
+        "timestamp": 1677856964
+    },
+    {
+        "content": "<p>Workflows for circleci are here:<br>\n<a href=\"https://app.circleci.com/pipelines/github/Rasbats/JavaScript_pi/260/workflows/6017efbb-a5bc-48fe-b526-b8137dea3689\">https://app.circleci.com/pipelines/github/Rasbats/JavaScript_pi/260/workflows/6017efbb-a5bc-48fe-b526-b8137dea3689</a></p>",
+        "id": 339374382,
+        "sender_full_name": "Mike Rossiter",
+        "timestamp": 1677857018
+    },
+    {
+        "content": "<p>Parking settings (Windows) from tools for my build:</p>\n<div class=\"codehilite\"><pre><span></span><code>Bespoke settings\n\n#define CONSOLE_MIN_HEIGHT 39L\n#define CONSOLE_STUB 63L\n#define PARK_LEVEL 35L\n#define PARK_FIRST_X 85L\n#define PARK_SEP 2L\n</code></pre></div>",
+        "id": 339375544,
+        "sender_full_name": "Mike Rossiter",
+        "timestamp": 1677857256
+    },
+    {
+        "content": "<p>Wonderful !!!   Please can you spell out where I do the <code>git clone --recursive</code> bit.  <em>etc..</em> assumes I know what you are doing !</p>",
+        "id": 339376256,
+        "sender_full_name": "Tony Voss",
+        "timestamp": 1677857446
+    },
+    {
+        "content": "<p>You have your master branch in the repo on github in the cloud.<br>\nYou want to make a clone of that repo on your Mac.<br>\ncd to a folder which does not have JavaScript_pi already present.<br>\nWith git commands:<br>\n<code>git clone --recursive https://github.com/antipole2/JavaScript_pi.git</code><br>\nGithub desktop should use --recursive but it gave me an error when I tried to make the clone.</p>",
+        "id": 339378377,
+        "sender_full_name": "Mike Rossiter",
+        "timestamp": 1677857972
+    },
+    {
+        "content": "<p>However, it fails for me.<br>\nNote I pushed my Master at 14:38.  Might you have cloned just before that.  Might I have screwed it up just after that?</p>\n<div class=\"codehilite\"><pre><span></span><code>tony@Janov JavaScript_pi % git clone --recursive https://github.com/antipole2/JavaScript_pi.git\nCloning into &#39;JavaScript_pi&#39;...\nremote: Enumerating objects: 6636, done.\nremote: Counting objects: 100% (1688/1688), done.\nremote: Compressing objects: 100% (566/566), done.\nremote: Total 6636 (delta 1282), reused 1418 (delta 1106), pack-reused 4948\nReceiving objects: 100% (6636/6636), 61.29 MiB | 2.73 MiB/s, done.\nResolving deltas: 100% (3318/3318), done.\nSubmodule &#39;opencpn-libs&#39; (https://github.com/leamas/opencpn-libs.git) registered for path &#39;opencpn-libs&#39;\nCloning into &#39;/Users/tony/JavaScript/JavaScript_pi/JavaScript_pi/opencpn-libs&#39;...\nremote: Enumerating objects: 1606, done.\nremote: Counting objects: 100% (73/73), done.\nremote: Compressing objects: 100% (34/34), done.\nremote: Total 1606 (delta 49), reused 55 (delta 39), pack-reused 1533\nReceiving objects: 100% (1606/1606), 23.61 MiB | 3.28 MiB/s, done.\nResolving deltas: 100% (551/551), done.\nfatal: remote error: upload-pack: not our ref c58db80d3844179532fd39f3c2b6dad09c8f5798\nfatal: the remote end hung up unexpectedly\nFetched in submodule path &#39;opencpn-libs&#39;, but it did not contain c58db80d3844179532fd39f3c2b6dad09c8f5798. Direct fetching of that commit failed.\n</code></pre></div>",
+        "id": 339381468,
+        "sender_full_name": "Tony Voss",
+        "timestamp": 1677858720
+    },
+    {
+        "content": "<p>Let me try the same again.</p>",
+        "id": 339383062,
+        "sender_full_name": "Mike Rossiter",
+        "timestamp": 1677859086
+    },
+    {
+        "content": "<p>Maybe I need to re-clone   opencpn-libs from Alec ?</p>",
+        "id": 339383522,
+        "sender_full_name": "Tony Voss",
+        "timestamp": 1677859199
+    },
+    {
+        "content": "<p>Yes ... that is the difference between us. Suggest updating the opencpn-libs sub-module again. Or run sd3.2.3-beta1 again. For me that is when opencpn-libs got updated.</p>",
+        "id": 339384426,
+        "sender_full_name": "Mike Rossiter",
+        "timestamp": 1677859405
+    },
+    {
+        "content": "<p>Parking settings - Ubuntu Focal - Small notebook monitor:</p>\n<div class=\"codehilite\"><pre><span></span><code>Bespoke settings\n\n#define CONSOLE_MIN_HEIGHT 38L\n#define CONSOLE_STUB 45L\n#define PARK_LEVEL 27L\n#define PARK_FIRST_X 100L\n#define PARK_SEP 20L\n</code></pre></div>",
+        "id": 339389007,
+        "sender_full_name": "Mike Rossiter",
+        "timestamp": 1677860601
+    },
+    {
+        "content": "<p>Is this last __LINUX__ ?</p>",
+        "id": 339392116,
+        "sender_full_name": "Tony Voss",
+        "timestamp": 1677861328
+    },
+    {
+        "content": "<p>Yes it is.</p>",
+        "id": 339392398,
+        "sender_full_name": "Mike Rossiter",
+        "timestamp": 1677861385
+    },
+    {
+        "content": "<p>Got there.  I am beginning to understand this stuff now.<br>\nWhen I switched back to Master (Which I have not used for some good while) it seems to have discovered that the opencpn-lib sub-module has been restructured since I last used it.  It could not update because there was a folder/file conflict.  I tried to fix it but must have screwed it up and then pushed the screwed-up one to remote.</p>\n<p>I re-updated sd3.2.3-beta1 then had to add that extra add-library alias line<br>\nNow it has built OK.<br>\nI have switched to my opencpn-libs repositary and pushed the update and can now push the JavaScript-pi to master.<br>\nPhew!<br>\nSorry to be a drag on you.  I know you have lost of other stuff to attend to.</p>",
+        "id": 339397624,
+        "sender_full_name": "Tony Voss",
+        "timestamp": 1677862728
+    },
+    {
+        "content": "<p>Something is broken again... sorry to bug you yet more.<br>\nI had to reinstall sd3.2.3-beta1, which went OK.  I think it now includes that extra add_library.  Maybe it should be beta2?<br>\nI can build locally OK.<br>\nRemote builds fail with   <code>add_subdirectory given source \"opencpn-libs/api-18\" which is not an existing directory.</code><br>\nLooking at my opencpn-libs repositary on Github Desktop it says it is a Detached Head, which is correct for a submodule, I believe.  Bu I cannot push it.<br>\nLooking on-line, it looks like my opencpn-libs is out of step with Alec's because we have both been adding the add_library fix.<br>\nMaybe I need to re-clone it?<br>\nStill not sure why I got the error, as the api-18 directory is in there.</p>\n<p>BTW 1: when <code>circleci-build-maacos.sh</code> fails because of the above, it still completes with OK in the cicleci pipeline, so it continues and fails later.<br>\nBTW 2:  Deleting the Android stuff from  config.yml not a good idea.  Stops all builds because of </p>\n<div class=\"codehilite\"><pre><span></span><code>Error calling workflow: &#39;build_all&#39;\nCannot find a definition for job named build-android-arm64\n</code></pre></div>",
+        "id": 339526321,
+        "sender_full_name": "Tony Voss",
+        "timestamp": 1677926113
+    },
+    {
+        "content": "<p>Let me look at your repo. My mistake with android stuff. I had not tried that edit.</p>",
+        "id": 339526967,
+        "sender_full_name": "Mike Rossiter",
+        "timestamp": 1677926344
+    },
+    {
+        "content": "<p>Alec's opencpn-libs repo already includes:<br>\n<code>add_library(ocpn::api ALIAS OCPN_API_WX32)</code><br>\nYour opencpn-libs is out of line with Alec's. No external sub-module found.<br>\nHere is the instruction for working with sub-modules:<br>\n<a href=\"/user_uploads/33951/eruraPRoYQYIGGaC-0jxOaDr/README.md\">README.md</a> <br>\nMay be worth removing the sub-module and then adding it again.  All git commands are done in the root folder of JavaScript.</p>",
+        "id": 339528537,
+        "sender_full_name": "Mike Rossiter",
+        "timestamp": 1677926903
+    },
+    {
+        "content": "<p>Back in business.<br>\nCould not update to latest submodule status because it needed single revision.<br>\nSo removed submodule and tried to re-install.  This failed because there was still the empty opencpn-libs folder and in .git/modules<br>\nOnce I had cleared those out, could re-install.</p>\n<p>Android builds fail as discussed.<br>\nBut so are the flatpack and bookworm ones</p>\n<div class=\"codehilite\"><pre><span></span><code>The following signatures couldn&#39;t be verified because the public key is not available: NO_PUBKEY 4EB27DB2A3B88B8B\n</code></pre></div>\n<p>I confirm I am using sd3.2.3-beta1</p>",
+        "id": 339542923,
+        "sender_full_name": "Tony Voss",
+        "timestamp": 1677931788
+    },
+    {
+        "content": "<blockquote>\n<p>I confirm I am using sd3.2.3-beta1</p>\n</blockquote>\n<p>Silly question: after <code>bash update-templates sd3.2.3-beta1</code> are you doing a git push?</p>",
+        "id": 339543620,
+        "sender_full_name": "Mike Rossiter",
+        "timestamp": 1677932003
+    },
+    {
+        "content": "<p>Not so silly. I pushed again to be sure. Still flatpack and bookworm failing.<br>\nBuster says <em>success</em> but actually has not done anything.</p>",
+        "id": 339546693,
+        "sender_full_name": "Tony Voss",
+        "timestamp": 1677933094
+    },
+    {
+        "content": "<p>Need to look at your repo master again.</p>",
+        "id": 339547851,
+        "sender_full_name": "Mike Rossiter",
+        "timestamp": 1677933505
+    },
+    {
+        "content": "<p>update-templates has not changed your <em>flatpak</em> folder or <em>.circleci/config.yml</em>.  This explains the failures. Strange.  Need to try an update-templates on my Mac machine.  Out of time at the moment.</p>",
+        "id": 339550649,
+        "sender_full_name": "Mike Rossiter",
+        "timestamp": 1677934610
+    },
+    {
+        "content": "<p>The remote MacOS build is taking about 30 minutes every time.  It looks like it is always recompiling wxWidgets.<br>\nThe log includes the error</p>\n<div class=\"codehilite\"><pre><span></span><code>CMake Error at cmake/MacosWxwidgets.cmake:86 (math):\n  math does not recognize sub-command _nproc\nCall Stack (most recent call first):\n  CMakeLists.txt:84 (include)\n</code></pre></div>\n<p>Possibly this might lead to the recompilation of wxWidgets?<br>\n<a href=\"https://app.circleci.com/pipelines/github/antipole2/JavaScript_pi/201/workflows/3243faf5-a98f-4c70-b04a-ebe3414399ed/jobs/2167\">Sample pipeline here</a></p>",
+        "id": 339590485,
+        "sender_full_name": "Tony Voss",
+        "timestamp": 1677950454
+    },
+    {
+        "content": "<p>The flatpak yaml file is not touched by update-templates on the Mac. I will raise a bug report.<br>\n<a href=\"https://stackoverflow.com/questions/4247068/sed-command-with-i-option-failing-on-mac-but-works-on-linux\">https://stackoverflow.com/questions/4247068/sed-command-with-i-option-failing-on-mac-but-works-on-linux</a><br>\nFor now you could copy my .yaml file and also the <em>build-deps/control</em> file.</p>",
+        "id": 339600281,
+        "sender_full_name": "Mike Rossiter",
+        "timestamp": 1677956006
+    },
+    {
+        "content": "<p>From my JavaScript fork (master) of your repo.</p>",
+        "id": 339600424,
+        "sender_full_name": "Mike Rossiter",
+        "timestamp": 1677956053
+    },
+    {
+        "content": "<p><a href=\"https://github.com/Rasbats/shipdriver_pi/issues/505\">https://github.com/Rasbats/shipdriver_pi/issues/505</a></p>",
+        "id": 339669013,
+        "sender_full_name": "Mike Rossiter",
+        "timestamp": 1678010937
+    },
+    {
+        "content": "<blockquote>\n<p>android: Only way I can see is to remove the android sections in .circleci/config.yml each time the template is used:</p>\n</blockquote>\n<p>Look into  <em>build-conf.rc</em></p>\n<p>in haste...</p>",
+        "id": 339715271,
+        "sender_full_name": "Alec Leamas",
+        "timestamp": 1678031759
+    },
+    {
+        "content": "<p><span class=\"user-mention silent\" data-user-id=\"399559\">Mike Rossiter</span> <a href=\"#narrow/stream/349785-JavaScript_pi/topic/Building.20for.20later.20than.20OCPN.20v5.2E6/near/339600281\">said</a>:</p>\n<blockquote>\n<p>For now you could copy my .yaml file and also the <em>build-deps/control</em> file.</p>\n</blockquote>\n<ul>\n<li>Did this and all building except Android (will try Alec's approach for that).</li>\n<li>Buster builds say they have succeeded but actually do no meaningful work.</li>\n<li>Copied your dependency file too but MacOS still compiling wxWidgets each time and taking almost 30 minutes.  Pipeline <a href=\"https://app.circleci.com/pipelines/github/antipole2/JavaScript_pi/211/workflows/f050ad26-6a83-4bb1-9f3b-5eac92fa5273/jobs/2284\">here</a>.</li>\n</ul>",
+        "id": 339723205,
+        "sender_full_name": "Tony Voss",
+        "timestamp": 1678035902
+    },
+    {
+        "content": "<p>You are now building branch v2.1.0 iso master. I think the next run of v2.1.0 will build much faster. I think the cache is related to the branch you build from.</p>",
+        "id": 339827656,
+        "sender_full_name": "Mike Rossiter",
+        "timestamp": 1678097989
+    },
+    {
+        "content": "<p>Buster builds are frozen. No new plugins are being built. Buster will use existing plugins only.<br>\n<a href=\"https://github.com/OpenCPN/OpenCPN/discussions/2797\">https://github.com/OpenCPN/OpenCPN/discussions/2797</a></p>",
+        "id": 339837075,
+        "sender_full_name": "Mike Rossiter",
+        "timestamp": 1678100576
+    },
+    {
+        "content": "<p>Managed to get my production builds built.  But have spotted no Windows build.  Not <a href=\"https://app.circleci.com/pipelines/github/antipole2/JavaScript_pi/211/workflows/f050ad26-6a83-4bb1-9f3b-5eac92fa5273\">in here.</a></p>",
+        "id": 340100317,
+        "sender_full_name": "Tony Voss",
+        "timestamp": 1678193272
+    },
+    {
+        "content": "<p>I will fork v2.1.0 and see what happens here.</p>",
+        "id": 340101864,
+        "sender_full_name": "Mike Rossiter",
+        "timestamp": 1678193696
+    },
+    {
+        "content": "<p>The appveyor builds for Windows are here:<br>\n<a href=\"https://ci.appveyor.com/project/antipole2/javascript-pi\">https://ci.appveyor.com/project/antipole2/javascript-pi</a><br>\nProblems with the new <em>GUIDarray</em> stuff (api-18). Have a feeling that <em>opencpn/libs/api-18</em> is missing something.<br>\nTBC</p>",
+        "id": 340114768,
+        "sender_full_name": "Mike Rossiter",
+        "timestamp": 1678197214
+    },
+    {
+        "content": "<p>Yes, the lib file needs to be updated. Hard to keep up when things moves fast as now.</p>",
+        "id": 340130125,
+        "sender_full_name": "Alec Leamas",
+        "timestamp": 1678200943
+    },
+    {
+        "content": "<p>From Dave's master branch 14 hours ago:<br>\n<a href=\"/user_uploads/33951/My4c1uXvR7zTJ0QPzSXgPQZB/ocpn_plugin.h\">ocpn_plugin.h</a> <br>\n<a href=\"/user_uploads/33951/zBOy7xIkY7Zc06PbBGoLLJxN/opencpn.lib\">opencpn.lib</a> <br>\nJavaScript_pi builds fine with these on Windows.<br>\n<span class=\"user-mention\" data-user-id=\"399510\">@Alec Leamas</span> : Shall I make a PR for <em>leams/opencpn-libs</em>?</p>",
+        "id": 340146133,
+        "sender_full_name": "Mike Rossiter",
+        "timestamp": 1678204525
+    },
+    {
+        "content": "<p>Yes, please do!</p>",
+        "id": 340146425,
+        "sender_full_name": "Alec Leamas",
+        "timestamp": 1678204587
+    },
+    {
+        "content": "<p>Right. However, we have still not done anything w r t shipdriver, we need to update the version of opencpn-libs in there.<br>\nIn shipdriver master branch do:</p>\n<div class=\"codehilite\"><pre><span></span><code>    $ git submodule update --remote --merge opencpn-libs\n    $ git add opencpn-libs\n    $ git commit -m &quot;Updating opencpn-libs to latest version.&quot;\n    $ git push ...\n</code></pre></div>",
+        "id": 340150754,
+        "sender_full_name": "Alec Leamas",
+        "timestamp": 1678205547
+    },
+    {
+        "content": "<p><span class=\"user-mention\" data-user-id=\"554731\">@Tony Voss</span>  You need to update your opencpn-libs, same exercise as above</p>",
+        "id": 340150898,
+        "sender_full_name": "Alec Leamas",
+        "timestamp": 1678205587
+    },
+    {
+        "content": "<p>All done. JavaScript builds fine with CI for all OS. Only Windows tested. Imports fine on latest OpenCPN 5.7.1 local build.</p>",
+        "id": 340155313,
+        "sender_full_name": "Mike Rossiter",
+        "timestamp": 1678206679
+    },
+    {
+        "content": "<p>Dam.. Was on v3.2 in ShipDriver. Will revert and make the changes to master branch.</p>",
+        "id": 340156212,
+        "sender_full_name": "Mike Rossiter",
+        "timestamp": 1678206891
+    },
+    {
+        "content": "<p>Done.</p>",
+        "id": 340157103,
+        "sender_full_name": "Mike Rossiter",
+        "timestamp": 1678207137
+    },
+    {
+        "content": "<p>Short of time now, but will cherry-pick into 3.2 later</p>",
+        "id": 340160578,
+        "sender_full_name": "Alec Leamas",
+        "timestamp": 1678208038
+    },
+    {
+        "content": "<p><span class=\"user-mention silent\" data-user-id=\"399510\">Alec Leamas</span> <a href=\"#narrow/stream/349785-JavaScript_pi/topic/Building.20for.20later.20than.20OCPN.20v5.2E6/near/340150898\">said</a>:</p>\n<blockquote>\n<p><span class=\"user-mention silent\" data-user-id=\"554731\">Tony Voss</span>  You need to update your opencpn-libs, same exercise as above</p>\n</blockquote>\n<p>Tried on JavaScript master branch:</p>\n<div class=\"codehilite\"><pre><span></span><code>tony@Janov JavaScript_pi % git submodule update --remote --merge opencpn-libs\nfatal: Needed a single revision\nUnable to find current origin/master revision in submodule path &#39;opencpn-libs&#39;\n</code></pre></div>\n<p>No updates outstanding.  I do have branches of master branch.</p>",
+        "id": 340304735,
+        "sender_full_name": "Tony Voss",
+        "timestamp": 1678267181
+    },
+    {
+        "content": "<p>Well, you seem to have kind of a state in opencpn-libs... Command above works for other users. Could you please run the following and submit the log?</p>\n<div class=\"codehilite\"><pre><span></span><code>$ cd opencpn-libs\n$ git status\n$ git branch\n$ git log --oneline -7\n$ git remote\n$ git remote show origin\n</code></pre></div>",
+        "id": 340384590,
+        "sender_full_name": "Alec Leamas",
+        "timestamp": 1678287532
+    },
+    {
+        "content": "<div class=\"codehilite\"><pre><span></span><code>cd /Users/tony/JavaScript/JavaScript_pi/opencpn-libs\ntony@Janov opencpn-libs % git status\nHEAD detached at 38762f4\nnothing to commit, working tree clean\ntony@Janov opencpn-libs % git branch\n* (HEAD detached at 38762f4)\n  main\ntony@Janov opencpn-libs % git log --oneline -7\n38762f4 (HEAD, origin/devel) ocpn_plugin.h: clang-format\ne2f30a4 api-18: Update ocpn_plugin.h to latest version\nd778f76 api-18: Add  compatiblity ocpn::api target (#9)\n1648fc0 Add new api-18 library\ne7a08c4 api-17: Correct another typo.\naa2247c Correct (probable) typo.\n9733384 api-17: Add opencpn.lib for wx32 builds\ntony@Janov opencpn-libs % git remote\norigin\nupstream\ntony@Janov opencpn-libs % git remote show origin\n* remote origin\n  Fetch URL: https://github.com/leamas/opencpn-libs.git\n  Push  URL: https://github.com/leamas/opencpn-libs.git\n  HEAD branch: main\n  Remote branches:\n    devel tracked\n    main  tracked\n    tmp   tracked\n  Local branch configured for &#39;git pull&#39;:\n    main merges with remote main\n  Local ref configured for &#39;git push&#39;:\n    main pushes to main (up to date)\ntony@Janov opencpn-libs % cd ..\ntony@Janov JavaScript_pi % git status\nOn branch master\nYour branch is up to date with &#39;origin/master&#39;.\nnothing to commit, working tree clean\ntony@Janov JavaScript_pi % git submodule update --remote --merge opencpn-libs\nfatal: Needed a single revision\nUnable to find current origin/master revision in submodule path &#39;opencpn-libs&#39;\ntony@Janov JavaScript_pi %\n</code></pre></div>",
+        "id": 340390652,
+        "sender_full_name": "Tony Voss",
+        "timestamp": 1678288785
+    },
+    {
+        "content": "<p>All looks ok in opencpn-libs AFAICT. Bit it looks for the branch \"master\" instead of \"main\", that might be a problem, perhaps <strong>the</strong> problem. Let me check</p>",
+        "id": 340392281,
+        "sender_full_name": "Alec Leamas",
+        "timestamp": 1678289108
+    },
+    {
+        "content": "<p>Perhaps, more or less a shot in the dark: Look into the file <em>.gitmodules</em>. Here is the definitions for opencpn-libs like <code>path = ...</code> and <code>url = ...</code></p>\n<p>Add  a new line like <code>branch = main</code>  below the other ones. Then  run <code>git submodule sync</code> and re-try the update. </p>\n<p>Reference: <a href=\"https://stackoverflow.com/questions/40987847\">https://stackoverflow.com/questions/40987847</a></p>",
+        "id": 340394810,
+        "sender_full_name": "Alec Leamas",
+        "timestamp": 1678289657
+    },
+    {
+        "content": "<p><span class=\"user-mention\" data-user-id=\"399510\">@Alec Leamas</span>  That seems to have worked - well done and thank you.  Remote builds gone through too.  Now Android do not fail - just do not do anything - like buster.    That's OK by me because I now, for the first time, get a 'Success' outcome.</p>",
+        "id": 340412815,
+        "sender_full_name": "Tony Voss",
+        "timestamp": 1678293829
+    },
+    {
+        "content": "<p>My remote builds still do not do Windows.<br>\nAlso MacOS recompiles loads including  wxWidgets even when run a second time from the same branch.  Takes ca 23 mins.<br>\n<a href=\"https://app.circleci.com/pipelines/github/antipole2/JavaScript_pi/224/workflows/c5310e0f-4d77-46f6-80ae-75b542c58cbe\">Work flow here</a>.</p>",
+        "id": 340437851,
+        "sender_full_name": "Tony Voss",
+        "timestamp": 1678300685
+    },
+    {
+        "content": "<p>Windows is build on appveyor (which you need to setup), not circleci. Hence nothing about windows in that log.</p>\n<p>EDIT:  First thing to check is your cloudsmith repo: is there a windows build? If not, check the appveyor logs.</p>",
+        "id": 340456063,
+        "sender_full_name": "Alec Leamas",
+        "timestamp": 1678306459
+    },
+    {
+        "content": "<p>Why your macos jobs rebuilds wxWidgets I just cannot understand. It does find the cache and installs it.  Have you made any changes to ci/circleci-build-macos.sh?</p>\n<p>If you hav'nt you might have a  broken cache for whatever reason, you have been doing all sorts of things here. One way might be to invalidate the cache, look into <em>build-deps/macos-cache-stamp</em> and  use that to invalidate the cache. The first build after that will not find any cache to download, look into the step \"Restoring cache\" in the log. OTOH, you will see it upload the new cache in the \"Saving cache\" step.</p>\n<p>Next build will find a cache, you will see that it is downloaded in the \"Restore cache\" step. At this point I don' see how it could start to build wxWidgets like today, it doesn't do that for anyone else. </p>\n<p>Still, I don't see everything...</p>",
+        "id": 340458096,
+        "sender_full_name": "Alec Leamas",
+        "timestamp": 1678307209
+    },
+    {
+        "content": "<p>The Windows build is failing in AppVeyor.  Not sure which errors are serious and which can be ignored as I am not familiar with this.  But outcome is a definite fail.<br>\n<a href=\"https://ci.appveyor.com/project/antipole2/javascript-pi/builds/46446359\">Log here.</a></p>",
+        "id": 340550630,
+        "sender_full_name": "Tony Voss",
+        "timestamp": 1678353716
+    },
+    {
+        "content": "<p>May not be connected but I would change <em>Plugin.cmake</em>:<br>\n<code>set(PKG_PRERELEASE \"alpha\")</code><br>\nto:<br>\n<code>set(PKG_PRERELEASE \"\")</code></p>",
+        "id": 340553084,
+        "sender_full_name": "Mike Rossiter",
+        "timestamp": 1678354348
+    },
+    {
+        "content": "<p>v2.1.0 branch does not contain the latest <em>opencpn-libs</em>. For this reason there are a lot of errors showing in the appveyor log. Related to api-18, which was updated recently.</p>\n<div class=\"codehilite\"><pre><span></span><code>$ git submodule update --remote --merge opencpn-libs\n$ git add opencpn-libs\n$ git commit -m &quot;Updating opencpn-libs to latest version.&quot;\n$ git push\n</code></pre></div>",
+        "id": 340554821,
+        "sender_full_name": "Mike Rossiter",
+        "timestamp": 1678354896
+    },
+    {
+        "content": "<p>Looks like the above is straightened out now.<br>\nI needed to update opencpn-libs in my v2.1.0 branch as well as my v2.2.0 branch<br>\nReset Mac cache file and that looks OK now.<br>\nGetting Windows build too. <span aria-label=\"smile\" class=\"emoji emoji-1f642\" role=\"img\" title=\"smile\">:smile:</span></p>\n<p>But had loads of problems with merging plugins metadata.<br>\nFirstly, I was re-building v2.1.0 to get a Windows build and it seems the  xml file names are not unique if no version change - at least for debian.  So had merge conflicts.  Resorted to bumping version number to v2.1.1.<br>\nSecondly, I need to leave the wx315 files in the catalogue for OCPN5.6 but the darwin xml contained target of darwin-wx315, which is no longer accepted during checks after the pull request.  It seems the options are now darwin &amp; darwin-32.  So I edited the target in the xml file to darwin and PRd again. It passed checks this time.  I am waiting for the PR to be accepted.</p>",
+        "id": 340644922,
+        "sender_full_name": "Tony Voss",
+        "timestamp": 1678377242
+    },
+    {
+        "content": "<p>You should not make that edit. Instead, leave it as-is and make a notd to Dave why the check fails. He is aware of the situation, and will merge anyway.  Changing the target to wx-32 passes the checks, but might crash in runtime since these old plugins actually are linked against wx 3.1.5</p>",
+        "id": 341330840,
+        "sender_full_name": "Alec Leamas",
+        "timestamp": 1678651538
+    },
+    {
+        "content": "<p><span class=\"user-mention silent\" data-user-id=\"399510\">Alec Leamas</span> <a href=\"#narrow/stream/349785-JavaScript_pi/topic/Building.20for.20later.20than.20OCPN.20v5.2E6/near/341330840\">said</a>:</p>\n<blockquote>\n<p>You should not make that edit. Instead, leave it as-is and make a notd to Dave why the check fails. He is aware of the situation, and will merge anyway.  Changing the target to wx-32 passes the checks, but might crash in runtime since these old plugins actually are linked against wx 3.1.5</p>\n</blockquote>\n<p>Alec.. I only edited the name in the xml file after the builds and just before the PR .  So I believe the builds will be OK.  The edit just got it cleanly through the checks.</p>",
+        "id": 341425460,
+        "sender_full_name": "Tony Voss",
+        "timestamp": 1678704454
+    },
+    {
+        "content": "<p>But the edit will trick runtime OpenCPN to think that the plugin is wx-32,  but it is not.  Upcoming version  5.8 will load it and most likely crash sooner or later. Older versions will not load it since they only load wx-315. </p>\n<p>So, a bad edit. Just disregard the checks which basically are buggy: <a href=\"https://github.com/OpenCPN/plugins/issues/818\">https://github.com/OpenCPN/plugins/issues/818</a>.</p>",
+        "id": 341443682,
+        "sender_full_name": "Alec Leamas",
+        "timestamp": 1678709809
+    }
+]

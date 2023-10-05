@@ -1,0 +1,254 @@
+[
+    {
+        "content": "<p>How should we handle plugins update to target \"msvc-wx32\".<br>\nSince the plugin itself has not changed, due to Win is changing to wx32, release of alpha or beta version would not be feasible. </p>\n<ul>\n<li>\n<p>One method would be to update plugin release master as usual but while update to \"Plugins\" the author should not delete previous metadata for the actual plugin version.  So as an example I would leave the present \"ais-vd-1.8.0-msvc-10.0.14393.xml\" together with the new \"ais-vd-1.8.0-msvc-wx32-10.0.14393.xml\". <br>\nWith this I suppose we will not jeopardize for neither those updating the plugin for O 5.6.1 nor those updating for O 5.8.0 (beta 5.7.x) since Pluginmanager will be able to distinguish between the two versions. Correct?</p>\n</li>\n<li>\n<p>For now we have to manually update appveyor.yml and .\\cmake\\PluginSetup.cmake to fit wx 3.2.1 installation and tarball designation. That has to be done efter a possible \"Update_Templates\".  (Or can \"Update_Templates\" be adapted in due time?)<br>\nFor now I've prepared ais-vd_pi as of o-charts_pi branch wx321.</p>\n</li>\n</ul>\n<p>Comments for a general decision and messaging plugin authors?</p>",
+        "id": 309175854,
+        "sender_full_name": "Håkan Svensson",
+        "timestamp": 1668167073
+    },
+    {
+        "content": "<p>The overall strategy should be to leave these questions to the plugin build chains testplugin and shipdriver. This way , the changes can be centralized. o-charts is a special case, most of the changes here will be  synchronized with shipdriver.</p>\n<p>During the alpha phase we could use the plugin beta catalog so we are free to work with this without affecting the stable plugins. No idea of <span class=\"user-mention\" data-user-id=\"517002\">@Dave Register</span> 's thoughts on this.  But at a later stage, your are right: it is perfectly ok to have multiple versions in the catalog, so we keep the old ones in place while starting the work with the new.</p>\n<p>The first step here is to file issues against shipdriver and tesplugin. We are almost there, but still need to sort out the MacOS version to build for, see <a href=\"https://github.com/OpenCPN/OpenCPN/discussions/2797\">https://github.com/OpenCPN/OpenCPN/discussions/2797</a>.  Once the MacOS issue is sorted out, I will file  the bugs and the start  to work with shipdriver. </p>\n<p>Not sure what will happen with testplugin, havn't heard from Jon for a while.</p>",
+        "id": 309186448,
+        "sender_full_name": "Alec Leamas",
+        "timestamp": 1668171129
+    },
+    {
+        "content": "<p>Let's use Beta catalog for now, at least thru Alpha testing.  For production, I see no reason not to keep legacy (mvsc and darwin-wx315) plugins in the catalog.  Up to the plugin authors whether they will back-port bug fixes to the legacy plugins over time.  My opinion is:  Only for critical bugs.  This will encourage users to update to O58 to get the best plugin experience.</p>",
+        "id": 309203590,
+        "sender_full_name": "Dave Register",
+        "timestamp": 1668177192
+    },
+    {
+        "content": "<p>Good. Beta catalog it will be. Thanks.<br>\nCould anyone else better English writer put this together this to the 5.8 discussion mentioned above for more general information?</p>\n<blockquote>\n<p>back-port bug fixes to the legacy plugins</p>\n</blockquote>\n<p>That was not my intention. Just to keep e.g. msvc as they are for those not yet updated O to 5.8. I concur the idea to force a O update by not update plugins for O 5.6</p>",
+        "id": 309210055,
+        "sender_full_name": "Håkan Svensson",
+        "timestamp": 1668179327
+    },
+    {
+        "content": "<p><span class=\"user-mention\" data-user-id=\"522486\">@Håkan Svensson</span>  Do you have a repo in github to see what needs changing for O5.8? ais-vd? Need a version which does not use opencpn-libs git sub-module in the template.</p>",
+        "id": 309236003,
+        "sender_full_name": "Mike Rossiter",
+        "timestamp": 1668188530
+    },
+    {
+        "content": "<p><span class=\"user-mention\" data-user-id=\"399559\">@Mike Rossiter</span> <br>\nais-vd is not yet updated on Github just local. And the opencpn-lib is there.<br>\nFor msvc changes I copied o-charts_pi branch wx321.  And I realize from Dave's note above  I may look more careful for Mac darwin-w315 changes as well.</p>",
+        "id": 309245539,
+        "sender_full_name": "Håkan Svensson",
+        "timestamp": 1668192620
+    },
+    {
+        "content": "<p><span class=\"user-mention\" data-user-id=\"399559\">@Mike Rossiter</span> <br>\nNot sure what you need.  Can I help?</p>",
+        "id": 309259633,
+        "sender_full_name": "Dave Register",
+        "timestamp": 1668200193
+    },
+    {
+        "content": "<p><span class=\"user-mention\" data-user-id=\"517002\">@Dave Register</span> I have compiled O5.7.1 and am trying to get ahead of plugin updates for wx3.2.1. These will probably have to wait for Alex to update the ShipDriver template but in the meantime I am testing some ideas. I think I can get the changes needed from o-charts_pi.</p>",
+        "id": 309315483,
+        "sender_full_name": "Mike Rossiter",
+        "timestamp": 1668248110
+    },
+    {
+        "content": "<p><span class=\"user-mention\" data-user-id=\"517002\">@Dave Register</span>  Ok ... got there. Shipdriver repo: <a href=\"https://github.com/Rasbats/shipdriver_pi/tree/v3.0-msvc-wx32\">https://github.com/Rasbats/shipdriver_pi/tree/v3.0-msvc-wx32</a></p>\n<p>Tarball is here: <a href=\"https://cloudsmith.io/~opencpn/repos/shipdriver-alpha/packages/\">https://cloudsmith.io/~opencpn/repos/shipdriver-alpha/packages/</a></p>\n<p>Needed to reset the configuration files when doing a parallel install of the alpha in order that OpenCPN recognises the tarball.</p>",
+        "id": 309332093,
+        "sender_full_name": "Mike Rossiter",
+        "timestamp": 1668256307
+    },
+    {
+        "content": "<p>New point regarding plugin API detection.<br>\nExperimenting with Ubuntu Jammy, which is our first ubuntu target with wx32.<br>\nLooks to me like we will need to adapt core so that the os name definition used to match plugins will work sensibly.<br>\nFor instance, we need to change the target tuple for jammy.<br>\n from: \"ubuntu-x86_64; 22.04; x86_64\" <br>\n to:  ubuntu-x86_64-wx32; 22.04; x86_64</p>\n<p>If we do not do this, then OCPN core thinks that existing plugins in the catalog targeting \"ubuntu-x86_64; 22.04; x86_64\" are compatible.  But they are not, since they are built with some wx30 version.<br>\n Result:</p>\n<ol>\n<li>The plugin manager says the plugin is available.</li>\n<li>When selected plugin has bee downloaded and installed, the actual load fails.</li>\n<li>User consternation.</li>\n</ol>\n<p>So, questions:</p>\n<ol>\n<li>Will this break anything?</li>\n<li>Should we do this only for \"ubuntu\" hosts, and let the os version number accomplish the same thing on say, debian?</li>\n</ol>",
+        "id": 312990210,
+        "sender_full_name": "Dave Register",
+        "timestamp": 1669786854
+    },
+    {
+        "content": "<p>This is actually a transition problem on Jammy which is the only version which has both ubuntu and ubuntu-wx32 plugins in play.  I cannot see that using ubuntu-wx32 should break anything.</p>\n<p>However, ubuntu-wx32 plugins is basically a corner case. When should these be available? We are moving to use debian plugins, for Jammy that is Debian-11. And here everything already is in place with <em>debian</em> and <em>debian-wx32</em></p>",
+        "id": 313016933,
+        "sender_full_name": "Alec Leamas",
+        "timestamp": 1669800395
+    },
+    {
+        "content": "<p>Slept on it.</p>\n<ol>\n<li>If we all follow something like the sd templates, we will not be ever building new plugins for ubuntu at all.  </li>\n<li>Existing OCPN O562 users on jammy will  have the plugins currently in the catalog.</li>\n<li>OCPN 58 users on jammy will get wx32, and plugins satisfied by debian builds.</li>\n</ol>\n<p>It may be safer to do this in simple code:   if on ubuntu, and wx version =&gt; 3.2.x, then ignore plugins targeting \"ubuntu-x\"..<br>\nThoughts?</p>",
+        "id": 313071755,
+        "sender_full_name": "Dave Register",
+        "timestamp": 1669818426
+    },
+    {
+        "content": "<p>Seems basically fine. We could implement this by setting the target to <em>ubuntu-wx32</em>. If we don't build any such plugins the only available will be <em>debian-wx32</em>. </p>\n<p>It also keeps a loophole open (which I think is sound) for <em>ubuntu-wx32</em> plugins. This is what we would need to do if the Debian plugins does not work. I don't expect this to happen, but...</p>",
+        "id": 313075771,
+        "sender_full_name": "Alec Leamas",
+        "timestamp": 1669819493
+    },
+    {
+        "content": "<p>This practical issue today is O58 on jammy with the existing catalog.  He incorrectly offers ubuntu plugins that don't work.<br>\nBest solution, with your comment, is to make core OCPN target as ubuntu-wx32.   And do not hard-code the IsCompatible() logic.<br>\npatch looks like this, in TargetSetup.cmake</p>\n<div class=\"codehilite\"><pre><span></span><code>if (UNIX)\n  if (( wxWidgets_VERSION_STRING VERSION_GREATER &quot;3.1.0&quot;) AND (NOT APPLE))\n     set(PKG_TARGET &quot;${PKG_TARGET}-wx32&quot;)\n  endif()\n....\n</code></pre></div>",
+        "id": 313078567,
+        "sender_full_name": "Dave Register",
+        "timestamp": 1669820255
+    },
+    {
+        "content": "<p>Yes, should do it. </p>\n<p>The alternative would be not patch at all and use <em>-DOCPN_TARGET_TUPLE=ubuntu-wx32;22.04;whatever</em>. Perhaps somewhat cleaner, no need to check specific versions in TargetSetup.</p>",
+        "id": 313079989,
+        "sender_full_name": "Alec Leamas",
+        "timestamp": 1669820648
+    },
+    {
+        "content": "<p>Simpler .  Where best to do that?  I guess debian/rules for PPA build?  Or....</p>",
+        "id": 313082362,
+        "sender_full_name": "Dave Register",
+        "timestamp": 1669821379
+    },
+    {
+        "content": "<p>Yes, d/rules is the right place when making a Debian package.</p>",
+        "id": 313083349,
+        "sender_full_name": "Alec Leamas",
+        "timestamp": 1669821662
+    },
+    {
+        "content": "<p>... in which case you probably want to use something like $(DEB_TARGET_GNU_CPU). However, it's not clear-cut since we use x86_64 instead of  amd64 and arm64 instead of aarch64 so some tweaks are needed. The command <em>dpkg-architecture</em> gives some hints.</p>",
+        "id": 313084849,
+        "sender_full_name": "Alec Leamas",
+        "timestamp": 1669822071
+    },
+    {
+        "content": "<p>I have more complete solutions for the arch problem available, let me know if you need it.</p>",
+        "id": 313093188,
+        "sender_full_name": "Alec Leamas",
+        "timestamp": 1669824196
+    },
+    {
+        "content": "<p>Could use a little debian help on this.  Cannot see how to detect wx version from d/rules. Ideas?</p>",
+        "id": 313103578,
+        "sender_full_name": "Dave Register",
+        "timestamp": 1669826937
+    },
+    {
+        "content": "<p>The Debian Way is to branch your PPA repo, with separate branches for wx32 and wx30. This way, there is nothing to detect in each branch.</p>",
+        "id": 313113430,
+        "sender_full_name": "Alec Leamas",
+        "timestamp": 1669829577
+    },
+    {
+        "content": "<p>That might be tough.  I am using the PPA workflow to automatically clone OCPN from github, and then I manually trigger builds when I need one.  Rather not have to add a special wx32 branch to github.  Other ways?</p>",
+        "id": 313125691,
+        "sender_full_name": "Dave Register",
+        "timestamp": 1669832960
+    },
+    {
+        "content": "<p>There is no need for  a special branch on github, what I'm talking about is the ppa sources i. e., the debian directory. The core problem is that you have the debian directory in the opencpn sources. </p>\n<p>Since you basically need <strong>some</strong> kind of change in the code to create either wx30 or wx32, I cannot see how this should work in current setup without branching or patching.   Things would be so much easier if you had what I have, a separate packaging-only repo which just imports the builds. Branching such a  repo is trivial.</p>\n<p>Need to sleep on this. Seems messy.</p>",
+        "id": 313148320,
+        "sender_full_name": "Alec Leamas",
+        "timestamp": 1669839920
+    },
+    {
+        "content": "<p>I still think branching is the right thing to do combined with a separate packaging repo. With some git-fu  it should not be that complicated to use.  A sketch:</p>\n<ul>\n<li>Remove the debian/ directory from main opencpn repo.</li>\n<li>Create a separate  git repository named for example opencpn-ppa as a clone of opencpn.</li>\n<li>In the opencpn-ppa repo create two branches, say wx30 and wx32</li>\n<li>In each of the wx30 and wx32 branches setup a debian/ directory with correct rules, control, changelog and what not. </li>\n</ul>\n<p>When it's time to make a build this is done in opencpn-ppa. Assuming this has a remote named upstream which points to the  main opencpn repo it goes like:</p>\n<div class=\"codehilite\"><pre><span></span><code>$ git remote update upstream\n$ git checkout wx32\n$ git merge upstream/master\n[ make wx32 build]\n\n$ git checkout wx30\n$ git merge upstream/master\n[make wx30 build]\n</code></pre></div>\n<p>... and that's it. There will be no conflicts, the ppa repo does not change anything but the debian/ directory, and upstream does not even know about this dir.  As I see it, this is a simple and clean way.</p>\n<p>Notes:</p>\n<ul>\n<li>The only thing maintained in opencpn-ppa is the debian/ directory.</li>\n<li>the wx30 and wx32 could technically live in the main opencpn repo. However, it often ends up in a mess. Been there, done that.</li>\n<li>The workflow means that any change in the sources (besides debian/) must be done either as a patch in the debian/ directory or in the main repo. This is  a sound rule anyway.</li>\n<li>When it's time to build for 24.04, this is just yet another branch in opencpn-ppa. This makes it possible to use a modified debian/ dir without touching the existing ones -- this is actually what you want.</li>\n</ul>",
+        "id": 313241939,
+        "sender_full_name": "Alec Leamas",
+        "timestamp": 1669889304
+    },
+    {
+        "content": "<p>I have another strategy.<br>\nI know you don't care for run-time \"hacks\", but this one seems legitimate to me.  <br>\nOn early init of OCPN, detect the following:  Host is \"ubuntu\", wx version is 32 or greater.<br>\nThis will hit on jammy+, and nowhere else, I'm pretty sure.<br>\nIf hit, append \"-wx32\" to PKG_TARGET, and set local environment.  Like this.</p>\n<div class=\"codehilite\"><pre><span></span><code>  std::string target = PKG_TARGET;\n  if (ocpn::startswith(target, &quot;ubuntu&quot;)) {\n   int wxv = wxMAJOR_VERSION * 10 + wxMINOR_VERSION;\n    if(wxv &gt;= 32){\n      target += std::string(&quot;-wx32&quot;);\n      setenv(&quot;OPENCPN_COMPAT_TARGET&quot;, target.c_str(), 1);\n    }\n  }\n</code></pre></div>\n\n<p>Flame on....</p>",
+        "id": 313527688,
+        "sender_full_name": "Dave Register",
+        "timestamp": 1669995885
+    },
+    {
+        "content": "<p>And another thing:<br>\nWhy is the \"is_debian_plugin_compatible()\" method restricted to x86_64 ARCH?</p>",
+        "id": 313530368,
+        "sender_full_name": "Dave Register",
+        "timestamp": 1669996606
+    },
+    {
+        "content": "<p>It should work as well, just a matter of overall philosophy I guess. </p>\n<p>However, I don't really understand why to make the complicated work-around  using OPENCPN_COMPAT_TARGET. Also, this will break the documented behavior of that variable since you override it. Better to do it directly in IsCompatible or, perhaps better, CompatOS::CompatOS after properly respecting a target set by user.</p>",
+        "id": 313540891,
+        "sender_full_name": "Alec Leamas",
+        "timestamp": 1669999550
+    },
+    {
+        "content": "<blockquote>\n<p>Why is the \"is_debian_plugin_compatible()\" method restricted to x86_64 ARH</p>\n</blockquote>\n<p>It shouldn't be, it was written at a time arm was a special case. It is a bug which should be fixed.</p>",
+        "id": 313541175,
+        "sender_full_name": "Alec Leamas",
+        "timestamp": 1669999622
+    },
+    {
+        "content": "<p>BTW:  If the reason for this is to avoid separate packaging branches I don't really think it's worth it.  To make a proper release you need at least a changelog. You also need to be prepared to have different control files. </p>\n<p>And it's not much of a price. After an initial setup it's just a question about doing <code>git merge</code> instead of <code>git clone</code> or <code>git pull</code></p>",
+        "id": 313542683,
+        "sender_full_name": "Alec Leamas",
+        "timestamp": 1670000079
+    },
+    {
+        "content": "<p>\"And it's not much of a price.\"  It is larger than that.  AFAICT, there is no ssh access to a PPA build stream.  Today, I use PPA tooling to clone from github master. Don't know how to do it otherwise, except by complex process of pushing a debian build instruction to PPA.  Been there, done that, too.  Mucho error prone. So my workflow would have more complicated steps, more opportunity for error.</p>",
+        "id": 313544466,
+        "sender_full_name": "Dave Register",
+        "timestamp": 1670000563
+    },
+    {
+        "content": "<p>Well, the official packaging is there and can be used more ore less as-is. The maintenance cost for copying it is not high. But admittedly, using that means using a new set of tools.</p>\n<p>But in any case, you cannot have a common d/control for Jammy which links either to wx30 or wx32. Without  branching I guess your option is to first patch d/control to link from wx30 and build from that. And in next step patch d/control to use wx32 and build from that. All this happening in the main repo master branch.</p>\n<p>But in this scheme you could certainly patch d/rules as well, avoiding complicating isCompatible(). Or?</p>\n<p>Late here, but can not sleep until I got this written ;)</p>",
+        "id": 313611491,
+        "sender_full_name": "Alec Leamas",
+        "timestamp": 1670026009
+    },
+    {
+        "content": "<p>I do now have a good d/control, builds bionic, focal, and jammy smoothly, with correct wx version.  So that is done.<br>\nI experimented with d/rules.  I'm not great at raw makefile syntax, so this soon became a rathole.<br>\nFinally,  I adopted CompatOS().  This led to some changes required in IsCompatible() and friends.  Introduced some ugliness that could benefit from additional eyes.<br>\nTODO:  Fix iIsCompatible() for ARMx ARCH, and test, test, test.</p>",
+        "id": 313698247,
+        "sender_full_name": "Dave Register",
+        "timestamp": 1670079348
+    },
+    {
+        "content": "<p>I just cannot convince you about making a proper packaging, not this time. Perhaps next....  After all, being forced to make the type of hacks here to isCompatible with friends just to handle packaging i,  well, irritating. </p>\n<p>I can just hope that you will see the light one day ;) Let's close this thread</p>",
+        "id": 313787091,
+        "sender_full_name": "Alec Leamas",
+        "timestamp": 1670148408
+    },
+    {
+        "content": "<p>This topic may cover more then Win...<br>\nInfo: For neither of my two RPis there are o-charts master plugin available. <br>\nThe \"Active settings\" are <br>\nrasbian-armhf:10  <br>\nand <br>\ndebian-arm64:11<br>\n<a href=\"/user_uploads/33951/SupAU2Mk2-PDO_t6Wklcb_-H/bild.png\">bild.png</a><br>\n<a href=\"/user_uploads/33951/B-vutG03S5z9ogGNGxJhKIqK/bild.png\">bild.png</a></p>\n<div class=\"message_inline_image\"><a href=\"/user_uploads/33951/SupAU2Mk2-PDO_t6Wklcb_-H/bild.png\" title=\"bild.png\"><img src=\"/user_uploads/33951/SupAU2Mk2-PDO_t6Wklcb_-H/bild.png\"></a></div><div class=\"message_inline_image\"><a href=\"/user_uploads/33951/B-vutG03S5z9ogGNGxJhKIqK/bild.png\" title=\"bild.png\"><img src=\"/user_uploads/33951/B-vutG03S5z9ogGNGxJhKIqK/bild.png\"></a></div>",
+        "id": 314243641,
+        "sender_full_name": "Håkan Svensson",
+        "timestamp": 1670335466
+    },
+    {
+        "content": "<p>Hakan...<br>\no-charts for rPI not quite ready yet.  Soon....</p>",
+        "id": 314252960,
+        "sender_full_name": "Dave Register",
+        "timestamp": 1670338286
+    },
+    {
+        "content": "<p>No problem when it was a known issue.</p>",
+        "id": 314324274,
+        "sender_full_name": "Håkan Svensson",
+        "timestamp": 1670359901
+    },
+    {
+        "content": "<p><span class=\"user-mention\" data-user-id=\"517002\">@Dave Register</span> <br>\nWin8/10<br>\nI updated master catalog and tried to install o-charts 2.0.0.13. -&gt; Bad checksum (nothing in log-file)<br>\nA local built tarball is though functional although still version 2.0.0.1</p>\n<p><a href=\"/user_uploads/33951/fxvqHAiMEAQt9hFZJqfBibaQ/bild.png\">bild.png</a></p>\n<div class=\"message_inline_image\"><a href=\"/user_uploads/33951/fxvqHAiMEAQt9hFZJqfBibaQ/bild.png\" title=\"bild.png\"><img src=\"/user_uploads/33951/fxvqHAiMEAQt9hFZJqfBibaQ/bild.png\"></a></div>",
+        "id": 315550168,
+        "sender_full_name": "Håkan Svensson",
+        "timestamp": 1670925812
+    },
+    {
+        "content": "<p>Corrected now in plugin catalog master.</p>",
+        "id": 315649432,
+        "sender_full_name": "Dave Register",
+        "timestamp": 1670953922
+    },
+    {
+        "content": "<p>Yes now no checksum error.<br>\nIt installs though with a crash.<br>\n        When resinstall during debug I get this:</p>\n<blockquote>\n<div class=\"codehilite\"><pre><span></span><code>  libcrypto-3.dll!6118a300()  Unknown\n[Frames below may be incorrect and/or missing, no symbols loaded for libcrypto-3.dll]\n</code></pre></div>\n\n<p>opencpn.exe!ChartPlugInWrapper::~ChartPlugInWrapper() Line 5719 C++<br>\n    [External Code] <br>\n    opencpn.exe!ChartDB::DeleteCacheEntry(CacheEntry * pce, bool bDelTexture, const wxString &amp; msg) Line 262    C++<br>\n    opencpn.exe!ChartDB::PurgeCachePlugins() Line 297   C++<br>\n    opencpn.exe!PlugInManager::OnPluginDeactivate(const PlugInContainer * pic) Line 1408    C++<br>\n    [Inline Frame] opencpn.exe!PlugInManager::HandlePluginLoaderEvents::__l2::&lt;lambda_1090a8c84136849279c8a1e76c8ae10b&gt;::operator()(wxCommandEvent &amp;) Line 1216 C++<br>\n    opencpn.exe!wxEventFunctorFunctor&lt;wxEventTypeTag&lt;wxCommandEvent&gt;,&lt;lambda_1090a8c84136849279c8a1e76c8ae10b&gt;&gt;::operator()(wxEvtHandler * __formal, wxEvent &amp; event) Line 548  C++<br>\n    [External Code] <br>\n    opencpn.exe!PluginLoader::LoadPluginCandidate(wxString file_name, bool load_enabled) Line 340   C++<br>\n    opencpn.exe!PluginLoader::LoadPlugInDirectory(const wxString &amp; plugin_dir, bool load_enabled) Line 444  C++<br>\n    opencpn.exe!PluginLoader::LoadAllPlugIns(bool load_enabled) Line 234    C++<br>\n    opencpn.exe!LoadAllPlugIns(bool load_enabled) Line 546  C++<br>\n    opencpn.exe!run_update_dialog(PluginListPanel * parent, PlugInContainer * pic, bool uninstall, const char * name, bool b_forceEnable) Line 662  C++<br>\n    opencpn.exe!pluginUtilHandler::OnPluginUtilAction(wxCommandEvent &amp; event) Line 814  C++<br>\n    [External Code] <br>\n    opencpn.exe!MyFrame::DoOptionsDialog() Line 4405    C++<br>\n    opencpn.exe!MyFrame::DoSettings() Line 3282 C++<br>\n    opencpn.exe!MyFrame::OnToolLeftClick(wxCommandEvent &amp; event) Line 3146  C++<br>\n    [External Code] <br>\n    opencpn.exe!WinMain(HINSTANCE__ * hInstance, HINSTANCE__ * hPrevInstance, char * lpCmdLine, int nCmdShow) Line 953  C++</p>\n</blockquote>",
+        "id": 315655310,
+        "sender_full_name": "Håkan Svensson",
+        "timestamp": 1670955614
+    },
+    {
+        "content": "<p>Test of Shipdriver sd3.2.1 for plugin ais_vd-pi:<br>\nThe CI result as of this <a href=\"https://app.circleci.com/pipelines/github/Hakansv/ais-vd_pi/58/workflows/acdda38e-cb93-4ad5-b0e7-54c6e0e24911\">link</a>. Is this list covering all non Windows system we want?<br>\nWin32 appveyor -&gt; Cloudsmith downloaded and tested positiv.<br>\nCS packages <a href=\"https://cloudsmith.io/~opencpn/repos/ais-vd-alpha/packages/\">here</a>.</p>",
+        "id": 317346624,
+        "sender_full_name": "Håkan Svensson",
+        "timestamp": 1671709956
+    },
+    {
+        "content": "<p>Looks good from here. We get a buster build but no Cloudsmith artefacts. Forgot the reason for this.</p>",
+        "id": 317400156,
+        "sender_full_name": "Mike Rossiter",
+        "timestamp": 1671725346
+    },
+    {
+        "content": "<p>One possible inconsistency?<br>\nIn CS we have e.g.: ais-vd-1.8-debian-A64-11-tarball <br>\nBut when built on my RPi400 Pluginmanager calls for: debian-arm64:11<br>\nIt diffs in \"A64\" instead of \"arm64\" and \"64-11\" instead of \"64:11\"<br>\nSo where to solve that?<br>\nIs it in Pluginmanager, O core, or Shipdriver methods?</p>\n<p>Importing that tarball from CS is though working so maybe the catalog updated will work as well?</p>",
+        "id": 317703463,
+        "sender_full_name": "Håkan Svensson",
+        "timestamp": 1671878811
+    }
+]
