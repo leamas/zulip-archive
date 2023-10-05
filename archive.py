@@ -136,6 +136,7 @@ def get_client_info():
     config = configparser.RawConfigParser()
     config.read(config_file)
     zulip_url = config.get("api", "site")
+    print("Archiving site: " + zulip_url);
 
     return client, zulip_url
 
