@@ -147,7 +147,8 @@ def populate_all(
             }
 
             messages = request_all(client, request)
-            if not messages: continue
+            if not messages:
+                continue
 
             topic_count = len(messages)
             last_message = messages[-1]
