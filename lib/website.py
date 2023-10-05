@@ -109,7 +109,6 @@ def build_website(
                 page_head_html,
                 page_footer_html,
             )
-
     copytree(
         str(Path(repo_root) / "assets"),
         str(Path(md_root) / "assets"),
