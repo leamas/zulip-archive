@@ -749,5 +749,60 @@ Thanks</p>
 
 
 
-<hr><p>Last updated: Oct 08 2023 at 21:22 UTC</p>
+<a name="395577098"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332168-Master%20-%205.8.0%20%20%28was%3A%20comms%29/topic/Common%20plugin%20library/near/395577098" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Jon <a href="https://leamas.github.io/zulip-archive/stream/332168-Master---5.2E8.2E0--.28was.3A-comms.29/topic/Common.20plugin.20library.html#395577098">(Oct 08 2023 at 21:23)</a>:</h4>
+<p>For clarity in clang formatting can we have the following set:<br>
+AlignConsecutiveDeclarations: true</p>
+<p>This will change code so that definitions in a block align the variable names which, to me, makes it easier to read . I have created a pull request for this change on opencpn-libs, but would like this to be propagated through to opencpn itself.</p>
+
+
+
+<a name="395577105"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332168-Master%20-%205.8.0%20%20%28was%3A%20comms%29/topic/Common%20plugin%20library/near/395577105" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Dave Register <a href="https://leamas.github.io/zulip-archive/stream/332168-Master---5.2E8.2E0--.28was.3A-comms.29/topic/Common.20plugin.20library.html#395577105">(Oct 08 2023 at 21:24)</a>:</h4>
+<p><span class="user-mention" data-user-id="399510">@Alec Leamas</span> <br>
+Build link?  or local?</p>
+
+
+
+<a name="395577206"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332168-Master%20-%205.8.0%20%20%28was%3A%20comms%29/topic/Common%20plugin%20library/near/395577206" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Alec Leamas <a href="https://leamas.github.io/zulip-archive/stream/332168-Master---5.2E8.2E0--.28was.3A-comms.29/topic/Common.20plugin.20library.html#395577206">(Oct 08 2023 at 21:25)</a>:</h4>
+<p><a href="https://app.circleci.com/pipelines/github/leamas/shipdriver_pi/1880/workflows/1f43c5b7-b1a6-432e-ae6a-e672e8e028f0/jobs/20048">https://app.circleci.com/pipelines/github/leamas/shipdriver_pi/1880/workflows/1f43c5b7-b1a6-432e-ae6a-e672e8e028f0/jobs/20048</a></p>
+
+
+
+<a name="395577400"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332168-Master%20-%205.8.0%20%20%28was%3A%20comms%29/topic/Common%20plugin%20library/near/395577400" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Alec Leamas <a href="https://leamas.github.io/zulip-archive/stream/332168-Master---5.2E8.2E0--.28was.3A-comms.29/topic/Common.20plugin.20library.html#395577400">(Oct 08 2023 at 21:28)</a>:</h4>
+<p>Found it:   pidc.h does nto include things as it should. Seems like the includes are in pidc.cpp.  Have you time to fix?</p>
+
+
+
+<a name="395577554"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332168-Master%20-%205.8.0%20%20%28was%3A%20comms%29/topic/Common%20plugin%20library/near/395577554" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Dave Register <a href="https://leamas.github.io/zulip-archive/stream/332168-Master---5.2E8.2E0--.28was.3A-comms.29/topic/Common.20plugin.20library.html#395577554">(Oct 08 2023 at 21:31)</a>:</h4>
+<p>Yes, no problem.<br>
+I wonder why none of my builds have trouble.  Must be include order, or some such.<br>
+I'll fix.</p>
+
+
+
+<a name="395578226"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332168-Master%20-%205.8.0%20%20%28was%3A%20comms%29/topic/Common%20plugin%20library/near/395578226" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Alec Leamas <a href="https://leamas.github.io/zulip-archive/stream/332168-Master---5.2E8.2E0--.28was.3A-comms.29/topic/Common.20plugin.20library.html#395578226">(Oct 08 2023 at 21:42)</a>:</h4>
+<p><span class="user-mention" data-user-id="400132">@Jon</span>   </p>
+<blockquote>
+<p>For clarity in clang formatting can we have the following set:</p>
+</blockquote>
+<p>Believe me, this is a can of worms. Personally, I found the current style really awkward from the beginning, it took some time to get used to it. But despite this, I have  not changed .clang-format. The basic idea is to not open up for discussions how to format. Such debates tends to take too much energy.</p>
+<p>There are some options here. One is to wait for a week or two to see if you could be used to the current settings. Obviosly, most of us have settled for  this conclusion.</p>
+<p>Another way is that you add your own copy of .clang-format into libraries you actively maintain. I think we all realize that the different projects in opencpn-libs have different culture, and if a project has it's own formatting I don't see any major problems as long as it  is consistent.</p>
+<p>All this said I think we should avoid starting debates how to format the code, besides that formatting should be consistent. This is true for core opencpn, and I think the clang-format in opencpn-libs should be a copy.</p>
+
+
+
+<a name="395578231"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332168-Master%20-%205.8.0%20%20%28was%3A%20comms%29/topic/Common%20plugin%20library/near/395578231" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Dave Register <a href="https://leamas.github.io/zulip-archive/stream/332168-Master---5.2E8.2E0--.28was.3A-comms.29/topic/Common.20plugin.20library.html#395578231">(Oct 08 2023 at 21:42)</a>:</h4>
+<p>Fixed.  devel branch now at:<br>
+<a href="https://github.com/opencpn/OpenCPN/commit/f262b101abd9f5aff184649851014330c25513fd">f262b101abd9f5aff184649851014330c25513fd</a></p>
+
+
+
+<hr><p>Last updated: Oct 08 2023 at 21:42 UTC</p>
 </html>
