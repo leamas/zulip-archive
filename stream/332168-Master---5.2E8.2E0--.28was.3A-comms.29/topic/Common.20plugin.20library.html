@@ -544,5 +544,43 @@ Thanks</p>
 
 
 
-<hr><p>Last updated: Oct 08 2023 at 07:42 UTC</p>
+<a name="395505100"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332168-Master%20-%205.8.0%20%20%28was%3A%20comms%29/topic/Common%20plugin%20library/near/395505100" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Alec Leamas <a href="https://leamas.github.io/zulip-archive/stream/332168-Master---5.2E8.2E0--.28was.3A-comms.29/topic/Common.20plugin.20library.html#395505100">(Oct 08 2023 at 07:49)</a>:</h4>
+<p>Besides the windows problems reported by <span class="user-mention" data-user-id="573239">@Pavel Kalian</span>  some random initial remarks on cuirrent code.</p>
+<div class="codehilite"><pre><span></span><code>ifndef DECL_EXP
+#ifdef __WXMSW__
+#  define DECL_EXP     __declspec(dllexport)
+#else
+# ifdef __GNUC__
+# define DECL_EXP       __attribute__((visibility(&quot;default&quot;)))
+#else
+#  define DECL_EXP
+# endif
+#endif
+#endif
+</code></pre></div>
+<p>This snippet misses clang which should use the the same DECL_EXP as gcc</p>
+
+
+
+<a name="395505506"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332168-Master%20-%205.8.0%20%20%28was%3A%20comms%29/topic/Common%20plugin%20library/near/395505506" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Alec Leamas <a href="https://leamas.github.io/zulip-archive/stream/332168-Master---5.2E8.2E0--.28was.3A-comms.29/topic/Common.20plugin.20library.html#395505506">(Oct 08 2023 at 07:51)</a>:</h4>
+<p>Formatting is not really well defined for plugins. That said, since some parts are more or less completely rewritten it might make sense to apply the same formatting as used by core OpenCPN i. e. using clang-format and the same .clang-format configuration. </p>
+<p>In any case, the new code contains trailing whitespace which should be removed.</p>
+
+
+
+<a name="395506202"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332168-Master%20-%205.8.0%20%20%28was%3A%20comms%29/topic/Common%20plugin%20library/near/395506202" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Alec Leamas <a href="https://leamas.github.io/zulip-archive/stream/332168-Master---5.2E8.2E0--.28was.3A-comms.29/topic/Common.20plugin.20library.html#395506202">(Oct 08 2023 at 07:59)</a>:</h4>
+<p>The formal copyright statement contradicts the <em>Author:   Jon Gough based on work by Sean D'Epagnier</em>. The correct way to state this is to modify the copyright statement to read</p>
+<div class="codehilite"><pre><span></span><code>Copyright (C) 2011 by Sean D&#39;Epagnier.
+Copyright (C) 2023 Jon Gough.
+...
+</code></pre></div>
+<p>With this copyright statement, the <em>Author:</em> statement is redundant and could (i. e., should) be removed.<br>
+Current form means legal problems, potentially making it impossible to include code in Linux distros.</p>
+
+
+
+<hr><p>Last updated: Oct 08 2023 at 08:09 UTC</p>
 </html>
