@@ -639,5 +639,35 @@ What could this be?</p>
 
 
 
-<hr><p>Last updated: Oct 08 2023 at 14:06 UTC</p>
+<a name="395547182"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332168-Master%20-%205.8.0%20%20%28was%3A%20comms%29/topic/Common%20plugin%20library/near/395547182" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Pavel Kalian <a href="https://leamas.github.io/zulip-archive/stream/332168-Master---5.2E8.2E0--.28was.3A-comms.29/topic/Common.20plugin.20library.html#395547182">(Oct 08 2023 at 14:22)</a>:</h4>
+<p>It seems like this has solved it for me:</p>
+<div class="codehilite" data-code-language="Diff"><pre><span></span><code><span class="gh">diff --git a/plugingl/CMakeLists.txt b/plugingl/CMakeLists.txt</span>
+<span class="gh">index 8e87f28..270af7f 100644</span>
+<span class="gd">--- a/plugingl/CMakeLists.txt</span>
+<span class="gi">+++ b/plugingl/CMakeLists.txt</span>
+<span class="gu">@@ -44,13 +44,13 @@ if (TARGET ocpn::glu_static)</span>
+<span class="w"> </span>  target_link_libraries(PLUGINGL PRIVATE ocpn::glu_static)
+<span class="w"> </span>endif()
+
+<span class="gd">-if (WIN32)</span>
+<span class="gi">+if(WIN32)</span>
+<span class="w"> </span>  target_link_libraries(PLUGINGL PRIVATE windows::headers)
+<span class="gd">-endif ()</span>
+<span class="gd">-</span>
+<span class="gd">-find_path(GLU_HEADERS NAMES GL/glu.h)</span>
+<span class="gd">-if (GLU_HEADERS)</span>
+<span class="gd">-  target_include_directories(PLUGINGL PRIVATE ${GLU_HEADERS})</span>
+<span class="gd">-endif ()</span>
+<span class="gi">+else()</span>
+<span class="gi">+  find_path(GLU_HEADERS NAMES GL/glu.h)</span>
+<span class="gi">+  if (GLU_HEADERS)</span>
+<span class="gi">+    target_include_directories(PLUGINGL PRIVATE ${GLU_HEADERS})</span>
+<span class="gi">+  endif()</span>
+<span class="gi">+endif()</span>
+</code></pre></div>
+
+
+
+<hr><p>Last updated: Oct 08 2023 at 14:24 UTC</p>
 </html>

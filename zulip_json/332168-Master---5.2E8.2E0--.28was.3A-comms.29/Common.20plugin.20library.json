@@ -400,5 +400,11 @@
         "id": 395545580,
         "sender_full_name": "Dave Register",
         "timestamp": 1696773897
+    },
+    {
+        "content": "<p>It seems like this has solved it for me:</p>\n<div class=\"codehilite\" data-code-language=\"Diff\"><pre><span></span><code><span class=\"gh\">diff --git a/plugingl/CMakeLists.txt b/plugingl/CMakeLists.txt</span>\n<span class=\"gh\">index 8e87f28..270af7f 100644</span>\n<span class=\"gd\">--- a/plugingl/CMakeLists.txt</span>\n<span class=\"gi\">+++ b/plugingl/CMakeLists.txt</span>\n<span class=\"gu\">@@ -44,13 +44,13 @@ if (TARGET ocpn::glu_static)</span>\n<span class=\"w\"> </span>  target_link_libraries(PLUGINGL PRIVATE ocpn::glu_static)\n<span class=\"w\"> </span>endif()\n\n<span class=\"gd\">-if (WIN32)</span>\n<span class=\"gi\">+if(WIN32)</span>\n<span class=\"w\"> </span>  target_link_libraries(PLUGINGL PRIVATE windows::headers)\n<span class=\"gd\">-endif ()</span>\n<span class=\"gd\">-</span>\n<span class=\"gd\">-find_path(GLU_HEADERS NAMES GL/glu.h)</span>\n<span class=\"gd\">-if (GLU_HEADERS)</span>\n<span class=\"gd\">-  target_include_directories(PLUGINGL PRIVATE ${GLU_HEADERS})</span>\n<span class=\"gd\">-endif ()</span>\n<span class=\"gi\">+else()</span>\n<span class=\"gi\">+  find_path(GLU_HEADERS NAMES GL/glu.h)</span>\n<span class=\"gi\">+  if (GLU_HEADERS)</span>\n<span class=\"gi\">+    target_include_directories(PLUGINGL PRIVATE ${GLU_HEADERS})</span>\n<span class=\"gi\">+  endif()</span>\n<span class=\"gi\">+endif()</span>\n</code></pre></div>",
+        "id": 395547182,
+        "sender_full_name": "Pavel Kalian",
+        "timestamp": 1696774963
     }
 ]
