@@ -16,5 +16,53 @@
         "id": 396872561,
         "sender_full_name": "Alec Leamas",
         "timestamp": 1697452270
+    },
+    {
+        "content": "<p>Looking at JavaScript 2.2 I think you need to update-templates to get the correct plugin. Latest available template is sd3.3.0-beta1</p>",
+        "id": 396875134,
+        "sender_full_name": "Mike Rossiter",
+        "timestamp": 1697453082
+    },
+    {
+        "content": "<p><span class=\"user-mention silent\" data-user-id=\"399559\">Mike Rossiter</span> <a href=\"#narrow/stream/349785-JavaScript_pi/topic/Building.20for.20.20RaspberryPi/near/396875134\">said</a>:</p>\n<blockquote>\n<p>Looking at JavaScript 2.2 I think you need to update-templates to get the correct plugin. Latest available template is sd3.3.0-beta1</p>\n</blockquote>\n<p>Will do when not doing roofing work on this sunny day.</p>",
+        "id": 396875569,
+        "sender_full_name": "Tony Voss",
+        "timestamp": 1697453247
+    },
+    {
+        "content": "<p>Looking into you build logs multiple builds fails. In particular, the one you should use <em>build-bullseye-armhf</em>  fails with at least this error</p>\n<div class=\"codehilite\"><pre><span></span><code>In file included from /ci-source/src/toolsDialogImp.h:22,\n                 from /ci-source/src/JavaScript_pi.h:23,\n                 from /ci-source/src/fileOrganiser.cpp:14:\n/ci-source/src/toolsDialogImp.h: In member function &#39;void ToolsClass::fixForScreenRes()&#39;:\n/ci-source/src/scaling.h:29:32: error: &#39;class ToolsClass&#39; has no member named &#39;GetDPIScaleFactor&#39;; did you mean &#39;GetContentScaleFactor&#39;?\n   29 | #define SCALE(window) (window-&gt;GetDPIScaleFactor())\n      |                                ^~~~~~~~~~~~~~~~~\n</code></pre></div>\n<p>You need to get your builds in order...</p>",
+        "id": 396876680,
+        "sender_full_name": "Alec Leamas",
+        "timestamp": 1697453656
+    },
+    {
+        "content": "<p>The bulllseye-armhf build failed with various compile errors.   Comparisons in <code>for </code>loops where <code>int i &lt; xxx.GetCount()</code> fails because GetCount returns size_t.  I will try casting.  Also screen scale stuff is missing.  I can add dummy FromDIP and ToDIP stuff.  But I need to know what the preprocessor macro is for these compiles.</p>",
+        "id": 396876714,
+        "sender_full_name": "Tony Voss",
+        "timestamp": 1697453669
+    },
+    {
+        "content": "<blockquote>\n<p>I  will try casting.</p>\n</blockquote>\n<p>Wrong  way, use <code>(size_t i = 0, i &lt; ...; ...)</code>instead. Still, this is just warnings and will not block the build. It's good to handle them while you are on it, though</p>",
+        "id": 396877137,
+        "sender_full_name": "Alec Leamas",
+        "timestamp": 1697453842
+    },
+    {
+        "content": "<blockquote>\n<p>But I need to know what the preprocessor macro is for these compiles.</p>\n</blockquote>\n<p>The log says:</p>\n<div class=\"codehilite\"><pre><span></span><code>-- The C compiler identification is GNU 10.2.1\n-- The CXX compiler identification is GNU 10.2.1\n</code></pre></div>\n<p>If you google for GNU version macros things should fall in place.</p>",
+        "id": 396877477,
+        "sender_full_name": "Alec Leamas",
+        "timestamp": 1697453970
+    },
+    {
+        "content": "<p>However, since the corresponding bullseye-wx32-armhf builds works it can of course be about the wxWidgets version rather than the compiler</p>",
+        "id": 396878039,
+        "sender_full_name": "Alec Leamas",
+        "timestamp": 1697454161
+    },
+    {
+        "content": "<p>Cirtcleci has  great feature which allows you to log in to a build box with a failed build. Here yo can try possible fixes without the long complete build time turn around. </p>\n<p>However, the armhf build is done in a docker container, so you not only need to ssh into the build box (actually simple) but also access the docker container. This is some obstacles in any case, more if you are not not used to docker.</p>",
+        "id": 396878653,
+        "sender_full_name": "Alec Leamas",
+        "timestamp": 1697454389
     }
 ]

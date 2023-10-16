@@ -38,5 +38,77 @@ He needs to install on his RaspberryPi (up to date 32 bit Bullseye OS, not the B
 
 
 
-<hr><p>Last updated: Oct 16 2023 at 10:42 UTC</p>
+<a name="396875134"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/349785-JavaScript_pi/topic/Building%20for%20%20RaspberryPi/near/396875134" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Mike Rossiter <a href="https://leamas.github.io/zulip-archive/stream/349785-JavaScript_pi/topic/Building.20for.20.20RaspberryPi.html#396875134">(Oct 16 2023 at 10:44)</a>:</h4>
+<p>Looking at JavaScript 2.2 I think you need to update-templates to get the correct plugin. Latest available template is sd3.3.0-beta1</p>
+
+
+
+<a name="396875569"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/349785-JavaScript_pi/topic/Building%20for%20%20RaspberryPi/near/396875569" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Tony Voss <a href="https://leamas.github.io/zulip-archive/stream/349785-JavaScript_pi/topic/Building.20for.20.20RaspberryPi.html#396875569">(Oct 16 2023 at 10:47)</a>:</h4>
+<p><span class="user-mention silent" data-user-id="399559">Mike Rossiter</span> <a href="#narrow/stream/349785-JavaScript_pi/topic/Building.20for.20.20RaspberryPi/near/396875134">said</a>:</p>
+<blockquote>
+<p>Looking at JavaScript 2.2 I think you need to update-templates to get the correct plugin. Latest available template is sd3.3.0-beta1</p>
+</blockquote>
+<p>Will do when not doing roofing work on this sunny day.</p>
+
+
+
+<a name="396876680"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/349785-JavaScript_pi/topic/Building%20for%20%20RaspberryPi/near/396876680" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Alec Leamas <a href="https://leamas.github.io/zulip-archive/stream/349785-JavaScript_pi/topic/Building.20for.20.20RaspberryPi.html#396876680">(Oct 16 2023 at 10:54)</a>:</h4>
+<p>Looking into you build logs multiple builds fails. In particular, the one you should use <em>build-bullseye-armhf</em>  fails with at least this error</p>
+<div class="codehilite"><pre><span></span><code>In file included from /ci-source/src/toolsDialogImp.h:22,
+                 from /ci-source/src/JavaScript_pi.h:23,
+                 from /ci-source/src/fileOrganiser.cpp:14:
+/ci-source/src/toolsDialogImp.h: In member function &#39;void ToolsClass::fixForScreenRes()&#39;:
+/ci-source/src/scaling.h:29:32: error: &#39;class ToolsClass&#39; has no member named &#39;GetDPIScaleFactor&#39;; did you mean &#39;GetContentScaleFactor&#39;?
+   29 | #define SCALE(window) (window-&gt;GetDPIScaleFactor())
+      |                                ^~~~~~~~~~~~~~~~~
+</code></pre></div>
+<p>You need to get your builds in order...</p>
+
+
+
+<a name="396876714"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/349785-JavaScript_pi/topic/Building%20for%20%20RaspberryPi/near/396876714" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Tony Voss <a href="https://leamas.github.io/zulip-archive/stream/349785-JavaScript_pi/topic/Building.20for.20.20RaspberryPi.html#396876714">(Oct 16 2023 at 10:54)</a>:</h4>
+<p>The bulllseye-armhf build failed with various compile errors.   Comparisons in <code>for </code>loops where <code>int i &lt; xxx.GetCount()</code> fails because GetCount returns size_t.  I will try casting.  Also screen scale stuff is missing.  I can add dummy FromDIP and ToDIP stuff.  But I need to know what the preprocessor macro is for these compiles.</p>
+
+
+
+<a name="396877137"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/349785-JavaScript_pi/topic/Building%20for%20%20RaspberryPi/near/396877137" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Alec Leamas <a href="https://leamas.github.io/zulip-archive/stream/349785-JavaScript_pi/topic/Building.20for.20.20RaspberryPi.html#396877137">(Oct 16 2023 at 10:57)</a>:</h4>
+<blockquote>
+<p>I  will try casting.</p>
+</blockquote>
+<p>Wrong  way, use <code>(size_t i = 0, i &lt; ...; ...)</code>instead. Still, this is just warnings and will not block the build. It's good to handle them while you are on it, though</p>
+
+
+
+<a name="396877477"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/349785-JavaScript_pi/topic/Building%20for%20%20RaspberryPi/near/396877477" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Alec Leamas <a href="https://leamas.github.io/zulip-archive/stream/349785-JavaScript_pi/topic/Building.20for.20.20RaspberryPi.html#396877477">(Oct 16 2023 at 10:59)</a>:</h4>
+<blockquote>
+<p>But I need to know what the preprocessor macro is for these compiles.</p>
+</blockquote>
+<p>The log says:</p>
+<div class="codehilite"><pre><span></span><code>-- The C compiler identification is GNU 10.2.1
+-- The CXX compiler identification is GNU 10.2.1
+</code></pre></div>
+<p>If you google for GNU version macros things should fall in place.</p>
+
+
+
+<a name="396878039"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/349785-JavaScript_pi/topic/Building%20for%20%20RaspberryPi/near/396878039" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Alec Leamas <a href="https://leamas.github.io/zulip-archive/stream/349785-JavaScript_pi/topic/Building.20for.20.20RaspberryPi.html#396878039">(Oct 16 2023 at 11:02)</a>:</h4>
+<p>However, since the corresponding bullseye-wx32-armhf builds works it can of course be about the wxWidgets version rather than the compiler</p>
+
+
+
+<a name="396878653"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/349785-JavaScript_pi/topic/Building%20for%20%20RaspberryPi/near/396878653" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Alec Leamas <a href="https://leamas.github.io/zulip-archive/stream/349785-JavaScript_pi/topic/Building.20for.20.20RaspberryPi.html#396878653">(Oct 16 2023 at 11:06)</a>:</h4>
+<p>Cirtcleci has  great feature which allows you to log in to a build box with a failed build. Here yo can try possible fixes without the long complete build time turn around. </p>
+<p>However, the armhf build is done in a docker container, so you not only need to ssh into the build box (actually simple) but also access the docker container. This is some obstacles in any case, more if you are not not used to docker.</p>
+
+
+
+<hr><p>Last updated: Oct 16 2023 at 11:07 UTC</p>
 </html>
