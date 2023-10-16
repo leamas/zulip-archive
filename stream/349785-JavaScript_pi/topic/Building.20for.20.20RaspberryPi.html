@@ -156,5 +156,31 @@ This would explain my compiler errors as the high res support was not in wx3.0.<
 
 
 
-<hr><p>Last updated: Oct 16 2023 at 19:42 UTC</p>
+<a name="396967414"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/349785-JavaScript_pi/topic/Building%20for%20%20RaspberryPi/near/396967414" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Alec Leamas <a href="https://leamas.github.io/zulip-archive/stream/349785-JavaScript_pi/topic/Building.20for.20.20RaspberryPi.html#396967414">(Oct 16 2023 at 19:44)</a>:</h4>
+<p>.... and this is as intended. The real problem here seems to be that the plugin code requires wx3.2, thus making making it impossible to bulid bullseye wx3.0 plugins.</p>
+<p>Whar are your thoughts? Patch plugin to build  on wx3.0?  Or try a ubuntu wx3.2 opencpn build on Debian? The latter is not kosher and carries risks, but "should"  work.</p>
+<p>Is there other failing builds after updating the template?</p>
+
+
+
+<a name="396968211"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/349785-JavaScript_pi/topic/Building%20for%20%20RaspberryPi/near/396968211" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Alec Leamas <a href="https://leamas.github.io/zulip-archive/stream/349785-JavaScript_pi/topic/Building.20for.20.20RaspberryPi.html#396968211">(Oct 16 2023 at 19:51)</a>:</h4>
+<p>One of the risks  with going  for wx3.2, is that users which installs OpenCPN on bullseye using the regular backports will not be able to use your plugin. As I see it, this might be a perfectly sane choice, the message to users would be that to use the updated plugin they need to update to Bookworm first.  </p>
+<p>But. it's a choice.</p>
+
+
+
+<a name="396969849"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/349785-JavaScript_pi/topic/Building%20for%20%20RaspberryPi/near/396969849" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Tony Voss <a href="https://leamas.github.io/zulip-archive/stream/349785-JavaScript_pi/topic/Building.20for.20.20RaspberryPi.html#396969849">(Oct 16 2023 at 20:04)</a>:</h4>
+<p>Both flatpak builds fail because of a certificate signature issue.<br>
+bullseye, bullseye-arm64 &amp; bullseye-armf all failed with the same missing DIP stuff.<br>
+The 3 bullseyes -wx32 were all OK.<br>
+So, as I understand it, the three failing ones are for  OCPN using wx3.0.  (I had thought all OCPN builds for v 5.8 were wx3.2 but clearly not.).<br>
+I can fix the code to have dummy functions for those builds.  That is straight forward.<br>
+You pointed me to the wxMAJOR_VERSION and wxMINOR_VERSION constants.  I guess I can use these to conditionally compile dummy routines for earlier than wx3.2</p>
+
+
+
+<hr><p>Last updated: Oct 16 2023 at 20:09 UTC</p>
 </html>
