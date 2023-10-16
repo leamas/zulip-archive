@@ -136,5 +136,19 @@ When I can compile on my M2 Mac, I can let Ynskje have her x86 Mac back <span ar
 
 
 
-<hr><p>Last updated: Oct 16 2023 at 18:11 UTC</p>
+<a name="396955099"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/349785-JavaScript_pi/topic/Building%20for%20%20RaspberryPi/near/396955099" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Tony Voss <a href="https://leamas.github.io/zulip-archive/stream/349785-JavaScript_pi/topic/Building.20for.20.20RaspberryPi.html#396955099">(Oct 16 2023 at 18:23)</a>:</h4>
+<p>Updated to sd3.3.0-beta1 OK.<br>
+The first <code>make tarball</code> after <code>circleci-build-macos.sh</code> still fails but works after that.  I have saved the terminal output in case anyone wants to look at it.</p>
+<p>The bullseye builds still failing.  The high res display functions (FromDIP etc.) are missing.<br>
+Looking at the output, it appears to build for wx3.2<br>
+<code>sed -i s/@BUILD_WX32@// /home/circleci/project/build.sh</code><br>
+ but all the output thereafter refers to wx3.0.<br>
+So I think it is actually building with wx3.0 despite the above sed line.<br>
+This would explain my compiler errors as the high res support was not in wx3.0.<br>
+<a href="https://app.circleci.com/pipelines/github/antipole2/JavaScript_pi/353/workflows/11b9ba80-f263-4cb4-a1d1-bda57b672dc8/jobs/4219">Build log here</a>.</p>
+
+
+
+<hr><p>Last updated: Oct 16 2023 at 18:31 UTC</p>
 </html>
