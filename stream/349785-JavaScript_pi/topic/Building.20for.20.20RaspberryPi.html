@@ -215,5 +215,35 @@ You pointed me to the wxMAJOR_VERSION and wxMINOR_VERSION constants.  I guess I 
 
 
 
-<hr><p>Last updated: Oct 17 2023 at 09:08 UTC</p>
+<a name="397064517"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/349785-JavaScript_pi/topic/Building%20for%20%20RaspberryPi/near/397064517" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Mike Rossiter <a href="https://leamas.github.io/zulip-archive/stream/349785-JavaScript_pi/topic/Building.20for.20.20RaspberryPi.html#397064517">(Oct 17 2023 at 09:18)</a>:</h4>
+<p>Was <em>update-templates sd3.3.0-beta1</em> completed successfully? I just synched your master branch and ran the update. Many changes.  Just about to test a local Win build.</p>
+
+
+
+<a name="397064699"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/349785-JavaScript_pi/topic/Building%20for%20%20RaspberryPi/near/397064699" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Alec Leamas <a href="https://leamas.github.io/zulip-archive/stream/349785-JavaScript_pi/topic/Building.20for.20.20RaspberryPi.html#397064699">(Oct 17 2023 at 09:19)</a>:</h4>
+<p>The shipdriver builds are OK for all targets including Flatpak when I rebuild from the beta1 tag. Hence, something differs between the flatpak build scripts in your  javascript plugin and the template.</p>
+<p>There should be no such difference. How did you perform the update? </p>
+<p>Could you please check status by  tryiung <code>git diff sd3.3.0-beta1 ci/circleci-build-flatpak.sh</code>. If this fails because <em>sd3.3.0-beta1</em> is not available do:</p>
+<div class="codehilite"><pre><span></span><code>$ git remote add tmp https://github.com/Rasbats/shipdriver_pi
+$ git remote update tmp
+$ git fetch tmp refs/tags/sd3.3.0-beta1:refs/tags/sd3.3.0-beta1
+$ git diff sd3.3.0-beta1 ci/circleci-build-flatpak.sh
+</code></pre></div>
+
+<p>and report back the result of the diff command</p>
+
+
+
+<a name="397065023"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/349785-JavaScript_pi/topic/Building%20for%20%20RaspberryPi/near/397065023" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Alec Leamas <a href="https://leamas.github.io/zulip-archive/stream/349785-JavaScript_pi/topic/Building.20for.20.20RaspberryPi.html#397065023">(Oct 17 2023 at 09:21)</a>:</h4>
+<blockquote>
+<p>Was update-templates sd3.3.0-beta1 completed successfully?</p>
+</blockquote>
+<p>This is indeed the question.</p>
+
+
+
+<hr><p>Last updated: Oct 17 2023 at 09:24 UTC</p>
 </html>
