@@ -996,5 +996,28 @@ For now, the best solution is to add to plugin.cmake:</p>
 
 
 
-<hr><p>Last updated: Oct 20 2023 at 14:27 UTC</p>
+<a name="397722633"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332168-Master%20-%205.8.0%20%20%28was%3A%20comms%29/topic/Common%20plugin%20library/near/397722633" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Alec Leamas <a href="https://leamas.github.io/zulip-archive/stream/332168-Master---5.2E8.2E0--.28was.3A-comms.29/topic/Common.20plugin.20library.html#397722633">(Oct 20 2023 at 14:31)</a>:</h4>
+<p>Seems like pidc has a hard dependency on glu, right?  But glu does not exist on Android. What does this mean?</p>
+
+
+
+<a name="397724518"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332168-Master%20-%205.8.0%20%20%28was%3A%20comms%29/topic/Common%20plugin%20library/near/397724518" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Dave Register <a href="https://leamas.github.io/zulip-archive/stream/332168-Master---5.2E8.2E0--.28was.3A-comms.29/topic/Common.20plugin.20library.html#397724518">(Oct 20 2023 at 14:41)</a>:</h4>
+<p><span class="user-mention" data-user-id="399510">@Alec Leamas</span> <br>
+gl_private is very old cruft from early Android days, and needs to die.<br>
+pidc does hard-depend on glu.  This is new, coming from the new rendering methods added for tesselated objects.<br>
+Maybe what is needed is a refactor, building an interface lib to bring in the correct platform specific header locations.  Then make glu depend on that interface lib.<br>
+Gotta go now, back later.</p>
+
+
+
+<a name="397724849"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332168-Master%20-%205.8.0%20%20%28was%3A%20comms%29/topic/Common%20plugin%20library/near/397724849" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Alec Leamas <a href="https://leamas.github.io/zulip-archive/stream/332168-Master---5.2E8.2E0--.28was.3A-comms.29/topic/Common.20plugin.20library.html#397724849">(Oct 20 2023 at 14:42)</a>:</h4>
+<p>The short question is: is GLU supported by the GLES implementation on Android?</p>
+<p>I'll make it build without includes for now.</p>
+
+
+
+<hr><p>Last updated: Oct 20 2023 at 14:42 UTC</p>
 </html>
