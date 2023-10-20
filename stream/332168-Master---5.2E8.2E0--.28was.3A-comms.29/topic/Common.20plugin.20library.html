@@ -988,5 +988,13 @@ For now, the best solution is to add to plugin.cmake:</p>
 
 
 
-<hr><p>Last updated: Oct 20 2023 at 14:08 UTC</p>
+<a name="397720769"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332168-Master%20-%205.8.0%20%20%28was%3A%20comms%29/topic/Common%20plugin%20library/near/397720769" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Alec Leamas <a href="https://leamas.github.io/zulip-archive/stream/332168-Master---5.2E8.2E0--.28was.3A-comms.29/topic/Common.20plugin.20library.html#397720769">(Oct 20 2023 at 14:22)</a>:</h4>
+<p><span class="user-mention" data-user-id="517002">@Dave Register</span>   The plot thickens. Android uses GLES which is more or less a subset of GL,  right?</p>
+<p>The current build uses GL/gl_private.h. I think we can agree that this is not a good idea. However, most (all)  of the required symbols exists in GL/gl.h. But that file does not exist on android for good reasons, so the build should use GLES/gl.h.</p>
+<p>This gives a some undefined. GLDouble does not worry me that much. However, there are also missing definitions of GL_POLYGON_SMOOTH and  GL_LINE_STIPPLE.  Does this reflect the actual limitations in GLES as compared to GL, or what?</p>
+
+
+
+<hr><p>Last updated: Oct 20 2023 at 14:27 UTC</p>
 </html>
