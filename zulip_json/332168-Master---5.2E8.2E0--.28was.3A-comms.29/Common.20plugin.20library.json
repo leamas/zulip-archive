@@ -676,5 +676,11 @@
         "id": 397740204,
         "sender_full_name": "Alec Leamas",
         "timestamp": 1697817708
+    },
+    {
+        "content": "<p><span class=\"user-mention\" data-user-id=\"399510\">@Alec Leamas</span> </p>\n<p>Short answer:  Yes.<br>\nglu is a platform agnostic set of utilities mainly used for composition of complex 2D shapes into arrays of triangles.  Our current troubles are largely the result of cross compilation environment, where we cannot use the system GL headers.</p>\n<p>Elaborate, please?<br>\n\" The standard android headers seems to indicate that these functions are not generally available.\"</p>\n<p>More:<br>\nI find that we can eliminate gl_private.h by a simple preprocessor definition that allows a common gl.h and glu.h to be used in pidc.h and .cpp</p>\n<div class=\"codehilite\"><pre><span></span><code>#ifdef __ANDROID__\n#include &lt;qopengl.h&gt;\n//#include &quot;GL/gl_private.h&quot;\n\n#define GL_GLEXT_LEGACY 1\n#include &quot;GL/gl.h&quot;\n#include &quot;GL/glu.h&quot;\n</code></pre></div>\n\n<p>This change causes gl.h to avoid loading glext.h, thus avoiding some typedef redefinition problems.<br>\nMore testing needed, but I am on it.</p>",
+        "id": 397771433,
+        "sender_full_name": "Dave Register",
+        "timestamp": 1697833333
     }
 ]

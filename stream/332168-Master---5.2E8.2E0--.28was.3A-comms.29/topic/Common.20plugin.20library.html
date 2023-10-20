@@ -1025,5 +1025,28 @@ Gotta go now, back later.</p>
 
 
 
-<hr><p>Last updated: Oct 20 2023 at 20:08 UTC</p>
+<a name="397771433"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332168-Master%20-%205.8.0%20%20%28was%3A%20comms%29/topic/Common%20plugin%20library/near/397771433" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Dave Register <a href="https://leamas.github.io/zulip-archive/stream/332168-Master---5.2E8.2E0--.28was.3A-comms.29/topic/Common.20plugin.20library.html#397771433">(Oct 20 2023 at 20:22)</a>:</h4>
+<p><span class="user-mention" data-user-id="399510">@Alec Leamas</span> </p>
+<p>Short answer:  Yes.<br>
+glu is a platform agnostic set of utilities mainly used for composition of complex 2D shapes into arrays of triangles.  Our current troubles are largely the result of cross compilation environment, where we cannot use the system GL headers.</p>
+<p>Elaborate, please?<br>
+" The standard android headers seems to indicate that these functions are not generally available."</p>
+<p>More:<br>
+I find that we can eliminate gl_private.h by a simple preprocessor definition that allows a common gl.h and glu.h to be used in pidc.h and .cpp</p>
+<div class="codehilite"><pre><span></span><code>#ifdef __ANDROID__
+#include &lt;qopengl.h&gt;
+//#include &quot;GL/gl_private.h&quot;
+
+#define GL_GLEXT_LEGACY 1
+#include &quot;GL/gl.h&quot;
+#include &quot;GL/glu.h&quot;
+</code></pre></div>
+
+<p>This change causes gl.h to avoid loading glext.h, thus avoiding some typedef redefinition problems.<br>
+More testing needed, but I am on it.</p>
+
+
+
+<hr><p>Last updated: Oct 20 2023 at 20:24 UTC</p>
 </html>
