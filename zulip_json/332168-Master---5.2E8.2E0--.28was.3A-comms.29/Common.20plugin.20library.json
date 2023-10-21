@@ -718,5 +718,11 @@
         "id": 397779196,
         "sender_full_name": "Alec Leamas",
         "timestamp": 1697837996
+    },
+    {
+        "content": "<p><span class=\"user-mention\" data-user-id=\"399510\">@Alec Leamas</span> <br>\nSome study.  The picture becomes more clear.</p>\n<ol>\n<li>On most platforms we support, glu is provided by the system along with the base opengl headers and libraries.</li>\n<li>However, there is no standard glu for GLES/GLES2.  This means we need a private version of a glu-compatible library for Android.</li>\n<li>And we have that. The code of opencpn-libs/glu is a partial port of glu provided by SGI, licensed as compatible with GPL.</li>\n<li>In point of fact, we are using our private(SGI)  glu for all TP template plugin builds, , on all platforms, for no particular reason other than code commonality.  Not exactly the linux way, but as I have said, glu is just simple C code.  If it works, it works.</li>\n</ol>\n<p>So, coming to the question of GL/gl.h, vs GLES2/gl.h.<br>\nHistory shows that we can safely use a generic GL/gl.h, even on GLES2.  The constants, typedefs, and functions that we use are fully compatible between GL and GLES. Further, we actually need to use it, since the SGI glu is actually written against GL, not GLES.<br>\nWe could switch to GLES/gl2.h if we want to look nice.  If we did that, we would have to privately typedef glDouble at least.  This typedef is missing from GLES.  But we would need it to be compatible with glu (SGI).</p>\n<p>This is all a little unavoidably muddy, since we are using the same code base for GL and GLES.  Bound to be some funny #ifdefs.</p>",
+        "id": 397792131,
+        "sender_full_name": "Dave Register",
+        "timestamp": 1697847978
     }
 ]

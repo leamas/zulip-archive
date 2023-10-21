@@ -1096,5 +1096,22 @@ You may be referring to something known as as a GL-Shim.  This is a piece of ver
 
 
 
-<hr><p>Last updated: Oct 20 2023 at 23:43 UTC</p>
+<a name="397792131"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332168-Master%20-%205.8.0%20%20%28was%3A%20comms%29/topic/Common%20plugin%20library/near/397792131" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Dave Register <a href="https://leamas.github.io/zulip-archive/stream/332168-Master---5.2E8.2E0--.28was.3A-comms.29/topic/Common.20plugin.20library.html#397792131">(Oct 21 2023 at 00:26)</a>:</h4>
+<p><span class="user-mention" data-user-id="399510">@Alec Leamas</span> <br>
+Some study.  The picture becomes more clear.</p>
+<ol>
+<li>On most platforms we support, glu is provided by the system along with the base opengl headers and libraries.</li>
+<li>However, there is no standard glu for GLES/GLES2.  This means we need a private version of a glu-compatible library for Android.</li>
+<li>And we have that. The code of opencpn-libs/glu is a partial port of glu provided by SGI, licensed as compatible with GPL.</li>
+<li>In point of fact, we are using our private(SGI)  glu for all TP template plugin builds, , on all platforms, for no particular reason other than code commonality.  Not exactly the linux way, but as I have said, glu is just simple C code.  If it works, it works.</li>
+</ol>
+<p>So, coming to the question of GL/gl.h, vs GLES2/gl.h.<br>
+History shows that we can safely use a generic GL/gl.h, even on GLES2.  The constants, typedefs, and functions that we use are fully compatible between GL and GLES. Further, we actually need to use it, since the SGI glu is actually written against GL, not GLES.<br>
+We could switch to GLES/gl2.h if we want to look nice.  If we did that, we would have to privately typedef glDouble at least.  This typedef is missing from GLES.  But we would need it to be compatible with glu (SGI).</p>
+<p>This is all a little unavoidably muddy, since we are using the same code base for GL and GLES.  Bound to be some funny #ifdefs.</p>
+
+
+
+<hr><p>Last updated: Oct 21 2023 at 00:36 UTC</p>
 </html>
