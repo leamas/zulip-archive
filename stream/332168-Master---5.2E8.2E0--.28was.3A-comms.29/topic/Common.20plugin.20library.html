@@ -1154,5 +1154,33 @@ We could switch to GLES/gl2.h if we want to look nice.  If we did that, we would
 
 
 
-<hr><p>Last updated: Oct 21 2023 at 11:22 UTC</p>
+<a name="397842605"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332168-Master%20-%205.8.0%20%20%28was%3A%20comms%29/topic/Common%20plugin%20library/near/397842605" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Pavel Kalian <a href="https://leamas.github.io/zulip-archive/stream/332168-Master---5.2E8.2E0--.28was.3A-comms.29/topic/Common.20plugin.20library.html#397842605">(Oct 21 2023 at 11:27)</a>:</h4>
+<p><span class="user-mention silent" data-user-id="399510">Alec Leamas</span> <a href="#narrow/stream/332168-Master---5.2E8.2E0--.28was.3A-comms.29/topic/Common.20plugin.20library/near/397838370">said</a>:</p>
+<blockquote>
+<p>Im not that happy with this dependency, perhaps it would be better to bundle ocpn_plugin.h with plugingl?</p>
+</blockquote>
+<p>Wouldn't that be another pain that will possibly eat our kittens with future plugin API updates?</p>
+
+
+
+<a name="397843095"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332168-Master%20-%205.8.0%20%20%28was%3A%20comms%29/topic/Common%20plugin%20library/near/397843095" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Alec Leamas <a href="https://leamas.github.io/zulip-archive/stream/332168-Master---5.2E8.2E0--.28was.3A-comms.29/topic/Common.20plugin.20library.html#397843095">(Oct 21 2023 at 11:35)</a>:</h4>
+<p>Not necessarily. This copy would only be used by the code in plugingl, it  should definitely not be exported. So as long as we keep our API compatibility promise, the only thing which should require an update of it would be an update of the files in plugingl/utils (actually, pidc.cpp).</p>
+
+
+
+<a name="397843186"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332168-Master%20-%205.8.0%20%20%28was%3A%20comms%29/topic/Common%20plugin%20library/near/397843186" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Alec Leamas <a href="https://leamas.github.io/zulip-archive/stream/332168-Master---5.2E8.2E0--.28was.3A-comms.29/topic/Common.20plugin.20library.html#397843186">(Oct 21 2023 at 11:37)</a>:</h4>
+<p>plugin overall links to ocpn:.api which is some version of the api like api-17, api-18, etc. But that's another story.</p>
+
+
+
+<a name="397843409"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332168-Master%20-%205.8.0%20%20%28was%3A%20comms%29/topic/Common%20plugin%20library/near/397843409" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Alec Leamas <a href="https://leamas.github.io/zulip-archive/stream/332168-Master---5.2E8.2E0--.28was.3A-comms.29/topic/Common.20plugin.20library.html#397843409">(Oct 21 2023 at 11:40)</a>:</h4>
+<p>WTF... That dependency is not even used! Will fix.</p>
+
+
+
+<hr><p>Last updated: Oct 21 2023 at 11:42 UTC</p>
 </html>
