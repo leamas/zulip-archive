@@ -724,5 +724,11 @@
         "id": 397792131,
         "sender_full_name": "Dave Register",
         "timestamp": 1697847978
+    },
+    {
+        "content": "<p>Seen from another point of view the situation is then</p>\n<ol>\n<li>plugingl has a hard dependency on glu</li>\n<li>We resolve this using our own glu library in glu/ on all platforms.</li>\n<li>Our glu/ library pulls in GL/gl.h on all platforms, even those using GLES</li>\n</ol>\n<p>I have problems with 2. However. it should be simple to modify glu/ to use system glu if available and otherwise fall back to the bundled implementation.</p>\n<p>Since it is glu/ which makes the need of GL/gl.h required it is also glu/ which should provide this header's include dir. That is, linking to ocpn::glu_static should provide all necessary headers (and of course libraries).</p>\n<p>Since plugingl-&gt;glu is a hard dependency  it cannot be optional as now. One solution could be to make the overall build fail with a proper message if the plugin hasn't included the glu/ library. Another, probably better one would be to move the glu/ library so it becomes a subdirectory of plugingl which then just could pull it in.</p>\n<p>I'll try to do some experiments.</p>",
+        "id": 397825865,
+        "sender_full_name": "Alec Leamas",
+        "timestamp": 1697873541
     }
 ]

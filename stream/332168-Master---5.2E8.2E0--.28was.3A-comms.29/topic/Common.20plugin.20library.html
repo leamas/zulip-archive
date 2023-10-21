@@ -1113,5 +1113,20 @@ We could switch to GLES/gl2.h if we want to look nice.  If we did that, we would
 
 
 
-<hr><p>Last updated: Oct 21 2023 at 07:22 UTC</p>
+<a name="397825865"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332168-Master%20-%205.8.0%20%20%28was%3A%20comms%29/topic/Common%20plugin%20library/near/397825865" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Alec Leamas <a href="https://leamas.github.io/zulip-archive/stream/332168-Master---5.2E8.2E0--.28was.3A-comms.29/topic/Common.20plugin.20library.html#397825865">(Oct 21 2023 at 07:32)</a>:</h4>
+<p>Seen from another point of view the situation is then</p>
+<ol>
+<li>plugingl has a hard dependency on glu</li>
+<li>We resolve this using our own glu library in glu/ on all platforms.</li>
+<li>Our glu/ library pulls in GL/gl.h on all platforms, even those using GLES</li>
+</ol>
+<p>I have problems with 2. However. it should be simple to modify glu/ to use system glu if available and otherwise fall back to the bundled implementation.</p>
+<p>Since it is glu/ which makes the need of GL/gl.h required it is also glu/ which should provide this header's include dir. That is, linking to ocpn::glu_static should provide all necessary headers (and of course libraries).</p>
+<p>Since plugingl-&gt;glu is a hard dependency  it cannot be optional as now. One solution could be to make the overall build fail with a proper message if the plugin hasn't included the glu/ library. Another, probably better one would be to move the glu/ library so it becomes a subdirectory of plugingl which then just could pull it in.</p>
+<p>I'll try to do some experiments.</p>
+
+
+
+<hr><p>Last updated: Oct 21 2023 at 07:42 UTC</p>
 </html>
