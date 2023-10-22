@@ -1365,5 +1365,24 @@ Good.</p>
 
 
 
-<hr><p>Last updated: Oct 22 2023 at 15:42 UTC</p>
+<a name="397954247"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332168-Master%20-%205.8.0%20%20%28was%3A%20comms%29/topic/Common%20plugin%20library/near/397954247" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Alec Leamas <a href="https://leamas.github.io/zulip-archive/stream/332168-Master---5.2E8.2E0--.28was.3A-comms.29/topic/Common.20plugin.20library.html#397954247">(Oct 22 2023 at 15:59)</a>:</h4>
+<p>We should of course not merge anything until we agree on it, and we should not break any android builds.  That said, just  merging to main does not change anything for the plugins until they update their own version of opencpn-libs. So, there are some safety nets.</p>
+
+
+
+<a name="397954629"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332168-Master%20-%205.8.0%20%20%28was%3A%20comms%29/topic/Common%20plugin%20library/near/397954629" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Alec Leamas <a href="https://leamas.github.io/zulip-archive/stream/332168-Master---5.2E8.2E0--.28was.3A-comms.29/topic/Common.20plugin.20library.html#397954629">(Oct 22 2023 at 16:03)</a>:</h4>
+<p>I have pushed  some new commits to the plugingl branch. Fixes since last push:</p>
+<ul>
+<li>The CMAKE_POSITION_INDEPENDENT_CODE stuff</li>
+<li>Including openpn-libs/glu  now terminates the build with a hopefully clarifying message(?)</li>
+<li>The include paths for the bundled glu, the one used by Android, has a bugfix.</li>
+</ul>
+<p>glu_gl.h does not live in <em>GL/glu_gl.h</em>, its just <code>#include &lt;glu_gl.h&gt;</code> </p>
+<p>Could you possibly give it a try?</p>
+
+
+
+<hr><p>Last updated: Oct 22 2023 at 16:09 UTC</p>
 </html>
