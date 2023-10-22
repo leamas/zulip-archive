@@ -1325,5 +1325,38 @@ The correct header location </p>
 
 
 
-<hr><p>Last updated: Oct 22 2023 at 15:07 UTC</p>
+<a name="397951278"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332168-Master%20-%205.8.0%20%20%28was%3A%20comms%29/topic/Common%20plugin%20library/near/397951278" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Dave Register <a href="https://leamas.github.io/zulip-archive/stream/332168-Master---5.2E8.2E0--.28was.3A-comms.29/topic/Common.20plugin.20library.html#397951278">(Oct 22 2023 at 15:12)</a>:</h4>
+<p><span class="user-mention" data-user-id="399510">@Alec Leamas</span> <br>
+Slight tweak to TP  required. He loads opencpn-libs/glu/ by default.  This means that the plugingl/ load later skips the glu/ part.  That somehow prevents the correct header path from coming in.  If I drop that initial glu/ load, all is well on Android.<br>
+I think I can remove that default behavior in TP, and depend on the plugingl "one-stop-shop" to do the right thing.<br>
+This is healthy, since we can then drop the separate "glu/" entirely.  One less subdir to wonder about.</p>
+<p>Another small CMake glitch.  The directive </p>
+<p>set(CMAKE_POSITION_INDEPENDENT_CODE ON)</p>
+<p>Seems to be required BEFORE any "add_library" directive.<br>
+plugin_dc/CMakeLists.txt:</p>
+<div class="codehilite"><pre><span></span><code>set(CMAKE_POSITION_INDEPENDENT_CODE ON)
+
+add_library(_PLUGIN_DC STATIC ${SRC})
+add_library(ocpn::plugin_dc ALIAS _PLUGIN_DC)
+
+#set(CMAKE_POSITION_INDEPENDENT_CODE ON)
+</code></pre></div>
+
+
+
+<a name="397951410"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332168-Master%20-%205.8.0%20%20%28was%3A%20comms%29/topic/Common%20plugin%20library/near/397951410" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Dave Register <a href="https://leamas.github.io/zulip-archive/stream/332168-Master---5.2E8.2E0--.28was.3A-comms.29/topic/Common.20plugin.20library.html#397951410">(Oct 22 2023 at 15:14)</a>:</h4>
+<p>btw, builds OK on debian 12, properly finds and uses system GLU<br>
+Good.</p>
+
+
+
+<a name="397951616"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332168-Master%20-%205.8.0%20%20%28was%3A%20comms%29/topic/Common%20plugin%20library/near/397951616" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Dave Register <a href="https://leamas.github.io/zulip-archive/stream/332168-Master---5.2E8.2E0--.28was.3A-comms.29/topic/Common.20plugin.20library.html#397951616">(Oct 22 2023 at 15:17)</a>:</h4>
+<p>If not obvious, merging this as-is to "main" will break all Android TP builds.  Just sayin'.</p>
+
+
+
+<hr><p>Last updated: Oct 22 2023 at 15:24 UTC</p>
 </html>

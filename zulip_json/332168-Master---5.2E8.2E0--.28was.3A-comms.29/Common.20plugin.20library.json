@@ -874,5 +874,23 @@
         "id": 397950468,
         "sender_full_name": "Alec Leamas",
         "timestamp": 1697986838
+    },
+    {
+        "content": "<p><span class=\"user-mention\" data-user-id=\"399510\">@Alec Leamas</span> <br>\nSlight tweak to TP  required. He loads opencpn-libs/glu/ by default.  This means that the plugingl/ load later skips the glu/ part.  That somehow prevents the correct header path from coming in.  If I drop that initial glu/ load, all is well on Android.<br>\nI think I can remove that default behavior in TP, and depend on the plugingl \"one-stop-shop\" to do the right thing.<br>\nThis is healthy, since we can then drop the separate \"glu/\" entirely.  One less subdir to wonder about.</p>\n<p>Another small CMake glitch.  The directive </p>\n<p>set(CMAKE_POSITION_INDEPENDENT_CODE ON)</p>\n<p>Seems to be required BEFORE any \"add_library\" directive.<br>\nplugin_dc/CMakeLists.txt:</p>\n<div class=\"codehilite\"><pre><span></span><code>set(CMAKE_POSITION_INDEPENDENT_CODE ON)\n\nadd_library(_PLUGIN_DC STATIC ${SRC})\nadd_library(ocpn::plugin_dc ALIAS _PLUGIN_DC)\n\n#set(CMAKE_POSITION_INDEPENDENT_CODE ON)\n</code></pre></div>",
+        "id": 397951278,
+        "sender_full_name": "Dave Register",
+        "timestamp": 1697987530
+    },
+    {
+        "content": "<p>btw, builds OK on debian 12, properly finds and uses system GLU<br>\nGood.</p>",
+        "id": 397951410,
+        "sender_full_name": "Dave Register",
+        "timestamp": 1697987667
+    },
+    {
+        "content": "<p>If not obvious, merging this as-is to \"main\" will break all Android TP builds.  Just sayin'.</p>",
+        "id": 397951616,
+        "sender_full_name": "Dave Register",
+        "timestamp": 1697987844
     }
 ]
