@@ -1411,5 +1411,79 @@ Maybe a manageable number of other builds beyond TP?</p>
 
 
 
-<hr><p>Last updated: Oct 22 2023 at 20:07 UTC</p>
+<a name="397969246"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332168-Master%20-%205.8.0%20%20%28was%3A%20comms%29/topic/Common%20plugin%20library/near/397969246" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Alec Leamas <a href="https://leamas.github.io/zulip-archive/stream/332168-Master---5.2E8.2E0--.28was.3A-comms.29/topic/Common.20plugin.20library.html#397969246">(Oct 22 2023 at 20:08)</a>:</h4>
+<p>That is just to say that we should not care about Mike. If this was important, but... plugindc instead of plugingl isn't  that much of a change.</p>
+<p>My idea is a README, something  like below. It's way more information than what's conveyed in a name:</p>
+<div class="codehilite"><pre><span></span><code>plugingl README
+==============
+
+This directory contains all necessary GL dependencies as well as
+some utilities for drawing on the chart canvas. All supported
+platforms are handled.
+
+For plugins requiring the OpenGL setup for drawings this library
+contains all necessary dependencies for all platforms.
+
+The formerly  separate libraries glu and libglu are part of
+plugingl and will be retired.
+</code></pre></div>
+
+
+
+<a name="397969434"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332168-Master%20-%205.8.0%20%20%28was%3A%20comms%29/topic/Common%20plugin%20library/near/397969434" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Alec Leamas <a href="https://leamas.github.io/zulip-archive/stream/332168-Master---5.2E8.2E0--.28was.3A-comms.29/topic/Common.20plugin.20library.html#397969434">(Oct 22 2023 at 20:12)</a>:</h4>
+<p><span class="user-mention" data-user-id="399559">@Mike Rossiter</span>  Ping? The question is if you are using <code>add_submodule(opencpn-libs/glu)</code> in a substantial number of plugins?</p>
+
+
+
+<a name="397969614"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332168-Master%20-%205.8.0%20%20%28was%3A%20comms%29/topic/Common%20plugin%20library/near/397969614" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Dave Register <a href="https://leamas.github.io/zulip-archive/stream/332168-Master---5.2E8.2E0--.28was.3A-comms.29/topic/Common.20plugin.20library.html#397969614">(Oct 22 2023 at 20:16)</a>:</h4>
+<p>Wordsmithing:<br>
+I would turn this around.</p>
+<p>Instead of</p>
+<div class="codehilite"><pre><span></span><code>This directory contains all necessary GL dependencies as well as
+some utilities for drawing on the chart canvas. All supported
+platforms are handled.
+</code></pre></div>
+
+<p>I would say</p>
+<div class="codehilite"><pre><span></span><code>This directory contains classes and methods useful for drawing on the charts surface.
+All required GL dependencies are handled internally.
+</code></pre></div>
+
+<p>That is to shift the focus.  The directory is about drawing, using GL if desired.  There is no interest in GL if one is not planning to draw.</p>
+
+
+
+<a name="397969672"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332168-Master%20-%205.8.0%20%20%28was%3A%20comms%29/topic/Common%20plugin%20library/near/397969672" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Alec Leamas <a href="https://leamas.github.io/zulip-archive/stream/332168-Master---5.2E8.2E0--.28was.3A-comms.29/topic/Common.20plugin.20library.html#397969672">(Oct 22 2023 at 20:17)</a>:</h4>
+<p>Please, you are the one who knows this stuff. Can you rephrase it in a better way?</p>
+
+
+
+<a name="397969858"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332168-Master%20-%205.8.0%20%20%28was%3A%20comms%29/topic/Common%20plugin%20library/near/397969858" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Alec Leamas <a href="https://leamas.github.io/zulip-archive/stream/332168-Master---5.2E8.2E0--.28was.3A-comms.29/topic/Common.20plugin.20library.html#397969858">(Oct 22 2023 at 20:20)</a>:</h4>
+<p>Also note as of now,  ocpnUSE_GL is hardcoded as set. If user should be able to change this  we must export it as a cmake variable to keep things sane.  No big deal if required.</p>
+
+
+
+<a name="397969889"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332168-Master%20-%205.8.0%20%20%28was%3A%20comms%29/topic/Common%20plugin%20library/near/397969889" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Dave Register <a href="https://leamas.github.io/zulip-archive/stream/332168-Master---5.2E8.2E0--.28was.3A-comms.29/topic/Common.20plugin.20library.html#397969889">(Oct 22 2023 at 20:20)</a>:</h4>
+<div class="codehilite"><pre><span></span><code>This directory contains classes and methods useful for drawing on the charts surface.
+It is usable on all platforms.  All required GL dependencies are handled internally.
+</code></pre></div>
+
+<p>Clear, or mush?</p>
+
+
+
+<a name="397969969"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332168-Master%20-%205.8.0%20%20%28was%3A%20comms%29/topic/Common%20plugin%20library/near/397969969" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Alec Leamas <a href="https://leamas.github.io/zulip-archive/stream/332168-Master---5.2E8.2E0--.28was.3A-comms.29/topic/Common.20plugin.20library.html#397969969">(Oct 22 2023 at 20:22)</a>:</h4>
+<p>Much better. I just don't understand it well enough, and pidgin Englisch tends to be longer. I'll make a commit.<br>
+See above on ocpnUSE_GL</p>
+
+
+
+<hr><p>Last updated: Oct 22 2023 at 20:24 UTC</p>
 </html>
