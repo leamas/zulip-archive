@@ -1288,5 +1288,36 @@ Yes, but maybe this is not the best zulip thread.  I see your comments in "commo
 
 
 
-<hr><p>Last updated: Oct 22 2023 at 14:25 UTC</p>
+<a name="397949088"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332168-Master%20-%205.8.0%20%20%28was%3A%20comms%29/topic/Common%20plugin%20library/near/397949088" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Dave Register <a href="https://leamas.github.io/zulip-archive/stream/332168-Master---5.2E8.2E0--.28was.3A-comms.29/topic/Common.20plugin.20library.html#397949088">(Oct 22 2023 at 14:38)</a>:</h4>
+<p><span class="user-mention" data-user-id="399510">@Alec Leamas</span> <br>
+Structure seems OK.<br>
+Android builds fails.  Ediited compiler invocation:</p>
+<div class="codehilite"><pre><span></span><code>-I/home/dsr/Projects/statusbar_pi/build_android_32/CMakeFiles/include 
+-I/home/dsr/Projects/statusbar_pi/src 
+-I/home/dsr/Projects/statusbar_pi/opencpn-libs/plugingl/plugin_dc/include/android 
+-I/home/dsr/Projects/statusbar_pi/opencpn-libs/plugingl/plugin_dc/include 
+-I/home/dsr/Projects/statusbar_pi/opencpn-libs/api-17 
+-I/home/dsr/Projects/statusbar_pi/opencpn-libs/glu/include
+
+In file included from /home/dsr/Projects/statusbar_pi/opencpn-libs/plugingl/plugin_dc/src/pidc.cpp:48:
+/home/dsr/Projects/statusbar_pi/opencpn-libs/plugingl/plugin_dc/include/pidc.h:37:10: fatal error: &#39;glu_gl.h&#39; file not found
+</code></pre></div>
+
+<p>I change "glu_gl" to "GL/glu_gl".  No help.<br>
+The correct header location </p>
+<div class="codehilite"><pre><span></span><code>&quot;/home/dsr/Projects/statusbar_pi/opencpn-libs/plugingl/glu/include&quot;
+</code></pre></div>
+
+<p>is not in the list above</p>
+
+
+
+<a name="397949367"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332168-Master%20-%205.8.0%20%20%28was%3A%20comms%29/topic/Common%20plugin%20library/near/397949367" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Alec Leamas <a href="https://leamas.github.io/zulip-archive/stream/332168-Master---5.2E8.2E0--.28was.3A-comms.29/topic/Common.20plugin.20library.html#397949367">(Oct 22 2023 at 14:42)</a>:</h4>
+<p>Hm... this strange situation again: what''s the difference betwenen your builds and mine which works? Have you got a complete build log?</p>
+
+
+
+<hr><p>Last updated: Oct 22 2023 at 14:42 UTC</p>
 </html>
