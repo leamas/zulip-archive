@@ -1718,5 +1718,20 @@ Android, not so much.  Problems in plugin_dc CMakeLists, around line 25, OpenGL 
 
 
 
-<hr><p>Last updated: Oct 24 2023 at 14:43 UTC</p>
+<a name="398305342"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332168-Master%20-%205.8.0%20%20%28was%3A%20comms%29/topic/Common%20plugin%20library/near/398305342" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Alec Leamas <a href="https://leamas.github.io/zulip-archive/stream/332168-Master---5.2E8.2E0--.28was.3A-comms.29/topic/Common.20plugin.20library.html#398305342">(Oct 24 2023 at 14:52)</a>:</h4>
+<p>I think I understand. The error message basically says that it does not find GLES2/gl2.h. </p>
+<p>In the shipdriver case we use a toolchain file. This sets up the environment so cmake searches in the  NDK sysroot.  This works.</p>
+<p>In TP, the setup is solely done by defining various constants to cmake  (circleci-build-android-*) . Nothing is done to mak  cmake look in the correct NDK locations. </p>
+<p>The fix would the be to use the shipdriver toolchain file instead. Or add the required stuff directly to circleci-build-android-*; the toolchain file should gives the the asnwer to what</p>
+
+
+
+<a name="398305867"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332168-Master%20-%205.8.0%20%20%28was%3A%20comms%29/topic/Common%20plugin%20library/near/398305867" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Alec Leamas <a href="https://leamas.github.io/zulip-archive/stream/332168-Master---5.2E8.2E0--.28was.3A-comms.29/topic/Common.20plugin.20library.html#398305867">(Oct 24 2023 at 14:54)</a>:</h4>
+<p>Bye for now...</p>
+
+
+
+<hr><p>Last updated: Oct 24 2023 at 15:09 UTC</p>
 </html>
