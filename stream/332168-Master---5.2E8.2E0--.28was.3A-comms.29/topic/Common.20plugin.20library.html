@@ -1799,5 +1799,29 @@ Who did that?</p>
 
 
 
-<hr><p>Last updated: Oct 25 2023 at 14:27 UTC</p>
+<a name="398498564"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332168-Master%20-%205.8.0%20%20%28was%3A%20comms%29/topic/Common%20plugin%20library/near/398498564" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Dave Register <a href="https://leamas.github.io/zulip-archive/stream/332168-Master---5.2E8.2E0--.28was.3A-comms.29/topic/Common.20plugin.20library.html#398498564">(Oct 25 2023 at 14:31)</a>:</h4>
+<p><span class="user-mention" data-user-id="399510">@Alec Leamas</span> <br>
+I copied your toolchain files verbatim.  Not studied CMake documention yet.</p>
+<p>MacOS builds are failing.  The usual problem:</p>
+<div class="codehilite"><pre><span></span><code>fatal error: &#39;GL/gl.h&#39; file not found
+</code></pre></div>
+
+<p><a href="https://app.circleci.com/pipelines/github/bdbcat/statusbar_pi?branch=master">https://app.circleci.com/pipelines/github/bdbcat/statusbar_pi?branch=master</a></p>
+
+
+
+<a name="398499420"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332168-Master%20-%205.8.0%20%20%28was%3A%20comms%29/topic/Common%20plugin%20library/near/398499420" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Alec Leamas <a href="https://leamas.github.io/zulip-archive/stream/332168-Master---5.2E8.2E0--.28was.3A-comms.29/topic/Common.20plugin.20library.html#398499420">(Oct 25 2023 at 14:35)</a>:</h4>
+<p>The usual Mac problem IIRC. On MacOS, there is no GL subdirectory but an OpenGL one.  Handled for example in main OpenCPN by code like </p>
+<div class="codehilite"><pre><span></span><code>...
+#elif defined(__WXOSX__)
+ #include &lt;OpenGL/gl.h&gt;
+ #include &lt;OpenGL/glu.h&gt;
+...
+</code></pre></div>
+
+
+
+<hr><p>Last updated: Oct 25 2023 at 14:42 UTC</p>
 </html>
