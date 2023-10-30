@@ -1872,5 +1872,20 @@ Makes sense.  We have all written some odd code to make some older version of CM
 
 
 
-<hr><p>Last updated: Oct 30 2023 at 11:22 UTC</p>
+<a name="399282675"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332168-Master%20-%205.8.0%20%20%28was%3A%20comms%29/topic/Common%20plugin%20library/near/399282675" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Alec Leamas <a href="https://leamas.github.io/zulip-archive/stream/332168-Master---5.2E8.2E0--.28was.3A-comms.29/topic/Common.20plugin.20library.html#399282675">(Oct 30 2023 at 11:31)</a>:</h4>
+<p><span class="user-mention" data-user-id="517002">@Dave Register</span> <br>
+plugin_dc/.../pidc.cpp has block below around line 140. It generates a compilation  message which is gibberish to me.</p>
+<p>Obviously, this block is misplaced, it belongs to the start of the file. But besides that, do you understand the purpose? Is it just a convoluted way to display the fact that wxUSE_GRAPHICS_CONTEXT is set, or what?</p>
+<div class="codehilite"><pre><span></span><code>#if wxUSE_GRAPHICS_CONTEXT
+#define VALUE_TO_STRING(x) #x
+#define VALUE(x) VALUE_TO_STRING(x)
+#define VAR_NAME_VALUE(var) #var &quot;=&quot; VALUE(var)
+#pragma message(VAR_NAME_VALUE(wxUSE_GRAPHICS_CONTEXT))
+#endif
+</code></pre></div>
+
+
+
+<hr><p>Last updated: Oct 30 2023 at 11:42 UTC</p>
 </html>
