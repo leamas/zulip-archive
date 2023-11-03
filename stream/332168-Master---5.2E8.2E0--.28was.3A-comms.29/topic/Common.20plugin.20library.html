@@ -1986,5 +1986,73 @@ Other classes in the DC_UTILS library (e.g. piDC) are found correctly.</p>
 
 
 
-<hr><p>Last updated: Nov 03 2023 at 06:42 UTC</p>
+<a name="400074866"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332168-Master%20-%205.8.0%20%20%28was%3A%20comms%29/topic/Common%20plugin%20library/near/400074866" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Alec Leamas <a href="https://leamas.github.io/zulip-archive/stream/332168-Master---5.2E8.2E0--.28was.3A-comms.29/topic/Common.20plugin.20library.html#400074866">(Nov 03 2023 at 06:51)</a>:</h4>
+<p>No. First of all, your link was a successful Android build. Sorry, just thinking aloud.</p>
+<p>Checked  the linkage order. It's perfectly sane, loading the dc_utils library at the very end. Back to the library internals.</p>
+<p>Repeating your readelf adding a -C (demangle) option on a local shipdriver android build. Here all looks defined and hidden besides the CTOR/DTOR. Same for a local Fedora build.</p>
+<div class="codehilite"><pre><span></span><code>     1: 0000000000000000     0 FILE    LOCAL  DEFAULT  ABS TexFont.cpp
+   486: 0000000000001090  1440 FUNC    GLOBAL HIDDEN     2 TexFont::RenderG[...]
+   487: 00000000000017a4   412 FUNC    GLOBAL HIDDEN     2 TexFont::RenderS[...]
+   488: 0000000000001940   148 FUNC    GLOBAL HIDDEN     2 TexFont::RenderS[...]
+   489: 0000000000000ddc   544 FUNC    GLOBAL HIDDEN     2 TexFont::GetText[...]
+   490: 0000000000000ffc   148 FUNC    GLOBAL HIDDEN     2 TexFont::GetText[...]
+   491: 00000000000001e0  3068 FUNC    GLOBAL HIDDEN     2 TexFont::Build(w[...]
+   492: 0000000000000180    96 FUNC    GLOBAL HIDDEN     2 TexFont::Delete()
+   493: 0000000000000000   264 FUNC    GLOBAL HIDDEN     2 TexFont::TexFont()
+   494: 0000000000000000   264 FUNC    GLOBAL HIDDEN     2 TexFont::TexFont()
+   495: 0000000000000108   120 FUNC    GLOBAL HIDDEN     2 TexFont::~TexFont()
+   496: 0000000000000108   120 FUNC    GLOBAL HIDDEN     2 TexFont::~TexFont()
+</code></pre></div>
+<p>Now, turning to my CCI shipdriver build. Here, the tooling to use obviously is NDK . Trying with readelf, objdump and nm. The latter gives below. It looks like everything is fine, besides the CTOR/DTOR.  </p>
+<p>The values are 0, presuming this is because it's relocatable using -fPIE.</p>
+<p>In the end, it seems to be about the CTOR/DTOR. Everything else is fine. </p>
+<div class="codehilite"><pre><span></span><code> /opt/android/ndk/toolchains/llvm/prebuilt/linux-x86_64/bin/llvm-nm  -C lib_DC_UTILS.a  | grep TexFont::
+         U TexFont::RenderString(wxString const&amp;, int, int)
+         U TexFont::GetTextExtent(wxString const&amp;, int*, int*)
+         U TexFont::Build(wxFont&amp;, bool)
+00000000 W TexFont::SetColor(wxColour&amp;)
+         U TexFont::TexFont()
+         U TexFont::~TexFont()
+00000000 T TexFont::RenderGlyph(int)
+00000000 T TexFont::RenderString(char const*, int, int)
+00000000 T TexFont::RenderString(wxString const&amp;, int, int)
+00000000 T TexFont::GetTextExtent(char const*, int*, int*)
+00000000 T TexFont::GetTextExtent(wxString const&amp;, int*, int*)
+00000000 T TexFont::Build(wxFont&amp;, bool)
+00000000 T TexFont::Delete()
+00000000 T TexFont::TexFont()
+00000000 T TexFont::TexFont()
+00000000 T TexFont::~TexFont()
+00000000 T TexFont::~TexFont()
+</code></pre></div>
+<p>Looking at pidc I can see that the DTOR/CTOR are well defined here (excerpt):</p>
+<div class="codehilite"><pre><span></span><code>$ /opt/android/ndk/toolchains/llvm/prebuilt/linux-x86_64/bin/llvm-nm -C lib_DC_UTILS.a  | grep piDC::
+...
+00000000 T piDC::piDC(wxGLCanvas&amp;)
+00000000 T piDC::piDC(wxDC&amp;)
+00000000 T piDC::piDC()
+00000000 T piDC::piDC(wxGLCanvas&amp;)
+00000000 T piDC::piDC(wxDC&amp;)
+00000000 T piDC::piDC()
+00000000 T piDC::~piDC()
+00000000 T piDC::~piDC()
+...
+</code></pre></div>
+<p>So this is about TexFont only, and specifically the CTOR/DTOR. Any ideas?</p>
+
+
+
+<a name="400075497"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332168-Master%20-%205.8.0%20%20%28was%3A%20comms%29/topic/Common%20plugin%20library/near/400075497" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Alec Leamas <a href="https://leamas.github.io/zulip-archive/stream/332168-Master---5.2E8.2E0--.28was.3A-comms.29/topic/Common.20plugin.20library.html#400075497">(Nov 03 2023 at 06:57)</a>:</h4>
+<p>The plot thickens. There are two TexFont::TexFont symbols, one undefined and one defined (piDC not so, only defined). </p>
+<div class="codehilite"><pre><span></span><code>/opt/android/ndk/toolchains/llvm/prebuilt/linux-x86_64/bin/llvm-nm -C lib_DC_UTILS.a  | grep TexFont::TexFont
+         U TexFont::TexFont()
+00000000 T TexFont::TexFont()
+00000000 T TexFont::TexFont()
+</code></pre></div>
+
+
+
+<hr><p>Last updated: Nov 03 2023 at 07:07 UTC</p>
 </html>
