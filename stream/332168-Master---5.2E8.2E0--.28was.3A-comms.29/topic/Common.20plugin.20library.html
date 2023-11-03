@@ -1978,5 +1978,13 @@ Other classes in the DC_UTILS library (e.g. piDC) are found correctly.</p>
 
 
 
-<hr><p>Last updated: Nov 03 2023 at 05:26 UTC</p>
+<a name="400067552"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332168-Master%20-%205.8.0%20%20%28was%3A%20comms%29/topic/Common%20plugin%20library/near/400067552" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Alec Leamas <a href="https://leamas.github.io/zulip-archive/stream/332168-Master---5.2E8.2E0--.28was.3A-comms.29/topic/Common.20plugin.20library.html#400067552">(Nov 03 2023 at 05:30)</a>:</h4>
+<p>hm...</p>
+<p>My first thought is that it could be about linkage order. That is, that when the linker loaded dc_plugin nothing "needed" the symbols we are talking about and they were thus ignored.</p>
+<p>In normal use cases this leads to linkage errors due to to undefined symbols, but unfortunately we accept  these in Linux builds. OTOH, we don't accept them when building for Android and Windows since we link those to main OpenCPN one way or another. So the question is then: does this build on Windows and Android?</p>
+
+
+
+<hr><p>Last updated: Nov 03 2023 at 05:42 UTC</p>
 </html>
