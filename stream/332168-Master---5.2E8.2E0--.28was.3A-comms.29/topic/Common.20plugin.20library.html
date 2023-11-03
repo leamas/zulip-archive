@@ -1910,5 +1910,66 @@ I will add the patch to pidc.h as requested.</p>
 
 
 
-<hr><p>Last updated: Nov 03 2023 at 02:42 UTC</p>
+<a name="400054265"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332168-Master%20-%205.8.0%20%20%28was%3A%20comms%29/topic/Common%20plugin%20library/near/400054265" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Dave Register <a href="https://leamas.github.io/zulip-archive/stream/332168-Master---5.2E8.2E0--.28was.3A-comms.29/topic/Common.20plugin.20library.html#400054265">(Nov 03 2023 at 02:59)</a>:</h4>
+<p><span class="user-mention" data-user-id="399510">@Alec Leamas</span> <br>
+OK, I'm stumped.<br>
+Jon's plugin , OCPN_Draw_pi, Android.<br>
+The plugin builds OK.  I import to hardware Android, and get undefined symbol in the library.  Sort of a normal occurrence during debugging.</p>
+<p>What is missing is the CTOR for TexFont, which is part of new plugin_dc.  Probably others missing, as well, but the load stops after one error.<br>
+So, I do ssh access to CI build bot, and look at the library.</p>
+<div class="codehilite"><pre><span></span><code>circleci@42471cd028e6:~/project/build$ readelf -s libocpn_draw_pi.so  | grep TexFont
+  1066: 00000000     0 FUNC    GLOBAL DEFAULT  UND _ZN7TexFont12RenderString
+  1072: 00000000     0 FUNC    GLOBAL DEFAULT  UND _ZN7TexFontC1Ev
+  1075: 00000000     0 FUNC    GLOBAL DEFAULT  UND _ZN7TexFont13GetTextExten
+  1077: 00000000     0 FUNC    GLOBAL DEFAULT  UND _ZN7TexFontD1Ev
+  1082: 00000000     0 FUNC    GLOBAL DEFAULT  UND _ZN7TexFont5BuildER6wxFon
+ 12422: 00000000     0 FUNC    GLOBAL DEFAULT  UND _ZN7TexFont12RenderString
+ 12430: 00000000     0 FUNC    GLOBAL DEFAULT  UND _ZN7TexFontC1Ev
+ 12433: 00000000     0 FUNC    GLOBAL DEFAULT  UND _ZN7TexFont13GetTextExten
+ 12435: 00000000     0 FUNC    GLOBAL DEFAULT  UND _ZN7TexFontD1Ev
+ 12440: 00000000     0 FUNC    GLOBAL DEFAULT  UND _ZN7TexFont5BuildER6wxFon
+</code></pre></div>
+
+<p>Sure enough, TexFont is undefined in the built plugin library.<br>
+Looking at the build log, I see TexFont.cpp is compiled, and added to the static ocpn::dc-utils library.  And this library is linked to the plugin.<br>
+So, where has TexFont gone to?<br>
+I suspected some trouble with compiler "visibility" flag, so I fiddled with it.  No luck.  "default" or "hidden" makes no difference.</p>
+<p>Build log is here:<br>
+<a href="https://app.circleci.com/pipelines/github/bdbcat/ocpn_draw_pi/32/workflows/077acb7b-262a-4a43-a295-bb7aa9004e94/jobs/355">https://app.circleci.com/pipelines/github/bdbcat/ocpn_draw_pi/32/workflows/077acb7b-262a-4a43-a295-bb7aa9004e94/jobs/355</a></p>
+<p>A mystery...</p>
+
+
+
+<a name="400054980"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332168-Master%20-%205.8.0%20%20%28was%3A%20comms%29/topic/Common%20plugin%20library/near/400054980" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Dave Register <a href="https://leamas.github.io/zulip-archive/stream/332168-Master---5.2E8.2E0--.28was.3A-comms.29/topic/Common.20plugin.20library.html#400054980">(Nov 03 2023 at 03:04)</a>:</h4>
+<p>More:<br>
+Looking at the static lib with readelf gives:</p>
+<div class="codehilite"><pre><span></span><code>circleci@42471cd028e6:~/project/build/opencpn-libs/plugin_dc/dc_utils$ readelf -s lib_DC_UTILS.a | grep TexFont
+</code></pre></div>
+
+<p>278: <a href="https://github.com/opencpn/OpenCPN/commit/00000000">00000000</a>     0 NOTYPE  GLOBAL DEFAULT  UND _ZN7TexFont12RenderString<br>
+   279: <a href="https://github.com/opencpn/OpenCPN/commit/00000000">00000000</a>     0 NOTYPE  GLOBAL DEFAULT  UND _ZN7TexFont13GetTextExten<br>
+   280: <a href="https://github.com/opencpn/OpenCPN/commit/00000000">00000000</a>     0 NOTYPE  GLOBAL DEFAULT  UND _ZN7TexFont5BuildER6wxFon<br>
+   281: <a href="https://github.com/opencpn/OpenCPN/commit/00000000">00000000</a>     0 NOTYPE  GLOBAL DEFAULT  UND _ZN7TexFontC1Ev<br>
+   282: <a href="https://github.com/opencpn/OpenCPN/commit/00000000">00000000</a>     0 NOTYPE  GLOBAL DEFAULT  UND _ZN7TexFontD1Ev<br>
+    File: lib_DC_UTILS.a(TexFont.cpp.o)<br>
+     1: <a href="https://github.com/opencpn/OpenCPN/commit/00000000">00000000</a>     0 FILE    LOCAL  DEFAULT  ABS TexFont.cpp<br>
+    82: <a href="https://github.com/opencpn/OpenCPN/commit/00001974">00001974</a>   876 FUNC    GLOBAL DEFAULT    2 _ZN7TexFont11RenderGlyphE<br>
+    83: <a href="https://github.com/opencpn/OpenCPN/commit/00001ce0">00001ce0</a>   184 FUNC    GLOBAL DEFAULT    2 _ZN7TexFont12RenderString<br>
+    84: <a href="https://github.com/opencpn/OpenCPN/commit/00001d98">00001d98</a>   392 FUNC    GLOBAL DEFAULT    2 _ZN7TexFont12RenderString<br>
+    85: <a href="https://github.com/opencpn/OpenCPN/commit/00001784">00001784</a>   192 FUNC    GLOBAL DEFAULT    2 _ZN7TexFont13GetTextExten<br>
+    86: <a href="https://github.com/opencpn/OpenCPN/commit/00001844">00001844</a>   304 FUNC    GLOBAL DEFAULT    2 _ZN7TexFont13GetTextExten<br>
+    87: <a href="https://github.com/opencpn/OpenCPN/commit/0000021c">0000021c</a>  5480 FUNC    GLOBAL DEFAULT    2 _ZN7TexFont5BuildER6wxFon<br>
+    88: <a href="https://github.com/opencpn/OpenCPN/commit/000001e0">000001e0</a>    60 FUNC    GLOBAL DEFAULT    2 _ZN7TexFont6DeleteEv<br>
+    89: <a href="https://github.com/opencpn/OpenCPN/commit/00000000">00000000</a>   348 FUNC    GLOBAL DEFAULT    2 _ZN7TexFontC1Ev<br>
+    90: <a href="https://github.com/opencpn/OpenCPN/commit/00000000">00000000</a>   348 FUNC    GLOBAL DEFAULT    2 _ZN7TexFontC2Ev<br>
+    91: <a href="https://github.com/opencpn/OpenCPN/commit/0000015c">0000015c</a>   132 FUNC    GLOBAL DEFAULT    2 _ZN7TexFontD1Ev<br>
+    92: <a href="https://github.com/opencpn/OpenCPN/commit/0000015c">0000015c</a>   132 FUNC    GLOBAL DEFAULT    2 _ZN7TexFontD2Ev</p>
+<p>Not sure how to interpret this.  TexFont is in the included file list, but then undefined in the linked static archive.<br>
+Hmmm.....</p>
+
+
+
+<hr><p>Last updated: Nov 03 2023 at 03:08 UTC</p>
 </html>
