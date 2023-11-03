@@ -1336,5 +1336,35 @@
         "id": 400148866,
         "sender_full_name": "Alec Leamas",
         "timestamp": 1699023102
+    },
+    {
+        "content": "<p><span class=\"user-mention\" data-user-id=\"399510\">@Alec Leamas</span> <br>\nI renamed TexFont to TexFontPi (in devel branch).<br>\nProblem solved.<br>\nImport plugin on real Android device, loads and runs fine.<br>\nTo confirm, investigated plugin on CCI:</p>\n<div class=\"codehilite\"><pre><span></span><code>circleci@2715700db4b9:~/project/build$ readelf -s libocpn_draw_pi.so | grep TexFont\n  1133: 00203fc8  5480 FUNC    GLOBAL DEFAULT   13 _ZN9TexFontPI5BuildER6wxF\n  1263: 00205a8c   184 FUNC    GLOBAL DEFAULT   13 _ZN9TexFontPI12RenderStri\n  1326: 00205530   192 FUNC    GLOBAL DEFAULT   13 _ZN9TexFontPI13GetTextExt\n  1809: 00203f8c    60 FUNC    GLOBAL DEFAULT   13 _ZN9TexFontPI6DeleteEv\n  2187: 00203dac   348 FUNC    GLOBAL DEFAULT   13 _ZN9TexFontPIC2Ev\n  2411: 00203f08   132 FUNC    GLOBAL DEFAULT   13 _ZN9TexFontPID2Ev\n  2696: 00205720   876 FUNC    GLOBAL DEFAULT   13 _ZN9TexFontPI11RenderGlyp\n  2940: 00205b44   392 FUNC    GLOBAL DEFAULT   13 _ZN9TexFontPI12RenderStri\n  3336: 00203dac   348 FUNC    GLOBAL DEFAULT   13 _ZN9TexFontPIC1Ev\n  3564: 00203f08   132 FUNC    GLOBAL DEFAULT   13 _ZN9TexFontPID1Ev\n  3630: 002055f0   304 FUNC    GLOBAL DEFAULT   13 _ZN9TexFontPI13GetTextExt\n</code></pre></div>\n\n<p>I have no explanation.<br>\nThanks for the support and sounding board.</p>",
+        "id": 400152238,
+        "sender_full_name": "Dave Register",
+        "timestamp": 1699024179
+    },
+    {
+        "content": "<p>I did change visibility to \"default\" in the Android build of dc-utils:</p>\n<div class=\"codehilite\"><pre><span></span><code>if (CMAKE_CXX_COMPILER_ID MATCHES &quot;Clang|GNU&quot;)\n  set_property(TARGET _DC_UTILS PROPERTY COMPILE_FLAGS &quot;-fvisibility=default&quot;)\nendif ()\n</code></pre></div>\n\n<p>Should this actually be changed back to \"hidden\"?  I am a little foggy on this point.</p>",
+        "id": 400152793,
+        "sender_full_name": "Dave Register",
+        "timestamp": 1699024349
+    },
+    {
+        "content": "<p>So am I, for sure.  Need to read up on this. </p>\n<p>For plugins: should anything link to the plugin besides the dlload runtime linkage? No.  So nothing should really be visible  to others, we don't want plugins to link to each other.</p>",
+        "id": 400154013,
+        "sender_full_name": "Alec Leamas",
+        "timestamp": 1699024730
+    },
+    {
+        "content": "<blockquote>\n<p>I have no explanation.</p>\n</blockquote>\n<p>Well, having two instances of a given class i. e., two libraries exporting different definitions of the same symbols is certainly a bug.</p>",
+        "id": 400154798,
+        "sender_full_name": "Alec Leamas",
+        "timestamp": 1699024967
+    },
+    {
+        "content": "<p><span class=\"user-mention\" data-user-id=\"399510\">@Alec Leamas</span> <br>\nI'll change back to \"hidden\", and verify</p>",
+        "id": 400154852,
+        "sender_full_name": "Dave Register",
+        "timestamp": 1699024985
     }
 ]

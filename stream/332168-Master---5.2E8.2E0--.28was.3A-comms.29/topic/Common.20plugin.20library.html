@@ -2069,5 +2069,66 @@ I will experiment.</p>
 
 
 
-<hr><p>Last updated: Nov 03 2023 at 15:08 UTC</p>
+<a name="400152238"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332168-Master%20-%205.8.0%20%20%28was%3A%20comms%29/topic/Common%20plugin%20library/near/400152238" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Dave Register <a href="https://leamas.github.io/zulip-archive/stream/332168-Master---5.2E8.2E0--.28was.3A-comms.29/topic/Common.20plugin.20library.html#400152238">(Nov 03 2023 at 15:09)</a>:</h4>
+<p><span class="user-mention" data-user-id="399510">@Alec Leamas</span> <br>
+I renamed TexFont to TexFontPi (in devel branch).<br>
+Problem solved.<br>
+Import plugin on real Android device, loads and runs fine.<br>
+To confirm, investigated plugin on CCI:</p>
+<div class="codehilite"><pre><span></span><code>circleci@2715700db4b9:~/project/build$ readelf -s libocpn_draw_pi.so | grep TexFont
+  1133: 00203fc8  5480 FUNC    GLOBAL DEFAULT   13 _ZN9TexFontPI5BuildER6wxF
+  1263: 00205a8c   184 FUNC    GLOBAL DEFAULT   13 _ZN9TexFontPI12RenderStri
+  1326: 00205530   192 FUNC    GLOBAL DEFAULT   13 _ZN9TexFontPI13GetTextExt
+  1809: 00203f8c    60 FUNC    GLOBAL DEFAULT   13 _ZN9TexFontPI6DeleteEv
+  2187: 00203dac   348 FUNC    GLOBAL DEFAULT   13 _ZN9TexFontPIC2Ev
+  2411: 00203f08   132 FUNC    GLOBAL DEFAULT   13 _ZN9TexFontPID2Ev
+  2696: 00205720   876 FUNC    GLOBAL DEFAULT   13 _ZN9TexFontPI11RenderGlyp
+  2940: 00205b44   392 FUNC    GLOBAL DEFAULT   13 _ZN9TexFontPI12RenderStri
+  3336: 00203dac   348 FUNC    GLOBAL DEFAULT   13 _ZN9TexFontPIC1Ev
+  3564: 00203f08   132 FUNC    GLOBAL DEFAULT   13 _ZN9TexFontPID1Ev
+  3630: 002055f0   304 FUNC    GLOBAL DEFAULT   13 _ZN9TexFontPI13GetTextExt
+</code></pre></div>
+
+<p>I have no explanation.<br>
+Thanks for the support and sounding board.</p>
+
+
+
+<a name="400152793"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332168-Master%20-%205.8.0%20%20%28was%3A%20comms%29/topic/Common%20plugin%20library/near/400152793" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Dave Register <a href="https://leamas.github.io/zulip-archive/stream/332168-Master---5.2E8.2E0--.28was.3A-comms.29/topic/Common.20plugin.20library.html#400152793">(Nov 03 2023 at 15:12)</a>:</h4>
+<p>I did change visibility to "default" in the Android build of dc-utils:</p>
+<div class="codehilite"><pre><span></span><code>if (CMAKE_CXX_COMPILER_ID MATCHES &quot;Clang|GNU&quot;)
+  set_property(TARGET _DC_UTILS PROPERTY COMPILE_FLAGS &quot;-fvisibility=default&quot;)
+endif ()
+</code></pre></div>
+
+<p>Should this actually be changed back to "hidden"?  I am a little foggy on this point.</p>
+
+
+
+<a name="400154013"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332168-Master%20-%205.8.0%20%20%28was%3A%20comms%29/topic/Common%20plugin%20library/near/400154013" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Alec Leamas <a href="https://leamas.github.io/zulip-archive/stream/332168-Master---5.2E8.2E0--.28was.3A-comms.29/topic/Common.20plugin.20library.html#400154013">(Nov 03 2023 at 15:18)</a>:</h4>
+<p>So am I, for sure.  Need to read up on this. </p>
+<p>For plugins: should anything link to the plugin besides the dlload runtime linkage? No.  So nothing should really be visible  to others, we don't want plugins to link to each other.</p>
+
+
+
+<a name="400154798"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332168-Master%20-%205.8.0%20%20%28was%3A%20comms%29/topic/Common%20plugin%20library/near/400154798" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Alec Leamas <a href="https://leamas.github.io/zulip-archive/stream/332168-Master---5.2E8.2E0--.28was.3A-comms.29/topic/Common.20plugin.20library.html#400154798">(Nov 03 2023 at 15:22)</a>:</h4>
+<blockquote>
+<p>I have no explanation.</p>
+</blockquote>
+<p>Well, having two instances of a given class i. e., two libraries exporting different definitions of the same symbols is certainly a bug.</p>
+
+
+
+<a name="400154852"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332168-Master%20-%205.8.0%20%20%28was%3A%20comms%29/topic/Common%20plugin%20library/near/400154852" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Dave Register <a href="https://leamas.github.io/zulip-archive/stream/332168-Master---5.2E8.2E0--.28was.3A-comms.29/topic/Common.20plugin.20library.html#400154852">(Nov 03 2023 at 15:23)</a>:</h4>
+<p><span class="user-mention" data-user-id="399510">@Alec Leamas</span> <br>
+I'll change back to "hidden", and verify</p>
+
+
+
+<hr><p>Last updated: Nov 03 2023 at 15:24 UTC</p>
 </html>
