@@ -36,5 +36,20 @@ I've for xx tried: escape u0025 and %% but both crash. Any hints?</p>
 
 
 
-<hr><p>Last updated: Nov 04 2023 at 08:42 UTC</p>
+<a name="400270251"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332168-Master%20-%205.8.0%20%20%28was%3A%20comms%29/topic/Code%20formatting/near/400270251" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Mike Rossiter <a href="https://leamas.github.io/zulip-archive/stream/332168-Master---5.2E8.2E0--.28was.3A-comms.29/topic/Code.20formatting.html#400270251">(Nov 04 2023 at 08:44)</a>:</h4>
+<p><span class="user-mention" data-user-id="554731">@Tony Voss</span>  may be able to help. We had this issue with JavaScript_pi.</p>
+<p>wxString text = wxString::Format(_T("%c"), 0x00B0); //_T("°");</p>
+<p><a href="https://github.com/antipole2/JavaScript_pi/blob/master/src/functions.cpp">https://github.com/antipole2/JavaScript_pi/blob/master/src/functions.cpp</a></p>
+
+
+
+<a name="400273029"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332168-Master%20-%205.8.0%20%20%28was%3A%20comms%29/topic/Code%20formatting/near/400273029" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Alec Leamas <a href="https://leamas.github.io/zulip-archive/stream/332168-Master---5.2E8.2E0--.28was.3A-comms.29/topic/Code.20formatting.html#400273029">(Nov 04 2023 at 09:06)</a>:</h4>
+<p>_T() is useless and should not be used since since wxWidgets 3.0:  <a href="https://docs.wxwidgets.org/3.0/group__group__funcmacro__string.html#ga437ea6ba615b75dac8603e96ec864160">https://docs.wxwidgets.org/3.0/group__group__funcmacro__string.html#ga437ea6ba615b75dac8603e96ec864160</a></p>
+<p>That is, above should be <code>wxString text = wxString::Format("%c", 0x00B0);   //"°";</code></p>
+
+
+
+<hr><p>Last updated: Nov 04 2023 at 09:07 UTC</p>
 </html>
