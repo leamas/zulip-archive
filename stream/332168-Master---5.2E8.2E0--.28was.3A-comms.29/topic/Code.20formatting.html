@@ -57,5 +57,15 @@ I've for xx tried: escape u0025 and %% but both crash. Any hints?</p>
 
 
 
-<hr><p>Last updated: Nov 04 2023 at 09:22 UTC</p>
+<a name="400275829"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332168-Master%20-%205.8.0%20%20%28was%3A%20comms%29/topic/Code%20formatting/near/400275829" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Tony Voss <a href="https://leamas.github.io/zulip-archive/stream/332168-Master---5.2E8.2E0--.28was.3A-comms.29/topic/Code.20formatting.html#400275829">(Nov 04 2023 at 09:26)</a>:</h4>
+<p>Yes... we had problems with various Unicode characters in JavaScript_pi.  The Duktape JavaScript engine works with ASCII only.  Text files often include (sometimes unintentionally) Unicode characters such as ‟Fancy quotes” ordinal º primes ‘’‛’′´` %  etc.  as evidenced by this very line.<br>
+In <a href="https://github.com/antipole2/JavaScript_pi/blob/master/src/functions.cpp">JavaScript_pi  functions.cpp</a> there is the function<br>
+<code>wxString JScleanString(wxString given){ // cleans script string of unacceptable characters</code><br>
+which replaces  unacceptable characters with ASCII ones.</p>
+<p>In the JavaScript_pi Tools diagnostics tab, there is a facility to paste a string and dump it in hex before and after it has been cleaned by the above function.</p>
+
+
+
+<hr><p>Last updated: Nov 04 2023 at 09:42 UTC</p>
 </html>
