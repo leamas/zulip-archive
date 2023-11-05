@@ -92,5 +92,48 @@ wxMessageBox(text);</p>
 
 
 
-<hr><p>Last updated: Nov 05 2023 at 09:42 UTC</p>
+<a name="400379960"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332168-Master%20-%205.8.0%20%20%28was%3A%20comms%29/topic/Code%20formatting/near/400379960" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Alec Leamas <a href="https://leamas.github.io/zulip-archive/stream/332168-Master---5.2E8.2E0--.28was.3A-comms.29/topic/Code.20formatting.html#400379960">(Nov 05 2023 at 09:44)</a>:</h4>
+<blockquote>
+<p>But my Q was about getting the per cent symbol %. S</p>
+</blockquote>
+<p>Ah, sorry, my bad.</p>
+<p>This is actually much simpler. There are two ways. One is to insist on the IMHO dangerous and unsecure wxString::Format.  The other, better approach is to  use the type safe c++ &lt;&lt; operators instead. </p>
+<p>A test program which demonstrates both approaches:</p>
+<div class="codehilite"><pre><span></span><code>#include &lt;iostream&gt;
+#include &lt;sstream&gt;
+
+#include &lt;wx/string.h&gt;
+
+int main(int argc, char**argv) {
+    std::stringstream ss;
+    ss &lt;&lt; &quot; Relative Humidity: &quot; &lt;&lt;  45 &lt;&lt; &quot;%\n&quot;;
+    std::cout &lt;&lt; ss.str();
+
+    wxString ws = wxString::Format(&quot; Relative Humidity: %d%%\n&quot;, 45);
+    std::cout &lt;&lt; ws;
+
+    wxString ws2(ss.str());
+    std::cout &lt;&lt; ws;
+}
+</code></pre></div>
+<p>As you can see, using std:.stringstream leads to  simpler code easier to read. However, the most important benefit is that  if  making a mistake like wxPrintf("foo %d", value) and value does not match %d this is not detected by the compiler and causes bad runtime errors . The &lt;&lt; operator does not suffer from this, it's type safe. </p>
+<p>If using ::Format, a percent sign is written %%.</p>
+<p>The last example shows that is simple to convert a std:.stringstream to a wxString if need be. In almost all cases this is not necessary, it's ok to use the stringstream.str() instead. As long as it compiles it's fine.</p>
+<p>TL;DR  Avoid using ::Format(...), use std::stringstream and &lt;&lt; instead.</p>
+
+
+
+<a name="400380628"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332168-Master%20-%205.8.0%20%20%28was%3A%20comms%29/topic/Code%20formatting/near/400380628" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Alec Leamas <a href="https://leamas.github.io/zulip-archive/stream/332168-Master---5.2E8.2E0--.28was.3A-comms.29/topic/Code.20formatting.html#400380628">(Nov 05 2023 at 09:52)</a>:</h4>
+<p>Actually if you really,  really want's to use wxString (why?) this also works. This still avoids the problematic wxString::Format(...)</p>
+<div class="codehilite"><pre><span></span><code>    wxString ws;
+    ws &lt;&lt; &quot; Relative Humidity: &quot; &lt;&lt;  45 &lt;&lt; &quot;%\n&quot;;
+    std::cout &lt;&lt; ws;
+</code></pre></div>
+<p>EDIT: TL;DR, new version: Avoid using ::Format(...),  use &lt;&lt; instead</p>
+
+
+
+<hr><p>Last updated: Nov 05 2023 at 10:07 UTC</p>
 </html>
