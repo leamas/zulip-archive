@@ -28,5 +28,11 @@
         "id": 400492662,
         "sender_full_name": "Håkan Svensson",
         "timestamp": 1699263256
+    },
+    {
+        "content": "<p>OK... even though that the degrees sign \"works\" I'm suspicious about it.   Let's take this into pieces, starting with</p>\n<p><code>msgFi &lt;&lt;  \"   Relative Humidity: \" &lt;&lt;   ptd-&gt;met_rel_humid &lt;&lt; \"%\";</code></p>\n<p>And test that. If all goes well, let's add (new lines, keep previous):</p>\n<div class=\"codehilite\"><pre><span></span><code>using namespace std;\nmsgFi &lt;&lt; &quot; Dew point: &quot; &lt;&lt; fixed  &lt;&lt; setprecision(1) &lt;&lt;  ptd-&gt;met_dew_point;\n</code></pre></div>\n<p>And if that goes well, add yet another line:</p>\n<div class=\"codehilite\"><pre><span></span><code>msg_Fi &lt;&lt;  wxString::FromUTF8(u8&quot;\\u00B0&quot;) &lt;&lt; &quot;C&quot;;\n</code></pre></div>\n<p>This is a bit awkward, but  makes it possible to piece by piece to check what actually makes it crash.</p>",
+        "id": 400510301,
+        "sender_full_name": "Alec Leamas",
+        "timestamp": 1699269295
     }
 ]

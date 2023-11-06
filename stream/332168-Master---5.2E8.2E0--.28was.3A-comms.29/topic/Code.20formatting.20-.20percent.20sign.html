@@ -51,5 +51,20 @@ Edit: the degree sign is working fine
 
 
 
-<hr><p>Last updated: Nov 06 2023 at 11:07 UTC</p>
+<a name="400510301"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332168-Master%20-%205.8.0%20%20%28was%3A%20comms%29/topic/Code%20formatting%20-%20percent%20sign/near/400510301" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Alec Leamas <a href="https://leamas.github.io/zulip-archive/stream/332168-Master---5.2E8.2E0--.28was.3A-comms.29/topic/Code.20formatting.20-.20percent.20sign.html#400510301">(Nov 06 2023 at 11:14)</a>:</h4>
+<p>OK... even though that the degrees sign "works" I'm suspicious about it.   Let's take this into pieces, starting with</p>
+<p><code>msgFi &lt;&lt;  "   Relative Humidity: " &lt;&lt;   ptd-&gt;met_rel_humid &lt;&lt; "%";</code></p>
+<p>And test that. If all goes well, let's add (new lines, keep previous):</p>
+<div class="codehilite"><pre><span></span><code>using namespace std;
+msgFi &lt;&lt; &quot; Dew point: &quot; &lt;&lt; fixed  &lt;&lt; setprecision(1) &lt;&lt;  ptd-&gt;met_dew_point;
+</code></pre></div>
+<p>And if that goes well, add yet another line:</p>
+<div class="codehilite"><pre><span></span><code>msg_Fi &lt;&lt;  wxString::FromUTF8(u8&quot;\u00B0&quot;) &lt;&lt; &quot;C&quot;;
+</code></pre></div>
+<p>This is a bit awkward, but  makes it possible to piece by piece to check what actually makes it crash.</p>
+
+
+
+<hr><p>Last updated: Nov 06 2023 at 11:22 UTC</p>
 </html>
