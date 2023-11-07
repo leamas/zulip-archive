@@ -70,5 +70,47 @@
         "id": 400729020,
         "sender_full_name": "Alec Leamas",
         "timestamp": 1699359917
+    },
+    {
+        "content": "<p>re: \"Are you saying that the others don't?\"<br>\nNot at all. Alla others are working as before. This was the way to get the per cent sign to work.  My wording would have been \"This code is actually working for %\"</p>",
+        "id": 400754758,
+        "sender_full_name": "Håkan Svensson",
+        "timestamp": 1699368469
+    },
+    {
+        "content": "<p>No. I made a try to build on Windows. This works:</p>\n<div class=\"codehilite\"><pre><span></span><code>  using namespace std;\n  stringstream  ss;\n  int humidity(45);\n  ss &lt;&lt; &quot;   Relative Humidity: &quot; &lt;&lt;  humidity&lt;&lt; &quot;%&quot;;\n  float dew_point(28.44);\n  ss &lt;&lt; &quot; Dew point: &quot; &lt;&lt; fixed  &lt;&lt; setprecision(1) &lt;&lt;  dew_point;\n  ss &lt;&lt;  wxString::FromUTF8(u8&quot;\\u00B0&quot;) &lt;&lt; &quot;C&quot;;\n  std::cout &lt;&lt; ss.str();\n</code></pre></div>\n<p>Since this is tested in the CLI the degrees sign is not shown, the cli does not handle utf. It should work o</p>",
+        "id": 400754772,
+        "sender_full_name": "Alec Leamas",
+        "timestamp": 1699368474
+    },
+    {
+        "content": "<p>You know, that  it \"works\" is sort of fine. However, this way of producing a percent sign is extremely convoluted for no reason. It would have no chance to survive even the most sloppy of all code reviews. </p>\n<p>We have had problems with the UTF-8 degrees sign and had to make some odd things for that. But percent is <strong>not</strong> odd, it's  standard ascii and should IMHO  be handled by simpler things than this, well, let's spell it out: this mess.</p>",
+        "id": 400755769,
+        "sender_full_name": "Alec Leamas",
+        "timestamp": 1699368751
+    },
+    {
+        "content": "<p>Maybe since it used as indication in \"Format()\". (It's said a dubble sign (%%) should work bit it's not)</p>",
+        "id": 400756954,
+        "sender_full_name": "Håkan Svensson",
+        "timestamp": 1699369103
+    },
+    {
+        "content": "<p>It does, otherwise we need to file a bug against wxWidgets directly. Hang on I have a simple setup on Windows now.</p>",
+        "id": 400757289,
+        "sender_full_name": "Alec Leamas",
+        "timestamp": 1699369187
+    },
+    {
+        "content": "<p>This prints \"45%\":</p>\n<div class=\"codehilite\"><pre><span></span><code>#include &lt;iostream&gt;\n#include &lt;wx/string.h&gt;\nint main(int argc, char**argv) {\n  std::cout &lt;&lt; wxString::Format(&quot;%d%%\\n&quot;, 45);\n}\n</code></pre></div>",
+        "id": 400758647,
+        "sender_full_name": "Alec Leamas",
+        "timestamp": 1699369526
+    },
+    {
+        "content": "<p><a href=\"#narrow/stream/332168-Master---5.2E8.2E0--.28was.3A-comms.29/topic/Code.20formatting.20-.20percent.20sign/near/400758647\">A message</a> was moved here from <a class=\"stream-topic\" data-stream-id=\"332168\" href=\"/#narrow/stream/332168-Master---5.2E8.2E0--.28was.3A-comms.29/topic/Project.20opencpn-cmd\">#Master - 5.8.0  (was: comms) &gt; Project opencpn-cmd</a> by <span class=\"user-mention silent\" data-user-id=\"399510\">Alec Leamas</span>.</p>",
+        "id": 400758755,
+        "sender_full_name": "Notification Bot",
+        "timestamp": 1699369560
     }
 ]
