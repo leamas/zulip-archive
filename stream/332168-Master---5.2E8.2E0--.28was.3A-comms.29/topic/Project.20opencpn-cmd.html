@@ -44,5 +44,25 @@ Errors Like this when opencpn-cmd is selected for build:</p>
 
 
 
-<hr><p>Last updated: Nov 07 2023 at 15:42 UTC</p>
+<a name="400766911"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332168-Master%20-%205.8.0%20%20%28was%3A%20comms%29/topic/Project%20opencpn-cmd/near/400766911" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Alec Leamas <a href="https://leamas.github.io/zulip-archive/stream/332168-Master---5.2E8.2E0--.28was.3A-comms.29/topic/Project.20opencpn-cmd.html#400766911">(Nov 07 2023 at 15:46)</a>:</h4>
+<p>On may way again and writing in haste. </p>
+<p>opencpn-cmd is really two things. The first is a cli utility currently able to do useful things like loading and listing plugins etc. Useful but no big deal.</p>
+<p>The other thing is that it "guards" the dependencies in the "model" part of the sources so they not depend on the GUI.  It <strong>might</strong> be this which is happening here. </p>
+<p>You can see what files which belongs to the model in the top level CMakeLists.txt.  If you have made a change to any of these files which makes it depending on file not in the model you need to refactor that change.  </p>
+<p>Why? This is all about getting rid of the "everything depends on everything" syndrome which is a major pain in the current Opencpn (lack of) design.</p>
+
+
+
+<a name="400769995"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332168-Master%20-%205.8.0%20%20%28was%3A%20comms%29/topic/Project%20opencpn-cmd/near/400769995" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Alec Leamas <a href="https://leamas.github.io/zulip-archive/stream/332168-Master---5.2E8.2E0--.28was.3A-comms.29/topic/Project.20opencpn-cmd.html#400769995">(Nov 07 2023 at 16:01)</a>:</h4>
+<blockquote>
+<p>which makes it depending on file not in the model </p>
+</blockquote>
+<p>That is, a file in the model must not call code outside the model. As a consequence of this, it also must not include any  non-model headers.</p>
+<p>Away for now. Refactoring such stuff might need the use of callbacks and/or EventVar variables. Let me know if you can figure out what is the problem, solutions are in almost all cases straight-forward.</p>
+
+
+
+<hr><p>Last updated: Nov 07 2023 at 16:10 UTC</p>
 </html>

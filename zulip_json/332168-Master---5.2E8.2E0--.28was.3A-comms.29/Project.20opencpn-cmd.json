@@ -22,5 +22,17 @@
         "id": 400760978,
         "sender_full_name": "Håkan Svensson",
         "timestamp": 1699370191
+    },
+    {
+        "content": "<p>On may way again and writing in haste. </p>\n<p>opencpn-cmd is really two things. The first is a cli utility currently able to do useful things like loading and listing plugins etc. Useful but no big deal.</p>\n<p>The other thing is that it \"guards\" the dependencies in the \"model\" part of the sources so they not depend on the GUI.  It <strong>might</strong> be this which is happening here. </p>\n<p>You can see what files which belongs to the model in the top level CMakeLists.txt.  If you have made a change to any of these files which makes it depending on file not in the model you need to refactor that change.  </p>\n<p>Why? This is all about getting rid of the \"everything depends on everything\" syndrome which is a major pain in the current Opencpn (lack of) design.</p>",
+        "id": 400766911,
+        "sender_full_name": "Alec Leamas",
+        "timestamp": 1699371997
+    },
+    {
+        "content": "<blockquote>\n<p>which makes it depending on file not in the model </p>\n</blockquote>\n<p>That is, a file in the model must not call code outside the model. As a consequence of this, it also must not include any  non-model headers.</p>\n<p>Away for now. Refactoring such stuff might need the use of callbacks and/or EventVar variables. Let me know if you can figure out what is the problem, solutions are in almost all cases straight-forward.</p>",
+        "id": 400769995,
+        "sender_full_name": "Alec Leamas",
+        "timestamp": 1699372912
     }
 ]
