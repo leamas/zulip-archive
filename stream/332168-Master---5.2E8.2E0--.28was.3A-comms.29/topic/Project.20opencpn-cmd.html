@@ -83,5 +83,13 @@ That is, files in GUI calls model but not the other way around.  If I understand
 
 
 
-<hr><p>Last updated: Nov 07 2023 at 22:27 UTC</p>
+<a name="400827303"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332168-Master%20-%205.8.0%20%20%28was%3A%20comms%29/topic/Project%20opencpn-cmd/near/400827303" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Alec Leamas <a href="https://leamas.github.io/zulip-archive/stream/332168-Master---5.2E8.2E0--.28was.3A-comms.29/topic/Project.20opencpn-cmd.html#400827303">(Nov 07 2023 at 22:38)</a>:</h4>
+<p>If I look into the  error messages it seems that you have some code in the model which calls  <code>toUsrTemp()</code>. This lives in <em>navutil.cpp</em> which is not part of the model. This probably needs to be handled using a callback.</p>
+<p>Likewise, it seems like some part of the model calls  <code>getUsrTempUnit()</code>. This also lives in <em>navutil.cpp</em>, so the model cannot call it. </p>
+<p>If I'm right (knock, knock...) you could perhaps find out where you invoke these. If you need help making these  callbacks instead just let me know (using callbacks is the way to handle these kind of deps where you need a reply).</p>
+
+
+
+<hr><p>Last updated: Nov 07 2023 at 22:42 UTC</p>
 </html>
