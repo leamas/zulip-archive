@@ -180,5 +180,27 @@ int main(int argc, char**argv) {
 
 
 
-<hr><p>Last updated: Nov 07 2023 at 21:42 UTC</p>
+<a name="400823617"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332168-Master%20-%205.8.0%20%20%28was%3A%20comms%29/topic/Code%20formatting%20-%20percent%20sign/near/400823617" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Alec Leamas <a href="https://leamas.github.io/zulip-archive/stream/332168-Master---5.2E8.2E0--.28was.3A-comms.29/topic/Code.20formatting.20-.20percent.20sign.html#400823617">(Nov 07 2023 at 22:07)</a>:</h4>
+<p>Finally I have a minimal GUI sample as playground as well.  Here some code:</p>
+<div class="codehilite"><pre><span></span><code>void MyFrame::OnAbout(wxCommandEvent&amp; WXUNUSED(event))
+{
+    using namespace std;
+    stringstream ss;
+    ss &lt;&lt; &quot;Hunidity: &quot; &lt;&lt; 45 &lt;&lt; &quot;%&quot;
+       &lt;&lt; &quot;  Dew Point: &quot; &lt;&lt; fixed &lt;&lt; setprecision(1) &lt;&lt; 18.45
+       &lt;&lt;  wxString::FromUTF8(u8&quot;\u00B0&quot;) &lt;&lt; &quot;C&quot;;
+    wxMessageBox(ss.str(),
+                 &quot;About wxWidgets minimal sample&quot;,
+                 wxOK | wxICON_INFORMATION,
+                 this);
+}
+</code></pre></div>
+<p>Result:<br>
+<a href="/user_uploads/33951/JYd2nnWTAjNU3-P-hRLCf77F/image.png">image.png</a></p>
+<div class="message_inline_image"><a href="/user_uploads/33951/JYd2nnWTAjNU3-P-hRLCf77F/image.png" title="image.png"><img src="/user_uploads/33951/JYd2nnWTAjNU3-P-hRLCf77F/image.png"></a></div><p>Ergo: Using standard mechanisms works well also on Windows without resorting to the error prone wxString::Format. The code here is no doubt more text. However, it's type safe and more right on and thus IMHO also easier to read.</p>
+
+
+
+<hr><p>Last updated: Nov 07 2023 at 22:07 UTC</p>
 </html>
