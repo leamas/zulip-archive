@@ -88,5 +88,17 @@
         "id": 400884158,
         "sender_full_name": "Alec Leamas",
         "timestamp": 1699427318
+    },
+    {
+        "content": "<p>hm... you can actually make that file compile again by adding more steps after removing <code>#include navutil.h</code>.  Let's say you have changed a file like foo.cpp which did include calls to getUsrTemp() which now fails to compile. Adding a callback is done in some steps.</p>\n<ol>\n<li>Add <code>#include &lt;functional&gt;</code> to top of foo.cpp.</li>\n<li>In foo.h add a new class variable in a line like <code>std::function&lt;double(double, int)&gt; m_get_usr_temp_cb;</code></li>\n<li>Replace all occurrences like <code>getUserTmp(a, b)</code> with <code> m_get_usr_temp_cb(a, b)</code>. </li>\n<li>Anything like  <code>getUserTmp(a)</code> is replaced by <code> m_get_usr_temp_cb(a,  -1)</code></li>\n<li>Add a new function too foo.h which makes is possible to set the  callback: <code>void SetUsrTempCb(std::function&lt;double(double, int)&gt; f) { m_get_usr_temp_cb = f; }</code></li>\n</ol>\n<p>This should compile. To make it work we need to add a  <code>SetUserTmpCb()</code> call to the gui somewhere, but this is  a later step.</p>\n<p>Note Google GL naming conventions. functions uses <em>MIxedCase</em>, capital first letter. Variables uses <em>underscore_separated_words</em>, all lower case.</p>",
+        "id": 400886459,
+        "sender_full_name": "Alec Leamas",
+        "timestamp": 1699428433
+    },
+    {
+        "content": "<p>hm... <code>#include &lt;functional&gt;</code> is better placed in foo.h, sorry.</p>",
+        "id": 400888389,
+        "sender_full_name": "Alec Leamas",
+        "timestamp": 1699429319
     }
 ]

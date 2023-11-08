@@ -146,5 +146,26 @@ Confirmed reference return toUsrTemp(cel_temp, unit);   C:\Builds\OCPN\OpenCPN\s
 
 
 
-<hr><p>Last updated: Nov 08 2023 at 07:22 UTC</p>
+<a name="400886459"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332168-Master%20-%205.8.0%20%20%28was%3A%20comms%29/topic/Project%20opencpn-cmd/near/400886459" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Alec Leamas <a href="https://leamas.github.io/zulip-archive/stream/332168-Master---5.2E8.2E0--.28was.3A-comms.29/topic/Project.20opencpn-cmd.html#400886459">(Nov 08 2023 at 07:27)</a>:</h4>
+<p>hm... you can actually make that file compile again by adding more steps after removing <code>#include navutil.h</code>.  Let's say you have changed a file like foo.cpp which did include calls to getUsrTemp() which now fails to compile. Adding a callback is done in some steps.</p>
+<ol>
+<li>Add <code>#include &lt;functional&gt;</code> to top of foo.cpp.</li>
+<li>In foo.h add a new class variable in a line like <code>std::function&lt;double(double, int)&gt; m_get_usr_temp_cb;</code></li>
+<li>Replace all occurrences like <code>getUserTmp(a, b)</code> with <code> m_get_usr_temp_cb(a, b)</code>. </li>
+<li>Anything like  <code>getUserTmp(a)</code> is replaced by <code> m_get_usr_temp_cb(a,  -1)</code></li>
+<li>Add a new function too foo.h which makes is possible to set the  callback: <code>void SetUsrTempCb(std::function&lt;double(double, int)&gt; f) { m_get_usr_temp_cb = f; }</code></li>
+</ol>
+<p>This should compile. To make it work we need to add a  <code>SetUserTmpCb()</code> call to the gui somewhere, but this is  a later step.</p>
+<p>Note Google GL naming conventions. functions uses <em>MIxedCase</em>, capital first letter. Variables uses <em>underscore_separated_words</em>, all lower case.</p>
+
+
+
+<a name="400888389"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332168-Master%20-%205.8.0%20%20%28was%3A%20comms%29/topic/Project%20opencpn-cmd/near/400888389" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Alec Leamas <a href="https://leamas.github.io/zulip-archive/stream/332168-Master---5.2E8.2E0--.28was.3A-comms.29/topic/Project.20opencpn-cmd.html#400888389">(Nov 08 2023 at 07:41)</a>:</h4>
+<p>hm... <code>#include &lt;functional&gt;</code> is better placed in foo.h, sorry.</p>
+
+
+
+<hr><p>Last updated: Nov 08 2023 at 07:42 UTC</p>
 </html>
