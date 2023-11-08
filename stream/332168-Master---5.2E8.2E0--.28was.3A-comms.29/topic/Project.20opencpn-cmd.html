@@ -116,5 +116,29 @@ Confirmed reference return toUsrTemp(cel_temp, unit);   C:\Builds\OCPN\OpenCPN\s
 
 
 
-<hr><p>Last updated: Nov 08 2023 at 06:42 UTC</p>
+<a name="400881821"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332168-Master%20-%205.8.0%20%20%28was%3A%20comms%29/topic/Project%20opencpn-cmd/near/400881821" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Alec Leamas <a href="https://leamas.github.io/zulip-archive/stream/332168-Master---5.2E8.2E0--.28was.3A-comms.29/topic/Project.20opencpn-cmd.html#400881821">(Nov 08 2023 at 06:51)</a>:</h4>
+<blockquote>
+<p>Just extended and copied like what's already there. Like using toUserTem() and likewise.</p>
+</blockquote>
+<p>tl;dr  That calling <code>toUsrTemp()</code> works in one file does not mean that it can be used in each and every file.</p>
+<p>More specifically: <code>toUsrTemp()</code> is lives in <em>navutil.cpp</em>. This file is listed in SRCS i. e., it is part of the GUI.  Since the model cannot call the gui  you cannot call <code>toUSrTemp()</code>  from any file listed in MODEL_SRC.</p>
+<p>So the question is not really <strong>how</strong> to call <code>toUserTmp()</code> from files listed in MODEL_SRC. It just cannot be done. The work around is using a callback, but in order to show how this is done I need much more context.</p>
+
+
+
+<a name="400882949"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332168-Master%20-%205.8.0%20%20%28was%3A%20comms%29/topic/Project%20opencpn-cmd/near/400882949" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Alec Leamas <a href="https://leamas.github.io/zulip-archive/stream/332168-Master---5.2E8.2E0--.28was.3A-comms.29/topic/Project.20opencpn-cmd.html#400882949">(Nov 08 2023 at 07:01)</a>:</h4>
+<p>The first step would be that you look into the diff and sees where you call <code>toUserTmp()</code>. If you have done it in a file listed in MODEL_SRC you have probably included <em>navutil.h</em>. You should then remove this include, because you cannot call anything in navutil.h from files listed in MODEL_SRC. This will give a compilation error, but this is actually a good starting point.</p>
+<p>If you have added a declaration like <code>double toUsrTemp(double cel_temp, int unit)</code>directly  into a file listed in MODEL_SRC instead this works the same way. Renove the declaration and let the compiler catch the error.</p>
+
+
+
+<a name="400883281"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332168-Master%20-%205.8.0%20%20%28was%3A%20comms%29/topic/Project%20opencpn-cmd/near/400883281" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Notification Bot <a href="https://leamas.github.io/zulip-archive/stream/332168-Master---5.2E8.2E0--.28was.3A-comms.29/topic/Project.20opencpn-cmd.html#400883281">(Nov 08 2023 at 07:02)</a>:</h4>
+<p>2 messages were moved here from <a class="stream-topic" data-stream-id="332168" href="/#narrow/stream/332168-Master---5.2E8.2E0--.28was.3A-comms.29/topic/Code.20formatting.20-.20percent.20sign">#Master - 5.8.0  (was: comms) &gt; Code formatting - percent sign</a> by <span class="user-mention silent" data-user-id="399510">Alec Leamas</span>.</p>
+
+
+
+<hr><p>Last updated: Nov 08 2023 at 07:07 UTC</p>
 </html>
