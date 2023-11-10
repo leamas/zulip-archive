@@ -358,5 +358,26 @@ Both fixes tested on Win. Works fine! I'll test on Debian this afternoon. (Some 
 
 
 
-<hr><p>Last updated: Nov 10 2023 at 13:10 UTC</p>
+<a name="401377019"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332168-Master%20-%205.8.0%20%20%28was%3A%20comms%29/topic/Project%20opencpn-cmd/near/401377019" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Alec Leamas <a href="https://leamas.github.io/zulip-archive/stream/332168-Master---5.2E8.2E0--.28was.3A-comms.29/topic/Project.20opencpn-cmd.html#401377019">(Nov 10 2023 at 13:10)</a>:</h4>
+<p>I have some more remarks here:</p>
+<p>- Adding yet another global variable is not the way to go. It's a wide-spread bad habit, not the the one which should be copied. Singletons are slightly  better, I'll show you how to create one instead.<br>
+  - Overall, our naming conventions are non-existing. However, we have a decisions to use the Google GL  convnetions for new code, and this does not adher to this.</p>
+
+
+
+<a name="401377603"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332168-Master%20-%205.8.0%20%20%28was%3A%20comms%29/topic/Project%20opencpn-cmd/near/401377603" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Alec Leamas <a href="https://leamas.github.io/zulip-archive/stream/332168-Master---5.2E8.2E0--.28was.3A-comms.29/topic/Project.20opencpn-cmd.html#401377603">(Nov 10 2023 at 13:13)</a>:</h4>
+<p><a href="/user_uploads/33951/UbE1mX8imYa4zOllKLtAJ5nT/0003-Use-a-singleton-instead-of-a-gloabl.patch">0003-Use-a-singleton-instead-of-a-gloabl.patch</a></p>
+
+
+
+<a name="401378338"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332168-Master%20-%205.8.0%20%20%28was%3A%20comms%29/topic/Project%20opencpn-cmd/near/401378338" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Alec Leamas <a href="https://leamas.github.io/zulip-archive/stream/332168-Master---5.2E8.2E0--.28was.3A-comms.29/topic/Project.20opencpn-cmd.html#401378338">(Nov 10 2023 at 13:16)</a>:</h4>
+<p>Using a singleton adds a lot of value. It one way it's just a glorified global. OTOH, it comes with strong compiler checks that is is always valid (no need to check for uninitialized stuff) and also ensures that the vector is never copied. The latter is otherwise a mistake which is easy to do.</p>
+<p>In short: singletons are bad, but much better than global variables.</p>
+
+
+
+<hr><p>Last updated: Nov 10 2023 at 13:26 UTC</p>
 </html>
