@@ -178,5 +178,11 @@
         "id": 401232923,
         "sender_full_name": "Alec Leamas",
         "timestamp": 1699562452
+    },
+    {
+        "content": "<p><span class=\"user-mention\" data-user-id=\"522486\">@Håkan Svensson</span>  <span class=\"user-mention\" data-user-id=\"399510\">@Alec Leamas</span> <br>\nRegarding the model/GUI question:<br>\nWe currently have some global variables that are generally useful in OCPN GUI, tests, and CLI implementation.  They look mostly like this:</p>\n<div class=\"codehilite\"><pre><span></span><code>int g_iDistanceFormat = 0;\nint g_iSDMMFormat = 0;\nint g_iSpeedFormat = 0;\n</code></pre></div>\n\n<p>The declaration of these types of globals is today done in three (!) places:<br>\ntests.cpp<br>\nconsole.cpp<br>\nocpn_app.cpp</p>\n<p>The correct (and single) declaration is compiled depending on the build target.<br>\nThere may be better ways to do this sort of thing, and if so we should maybe move in that direction.<br>\nBut for right or wrong, this is what we are doing today.</p>\n<p>On to Hakan's linux patch and linux build failure:</p>\n<p>Hakan's approach is to add a few more global variables, using the same technique as described.  This approach is no better or worse than what we do globally today.  A reasonable solution for a point feature upgrade.</p>\n<p>However, Hakan missed one of the three declarations sources required for the new variables</p>\n<div class=\"codehilite\"><pre><span></span><code>int g_iWindSpeedFormat = 0;\nint g_iTempFormat = 0;\nint g_nDepthUnitDisplay = 0;\n</code></pre></div>\n\n<p>You have these three declarations in \"ocpn_app.cpp\", and \"console.cpp\".<br>\nThey are missing in \"tests.cpp\".<br>\nAdd those three lines at obvious place in tests.cpp, and the build succeeds.</p>\n<p>btw, I have other comments on the AIS Meteo patch.  Coming separately.</p>",
+        "id": 401272865,
+        "sender_full_name": "Dave Register",
+        "timestamp": 1699583066
     }
 ]

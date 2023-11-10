@@ -270,5 +270,37 @@ If you like to have look I'm of course grateful. Whatever you find I'll hopefull
 
 
 
-<hr><p>Last updated: Nov 10 2023 at 02:08 UTC</p>
+<a name="401272865"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332168-Master%20-%205.8.0%20%20%28was%3A%20comms%29/topic/Project%20opencpn-cmd/near/401272865" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Dave Register <a href="https://leamas.github.io/zulip-archive/stream/332168-Master---5.2E8.2E0--.28was.3A-comms.29/topic/Project.20opencpn-cmd.html#401272865">(Nov 10 2023 at 02:24)</a>:</h4>
+<p><span class="user-mention" data-user-id="522486">@Håkan Svensson</span>  <span class="user-mention" data-user-id="399510">@Alec Leamas</span> <br>
+Regarding the model/GUI question:<br>
+We currently have some global variables that are generally useful in OCPN GUI, tests, and CLI implementation.  They look mostly like this:</p>
+<div class="codehilite"><pre><span></span><code>int g_iDistanceFormat = 0;
+int g_iSDMMFormat = 0;
+int g_iSpeedFormat = 0;
+</code></pre></div>
+
+<p>The declaration of these types of globals is today done in three (!) places:<br>
+tests.cpp<br>
+console.cpp<br>
+ocpn_app.cpp</p>
+<p>The correct (and single) declaration is compiled depending on the build target.<br>
+There may be better ways to do this sort of thing, and if so we should maybe move in that direction.<br>
+But for right or wrong, this is what we are doing today.</p>
+<p>On to Hakan's linux patch and linux build failure:</p>
+<p>Hakan's approach is to add a few more global variables, using the same technique as described.  This approach is no better or worse than what we do globally today.  A reasonable solution for a point feature upgrade.</p>
+<p>However, Hakan missed one of the three declarations sources required for the new variables</p>
+<div class="codehilite"><pre><span></span><code>int g_iWindSpeedFormat = 0;
+int g_iTempFormat = 0;
+int g_nDepthUnitDisplay = 0;
+</code></pre></div>
+
+<p>You have these three declarations in "ocpn_app.cpp", and "console.cpp".<br>
+They are missing in "tests.cpp".<br>
+Add those three lines at obvious place in tests.cpp, and the build succeeds.</p>
+<p>btw, I have other comments on the AIS Meteo patch.  Coming separately.</p>
+
+
+
+<hr><p>Last updated: Nov 10 2023 at 02:31 UTC</p>
 </html>
