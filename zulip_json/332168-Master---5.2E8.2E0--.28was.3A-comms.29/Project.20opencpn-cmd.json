@@ -238,5 +238,23 @@
         "id": 401378338,
         "sender_full_name": "Alec Leamas",
         "timestamp": 1699622204
+    },
+    {
+        "content": "<p>You should probably, just for clarity, add this on top of singleton patch above:</p>\n<div class=\"codehilite\"><pre><span></span><code>diff --git a/src/ais_decoder.cpp b/src/ais_decoder.cpp\nindex 8c73161da..516a0ead8 100644\n--- a/src/ais_decoder.cpp\n+++ b/src/ais_decoder.cpp\n@@ -4250,7 +4250,7 @@ int AisMeteoNewMmsi(int m_mmsi, int m_lat, int m_lon, double pt_Lat,\n     bool found = false;\n     int new_mmsi;\n\n-    auto points = AisMeteoPoints::GetInstance().GetPoints();\n+    auto&amp; points = AisMeteoPoints::GetInstance().GetPoints();\n     if (points.size()) {\n       wxString t_lat, t_lon;\n       for (const auto&amp; point: points) {\n</code></pre></div>",
+        "id": 401382700,
+        "sender_full_name": "Alec Leamas",
+        "timestamp": 1699623774
+    },
+    {
+        "content": "<p>Taking a step back I can see two overall routes here.</p>\n<p>The first would be to let this vector become an attribute of some existing class which already is exported as  an evil global var.  In this case the singleton is not useful.</p>\n<p>The other would be to use it as a singleton. In this case the best would be to split it out as a separate header, with just the MeteoPoint and singleton definitions.  This would be a nice and well defined header-only component.</p>",
+        "id": 401385826,
+        "sender_full_name": "Alec Leamas",
+        "timestamp": 1699624923
+    },
+    {
+        "content": "<p><span class=\"user-mention\" data-user-id=\"517002\">@Dave Register</span>  ^</p>",
+        "id": 401385886,
+        "sender_full_name": "Alec Leamas",
+        "timestamp": 1699624931
     }
 ]
