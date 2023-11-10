@@ -311,5 +311,24 @@ Add those three lines at obvious place in tests.cpp, and the build succeeds.</p>
 
 
 
-<hr><p>Last updated: Nov 10 2023 at 11:22 UTC</p>
+<a name="401350828"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332168-Master%20-%205.8.0%20%20%28was%3A%20comms%29/topic/Project%20opencpn-cmd/near/401350828" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Håkan Svensson <a href="https://leamas.github.io/zulip-archive/stream/332168-Master---5.2E8.2E0--.28was.3A-comms.29/topic/Project.20opencpn-cmd.html#401350828">(Nov 10 2023 at 11:23)</a>:</h4>
+<p><span class="user-mention" data-user-id="517002">@Dave Register</span> <span class="user-mention" data-user-id="399510">@Alec Leamas</span> <br>
+Dave..<br>
+Thanks for test.cpp corrections. Now pushed.<br>
+Unfortunately this didn't changed the Linux Debian build errors.</p>
+<p>It builds and works fine on Win (wx 3.2.3) but fails on Debian (wx 3.0)<br>
+It's about the array "g_pMeteoArray" from class AISMeteoPoint  ais_decoder.h : 82 and used in ais_decoder.cpp : 4256<br>
+It builds on Debian if I make a pointer in declaration but then I get scrap values when searching data.  (Obviously my lack of knowledge?)</p>
+<p>One example of many Linux errors:</p>
+<div class="codehilite"><pre><span></span><code>In file included from /usr/include/wx-3.0/wx/wx.h:16,
+                 from /home/pi/Builds/OpenCPN/src/AISTargetAlertDialog.cpp:29:
+/home/pi/Builds/OpenCPN/include/ais_decoder.h: In member function ‘ArrayOfAISMeteoPoints::reverse_iterator ArrayOfAISMeteoPoints::rend()’:
+/home/pi/Builds/OpenCPN/include/ais_decoder.h:82:1: error: invalid use of incomplete type ‘class AISMeteoPoint’
+   82 | WX_DEFINE_ARRAY_PTR(AISMeteoPoint, ArrayOfAISMeteoPoints);
+</code></pre></div>
+
+
+
+<hr><p>Last updated: Nov 10 2023 at 11:43 UTC</p>
 </html>
