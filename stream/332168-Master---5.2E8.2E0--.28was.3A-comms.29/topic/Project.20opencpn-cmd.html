@@ -302,5 +302,14 @@ Add those three lines at obvious place in tests.cpp, and the build succeeds.</p>
 
 
 
-<hr><p>Last updated: Nov 10 2023 at 08:28 UTC</p>
+<a name="401309006"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332168-Master%20-%205.8.0%20%20%28was%3A%20comms%29/topic/Project%20opencpn-cmd/near/401309006" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Alec Leamas <a href="https://leamas.github.io/zulip-archive/stream/332168-Master---5.2E8.2E0--.28was.3A-comms.29/topic/Project.20opencpn-cmd.html#401309006">(Nov 10 2023 at 08:34)</a>:</h4>
+<p>Digging a little more, now when I can see what this all about. </p>
+<p>First of all: these are part of the configuration. As such, the proper place to have the "real", non-extern declaration is in  <em>config_vars.cpp</em> with the corresponding update to <em>config_vars.h</em>.  Once declared there all other declarations should be removed. I'll make an update to Hakan's work in this direction after a dear visit to my dentist.</p>
+<p>Secondly: I see a massive overlap between <code> ConfigMgr::SaveTemplate()</code> and <code>MyConfig::UpdateSettings()</code>in <em>navutil.cpp</em>. About 350 lines of hard to maintain relations between the written "spelling" of the variable names in the config file and the actual values. Seems like a  pretty low hanging fruit. </p>
+<p>The goal should be that navutil and navutil_base handles read/write of config variables to /from the config file.</p>
+
+
+
+<hr><p>Last updated: Nov 10 2023 at 08:42 UTC</p>
 </html>
