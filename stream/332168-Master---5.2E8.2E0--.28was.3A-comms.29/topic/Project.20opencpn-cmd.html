@@ -487,5 +487,22 @@ Many thanks.</p>
 
 
 
-<hr><p>Last updated: Nov 11 2023 at 11:42 UTC</p>
+<a name="401504876"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332168-Master%20-%205.8.0%20%20%28was%3A%20comms%29/topic/Project%20opencpn-cmd/near/401504876" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Alec Leamas <a href="https://leamas.github.io/zulip-archive/stream/332168-Master---5.2E8.2E0--.28was.3A-comms.29/topic/Project.20opencpn-cmd.html#401504876">(Nov 11 2023 at 11:44)</a>:</h4>
+<p>I have two new remarks, these should be the last.</p>
+<ul>
+<li>The usage pattern of the AisMeteoPoint is basically that it is created and then never changed. Such objects should be marked <code>const</code>.  Marking objects const makes it much easier to read the code since you know that the data will never change.  At also allows the compiler to make better optimizations. I'll make a patch for this </li>
+<li>You have added a large number of attributes to ais_target_data.h. This is also following some not so good existing patterns. A better solution would be to define a new struct containing this data,  and  then add a single struct of this kind to AisTargetData. This is more work, but I'll see what I can do.</li>
+</ul>
+
+
+
+<a name="401504969"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332168-Master%20-%205.8.0%20%20%28was%3A%20comms%29/topic/Project%20opencpn-cmd/near/401504969" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Alec Leamas <a href="https://leamas.github.io/zulip-archive/stream/332168-Master---5.2E8.2E0--.28was.3A-comms.29/topic/Project.20opencpn-cmd.html#401504969">(Nov 11 2023 at 11:45)</a>:</h4>
+<p>Here is a patch for the const issue: <br>
+<a href="/user_uploads/33951/PFNOMo9f6e5LA7fIMyFs2TL0/0002-AisMeteoPoint-make-it-const.patch">0002-AisMeteoPoint-make-it-const.patch</a></p>
+
+
+
+<hr><p>Last updated: Nov 11 2023 at 12:13 UTC</p>
 </html>
