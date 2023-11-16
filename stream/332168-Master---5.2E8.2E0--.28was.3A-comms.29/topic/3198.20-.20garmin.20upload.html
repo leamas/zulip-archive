@@ -47,5 +47,23 @@ I saw those.  It will be a few days...</p>
 
 
 
-<hr><p>Last updated: Nov 16 2023 at 03:09 UTC</p>
+<a name="402371959"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332168-Master%20-%205.8.0%20%20%28was%3A%20comms%29/topic/3198%20-%20garmin%20upload/near/402371959" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Dave Register <a href="https://leamas.github.io/zulip-archive/stream/332168-Master---5.2E8.2E0--.28was.3A-comms.29/topic/3198.20-.20garmin.20upload.html#402371959">(Nov 16 2023 at 03:10)</a>:</h4>
+<p><span class="user-mention" data-user-id="399510">@Alec Leamas</span> <br>
+re PR <a href="https://github.com/opencpn/OpenCPN/issues/3198">#3198</a>:<br>
+Merged your PR with my fix for <a href="https://github.com/opencpn/OpenCPN/issues/3496">#3496</a>, pushed to master.<br>
+Works fine on Garmin serial, not tested yet on Garmin USB.</p>
+<p>Also looked at and fixed a couple of FIXME's.  But one I am not too comfortable with.<br>
+In "void BroadcastNMEA0183Message()", I think we want to echo the broadcast NMEA message to all plugins, to process as they choose. <br>
+I implemented this by converting "void PlugInManager::SendNMEASentenceToAllPlugIns(const wxString&amp; sentence)" to a class static method, so I can call it essentially from anywhere.  The result in BroadcastNMEA0183Message() now looks like:</p>
+<p>// Send to plugins<br>
+    #ifndef CLIAPP<br>
+      PlugInManager::SendNMEASentenceToAllPlugIns(msg);<br>
+    #endif</p>
+<p>I don't know why this bothers me.  Maybe there is a better technique here, that preserves the model. And I don't know why it wont work in CLIAPP build.<br>
+Thoughts?</p>
+
+
+
+<hr><p>Last updated: Nov 16 2023 at 03:25 UTC</p>
 </html>

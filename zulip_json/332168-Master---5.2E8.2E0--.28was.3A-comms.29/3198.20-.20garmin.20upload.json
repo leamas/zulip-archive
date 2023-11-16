@@ -28,5 +28,11 @@
         "id": 401801962,
         "sender_full_name": "Alec Leamas",
         "timestamp": 1699892492
+    },
+    {
+        "content": "<p><span class=\"user-mention\" data-user-id=\"399510\">@Alec Leamas</span> <br>\nre PR <a href=\"https://github.com/opencpn/OpenCPN/issues/3198\">#3198</a>:<br>\nMerged your PR with my fix for <a href=\"https://github.com/opencpn/OpenCPN/issues/3496\">#3496</a>, pushed to master.<br>\nWorks fine on Garmin serial, not tested yet on Garmin USB.</p>\n<p>Also looked at and fixed a couple of FIXME's.  But one I am not too comfortable with.<br>\nIn \"void BroadcastNMEA0183Message()\", I think we want to echo the broadcast NMEA message to all plugins, to process as they choose. <br>\nI implemented this by converting \"void PlugInManager::SendNMEASentenceToAllPlugIns(const wxString&amp; sentence)\" to a class static method, so I can call it essentially from anywhere.  The result in BroadcastNMEA0183Message() now looks like:</p>\n<p>// Send to plugins<br>\n    #ifndef CLIAPP<br>\n      PlugInManager::SendNMEASentenceToAllPlugIns(msg);<br>\n    #endif</p>\n<p>I don't know why this bothers me.  Maybe there is a better technique here, that preserves the model. And I don't know why it wont work in CLIAPP build.<br>\nThoughts?</p>",
+        "id": 402371959,
+        "sender_full_name": "Dave Register",
+        "timestamp": 1700104228
     }
 ]
