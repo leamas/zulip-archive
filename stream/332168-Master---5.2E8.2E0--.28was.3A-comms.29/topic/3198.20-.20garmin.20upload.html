@@ -65,5 +65,23 @@ Thoughts?</p>
 
 
 
-<hr><p>Last updated: Nov 16 2023 at 08:29 UTC</p>
+<a name="402414286"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332168-Master%20-%205.8.0%20%20%28was%3A%20comms%29/topic/3198%20-%20garmin%20upload/near/402414286" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Alec Leamas <a href="https://leamas.github.io/zulip-archive/stream/332168-Master---5.2E8.2E0--.28was.3A-comms.29/topic/3198.20-.20garmin.20upload.html#402414286">(Nov 16 2023 at 08:39)</a>:</h4>
+<p>It bothers you since it means that we build in knowledge about pluginmanager into the low-level serial model code handling the communications.  This does not fly since comm_n0183_output #include pluginmanager.h. This is model code including non-model gui code, exactly the things we should avoid -- it is the everything includes everything evil path.</p>
+<p>This is also the reason it does not work in a CLIAPP build. These builds does not contain any GUI code and hence not pluginmanager.</p>
+<p>There are two ways of handling this. One is the asynchronous, basically to send an event to whoever wants it and let them process it. On our case this would be using an EventVar. This is basically fire and forget, there is no feedback.</p>
+<p>The other way is using a callback. This is synchronous, the model code can get return values from the GUI.</p>
+<p>In both cases this is more to write tha usual since comm_n0183_output is  using free functions, there is no class which can house an EventVar or a callback.</p>
+
+
+
+<a name="402414637"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332168-Master%20-%205.8.0%20%20%28was%3A%20comms%29/topic/3198%20-%20garmin%20upload/near/402414637" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Alec Leamas <a href="https://leamas.github.io/zulip-archive/stream/332168-Master---5.2E8.2E0--.28was.3A-comms.29/topic/3198.20-.20garmin.20upload.html#402414637">(Nov 16 2023 at 08:41)</a>:</h4>
+<p>Here is a patch using the EventVar mechanism: <br>
+<a href="/user_uploads/33951/SX1UiU-q7d5tatFOk1xO2mRM/0002-comm_n0183_output-et.-al.-Don-t-refer-to-non-model-c.patch">0002-comm_n0183_output-et.-al.-Don-t-refer-to-non-model-c.patch</a></p>
+<p>This is against my private master, you might need to rebase it but it should not be that bad.</p>
+
+
+
+<hr><p>Last updated: Nov 16 2023 at 08:42 UTC</p>
 </html>
