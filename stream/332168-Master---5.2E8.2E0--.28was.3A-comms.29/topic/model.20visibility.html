@@ -20,5 +20,30 @@
 
 
 
-<hr><p>Last updated: Nov 16 2023 at 21:22 UTC</p>
+<a name="402560773"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332168-Master%20-%205.8.0%20%20%28was%3A%20comms%29/topic/model%20visibility/near/402560773" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Dave Register <a href="https://leamas.github.io/zulip-archive/stream/332168-Master---5.2E8.2E0--.28was.3A-comms.29/topic/model.20visibility.html#402560773">(Nov 16 2023 at 21:35)</a>:</h4>
+<p><span class="user-mention" data-user-id="399510">@Alec Leamas</span> <br>
+I think basically a good idea.  A source organization that helps us to refactor intelligently makes sense.<br>
+On more refactor thought, we have lots of non-GUI utility functions lying around, placed for convenience rather than general utility.<br>
+Indeed, a large part of the entire set of bare subroutines called by a plugin (i.e. plugin-&gt;core) should be moved out of pluginmanager, and into something else that can logically live in the model.  I'm thinking about non-GUI plugins, if there ever was such a beast.  Useful for plugin functional test also, for instance.<br>
+Anyway, lots of old-fashioned C-style code to refactor as the opportunity arises.</p>
+
+
+
+<a name="402561419"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332168-Master%20-%205.8.0%20%20%28was%3A%20comms%29/topic/model%20visibility/near/402561419" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Alec Leamas <a href="https://leamas.github.io/zulip-archive/stream/332168-Master---5.2E8.2E0--.28was.3A-comms.29/topic/model.20visibility.html#402561419">(Nov 16 2023 at 21:39)</a>:</h4>
+<blockquote>
+<p>ndeed, a large part of the entire set of bare subroutines called by a plugin (i.e. plugin-&gt;core) should be moved out of pluginmanager,</p>
+</blockquote>
+<p>Indeed. src/plugin_api.cpp. Problem is that many of these are gui related, what plugins wants from opencpn core is actually gui to a large extent. This could be solved using callbacks, but it will take some man hours.</p>
+
+
+
+<a name="402561564"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332168-Master%20-%205.8.0%20%20%28was%3A%20comms%29/topic/model%20visibility/near/402561564" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Alec Leamas <a href="https://leamas.github.io/zulip-archive/stream/332168-Master---5.2E8.2E0--.28was.3A-comms.29/topic/model.20visibility.html#402561564">(Nov 16 2023 at 21:40)</a>:</h4>
+<p>Making the split  model/gui split is not that hard, will need som sed voodoo. However, It will break each and every pending PR, including some of mine ;)</p>
+
+
+
+<hr><p>Last updated: Nov 16 2023 at 21:42 UTC</p>
 </html>
