@@ -1489,5 +1489,24 @@ So, I think the Win hibernation issue would be rather easy to solve?</p>
 
 
 
-<hr><p>Last updated: Nov 18 2023 at 21:42 UTC</p>
+<a name="402917302"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332168-Master%20-%205.8.0%20%20%28was%3A%20comms%29/topic/Network%20problems/near/402917302" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Håkan Svensson <a href="https://leamas.github.io/zulip-archive/stream/332168-Master---5.2E8.2E0--.28was.3A-comms.29/topic/Network.20problems.html#402917302">(Nov 18 2023 at 21:50)</a>:</h4>
+<p><span class="user-mention" data-user-id="517002">@Dave Register</span> <br>
+About TCP connection and comm_drv_n0183_net.cpp.<br>
+I've a constant log flood caused by the 5 seconds, nothing received, timer. (m_dog_value = N_DOG_TIMEOUT)<br>
+One TCP feed don't send that much data. Some AIS targets now and then. Upstart log below.<br>
+Two questions:</p>
+<ol>
+<li>Why a time out on 5 seconds? My connection example is nothing strange. In a boat you can by TCP connect an AIS receiver seeing only one target. A class B updates every 3 to 5 minutes. This should not cause any failure action or reconnect?</li>
+<li>Why do we at all monitor the the TCP data flow? Is there not a general socket handling for TCP taking care of the connection and request a at live respons every now and then? Do we have to redo that?<div class="codehilite"><pre><span></span><code> 22:07:49.459 MESSAGE comm_drv_n0183_net.cpp:541 TCP NetworkDataStream connection established: TCP:92.39.188.126:11101
+ 22:08:09.580 MESSAGE comm_drv_n0183_net.cpp:350  TCP NetworkDataStream watchdog timeout: TCP:92.39.188.126:11101. Reconnection is disabled, waiting another 5 seconds.
+ 22:08:19.518 MESSAGE comm_drv_n0183_net.cpp:350  TCP NetworkDataStream watchdog timeout: TCP:92.39.188.126:11101. Reconnection is disabled, waiting another 5 seconds.
+</code></pre></div>
+
+</li>
+</ol>
+
+
+
+<hr><p>Last updated: Nov 18 2023 at 22:07 UTC</p>
 </html>
