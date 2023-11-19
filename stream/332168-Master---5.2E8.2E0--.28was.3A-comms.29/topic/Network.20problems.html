@@ -1508,5 +1508,18 @@ Two questions:</p>
 
 
 
-<hr><p>Last updated: Nov 19 2023 at 15:42 UTC</p>
+<a name="403024254"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332168-Master%20-%205.8.0%20%20%28was%3A%20comms%29/topic/Network%20problems/near/403024254" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Dave Register <a href="https://leamas.github.io/zulip-archive/stream/332168-Master---5.2E8.2E0--.28was.3A-comms.29/topic/Network.20problems.html#403024254">(Nov 19 2023 at 15:54)</a>:</h4>
+<p><span class="user-mention" data-user-id="522486">@Håkan Svensson</span> <br>
+I understand the issue.<br>
+I never imagined a TCP connection providing only one AIS-B target, without any AIVDO messages.  Of course this will time-out every 5 seconds.<br>
+I believe that we need some sort of watchdog on TCP connections.  The case I think of is when one has a local OCPN server which provides NMEA service to possibly a number of OCPN clients, also local.  In fact, this is my "everyday" mode for testing.  If the server should die, I want the clients to reconnect automatically when the server returns to life.</p>
+<p>How to handle?<br>
+Perhaps simply throttle the log messages, allow only one log event per (example) 5 minutes after the first is issued?  <br>
+Or more clever:  Measure the average time interval between TCP incoming messages, and compute the watchdog timeout value dynamically as some multiple of the average message interval?</p>
+<p>Thoughts?</p>
+
+
+
+<hr><p>Last updated: Nov 19 2023 at 16:09 UTC</p>
 </html>
