@@ -1,0 +1,24 @@
+<html>
+<head><meta charset="utf-8"><title>rest pin algorithm · Master - 5.8.0  (was: comms) · Zulip Chat Archive</title></head>
+<h2>Stream: <a href="https://leamas.github.io/zulip-archive/stream/332168-Master---5.2E8.2E0--.28was.3A-comms.29/index.html">Master - 5.8.0  (was: comms)</a></h2>
+<h3>Topic: <a href="https://leamas.github.io/zulip-archive/stream/332168-Master---5.2E8.2E0--.28was.3A-comms.29/topic/rest.20pin.20algorithm.html">rest pin algorithm</a></h3>
+
+<hr>
+
+<base href="https://opencpn.zulipchat.com">
+
+<head><link href="https://leamas.github.io/zulip-archive/style.css" rel="stylesheet"></head>
+
+<a name="403009507"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332168-Master%20-%205.8.0%20%20%28was%3A%20comms%29/topic/rest%20pin%20algorithm/near/403009507" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Alec Leamas <a href="https://leamas.github.io/zulip-archive/stream/332168-Master---5.2E8.2E0--.28was.3A-comms.29/topic/rest.20pin.20algorithm.html#403009507">(Nov 19 2023 at 13:18)</a>:</h4>
+<p>Looking into how a random int is converted to a some obfuscated value which is transferred on the network. </p>
+<p>The basic idea here is that it should no be possible to deduce what was used to create the obfuscated value by sniffing this obfuscated value on the network.</p>
+<p>To that end,  we use a random number generator to generate a random string from the original secret. hoping that it is not possible to find out the int by looking at the output from the random generator.</p>
+<p>However, this is not completely correct implemented.  The alghoritms optimized for this purpose is hashing algorithms like sha 512 etc. These are matematically "safe" for this purpose, a random number generator is not.</p>
+<p>Now, this would be a simple fix. However, such a fix would break all currently paired connections out there. So the question becomes: is it worth it?</p>
+<p><span class="user-mention" data-user-id="517002">@Dave Register</span> ^</p>
+
+
+
+<hr><p>Last updated: Nov 19 2023 at 13:24 UTC</p>
+</html>
