@@ -1,0 +1,27 @@
+<html>
+<head><meta charset="utf-8"><title>Plugin with dependencies that can&#x27;t be statically linked · Master - 5.8.0  (was: comms) · Zulip Chat Archive</title></head>
+<h2>Stream: <a href="https://leamas.github.io/zulip-archive/stream/332168-Master---5.2E8.2E0--.28was.3A-comms.29/index.html">Master - 5.8.0  (was: comms)</a></h2>
+<h3>Topic: <a href="https://leamas.github.io/zulip-archive/stream/332168-Master---5.2E8.2E0--.28was.3A-comms.29/topic/Plugin.20with.20dependencies.20that.20can.27t.20be.20statically.20linked.html">Plugin with dependencies that can&#x27;t be statically linked</a></h3>
+
+<hr>
+
+<base href="https://opencpn.zulipchat.com">
+
+<head><link href="https://leamas.github.io/zulip-archive/style.css" rel="stylesheet"></head>
+
+<a name="405705605"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332168-Master%20-%205.8.0%20%20%28was%3A%20comms%29/topic/Plugin%20with%20dependencies%20that%20can%27t%20be%20statically%20linked/near/405705605" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Pavel Kalian <a href="https://leamas.github.io/zulip-archive/stream/332168-Master---5.2E8.2E0--.28was.3A-comms.29/topic/Plugin.20with.20dependencies.20that.20can.27t.20be.20statically.20linked.html#405705605">(Dec 03 2023 at 22:51)</a>:</h4>
+<p><span class="user-mention" data-user-id="399510">@Alec Leamas</span> I'm resurrecting the Survey plugin. It has dependency on a dynamically loaded SQLite extension (<code>mod_spatialite</code>), which itself has quite a few dependencies (PROJ, LibGEOS etc.). Do you have some suggestion on the least painful way to do it in flatpak? Everywhere else it will probably be OK to handle it using "Do XXX" instruction for the user, where XXX is either "Unpack an archive to the OpenCPN folder" or "Run <code>brew/apt install libspatialite</code>"</p>
+
+
+
+<a name="405706093"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332168-Master%20-%205.8.0%20%20%28was%3A%20comms%29/topic/Plugin%20with%20dependencies%20that%20can%27t%20be%20statically%20linked/near/405706093" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Alec Leamas <a href="https://leamas.github.io/zulip-archive/stream/332168-Master---5.2E8.2E0--.28was.3A-comms.29/topic/Plugin.20with.20dependencies.20that.20can.27t.20be.20statically.20linked.html#405706093">(Dec 03 2023 at 22:57)</a>:</h4>
+<p>actually, these things are known to not work. Flatpak runs in a sandbox and will not load anything from the host. To make the plugin run in the sandbox you need to add the deps to the manifest, there is no way around.</p>
+<p>The way is to add new snippets to opencpn-libs/flatpak and then use them  as in the shipdriver manifest's use of libglu around line 34.</p>
+<p>You can of course  also add the deps right into the survey manifest. The downside is that such deps are not reusable.</p>
+
+
+
+<hr><p>Last updated: Dec 03 2023 at 23:08 UTC</p>
+</html>

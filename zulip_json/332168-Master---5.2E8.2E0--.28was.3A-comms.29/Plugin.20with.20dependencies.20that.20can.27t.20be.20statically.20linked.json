@@ -1,0 +1,14 @@
+[
+    {
+        "content": "<p><span class=\"user-mention\" data-user-id=\"399510\">@Alec Leamas</span> I'm resurrecting the Survey plugin. It has dependency on a dynamically loaded SQLite extension (<code>mod_spatialite</code>), which itself has quite a few dependencies (PROJ, LibGEOS etc.). Do you have some suggestion on the least painful way to do it in flatpak? Everywhere else it will probably be OK to handle it using \"Do XXX\" instruction for the user, where XXX is either \"Unpack an archive to the OpenCPN folder\" or \"Run <code>brew/apt install libspatialite</code>\"</p>",
+        "id": 405705605,
+        "sender_full_name": "Pavel Kalian",
+        "timestamp": 1701643885
+    },
+    {
+        "content": "<p>actually, these things are known to not work. Flatpak runs in a sandbox and will not load anything from the host. To make the plugin run in the sandbox you need to add the deps to the manifest, there is no way around.</p>\n<p>The way is to add new snippets to opencpn-libs/flatpak and then use them  as in the shipdriver manifest's use of libglu around line 34.</p>\n<p>You can of course  also add the deps right into the survey manifest. The downside is that such deps are not reusable.</p>",
+        "id": 405706093,
+        "sender_full_name": "Alec Leamas",
+        "timestamp": 1701644272
+    }
+]
