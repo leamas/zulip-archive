@@ -1223,5 +1223,52 @@ When is late_init() supposed to happen?</p>
 
 
 
-<hr><p>Last updated: Dec 07 2023 at 21:07 UTC</p>
+<a name="406621176"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332200-shipdriver/topic/shipdriver%203.2/near/406621176" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Dave Register <a href="https://leamas.github.io/zulip-archive/stream/332200-shipdriver/topic/shipdriver.203.2E2.html#406621176">(Dec 07 2023 at 21:09)</a>:</h4>
+<p><span class="user-mention" data-user-id="399510">@Alec Leamas</span> <br>
+  message(STATUS "Checking ARCH: ${ARCH}")</p>
+<p>Same result, null.<br>
+I should mention, the build is otherwise working fine.  But I need to add a compile definition for ARMHF builds, to account for that processor's dword alignment requirements.</p>
+
+
+
+<a name="406621314"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332200-shipdriver/topic/shipdriver%203.2/near/406621314" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Alec Leamas <a href="https://leamas.github.io/zulip-archive/stream/332200-shipdriver/topic/shipdriver.203.2E2.html#406621314">(Dec 07 2023 at 21:10)</a>:</h4>
+<p>... also in late_init? </p>
+<p>Strange, as they say. I'll have alook</p>
+
+
+
+<a name="406621547"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332200-shipdriver/topic/shipdriver%203.2/near/406621547" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Dave Register <a href="https://leamas.github.io/zulip-archive/stream/332200-shipdriver/topic/shipdriver.203.2E2.html#406621547">(Dec 07 2023 at 21:12)</a>:</h4>
+<p><span class="user-mention" data-user-id="399510">@Alec Leamas</span> <br>
+CMake output, from the top</p>
+<div class="codehilite"><pre><span></span><code>0/1] Re-running CMake...
+-- Cmake version: 3.25.2.
+-- Build uses 1 processors
+-- Building: tarball
+-- late_init: 
+-- OCPN_TARGET_TUPLE: 
+-- Checking ARCH: 
+-- Setup: OCPN_TARGET_TUPLE: 
+-- Setup: lsb_linux: .
+-- Building for target:release debian-x86_64:12
+</code></pre></div>
+
+
+
+<a name="406621837"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332200-shipdriver/topic/shipdriver%203.2/near/406621837" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Alec Leamas <a href="https://leamas.github.io/zulip-archive/stream/332200-shipdriver/topic/shipdriver.203.2E2.html#406621837">(Dec 07 2023 at 21:14)</a>:</h4>
+<p>Yes, I see the same myself....</p>
+
+
+
+<a name="406622618"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332200-shipdriver/topic/shipdriver%203.2/near/406622618" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Alec Leamas <a href="https://leamas.github.io/zulip-archive/stream/332200-shipdriver/topic/shipdriver.203.2E2.html#406622618">(Dec 07 2023 at 21:20)</a>:</h4>
+<p>The core issue is the first round of cmake just configures and exits in CMakeLists.txt around line 76.<br>
+Thinking...</p>
+
+
+
+<hr><p>Last updated: Dec 07 2023 at 21:22 UTC</p>
 </html>
