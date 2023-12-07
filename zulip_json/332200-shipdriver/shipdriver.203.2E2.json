@@ -808,5 +808,47 @@
         "id": 406521490,
         "sender_full_name": "Alec Leamas",
         "timestamp": 1701947781
+    },
+    {
+        "content": "<p><span class=\"user-mention\" data-user-id=\"399510\">@Alec Leamas</span> <br>\nNeed a little advice on SD template.<br>\nI need to know the target arch in plugin.cmake.  But plugin.cmake comes into CMakeLists.txt pretty early, so I was hoping to get the target arch by some environment variable, or so.<br>\nAny hints?</p>",
+        "id": 406618809,
+        "sender_full_name": "Dave Register",
+        "timestamp": 1701982368
+    },
+    {
+        "content": "<p>Can you do what you want to do in the late_init phase? At that point everything is available...</p>",
+        "id": 406619659,
+        "sender_full_name": "Alec Leamas",
+        "timestamp": 1701982742
+    },
+    {
+        "content": "<p>By my reading, late_init() comes in, well, not very late.<br>\nBut I will check again.<br>\nPSB.</p>",
+        "id": 406619843,
+        "sender_full_name": "Dave Register",
+        "timestamp": 1701982805
+    },
+    {
+        "content": "<p><span class=\"user-mention\" data-user-id=\"399510\">@Alec Leamas</span> <br>\nI add to late_init() macro:<br>\n     message(STATUS \"OCPN_TARGET_TUPLE: ${OCPN_TARGET_TUPLE}\")</p>\n<p>And I get null for the tuple.<br>\nWhen is late_init() supposed to happen?</p>",
+        "id": 406620469,
+        "sender_full_name": "Dave Register",
+        "timestamp": 1701983012
+    },
+    {
+        "content": "<p>It's clear as mud, with the two runs it requires some thought to find out what's \"early\". </p>\n<p>If you want it later, you can (ab)use add_plugin_libraries. It is designed for including libraries, but it could actually be anything.</p>",
+        "id": 406620496,
+        "sender_full_name": "Alec Leamas",
+        "timestamp": 1701983024
+    },
+    {
+        "content": "<p>OCPN_TARGET_TUPLE is the input variable. You should look for what GetArch.cmake produces i. e., ARCH</p>",
+        "id": 406620688,
+        "sender_full_name": "Alec Leamas",
+        "timestamp": 1701983115
+    },
+    {
+        "content": "<p>... and <code>plugin_target</code>and <code>plugin_target_version</code>  set up by PluginSetup.cmake</p>",
+        "id": 406620903,
+        "sender_full_name": "Alec Leamas",
+        "timestamp": 1701983223
     }
 ]

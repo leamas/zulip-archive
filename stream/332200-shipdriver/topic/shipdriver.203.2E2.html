@@ -1171,5 +1171,57 @@ I need an updated template for using <em>OpenCPN/opencpn-libs</em>. Could you ed
 
 
 
-<hr><p>Last updated: Dec 07 2023 at 20:42 UTC</p>
+<a name="406618809"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332200-shipdriver/topic/shipdriver%203.2/near/406618809" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Dave Register <a href="https://leamas.github.io/zulip-archive/stream/332200-shipdriver/topic/shipdriver.203.2E2.html#406618809">(Dec 07 2023 at 20:52)</a>:</h4>
+<p><span class="user-mention" data-user-id="399510">@Alec Leamas</span> <br>
+Need a little advice on SD template.<br>
+I need to know the target arch in plugin.cmake.  But plugin.cmake comes into CMakeLists.txt pretty early, so I was hoping to get the target arch by some environment variable, or so.<br>
+Any hints?</p>
+
+
+
+<a name="406619659"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332200-shipdriver/topic/shipdriver%203.2/near/406619659" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Alec Leamas <a href="https://leamas.github.io/zulip-archive/stream/332200-shipdriver/topic/shipdriver.203.2E2.html#406619659">(Dec 07 2023 at 20:59)</a>:</h4>
+<p>Can you do what you want to do in the late_init phase? At that point everything is available...</p>
+
+
+
+<a name="406619843"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332200-shipdriver/topic/shipdriver%203.2/near/406619843" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Dave Register <a href="https://leamas.github.io/zulip-archive/stream/332200-shipdriver/topic/shipdriver.203.2E2.html#406619843">(Dec 07 2023 at 21:00)</a>:</h4>
+<p>By my reading, late_init() comes in, well, not very late.<br>
+But I will check again.<br>
+PSB.</p>
+
+
+
+<a name="406620469"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332200-shipdriver/topic/shipdriver%203.2/near/406620469" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Dave Register <a href="https://leamas.github.io/zulip-archive/stream/332200-shipdriver/topic/shipdriver.203.2E2.html#406620469">(Dec 07 2023 at 21:03)</a>:</h4>
+<p><span class="user-mention" data-user-id="399510">@Alec Leamas</span> <br>
+I add to late_init() macro:<br>
+     message(STATUS "OCPN_TARGET_TUPLE: ${OCPN_TARGET_TUPLE}")</p>
+<p>And I get null for the tuple.<br>
+When is late_init() supposed to happen?</p>
+
+
+
+<a name="406620496"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332200-shipdriver/topic/shipdriver%203.2/near/406620496" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Alec Leamas <a href="https://leamas.github.io/zulip-archive/stream/332200-shipdriver/topic/shipdriver.203.2E2.html#406620496">(Dec 07 2023 at 21:03)</a>:</h4>
+<p>It's clear as mud, with the two runs it requires some thought to find out what's "early". </p>
+<p>If you want it later, you can (ab)use add_plugin_libraries. It is designed for including libraries, but it could actually be anything.</p>
+
+
+
+<a name="406620688"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332200-shipdriver/topic/shipdriver%203.2/near/406620688" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Alec Leamas <a href="https://leamas.github.io/zulip-archive/stream/332200-shipdriver/topic/shipdriver.203.2E2.html#406620688">(Dec 07 2023 at 21:05)</a>:</h4>
+<p>OCPN_TARGET_TUPLE is the input variable. You should look for what GetArch.cmake produces i. e., ARCH</p>
+
+
+
+<a name="406620903"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332200-shipdriver/topic/shipdriver%203.2/near/406620903" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Alec Leamas <a href="https://leamas.github.io/zulip-archive/stream/332200-shipdriver/topic/shipdriver.203.2E2.html#406620903">(Dec 07 2023 at 21:07)</a>:</h4>
+<p>... and <code>plugin_target</code>and <code>plugin_target_version</code>  set up by PluginSetup.cmake</p>
+
+
+
+<hr><p>Last updated: Dec 07 2023 at 21:07 UTC</p>
 </html>
