@@ -10,5 +10,11 @@
         "id": 407826177,
         "sender_full_name": "Pavel Kalian",
         "timestamp": 1702508725
+    },
+    {
+        "content": "<p><span class=\"user-mention\" data-user-id=\"573239\">@Pavel Kalian</span> </p>\n<p>Anyway, I have problems getting the currently broken macos builds in place. So far two things:</p>\n<ol>\n<li>The build picks up /usr/local/include/geodesic.h instead of the intended  ./include/geodesic.h.</li>\n<li>I have problems with below  which just does not do what it should. </li>\n</ol>\n<p>Any ideas?</p>\n<div class=\"codehilite\"><pre><span></span><code>#if defined(__GNUC__) &amp;&amp; (__GNUC__ &lt; 8)\n#include &lt;experimental/filesystem&gt;\nnamespace fs = std::experimental::filesystem;\n\n#elif defined(__clang_major__) &amp;&amp; (__clang_major__ &lt; 15)\n#pragma message &quot;Using boost filesystem&quot;\n#include &lt;boost/filesystem.hpp&gt;\nnamespace fs = boost::filesystem;\n\n#else\n#include &lt;filesystem&gt;\n#include &lt;utility&gt;\nnamespace fs = std::filesystem;\n#endif\n</code></pre></div>",
+        "id": 407828677,
+        "sender_full_name": "Alec Leamas",
+        "timestamp": 1702510078
     }
 ]

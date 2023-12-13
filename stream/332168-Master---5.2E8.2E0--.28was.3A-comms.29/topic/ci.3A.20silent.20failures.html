@@ -22,5 +22,32 @@
 
 
 
-<hr><p>Last updated: Dec 13 2023 at 23:24 UTC</p>
+<a name="407828677"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332168-Master%20-%205.8.0%20%20%28was%3A%20comms%29/topic/ci%3A%20silent%20failures/near/407828677" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Alec Leamas <a href="https://leamas.github.io/zulip-archive/stream/332168-Master---5.2E8.2E0--.28was.3A-comms.29/topic/ci.3A.20silent.20failures.html#407828677">(Dec 13 2023 at 23:27)</a>:</h4>
+<p><span class="user-mention" data-user-id="573239">@Pavel Kalian</span> </p>
+<p>Anyway, I have problems getting the currently broken macos builds in place. So far two things:</p>
+<ol>
+<li>The build picks up /usr/local/include/geodesic.h instead of the intended  ./include/geodesic.h.</li>
+<li>I have problems with below  which just does not do what it should. </li>
+</ol>
+<p>Any ideas?</p>
+<div class="codehilite"><pre><span></span><code>#if defined(__GNUC__) &amp;&amp; (__GNUC__ &lt; 8)
+#include &lt;experimental/filesystem&gt;
+namespace fs = std::experimental::filesystem;
+
+#elif defined(__clang_major__) &amp;&amp; (__clang_major__ &lt; 15)
+#pragma message &quot;Using boost filesystem&quot;
+#include &lt;boost/filesystem.hpp&gt;
+namespace fs = boost::filesystem;
+
+#else
+#include &lt;filesystem&gt;
+#include &lt;utility&gt;
+namespace fs = std::filesystem;
+#endif
+</code></pre></div>
+
+
+
+<hr><p>Last updated: Dec 13 2023 at 23:42 UTC</p>
 </html>
