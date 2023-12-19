@@ -70,5 +70,83 @@
         "id": 408934161,
         "sender_full_name": "Alec Leamas",
         "timestamp": 1702992560
+    },
+    {
+        "content": "<p>i. e.,  is there anything blocking us from using Xcode 15.0.0 or 15.1.0, both of which available for both arm and intel: <a href=\"https://circleci.com/docs/testing-ios/#supported-xcode-versions\">https://circleci.com/docs/testing-ios/#supported-xcode-versions</a></p>",
+        "id": 408936970,
+        "sender_full_name": "Alec Leamas",
+        "timestamp": 1702993557
+    },
+    {
+        "content": "<p>I read a bit and it seems that whatever we do, <code>std::filesystem</code> can be used only with macOS 10.15 and newer deployment targets. Anything built like that does not run on 10.13 or 10.14</p>",
+        "id": 408937918,
+        "sender_full_name": "Pavel Kalian",
+        "timestamp": 1702993863
+    },
+    {
+        "content": "<p>I kind of can't believe that a C++17 feature like this would be available only with the absolutely latest compiler toolchain available on macOS, which Xcode 15 is, the problem should really be the SDK used for the old deployment targets.</p>",
+        "id": 408938508,
+        "sender_full_name": "Pavel Kalian",
+        "timestamp": 1702994060
+    },
+    {
+        "content": "<p>Yes. But for 10.13, as you say, we only build intel stuff. here we can use the homebrew boost, specifically boost::filesystem which effectively is a preview of std::filesystem. The overall code to handle this is already in place. This already at least compiles and links.</p>",
+        "id": 408938690,
+        "sender_full_name": "Alec Leamas",
+        "timestamp": 1702994133
+    },
+    {
+        "content": "<p>My question: what is the target for the universal build?</p>",
+        "id": 408938883,
+        "sender_full_name": "Alec Leamas",
+        "timestamp": 1702994192
+    },
+    {
+        "content": "<p>Yes, and for the universal build we use 11 deployment target, so we should not need boost at all</p>",
+        "id": 408938918,
+        "sender_full_name": "Pavel Kalian",
+        "timestamp": 1702994206
+    },
+    {
+        "content": "<p>That is, we could compile the universal build using Xcode 15.0 or higher ?</p>",
+        "id": 408939035,
+        "sender_full_name": "Alec Leamas",
+        "timestamp": 1702994250
+    },
+    {
+        "content": "<p>Probably yes, the product needs to be tried on macOS 11</p>",
+        "id": 408939309,
+        "sender_full_name": "Pavel Kalian",
+        "timestamp": 1702994331
+    },
+    {
+        "content": "<p>But the dependency bundle already is built with Xcode 15 anyway, so I do not see much reason why upgrading the compiler used in the CI builds should break something</p>",
+        "id": 408939516,
+        "sender_full_name": "Pavel Kalian",
+        "timestamp": 1702994398
+    },
+    {
+        "content": "<p>The bundle for the universal build, the one for Intel is built on 10.14 using Xcode 11</p>",
+        "id": 408939690,
+        "sender_full_name": "Pavel Kalian",
+        "timestamp": 1702994438
+    },
+    {
+        "content": "<p>So, if I update Xcode as part of  <a href=\"https://github.com/opencpn/OpenCPN/issues/3539\">#3539</a> you are on board? If we run into problems it can of course be reverted and we will have to evaluate the situation again. But, it's  worth a try.</p>\n<p>Or?</p>",
+        "id": 408940051,
+        "sender_full_name": "Alec Leamas",
+        "timestamp": 1702994521
+    },
+    {
+        "content": "<p>Least costly is to try, for sure.</p>",
+        "id": 408940238,
+        "sender_full_name": "Pavel Kalian",
+        "timestamp": 1702994557
+    },
+    {
+        "content": "<p>OK. I'll add that to the PR. It will probably go in today</p>\n<p>I could merge this myself, but since the focus is android I think it's better if Dave pushes the final button. We have  had a similar discussion with roughly the same result for android.</p>",
+        "id": 408940621,
+        "sender_full_name": "Alec Leamas",
+        "timestamp": 1702994668
     }
 ]
