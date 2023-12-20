@@ -26,5 +26,40 @@ Getting a hint from the bug purported to be fixed by this patch.<br>
 
 
 
-<hr><p>Last updated: Dec 20 2023 at 20:42 UTC</p>
+<a name="409258180"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332168-Master%20-%205.8.0%20%20%28was%3A%20comms%29/topic/Linux%20plugin%20load%20path/near/409258180" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Alec Leamas <a href="https://leamas.github.io/zulip-archive/stream/332168-Master---5.2E8.2E0--.28was.3A-comms.29/topic/Linux.20plugin.20load.20path.html#409258180">(Dec 20 2023 at 20:51)</a>:</h4>
+<p>Thanks for the link.</p>
+<p>Anyway, we need to add the path to the system plugins. This is, on linux, <em>$base_plugin_path/../$libdir/opencpn</em>. <em>$base_plugin_path</em> is known, the installation path. In the standard  scenario it is <em>/usr/bin/opencpn</em>; viable alternatives includes <em>/usr/local/bin/opencpn</em>,  <em>/opt/opencpn/bin/opencpn</em> and what not. </p>
+<p>However, <em>$libdir</em> is problematic. It could at least be <em>lib</em> or <em>lib64</em>. On a Debian system it might even  be a triple like <em>x86_64-linux-gnu</em>. Our own  packages alway uses <em>lib</em>, though.</p>
+<p>We have the OPENCPN_PLUGIN_DIRS loophole, so we could probably get away with using just <em>lib</em>.</p>
+<p>TL; DR; we should add <em>$base_plugin_path/../lib/opencpn</em> to the search paths. </p>
+<p>OK?</p>
+
+
+
+<a name="409259821"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332168-Master%20-%205.8.0%20%20%28was%3A%20comms%29/topic/Linux%20plugin%20load%20path/near/409259821" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Alec Leamas <a href="https://leamas.github.io/zulip-archive/stream/332168-Master---5.2E8.2E0--.28was.3A-comms.29/topic/Linux.20plugin.20load.20path.html#409259821">(Dec 20 2023 at 21:02)</a>:</h4>
+<p>... which is what we are trying to do already today. Somethin wrong, though.</p>
+
+
+
+<a name="409259877"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332168-Master%20-%205.8.0%20%20%28was%3A%20comms%29/topic/Linux%20plugin%20load%20path/near/409259877" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Dave Register <a href="https://leamas.github.io/zulip-archive/stream/332168-Master---5.2E8.2E0--.28was.3A-comms.29/topic/Linux.20plugin.20load.20path.html#409259877">(Dec 20 2023 at 21:03)</a>:</h4>
+<p>If the drop both /usr/local/bin and /usr/bin, OK  We do not want paths that resolve to those locations both to exist.  That was the original bug.</p>
+
+
+
+<a name="409260084"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332168-Master%20-%205.8.0%20%20%28was%3A%20comms%29/topic/Linux%20plugin%20load%20path/near/409260084" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Alec Leamas <a href="https://leamas.github.io/zulip-archive/stream/332168-Master---5.2E8.2E0--.28was.3A-comms.29/topic/Linux.20plugin.20load.20path.html#409260084">(Dec 20 2023 at 21:04)</a>:</h4>
+<p>? don't follow...</p>
+
+
+
+<a name="409260137"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332168-Master%20-%205.8.0%20%20%28was%3A%20comms%29/topic/Linux%20plugin%20load%20path/near/409260137" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Alec Leamas <a href="https://leamas.github.io/zulip-archive/stream/332168-Master---5.2E8.2E0--.28was.3A-comms.29/topic/Linux.20plugin.20load.20path.html#409260137">(Dec 20 2023 at 21:04)</a>:</h4>
+<p>IT cannot be two paths, just one.</p>
+
+
+
+<hr><p>Last updated: Dec 20 2023 at 21:07 UTC</p>
 </html>
