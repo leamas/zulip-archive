@@ -318,5 +318,23 @@ Thanks for the hint.</p>
 
 
 
-<hr><p>Last updated: Dec 30 2023 at 08:10 UTC</p>
+<a name="410523366"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332168-Master%20-%205.8.0%20%20%28was%3A%20comms%29/topic/HEADS%20UP%3A%20All%20source%20files%20being%20moved/near/410523366" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Alec Leamas <a href="https://leamas.github.io/zulip-archive/stream/332168-Master---5.2E8.2E0--.28was.3A-comms.29/topic/HEADS.20UP.3A.20All.20source.20files.20being.20moved.html#410523366">(Dec 30 2023 at 08:12)</a>:</h4>
+<p><span class="user-mention" data-user-id="522486">@Håkan Svensson</span>  I basically never merge anything into master, it's a bad idea since your master will differ from upstream/master (different history).</p>
+<p>If you have local changes you want to keep there are two ways to handle it instead, to rebase or get a fresh branch.</p>
+<p>Doing a rebase  goes like this:</p>
+<div class="codehilite"><pre><span></span><code>    $ git remote update upstream
+    $ git rebase upstream/master
+</code></pre></div>
+<p>If there are conflicts you will need to handle them, much the same as when doing a merge. When completeted you will have your own changes on top on a verbatim copy of upstream/master -- this is what you want. One added benefit is that in case of troubles there is <code>git rebase --abort</code> which resets everything.</p>
+<p>A complete, verbatim copy of master :</p>
+<div class="codehilite"><pre><span></span><code>    $ git remote update upstream
+    $ git checkout some-branch-but-not-master
+    $  git fetch -f upstream master:master
+</code></pre></div>
+<p>This will nuke whatever changes you have locally, such should be saved in other branches. Your master will be an exact copy of upstream/master, something a merge often (but not always) isn't.</p>
+
+
+
+<hr><p>Last updated: Dec 30 2023 at 08:27 UTC</p>
 </html>

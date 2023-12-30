@@ -76,5 +76,11 @@
         "id": 410475683,
         "sender_full_name": "Pavel Kalian",
         "timestamp": 1703881974
+    },
+    {
+        "content": "<p><span class=\"user-mention\" data-user-id=\"522486\">@Håkan Svensson</span>  I basically never merge anything into master, it's a bad idea since your master will differ from upstream/master (different history).</p>\n<p>If you have local changes you want to keep there are two ways to handle it instead, to rebase or get a fresh branch.</p>\n<p>Doing a rebase  goes like this:</p>\n<div class=\"codehilite\"><pre><span></span><code>    $ git remote update upstream\n    $ git rebase upstream/master\n</code></pre></div>\n<p>If there are conflicts you will need to handle them, much the same as when doing a merge. When completeted you will have your own changes on top on a verbatim copy of upstream/master -- this is what you want. One added benefit is that in case of troubles there is <code>git rebase --abort</code> which resets everything.</p>\n<p>A complete, verbatim copy of master :</p>\n<div class=\"codehilite\"><pre><span></span><code>    $ git remote update upstream\n    $ git checkout some-branch-but-not-master\n    $  git fetch -f upstream master:master\n</code></pre></div>\n<p>This will nuke whatever changes you have locally, such should be saved in other branches. Your master will be an exact copy of upstream/master, something a merge often (but not always) isn't.</p>",
+        "id": 410523366,
+        "sender_full_name": "Alec Leamas",
+        "timestamp": 1703923954
     }
 ]
