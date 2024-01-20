@@ -1,0 +1,8 @@
+[
+    {
+        "content": "<p>Previously, I have been able to debug under Xcode by</p>\n<ul>\n<li>In ci/circleci-build-macos.sh setting build type to debug and building</li>\n<li>Launching Xcode and running OpenCPN</li>\n<li>Adding source files to Xcode</li>\n<li>Setting breakpoints as required.</li>\n</ul>\n<p>Now the breakpoints will not stick - they have a dotted outline.  This is likely because the debug tables are missing.<br>\nThis problem seems to have arisen since the build was modified to support Apple silicon.</p>\n<p>I am running on an M2 Mac.</p>\n<p>Relevant setting is:</p>\n<div class=\"codehilite\"><pre><span></span><code>cmake \\\n  -DCMAKE_BUILD_TYPE=${CMAKE_BUILD_TYPE:-Debug} \\\n  -DCMAKE_INSTALL_PREFIX= \\\n  -DCMAKE_OSX_DEPLOYMENT_TARGET=${MACOSX_DEPLOYMENT_TARGET} \\\n  -DOCPN_TARGET_TUPLE=&quot;darwin-wx32;10;universal&quot; \\\n  -DCMAKE_OSX_ARCHITECTURES=&quot;arm64;x86_64&quot; \\\n  ..\n</code></pre></div>\n<p>The above has changed since I had Xcode working OK to accommodate Apple Silicon</p>\n<p>I assume on my M2 Mac, I building for arm.<br>\nHowever, In order to get Xcode to run OCPN I have to set set the Product Destination to <code>My Mac (Rosetta)'.  If I choose </code>Apple Silicon<code> or </code>Show both<code>  when I launch OCPN, I get </code>Cannot launch using specified run destination`</p>\n<p>I am running with OCPN v5.8.4-0-1637c28</p>\n<p>Anyone got this working?</p>",
+        "id": 416968682,
+        "sender_full_name": "Tony Voss",
+        "timestamp": 1705737615
+    }
+]

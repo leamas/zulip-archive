@@ -1,0 +1,42 @@
+<html>
+<head><meta charset="utf-8"><title>Debugging under MacOS Xcode · general · Zulip Chat Archive</title></head>
+<h2>Stream: <a href="https://leamas.github.io/zulip-archive/stream/282854-general/index.html">general</a></h2>
+<h3>Topic: <a href="https://leamas.github.io/zulip-archive/stream/282854-general/topic/Debugging.20under.20MacOS.20Xcode.html">Debugging under MacOS Xcode</a></h3>
+
+<hr>
+
+<base href="https://opencpn.zulipchat.com">
+
+<head><link href="https://leamas.github.io/zulip-archive/style.css" rel="stylesheet"></head>
+
+<a name="416968682"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/282854-general/topic/Debugging%20under%20MacOS%20Xcode/near/416968682" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Tony Voss <a href="https://leamas.github.io/zulip-archive/stream/282854-general/topic/Debugging.20under.20MacOS.20Xcode.html#416968682">(Jan 20 2024 at 08:00)</a>:</h4>
+<p>Previously, I have been able to debug under Xcode by</p>
+<ul>
+<li>In ci/circleci-build-macos.sh setting build type to debug and building</li>
+<li>Launching Xcode and running OpenCPN</li>
+<li>Adding source files to Xcode</li>
+<li>Setting breakpoints as required.</li>
+</ul>
+<p>Now the breakpoints will not stick - they have a dotted outline.  This is likely because the debug tables are missing.<br>
+This problem seems to have arisen since the build was modified to support Apple silicon.</p>
+<p>I am running on an M2 Mac.</p>
+<p>Relevant setting is:</p>
+<div class="codehilite"><pre><span></span><code>cmake \
+  -DCMAKE_BUILD_TYPE=${CMAKE_BUILD_TYPE:-Debug} \
+  -DCMAKE_INSTALL_PREFIX= \
+  -DCMAKE_OSX_DEPLOYMENT_TARGET=${MACOSX_DEPLOYMENT_TARGET} \
+  -DOCPN_TARGET_TUPLE=&quot;darwin-wx32;10;universal&quot; \
+  -DCMAKE_OSX_ARCHITECTURES=&quot;arm64;x86_64&quot; \
+  ..
+</code></pre></div>
+<p>The above has changed since I had Xcode working OK to accommodate Apple Silicon</p>
+<p>I assume on my M2 Mac, I building for arm.<br>
+However, In order to get Xcode to run OCPN I have to set set the Product Destination to <code>My Mac (Rosetta)'.  If I choose </code>Apple Silicon<code> or </code>Show both<code>  when I launch OCPN, I get </code>Cannot launch using specified run destination`</p>
+<p>I am running with OCPN v5.8.4-0-1637c28</p>
+<p>Anyone got this working?</p>
+
+
+
+<hr><p>Last updated: Jan 20 2024 at 08:10 UTC</p>
+</html>
