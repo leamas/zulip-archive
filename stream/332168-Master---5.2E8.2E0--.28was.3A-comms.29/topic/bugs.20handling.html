@@ -138,5 +138,75 @@ GLEW init success!nGLEW init success!n SENC: nCPU: 4    m_max_jobs :3
 
 
 
-<hr><p>Last updated: Jan 27 2024 at 14:42 UTC</p>
+<a name="418422743"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332168-Master%20-%205.8.0%20%20%28was%3A%20comms%29/topic/bugs%20handling/near/418422743" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Dave Register <a href="https://leamas.github.io/zulip-archive/stream/332168-Master---5.2E8.2E0--.28was.3A-comms.29/topic/bugs.20handling.html#418422743">(Jan 27 2024 at 14:44)</a>:</h4>
+<p>Fixed it.  Embarrassed by that old code...</p>
+
+
+
+<a name="418422898"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332168-Master%20-%205.8.0%20%20%28was%3A%20comms%29/topic/bugs%20handling/near/418422898" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Alec Leamas <a href="https://leamas.github.io/zulip-archive/stream/332168-Master---5.2E8.2E0--.28was.3A-comms.29/topic/bugs.20handling.html#418422898">(Jan 27 2024 at 14:47)</a>:</h4>
+<p>oops... any chance you could bisect it?</p>
+
+
+
+<a name="418422981"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332168-Master%20-%205.8.0%20%20%28was%3A%20comms%29/topic/bugs%20handling/near/418422981" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Alec Leamas <a href="https://leamas.github.io/zulip-archive/stream/332168-Master---5.2E8.2E0--.28was.3A-comms.29/topic/bugs.20handling.html#418422981">(Jan 27 2024 at 14:48)</a>:</h4>
+<p>sorry, missed the thread. disregard</p>
+
+
+
+<a name="418423107"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332168-Master%20-%205.8.0%20%20%28was%3A%20comms%29/topic/bugs%20handling/near/418423107" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Pavel Kalian <a href="https://leamas.github.io/zulip-archive/stream/332168-Master---5.2E8.2E0--.28was.3A-comms.29/topic/bugs.20handling.html#418423107">(Jan 27 2024 at 14:50)</a>:</h4>
+<p><a href="/user_uploads/33951/N9VYScnMaNYNJkssWWyTzpWD/leaks.txt">leaks.txt</a><br>
+This is what we are down to now, I don't think we can resolve any of the rest in the application code. But being less than 1KB, we can probably live with it...</p>
+
+
+
+<a name="418423668"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332168-Master%20-%205.8.0%20%20%28was%3A%20comms%29/topic/bugs%20handling/near/418423668" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Dave Register <a href="https://leamas.github.io/zulip-archive/stream/332168-Master---5.2E8.2E0--.28was.3A-comms.29/topic/bugs.20handling.html#418423668">(Jan 27 2024 at 14:58)</a>:</h4>
+<p>Hmmmm<br>
+In OCPNPlatform.cpp:753</p>
+<div class="codehilite"><pre><span></span><code>  delete tcanvas;
+  delete pctx;
+</code></pre></div>
+
+<p>Try flipping the order of the deletes here, maybe unwinding in reverse order of creation will help?</p>
+
+
+
+<a name="418423723"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332168-Master%20-%205.8.0%20%20%28was%3A%20comms%29/topic/bugs%20handling/near/418423723" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Pavel Kalian <a href="https://leamas.github.io/zulip-archive/stream/332168-Master---5.2E8.2E0--.28was.3A-comms.29/topic/bugs.20handling.html#418423723">(Jan 27 2024 at 14:59)</a>:</h4>
+<p>I already did I think, but will try again to make sure</p>
+
+
+
+<a name="418424017"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332168-Master%20-%205.8.0%20%20%28was%3A%20comms%29/topic/bugs%20handling/near/418424017" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Pavel Kalian <a href="https://leamas.github.io/zulip-archive/stream/332168-Master---5.2E8.2E0--.28was.3A-comms.29/topic/bugs.20handling.html#418424017">(Jan 27 2024 at 15:03)</a>:</h4>
+<p>Yes, indeed I did and it is the same</p>
+
+
+
+<a name="418424176"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332168-Master%20-%205.8.0%20%20%28was%3A%20comms%29/topic/bugs%20handling/near/418424176" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Dave Register <a href="https://leamas.github.io/zulip-archive/stream/332168-Master---5.2E8.2E0--.28was.3A-comms.29/topic/bugs.20handling.html#418424176">(Jan 27 2024 at 15:05)</a>:</h4>
+<p>OK, that's what we have, I guess.</p>
+
+
+
+<a name="418424267"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332168-Master%20-%205.8.0%20%20%28was%3A%20comms%29/topic/bugs%20handling/near/418424267" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Pavel Kalian <a href="https://leamas.github.io/zulip-archive/stream/332168-Master---5.2E8.2E0--.28was.3A-comms.29/topic/bugs.20handling.html#418424267">(Jan 27 2024 at 15:06)</a>:</h4>
+<h1>AddressSanitizer</h1>
+<h2>suppr.txt</h2>
+<p>There are (supposedly false positive) leaks detected in libfontconfig, we want to suppress therm</p>
+<div class="codehilite"><pre><span></span><code>leak:FcPatternObjectInsertElt
+leak:FcValueSave
+</code></pre></div>
+<div class="codehilite" data-code-language="Bash"><pre><span></span><code>cmake<span class="w"> </span>-DENABLE_SANITIZER<span class="o">=</span>address<span class="w"> </span>..
+make
+<span class="nv">ASAN_OPTIONS</span><span class="o">=</span><span class="nv">detect_leaks</span><span class="o">=</span><span class="m">1</span>,halt_on_error<span class="o">=</span><span class="m">0</span><span class="w"> </span><span class="nv">LSAN_OPTIONS</span><span class="o">=</span><span class="nv">suppressions</span><span class="o">=</span>../suppr.txt<span class="w"> </span>./opencpn<span class="w"> </span>&gt;<span class="w"> </span>leaks.txt<span class="w"> </span><span class="m">2</span>&gt;<span class="p">&amp;</span><span class="m">1</span>
+</code></pre></div>
+
+
+
+<hr><p>Last updated: Jan 27 2024 at 15:06 UTC</p>
 </html>

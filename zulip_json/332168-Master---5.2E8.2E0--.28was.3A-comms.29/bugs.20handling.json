@@ -40,5 +40,59 @@
         "id": 418418619,
         "sender_full_name": "Pavel Kalian",
         "timestamp": 1706362990
+    },
+    {
+        "content": "<p>Fixed it.  Embarrassed by that old code...</p>",
+        "id": 418422743,
+        "sender_full_name": "Dave Register",
+        "timestamp": 1706366680
+    },
+    {
+        "content": "<p>oops... any chance you could bisect it?</p>",
+        "id": 418422898,
+        "sender_full_name": "Alec Leamas",
+        "timestamp": 1706366837
+    },
+    {
+        "content": "<p>sorry, missed the thread. disregard</p>",
+        "id": 418422981,
+        "sender_full_name": "Alec Leamas",
+        "timestamp": 1706366901
+    },
+    {
+        "content": "<p><a href=\"/user_uploads/33951/N9VYScnMaNYNJkssWWyTzpWD/leaks.txt\">leaks.txt</a><br>\nThis is what we are down to now, I don't think we can resolve any of the rest in the application code. But being less than 1KB, we can probably live with it...</p>",
+        "id": 418423107,
+        "sender_full_name": "Pavel Kalian",
+        "timestamp": 1706367037
+    },
+    {
+        "content": "<p>Hmmmm<br>\nIn OCPNPlatform.cpp:753</p>\n<div class=\"codehilite\"><pre><span></span><code>  delete tcanvas;\n  delete pctx;\n</code></pre></div>\n\n<p>Try flipping the order of the deletes here, maybe unwinding in reverse order of creation will help?</p>",
+        "id": 418423668,
+        "sender_full_name": "Dave Register",
+        "timestamp": 1706367525
+    },
+    {
+        "content": "<p>I already did I think, but will try again to make sure</p>",
+        "id": 418423723,
+        "sender_full_name": "Pavel Kalian",
+        "timestamp": 1706367586
+    },
+    {
+        "content": "<p>Yes, indeed I did and it is the same</p>",
+        "id": 418424017,
+        "sender_full_name": "Pavel Kalian",
+        "timestamp": 1706367803
+    },
+    {
+        "content": "<p>OK, that's what we have, I guess.</p>",
+        "id": 418424176,
+        "sender_full_name": "Dave Register",
+        "timestamp": 1706367936
+    },
+    {
+        "content": "<h1>AddressSanitizer</h1>\n<h2>suppr.txt</h2>\n<p>There are (supposedly false positive) leaks detected in libfontconfig, we want to suppress therm</p>\n<div class=\"codehilite\"><pre><span></span><code>leak:FcPatternObjectInsertElt\nleak:FcValueSave\n</code></pre></div>\n<div class=\"codehilite\" data-code-language=\"Bash\"><pre><span></span><code>cmake<span class=\"w\"> </span>-DENABLE_SANITIZER<span class=\"o\">=</span>address<span class=\"w\"> </span>..\nmake\n<span class=\"nv\">ASAN_OPTIONS</span><span class=\"o\">=</span><span class=\"nv\">detect_leaks</span><span class=\"o\">=</span><span class=\"m\">1</span>,halt_on_error<span class=\"o\">=</span><span class=\"m\">0</span><span class=\"w\"> </span><span class=\"nv\">LSAN_OPTIONS</span><span class=\"o\">=</span><span class=\"nv\">suppressions</span><span class=\"o\">=</span>../suppr.txt<span class=\"w\"> </span>./opencpn<span class=\"w\"> </span>&gt;<span class=\"w\"> </span>leaks.txt<span class=\"w\"> </span><span class=\"m\">2</span>&gt;<span class=\"p\">&amp;</span><span class=\"m\">1</span>\n</code></pre></div>",
+        "id": 418424267,
+        "sender_full_name": "Pavel Kalian",
+        "timestamp": 1706368001
     }
 ]
