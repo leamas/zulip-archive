@@ -214,5 +214,30 @@ make
 
 
 
-<hr><p>Last updated: Jan 27 2024 at 15:42 UTC</p>
+<a name="418427417"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332168-Master%20-%205.8.0%20%20%28was%3A%20comms%29/topic/bugs%20handling/near/418427417" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Dan Dickey <a href="https://leamas.github.io/zulip-archive/stream/332168-Master---5.2E8.2E0--.28was.3A-comms.29/topic/bugs.20handling.html#418427417">(Jan 27 2024 at 15:51)</a>:</h4>
+<p>Can anyone point me to code that causes this leak reported by Visual C debug heap library:</p>
+<blockquote>
+<p>{311223} normal block at 0x0F531340, 18 bytes long.<br>
+ Data: &lt;:America/Asuncio&gt; 3A 41 6D 65 72 69 63 61 2F 41 73 75 6E 63 69 6F <br>
+{311222} normal block at 0x0F531740, 15 bytes long.<br>
+ Data: &lt;:America/Aruba &gt; 3A 41 6D 65 72 69 63 61 2F 41 72 75 62 61 00 <br>
+{311221} normal block at 0x0F531100, 19 bytes long.<br>
+ Data: &lt;:America/Araguai&gt; 3A 41 6D 65 72 69 63 61 2F 41 72 61 67 75 61 69 <br>
+{311220} normal block at 0x0F5311C0, 17 bytes long.<br>
+ Data: &lt;:America/Antigua&gt; 3A 41 6D 65 72 69 63 61 2F 41 6E 74 69 67 75 61 <br>
+{311219} normal block at 0x0F5317C0, 18 bytes long.<br>
+ Data: &lt;:America/Anguill&gt; 3A 41 6D 65 72 69 63 61 2F 41 6E 67 75 69 6C 6C</p>
+</blockquote>
+<p>Any idea what kind of data that is?  Maybe tide stations or something similar?</p>
+
+
+
+<a name="418427767"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332168-Master%20-%205.8.0%20%20%28was%3A%20comms%29/topic/bugs%20handling/near/418427767" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Pavel Kalian <a href="https://leamas.github.io/zulip-archive/stream/332168-Master---5.2E8.2E0--.28was.3A-comms.29/topic/bugs.20handling.html#418427767">(Jan 27 2024 at 15:56)</a>:</h4>
+<p>Looks like timezone data from <code>NV_CHAR tzfile[DEFAULT_TZFILES][DEFAULT_TZFILE_SIZE]</code> in <code>gui/src/tcmgr.cpp</code></p>
+
+
+
+<hr><p>Last updated: Jan 27 2024 at 16:09 UTC</p>
 </html>
