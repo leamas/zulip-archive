@@ -15,5 +15,95 @@
 
 
 
-<hr><p>Last updated: Jan 27 2024 at 13:07 UTC</p>
+<a name="418416671"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332168-Master%20-%205.8.0%20%20%28was%3A%20comms%29/topic/bugs%20handling/near/418416671" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Håkan Svensson <a href="https://leamas.github.io/zulip-archive/stream/332168-Master---5.2E8.2E0--.28was.3A-comms.29/topic/bugs.20handling.html#418416671">(Jan 27 2024 at 13:10)</a>:</h4>
+<p><span class="user-mention" data-user-id="399510">@Alec Leamas</span> <span class="user-mention" data-user-id="517002">@Dave Register</span> <span class="user-mention" data-user-id="573239">@Pavel Kalian</span> <br>
+Maybe not worth a bug report?<br>
+Rpi4 Bullseye. Today's master 5.9<br>
+O crash at start up after accepted "New version ..."</p>
+<p>gdb crash and bt:</p>
+<div class="codehilite"><pre><span></span><code>GLEW init success!nGLEW init success!n SENC: nCPU: 4    m_max_jobs :3
+
+(opencpn:968058): Gtk-CRITICAL **: 13:35:18.266: gtk_window_resize: assertion &#39;height &gt; 0&#39; failed
+--Type &lt;RET&gt; for more, q to quit, c to continue without paging--
+
+Thread 1 &quot;opencpn&quot; received signal SIGSEGV, Segmentation fault.
+0x0000007ff72401e8 in wxString::compare(wxString const&amp;) const ()
+   from /lib/aarch64-linux-gnu/libwx_baseu-3.0.so.0
+(gdb) bt
+#0  0x0000007ff72401e8 in wxString::compare(wxString const&amp;) const ()
+    at /lib/aarch64-linux-gnu/libwx_baseu-3.0.so.0
+#1  0x0000005555d2778c in wxString::Cmp(wxString const&amp;) const (s=..., this=0x555c7bd978)
+    at /usr/include/wx-3.0/wx/string.h:2111
+#2  wxString::IsSameAs(wxString const&amp;, bool) const (compareWithCase=true, str=..., this=0x555c7bd978)
+    at /usr/include/wx-3.0/wx/string.h:2130
+#3  wxString::IsSameAs(wxString const&amp;, bool) const (compareWithCase=true, str=..., this=0x555c7bd978)
+    at /usr/include/wx-3.0/wx/string.h:2123
+#4  s52plib::GetAndAddCSRules(_ObjRazRules*, _Rules*)
+    (this=this@entry=0x55591f73e0, rzRules=rzRules@entry=0x555a60acb0, rules=rules@entry=0x555a60ac30)
+    at /home/pi/Builds/OpenCPN/libs/s52plib/src/s52plib.cpp:9234
+#5  0x0000005555d27a78 in s52plib::SetLineFeaturePriority(_ObjRazRules*, int)
+    (this=0x55591f73e0, rzRules=0x555a60acb0, npriority=npriority@entry=3)
+    at /home/pi/Builds/OpenCPN/libs/s52plib/src/s52plib.cpp:6672
+#6  0x0000005555a8eb84 in s57chart::SetLinePriorities() (this=this@entry=0x555a2a1580)
+    at /home/pi/Builds/OpenCPN/gui/src/s57chart.cpp:788
+#7  0x0000005555aa4530 in s57chart::DoRenderRegionViewOnGL(wxGLContext const&amp;, ViewPort const&amp;, OCPNRegion const&amp;, LLRegion const&amp;, bool)
+    (this=0x555a2a1580, glc=..., VPoint=..., RectRegion=..., Region=..., b_overlay=b_overlay@entry=false)
+    at /home/pi/Builds/OpenCPN/gui/src/s57chart.cpp:1628
+#8  0x0000005555aa4858 in s57chart::RenderRegionViewOnGLNoText(wxGLContext const&amp;, ViewPort const&amp;, OCPNRegion const&amp;, LLRegion const&amp;)
+    (Region=&lt;optimized out&gt;, RectRegion=&lt;optimized out&gt;, VPoint=&lt;optimized out&gt;, glc=&lt;optimized out&gt;, this=&lt;optimized out&gt;) at /home/pi/Builds/OpenCPN/gui/src/s57chart.cpp:1572
+
+
+i@RPi400:~/Builds/OpenCPN/build $ cat /proc/version
+Linux version 6.1.21-v8+ (dom@buildbot) (aarch64-linux-gnu-gcc-8 (Ubuntu/Linaro 8.4.0-3ubuntu1) 8.4.0, GNU ld (GNU Binutils for Ubuntu) 2.34) #1642 SMP PREEMPT Mon Apr  3 17:24:16 BST 2023
+
+pi@RPi400:~/Builds/OpenCPN/build $ cat /etc/os-release
+PRETTY_NAME=&quot;Debian GNU/Linux 11 (bullseye)&quot;
+NAME=&quot;Debian GNU/Linux&quot;
+VERSION_ID=&quot;11&quot;
+VERSION=&quot;11 (bullseye)&quot;
+VERSION_CODENAME=bullseye
+ID=debian
+HOME_URL=&quot;https://www.debian.org/&quot;
+SUPPORT_URL=&quot;https://www.debian.org/support&quot;
+BUG_REPORT_URL=&quot;https://bugs.debian.org/&quot;
+</code></pre></div>
+
+
+
+<a name="418417083"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332168-Master%20-%205.8.0%20%20%28was%3A%20comms%29/topic/bugs%20handling/near/418417083" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Pavel Kalian <a href="https://leamas.github.io/zulip-archive/stream/332168-Master---5.2E8.2E0--.28was.3A-comms.29/topic/bugs.20handling.html#418417083">(Jan 27 2024 at 13:16)</a>:</h4>
+<p>It is related to <a href="https://github.com/OpenCPN/OpenCPN/issues/3600">https://github.com/OpenCPN/OpenCPN/issues/3600</a><br>
+Try this:</p>
+<div class="codehilite" data-code-language="Diff"><pre><span></span><code><span class="gh">diff --git a/libs/s52plib/src/chartsymbols.cpp b/libs/s52plib/src/chartsymbols.cpp</span>
+<span class="gh">index 755163b31..91b9cd4d4 100644</span>
+<span class="gd">--- a/libs/s52plib/src/chartsymbols.cpp</span>
+<span class="gi">+++ b/libs/s52plib/src/chartsymbols.cpp</span>
+<span class="gu">@@ -474,7 +474,7 @@ void ChartSymbols::ProcessSymbols(pugi::xml_node &amp;node) {</span>
+
+
+<span class="w"> </span>void ChartSymbols::BuildLookup(Lookup &amp;lookup) {
+<span class="gd">-  LUPrec *LUP = (LUPrec *)calloc(1, sizeof(LUPrec));</span>
+<span class="gi">+  LUPrec *LUP = new LUPrec();</span>
+<span class="w"> </span>  //plib-&gt;pAlloc-&gt;Add(LUP);
+
+<span class="w"> </span>  LUP-&gt;RCID = lookup.RCID;
+<span class="gh">diff --git a/libs/s52plib/src/s52plib.cpp b/libs/s52plib/src/s52plib.cpp</span>
+<span class="gh">index 49463cd61..e7f64ae2f 100755</span>
+<span class="gd">--- a/libs/s52plib/src/s52plib.cpp</span>
+<span class="gi">+++ b/libs/s52plib/src/s52plib.cpp</span>
+<span class="gu">@@ -9245,7 +9245,7 @@ void s52plib::GetAndAddCSRules(ObjRazRules *rzRules, Rules *rules) {</span>
+
+<span class="w"> </span>  if (NULL == LUP)  // Not found
+<span class="w"> </span>  {
+<span class="gd">-    NewLUP = (LUPrec *)calloc(1, sizeof(LUPrec));</span>
+<span class="gi">+    NewLUP = new LUPrec();</span>
+<span class="w"> </span>    //pAlloc-&gt;Add(NewLUP);
+
+<span class="w"> </span>    NewLUP-&gt;DISC = rzRules-&gt;LUP-&gt;DISC;  // as a default
+</code></pre></div>
+
+
+
+<hr><p>Last updated: Jan 27 2024 at 13:22 UTC</p>
 </html>
