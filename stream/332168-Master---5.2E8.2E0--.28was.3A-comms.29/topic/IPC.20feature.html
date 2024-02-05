@@ -63,5 +63,14 @@
 
 
 
-<hr><p>Last updated: Feb 05 2024 at 13:24 UTC</p>
+<a name="419839701"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332168-Master%20-%205.8.0%20%20%28was%3A%20comms%29/topic/IPC%20feature/near/419839701" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Alec Leamas <a href="https://leamas.github.io/zulip-archive/stream/332168-Master---5.2E8.2E0--.28was.3A-comms.29/topic/IPC.20feature.html#419839701">(Feb 05 2024 at 13:30)</a>:</h4>
+<p>The core issue he is that wxWidgets requires that it can collect all wxWidgets components at exit. This is actually not meaningful for static objects such as singletons, but required anyway.</p>
+<p>However, we should no let this particular wxWidgets requirement be the overall solution to everything. Global/static variables are evil, agreed (also true for singletons).  But  the c++ runtime is perfectly capable of invoking destructors on them on exit. Using these mechanisms it's possible to avoid the evil  raw pointers.</p>
+<p>So the  solution should IMHO be an internal pointer in IpcConnection which is possible to tear down at exit.  Basically a band aid for semi functional wxWidgets exit procedures.  And keep the overall reference handling of the objects which is much less error prone. </p>
+<p>Or?</p>
+
+
+
+<hr><p>Last updated: Feb 05 2024 at 13:42 UTC</p>
 </html>
