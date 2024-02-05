@@ -47,5 +47,12 @@
 
 
 
-<hr><p>Last updated: Feb 05 2024 at 12:14 UTC</p>
+<a name="419827688"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332168-Master%20-%205.8.0%20%20%28was%3A%20comms%29/topic/IPC%20feature/near/419827688" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Dan Dickey <a href="https://leamas.github.io/zulip-archive/stream/332168-Master---5.2E8.2E0--.28was.3A-comms.29/topic/IPC.20feature.html#419827688">(Feb 05 2024 at 12:27)</a>:</h4>
+<p>There are a ton of pointers (and arrays of pointers) that remain allocated when O closes.  This is just one that triggers a wx assert.  All of them are "bad form" in my experience.</p>
+<p>The LocalServerApi::GetInstance() function returns a pointer to the one and only IpcServer object.  Just retaining and then deleting that pointer on exit should suffice. The destructor of inherited wxServer class should get rid of the DDE connection.  I think that is what you are suggesting.</p>
+
+
+
+<hr><p>Last updated: Feb 05 2024 at 12:40 UTC</p>
 </html>
