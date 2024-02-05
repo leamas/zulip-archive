@@ -16,5 +16,11 @@
         "id": 419796881,
         "sender_full_name": "Notification Bot",
         "timestamp": 1707125672
+    },
+    {
+        "content": "<p>There is no pointer, and hence nothing to delete. The server is created in <br>\n<em>ocpn_frame.cpp</em> using <code>auto&amp; server = LocalServerApi::GetInstance();</code>.  That is a reference to a singleton, no pointer.  As such it could not really be deleted but  is managed by  the runtime system.</p>\n<p>On Linux, this should not be a problem. The DBusServer used to implement LocalServerAPI does not use any wxWindows components and is thus happy with the runtime system handling it. This is really how things should be.</p>\n<p>But when you say it, I think I might understand  the problem.  The runtime system's  clean up of  static variables occurs after wxWidgets' clean  up of wxWidgets resources.  This means that wxWidgets might become upset for no reason if there is a yet not cleaned up singleton when closing down.</p>\n<p>We could handle this without breaking any  major interfaces in a three step approach</p>\n<ol>\n<li>Add a new method <code>Close()</code> to <code>LocalServerApi</code>, by default empty;</li>\n<li>Make the internal  server variable in <code>IpcConnection</code>  a pointer rather than a reference. (Remains to see if it is possible to return a reference to a *pointer.)</li>\n<li>Let the Close() on IpcConnection() delete that pointer.</li>\n<li>Invoke <code>Close()</code>on   <code>LocalServerApi::GetInstance()</code> on exit.</li>\n</ol>\n<p>This is a lot of code which generally makes things worse to satisfy wxWidgets'  internal needs. Sigh. </p>\n<p>Do you see alternatives?</p>",
+        "id": 419801946,
+        "sender_full_name": "Alec Leamas",
+        "timestamp": 1707127330
     }
 ]

@@ -29,5 +29,23 @@
 
 
 
-<hr><p>Last updated: Feb 05 2024 at 09:42 UTC</p>
+<a name="419801946"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332168-Master%20-%205.8.0%20%20%28was%3A%20comms%29/topic/IPC%20feature/near/419801946" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Alec Leamas <a href="https://leamas.github.io/zulip-archive/stream/332168-Master---5.2E8.2E0--.28was.3A-comms.29/topic/IPC.20feature.html#419801946">(Feb 05 2024 at 10:02)</a>:</h4>
+<p>There is no pointer, and hence nothing to delete. The server is created in <br>
+<em>ocpn_frame.cpp</em> using <code>auto&amp; server = LocalServerApi::GetInstance();</code>.  That is a reference to a singleton, no pointer.  As such it could not really be deleted but  is managed by  the runtime system.</p>
+<p>On Linux, this should not be a problem. The DBusServer used to implement LocalServerAPI does not use any wxWindows components and is thus happy with the runtime system handling it. This is really how things should be.</p>
+<p>But when you say it, I think I might understand  the problem.  The runtime system's  clean up of  static variables occurs after wxWidgets' clean  up of wxWidgets resources.  This means that wxWidgets might become upset for no reason if there is a yet not cleaned up singleton when closing down.</p>
+<p>We could handle this without breaking any  major interfaces in a three step approach</p>
+<ol>
+<li>Add a new method <code>Close()</code> to <code>LocalServerApi</code>, by default empty;</li>
+<li>Make the internal  server variable in <code>IpcConnection</code>  a pointer rather than a reference. (Remains to see if it is possible to return a reference to a *pointer.)</li>
+<li>Let the Close() on IpcConnection() delete that pointer.</li>
+<li>Invoke <code>Close()</code>on   <code>LocalServerApi::GetInstance()</code> on exit.</li>
+</ol>
+<p>This is a lot of code which generally makes things worse to satisfy wxWidgets'  internal needs. Sigh. </p>
+<p>Do you see alternatives?</p>
+
+
+
+<hr><p>Last updated: Feb 05 2024 at 10:09 UTC</p>
 </html>
