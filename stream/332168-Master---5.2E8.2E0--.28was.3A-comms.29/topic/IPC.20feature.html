@@ -104,5 +104,21 @@
 
 
 
-<hr><p>Last updated: Feb 06 2024 at 09:08 UTC</p>
+<a name="420003771"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332168-Master%20-%205.8.0%20%20%28was%3A%20comms%29/topic/IPC%20feature/near/420003771" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Alec Leamas <a href="https://leamas.github.io/zulip-archive/stream/332168-Master---5.2E8.2E0--.28was.3A-comms.29/topic/IPC.20feature.html#420003771">(Feb 06 2024 at 09:14)</a>:</h4>
+<p>The underlying problem is the widespread usage of globals, singletons are basically just glorified globals in this context.  They are evil more many reasons, this is one of them. And we keep adding them, one after one. </p>
+<p>We need a path to avoid this. One could be to attach them to ocpn_app instead.  It's in the gui, but it should be possible to make partly available in the model as welll. Certainly not low hanging fruits.</p>
+
+
+
+<a name="420004938"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332168-Master%20-%205.8.0%20%20%28was%3A%20comms%29/topic/IPC%20feature/near/420004938" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Alec Leamas <a href="https://leamas.github.io/zulip-archive/stream/332168-Master---5.2E8.2E0--.28was.3A-comms.29/topic/IPC.20feature.html#420004938">(Feb 06 2024 at 09:20)</a>:</h4>
+<blockquote>
+<p>There are a ton of pointers (and arrays of pointers) that remain allocated when O closes This is just one that triggers a wx assert</p>
+</blockquote>
+<p>It might be enough to invoke wxConnection::Disconnect() to handle the assertion, dunno</p>
+
+
+
+<hr><p>Last updated: Feb 06 2024 at 09:23 UTC</p>
 </html>
