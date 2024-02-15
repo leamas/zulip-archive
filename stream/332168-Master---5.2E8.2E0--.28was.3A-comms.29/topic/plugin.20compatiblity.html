@@ -19,5 +19,34 @@
 
 
 
-<hr><p>Last updated: Feb 15 2024 at 21:42 UTC</p>
+<a name="421746813"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332168-Master%20-%205.8.0%20%20%28was%3A%20comms%29/topic/plugin%20compatiblity/near/421746813" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Alec Leamas <a href="https://leamas.github.io/zulip-archive/stream/332168-Master---5.2E8.2E0--.28was.3A-comms.29/topic/plugin.20compatiblity.html#421746813">(Feb 15 2024 at 21:49)</a>:</h4>
+<p>The core issue is which API level the plugin uses. For shipdriver-based ones this is about the <code>set(PKG_API_LIB api-18)  </code> in _Plugin.cmake_.  If you use api-18 it means that you need  an OpenCPN recent enough to support this . We should have a table...</p>
+<p>If a plugin uses upcoming api-19 it will only be loaded by 5.10 or later.  The usual approach taken by most plugin devs is basically to wait until next release 5.12 and from that point use the new API, leaving anything older behind.</p>
+<p>It should certainly be possible in a case like this to make a conditional build which uses api-19 when building for bookworm and api-18 otherwise. Never seen it , but I see no major problems.</p>
+
+
+
+<a name="421747709"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332168-Master%20-%205.8.0%20%20%28was%3A%20comms%29/topic/plugin%20compatiblity/near/421747709" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Alec Leamas <a href="https://leamas.github.io/zulip-archive/stream/332168-Master---5.2E8.2E0--.28was.3A-comms.29/topic/plugin.20compatiblity.html#421747709">(Feb 15 2024 at 21:56)</a>:</h4>
+<p>And in other cases plugins just leaves their existing, working builds  for older version as they are in the catalog while updating plugins heading for the latest OpenCPN version</p>
+
+
+
+<a name="421747809"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332168-Master%20-%205.8.0%20%20%28was%3A%20comms%29/topic/plugin%20compatiblity/near/421747809" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Dave Register <a href="https://leamas.github.io/zulip-archive/stream/332168-Master---5.2E8.2E0--.28was.3A-comms.29/topic/plugin.20compatiblity.html#421747809">(Feb 15 2024 at 21:57)</a>:</h4>
+<p>"If a plugin uses upcoming api-19 it will only be loaded by 5.10 or later."<br>
+where in the code does this happen, please?<br>
+Maybe I missed an important patch.</p>
+
+
+
+<a name="421748849"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332168-Master%20-%205.8.0%20%20%28was%3A%20comms%29/topic/plugin%20compatiblity/near/421748849" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Alec Leamas <a href="https://leamas.github.io/zulip-archive/stream/332168-Master---5.2E8.2E0--.28was.3A-comms.29/topic/plugin.20compatiblity.html#421748849">(Feb 15 2024 at 22:04)</a>:</h4>
+<p>You didn't, it was me cutting some corners.   Sorry.</p>
+<p>The net result is the same, though: Using API level 1.19 requires OpenCPN 5.10.</p>
+
+
+
+<hr><p>Last updated: Feb 15 2024 at 22:07 UTC</p>
 </html>
