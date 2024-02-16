@@ -95,5 +95,18 @@ But a general conclusion would be to not update plugins to higher API than neces
 
 
 
-<hr><p>Last updated: Feb 16 2024 at 09:22 UTC</p>
+<a name="421822754"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332168-Master%20-%205.8.0%20%20%28was%3A%20comms%29/topic/plugin%20compatiblity/near/421822754" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Alec Leamas <a href="https://leamas.github.io/zulip-archive/stream/332168-Master---5.2E8.2E0--.28was.3A-comms.29/topic/plugin.20compatiblity.html#421822754">(Feb 16 2024 at 09:42)</a>:</h4>
+<blockquote>
+<p>though think we still have the situation that if a plugin is updated to API 19 it will be in the catalog for a O v5.8</p>
+</blockquote>
+<p>What we do is actually to create for example a bookworm plugin, something like <code>debian-x86_64</code> version <code>12</code>. Main OpenCPN determines plugin compatibility  from this tuple called the ABI. </p>
+<p>And for bookworm this becomes a problem. Bookworm plugins are already used by OpenCPN 5.8 on Debian (notably Raspbian). So if we create new 1.19 plugins they will indeed be loaded by existing Debian OpenCPN builds, and this will fail.</p>
+<p>For that reason Dave and Pavel is right: we should check not only the ABI but also the metadata API level.  But this will not fix the current situation, the fix will not  be available in already existing bookworm  OpenCPN 5.8.</p>
+<p>Which means we have a problem.  The only thing actually checked by 5.8 builds is <code>&lt;target&gt;</code> and <code>&lt;target-version&gt;</code>.  And hence we need to modify these for 1.19 plugins so they are not loaded by 5.8. </p>
+<p>The only thing checked everywhere is <code>&lt;target&gt;</code>. It might thus  be necessary to create a complete set of new targets, for example  with a _-19_ suffix like <code>msvc-wx32-19</code>.   This means that the list of ABIs will explode,. Are there better options?</p>
+
+
+
+<hr><p>Last updated: Feb 16 2024 at 09:42 UTC</p>
 </html>
