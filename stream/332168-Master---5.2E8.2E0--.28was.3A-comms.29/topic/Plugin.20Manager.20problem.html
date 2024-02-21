@@ -74,5 +74,62 @@ index d36ea7af9..4c31be25b 100644
 
 
 
-<hr><p>Last updated: Feb 21 2024 at 13:24 UTC</p>
+<a name="422617491"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332168-Master%20-%205.8.0%20%20%28was%3A%20comms%29/topic/Plugin%20Manager%20problem/near/422617491" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Alec Leamas <a href="https://leamas.github.io/zulip-archive/stream/332168-Master---5.2E8.2E0--.28was.3A-comms.29/topic/Plugin.20Manager.20problem.html#422617491">(Feb 21 2024 at 13:28)</a>:</h4>
+<p>The plugin does not see it. It's defined in <code>class PlugInData</code> which is not visible for the plugin.</p>
+
+
+
+<a name="422617506"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332168-Master%20-%205.8.0%20%20%28was%3A%20comms%29/topic/Plugin%20Manager%20problem/near/422617506" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Pavel Kalian <a href="https://leamas.github.io/zulip-archive/stream/332168-Master---5.2E8.2E0--.28was.3A-comms.29/topic/Plugin.20Manager.20problem.html#422617506">(Feb 21 2024 at 13:28)</a>:</h4>
+<p>We want to avoid the need for new API level here if simply reloading the plugins will do us the same service...</p>
+
+
+
+<a name="422617707"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332168-Master%20-%205.8.0%20%20%28was%3A%20comms%29/topic/Plugin%20Manager%20problem/near/422617707" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Alec Leamas <a href="https://leamas.github.io/zulip-archive/stream/332168-Master---5.2E8.2E0--.28was.3A-comms.29/topic/Plugin.20Manager.20problem.html#422617707">(Feb 21 2024 at 13:29)</a>:</h4>
+<blockquote>
+<p>We want to avoid the need for new API level here if simply reloading the plugins will do us the same service...</p>
+</blockquote>
+<p>Yes.</p>
+
+
+
+<a name="422618019"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332168-Master%20-%205.8.0%20%20%28was%3A%20comms%29/topic/Plugin%20Manager%20problem/near/422618019" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Alec Leamas <a href="https://leamas.github.io/zulip-archive/stream/332168-Master---5.2E8.2E0--.28was.3A-comms.29/topic/Plugin.20Manager.20problem.html#422618019">(Feb 21 2024 at 13:31)</a>:</h4>
+<p>If we want to be really, really safe we could hardcode a list of plugins and only clear the flag  for those in the list. Certainly not kosher...</p>
+
+
+
+<a name="422618461"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332168-Master%20-%205.8.0%20%20%28was%3A%20comms%29/topic/Plugin%20Manager%20problem/near/422618461" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Pavel Kalian <a href="https://leamas.github.io/zulip-archive/stream/332168-Master---5.2E8.2E0--.28was.3A-comms.29/topic/Plugin.20Manager.20problem.html#422618461">(Feb 21 2024 at 13:33)</a>:</h4>
+<p>We don't need to, we can check for <code>INSTALLS_TOOLBOX_PAGE</code></p>
+
+
+
+<a name="422618815"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332168-Master%20-%205.8.0%20%20%28was%3A%20comms%29/topic/Plugin%20Manager%20problem/near/422618815" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Alec Leamas <a href="https://leamas.github.io/zulip-archive/stream/332168-Master---5.2E8.2E0--.28was.3A-comms.29/topic/Plugin.20Manager.20problem.html#422618815">(Feb 21 2024 at 13:35)</a>:</h4>
+<p>Almost kosher, I'd say. In practice, we could test these three plugins and make sure it works and rest assured that other plugins are not affected.</p>
+
+
+
+<a name="422619282"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332168-Master%20-%205.8.0%20%20%28was%3A%20comms%29/topic/Plugin%20Manager%20problem/near/422619282" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Alec Leamas <a href="https://leamas.github.io/zulip-archive/stream/332168-Master---5.2E8.2E0--.28was.3A-comms.29/topic/Plugin.20Manager.20problem.html#422619282">(Feb 21 2024 at 13:37)</a>:</h4>
+<p>... and sending a message is perhaps  a good thing to do anyway for the future. It's cheap.</p>
+
+
+
+<a name="422619459"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332168-Master%20-%205.8.0%20%20%28was%3A%20comms%29/topic/Plugin%20Manager%20problem/near/422619459" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Dan Dickey <a href="https://leamas.github.io/zulip-archive/stream/332168-Master---5.2E8.2E0--.28was.3A-comms.29/topic/Plugin.20Manager.20problem.html#422619459">(Feb 21 2024 at 13:37)</a>:</h4>
+<p>But surely plug-in manager knows the plug-in is being destroyed. How can it not? Whoever destroyed the plug-in should clear this flag.</p>
+
+
+
+<a name="422619987"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332168-Master%20-%205.8.0%20%20%28was%3A%20comms%29/topic/Plugin%20Manager%20problem/near/422619987" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Alec Leamas <a href="https://leamas.github.io/zulip-archive/stream/332168-Master---5.2E8.2E0--.28was.3A-comms.29/topic/Plugin.20Manager.20problem.html#422619987">(Feb 21 2024 at 13:40)</a>:</h4>
+<p>Yes, it does, it's basically the UnloadPlugIn. So we could check  INSTALLS_TOOLBOX_PAGE in UnloadPlugin and clear it there instead. I don't see any major advantage doing so, do you?</p>
+
+
+
+<hr><p>Last updated: Feb 21 2024 at 13:42 UTC</p>
 </html>
