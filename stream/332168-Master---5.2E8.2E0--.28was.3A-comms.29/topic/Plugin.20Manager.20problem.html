@@ -1,0 +1,26 @@
+<html>
+<head><meta charset="utf-8"><title>Plugin Manager problem · Master - 5.8.0  (was: comms) · Zulip Chat Archive</title></head>
+<h2>Stream: <a href="https://leamas.github.io/zulip-archive/stream/332168-Master---5.2E8.2E0--.28was.3A-comms.29/index.html">Master - 5.8.0  (was: comms)</a></h2>
+<h3>Topic: <a href="https://leamas.github.io/zulip-archive/stream/332168-Master---5.2E8.2E0--.28was.3A-comms.29/topic/Plugin.20Manager.20problem.html">Plugin Manager problem</a></h3>
+
+<hr>
+
+<base href="https://opencpn.zulipchat.com">
+
+<head><link href="https://leamas.github.io/zulip-archive/style.css" rel="stylesheet"></head>
+
+<a name="422610060"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332168-Master%20-%205.8.0%20%20%28was%3A%20comms%29/topic/Plugin%20Manager%20problem/near/422610060" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Dan Dickey <a href="https://leamas.github.io/zulip-archive/stream/332168-Master---5.2E8.2E0--.28was.3A-comms.29/topic/Plugin.20Manager.20problem.html#422610060">(Feb 21 2024 at 12:51)</a>:</h4>
+<p><span class="user-mention" data-user-id="399510">@Alec Leamas</span> : Alec, we are looking at a bug which I think is a plugin manager issue.  When language is changed the options dialog gets destroyed.  As part of this process at least the chart downloader plugin (and possibly other plugins) get unloaded.  When they are reloaded again the plugin manager does not notify them that they can add their content to the options dialog panel.  Specifically, this snippet:</p>
+<blockquote>
+<p>void PluginLoader::NotifySetupOptionsPlugin(const PlugInData* pd) {<br>
+  auto pic = GetContainer(*pd, *GetPlugInArray());<br>
+  if (!pic) return;<br>
+  if (pic-&gt;m_has_setup_options) return;</p>
+</blockquote>
+<p>Will always return because when the plugin was unloaded the m_has_setup_options flag was not cleared. At least I think that is the problem (or maybe just one of multiple problems).</p>
+
+
+
+<hr><p>Last updated: Feb 21 2024 at 12:53 UTC</p>
+</html>

@@ -1,0 +1,8 @@
+[
+    {
+        "content": "<p><span class=\"user-mention\" data-user-id=\"399510\">@Alec Leamas</span> : Alec, we are looking at a bug which I think is a plugin manager issue.  When language is changed the options dialog gets destroyed.  As part of this process at least the chart downloader plugin (and possibly other plugins) get unloaded.  When they are reloaded again the plugin manager does not notify them that they can add their content to the options dialog panel.  Specifically, this snippet:</p>\n<blockquote>\n<p>void PluginLoader::NotifySetupOptionsPlugin(const PlugInData* pd) {<br>\n  auto pic = GetContainer(*pd, *GetPlugInArray());<br>\n  if (!pic) return;<br>\n  if (pic-&gt;m_has_setup_options) return;</p>\n</blockquote>\n<p>Will always return because when the plugin was unloaded the m_has_setup_options flag was not cleared. At least I think that is the problem (or maybe just one of multiple problems).</p>",
+        "id": 422610060,
+        "sender_full_name": "Dan Dickey",
+        "timestamp": 1708519876
+    }
+]
