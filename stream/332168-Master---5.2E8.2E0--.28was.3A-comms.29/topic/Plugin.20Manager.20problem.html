@@ -22,5 +22,33 @@
 
 
 
-<hr><p>Last updated: Feb 21 2024 at 12:53 UTC</p>
+<a name="422613208"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332168-Master%20-%205.8.0%20%20%28was%3A%20comms%29/topic/Plugin%20Manager%20problem/near/422613208" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Dan Dickey <a href="https://leamas.github.io/zulip-archive/stream/332168-Master---5.2E8.2E0--.28was.3A-comms.29/topic/Plugin.20Manager.20problem.html#422613208">(Feb 21 2024 at 13:06)</a>:</h4>
+<p>Info: This patch:</p>
+<div class="codehilite"><pre><span></span><code>diff --git a/model/src/plugin_loader.cpp b/model/src/plugin_loader.cpp
+index d36ea7af9..4c31be25b 100644
+--- a/model/src/plugin_loader.cpp
++++ b/model/src/plugin_loader.cpp
+@@ -752,7 +752,7 @@ bool PluginLoader::UpdatePlugIns() {
+       wxString msg(&quot;PluginLoader: Initializing PlugIn: &quot;);
+       msg += pic-&gt;m_plugin_file;
+       wxLogMessage(msg);
+-
++      pic-&gt;m_has_setup_options = false;
+       pic-&gt;m_cap_flag = pic-&gt;m_pplugin-&gt;Init();
+       pic-&gt;m_pplugin-&gt;SetDefaults();
+       pic-&gt;m_init_state = true;
+</code></pre></div>
+<p>Fixed the reported problem.  But I am pretty sure this is not the right place for this hack.</p>
+
+
+
+<a name="422613510"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332168-Master%20-%205.8.0%20%20%28was%3A%20comms%29/topic/Plugin%20Manager%20problem/near/422613510" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Alec Leamas <a href="https://leamas.github.io/zulip-archive/stream/332168-Master---5.2E8.2E0--.28was.3A-comms.29/topic/Plugin.20Manager.20problem.html#422613510">(Feb 21 2024 at 13:08)</a>:</h4>
+<p>This code is extremely convoluted, for sure.  We could of course clear <code>pic-&gt;m_has_setup_options</code>, but  it might be dangerous since the overall assumption until now has been that this only is done once.</p>
+<p>Another path would be to make chartdldr listen to a new PluginMsg which PluginLoader sends after the plugin has been completely loaded.  It could then do what it needs.  This would not affect other plugins unless they listen to it. I don't know if this is for better or worse.</p>
+
+
+
+<hr><p>Last updated: Feb 21 2024 at 13:08 UTC</p>
 </html>

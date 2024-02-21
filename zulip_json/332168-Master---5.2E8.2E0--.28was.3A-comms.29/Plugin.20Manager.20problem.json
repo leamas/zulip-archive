@@ -4,5 +4,17 @@
         "id": 422610060,
         "sender_full_name": "Dan Dickey",
         "timestamp": 1708519876
+    },
+    {
+        "content": "<p>Info: This patch:</p>\n<div class=\"codehilite\"><pre><span></span><code>diff --git a/model/src/plugin_loader.cpp b/model/src/plugin_loader.cpp\nindex d36ea7af9..4c31be25b 100644\n--- a/model/src/plugin_loader.cpp\n+++ b/model/src/plugin_loader.cpp\n@@ -752,7 +752,7 @@ bool PluginLoader::UpdatePlugIns() {\n       wxString msg(&quot;PluginLoader: Initializing PlugIn: &quot;);\n       msg += pic-&gt;m_plugin_file;\n       wxLogMessage(msg);\n-\n+      pic-&gt;m_has_setup_options = false;\n       pic-&gt;m_cap_flag = pic-&gt;m_pplugin-&gt;Init();\n       pic-&gt;m_pplugin-&gt;SetDefaults();\n       pic-&gt;m_init_state = true;\n</code></pre></div>\n<p>Fixed the reported problem.  But I am pretty sure this is not the right place for this hack.</p>",
+        "id": 422613208,
+        "sender_full_name": "Dan Dickey",
+        "timestamp": 1708520814
+    },
+    {
+        "content": "<p>This code is extremely convoluted, for sure.  We could of course clear <code>pic-&gt;m_has_setup_options</code>, but  it might be dangerous since the overall assumption until now has been that this only is done once.</p>\n<p>Another path would be to make chartdldr listen to a new PluginMsg which PluginLoader sends after the plugin has been completely loaded.  It could then do what it needs.  This would not affect other plugins unless they listen to it. I don't know if this is for better or worse.</p>",
+        "id": 422613510,
+        "sender_full_name": "Alec Leamas",
+        "timestamp": 1708520890
     }
 ]
