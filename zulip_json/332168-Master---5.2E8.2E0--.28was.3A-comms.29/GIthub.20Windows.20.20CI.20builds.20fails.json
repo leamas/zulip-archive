@@ -70,5 +70,11 @@
         "id": 424009711,
         "sender_full_name": "Pavel Kalian",
         "timestamp": 1709210050
+    },
+    {
+        "content": "<p>out of time. Tried patch below to no avail, still does not find msgmerge</p>\n<div class=\"codehilite\"><pre><span></span><code>diff --git a/CMakeLists.txt b/CMakeLists.txt\nindex 52e01f61e..06443de26 100644\n--- a/CMakeLists.txt\n+++ b/CMakeLists.txt\n@@ -1094,6 +1094,15 @@ if (APPLE)\n   endif ()\n endif ()\n\n+if (WIN32)\n+  find_package(Git)\n+  if (Git_FOUND)\n+    get_filename_component(GIT_DIR ${GIT_EXECUTABLE} DIRECTORY)\n+    get_filename_component(GIT_DIR ${GIT_DIR} DIRECTORY)\n+    set(Gettext_ROOT ${GIT_DIR}/usr/bin)\n+    message(STATUS &quot;Adding ${Gettext_ROOT} to gettext search path&quot;)\n+  endif ()\n+endif ()\n find_package(Gettext REQUIRED)\n\n add_subdirectory(libs/ssl_sha1)\n</code></pre></div>",
+        "id": 424012160,
+        "sender_full_name": "Alec Leamas",
+        "timestamp": 1709211032
     }
 ]

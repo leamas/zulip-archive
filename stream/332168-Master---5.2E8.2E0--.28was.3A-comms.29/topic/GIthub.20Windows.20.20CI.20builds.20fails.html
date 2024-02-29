@@ -91,5 +91,32 @@ Call Stack (most recent call first):
 
 
 
-<hr><p>Last updated: Feb 29 2024 at 12:39 UTC</p>
+<a name="424012160"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332168-Master%20-%205.8.0%20%20%28was%3A%20comms%29/topic/GIthub%20Windows%20%20CI%20builds%20fails/near/424012160" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Alec Leamas <a href="https://leamas.github.io/zulip-archive/stream/332168-Master---5.2E8.2E0--.28was.3A-comms.29/topic/GIthub.20Windows.20.20CI.20builds.20fails.html#424012160">(Feb 29 2024 at 12:50)</a>:</h4>
+<p>out of time. Tried patch below to no avail, still does not find msgmerge</p>
+<div class="codehilite"><pre><span></span><code>diff --git a/CMakeLists.txt b/CMakeLists.txt
+index 52e01f61e..06443de26 100644
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -1094,6 +1094,15 @@ if (APPLE)
+   endif ()
+ endif ()
+
++if (WIN32)
++  find_package(Git)
++  if (Git_FOUND)
++    get_filename_component(GIT_DIR ${GIT_EXECUTABLE} DIRECTORY)
++    get_filename_component(GIT_DIR ${GIT_DIR} DIRECTORY)
++    set(Gettext_ROOT ${GIT_DIR}/usr/bin)
++    message(STATUS &quot;Adding ${Gettext_ROOT} to gettext search path&quot;)
++  endif ()
++endif ()
+ find_package(Gettext REQUIRED)
+
+ add_subdirectory(libs/ssl_sha1)
+</code></pre></div>
+
+
+
+<hr><p>Last updated: Feb 29 2024 at 12:51 UTC</p>
 </html>
