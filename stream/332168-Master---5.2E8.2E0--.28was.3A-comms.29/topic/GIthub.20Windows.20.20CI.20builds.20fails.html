@@ -36,5 +36,48 @@ Call Stack (most recent call first):
 
 
 
-<hr><p>Last updated: Feb 29 2024 at 11:45 UTC</p>
+<a name="424002626"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332168-Master%20-%205.8.0%20%20%28was%3A%20comms%29/topic/GIthub%20Windows%20%20CI%20builds%20fails/near/424002626" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Alec Leamas <a href="https://leamas.github.io/zulip-archive/stream/332168-Master---5.2E8.2E0--.28was.3A-comms.29/topic/GIthub.20Windows.20.20CI.20builds.20fails.html#424002626">(Feb 29 2024 at 11:46)</a>:</h4>
+<p>Perhaps about  cmake version. My successful builds is on cmake  3.27.2-msvc1, the failing on  3.28.0-msvc1 i. e.,  the github builder image is updated</p>
+
+
+
+<a name="424003220"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332168-Master%20-%205.8.0%20%20%28was%3A%20comms%29/topic/GIthub%20Windows%20%20CI%20builds%20fails/near/424003220" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Pavel Kalian <a href="https://leamas.github.io/zulip-archive/stream/332168-Master---5.2E8.2E0--.28was.3A-comms.29/topic/GIthub.20Windows.20.20CI.20builds.20fails.html#424003220">(Feb 29 2024 at 11:50)</a>:</h4>
+<p>Not that, I have the same up to date version here and everything works</p>
+
+
+
+<a name="424004237"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332168-Master%20-%205.8.0%20%20%28was%3A%20comms%29/topic/GIthub%20Windows%20%20CI%20builds%20fails/near/424004237" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Alec Leamas <a href="https://leamas.github.io/zulip-archive/stream/332168-Master---5.2E8.2E0--.28was.3A-comms.29/topic/GIthub.20Windows.20.20CI.20builds.20fails.html#424004237">(Feb 29 2024 at 11:57)</a>:</h4>
+<p>where is your gettext package installed?</p>
+
+
+
+<a name="424005832"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332168-Master%20-%205.8.0%20%20%28was%3A%20comms%29/topic/GIthub%20Windows%20%20CI%20builds%20fails/near/424005832" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Alec Leamas <a href="https://leamas.github.io/zulip-archive/stream/332168-Master---5.2E8.2E0--.28was.3A-comms.29/topic/GIthub.20Windows.20.20CI.20builds.20fails.html#424005832">(Feb 29 2024 at 12:08)</a>:</h4>
+<p>For me, it is on like C:\Program Files (x86)\Poedit\Gettexttools\bin\msgfmt.exe , and cmake finds it. </p>
+<p>This is a location not that  easy to guess for cmake, but perhaps it finds it because it's on %PATH%.  In any case, it should find  it given some hints.</p>
+
+
+
+<a name="424006107"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332168-Master%20-%205.8.0%20%20%28was%3A%20comms%29/topic/GIthub%20Windows%20%20CI%20builds%20fails/near/424006107" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Pavel Kalian <a href="https://leamas.github.io/zulip-archive/stream/332168-Master---5.2E8.2E0--.28was.3A-comms.29/topic/GIthub.20Windows.20.20CI.20builds.20fails.html#424006107">(Feb 29 2024 at 12:10)</a>:</h4>
+<p>I have a few too many in different locations (Poedit, OS4Geo, some more from God knows where)...</p>
+
+
+
+<a name="424006215"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332168-Master%20-%205.8.0%20%20%28was%3A%20comms%29/topic/GIthub%20Windows%20%20CI%20builds%20fails/near/424006215" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Alec Leamas <a href="https://leamas.github.io/zulip-archive/stream/332168-Master---5.2E8.2E0--.28was.3A-comms.29/topic/GIthub.20Windows.20.20CI.20builds.20fails.html#424006215">(Feb 29 2024 at 12:10)</a>:</h4>
+<p>If you look in CmakeCache.txt you should see what it uses?</p>
+
+
+
+<a name="424006656"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332168-Master%20-%205.8.0%20%20%28was%3A%20comms%29/topic/GIthub%20Windows%20%20CI%20builds%20fails/near/424006656" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Pavel Kalian <a href="https://leamas.github.io/zulip-archive/stream/332168-Master---5.2E8.2E0--.28was.3A-comms.29/topic/GIthub.20Windows.20.20CI.20builds.20fails.html#424006656">(Feb 29 2024 at 12:13)</a>:</h4>
+<p>Currently the one that came with Git (But that may be because I uninstalled Poedit). As I said, a few too many..</p>
+
+
+
+<hr><p>Last updated: Feb 29 2024 at 12:14 UTC</p>
 </html>
