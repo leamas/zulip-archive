@@ -138,5 +138,82 @@ consoleSize.y =  pConf-&gt;Read ( name + _T ( &quot;:ConsoleSizeY&quot; ), 5L );
 
 
 
-<hr><p>Last updated: Mar 12 2024 at 11:42 UTC</p>
+<a name="426106714"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/349785-JavaScript_pi/topic/v3.0%20beta%20testing/near/426106714" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Mike Rossiter <a href="https://leamas.github.io/zulip-archive/stream/349785-JavaScript_pi/topic/v3.2E0.20beta.20testing.html#426106714">(Mar 12 2024 at 11:44)</a>:</h4>
+<p>Have you tried starting with a .conf file without any JavaScript_pi sections to try and reproduce the problem with the Mac?</p>
+
+
+
+<a name="426107413"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/349785-JavaScript_pi/topic/v3.0%20beta%20testing/near/426107413" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Tony Voss <a href="https://leamas.github.io/zulip-archive/stream/349785-JavaScript_pi/topic/v3.2E0.20beta.20testing.html#426107413">(Mar 12 2024 at 11:49)</a>:</h4>
+<p>In my .ini file there are two separate JavaScript sections</p>
+<div class="codehilite"><pre><span></span><code>[PlugIns/libjavascript_pi.dylib]
+bEnabled=1
+</code></pre></div>
+<p>Which is managed by OCPN, including the enabled status<br>
+and then there is another section</p>
+<div class="codehilite"><pre><span></span><code>[PlugIns/JavaScript_pi]
+</code></pre></div>
+<p>which is where all my stuff is stored.</p>
+<p>Other plugins have these two sections too e.g.</p>
+<div class="codehilite"><pre><span></span><code>[PlugIns/libdashboard_pi.dylib]
+bEnabled=0
+[PlugIns/Dashboard]
+Version=2
+...
+</code></pre></div>
+<p>Starting without any [PlugIns/JavaScript_pi] or an empty section hangs OCPN in PluginLoader. (It should cope - I expect to report that).</p>
+
+
+
+<a name="426107713"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/349785-JavaScript_pi/topic/v3.0%20beta%20testing/near/426107713" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Mike Rossiter <a href="https://leamas.github.io/zulip-archive/stream/349785-JavaScript_pi/topic/v3.2E0.20beta.20testing.html#426107713">(Mar 12 2024 at 11:51)</a>:</h4>
+<blockquote>
+<p>[PlugIns/JavaScript_pi]<br>
+which is where all my stuff is stored.</p>
+</blockquote>
+<p>That section is not created here.</p>
+
+
+
+<a name="426108071"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/349785-JavaScript_pi/topic/v3.0%20beta%20testing/near/426108071" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Tony Voss <a href="https://leamas.github.io/zulip-archive/stream/349785-JavaScript_pi/topic/v3.2E0.20beta.20testing.html#426108071">(Mar 12 2024 at 11:53)</a>:</h4>
+<p>I wonder how anything has worked in the past.<br>
+You must have had one in the past.  Could it have been deleted since?<br>
+I will look at coping with no existing section.</p>
+
+
+
+<a name="426108382"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/349785-JavaScript_pi/topic/v3.0%20beta%20testing/near/426108382" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Mike Rossiter <a href="https://leamas.github.io/zulip-archive/stream/349785-JavaScript_pi/topic/v3.2E0.20beta.20testing.html#426108382">(Mar 12 2024 at 11:55)</a>:</h4>
+<p>If I load the old (2.2) version from the catalog the sections are created perfectly. Then loading the new (3.0) version works.</p>
+
+
+
+<a name="426108801"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/349785-JavaScript_pi/topic/v3.0%20beta%20testing/near/426108801" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Tony Voss <a href="https://leamas.github.io/zulip-archive/stream/349785-JavaScript_pi/topic/v3.2E0.20beta.20testing.html#426108801">(Mar 12 2024 at 11:58)</a>:</h4>
+<p>With 2.2 had it remembered your previous consoles or did you just get the default one named <code>JavaScript</code> ?</p>
+
+
+
+<a name="426109015"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/349785-JavaScript_pi/topic/v3.0%20beta%20testing/near/426109015" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Tony Voss <a href="https://leamas.github.io/zulip-archive/stream/349785-JavaScript_pi/topic/v3.2E0.20beta.20testing.html#426109015">(Mar 12 2024 at 11:59)</a>:</h4>
+<p>You might also see <code>"Welcome to the JavaScript plugin\n\nRun your first script by clicking on the run button above.\n\nSee the Help panel right for documentation"</code></p>
+
+
+
+<a name="426109469"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/349785-JavaScript_pi/topic/v3.0%20beta%20testing/near/426109469" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Tony Voss <a href="https://leamas.github.io/zulip-archive/stream/349785-JavaScript_pi/topic/v3.2E0.20beta.20testing.html#426109469">(Mar 12 2024 at 12:01)</a>:</h4>
+<p>I need to compare 2.2 and 3.0 in this respect.</p>
+
+
+
+<a name="426111493"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/349785-JavaScript_pi/topic/v3.0%20beta%20testing/near/426111493" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Mike Rossiter <a href="https://leamas.github.io/zulip-archive/stream/349785-JavaScript_pi/topic/v3.2E0.20beta.20testing.html#426111493">(Mar 12 2024 at 12:13)</a>:</h4>
+<p><a href="/user_uploads/33951/QNX5251ASmt1UB9Hn2up5xBu/3.jpg">3.jpg</a></p>
+<div class="message_inline_image"><a href="/user_uploads/33951/QNX5251ASmt1UB9Hn2up5xBu/3.jpg" title="3.jpg"><img src="/user_uploads/33951/QNX5251ASmt1UB9Hn2up5xBu/3.jpg"></a></div>
+
+
+
+<hr><p>Last updated: Mar 12 2024 at 12:14 UTC</p>
 </html>
