@@ -239,5 +239,45 @@ I really need to find why 3.0 failed without first starting 2.2.</p>
 
 
 
-<hr><p>Last updated: Mar 12 2024 at 15:43 UTC</p>
+<a name="426158784"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/349785-JavaScript_pi/topic/v3.0%20beta%20testing/near/426158784" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Mike Rossiter <a href="https://leamas.github.io/zulip-archive/stream/349785-JavaScript_pi/topic/v3.2E0.20beta.20testing.html#426158784">(Mar 12 2024 at 15:55)</a>:</h4>
+<p>Not having much luck with the test scripts.  Example:<br>
+<em>JavaScript_pi\Tests_scripts\74_dialogue_test.js</em></p>
+<div class="codehilite"><pre><span></span><code>L4  wrapUpWorks with error stack:Duktape context dump:
+ctx: top=1, stack=[{}]
+
+L4  Call stack: SyntaxError: source decode failed (line 8)
+    at [anon] (eval:8) internal
+    at [anon] (duk_lexer.c:314) internal
+L5  JavaScript-&gt;message() SyntaxError: source decode failed (line 8)
+L4  JavaScript-&gt;clearDialog()  (None)
+L4  JavaScript-&gt;clearAlert()  (None)
+L0  ------------------ Console JavaScript wrapped up
+</code></pre></div>
+<p>Found that the degree symbol had been introduced in the test script. Now looking at other scripts to see if we have the same problem.</p>
+
+
+
+<a name="426158940"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/349785-JavaScript_pi/topic/v3.0%20beta%20testing/near/426158940" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Mike Rossiter <a href="https://leamas.github.io/zulip-archive/stream/349785-JavaScript_pi/topic/v3.2E0.20beta.20testing.html#426158940">(Mar 12 2024 at 15:56)</a>:</h4>
+<p>Once the degree symbol had been deleted the script ran successfully.</p>
+
+
+
+<a name="426160898"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/349785-JavaScript_pi/topic/v3.0%20beta%20testing/near/426160898" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Tony Voss <a href="https://leamas.github.io/zulip-archive/stream/349785-JavaScript_pi/topic/v3.2E0.20beta.20testing.html#426160898">(Mar 12 2024 at 16:04)</a>:</h4>
+<p>The Position object now has a method to parse a position like 52º 23.67'N 3º 14'W<br>
+Great applications with it.   Have just planned summer cruise by copying positions out of the sailing guide and pasting the waypoints into the chart <span aria-label="smile" class="emoji emoji-1f642" role="img" title="smile">:smile:</span><br>
+cleanString now converts superscript 0 to degree.<br>
+So looks like Windows cannot cope with that?</p>
+
+
+
+<a name="426161877"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/349785-JavaScript_pi/topic/v3.0%20beta%20testing/near/426161877" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Mike Rossiter <a href="https://leamas.github.io/zulip-archive/stream/349785-JavaScript_pi/topic/v3.2E0.20beta.20testing.html#426161877">(Mar 12 2024 at 16:09)</a>:</h4>
+<p>Does <code>writeTextFile</code> also use cleanString? 42 fails at the moment.</p>
+
+
+
+<hr><p>Last updated: Mar 12 2024 at 16:11 UTC</p>
 </html>
