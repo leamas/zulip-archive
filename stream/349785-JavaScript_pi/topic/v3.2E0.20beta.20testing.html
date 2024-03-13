@@ -737,5 +737,71 @@ result: undefined</p>
 
 
 
-<hr><p>Last updated: Mar 13 2024 at 12:40 UTC</p>
+<a name="426330451"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/349785-JavaScript_pi/topic/v3.0%20beta%20testing/near/426330451" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Mike Rossiter <a href="https://leamas.github.io/zulip-archive/stream/349785-JavaScript_pi/topic/v3.2E0.20beta.20testing.html#426330451">(Mar 13 2024 at 12:48)</a>:</h4>
+<p>Sorry: <br>
+SyntaxError: source decode failed (line 156)</p>
+
+
+
+<a name="426331479"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/349785-JavaScript_pi/topic/v3.0%20beta%20testing/near/426331479" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Tony Voss <a href="https://leamas.github.io/zulip-archive/stream/349785-JavaScript_pi/topic/v3.2E0.20beta.20testing.html#426331479">(Mar 13 2024 at 12:51)</a>:</h4>
+<p>Fresh copy of the test script which compiles OK for me.  Please adopt so we know we are working with the same thing.<br>
+<a href="/user_uploads/33951/5fLfNpQV9xl6RnoflofCe1rm/positionComplete.js.zip">positionComplete.js.zip</a></p>
+
+
+
+<a name="426332234"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/349785-JavaScript_pi/topic/v3.0%20beta%20testing/near/426332234" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Mike Rossiter <a href="https://leamas.github.io/zulip-archive/stream/349785-JavaScript_pi/topic/v3.2E0.20beta.20testing.html#426332234">(Mar 13 2024 at 12:53)</a>:</h4>
+<p>SyntaxError: source decode failed (line 28)</p>
+
+
+
+<a name="426333729"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/349785-JavaScript_pi/topic/v3.0%20beta%20testing/near/426333729" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Tony Voss <a href="https://leamas.github.io/zulip-archive/stream/349785-JavaScript_pi/topic/v3.2E0.20beta.20testing.html#426333729">(Mar 13 2024 at 12:57)</a>:</h4>
+<p>OK looks like it is throwing up over "\xB0".  Let's restore it using fromCharCode lines 26-33 should now be</p>
+<div class="codehilite" data-code-language="JavaScript"><pre><span></span><code><span class="w">        </span><span class="k">return</span><span class="w"> </span><span class="p">(</span>
+<span class="w">            </span><span class="p">(</span><span class="s2">"00"</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="nb">parseInt</span><span class="p">(</span><span class="nx">latAbs</span><span class="p">)).</span><span class="nx">slice</span><span class="p">(</span><span class="o">-</span><span class="mf">2</span><span class="p">)</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="nb">String</span><span class="p">.</span><span class="nx">fromCharCode</span><span class="p">(</span><span class="mf">176</span><span class="p">)</span><span class="w"> </span><span class="o">+</span>
+<span class="w">            </span><span class="p">(</span><span class="s2">"00"</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="p">(</span><span class="nx">latAbs</span><span class="w"> </span><span class="o">%</span><span class="w"> </span><span class="mf">1</span><span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="mf">60</span><span class="p">).</span><span class="nx">toFixed</span><span class="p">(</span><span class="mf">3</span><span class="p">)).</span><span class="nx">slice</span><span class="p">(</span><span class="o">-</span><span class="mf">6</span><span class="p">)</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="s2">"'"</span><span class="w"> </span><span class="o">+</span>
+<span class="w">            </span><span class="p">((</span><span class="k">this</span><span class="p">.</span><span class="nx">latitude</span><span class="w"> </span><span class="o">&lt;</span><span class="w"> </span><span class="mf">0</span><span class="p">)</span><span class="w"> </span><span class="o">?</span><span class="w"> </span><span class="s2">"S "</span><span class="w"> </span><span class="o">:</span><span class="w"> </span><span class="s2">"N "</span><span class="p">)</span><span class="w"> </span><span class="o">+</span>
+<span class="w">            </span><span class="p">(</span><span class="s2">"00"</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="nb">parseInt</span><span class="p">(</span><span class="nx">lonAbs</span><span class="p">)).</span><span class="nx">slice</span><span class="p">(</span><span class="o">-</span><span class="mf">3</span><span class="p">)</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="nb">String</span><span class="p">.</span><span class="nx">fromCharCode</span><span class="p">(</span><span class="mf">176</span><span class="p">)</span><span class="w"> </span><span class="o">+</span>
+<span class="w">            </span><span class="p">(</span><span class="nx">lonAbs</span><span class="w"> </span><span class="o">%</span><span class="w"> </span><span class="mf">1</span><span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="mf">60</span><span class="p">).</span><span class="nx">toFixed</span><span class="p">(</span><span class="mf">3</span><span class="p">)</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="s2">"'"</span><span class="w"> </span><span class="o">+</span>
+<span class="w">            </span><span class="p">((</span><span class="k">this</span><span class="p">.</span><span class="nx">longitude</span><span class="w"> </span><span class="o">&lt;</span><span class="w"> </span><span class="mf">0</span><span class="p">)</span><span class="w"> </span><span class="o">?</span><span class="w"> </span><span class="s2">"W"</span><span class="w"> </span><span class="o">:</span><span class="w"> </span><span class="s2">"E"</span><span class="p">)</span>
+<span class="w">            </span><span class="p">)}</span>
+</code></pre></div>
+
+
+
+<a name="426334273"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/349785-JavaScript_pi/topic/v3.0%20beta%20testing/near/426334273" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Mike Rossiter <a href="https://leamas.github.io/zulip-archive/stream/349785-JavaScript_pi/topic/v3.2E0.20beta.20testing.html#426334273">(Mar 13 2024 at 12:59)</a>:</h4>
+<p>Still:<br>
+SyntaxError: source decode failed (line 28)</p>
+
+
+
+<a name="426334572"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/349785-JavaScript_pi/topic/v3.0%20beta%20testing/near/426334572" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Mike Rossiter <a href="https://leamas.github.io/zulip-archive/stream/349785-JavaScript_pi/topic/v3.2E0.20beta.20testing.html#426334572">(Mar 13 2024 at 13:01)</a>:</h4>
+<p>Hold on: your ? has come out as a decimal character when I copied your code across.</p>
+
+
+
+<a name="426335010"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/349785-JavaScript_pi/topic/v3.0%20beta%20testing/near/426335010" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Tony Voss <a href="https://leamas.github.io/zulip-archive/stream/349785-JavaScript_pi/topic/v3.2E0.20beta.20testing.html#426335010">(Mar 13 2024 at 13:03)</a>:</h4>
+<p>Maybe use the Load button to load  the file rather than copying and pasting.</p>
+
+
+
+<a name="426335629"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/349785-JavaScript_pi/topic/v3.0%20beta%20testing/near/426335629" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Mike Rossiter <a href="https://leamas.github.io/zulip-archive/stream/349785-JavaScript_pi/topic/v3.2E0.20beta.20testing.html#426335629">(Mar 13 2024 at 13:06)</a>:</h4>
+<p>Yes. Did that but lines 43 and 44 had the same problem, replacing ? by the decimal character..</p>
+
+
+
+<a name="426335676"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/349785-JavaScript_pi/topic/v3.0%20beta%20testing/near/426335676" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Mike Rossiter <a href="https://leamas.github.io/zulip-archive/stream/349785-JavaScript_pi/topic/v3.2E0.20beta.20testing.html#426335676">(Mar 13 2024 at 13:06)</a>:</h4>
+<p>Off to lunch.</p>
+
+
+
+<hr><p>Last updated: Mar 13 2024 at 13:08 UTC</p>
 </html>
