@@ -454,5 +454,35 @@
         "id": 426320482,
         "sender_full_name": "Mike Rossiter",
         "timestamp": 1710331278
+    },
+    {
+        "content": "<p>I am using nested functions.  Not strictly allowed but seen no problems on MacOS.<br>\nPlease try this script in a scratch console</p>\n<div class=\"codehilite\" data-code-language=\"JavaScript\"><pre><span></span><code><span class=\"nx\">print</span><span class=\"p\">(</span><span class=\"nx\">outer</span><span class=\"p\">(),</span><span class=\"w\"> </span><span class=\"s2\">\"\\n\"</span><span class=\"p\">);</span>\n\n<span class=\"kd\">function</span><span class=\"w\"> </span><span class=\"nx\">outer</span><span class=\"p\">(){</span>\n<span class=\"w\">    </span><span class=\"kd\">function</span><span class=\"w\"> </span><span class=\"nx\">inner</span><span class=\"p\">(){</span>\n<span class=\"w\">        </span><span class=\"k\">return</span><span class=\"p\">(</span><span class=\"s2\">\"Hello\"</span><span class=\"p\">);</span>\n<span class=\"w\">        </span><span class=\"p\">}</span>\n<span class=\"w\">    </span><span class=\"k\">return</span><span class=\"w\"> </span><span class=\"nx\">inner</span><span class=\"p\">();</span>\n<span class=\"w\">    </span><span class=\"p\">}</span>\n</code></pre></div>",
+        "id": 426323499,
+        "sender_full_name": "Tony Voss",
+        "timestamp": 1710332328
+    },
+    {
+        "content": "<p>Hello<br>\nresult: undefined</p>",
+        "id": 426323908,
+        "sender_full_name": "Mike Rossiter",
+        "timestamp": 1710332481
+    },
+    {
+        "content": "<p>So it is not nested functions...</p>",
+        "id": 426325016,
+        "sender_full_name": "Tony Voss",
+        "timestamp": 1710332848
+    },
+    {
+        "content": "<p>My head hurts as well ;)</p>",
+        "id": 426325303,
+        "sender_full_name": "Mike Rossiter",
+        "timestamp": 1710332929
+    },
+    {
+        "content": "<p>OK, lets narrow it down. by commenting out code<br>\nLines 80-84 become</p>\n<div class=\"codehilite\" data-code-language=\"JavaScript\"><pre><span></span><code><span class=\"w\">      </span><span class=\"kd\">function</span><span class=\"w\"> </span><span class=\"nx\">parsePosition</span><span class=\"p\">(</span><span class=\"nx\">text</span><span class=\"p\">){</span>\n<span class=\"w\">        </span><span class=\"c1\">// parse lat &amp; long into position object</span>\n<span class=\"k\">return</span><span class=\"p\">({</span><span class=\"nx\">latitude</span><span class=\"o\">:</span><span class=\"mf\">61</span><span class=\"p\">,</span><span class=\"w\"> </span><span class=\"nx\">longitude</span><span class=\"o\">:</span><span class=\"w\"> </span><span class=\"o\">-</span><span class=\"mf\">2</span><span class=\"p\">});</span>\n<span class=\"err\">/*</span>\n<span class=\"w\">        </span><span class=\"nx\">trace</span><span class=\"w\"> </span><span class=\"o\">=</span><span class=\"w\"> </span><span class=\"kc\">true</span><span class=\"p\">;</span>\n</code></pre></div>\n<p>and insert end of comment like this</p>\n<div class=\"codehilite\" data-code-language=\"JavaScript\"><pre><span></span><code><span class=\"w\">        </span><span class=\"kd\">function</span><span class=\"w\"> </span><span class=\"nx\">bail</span><span class=\"p\">(</span><span class=\"nx\">message</span><span class=\"p\">){</span>\n<span class=\"w\">            </span><span class=\"k\">throw</span><span class=\"p\">(</span><span class=\"nx\">title</span><span class=\"w\"> </span><span class=\"o\">+</span><span class=\"w\"> </span><span class=\"s2\">\" \"</span><span class=\"w\"> </span><span class=\"o\">+</span><span class=\"w\"> </span><span class=\"nx\">phase</span><span class=\"w\"> </span><span class=\"o\">+</span><span class=\"w\"> </span><span class=\"s2\">\" \"</span><span class=\"w\"> </span><span class=\"o\">+</span><span class=\"w\"> </span><span class=\"nx\">message</span><span class=\"p\">);</span>\n<span class=\"w\">            </span><span class=\"p\">};</span>\n<span class=\"o\">*</span><span class=\"err\">/</span>\n<span class=\"w\">        </span><span class=\"p\">}</span>\n</code></pre></div>\n<p>Hopefully you get output</p>\n<blockquote>\n<p>55° 00.000'N 002° 0.000'W<br>\n61° 00.000'N 002° 0.000'W<br>\nresult: undefined</p>\n</blockquote>",
+        "id": 426326584,
+        "sender_full_name": "Tony Voss",
+        "timestamp": 1710333384
     }
 ]

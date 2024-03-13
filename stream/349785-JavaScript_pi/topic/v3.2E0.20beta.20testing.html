@@ -676,5 +676,66 @@ If that works, try moving the position further down the parsing function to see 
 
 
 
-<hr><p>Last updated: Mar 13 2024 at 12:15 UTC</p>
+<a name="426323499"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/349785-JavaScript_pi/topic/v3.0%20beta%20testing/near/426323499" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Tony Voss <a href="https://leamas.github.io/zulip-archive/stream/349785-JavaScript_pi/topic/v3.2E0.20beta.20testing.html#426323499">(Mar 13 2024 at 12:18)</a>:</h4>
+<p>I am using nested functions.  Not strictly allowed but seen no problems on MacOS.<br>
+Please try this script in a scratch console</p>
+<div class="codehilite" data-code-language="JavaScript"><pre><span></span><code><span class="nx">print</span><span class="p">(</span><span class="nx">outer</span><span class="p">(),</span><span class="w"> </span><span class="s2">"\n"</span><span class="p">);</span>
+
+<span class="kd">function</span><span class="w"> </span><span class="nx">outer</span><span class="p">(){</span>
+<span class="w">    </span><span class="kd">function</span><span class="w"> </span><span class="nx">inner</span><span class="p">(){</span>
+<span class="w">        </span><span class="k">return</span><span class="p">(</span><span class="s2">"Hello"</span><span class="p">);</span>
+<span class="w">        </span><span class="p">}</span>
+<span class="w">    </span><span class="k">return</span><span class="w"> </span><span class="nx">inner</span><span class="p">();</span>
+<span class="w">    </span><span class="p">}</span>
+</code></pre></div>
+
+
+
+<a name="426323908"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/349785-JavaScript_pi/topic/v3.0%20beta%20testing/near/426323908" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Mike Rossiter <a href="https://leamas.github.io/zulip-archive/stream/349785-JavaScript_pi/topic/v3.2E0.20beta.20testing.html#426323908">(Mar 13 2024 at 12:21)</a>:</h4>
+<p>Hello<br>
+result: undefined</p>
+
+
+
+<a name="426325016"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/349785-JavaScript_pi/topic/v3.0%20beta%20testing/near/426325016" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Tony Voss <a href="https://leamas.github.io/zulip-archive/stream/349785-JavaScript_pi/topic/v3.2E0.20beta.20testing.html#426325016">(Mar 13 2024 at 12:27)</a>:</h4>
+<p>So it is not nested functions...</p>
+
+
+
+<a name="426325303"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/349785-JavaScript_pi/topic/v3.0%20beta%20testing/near/426325303" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Mike Rossiter <a href="https://leamas.github.io/zulip-archive/stream/349785-JavaScript_pi/topic/v3.2E0.20beta.20testing.html#426325303">(Mar 13 2024 at 12:28)</a>:</h4>
+<p>My head hurts as well ;)</p>
+
+
+
+<a name="426326584"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/349785-JavaScript_pi/topic/v3.0%20beta%20testing/near/426326584" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Tony Voss <a href="https://leamas.github.io/zulip-archive/stream/349785-JavaScript_pi/topic/v3.2E0.20beta.20testing.html#426326584">(Mar 13 2024 at 12:36)</a>:</h4>
+<p>OK, lets narrow it down. by commenting out code<br>
+Lines 80-84 become</p>
+<div class="codehilite" data-code-language="JavaScript"><pre><span></span><code><span class="w">      </span><span class="kd">function</span><span class="w"> </span><span class="nx">parsePosition</span><span class="p">(</span><span class="nx">text</span><span class="p">){</span>
+<span class="w">        </span><span class="c1">// parse lat &amp; long into position object</span>
+<span class="k">return</span><span class="p">({</span><span class="nx">latitude</span><span class="o">:</span><span class="mf">61</span><span class="p">,</span><span class="w"> </span><span class="nx">longitude</span><span class="o">:</span><span class="w"> </span><span class="o">-</span><span class="mf">2</span><span class="p">});</span>
+<span class="err">/*</span>
+<span class="w">        </span><span class="nx">trace</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="kc">true</span><span class="p">;</span>
+</code></pre></div>
+<p>and insert end of comment like this</p>
+<div class="codehilite" data-code-language="JavaScript"><pre><span></span><code><span class="w">        </span><span class="kd">function</span><span class="w"> </span><span class="nx">bail</span><span class="p">(</span><span class="nx">message</span><span class="p">){</span>
+<span class="w">            </span><span class="k">throw</span><span class="p">(</span><span class="nx">title</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="s2">" "</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="nx">phase</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="s2">" "</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="nx">message</span><span class="p">);</span>
+<span class="w">            </span><span class="p">};</span>
+<span class="o">*</span><span class="err">/</span>
+<span class="w">        </span><span class="p">}</span>
+</code></pre></div>
+<p>Hopefully you get output</p>
+<blockquote>
+<p>55° 00.000'N 002° 0.000'W<br>
+61° 00.000'N 002° 0.000'W<br>
+result: undefined</p>
+</blockquote>
+
+
+
+<hr><p>Last updated: Mar 13 2024 at 12:40 UTC</p>
 </html>
