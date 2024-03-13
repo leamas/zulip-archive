@@ -394,5 +394,38 @@ I am cooking this evening - Ynskje's day off and out.  So I will need to attend 
 
 
 
-<hr><p>Last updated: Mar 13 2024 at 08:10 UTC</p>
+<a name="426280566"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/349785-JavaScript_pi/topic/v3.0%20beta%20testing/near/426280566" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Tony Voss <a href="https://leamas.github.io/zulip-archive/stream/349785-JavaScript_pi/topic/v3.2E0.20beta.20testing.html#426280566">(Mar 13 2024 at 08:15)</a>:</h4>
+<p>Have reworked and fixed loadConfig.  Pushed to repo.</p>
+<p>In the config file, bool is represented by 0 or 1.  I had<br>
+<code> bool configFound = pConf-&gt;Read ( _T( "ShowJavaScriptIcon" ), &amp;m_bJavaScriptShowIcon, 1 );
+</code><br>
+If not found, it used the default, which in this case sets a bool to 1 and not true or false.  Compiler does not (cannot) spot that.  Changed to <br>
+<code> bool configFound = pConf-&gt;Read ( _T( "ShowJavaScriptIcon" ), &amp;m_bJavaScriptShowIcon, true );
+</code><br>
+and all is happy again.<br>
+I have removed the complicated stuff rescuing pre v0.3  and deleting stuff in the old location for the config.  Much cleaner now.</p>
+
+
+
+<a name="426281312"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/349785-JavaScript_pi/topic/v3.0%20beta%20testing/near/426281312" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Tony Voss <a href="https://leamas.github.io/zulip-archive/stream/349785-JavaScript_pi/topic/v3.2E0.20beta.20testing.html#426281312">(Mar 13 2024 at 08:20)</a>:</h4>
+<blockquote>
+<p>main.js failed at line 225:<br>
+else printGreen("No errors\n");</p>
+</blockquote>
+<p>Cannot understand this problem.  Fine here.<br>
+Need to find issue.  Possibly some weird invisible character in source?<br>
+Suggest you copy the line and paste into the field in the diagnostis tab of tools and 'clean' it.  It will dump character codes .</p>
+
+
+
+<a name="426281686"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/349785-JavaScript_pi/topic/v3.0%20beta%20testing/near/426281686" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Tony Voss <a href="https://leamas.github.io/zulip-archive/stream/349785-JavaScript_pi/topic/v3.2E0.20beta.20testing.html#426281686">(Mar 13 2024 at 08:22)</a>:</h4>
+<p>? seems to be replaced by degree symbol when the script is loaded. Seen in comment in 02 PosWayRoutes.js line 33.<br>
+please copy that lineand paste into the field in the diagnostis tab of tools and 'clean' it. It will dump character codes .  Can then see what Windows build is doing with it.</p>
+
+
+
+<hr><p>Last updated: Mar 13 2024 at 08:27 UTC</p>
 </html>
