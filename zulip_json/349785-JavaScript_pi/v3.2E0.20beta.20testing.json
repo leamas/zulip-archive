@@ -346,5 +346,17 @@
         "id": 426306440,
         "sender_full_name": "Tony Voss",
         "timestamp": 1710326496
+    },
+    {
+        "content": "<p>My bad. Now with positionComplete:<br>\n<em>SyntaxError: source decode failed (line 152)</em></p>",
+        "id": 426309452,
+        "sender_full_name": "Mike Rossiter",
+        "timestamp": 1710327279
+    },
+    {
+        "content": "<p>Line 152 invokes the  function starting at line 23 to build the formatted position.  This uses <code>String.fromCharCode(176)</code> to get a degree character, which is perhaps where Windows is failing - although I thought it worked previously.<br>\nTry replacing  with xB0.  So line 27<br>\n<code>            (\"00\" + parseInt(latAbs)).slice(-2) + String.fromCharCode(176) + \" \" +</code><br>\nbecomes<br>\n<code>            (\"00\" + parseInt(latAbs)).slice(-2) + \"\\xB0\" + \" \" +</code><br>\nand similar change on line 30</p>",
+        "id": 426311400,
+        "sender_full_name": "Tony Voss",
+        "timestamp": 1710327973
     }
 ]

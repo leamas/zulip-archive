@@ -538,5 +538,23 @@ Unzip and load and run.  You should see which line it is failing on.<br>
 
 
 
-<hr><p>Last updated: Mar 13 2024 at 10:42 UTC</p>
+<a name="426309452"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/349785-JavaScript_pi/topic/v3.0%20beta%20testing/near/426309452" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Mike Rossiter <a href="https://leamas.github.io/zulip-archive/stream/349785-JavaScript_pi/topic/v3.2E0.20beta.20testing.html#426309452">(Mar 13 2024 at 10:54)</a>:</h4>
+<p>My bad. Now with positionComplete:<br>
+<em>SyntaxError: source decode failed (line 152)</em></p>
+
+
+
+<a name="426311400"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/349785-JavaScript_pi/topic/v3.0%20beta%20testing/near/426311400" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Tony Voss <a href="https://leamas.github.io/zulip-archive/stream/349785-JavaScript_pi/topic/v3.2E0.20beta.20testing.html#426311400">(Mar 13 2024 at 11:06)</a>:</h4>
+<p>Line 152 invokes the  function starting at line 23 to build the formatted position.  This uses <code>String.fromCharCode(176)</code> to get a degree character, which is perhaps where Windows is failing - although I thought it worked previously.<br>
+Try replacing  with xB0.  So line 27<br>
+<code>            ("00" + parseInt(latAbs)).slice(-2) + String.fromCharCode(176) + " " +</code><br>
+becomes<br>
+<code>            ("00" + parseInt(latAbs)).slice(-2) + "\xB0" + " " +</code><br>
+and similar change on line 30</p>
+
+
+
+<hr><p>Last updated: Mar 13 2024 at 11:09 UTC</p>
 </html>
