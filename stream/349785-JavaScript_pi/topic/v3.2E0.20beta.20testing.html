@@ -909,5 +909,18 @@ result: undefined</p>
 
 
 
-<hr><p>Last updated: Mar 13 2024 at 16:42 UTC</p>
+<a name="426384626"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/349785-JavaScript_pi/topic/v3.0%20beta%20testing/near/426384626" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Tony Voss <a href="https://leamas.github.io/zulip-archive/stream/349785-JavaScript_pi/topic/v3.2E0.20beta.20testing.html#426384626">(Mar 13 2024 at 16:50)</a>:</h4>
+<p>So we know that ? is being compiled correctly to 0x3f.<br>
+But it is being converted to º and your restored extra is  converting it to a string that is Not A Number.<br>
+Only change I made is to add in functions.cpp line 93<br>
+<code> given.Replace(superScript0, degree, true);</code><br>
+where superScript0 is<br>
+<code> const wxString superScript0 {"\u2070"};   // superscript 0 pretending to be degrees</code></p>
+<p>Could this somehow be matching 0x3f ? Sounds impossible but only think I can think of.<br>
+Can you comment out this conversion to check?</p>
+
+
+
+<hr><p>Last updated: Mar 13 2024 at 17:08 UTC</p>
 </html>
