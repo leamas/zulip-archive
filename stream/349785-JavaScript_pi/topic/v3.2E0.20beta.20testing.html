@@ -485,5 +485,39 @@ Does the test suite run OK now?</p>
 
 
 
-<hr><p>Last updated: Mar 13 2024 at 09:42 UTC</p>
+<a name="426299803"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/349785-JavaScript_pi/topic/v3.0%20beta%20testing/near/426299803" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Mike Rossiter <a href="https://leamas.github.io/zulip-archive/stream/349785-JavaScript_pi/topic/v3.2E0.20beta.20testing.html#426299803">(Mar 13 2024 at 10:07)</a>:</h4>
+<div class="codehilite"><pre><span></span><code>Position = require(&quot;Position&quot;);
+
+pos = new Position(55, -2);
+print(pos.formatted, &quot;\n&quot;);
+
+pos2 = new Position(&quot;52° 12.345&#39;N 1° 1.234&#39;W&quot;);
+print(pos2.formatted, &quot;\n&quot;);
+</code></pre></div>
+<blockquote>
+<p>SyntaxError: source decode failed (line 3)</p>
+</blockquote>
+<p>Try cleaning with: <code>pos = new Position(55, -2);</code></p>
+<div class="codehilite"><pre><span></span><code>[00]p [01]o [02]s [03]  [04]= [05]  [06]n [07]e [08]w [09]
+[10]P [11]o [12]s [13]i [14]t [15]i [16]o [17]n [18]( [19]5
+[20]5 [21], [22]  [23]- [24]2 [25]) [26];
+
+Raw
+pos = new Position(55, -2);
+[00]70 [01]6F [02]73 [03]20 [04]3D [05]20 [06]6E [07]65 [08]77 [09]20
+[10]50 [11]6F [12]73 [13]69 [14]74 [15]69 [16]6F [17]6E [18]28 [19]35
+[20]35 [21]2C [22]20 [23]2D [24]32 [25]29 [26]3B
+
+Cleaned
+pos = new Position(55, -2);
+[00]70 [01]6F [02]73 [03]20 [04]3D [05]20 [06]6E [07]65 [08]77 [09]20
+[10]50 [11]6F [12]73 [13]69 [14]74 [15]69 [16]6F [17]6E [18]28 [19]35
+[20]35 [21]2C [22]20 [23]2D [24]32 [25]29 [26]3B
+</code></pre></div>
+<p>I think the problem lies somewhere in <em>Position.</em></p>
+
+
+
+<hr><p>Last updated: Mar 13 2024 at 10:09 UTC</p>
 </html>
