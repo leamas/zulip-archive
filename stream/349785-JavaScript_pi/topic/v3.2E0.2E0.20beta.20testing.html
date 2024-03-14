@@ -1,0 +1,70 @@
+<html>
+<head><meta charset="utf-8"><title>v3.0.0 beta testing · JavaScript_pi · Zulip Chat Archive</title></head>
+<h2>Stream: <a href="https://leamas.github.io/zulip-archive/stream/349785-JavaScript_pi/index.html">JavaScript_pi</a></h2>
+<h3>Topic: <a href="https://leamas.github.io/zulip-archive/stream/349785-JavaScript_pi/topic/v3.2E0.2E0.20beta.20testing.html">v3.0.0 beta testing</a></h3>
+
+<hr>
+
+<base href="https://opencpn.zulipchat.com">
+
+<head><link href="https://leamas.github.io/zulip-archive/style.css" rel="stylesheet"></head>
+
+<a name="426523817"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/349785-JavaScript_pi/topic/v3.0.0%20beta%20testing/near/426523817" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Tony Voss <a href="https://leamas.github.io/zulip-archive/stream/349785-JavaScript_pi/topic/v3.2E0.2E0.20beta.20testing.html#426523817">(Mar 14 2024 at 11:45)</a>:</h4>
+<p>So earlier problem was that it was failing to compile with degree symbol.<br>
+At least now we are getting the trace back.<br>
+It is failing when matching a regular expression if the text to be matched as a degree in it.<br>
+Will send you another test in a few moments,</p>
+
+
+
+<a name="426525797"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/349785-JavaScript_pi/topic/v3.0.0%20beta%20testing/near/426525797" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Tony Voss <a href="https://leamas.github.io/zulip-archive/stream/349785-JavaScript_pi/topic/v3.2E0.2E0.20beta.20testing.html#426525797">(Mar 14 2024 at 11:58)</a>:</h4>
+<p>Please run this script with the position on the clipboard:</p>
+<div class="codehilite" data-code-language="JavaScript"><pre><span></span><code><span class="nx">text</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nx">fromClipboard</span><span class="p">();</span>
+<span class="nx">print</span><span class="p">(</span><span class="s2">"Clipboard has: "</span><span class="p">,</span><span class="w"> </span><span class="nx">text</span><span class="p">,</span><span class="w"> </span><span class="s2">"\n"</span><span class="p">);</span>
+<span class="nx">print</span><span class="p">(</span><span class="s2">"\xB0"</span><span class="p">,</span><span class="w"> </span><span class="s2">"\n"</span><span class="p">);</span>
+<span class="k">while</span><span class="w"> </span><span class="p">(</span><span class="nx">text</span><span class="p">.</span><span class="nx">indexOf</span><span class="p">(</span><span class="s2">"\xB0"</span><span class="p">)</span><span class="w"> </span><span class="o">&gt;=</span><span class="w"> </span><span class="mf">0</span><span class="p">)</span><span class="w"> </span><span class="nx">text</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nx">text</span><span class="p">.</span><span class="nx">replace</span><span class="p">(</span><span class="s2">"\xB0"</span><span class="p">,</span><span class="w"> </span><span class="s1">'*'</span><span class="p">);</span>
+<span class="nx">print</span><span class="p">(</span><span class="s2">"Processed: "</span><span class="p">,</span><span class="w"> </span><span class="nx">text</span><span class="p">,</span><span class="w"> </span><span class="s2">"\n"</span><span class="p">);</span>
+</code></pre></div>
+
+
+
+<a name="426526108"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/349785-JavaScript_pi/topic/v3.0.0%20beta%20testing/near/426526108" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Mike Rossiter <a href="https://leamas.github.io/zulip-archive/stream/349785-JavaScript_pi/topic/v3.2E0.2E0.20beta.20testing.html#426526108">(Mar 14 2024 at 12:00)</a>:</h4>
+<div class="codehilite"><pre><span></span><code>Clipboard has: 52° 12.345&#39;N 1° 1.234&#39;W
+°
+Processed: 52° 12.345&#39;N 1° 1.234&#39;W
+result: undefined
+</code></pre></div>
+
+
+
+<a name="426526581"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/349785-JavaScript_pi/topic/v3.0.0%20beta%20testing/near/426526581" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Tony Voss <a href="https://leamas.github.io/zulip-archive/stream/349785-JavaScript_pi/topic/v3.2E0.2E0.20beta.20testing.html#426526581">(Mar 14 2024 at 12:03)</a>:</h4>
+<p>That is disappointing.  The "\xB0" has compiled OK as it is printed correctly in line 3.<br>
+But it is failing to match in the search and replace bit.<br>
+Will have another go.</p>
+
+
+
+<a name="426527023"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/349785-JavaScript_pi/topic/v3.0.0%20beta%20testing/near/426527023" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Notification Bot <a href="https://leamas.github.io/zulip-archive/stream/349785-JavaScript_pi/topic/v3.2E0.2E0.20beta.20testing.html#426527023">(Mar 14 2024 at 12:06)</a>:</h4>
+<p>147 messages were moved here from <a class="stream-topic" data-stream-id="349785" href="/#narrow/stream/349785-JavaScript_pi/topic/v3.2E0.20beta.20testing">#JavaScript_pi &gt; v3.0 beta testing</a> by <span class="user-mention silent" data-user-id="399559">Mike Rossiter</span>.</p>
+
+
+
+<a name="426527176"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/349785-JavaScript_pi/topic/v3.0.0%20beta%20testing/near/426527176" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Notification Bot <a href="https://leamas.github.io/zulip-archive/stream/349785-JavaScript_pi/topic/v3.2E0.2E0.20beta.20testing.html#426527176">(Mar 14 2024 at 12:07)</a>:</h4>
+<p>This topic was moved here from <a class="stream-topic" data-stream-id="349785" href="/#narrow/stream/349785-JavaScript_pi/topic/.28no.20topic.29">#JavaScript_pi &gt; (no topic)</a> by <span class="user-mention silent" data-user-id="399559">Mike Rossiter</span>.</p>
+
+
+
+<a name="426527592"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/349785-JavaScript_pi/topic/v3.0.0%20beta%20testing/near/426527592" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Mike Rossiter <a href="https://leamas.github.io/zulip-archive/stream/349785-JavaScript_pi/topic/v3.2E0.2E0.20beta.20testing.html#426527592">(Mar 14 2024 at 12:09)</a>:</h4>
+<p>Trying to get all the beta testing stuff together.</p>
+
+
+
+<hr><p>Last updated: Mar 14 2024 at 12:15 UTC</p>
+</html>
