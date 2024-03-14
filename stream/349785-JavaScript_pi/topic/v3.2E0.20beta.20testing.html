@@ -1208,5 +1208,63 @@ Please try this one-liner<br>
 
 
 
-<hr><p>Last updated: Mar 14 2024 at 11:22 UTC</p>
+<a name="426520013"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/349785-JavaScript_pi/topic/v3.0%20beta%20testing/near/426520013" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Tony Voss <a href="https://leamas.github.io/zulip-archive/stream/349785-JavaScript_pi/topic/v3.2E0.20beta.20testing.html#426520013">(Mar 14 2024 at 11:23)</a>:</h4>
+<p>Your pasted degree was actually 0xBA - the masculine ordinal.  This is a common mis-representation of degree.  maybe you got that by copying from Zulip.<br>
+Anyhow, cleanString correctly changed that to 0xB0 - the degree symbol.<br>
+Yes you can uncomment that superscript conversion but it is not being used here.<br>
+It looks like the problem is again that the Windows JS engine cannot cope with degree 0xB0.</p>
+
+
+
+<a name="426520843"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/349785-JavaScript_pi/topic/v3.0%20beta%20testing/near/426520843" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Tony Voss <a href="https://leamas.github.io/zulip-archive/stream/349785-JavaScript_pi/topic/v3.2E0.20beta.20testing.html#426520843">(Mar 14 2024 at 11:28)</a>:</h4>
+<p>Let's see whether it can process if  not compiled.<br>
+Please change line  87 to<br>
+<code>pos2 = new Position(fromClipboard());</code><br>
+and before running the script, copy this position to the clipboard, from where it will read it.<br>
+52° 12.345'N 1° 1.234'W</p>
+
+
+
+<a name="426521351"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/349785-JavaScript_pi/topic/v3.0%20beta%20testing/near/426521351" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Mike Rossiter <a href="https://leamas.github.io/zulip-archive/stream/349785-JavaScript_pi/topic/v3.2E0.20beta.20testing.html#426521351">(Mar 14 2024 at 11:31)</a>:</h4>
+<div class="codehilite"><pre><span></span><code>arguments.length:2
+55° 00.000&#39;N 002° 0.000&#39;W
+arguments.length:1
+Have arguments.length == 1
+Type:string
+In parse section
+Done parse section
+61° 00.000&#39;N 002° 0.000&#39;W
+result: undefined
+</code></pre></div>
+
+
+
+<a name="426521654"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/349785-JavaScript_pi/topic/v3.0%20beta%20testing/near/426521654" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Tony Voss <a href="https://leamas.github.io/zulip-archive/stream/349785-JavaScript_pi/topic/v3.2E0.20beta.20testing.html#426521654">(Mar 14 2024 at 11:33)</a>:</h4>
+<p>Yes!   Conclusion: cannot compile degree symbol but a script can process it.<br>
+Standby for testing further with the new Position .</p>
+
+
+
+<a name="426522284"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/349785-JavaScript_pi/topic/v3.0%20beta%20testing/near/426522284" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Tony Voss <a href="https://leamas.github.io/zulip-archive/stream/349785-JavaScript_pi/topic/v3.2E0.20beta.20testing.html#426522284">(Mar 14 2024 at 11:37)</a>:</h4>
+<p>Please run Test6 with the position on your clipboard.<br>
+<a href="/user_uploads/33951/6ZsltwaBa4XE1z3v06p2utTd/Test6.js.zip">Test6.js.zip</a></p>
+
+
+
+<a name="426522620"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/349785-JavaScript_pi/topic/v3.0%20beta%20testing/near/426522620" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Mike Rossiter <a href="https://leamas.github.io/zulip-archive/stream/349785-JavaScript_pi/topic/v3.2E0.20beta.20testing.html#426522620">(Mar 14 2024 at 11:39)</a>:</h4>
+<div class="codehilite"><pre><span></span><code>55° 00.000&#39;N 002° 0.000&#39;W
+parsePosition line 86 Error: internal error
+called from Position line 10
+called from line 154
+</code></pre></div>
+
+
+
+<hr><p>Last updated: Mar 14 2024 at 11:42 UTC</p>
 </html>
