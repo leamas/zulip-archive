@@ -619,5 +619,63 @@ Must pop out for an hour.</p>
 
 
 
-<hr><p>Last updated: Mar 15 2024 at 15:23 UTC</p>
+<a name="426767488"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/349785-JavaScript_pi/topic/v3.0.0%20beta%20testing/near/426767488" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Tony Voss <a href="https://leamas.github.io/zulip-archive/stream/349785-JavaScript_pi/topic/v3.2E0.2E0.20beta.20testing.html#426767488">(Mar 15 2024 at 15:28)</a>:</h4>
+<p>Back now.  Where are we at?</p>
+
+
+
+<a name="426767925"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/349785-JavaScript_pi/topic/v3.0.0%20beta%20testing/near/426767925" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Mike Rossiter <a href="https://leamas.github.io/zulip-archive/stream/349785-JavaScript_pi/topic/v3.2E0.2E0.20beta.20testing.html#426767925">(Mar 15 2024 at 15:30)</a>:</h4>
+<p>cut and paste is giving me problems. Restarting the pc.</p>
+
+
+
+<a name="426769388"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/349785-JavaScript_pi/topic/v3.0.0%20beta%20testing/near/426769388" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Mike Rossiter <a href="https://leamas.github.io/zulip-archive/stream/349785-JavaScript_pi/topic/v3.2E0.2E0.20beta.20testing.html#426769388">(Mar 15 2024 at 15:37)</a>:</h4>
+<p>This is what I have when loading Test9:        </p>
+<div class="codehilite"><pre><span></span><code>(&quot;00&quot; + parseInt(latAbs)).slice(-2) + &quot;º &quot; +
+            (&quot;00&quot; + (latAbs % 1 * 60).toFixed(3)).slice(-6) + &quot;&#39;&quot; +
+            ((this.latitude &lt; 0) ? &quot;S &quot; : &quot;N &quot;) +
+</code></pre></div>
+<p>When I test the ? character all is well but we have the  masculine ordinal:<br>
+<a href="/user_uploads/33951/s-wf9JziSCtbS-wj3IDDkMCi/4.jpg">4.jpg</a></p>
+<div class="message_inline_image"><a href="/user_uploads/33951/s-wf9JziSCtbS-wj3IDDkMCi/4.jpg" title="4.jpg"><img src="/user_uploads/33951/s-wf9JziSCtbS-wj3IDDkMCi/4.jpg"></a></div>
+
+
+
+<a name="426770438"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/349785-JavaScript_pi/topic/v3.0.0%20beta%20testing/near/426770438" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Tony Voss <a href="https://leamas.github.io/zulip-archive/stream/349785-JavaScript_pi/topic/v3.2E0.2E0.20beta.20testing.html#426770438">(Mar 15 2024 at 15:42)</a>:</h4>
+<p>When you view it in the script pane, you may see the masculine ordinal but it is cleaned before it gets into the JavaScript engine.<br>
+You can confirm that by running the simple script</p>
+<div class="codehilite" data-code-language="JavaScript"><pre><span></span><code><span class="nx">text</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">"'°º⁰ primes ‘’‛’′´`º"</span><span class="p">;</span>
+<span class="k">for</span><span class="w"> </span><span class="p">(</span><span class="nx">i</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mf">0</span><span class="p">;</span><span class="w"> </span><span class="nx">i</span><span class="w"> </span><span class="o">&lt;</span><span class="w"> </span><span class="nx">text</span><span class="p">.</span><span class="nx">length</span><span class="p">;</span><span class="w"> </span><span class="nx">i</span><span class="o">++</span><span class="p">)</span><span class="w"> </span><span class="nx">print</span><span class="p">(</span><span class="nx">text</span><span class="p">.</span><span class="nx">charAt</span><span class="p">(</span><span class="nx">i</span><span class="p">),</span><span class="w"> </span><span class="s2">"\t"</span><span class="p">,</span><span class="w"> </span><span class="nx">text</span><span class="p">.</span><span class="nx">charCodeAt</span><span class="p">(</span><span class="nx">i</span><span class="p">),</span><span class="w"> </span><span class="s2">"\n"</span><span class="p">);</span>
+</code></pre></div>
+<p>When I run that I get</p>
+<blockquote>
+<p>'   39<br>
+°   176<br>
+°   176<br>
+°   176<br>
+    32<br>
+p   112<br>
+r   114<br>
+i   105<br>
+m   109<br>
+e   101<br>
+s   115<br>
+    32<br>
+'   39<br>
+'   39<br>
+'   39<br>
+'   39<br>
+'   39<br>
+'   39<br>
+'   39<br>
+°   176</p>
+</blockquote>
+
+
+
+<hr><p>Last updated: Mar 15 2024 at 15:42 UTC</p>
 </html>
