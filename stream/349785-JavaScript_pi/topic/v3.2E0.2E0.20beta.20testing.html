@@ -697,5 +697,38 @@ result: undefined</p>
 
 
 
-<hr><p>Last updated: Mar 15 2024 at 16:10 UTC</p>
+<a name="426777731"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/349785-JavaScript_pi/topic/v3.0.0%20beta%20testing/near/426777731" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Mike Rossiter <a href="https://leamas.github.io/zulip-archive/stream/349785-JavaScript_pi/topic/v3.2E0.2E0.20beta.20testing.html#426777731">(Mar 15 2024 at 16:18)</a>:</h4>
+<p>__WXMSW__ is being used to determine the OS. It should be __WINDOWS__.</p>
+
+
+
+<a name="426778339"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/349785-JavaScript_pi/topic/v3.0.0%20beta%20testing/near/426778339" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Mike Rossiter <a href="https://leamas.github.io/zulip-archive/stream/349785-JavaScript_pi/topic/v3.2E0.2E0.20beta.20testing.html#426778339">(Mar 15 2024 at 16:21)</a>:</h4>
+<p>__WXMSW__ is for GUI stuff, I think.</p>
+
+
+
+<a name="426778964"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/349785-JavaScript_pi/topic/v3.0.0%20beta%20testing/near/426778964" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Tony Voss <a href="https://leamas.github.io/zulip-archive/stream/349785-JavaScript_pi/topic/v3.2E0.2E0.20beta.20testing.html#426778964">(Mar 15 2024 at 16:25)</a>:</h4>
+<blockquote>
+<p>'\u2070' cannot be represented in the current code page (1252)<br>
+This relates to superscript 0 and is only a warning.  However, its possible there is one ib the tests.  I have seen it used in the wild for the degree symbol.  Have to think about how to handle that.  Might it end up getting confused with '?' ?</p>
+</blockquote>
+<p>Regarding Line 111 in functions.cpp, I had forgottem about that and have been getting strings from the duk stack without going via that.  It only affects Windows and if the script when run has generated "\u00C2\u00b0", which we must have seen sometime in the past.  It does not impact what goes into the engine - only what it delivers out.</p>
+<p>Snag is, I get strings off the stack in many places and not always from the top - sometimes further down.  I can, maybe should, generalise it but it will take some hours.</p>
+<p>Shall I change __WXMSW__  to _WINDOWS__ throughout?</p>
+
+
+
+<a name="426779517"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/349785-JavaScript_pi/topic/v3.0.0%20beta%20testing/near/426779517" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Mike Rossiter <a href="https://leamas.github.io/zulip-archive/stream/349785-JavaScript_pi/topic/v3.2E0.2E0.20beta.20testing.html#426779517">(Mar 15 2024 at 16:27)</a>:</h4>
+<blockquote>
+<p>Shall I change __WXMSW__ to _WINDOWS__ throughout?</p>
+</blockquote>
+<p>No, it only applies to lines 85 - 124.</p>
+
+
+
+<hr><p>Last updated: Mar 15 2024 at 16:30 UTC</p>
 </html>

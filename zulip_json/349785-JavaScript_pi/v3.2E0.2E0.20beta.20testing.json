@@ -466,5 +466,29 @@
         "id": 426775148,
         "sender_full_name": "Mike Rossiter",
         "timestamp": 1710518707
+    },
+    {
+        "content": "<p>__WXMSW__ is being used to determine the OS. It should be __WINDOWS__.</p>",
+        "id": 426777731,
+        "sender_full_name": "Mike Rossiter",
+        "timestamp": 1710519514
+    },
+    {
+        "content": "<p>__WXMSW__ is for GUI stuff, I think.</p>",
+        "id": 426778339,
+        "sender_full_name": "Mike Rossiter",
+        "timestamp": 1710519719
+    },
+    {
+        "content": "<blockquote>\n<p>'\\u2070' cannot be represented in the current code page (1252)<br>\nThis relates to superscript 0 and is only a warning.  However, its possible there is one ib the tests.  I have seen it used in the wild for the degree symbol.  Have to think about how to handle that.  Might it end up getting confused with '?' ?</p>\n</blockquote>\n<p>Regarding Line 111 in functions.cpp, I had forgottem about that and have been getting strings from the duk stack without going via that.  It only affects Windows and if the script when run has generated \"\\u00C2\\u00b0\", which we must have seen sometime in the past.  It does not impact what goes into the engine - only what it delivers out.</p>\n<p>Snag is, I get strings off the stack in many places and not always from the top - sometimes further down.  I can, maybe should, generalise it but it will take some hours.</p>\n<p>Shall I change __WXMSW__  to _WINDOWS__ throughout?</p>",
+        "id": 426778964,
+        "sender_full_name": "Tony Voss",
+        "timestamp": 1710519912
+    },
+    {
+        "content": "<blockquote>\n<p>Shall I change __WXMSW__ to _WINDOWS__ throughout?</p>\n</blockquote>\n<p>No, it only applies to lines 85 - 124.</p>",
+        "id": 426779517,
+        "sender_full_name": "Mike Rossiter",
+        "timestamp": 1710520079
     }
 ]
