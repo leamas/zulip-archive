@@ -373,5 +373,101 @@ Also line  31 at least.</p>
 
 
 
-<hr><p>Last updated: Mar 15 2024 at 11:42 UTC</p>
+<a name="426725949"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/349785-JavaScript_pi/topic/v3.0.0%20beta%20testing/near/426725949" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Tony Voss <a href="https://leamas.github.io/zulip-archive/stream/349785-JavaScript_pi/topic/v3.2E0.2E0.20beta.20testing.html#426725949">(Mar 15 2024 at 11:43)</a>:</h4>
+<p><code>print(123.5 % 1 * 60, "\n");</code></p>
+
+
+
+<a name="426726133"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/349785-JavaScript_pi/topic/v3.0.0%20beta%20testing/near/426726133" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Mike Rossiter <a href="https://leamas.github.io/zulip-archive/stream/349785-JavaScript_pi/topic/v3.2E0.2E0.20beta.20testing.html#426726133">(Mar 15 2024 at 11:44)</a>:</h4>
+<p>0.5<br>
+result: undefined</p>
+<p>30<br>
+result: undefined</p>
+
+
+
+<a name="426726736"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/349785-JavaScript_pi/topic/v3.0.0%20beta%20testing/near/426726736" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Tony Voss <a href="https://leamas.github.io/zulip-archive/stream/349785-JavaScript_pi/topic/v3.2E0.2E0.20beta.20testing.html#426726736">(Mar 15 2024 at 11:48)</a>:</h4>
+<p>Line 28 should look like this:<br>
+<code>("00" + (latAbs % 1 * 60).toFixed(3)).slice(-6) + "'" +</code></p>
+<p>Please find out which bit is the problem.  Yo could try replacing ' with, say, x<br>
+or insert returns (not within a string) so it is spread across more lines. <br>
+Then the error message will point you closer.</p>
+
+
+
+<a name="426729133"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/349785-JavaScript_pi/topic/v3.0.0%20beta%20testing/near/426729133" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Mike Rossiter <a href="https://leamas.github.io/zulip-archive/stream/349785-JavaScript_pi/topic/v3.2E0.2E0.20beta.20testing.html#426729133">(Mar 15 2024 at 12:02)</a>:</h4>
+<p>Back to the problem of the ternary operator ?. When I remove this in lines 29-31 I trace down to line 90, another ternary. I will try some if/else stuff.</p>
+
+
+
+<a name="426729446"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/349785-JavaScript_pi/topic/v3.0.0%20beta%20testing/near/426729446" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Tony Voss <a href="https://leamas.github.io/zulip-archive/stream/349785-JavaScript_pi/topic/v3.2E0.2E0.20beta.20testing.html#426729446">(Mar 15 2024 at 12:05)</a>:</h4>
+<p>Hang on - earlier you said you had issues with ?<br>
+Try <code>print("Question ?\n");</code></p>
+
+
+
+<a name="426729682"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/349785-JavaScript_pi/topic/v3.0.0%20beta%20testing/near/426729682" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Mike Rossiter <a href="https://leamas.github.io/zulip-archive/stream/349785-JavaScript_pi/topic/v3.2E0.2E0.20beta.20testing.html#426729682">(Mar 15 2024 at 12:06)</a>:</h4>
+<p>SyntaxError: source decode failed (line 0)</p>
+
+
+
+<a name="426729807"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/349785-JavaScript_pi/topic/v3.0.0%20beta%20testing/near/426729807" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Tony Voss <a href="https://leamas.github.io/zulip-archive/stream/349785-JavaScript_pi/topic/v3.2E0.2E0.20beta.20testing.html#426729807">(Mar 15 2024 at 12:07)</a>:</h4>
+<p>What is ? giving you in the Tools string cleaning inspector?<br>
+Expect x3F</p>
+
+
+
+<a name="426729952"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/349785-JavaScript_pi/topic/v3.0.0%20beta%20testing/near/426729952" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Mike Rossiter <a href="https://leamas.github.io/zulip-archive/stream/349785-JavaScript_pi/topic/v3.2E0.2E0.20beta.20testing.html#426729952">(Mar 15 2024 at 12:08)</a>:</h4>
+<p>[00]? </p>
+<div class="codehilite"><pre><span></span><code>Raw
+?
+[00]3F
+
+Cleaned
+°
+[00]B0
+</code></pre></div>
+
+
+
+<a name="426730009"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/349785-JavaScript_pi/topic/v3.0.0%20beta%20testing/near/426730009" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Tony Voss <a href="https://leamas.github.io/zulip-archive/stream/349785-JavaScript_pi/topic/v3.2E0.2E0.20beta.20testing.html#426730009">(Mar 15 2024 at 12:08)</a>:</h4>
+<p>Ah!  stand by...</p>
+
+
+
+<a name="426730908"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/349785-JavaScript_pi/topic/v3.0.0%20beta%20testing/near/426730908" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Alec Leamas <a href="https://leamas.github.io/zulip-archive/stream/349785-JavaScript_pi/topic/v3.2E0.2E0.20beta.20testing.html#426730908">(Mar 15 2024 at 12:13)</a>:</h4>
+<p>Isnt this about javascript using utf-16 a k a unicode internally?. The degrees codepoint is certainly not 0xB0, it is 0x00B0. And when trying to match single bytes things breaks. Or?</p>
+<p>Sample node session:</p>
+<div class="codehilite"><pre><span></span><code>&gt; console.log(&quot;degrees °&quot;)
+degrees °
+undefined
+&gt; chars = [...&quot;degrees °&quot;]
+[
+  &#39;d&#39;, &#39;e&#39;, &#39;g&#39;,
+  &#39;r&#39;, &#39;e&#39;, &#39;e&#39;,
+  &#39;s&#39;, &#39; &#39;, &#39;°&#39;
+]
+&gt; console.log(chars)
+[
+  &#39;d&#39;, &#39;e&#39;, &#39;g&#39;,
+  &#39;r&#39;, &#39;e&#39;, &#39;e&#39;,
+  &#39;s&#39;, &#39; &#39;, &#39;°&#39;
+]
+undefined
+</code></pre></div>
+<p>Just tell me if I should shut up...</p>
+
+
+
+<hr><p>Last updated: Mar 15 2024 at 12:14 UTC</p>
 </html>

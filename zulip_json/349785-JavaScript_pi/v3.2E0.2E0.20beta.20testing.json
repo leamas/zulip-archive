@@ -250,5 +250,65 @@
         "id": 426725835,
         "sender_full_name": "Tony Voss",
         "timestamp": 1710502949
+    },
+    {
+        "content": "<p><code>print(123.5 % 1 * 60, \"\\n\");</code></p>",
+        "id": 426725949,
+        "sender_full_name": "Tony Voss",
+        "timestamp": 1710503003
+    },
+    {
+        "content": "<p>0.5<br>\nresult: undefined</p>\n<p>30<br>\nresult: undefined</p>",
+        "id": 426726133,
+        "sender_full_name": "Mike Rossiter",
+        "timestamp": 1710503079
+    },
+    {
+        "content": "<p>Line 28 should look like this:<br>\n<code>(\"00\" + (latAbs % 1 * 60).toFixed(3)).slice(-6) + \"'\" +</code></p>\n<p>Please find out which bit is the problem.  Yo could try replacing ' with, say, x<br>\nor insert returns (not within a string) so it is spread across more lines. <br>\nThen the error message will point you closer.</p>",
+        "id": 426726736,
+        "sender_full_name": "Tony Voss",
+        "timestamp": 1710503306
+    },
+    {
+        "content": "<p>Back to the problem of the ternary operator ?. When I remove this in lines 29-31 I trace down to line 90, another ternary. I will try some if/else stuff.</p>",
+        "id": 426729133,
+        "sender_full_name": "Mike Rossiter",
+        "timestamp": 1710504178
+    },
+    {
+        "content": "<p>Hang on - earlier you said you had issues with ?<br>\nTry <code>print(\"Question ?\\n\");</code></p>",
+        "id": 426729446,
+        "sender_full_name": "Tony Voss",
+        "timestamp": 1710504307
+    },
+    {
+        "content": "<p>SyntaxError: source decode failed (line 0)</p>",
+        "id": 426729682,
+        "sender_full_name": "Mike Rossiter",
+        "timestamp": 1710504389
+    },
+    {
+        "content": "<p>What is ? giving you in the Tools string cleaning inspector?<br>\nExpect x3F</p>",
+        "id": 426729807,
+        "sender_full_name": "Tony Voss",
+        "timestamp": 1710504438
+    },
+    {
+        "content": "<p>[00]? </p>\n<div class=\"codehilite\"><pre><span></span><code>Raw\n?\n[00]3F\n\nCleaned\n°\n[00]B0\n</code></pre></div>",
+        "id": 426729952,
+        "sender_full_name": "Mike Rossiter",
+        "timestamp": 1710504485
+    },
+    {
+        "content": "<p>Ah!  stand by...</p>",
+        "id": 426730009,
+        "sender_full_name": "Tony Voss",
+        "timestamp": 1710504511
+    },
+    {
+        "content": "<p>Isnt this about javascript using utf-16 a k a unicode internally?. The degrees codepoint is certainly not 0xB0, it is 0x00B0. And when trying to match single bytes things breaks. Or?</p>\n<p>Sample node session:</p>\n<div class=\"codehilite\"><pre><span></span><code>&gt; console.log(&quot;degrees °&quot;)\ndegrees °\nundefined\n&gt; chars = [...&quot;degrees °&quot;]\n[\n  &#39;d&#39;, &#39;e&#39;, &#39;g&#39;,\n  &#39;r&#39;, &#39;e&#39;, &#39;e&#39;,\n  &#39;s&#39;, &#39; &#39;, &#39;°&#39;\n]\n&gt; console.log(chars)\n[\n  &#39;d&#39;, &#39;e&#39;, &#39;g&#39;,\n  &#39;r&#39;, &#39;e&#39;, &#39;e&#39;,\n  &#39;s&#39;, &#39; &#39;, &#39;°&#39;\n]\nundefined\n</code></pre></div>\n<p>Just tell me if I should shut up...</p>",
+        "id": 426730908,
+        "sender_full_name": "Alec Leamas",
+        "timestamp": 1710504798
     }
 ]
