@@ -1180,5 +1180,46 @@ result: undefined
 
 
 
-<hr><p>Last updated: Mar 18 2024 at 20:25 UTC</p>
+<a name="427568813"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/349785-JavaScript_pi/topic/v3.0.0%20beta%20testing/near/427568813" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Tony Voss <a href="https://leamas.github.io/zulip-archive/stream/349785-JavaScript_pi/topic/v3.2E0.2E0.20beta.20testing.html#427568813">(Mar 18 2024 at 20:26)</a>:</h4>
+<div class="codehilite"><pre><span></span><code>The BEL is left in the output window.
+</code></pre></div>
+<p>Screenshot please.</p>
+<blockquote>
+<p>Test 12_runtime_error_main.js causes OpenCPN to crash.</p>
+</blockquote>
+<p>Does it crash if you run that script directly, rather than invoking from the main test program?</p>
+
+
+
+<a name="427570056"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/349785-JavaScript_pi/topic/v3.0.0%20beta%20testing/near/427570056" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Tony Voss <a href="https://leamas.github.io/zulip-archive/stream/349785-JavaScript_pi/topic/v3.2E0.2E0.20beta.20testing.html#427570056">(Mar 18 2024 at 20:33)</a>:</h4>
+<p>If it crashes when run directly, please confirm whether</p>
+<div class="codehilite" data-code-language="JavaScript"><pre><span></span><code><span class="nx">JS_throw_test</span><span class="p">(</span><span class="mf">2</span><span class="p">,</span><span class="mf">2</span><span class="p">);</span>
+</code></pre></div>
+<p>throws an error within the plugin correctly, while</p>
+<div class="codehilite" data-code-language="JavaScript"><pre><span></span><code><span class="nx">onSeconds</span><span class="p">(</span><span class="mf">1</span><span class="p">,</span><span class="w"> </span><span class="nx">doit</span><span class="p">);</span>
+<span class="kd">function</span><span class="w"> </span><span class="nx">doit</span><span class="p">(){</span>
+<span class="w">    </span><span class="nx">print</span><span class="p">(</span><span class="s2">"Hello"</span><span class="p">);</span>
+<span class="w">    </span><span class="p">}</span>
+</code></pre></div>
+<p>crashes OCPN.</p>
+
+
+
+<a name="427570845"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/349785-JavaScript_pi/topic/v3.0.0%20beta%20testing/near/427570845" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Mike Rossiter <a href="https://leamas.github.io/zulip-archive/stream/349785-JavaScript_pi/topic/v3.2E0.2E0.20beta.20testing.html#427570845">(Mar 18 2024 at 20:38)</a>:</h4>
+<p><a href="/user_uploads/33951/KwSKhZII_ex5hFfauDA96v38/5.jpg">5.jpg</a></p>
+<div class="message_inline_image"><a href="/user_uploads/33951/KwSKhZII_ex5hFfauDA96v38/5.jpg" title="5.jpg"><img src="/user_uploads/33951/KwSKhZII_ex5hFfauDA96v38/5.jpg"></a></div><p>Test 12 crashes when run directly as well as when invoked from main.</p>
+<p><code>JS_throw_test(2,2);</code> works correctly.</p>
+<div class="codehilite"><pre><span></span><code>onSeconds(1, doit);
+function doit(){
+    print(&quot;Hello&quot;);
+    }
+</code></pre></div>
+<p>crashes directly.</p>
+
+
+
+<hr><p>Last updated: Mar 18 2024 at 20:42 UTC</p>
 </html>
