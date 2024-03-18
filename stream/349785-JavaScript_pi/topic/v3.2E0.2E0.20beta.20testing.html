@@ -1130,5 +1130,33 @@ Boating today.</p>
 
 
 
-<hr><p>Last updated: Mar 18 2024 at 15:42 UTC</p>
+<a name="427515712"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/349785-JavaScript_pi/topic/v3.0.0%20beta%20testing/near/427515712" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Tony Voss <a href="https://leamas.github.io/zulip-archive/stream/349785-JavaScript_pi/topic/v3.2E0.2E0.20beta.20testing.html#427515712">(Mar 18 2024 at 15:44)</a>:</h4>
+<p>version.h now contains</p>
+<div class="codehilite"><pre><span></span><code>#define DEGREE        {&quot;\u00B0&quot;}    // real degree character
+#ifdef __WINDOWS__
+#define PSEUDODEGREE  {&quot;\u0007&quot;}    // substitute character for degree - bell
+#else
+#define PSEUDODEGREE  DEGREE    // keep it as real degree
+#endif
+</code></pre></div>
+<p>I have now fixed up the twelve areas where I have to go PSEUDODEGREE &lt;-&gt;DEGREE on way in or. out - error messages, messageBox, to and from clipboard, file input and output etc. etc.  Worst was the onDialogue feature. where the dialogue specification and its interpretation has to be fixed up.  Bloody Windows <span aria-label="rage" class="emoji emoji-1f621" role="img" title="rage">:rage:</span> <br>
+Still not completely hidden as I explain in this addition to the User Guide</p>
+<blockquote>
+<p><strong>Note for Windows users about the degree symbol</strong><br>
+On Windows, the JavaScript engine cannot handle the degree symbol ° (code \u00B0).<br>
+To work around this, the plugin changes all incoming occurrences of ° (including in scripts), to an alternative code (\u0007 - bell) and all out-going occurrences of this alternative back to °.  This is mostly invisible to the user.<br>
+However, if you print the actual character code, you will see the substitute. <br>
+This will also be the case if you examine the JSON representation of the symbol or match it by character code.</p>
+</blockquote>
+<p>The string dump you sent me shows that superscript 0 is seen as \x2070 in C++ so it is now cleaned to DEGREE.  Not sure why it was still giving trouble before.  Now it goes directly to DEGREE.  Please test again.</p>
+<p>Latest beta-l build inmy beta repo has the updated Position object, so you can test with, say,</p>
+<div class="codehilite" data-code-language="JavaScript"><pre><span></span><code><span class="nx">Position</span><span class="o">=</span><span class="w"> </span><span class="nx">require</span><span class="p">(</span><span class="s2">"Position"</span><span class="p">);</span>
+<span class="nx">print</span><span class="p">(</span><span class="ow">new</span><span class="w"> </span><span class="nx">Position</span><span class="p">(</span><span class="s2">"28.5ºN 3º 12'34E"</span><span class="p">).</span><span class="nx">formatted</span><span class="p">,</span><span class="w"> </span><span class="s2">"\n"</span><span class="p">);</span>
+</code></pre></div>
+<p>If this all viable, please try the test suite again.  It runs OK for me.</p>
+
+
+
+<hr><p>Last updated: Mar 18 2024 at 16:11 UTC</p>
 </html>
