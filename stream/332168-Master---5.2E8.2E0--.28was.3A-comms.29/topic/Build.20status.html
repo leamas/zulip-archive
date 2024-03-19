@@ -588,5 +588,25 @@ I had the same trouble updating locally to wx322.  Solved by similar procedure. 
 
 
 
-<hr><p>Last updated: Mar 19 2024 at 06:42 UTC</p>
+<a name="427629182"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332168-Master%20-%205.8.0%20%20%28was%3A%20comms%29/topic/Build%20status/near/427629182" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Håkan Svensson <a href="https://leamas.github.io/zulip-archive/stream/332168-Master---5.2E8.2E0--.28was.3A-comms.29/topic/Build.20status.html#427629182">(Mar 19 2024 at 06:43)</a>:</h4>
+<p><span class="user-mention" data-user-id="517002">@Dave Register</span> <span class="user-mention" data-user-id="573239">@Pavel Kalian</span> <span class="user-mention" data-user-id="399510">@Alec Leamas</span> <br>
+Build on VS2022:<br>
+The new bin\opencpn-glutil.exe is not copied to build environment like opencpn-cmd.exe<br>
+It would likewise have been copied to ..\Release\bin\ , ..\RelWithDebInfo\bin\ and ..\Debug\bin\<br>
+See log.<br>
+That's also leading to config file "corruption" during debug:<br>
+OpenGL=0<br>
+DisableOpenGL=0</p>
+<p>The temporary work around is obviously to copy the  opencpn-glutil.exe to where it's needed during debug but I think it would be handled like opencpn-cmd.exe for possible future change?</p>
+<p>btw is the Win installer handling this new opencpn-glutil.exe in a proper way so run-time is ok. :)</p>
+<div class="codehilite"><pre><span></span><code>07:05:41.651 MESSAGE OCPNPlatform.cpp:901 Starting OpenGL test...
+07:05:41.651 MESSAGE OCPNPlatform.cpp:714 OpenGL test utility not found at C:\Builds\OCPN\OpenCPN\build\RelWithDebInfo\bin\opencpn-glutil.exe.
+07:05:41.651 MESSAGE OCPNPlatform.cpp:908 OpenGL test complete.
+07:05:41.651 MESSAGE OCPNPlatform.cpp:910 BuildGLCaps fails.
+</code></pre></div>
+
+
+
+<hr><p>Last updated: Mar 19 2024 at 07:09 UTC</p>
 </html>
