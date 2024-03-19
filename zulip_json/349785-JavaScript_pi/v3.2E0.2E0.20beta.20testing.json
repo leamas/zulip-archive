@@ -850,5 +850,23 @@
         "id": 427654419,
         "sender_full_name": "Mike Rossiter",
         "timestamp": 1710841904
+    },
+    {
+        "content": "<p>New timer mechanism now moved out of console mothod.  Long battle with getting timers to reliably go away on script termination  <span aria-label=\"face with spiral eyes\" class=\"emoji emoji-1f635-200d-1f4ab\" role=\"img\" title=\"face with spiral eyes\">:face_with_spiral_eyes:</span> </p>\n<p>Beta m now in my repository.</p>\n<p>Please check it throws an error safely with</p>\n<div class=\"codehilite\" data-code-language=\"JavaScript\"><pre><span></span><code><span class=\"nx\">onSeconds</span><span class=\"p\">(</span><span class=\"mf\">2</span><span class=\"p\">,</span><span class=\"w\"> </span><span class=\"nx\">func</span><span class=\"p\">);</span>\n<span class=\"kd\">function</span><span class=\"w\"> </span><span class=\"nx\">func</span><span class=\"p\">(){</span>\n<span class=\"w\">    </span><span class=\"nx\">print</span><span class=\"p\">(</span><span class=\"s2\">\"Should not get here\\n\"</span><span class=\"p\">);</span>\n<span class=\"w\">    </span><span class=\"p\">}</span>\n</code></pre></div>\n<p>Also please run the timer tests.</p>\n<p><code>OCPNonNMEA0183()</code> &amp; <code>OCPNonNMEA2000()</code> will have the same problem as onSeconds had.  I will rework them once you have confirmed the new onSeconds tests are OK.</p>",
+        "id": 427781630,
+        "sender_full_name": "Tony Voss",
+        "timestamp": 1710870847
+    },
+    {
+        "content": "<p><strong>The degree problem</strong><br>\nA mystery.  Yes I am uncleaning.  I did a test forcing it to use \\x0007 here on MacOS and all output was correct.<br>\nPlease try this script to see what code is being produced at the end.  I am showing the formatted text in an alert as it is simpler.</p>\n<div class=\"codehilite\" data-code-language=\"JavaScript\"><pre><span></span><code><span class=\"nx\">Position</span><span class=\"w\"> </span><span class=\"o\">=</span><span class=\"w\"> </span><span class=\"nx\">require</span><span class=\"p\">(</span><span class=\"s2\">\"Position\"</span><span class=\"p\">);</span>\n<span class=\"nx\">pos</span><span class=\"w\"> </span><span class=\"o\">=</span><span class=\"w\"> </span><span class=\"ow\">new</span><span class=\"w\"> </span><span class=\"nx\">Position</span><span class=\"p\">(</span><span class=\"mf\">55</span><span class=\"p\">,</span><span class=\"w\"> </span><span class=\"o\">-</span><span class=\"mf\">2</span><span class=\"p\">);</span>\n<span class=\"nx\">text</span><span class=\"w\"> </span><span class=\"o\">=</span><span class=\"w\"> </span><span class=\"nx\">pos</span><span class=\"p\">.</span><span class=\"nx\">formatted</span><span class=\"p\">;</span>\n<span class=\"nx\">print</span><span class=\"p\">(</span><span class=\"nx\">text</span><span class=\"p\">.</span><span class=\"nx\">charCodeAt</span><span class=\"p\">(</span><span class=\"mf\">2</span><span class=\"p\">),</span><span class=\"w\"> </span><span class=\"s2\">\"\\n\"</span><span class=\"p\">);</span>\n<span class=\"nx\">alert</span><span class=\"p\">(</span><span class=\"nx\">pos</span><span class=\"p\">.</span><span class=\"nx\">formatted</span><span class=\"p\">,</span><span class=\"w\"> </span><span class=\"s2\">\"\\n\"</span><span class=\"p\">);</span>\n</code></pre></div>\n<p>When I run this with the fiddle to make it use \\x0007, it prints <strong>7</strong></p>",
+        "id": 427782610,
+        "sender_full_name": "Tony Voss",
+        "timestamp": 1710871199
+    },
+    {
+        "content": "<div class=\"codehilite\"><pre><span></span><code>onSeconds(2, func);\nfunction func(){\n    print(&quot;Should not get here\\n&quot;);\n    }\n</code></pre></div>\n<p>Causes a crash.</p>\n<div class=\"codehilite\"><pre><span></span><code>Position = require(&quot;Position&quot;);\npos = new Position(55, -2);\ntext = pos.formatted;\nprint(text.charCodeAt(2), &quot;\\n&quot;);\nalert(pos.formatted, &quot;\\n&quot;);\n</code></pre></div>\n<p>Prints 7 in output. The alert has a square character.<br>\n<a href=\"/user_uploads/33951/q7UZGzTnD1A-rjVSPSjKXZ2k/8.jpg\">8.jpg</a></p>\n<div class=\"message_inline_image\"><a href=\"/user_uploads/33951/q7UZGzTnD1A-rjVSPSjKXZ2k/8.jpg\" title=\"8.jpg\"><img src=\"/user_uploads/33951/q7UZGzTnD1A-rjVSPSjKXZ2k/8.jpg\"></a></div>",
+        "id": 427783988,
+        "sender_full_name": "Mike Rossiter",
+        "timestamp": 1710871674
     }
 ]

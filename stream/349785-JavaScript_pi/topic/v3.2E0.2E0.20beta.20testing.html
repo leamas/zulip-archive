@@ -1256,5 +1256,55 @@ The bell symbol appears. Has the output been cleaned?</p>
 
 
 
-<hr><p>Last updated: Mar 19 2024 at 17:42 UTC</p>
+<a name="427781630"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/349785-JavaScript_pi/topic/v3.0.0%20beta%20testing/near/427781630" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Tony Voss <a href="https://leamas.github.io/zulip-archive/stream/349785-JavaScript_pi/topic/v3.2E0.2E0.20beta.20testing.html#427781630">(Mar 19 2024 at 17:54)</a>:</h4>
+<p>New timer mechanism now moved out of console mothod.  Long battle with getting timers to reliably go away on script termination  <span aria-label="face with spiral eyes" class="emoji emoji-1f635-200d-1f4ab" role="img" title="face with spiral eyes">:face_with_spiral_eyes:</span> </p>
+<p>Beta m now in my repository.</p>
+<p>Please check it throws an error safely with</p>
+<div class="codehilite" data-code-language="JavaScript"><pre><span></span><code><span class="nx">onSeconds</span><span class="p">(</span><span class="mf">2</span><span class="p">,</span><span class="w"> </span><span class="nx">func</span><span class="p">);</span>
+<span class="kd">function</span><span class="w"> </span><span class="nx">func</span><span class="p">(){</span>
+<span class="w">    </span><span class="nx">print</span><span class="p">(</span><span class="s2">"Should not get here\n"</span><span class="p">);</span>
+<span class="w">    </span><span class="p">}</span>
+</code></pre></div>
+<p>Also please run the timer tests.</p>
+<p><code>OCPNonNMEA0183()</code> &amp; <code>OCPNonNMEA2000()</code> will have the same problem as onSeconds had.  I will rework them once you have confirmed the new onSeconds tests are OK.</p>
+
+
+
+<a name="427782610"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/349785-JavaScript_pi/topic/v3.0.0%20beta%20testing/near/427782610" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Tony Voss <a href="https://leamas.github.io/zulip-archive/stream/349785-JavaScript_pi/topic/v3.2E0.2E0.20beta.20testing.html#427782610">(Mar 19 2024 at 17:59)</a>:</h4>
+<p><strong>The degree problem</strong><br>
+A mystery.  Yes I am uncleaning.  I did a test forcing it to use \x0007 here on MacOS and all output was correct.<br>
+Please try this script to see what code is being produced at the end.  I am showing the formatted text in an alert as it is simpler.</p>
+<div class="codehilite" data-code-language="JavaScript"><pre><span></span><code><span class="nx">Position</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nx">require</span><span class="p">(</span><span class="s2">"Position"</span><span class="p">);</span>
+<span class="nx">pos</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="ow">new</span><span class="w"> </span><span class="nx">Position</span><span class="p">(</span><span class="mf">55</span><span class="p">,</span><span class="w"> </span><span class="o">-</span><span class="mf">2</span><span class="p">);</span>
+<span class="nx">text</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nx">pos</span><span class="p">.</span><span class="nx">formatted</span><span class="p">;</span>
+<span class="nx">print</span><span class="p">(</span><span class="nx">text</span><span class="p">.</span><span class="nx">charCodeAt</span><span class="p">(</span><span class="mf">2</span><span class="p">),</span><span class="w"> </span><span class="s2">"\n"</span><span class="p">);</span>
+<span class="nx">alert</span><span class="p">(</span><span class="nx">pos</span><span class="p">.</span><span class="nx">formatted</span><span class="p">,</span><span class="w"> </span><span class="s2">"\n"</span><span class="p">);</span>
+</code></pre></div>
+<p>When I run this with the fiddle to make it use \x0007, it prints <strong>7</strong></p>
+
+
+
+<a name="427783988"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/349785-JavaScript_pi/topic/v3.0.0%20beta%20testing/near/427783988" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Mike Rossiter <a href="https://leamas.github.io/zulip-archive/stream/349785-JavaScript_pi/topic/v3.2E0.2E0.20beta.20testing.html#427783988">(Mar 19 2024 at 18:07)</a>:</h4>
+<div class="codehilite"><pre><span></span><code>onSeconds(2, func);
+function func(){
+    print(&quot;Should not get here\n&quot;);
+    }
+</code></pre></div>
+<p>Causes a crash.</p>
+<div class="codehilite"><pre><span></span><code>Position = require(&quot;Position&quot;);
+pos = new Position(55, -2);
+text = pos.formatted;
+print(text.charCodeAt(2), &quot;\n&quot;);
+alert(pos.formatted, &quot;\n&quot;);
+</code></pre></div>
+<p>Prints 7 in output. The alert has a square character.<br>
+<a href="/user_uploads/33951/q7UZGzTnD1A-rjVSPSjKXZ2k/8.jpg">8.jpg</a></p>
+<div class="message_inline_image"><a href="/user_uploads/33951/q7UZGzTnD1A-rjVSPSjKXZ2k/8.jpg" title="8.jpg"><img src="/user_uploads/33951/q7UZGzTnD1A-rjVSPSjKXZ2k/8.jpg"></a></div>
+
+
+
+<hr><p>Last updated: Mar 19 2024 at 18:10 UTC</p>
 </html>
