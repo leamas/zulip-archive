@@ -1495,5 +1495,37 @@ Please let me have the trace/dump for a compile error.</p>
 
 
 
-<hr><p>Last updated: Mar 20 2024 at 16:11 UTC</p>
+<a name="427965692"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/349785-JavaScript_pi/topic/v3.0.0%20beta%20testing/near/427965692" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Mike Rossiter <a href="https://leamas.github.io/zulip-archive/stream/349785-JavaScript_pi/topic/v3.2E0.2E0.20beta.20testing.html#427965692">(Mar 20 2024 at 16:12)</a>:</h4>
+<p>A crash obviously.<br>
+Windows debug:<br>
+<code>Unhandled exception at 0x77236D13 (ntdll.dll) in opencpn.exe: 0xC0000374: A heap has been corrupted (parameters: 0x77273960).</code></p>
+<p>In trace window only this (frozen):</p>
+<div class="codehilite"><pre><span></span><code>L4  setConsoleMinClientSize text JavaScript, size X:52 Y: 15
+L4  Constructed console JavaScript size x 1066 y 949  minSize x 134 y 39
+L0  ------------------ Console JavaScript about to run
+L4  JavaScript-&gt;throw_error() messageBox called with invalid number of args
+L4  Duktape context dump:
+ctx: top=4, stack=[&quot;One&quot;,2,3,4]
+</code></pre></div>
+
+
+
+<a name="427966363"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/349785-JavaScript_pi/topic/v3.0.0%20beta%20testing/near/427966363" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Tony Voss <a href="https://leamas.github.io/zulip-archive/stream/349785-JavaScript_pi/topic/v3.2E0.2E0.20beta.20testing.html#427966363">(Mar 20 2024 at 16:15)</a>:</h4>
+<p>Please cause a compiler error - invalid JavaScript.  Say just run<br>
+a = b;<br>
+(b is undefined and compile will throw an error)</p>
+
+
+
+<a name="427966925"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/349785-JavaScript_pi/topic/v3.0.0%20beta%20testing/near/427966925" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Mike Rossiter <a href="https://leamas.github.io/zulip-archive/stream/349785-JavaScript_pi/topic/v3.2E0.2E0.20beta.20testing.html#427966925">(Mar 20 2024 at 16:17)</a>:</h4>
+<div class="codehilite"><pre><span></span><code>Tracing levels 4 - 4
+ReferenceError: identifier &#39;b&#39; undefined
+</code></pre></div>
+
+
+
+<hr><p>Last updated: Mar 20 2024 at 16:30 UTC</p>
 </html>
