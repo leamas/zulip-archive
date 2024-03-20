@@ -1377,5 +1377,62 @@ In ThrowError() commenting out:</p>
 
 
 
-<hr><p>Last updated: Mar 20 2024 at 12:53 UTC</p>
+<a name="427922529"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/349785-JavaScript_pi/topic/v3.0.0%20beta%20testing/near/427922529" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Tony Voss <a href="https://leamas.github.io/zulip-archive/stream/349785-JavaScript_pi/topic/v3.2E0.2E0.20beta.20testing.html#427922529">(Mar 20 2024 at 13:03)</a>:</h4>
+<blockquote>
+<p>No, I added this to JScleanOutput:<br>
+given.Replace(PSEUDODEGREE, DEGREE, true);<br>
+and the alert was correct.</p>
+</blockquote>
+<p>Already had that in my latest push to GitHub</p>
+<div class="codehilite" data-code-language="JavaScript"><pre><span></span><code><span class="nx">wxString</span><span class="w"> </span><span class="nx">js_formOutput</span><span class="p">(</span><span class="nx">duk_context</span><span class="w"> </span><span class="o">*</span><span class="nx">ctx</span><span class="p">){</span>
+<span class="w">    </span><span class="nx">duk_idx_t</span><span class="w"> </span><span class="nx">nargs</span><span class="p">;</span><span class="w">  </span><span class="c1">// number of args in call</span>
+<span class="w">    </span><span class="nx">wxString</span><span class="w"> </span><span class="nx">output</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nx">wxEmptyString</span><span class="p">;</span>
+
+<span class="w">    </span><span class="nx">nargs</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nx">duk_get_top</span><span class="p">(</span><span class="nx">ctx</span><span class="p">);</span>
+<span class="c1">//   MAYBE_DUK_DUMP</span>
+<span class="w">    </span><span class="k">for</span><span class="p">(</span><span class="kr">int</span><span class="w"> </span><span class="nx">i</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mf">0</span><span class="p">;</span><span class="w"> </span><span class="nx">i</span><span class="o">&lt;</span><span class="nx">nargs</span><span class="p">;</span><span class="w"> </span><span class="nx">i</span><span class="o">++</span><span class="p">){</span>
+<span class="w">        </span><span class="k">switch</span><span class="w"> </span><span class="p">(</span><span class="nx">duk_int_t</span><span class="w"> </span><span class="nx">type</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nx">duk_get_type</span><span class="p">(</span><span class="nx">ctx</span><span class="p">,</span><span class="w"> </span><span class="nx">i</span><span class="p">)){</span>
+<span class="w">            </span><span class="k">case</span><span class="w"> </span><span class="nx">DUK_TYPE_STRING</span><span class="o">:</span>
+<span class="w">            </span><span class="k">case</span><span class="w"> </span><span class="nx">DUK_TYPE_NUMBER</span><span class="o">:</span>
+<span class="w">                </span><span class="nx">output</span><span class="w"> </span><span class="o">+=</span><span class="w"> </span><span class="nx">duk_to_string</span><span class="p">(</span><span class="nx">ctx</span><span class="p">,</span><span class="nx">i</span><span class="p">);</span><span class="w">  </span><span class="c1">// mangles º character on Windows!</span>
+<span class="w">                </span><span class="k">break</span><span class="p">;</span>
+<span class="w">            </span><span class="k">case</span><span class="w"> </span><span class="nx">DUK_TYPE_BOOLEAN</span><span class="o">:</span>
+<span class="w">                </span><span class="nx">output</span><span class="w"> </span><span class="o">+=</span><span class="w"> </span><span class="p">((</span><span class="nx">duk_to_boolean</span><span class="p">(</span><span class="nx">ctx</span><span class="p">,</span><span class="nx">i</span><span class="p">)</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="mf">1</span><span class="p">)</span><span class="w"> </span><span class="o">?</span><span class="w"> </span><span class="s2">"true"</span><span class="o">:</span><span class="s2">"false"</span><span class="p">);</span>
+<span class="w">                </span><span class="k">break</span><span class="p">;</span>
+<span class="w">            </span><span class="k">case</span><span class="w"> </span><span class="nx">DUK_TYPE_OBJECT</span><span class="o">:</span>
+<span class="w">                </span><span class="nx">duk_json_encode</span><span class="p">(</span><span class="nx">ctx</span><span class="p">,</span><span class="w"> </span><span class="nx">i</span><span class="p">);</span>
+<span class="w">                </span><span class="nx">output</span><span class="w"> </span><span class="o">+=</span><span class="w"> </span><span class="nx">duk_to_string</span><span class="p">(</span><span class="nx">ctx</span><span class="p">,</span><span class="nx">i</span><span class="p">);</span>
+<span class="w">                </span><span class="k">break</span><span class="p">;</span>
+<span class="w">            </span><span class="k">case</span><span class="w"> </span><span class="nx">DUK_TYPE_NULL</span><span class="o">:</span>
+<span class="w">                </span><span class="k">break</span><span class="p">;</span>
+<span class="w">            </span><span class="k">case</span><span class="w"> </span><span class="nx">DUK_TYPE_UNDEFINED</span><span class="o">:</span>
+<span class="w">                </span><span class="nx">findConsoleByCtx</span><span class="p">(</span><span class="nx">ctx</span><span class="p">)</span><span class="o">-&gt;</span><span class="nx">throw_error</span><span class="p">(</span><span class="nx">ctx</span><span class="p">,</span><span class="w"> </span><span class="s2">"output - arg "</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="nx">to_string</span><span class="p">(</span><span class="nx">i</span><span class="p">)</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="s2">" is undefined"</span><span class="p">);</span>
+<span class="w">            </span><span class="k">default</span><span class="o">:</span>
+<span class="w">                </span><span class="nx">findConsoleByCtx</span><span class="p">(</span><span class="nx">ctx</span><span class="p">)</span><span class="o">-&gt;</span><span class="nx">throw_error</span><span class="p">(</span><span class="nx">ctx</span><span class="p">,</span><span class="w"> </span><span class="s2">"output - arg "</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="nx">to_string</span><span class="p">(</span><span class="nx">i</span><span class="p">)</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="s2">" of unexpected type "</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="nx">to_string</span><span class="p">(</span><span class="nx">type</span><span class="p">));</span>
+<span class="w">            </span><span class="p">}</span>
+<span class="w">        </span><span class="p">}</span>
+<span class="w">    </span><span class="nx">output</span><span class="p">.</span><span class="nx">Replace</span><span class="p">(</span><span class="nx">PSEUDODEGREE</span><span class="p">,</span><span class="w"> </span><span class="nx">DEGREE</span><span class="p">,</span><span class="w"> </span><span class="kc">true</span><span class="p">);</span><span class="w"> </span><span class="c1">// internally, we are using DEGREE to represent degree - convert any back</span>
+<span class="err">#</span><span class="nx">ifdef</span><span class="w"> </span><span class="nx">__WXMSW__</span>
+<span class="w">    </span><span class="nx">wxString</span><span class="w"> </span><span class="nx">JScleanOutput</span><span class="p">(</span><span class="nx">wxString</span><span class="w"> </span><span class="nx">given</span><span class="p">);</span>
+<span class="w">    </span><span class="nx">output</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nx">JScleanOutput</span><span class="p">(</span><span class="nx">output</span><span class="p">);</span><span class="w"> </span><span class="c1">// clean for Windows only</span>
+<span class="err">#</span><span class="nx">endif</span>
+<span class="w">    </span><span class="k">return</span><span class="p">(</span><span class="nx">output</span><span class="p">);</span>
+</code></pre></div>
+<p>Note I have it outside the Windows bit. so it is executed on all platforms.  This so that any platform can change the PSEUDODEGREE character.  I alsonow  have this all over the place and not only when stuff is going throughg js_formOutput.<br>
+I cannot rceall why we have the JScleanOutput for Windows.  It may not be necessary now we have other things sorted.  Can we get rid of it?</p>
+
+
+
+<a name="427923665"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/349785-JavaScript_pi/topic/v3.0.0%20beta%20testing/near/427923665" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Mike Rossiter <a href="https://leamas.github.io/zulip-archive/stream/349785-JavaScript_pi/topic/v3.2E0.2E0.20beta.20testing.html#427923665">(Mar 20 2024 at 13:08)</a>:</h4>
+<blockquote>
+<p>I cannot rceall why we have the JScleanOutput for Windows. It may not be necessary now we have other things sorted. Can we get rid of it?</p>
+</blockquote>
+<p>Without this I have a rogue symbol in the alert box. In the console output it is not needed.</p>
+<p>Boat things early this afternoon.</p>
+
+
+
+<hr><p>Last updated: Mar 20 2024 at 13:11 UTC</p>
 </html>
