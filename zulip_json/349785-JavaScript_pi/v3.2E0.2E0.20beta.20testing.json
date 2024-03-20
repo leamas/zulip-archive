@@ -868,5 +868,11 @@
         "id": 427783988,
         "sender_full_name": "Mike Rossiter",
         "timestamp": 1710871674
+    },
+    {
+        "content": "<p>I have to use a rare dry day to tackle the sliding back door - which is exposed to the sea.</p>\n<p>I am sorry to give you work but I see no alternative but to ask you to dig in a bit as I cannot reproduce here.</p>\n<p><strong>Degree character problem</strong></p>\n<p>Is Windows failing because of an issue with the bell charcater?<br>\nIn version.h line 35, try setting PSEUDODEGREE to something printable such as {\"\\u005E\"} (^)</p>\n<p><strong>Crash when throwing error </strong></p>\n<p>JS_throw_test does not use the <code>throw_error </code>method.</p>\n<p>I suspect if you run this single line script, you will get the crash<br>\n<code>messageBox(\"One\", 2, 3, 4);</code><br>\nTurn on tracing level 4.  In trace.h set TRACE_YES to <code>true</code><br>\nand both TRACE_MAX and TRACE_MIN to 4.<br>\nTrouble is, you lose the trace when it crashes and even if you direct the trace to the log file, it does not get into there when it crashes so soon after - I think.<br>\nSo we have to experiment.</p>\n<p>In JavaScriptgui_imp.h you have line 771 as<br>\n<code>void wrapUp(Completions reason) {    // clean down and maybe destroy ctx</code><br>\nInsert <code>return;</code> immediately after that so it does nothing.</p>\n<p>If it does not crash, move the return to the beginning of <code>wrapUpWorks</code> just below the above.</p>\n<p>NB Both these will leave the duktape stack unreleased, so you will have a big memory leak.  So avoid running too many times without restarting OCPN.</p>\n<p>I will try and check back at intervals.</p>",
+        "id": 427868234,
+        "sender_full_name": "Tony Voss",
+        "timestamp": 1710920147
     }
 ]
