@@ -880,5 +880,29 @@
         "id": 427890725,
         "sender_full_name": "Mike Rossiter",
         "timestamp": 1710929113
+    },
+    {
+        "content": "<p><em>JSExtensions.cpp</em> Line 527. Compile error mpTimersVector undeclared. I am going to comment out this TRACE at the moment.</p>",
+        "id": 427905552,
+        "sender_full_name": "Mike Rossiter",
+        "timestamp": 1710933838
+    },
+    {
+        "content": "<p>Probably needs pConsole-&gt;mpTimersVector since I moved it out of the method.</p>",
+        "id": 427905966,
+        "sender_full_name": "Tony Voss",
+        "timestamp": 1710933998
+    },
+    {
+        "content": "<blockquote>\n<p>Probably needs pConsole-&gt;mpTimersVector since I moved it out of the method.</p>\n</blockquote>\n<p>That fixes it.</p>",
+        "id": 427906476,
+        "sender_full_name": "Mike Rossiter",
+        "timestamp": 1710934187
+    },
+    {
+        "content": "<p>Placing return; did not work.<br>\nIn ThrowError() commenting out:</p>\n<div class=\"codehilite\"><pre><span></span><code>if (!duk_is_error(ctx, -1)){\n            // we do not have an error object on the stack\n            duk_push_error_object(ctx, DUK_ERR_ERROR, _(&quot;Console &quot;) + mConsoleName + _(&quot; - &quot;) + message);  // convert message to error object\n            }\n</code></pre></div>\n<p>Stopped the crash. Not sure where to go from here.</p>",
+        "id": 427907799,
+        "sender_full_name": "Mike Rossiter",
+        "timestamp": 1710934693
     }
 ]

@@ -1343,5 +1343,39 @@ and the alert was correct.</p>
 
 
 
-<hr><p>Last updated: Mar 20 2024 at 11:22 UTC</p>
+<a name="427905552"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/349785-JavaScript_pi/topic/v3.0.0%20beta%20testing/near/427905552" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Mike Rossiter <a href="https://leamas.github.io/zulip-archive/stream/349785-JavaScript_pi/topic/v3.2E0.2E0.20beta.20testing.html#427905552">(Mar 20 2024 at 11:23)</a>:</h4>
+<p><em>JSExtensions.cpp</em> Line 527. Compile error mpTimersVector undeclared. I am going to comment out this TRACE at the moment.</p>
+
+
+
+<a name="427905966"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/349785-JavaScript_pi/topic/v3.0.0%20beta%20testing/near/427905966" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Tony Voss <a href="https://leamas.github.io/zulip-archive/stream/349785-JavaScript_pi/topic/v3.2E0.2E0.20beta.20testing.html#427905966">(Mar 20 2024 at 11:26)</a>:</h4>
+<p>Probably needs pConsole-&gt;mpTimersVector since I moved it out of the method.</p>
+
+
+
+<a name="427906476"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/349785-JavaScript_pi/topic/v3.0.0%20beta%20testing/near/427906476" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Mike Rossiter <a href="https://leamas.github.io/zulip-archive/stream/349785-JavaScript_pi/topic/v3.2E0.2E0.20beta.20testing.html#427906476">(Mar 20 2024 at 11:29)</a>:</h4>
+<blockquote>
+<p>Probably needs pConsole-&gt;mpTimersVector since I moved it out of the method.</p>
+</blockquote>
+<p>That fixes it.</p>
+
+
+
+<a name="427907799"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/349785-JavaScript_pi/topic/v3.0.0%20beta%20testing/near/427907799" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Mike Rossiter <a href="https://leamas.github.io/zulip-archive/stream/349785-JavaScript_pi/topic/v3.2E0.2E0.20beta.20testing.html#427907799">(Mar 20 2024 at 11:38)</a>:</h4>
+<p>Placing return; did not work.<br>
+In ThrowError() commenting out:</p>
+<div class="codehilite"><pre><span></span><code>if (!duk_is_error(ctx, -1)){
+            // we do not have an error object on the stack
+            duk_push_error_object(ctx, DUK_ERR_ERROR, _(&quot;Console &quot;) + mConsoleName + _(&quot; - &quot;) + message);  // convert message to error object
+            }
+</code></pre></div>
+<p>Stopped the crash. Not sure where to go from here.</p>
+
+
+
+<hr><p>Last updated: Mar 20 2024 at 11:42 UTC</p>
 </html>
