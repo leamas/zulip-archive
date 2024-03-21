@@ -1030,5 +1030,11 @@
         "id": 428192890,
         "sender_full_name": "Tony Voss",
         "timestamp": 1711045871
+    },
+    {
+        "content": "<p>Above sent too soon and I cannot edit it any more - please ignore that.</p>\n<p>Mike - hope you had a good day at the boat.<br>\nPlease work with beta n just pushed to GitHub at 18:28 but not built remotely.  It has TRACE level 4.</p>\n<p>JS_throw_test extended such that<br>\n<code>JS_throw_test(1, 1) // both arguments equal</code><br>\n throws error by pushing error object to stack and throwing.  Works correctly?<br>\n<code>JS_throw_test(0,0 ) // both arguments zero</code><br>\ninvokes throw_error method.  Crashes Windows?<br>\nThe trace from the two looks identical apart from the extra trace statement within throw_ error apart from the following:<br>\nThe error objects pushed to the stack are slightly different DUK_ERR_TYPE_ERROR and DUK_ERR_ERROR.  These types are <a href=\"https://duktape.org/api#defines.5\">explained here</a>.  The one that works has DUK_ERR_TYPE_ERROR whereas the one that fails is DUK_ERR_ERROR.  I have not harmonised them because DUK_ERR_ERROR seems more appropriate but is the one used in the failing version.<br>\nAnother difference was setting <code>m_hadError = true;</code> but that did not do anything and I have now commented it out.  Also  <code>mRunningMain = false;</code> but that is only relevant when there are call-backs, which is not the case in these tests.</p>\n<p>Other straws to grasp at:</p>\n<ol>\n<li>Does running the crashing script in a virgin console that has never run anything before behave differently?</li>\n<li>Might be worth checking whether the crash occurs with the plugin v2.  We could have overlooked it.</li>\n</ol>\n<p>Sorry to land you with all this work but I am unable to pursue myself.</p>",
+        "id": 428195843,
+        "sender_full_name": "Tony Voss",
+        "timestamp": 1711046993
     }
 ]

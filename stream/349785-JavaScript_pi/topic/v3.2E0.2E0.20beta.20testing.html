@@ -1695,5 +1695,27 @@ JS_throw_test(1, 1)<br>
 
 
 
-<hr><p>Last updated: Mar 21 2024 at 18:42 UTC</p>
+<a name="428195843"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/349785-JavaScript_pi/topic/v3.0.0%20beta%20testing/near/428195843" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Tony Voss <a href="https://leamas.github.io/zulip-archive/stream/349785-JavaScript_pi/topic/v3.2E0.2E0.20beta.20testing.html#428195843">(Mar 21 2024 at 18:49)</a>:</h4>
+<p>Above sent too soon and I cannot edit it any more - please ignore that.</p>
+<p>Mike - hope you had a good day at the boat.<br>
+Please work with beta n just pushed to GitHub at 18:28 but not built remotely.  It has TRACE level 4.</p>
+<p>JS_throw_test extended such that<br>
+<code>JS_throw_test(1, 1) // both arguments equal</code><br>
+ throws error by pushing error object to stack and throwing.  Works correctly?<br>
+<code>JS_throw_test(0,0 ) // both arguments zero</code><br>
+invokes throw_error method.  Crashes Windows?<br>
+The trace from the two looks identical apart from the extra trace statement within throw_ error apart from the following:<br>
+The error objects pushed to the stack are slightly different DUK_ERR_TYPE_ERROR and DUK_ERR_ERROR.  These types are <a href="https://duktape.org/api#defines.5">explained here</a>.  The one that works has DUK_ERR_TYPE_ERROR whereas the one that fails is DUK_ERR_ERROR.  I have not harmonised them because DUK_ERR_ERROR seems more appropriate but is the one used in the failing version.<br>
+Another difference was setting <code>m_hadError = true;</code> but that did not do anything and I have now commented it out.  Also  <code>mRunningMain = false;</code> but that is only relevant when there are call-backs, which is not the case in these tests.</p>
+<p>Other straws to grasp at:</p>
+<ol>
+<li>Does running the crashing script in a virgin console that has never run anything before behave differently?</li>
+<li>Might be worth checking whether the crash occurs with the plugin v2.  We could have overlooked it.</li>
+</ol>
+<p>Sorry to land you with all this work but I am unable to pursue myself.</p>
+
+
+
+<hr><p>Last updated: Mar 21 2024 at 19:07 UTC</p>
 </html>
