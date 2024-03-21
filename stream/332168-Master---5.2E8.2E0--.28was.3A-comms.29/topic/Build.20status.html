@@ -672,5 +672,98 @@ buildwin\winconfig.bat
 
 
 
-<hr><p>Last updated: Mar 21 2024 at 02:30 UTC</p>
+<a name="428048109"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332168-Master%20-%205.8.0%20%20%28was%3A%20comms%29/topic/Build%20status/near/428048109" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Pavel Kalian <a href="https://leamas.github.io/zulip-archive/stream/332168-Master---5.2E8.2E0--.28was.3A-comms.29/topic/Build.20status.html#428048109">(Mar 21 2024 at 02:38)</a>:</h4>
+<p>Still no joy. I now have buildable wxWidgets in ocpn_wxWidgets (confirmed by doing a manual buid with cmake there)<br>
+But winConfig.bat does not even try to build WX, proceeds to OpenCPN and fails like this:</p>
+<div class="codehilite"><pre><span></span><code>**********************************************************************
+** Visual Studio 2022 Developer Command Prompt v17.9.2
+** Copyright (c) 2022 Microsoft Corporation
+**********************************************************************
+[vcvarsall.bat] Environment initialized for: &#39;x86&#39;
+
+C:\Users\pavel&gt;cd Source
+
+C:\Users\pavel\Source&gt;cd Repos
+
+C:\Users\pavel\Source\Repos&gt;cd OpenCPN
+
+C:\Users\pavel\Source\Repos\OpenCPN&gt;buildwin\winConfig.bat
+OD=C:\Users\pavel\Source\Repos\OpenCPN\buildwin\..
+C:\Program Files\Microsoft Visual Studio\2022\Community\MSBuild\Current\Bin\amd64\MSBuild.exe
+C:\Windows\Microsoft.NET\Framework\v4.0.30319\MSBuild.exe
+Git found @ \Program Files\Git\cmd\git.exe
+Patch found @ \Program Files\Git\cmd\..\usr\bin\patch.exe
+4 File(s) copied
+wxWidgets Debug build OK
+48 File(s) copied
+wxWidgets Debug build OK
+ocpn_relwithdebinfo=1
+ocpn_release=1
+ocpn_debug=1
+ocpn_minsizerel=1
+xcopy /d /y &quot;C:\Program Files (x86)\Windows Kits\10\\lib\10.0.22621.0\\um\x86\iphlpapi.lib&quot; &quot;C:\Users\pavel\Source\Repos\OpenCPN\cache\buildwin&quot;
+0 File(s) copied
+xcopy /d /y &quot;C:\Program Files (x86)\Windows Kits\10\\include\10.0.22621.0\\um\iphlpapi.h&quot; &quot;C:\Users\pavel\Source\Repos\OpenCPN\cache\buildwin\include&quot;
+0 File(s) copied
+Feeds used:
+  https://api.nuget.org/v3/index.json
+
+Installing package &#39;Gettext.Tools&#39; to &#39;C:\Users\pavel\Source\Repos\OpenCPN\build&#39;.
+  CACHE https://api.nuget.org/v3/registration5-gz-semver2/gettext.tools/index.json
+Package &quot;Gettext.Tools.0.22.5&quot; is already installed.
+Found Gettext.Tools
+Feeds used:
+  https://api.nuget.org/v3/index.json
+
+Installing package &#39;NSIS-Package&#39; to &#39;C:\Users\pavel\Source\Repos\OpenCPN\build&#39;.
+  CACHE https://api.nuget.org/v3/registration5-gz-semver2/nsis-package/index.json
+Package &quot;NSIS-Package.3.0.9.1&quot; is already installed.
+Found NSIS-Package
+gettext=C:\Users\pavel\Source\Repos\OpenCPN\build\Gettext.Tools.0.22.5
+nsis=C:\Users\pavel\Source\Repos\OpenCPN\build\NSIS-Package.3.0.9.1
+Finishing C:\Users\pavel\Source\Repos\OpenCPN\buildwin\configdev.bat
+In folder C:\Users\pavel\Source\Repos\OpenCPN
+In folder C:\Users\pavel\Source\Repos\OpenCPN\build
+Building Debug
+-- cmake version: 3.28.0-msvc1
+-- Could NOT find PkgConfig (missing: PKG_CONFIG_EXECUTABLE)
+-- tests using vcan0 are NOT available: &quot;&quot;
+-- *** Host Build Architecture is x86_64
+-- Setting C++17 standard via cmake standard mechanism
+-- Final compiler options:
+-- CMAKE_CXX_FLAGS: /MP /EHsc /DWIN32
+-- CMAKE_CXX_FLAGS_DEBUG: /MP /MDd /Ob0 /Od  /D_DEBUG  /Zi /RTC1 /EHa
+-- CMAKE_CXX_FLAGS_MINSIZEREL: /MP /MD  /O1  /Ob1 /D NDEBUG /EHa
+-- CMAKE_CXX_FLAGS_RELEASE: /MP /MD  /O2  /Ob2 /D NDEBUG /Zi /EHa /wd4068
+-- CMAKE_CXX_FLAGS_RELWITHDEBINFO: /MP /MD  /O2  /Ob1 /D NDEBUG /Zi /EHa /wd4068
+-- Building version 5.9.0
+-- *** Staging to build opencpn 5.9.0 ***
+-- *** Package will include documentation ***
+-- Found OpenGL....
+--     GL Lib: opengl32glu32
+--     GL Include:
+--     Revised GL Lib: opengl32
+-- Could NOT find wxWidgets (missing: gl net xml html adv aui core base webview) (found version &quot;3.2.5&quot;)
+-- Could not find wxWidgets webview add-on
+-- Could NOT find wxWidgets (missing: gl net xml html adv aui core base) (found version &quot;3.2.5&quot;)
+CMake Error at CMakeLists.txt:654 (message):
+  Cannot find wxWidgets, giving up.  On linux you might want to try using
+  -DOCPN_FORCE_GTK3.
+
+
+-- Configuring incomplete, errors occurred!
+Running with debug output on for the `find` commands.
+-- cmake version: 3.28.0-msvc1
+CMake Debug Log at C:/Program Files/Microsoft Visual Studio/2022/Community/Common7/IDE/CommonExtensions/Microsoft/CMake/CMake/share/cmake-3.28/Modules/FindPkgConfig.cmake:62 (find_program):
+  find_program called with the following settings:
+
+    VAR: PKG_CONFIG_EXECUTABLE
+    NAMES: &quot;pkg-config.bat&quot;
+.....
+</code></pre></div>
+
+
+
+<hr><p>Last updated: Mar 21 2024 at 02:42 UTC</p>
 </html>
