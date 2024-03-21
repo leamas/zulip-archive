@@ -1554,5 +1554,33 @@ L0  ------------------ Console JavaScript wrapped up
 
 
 
-<hr><p>Last updated: Mar 21 2024 at 07:08 UTC</p>
+<a name="428068042"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/349785-JavaScript_pi/topic/v3.0.0%20beta%20testing/near/428068042" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Tony Voss <a href="https://leamas.github.io/zulip-archive/stream/349785-JavaScript_pi/topic/v3.2E0.2E0.20beta.20testing.html#428068042">(Mar 21 2024 at 07:11)</a>:</h4>
+<p>With a compiler generated error (and no crash) the stack only has the error object on it.<br>
+With my calls, the stack still has the remains of the API  arguments on it.<br>
+So, let's clear those off before putting our error object onto it.</p>
+<p>Here is the revised throw_error</p>
+<div class="codehilite" data-code-language="JavaScript"><pre><span></span><code><span class="w">    </span><span class="ow">void</span><span class="w"> </span><span class="nx">throw_error</span><span class="p">(</span><span class="nx">duk_context</span><span class="w"> </span><span class="o">*</span><span class="nx">ctx</span><span class="p">,</span><span class="w"> </span><span class="nx">wxString</span><span class="w"> </span><span class="nx">message</span><span class="p">){</span>
+<span class="w">        </span><span class="c1">// throw an error from within c++ code called from running script</span>
+<span class="w">        </span><span class="c1">// either there is an error object on the stack or a message</span>
+<span class="w">        </span><span class="c1">// ! do not call otherwise</span>
+<span class="w">        </span><span class="nx">message</span><span class="p">.</span><span class="nx">Replace</span><span class="p">(</span><span class="nx">PSEUDODEGREE</span><span class="p">,</span><span class="w"> </span><span class="nx">DEGREE</span><span class="p">,</span><span class="w"> </span><span class="kc">true</span><span class="p">);</span><span class="w">    </span><span class="c1">// internally, we are using DEGREE to represent degree - convert any back</span>
+<span class="w">        </span><span class="nx">TRACE</span><span class="p">(</span><span class="mf">4</span><span class="p">,</span><span class="w"> </span><span class="nx">mConsoleName</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="s2">"-&gt;throw_error() "</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="nx">message</span><span class="p">);</span>
+<span class="w">        </span><span class="nx">m_result</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nx">wxEmptyString</span><span class="p">;</span><span class="w">    </span><span class="c1">// supress result</span>
+<span class="w">        </span><span class="nx">m_explicitResult</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="kc">true</span><span class="p">;</span><span class="w">    </span><span class="c1">// supress result</span>
+<span class="w">        </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="o">!</span><span class="nx">duk_is_error</span><span class="p">(</span><span class="nx">ctx</span><span class="p">,</span><span class="w"> </span><span class="o">-</span><span class="mf">1</span><span class="p">)){</span>
+<span class="w">            </span><span class="c1">// we do not have an error object on the stack</span>
+<span class="w">            </span><span class="kr">int</span><span class="w"> </span><span class="nx">n</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nx">duk_get_top</span><span class="p">(</span><span class="nx">ctx</span><span class="p">);</span><span class="w">  </span><span class="c1">// number of items on stack</span>
+<span class="w">            </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="nx">n</span><span class="w"> </span><span class="o">&gt;</span><span class="w"> </span><span class="mf">0</span><span class="p">)</span><span class="w"> </span><span class="nx">duk_pop_n</span><span class="p">(</span><span class="nx">ctx</span><span class="p">,</span><span class="w"> </span><span class="nx">n</span><span class="p">);</span><span class="w">   </span><span class="c1">// clear stack</span>
+<span class="w">            </span><span class="nx">duk_push_error_object</span><span class="p">(</span><span class="nx">ctx</span><span class="p">,</span><span class="w"> </span><span class="nx">DUK_ERR_ERROR</span><span class="p">,</span><span class="w"> </span><span class="nx">_</span><span class="p">(</span><span class="s2">"Console "</span><span class="p">)</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="nx">mConsoleName</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="nx">_</span><span class="p">(</span><span class="s2">" - "</span><span class="p">)</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="nx">message</span><span class="p">);</span><span class="w">  </span><span class="c1">// convert message to error object</span>
+<span class="w">            </span><span class="p">}</span>
+<span class="w">        </span><span class="nx">m_hadError</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="kc">true</span><span class="p">;</span>
+<span class="w">        </span><span class="nx">mRunningMain</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="kc">false</span><span class="p">;</span>
+<span class="w">        </span><span class="nx">duk_throw</span><span class="p">(</span><span class="nx">ctx</span><span class="p">);</span><span class="w">   </span><span class="c1">// we don't come back from this</span>
+<span class="w">        </span><span class="p">}</span>
+</code></pre></div>
+
+
+
+<hr><p>Last updated: Mar 21 2024 at 07:22 UTC</p>
 </html>
