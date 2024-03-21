@@ -1042,5 +1042,17 @@
         "id": 428200080,
         "sender_full_name": "Mike Rossiter",
         "timestamp": 1711048681
+    },
+    {
+        "content": "<p>JS_throw_test(0, 0)<br>\nCrash</p>\n<div class=\"codehilite\"><pre><span></span><code>L4  setConsoleMinClientSize text JavaScript, size X:52 Y: 15\nL4  Constructed console JavaScript size x 1066 y 949  minSize x 134 y 39\nL0  ------------------ Console JavaScript about to run\nL4  JavaScript-&gt;throw_error() the arguments are both zero - throw_error\nL4  JavaScript-&gt;throw_error() pushing error object to stack\nL4  JavaScript-&gt;afterwards() with dukOutcome 1 and status now (no status)\nL4  JavaScript-&gt;run() completed with outcome 0\nL4  JavaScript-&gt;wrapUpWorks() with status 0 and now HAD_ERROR\nDuktape context dump:\nctx: top=1, stack=[{}]\n\nL4  No brief\n\nL4  wrapUpWorks with error stack:Duktape context dump:\nctx: top=1, stack=[{}]\n\nL4  Call stack: Error: Console JavaScript - the arguments are both zero - throw_error\n    at [anon] (D:\\Documents\\Github\\JavaScript_pi\\src\\JavaScriptgui_impl.h:989) internal\n    at [anon] () native strict preventsyield\n    at eval (eval:1) preventsyield\nL4  wholeLine:    at eval (eval:1\nL4  JavaScript-&gt;clearDialog()  (None)\nL4  JavaScript-&gt;clearAlert()  (None)\nL4  JavaScript-&gt;wrapUp() destroying ctx\nL0  ------------------ Console JavaScript wrapped up\n</code></pre></div>\n<p>Debug shows error at <code>duk_throw(ctx)</code><br>\nAfter debug this in output:<br>\n<code>line 1 Error: Console JavaScript - the arguments are both zero - throw_error</code></p>",
+        "id": 428201430,
+        "sender_full_name": "Mike Rossiter",
+        "timestamp": 1711049183
+    },
+    {
+        "content": "<p>In both cases, the stack dump shows just one thing - the  error object on the stack as expected.<br>\n<code>ctx: top=1, stack=[{}]</code><br>\nI am perplexed.  Only reason <code>duk_throw(ctx)</code> might fail is if invalid ctx.  Biut trce does not reveal any difference and, if a programming error, it would show here on MacOS.</p>\n<p>Please check with v2 . You will need to use, say, <code>messageBox(1,2,3,4);</code></p>",
+        "id": 428203606,
+        "sender_full_name": "Tony Voss",
+        "timestamp": 1711049904
     }
 ]
