@@ -1647,5 +1647,31 @@ No - but the throw is before ctx is destroyed - or should be - but hang on - edi
 
 
 
-<hr><p>Last updated: Mar 21 2024 at 08:10 UTC</p>
+<a name="428076071"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/349785-JavaScript_pi/topic/v3.0.0%20beta%20testing/near/428076071" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Tony Voss <a href="https://leamas.github.io/zulip-archive/stream/349785-JavaScript_pi/topic/v3.2E0.2E0.20beta.20testing.html#428076071">(Mar 21 2024 at 08:18)</a>:</h4>
+<p>Please replace  wrapup (from line 771 in JavaScriptgui_imp.h) with this:</p>
+<div class="codehilite" data-code-language="JavaScript"><pre><span></span><code><span class="w">    </span><span class="ow">void</span><span class="w"> </span><span class="nx">wrapUp</span><span class="p">(</span><span class="nx">Completions</span><span class="w"> </span><span class="nx">reason</span><span class="p">)</span><span class="w"> </span><span class="p">{</span><span class="w">    </span><span class="c1">// clean down and maybe destroy ctx</span>
+<span class="w">        </span><span class="nx">wrapUpWorks</span><span class="p">(</span><span class="nx">reason</span><span class="p">);</span>
+<span class="w">        </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="o">!</span><span class="nx">isBusy</span><span class="p">()){</span>
+<span class="w">            </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="nx">mpCtx</span><span class="w"> </span><span class="o">!=</span><span class="w"> </span><span class="nx">nullptr</span><span class="p">)</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="c1">// for safety - nasty consequences if no context</span>
+<span class="w">                </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="nx">reason</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="nx">DONE</span><span class="p">){</span><span class="w">    </span><span class="c1">// save the enduring variable</span>
+<span class="w">                    </span><span class="nx">TRACE</span><span class="p">(</span><span class="mf">4</span><span class="p">,</span><span class="w"> </span><span class="nx">mConsoleName</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="s2">"-&gt;wrapUp() will save _remember"</span><span class="p">);</span>
+<span class="w">                    </span><span class="nx">duk_push_global_object</span><span class="p">(</span><span class="nx">mpCtx</span><span class="p">);</span>
+<span class="w">                    </span><span class="kr">int</span><span class="w"> </span><span class="nx">OK</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nx">duk_get_prop_literal</span><span class="p">(</span><span class="nx">mpCtx</span><span class="p">,</span><span class="w"> </span><span class="o">-</span><span class="mf">1</span><span class="p">,</span><span class="w"> </span><span class="s2">"_remember"</span><span class="p">);</span>
+<span class="w">                    </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="nx">OK</span><span class="p">)</span><span class="w"> </span><span class="nx">m_remembered</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nx">duk_json_encode</span><span class="p">(</span><span class="nx">mpCtx</span><span class="p">,</span><span class="w"> </span><span class="o">-</span><span class="mf">1</span><span class="p">);</span>
+<span class="w">                    </span><span class="k">else</span><span class="w"> </span><span class="nx">m_remembered</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">"{}"</span><span class="p">;</span><span class="w">   </span><span class="c1">// play safe - if no -remember set as undefined</span>
+<span class="w">                    </span><span class="nx">duk_pop</span><span class="p">(</span><span class="nx">mpCtx</span><span class="p">);</span>
+<span class="w">                    </span><span class="p">}</span>
+<span class="w">                </span><span class="nx">TRACE</span><span class="p">(</span><span class="mf">4</span><span class="p">,</span><span class="w"> </span><span class="nx">mConsoleName</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="s2">"-&gt;wrapUp() destroying ctx"</span><span class="p">);</span>
+<span class="w">                </span><span class="nx">duk_destroy_heap</span><span class="p">(</span><span class="nx">mpCtx</span><span class="p">);</span>
+<span class="w">                </span><span class="nx">mpCtx</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nx">nullptr</span><span class="p">;</span>
+<span class="w">                </span><span class="p">}</span>
+<span class="w">            </span><span class="nx">TRACE</span><span class="p">(</span><span class="mf">0</span><span class="p">,</span><span class="w"> </span><span class="s2">"------------------ Console "</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="nx">mConsoleName</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="s2">" wrapped up"</span><span class="p">);</span>
+<span class="w">            </span><span class="p">}</span>
+<span class="w">        </span><span class="p">}</span>
+</code></pre></div>
+
+
+
+<hr><p>Last updated: Mar 21 2024 at 08:27 UTC</p>
 </html>
