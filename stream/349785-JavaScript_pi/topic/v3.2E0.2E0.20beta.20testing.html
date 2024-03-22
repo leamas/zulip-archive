@@ -1963,5 +1963,24 @@ Conclusion:  Windows cannot cope with throw within a method and probably a funct
 
 
 
-<hr><p>Last updated: Mar 22 2024 at 15:42 UTC</p>
+<a name="428362714"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/349785-JavaScript_pi/topic/v3.0.0%20beta%20testing/near/428362714" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Tony Voss <a href="https://leamas.github.io/zulip-archive/stream/349785-JavaScript_pi/topic/v3.2E0.2E0.20beta.20testing.html#428362714">(Mar 22 2024 at 16:04)</a>:</h4>
+<p>Needed to change 95 instances like<br>
+<code>if (&lt;some condition) throw_error(ctx, "the error message");</code><br>
+to</p>
+<div class="codehilite" data-code-language="JavaScript"><pre><span></span><code><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="nx">some</span><span class="w"> </span><span class="nx">condition</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">      </span><span class="nx">prep_for_throw</span><span class="p">(</span><span class="nx">pConsole</span><span class="o">-&gt;</span><span class="nx">mpCtx</span><span class="p">,</span><span class="w"> </span><span class="s2">"the error message"</span><span class="p">);</span>
+<span class="w">      </span><span class="k">throw</span><span class="p">(</span><span class="nx">pConsole</span><span class="o">-&gt;</span><span class="nx">mpCtx</span><span class="p">);</span>
+<span class="w">  </span><span class="p">}</span>
+</code></pre></div>
+<p>Build beta-m pushed to GitHub and build in my beta repo.</p>
+<p>I fear there could still be a problem with file name working.<br>
+Please run the one-liner<br>
+<code>readTextFile("??");</code><br>
+which will open a dialogue to choose the file to read.  If you cancel the dialogue, it throws an error from within a function - not a method.</p>
+<p>If all is well, please run the diagnostic suite.</p>
+
+
+
+<hr><p>Last updated: Mar 22 2024 at 16:11 UTC</p>
 </html>
