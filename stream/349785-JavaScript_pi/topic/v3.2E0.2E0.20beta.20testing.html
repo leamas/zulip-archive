@@ -1814,5 +1814,40 @@ I am perplexed.  Only reason <code>duk_throw(ctx)</code> might fail is if invali
 
 
 
-<hr><p>Last updated: Mar 22 2024 at 11:42 UTC</p>
+<a name="428312654"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/349785-JavaScript_pi/topic/v3.0.0%20beta%20testing/near/428312654" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Mike Rossiter <a href="https://leamas.github.io/zulip-archive/stream/349785-JavaScript_pi/topic/v3.2E0.2E0.20beta.20testing.html#428312654">(Mar 22 2024 at 11:46)</a>:</h4>
+<p>With JS_throw_test(1, 1)<br>
+<code>line 1 TypeError: the arguments match - duk_throw</code><br>
+With JS_throw_test(0, 0)<br>
+<code>line 1 TypeError: Console JavaScript - the arguments are both zero - throw_error</code></p>
+<p>With JS_throw_test(0, 0) the debug always finds the line <code>duk_throw(ctx);</code></p>
+
+
+
+<a name="428312960"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/349785-JavaScript_pi/topic/v3.0.0%20beta%20testing/near/428312960" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Tony Voss <a href="https://leamas.github.io/zulip-archive/stream/349785-JavaScript_pi/topic/v3.2E0.2E0.20beta.20testing.html#428312960">(Mar 22 2024 at 11:48)</a>:</h4>
+<p>Are you saying it crashes OCPN with DUK_ERR_TYPE_ERROR ?</p>
+
+
+
+<a name="428313842"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/349785-JavaScript_pi/topic/v3.0.0%20beta%20testing/near/428313842" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Tony Voss <a href="https://leamas.github.io/zulip-archive/stream/349785-JavaScript_pi/topic/v3.2E0.2E0.20beta.20testing.html#428313842">(Mar 22 2024 at 11:55)</a>:</h4>
+<p>Maybe it cannot cope with duk_throw(ctx) from within a method?  <span aria-label="thinking" class="emoji emoji-1f914" role="img" title="thinking">:thinking:</span></p>
+
+
+
+<a name="428314889"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/349785-JavaScript_pi/topic/v3.0.0%20beta%20testing/near/428314889" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Mike Rossiter <a href="https://leamas.github.io/zulip-archive/stream/349785-JavaScript_pi/topic/v3.2E0.2E0.20beta.20testing.html#428314889">(Mar 22 2024 at 12:01)</a>:</h4>
+<blockquote>
+<p>Are you saying it crashes OCPN with DUK_ERR_TYPE_ERROR ?</p>
+</blockquote>
+<p>Yes it does.</p>
+<p>Is <code>duk_throw(ctx)</code> needed? This works:</p>
+<div class="codehilite"><pre><span></span><code>wxStyledTextCtrl* output_window = m_Output;
+output_window-&gt;AppendText(message);
+</code></pre></div>
+
+
+
+<hr><p>Last updated: Mar 22 2024 at 12:15 UTC</p>
 </html>
