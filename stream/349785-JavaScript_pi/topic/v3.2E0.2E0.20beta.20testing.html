@@ -1910,5 +1910,58 @@ Please try the following</p>
 
 
 
-<hr><p>Last updated: Mar 22 2024 at 12:40 UTC</p>
+<a name="428321916"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/349785-JavaScript_pi/topic/v3.0.0%20beta%20testing/near/428321916" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Mike Rossiter <a href="https://leamas.github.io/zulip-archive/stream/349785-JavaScript_pi/topic/v3.2E0.2E0.20beta.20testing.html#428321916">(Mar 22 2024 at 12:43)</a>:</h4>
+<p>No crash.</p>
+<div class="codehilite"><pre><span></span><code>L4  setConsoleMinClientSize text JavaScript, size X:52 Y: 15
+L4  Constructed console JavaScript size x 816 y 949  minSize x 134 y 39
+L0  ------------------ Console JavaScript about to run
+L4  JavaScript-&gt;throw_error() the arguments are both zero - throw_error
+L4  JavaScript-&gt;throw_error() pushing error object to stack
+L4  JavaScript-&gt;afterwards() with dukOutcome 1 and status now (no status)
+L4  JavaScript-&gt;run() completed with outcome 0
+L4  JavaScript-&gt;wrapUpWorks() with status 0 and now HAD_ERROR
+Duktape context dump:
+ctx: top=1, stack=[{}]
+
+L4  No brief
+
+L4  wrapUpWorks with error stack:Duktape context dump:
+ctx: top=1, stack=[{}]
+
+L4  Call stack: TypeError: Console JavaScript - the arguments are both zero - throw_error
+    at [anon] (D:\Documents\Github\JavaScript_pi\src\JavaScriptgui_impl.h:1107) internal
+    at [anon] () native strict preventsyield
+    at eval (eval:1) preventsyield
+L4  wholeLine:    at eval (eval:1
+L4  JavaScript-&gt;clearDialog()  (None)
+L4  JavaScript-&gt;clearAlert()  (None)
+L4  JavaScript-&gt;wrapUp() destroying ctx
+L0  ------------------ Console JavaScript wrapped up
+</code></pre></div>
+<p>In output:<br>
+<code>line 1 TypeError: Console JavaScript - the arguments are both zero - throw_error</code></p>
+
+
+
+<a name="428322284"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/349785-JavaScript_pi/topic/v3.0.0%20beta%20testing/near/428322284" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Tony Voss <a href="https://leamas.github.io/zulip-archive/stream/349785-JavaScript_pi/topic/v3.2E0.2E0.20beta.20testing.html#428322284">(Mar 22 2024 at 12:45)</a>:</h4>
+<p>Hooray!  At last <span aria-label="smile" class="emoji emoji-1f642" role="img" title="smile">:smile:</span> <br>
+Conclusion:  Windows cannot cope with throw within a method and probably a function when there is  a C++ call to be unwound.  Do you agree?</p>
+
+
+
+<a name="428322502"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/349785-JavaScript_pi/topic/v3.0.0%20beta%20testing/near/428322502" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Mike Rossiter <a href="https://leamas.github.io/zulip-archive/stream/349785-JavaScript_pi/topic/v3.2E0.2E0.20beta.20testing.html#428322502">(Mar 22 2024 at 12:46)</a>:</h4>
+<p>Agreed. Are there unintended consequences?</p>
+
+
+
+<a name="428322710"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/349785-JavaScript_pi/topic/v3.0.0%20beta%20testing/near/428322710" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Tony Voss <a href="https://leamas.github.io/zulip-archive/stream/349785-JavaScript_pi/topic/v3.2E0.2E0.20beta.20testing.html#428322710">(Mar 22 2024 at 12:48)</a>:</h4>
+<p>I need to rework all throws within the plugin.  Tedious but not difficult.  Will push an update version and advise.</p>
+
+
+
+<hr><p>Last updated: Mar 22 2024 at 12:53 UTC</p>
 </html>
