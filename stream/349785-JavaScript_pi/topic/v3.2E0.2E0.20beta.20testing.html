@@ -2594,5 +2594,59 @@ gets a parse error end of input ?</p>
 
 
 
-<hr><p>Last updated: Mar 23 2024 at 15:42 UTC</p>
+<a name="429091227"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/349785-JavaScript_pi/topic/v3.0.0%20beta%20testing/near/429091227" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Mike Rossiter <a href="https://leamas.github.io/zulip-archive/stream/349785-JavaScript_pi/topic/v3.2E0.2E0.20beta.20testing.html#429091227">(Mar 23 2024 at 15:46)</a>:</h4>
+<p>Double check:<br>
+<code>line 1 Error: Console PluginTests - SyntaxError: parse error (line 1, end of input)</code></p>
+
+
+
+<a name="429091477"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/349785-JavaScript_pi/topic/v3.0.0%20beta%20testing/near/429091477" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Tony Voss <a href="https://leamas.github.io/zulip-archive/stream/349785-JavaScript_pi/topic/v3.2E0.2E0.20beta.20testing.html#429091477">(Mar 23 2024 at 15:49)</a>:</h4>
+<p>Cannot see anything wrong with js.<br>
+Please run the above test with TRACE level max &amp; min set to 45.</p>
+
+
+
+<a name="429092253"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/349785-JavaScript_pi/topic/v3.0.0%20beta%20testing/near/429092253" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Tony Voss <a href="https://leamas.github.io/zulip-archive/stream/349785-JavaScript_pi/topic/v3.2E0.2E0.20beta.20testing.html#429092253">(Mar 23 2024 at 15:58)</a>:</h4>
+<p>JSExtensions.js. after line 473<br>
+<code> pConsole-&gt;prep_for_throw(ctx, "require - " + fileNameGiven + " not in built-in scripts");</code><br>
+add missing line<br>
+<code>               duk_throw(ctx);</code><br>
+Missed when I did all those edits yesterday.<br>
+Would only explain problem if  file not being found.</p>
+
+
+
+<a name="429092543"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/349785-JavaScript_pi/topic/v3.0.0%20beta%20testing/near/429092543" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Mike Rossiter <a href="https://leamas.github.io/zulip-archive/stream/349785-JavaScript_pi/topic/v3.2E0.2E0.20beta.20testing.html#429092543">(Mar 23 2024 at 16:02)</a>:</h4>
+<p>Without edit:</p>
+<div class="codehilite"><pre><span></span><code>L0  ------------------ Console PluginTests about to run
+L0  ------------------ Console PluginTests wrapped up
+L0  ------------------ Console PluginTests about to run
+L45 Require - fileGivenName: pgnDescriptors
+L45 Require - looking for built-in script
+L45 Require - looking to load built-in script: C:\Users\rasba\AppData\Local\opencpn\plugins\JavaScript_pi\data\scripts\pgnDescriptors.js
+L45 Require - found built-in script
+L45 Require - resolved to: C:\Users\rasba\AppData\Local\opencpn\plugins\JavaScript_pi\data\scripts\pgnDescriptors.js
+L0  ------------------ Console PluginTests wrapped up
+</code></pre></div>
+
+
+
+<a name="429092849"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/349785-JavaScript_pi/topic/v3.0.0%20beta%20testing/near/429092849" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Mike Rossiter <a href="https://leamas.github.io/zulip-archive/stream/349785-JavaScript_pi/topic/v3.2E0.2E0.20beta.20testing.html#429092849">(Mar 23 2024 at 16:06)</a>:</h4>
+<p>With edit:<br>
+<code>line 1 TypeError: invalid args</code></p>
+<div class="codehilite"><pre><span></span><code>L0  ------------------ Console PluginTests about to run
+L45 Require - fileGivenName: pgnDescriptors
+L45 Require - looking for built-in script
+L45 Require - looking to load built-in script: C:\Users\rasba\AppData\Local\opencpn\plugins\JavaScript_pi\data\scripts\pgnDescriptors.js
+L0  ------------------ Console PluginTests wrapped up
+</code></pre></div>
+
+
+
+<hr><p>Last updated: Mar 23 2024 at 16:09 UTC</p>
 </html>
