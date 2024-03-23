@@ -2658,5 +2658,22 @@ Looks like it is not throwing and trying to compile and failing.</p>
 
 
 
-<hr><p>Last updated: Mar 23 2024 at 16:42 UTC</p>
+<a name="429096364"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/349785-JavaScript_pi/topic/v3.0.0%20beta%20testing/near/429096364" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Tony Voss <a href="https://leamas.github.io/zulip-archive/stream/349785-JavaScript_pi/topic/v3.2E0.2E0.20beta.20testing.html#429096364">(Mar 23 2024 at 16:54)</a>:</h4>
+<p>Not checking for read error when reading the file.<br>
+After now line 490<br>
+<code>    outcome = getTextFile(resolved, &amp;script);</code><br>
+insert</p>
+<div class="codehilite" data-code-language="JavaScript"><pre><span></span><code><span class="w">    </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="nx">outcome</span><span class="w"> </span><span class="o">!=</span><span class="w"> </span><span class="nx">wxEmptyString</span><span class="p">){</span>
+<span class="w">        </span><span class="nx">pConsole</span><span class="o">-&gt;</span><span class="nx">prep_for_throw</span><span class="p">(</span><span class="nx">ctx</span><span class="p">,</span><span class="w"> </span><span class="s2">"require readTextFile error: "</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="nx">outcome</span><span class="p">);</span>
+<span class="w">        </span><span class="nx">duk_throw</span><span class="p">(</span><span class="nx">ctx</span><span class="p">);</span>
+<span class="w">        </span><span class="p">}</span>
+</code></pre></div>
+<p>With this added, please try<br>
+<code>pgnDescriptors = require("pgnDescriptors");</code> again.</p>
+<p>Another thought... this file is large.  Possibly getting a buffer overrun so if the above does not reveal the problem, I have other tacks to try.</p>
+
+
+
+<hr><p>Last updated: Mar 23 2024 at 17:07 UTC</p>
 </html>

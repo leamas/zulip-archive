@@ -1372,5 +1372,11 @@
         "id": 429093709,
         "sender_full_name": "Tony Voss",
         "timestamp": 1711210691
+    },
+    {
+        "content": "<p>Not checking for read error when reading the file.<br>\nAfter now line 490<br>\n<code>    outcome = getTextFile(resolved, &amp;script);</code><br>\ninsert</p>\n<div class=\"codehilite\" data-code-language=\"JavaScript\"><pre><span></span><code><span class=\"w\">    </span><span class=\"k\">if</span><span class=\"w\"> </span><span class=\"p\">(</span><span class=\"nx\">outcome</span><span class=\"w\"> </span><span class=\"o\">!=</span><span class=\"w\"> </span><span class=\"nx\">wxEmptyString</span><span class=\"p\">){</span>\n<span class=\"w\">        </span><span class=\"nx\">pConsole</span><span class=\"o\">-&gt;</span><span class=\"nx\">prep_for_throw</span><span class=\"p\">(</span><span class=\"nx\">ctx</span><span class=\"p\">,</span><span class=\"w\"> </span><span class=\"s2\">\"require readTextFile error: \"</span><span class=\"w\"> </span><span class=\"o\">+</span><span class=\"w\"> </span><span class=\"nx\">outcome</span><span class=\"p\">);</span>\n<span class=\"w\">        </span><span class=\"nx\">duk_throw</span><span class=\"p\">(</span><span class=\"nx\">ctx</span><span class=\"p\">);</span>\n<span class=\"w\">        </span><span class=\"p\">}</span>\n</code></pre></div>\n<p>With this added, please try<br>\n<code>pgnDescriptors = require(\"pgnDescriptors\");</code> again.</p>\n<p>Another thought... this file is large.  Possibly getting a buffer overrun so if the above does not reveal the problem, I have other tacks to try.</p>",
+        "id": 429096364,
+        "sender_full_name": "Tony Voss",
+        "timestamp": 1711212848
     }
 ]
