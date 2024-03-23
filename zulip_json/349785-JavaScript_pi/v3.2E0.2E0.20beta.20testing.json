@@ -1306,5 +1306,17 @@
         "id": 429079711,
         "sender_full_name": "Tony Voss",
         "timestamp": 1711199463
+    },
+    {
+        "content": "<p>To address the text compare issue on Windows, I am now cleaning \\r\\n to \\n.<br>\nHopefully this will fix the read text file issues.</p>\n<p>I cannot understand why on Windows <code>require(\"pgnDescriptors\")</code>is compiling to an object, but onMacOS to a function, which is correct.  Grasping at staws here, but the only difference I can presently see between this and other files that compile to a function is that pgnDescriptors has a comment block in front of the start of the function.  Possibly Duktape is seeing it does not start with <code>function</code> and discounting it as a function.  So I have moved the comment block inside the function body.</p>\n<p>beta-p pushed to GitHub and build to beta repo 23 Mar 15:12</p>\n<p>Please run  tests affected by CR LF</p>\n<ol>\n<li>Read text file</li>\n<li>Read remote text file</li>\n<li>Files object</li>\n</ol>\n<p>Also please run</p>\n<div class=\"codehilite\" data-code-language=\"JavaScript\"><pre><span></span><code><span class=\"nx\">Position</span><span class=\"w\"> </span><span class=\"o\">=</span><span class=\"w\"> </span><span class=\"nx\">require</span><span class=\"p\">(</span><span class=\"s2\">\"Position\"</span><span class=\"p\">);</span>\n<span class=\"nx\">print</span><span class=\"p\">(</span><span class=\"s2\">\"X\\t\"</span><span class=\"p\">,</span><span class=\"w\"> </span><span class=\"ow\">typeof</span><span class=\"w\"> </span><span class=\"nx\">Position</span><span class=\"p\">,</span><span class=\"w\"> </span><span class=\"s2\">\"\\n\"</span><span class=\"p\">);</span>\n\n<span class=\"nx\">pgnDescriptors</span><span class=\"w\"> </span><span class=\"o\">=</span><span class=\"w\"> </span><span class=\"nx\">require</span><span class=\"p\">(</span><span class=\"s2\">\"pgnDescriptors\"</span><span class=\"p\">);</span>\n<span class=\"nx\">print</span><span class=\"p\">(</span><span class=\"s2\">\"A\\t\"</span><span class=\"p\">,</span><span class=\"w\"> </span><span class=\"ow\">typeof</span><span class=\"w\"> </span><span class=\"nx\">pgnDescriptors</span><span class=\"p\">,</span><span class=\"w\"> </span><span class=\"s2\">\"\\n\"</span><span class=\"p\">);</span>\n<span class=\"nx\">stDescriptor</span><span class=\"w\"> </span><span class=\"o\">=</span><span class=\"w\"> </span><span class=\"nx\">pgnDescriptors</span><span class=\"p\">(</span><span class=\"mf\">126992</span><span class=\"p\">);</span>\n<span class=\"nx\">print</span><span class=\"p\">(</span><span class=\"s2\">\"B\\t\"</span><span class=\"p\">,</span><span class=\"w\"> </span><span class=\"ow\">typeof</span><span class=\"w\"> </span><span class=\"nx\">stDescriptor</span><span class=\"p\">,</span><span class=\"w\"> </span><span class=\"s2\">\"\\n\"</span><span class=\"p\">);</span>\n<span class=\"nx\">print</span><span class=\"p\">(</span><span class=\"s2\">\"C\\t\"</span><span class=\"p\">,</span><span class=\"w\"> </span><span class=\"nx\">stDescriptor</span><span class=\"p\">.</span><span class=\"nx\">Id</span><span class=\"p\">,</span><span class=\"w\"> </span><span class=\"s2\">\"\\n\"</span><span class=\"p\">);</span>\n</code></pre></div>",
+        "id": 429089493,
+        "sender_full_name": "Tony Voss",
+        "timestamp": 1711207368
+    },
+    {
+        "content": "<p>PS No need for TRACEs at the mo</p>",
+        "id": 429089618,
+        "sender_full_name": "Tony Voss",
+        "timestamp": 1711207471
     }
 ]
