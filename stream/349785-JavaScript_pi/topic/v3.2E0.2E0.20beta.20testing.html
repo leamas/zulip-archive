@@ -2769,5 +2769,23 @@ L0  ------------------ Console PluginTests wrapped up</p>
 
 
 
-<hr><p>Last updated: Mar 25 2024 at 13:24 UTC</p>
+<a name="429401980"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/349785-JavaScript_pi/topic/v3.0.0%20beta%20testing/near/429401980" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Tony Voss <a href="https://leamas.github.io/zulip-archive/stream/349785-JavaScript_pi/topic/v3.2E0.2E0.20beta.20testing.html#429401980">(Mar 25 2024 at 13:26)</a>:</h4>
+<p>Just pushed beta-q to GitHub and beta repo.<br>
+(1) Trace window now belongs to plugin and gets deleted on plugin deinit<br>
+(2) readTextFile now preallocates a buffer for the data.  Hopefully, it will cope with the large file.<br>
+Please try with this test script:</p>
+<div class="codehilite" data-code-language="JavaScript"><pre><span></span><code><span class="nx">desc</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nx">require</span><span class="p">(</span><span class="s2">"pgnDescriptors"</span><span class="p">);</span>
+<span class="nx">desc</span><span class="p">(</span><span class="mf">126992</span><span class="p">).</span><span class="nx">Id</span><span class="p">;</span>
+</code></pre></div>
+<p>Expected output:</p>
+<blockquote>
+<p>result: systemTime</p>
+</blockquote>
+<p>This should work without first needing to resolve the missing \\ you are looking  into as it loads from the built-in scripts.  SO you can just load from my beta repo.<br>
+If there is still a problem, you can turn on TRACE at level 64 to see how big it  things the file is.</p>
+
+
+
+<hr><p>Last updated: Mar 25 2024 at 13:42 UTC</p>
 </html>
