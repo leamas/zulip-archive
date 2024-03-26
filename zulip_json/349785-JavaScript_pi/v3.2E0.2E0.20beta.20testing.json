@@ -1744,5 +1744,83 @@
         "id": 429683929,
         "sender_full_name": "Tony Voss",
         "timestamp": 1711467606
+    },
+    {
+        "content": "<blockquote>\n<p>Is your Linux machine old and slow? </p>\n</blockquote>\n<p>Yes.<br>\nSome output from Test 1</p>",
+        "id": 429684698,
+        "sender_full_name": "Mike Rossiter",
+        "timestamp": 1711467802
+    },
+    {
+        "content": "<p>Line 127 of the test script is<br>\n<code>timeAlloc(1000);   // more time may be needed</code><br>\nbecause I reckoned it might be running out of time by then.<br>\nTry giving it more time with, say,<br>\n<code>timeAlloc(3000);   // more time may be needed</code><br>\nplaced near the beginning</p>",
+        "id": 429684745,
+        "sender_full_name": "Tony Voss",
+        "timestamp": 1711467819
+    },
+    {
+        "content": "<blockquote>\n<p>This is programming error and having failed to find the console, there is no sane way out.<br>\nPlease clarify how you got there. Did you press a parking button or run the parking test script?</p>\n</blockquote>\n<p>Both tried.</p>",
+        "id": 429685094,
+        "sender_full_name": "Mike Rossiter",
+        "timestamp": 1711467910
+    },
+    {
+        "content": "<p>JavaScript plugin version 3.0<br>\nJavaScript patch 0<br>\nJavaScript tools window DPI scaling factor 1.000000<br>\nwxWidgets version 3.2.2.0 or 3202<br>\nOCPN API version 1.18<br>\nDuktape version 20700<br>\nNot using svg<br>\npJavaScript_pi-&gt;m_pconfig                   0x009c726000<br>\npJavaScript_pi-&gt;m_parent_window         0x009cef35b0<br>\npJavaScript_pi-&gt;m_floatOnTop                false<br>\npJavaScript_pi-&gt;mRememberToggleStatus   false<br>\nfavouriteFiles:<br>\nrecentFiles:<br>\n    /home/mike/Documents/JavaScript_pi/Tests_scripts/110_n2k_encode_decode.js<br>\n    /home/mike/Documents/JavaScript_pi/Tests_scripts/00_main.js<br>\n    /home/mike/Documents/JavaScript_pi/Tests_scripts/54_stop_explicit_callback.js<br>\nN2K pgn registrations: none<br>\npJavaScript_pi-&gt;mpFirstConsole  0x009e61a240</p>\n<p>----------Console PluginTests----------<br>\nConsole name:       PluginTests<br>\nthis:                   0x009e61a240<br>\nmpNextConsole:      nullptr<br>\nmStatus:                (no status)<br>\nmRunningMain:       false<br>\nm_time_to_allocate: 1000ms<br>\nm_timeout_check_counter:    0<br>\nmWaitingCached:     true<br>\nmWaiting:           false<br>\nmpMessageDialog:    nullptr<br>\nisBusy():               false<br>\nisWaiting():            false<br>\nauto_run:           false<br>\nposition:               screen x:274 y:347  DIP x:274 y:347<br>\nSize():             x:738 y:600 DIP x:738 y:600 MinSize() x:142 y:37<br>\nm_parked:           true<br>\nisParked():         false<br>\nparked Location     74  27  size 142    37<br>\nnotParked location  235 90  size 738    600<br>\nMessages callback table<br>\n    OCPN_CORE_SIGNALK<br>\n    OCPN_OPENGL_CONFIG<br>\n    OpenCPN Config<br>\n    WMM_VARIATION_BOAT<br>\nm_timerActionBusy:  false<br>\nTimers callback table<br>\n    (empty)<br>\nMenus callback table<br>\n    (empty)<br>\nm_dialog:           None<br>\nm_alert:                None<br>\nm_NMEAmessageFunction:      <br>\nm_streamMessageCntlsVector  &lt;empty&gt;<br>\nm_activeLegFunction:        <br>\nm_exitFunction: <br>\nm_closeButtonFunction:  <br>\nm_explicitResult:       false<br>\nm_result:               <br>\nmscriptToBeRun: false<br>\nNo brief<br>\nmConsoleRepliesAwaited  0<br>\nm_remembered    <br>\nwxFile ids - none<br>\nNo Duktape context</p>\n<hr>\n<p>pJavaScript_pi-&gt;mpBin       nullptr</p>\n<p>End of dump</p>",
+        "id": 429685178,
+        "sender_full_name": "Mike Rossiter",
+        "timestamp": 1711467938
+    },
+    {
+        "content": "<p>I'll look at the dump now.</p>\n<p>The tests take 334ms on my MacBook M2.  I can well imagine your old machine needs longer.  Suggest you refrain from messing with the descriptors.  They are loading OK or you would not ave got as far as you have.</p>",
+        "id": 429685642,
+        "sender_full_name": "Tony Voss",
+        "timestamp": 1711468076
+    },
+    {
+        "content": "<p>But the PGN where it stops is 129540, the one before 129541 which caused the Windows problem.</p>",
+        "id": 429685973,
+        "sender_full_name": "Mike Rossiter",
+        "timestamp": 1711468156
+    },
+    {
+        "content": "<p>129540 is big compared with th others.  The script runs all the decoding tests with only the default time of 1000ms for all three.  It does not allocate more time between each test (as written at present).  Feels like it is just running out of time.</p>",
+        "id": 429686793,
+        "sender_full_name": "Tony Voss",
+        "timestamp": 1711468367
+    },
+    {
+        "content": "<p>Tried 5000 at line 127 but still times out.</p>",
+        "id": 429687119,
+        "sender_full_name": "Mike Rossiter",
+        "timestamp": 1711468472
+    },
+    {
+        "content": "<p>That is after all the decoding tests have completed.<br>\nPut it near the beginning, say before the loop at line 83</p>\n<p>PS I can tell you how to turn on tracing within the decoding if w have to go there.</p>",
+        "id": 429687826,
+        "sender_full_name": "Tony Voss",
+        "timestamp": 1711468666
+    },
+    {
+        "content": "<p>Or give it 2000 ms per test by placing inside the loop at the start</p>",
+        "id": 429688093,
+        "sender_full_name": "Tony Voss",
+        "timestamp": 1711468735
+    },
+    {
+        "content": "<p>Same and same again with these edits.</p>",
+        "id": 429688430,
+        "sender_full_name": "Mike Rossiter",
+        "timestamp": 1711468819
+    },
+    {
+        "content": "<p>Test script line 88, near end set <code>trace:true</code></p>",
+        "id": 429689387,
+        "sender_full_name": "Tony Voss",
+        "timestamp": 1711469049
+    },
+    {
+        "content": "<div class=\"codehilite\"><pre><span></span><code>Testing pgn 126992\nNMEA2000 called with arg type number\narg is number 126992\nparse for pgn 126992\nTest 0 decode passed\n\nTesting pgn 129540\nNMEA2000 called with arg type number\narg is number 129540\nScript timed out\n</code></pre></div>",
+        "id": 429690801,
+        "sender_full_name": "Mike Rossiter",
+        "timestamp": 1711469447
     }
 ]
