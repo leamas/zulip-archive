@@ -214,5 +214,88 @@ Will this be general for GTK scaled displays, do you expect?</p>
 
 
 
-<hr><p>Last updated: Mar 27 2024 at 20:42 UTC</p>
+<a name="429945500"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332168-Master%20-%205.8.0%20%20%28was%3A%20comms%29/topic/PR%20%233765/near/429945500" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Dave Register <a href="https://leamas.github.io/zulip-archive/stream/332168-Master---5.2E8.2E0--.28was.3A-comms.29/topic/PR.20.233765.html#429945500">(Mar 27 2024 at 20:43)</a>:</h4>
+<p>I agree that it would be nice to confine all this contorted display detection/scaling to one place.  Maybe we can even do something about Windows here, too.<br>
+But later days..</p>
+
+
+
+<a name="429945764"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332168-Master%20-%205.8.0%20%20%28was%3A%20comms%29/topic/PR%20%233765/near/429945764" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Alec Leamas <a href="https://leamas.github.io/zulip-archive/stream/332168-Master---5.2E8.2E0--.28was.3A-comms.29/topic/PR.20.233765.html#429945764">(Mar 27 2024 at 20:44)</a>:</h4>
+<p>But this is perhaps something else. A minimal patch solving <a href="https://github.com/opencpn/OpenCPN/issues/3612">#3612</a> is probably smaller. I agree that we are in the wrong phase in this cycle for refactoring if it can be avoided.</p>
+
+
+
+<a name="429945972"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332168-Master%20-%205.8.0%20%20%28was%3A%20comms%29/topic/PR%20%233765/near/429945972" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Pavel Kalian <a href="https://leamas.github.io/zulip-archive/stream/332168-Master---5.2E8.2E0--.28was.3A-comms.29/topic/PR.20.233765.html#429945972">(Mar 27 2024 at 20:46)</a>:</h4>
+<p>FWIW on retina we probably should do something, the chart symbols and ownship are too small, the AIS targets I have already fixed.</p>
+
+
+
+<a name="429946119"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332168-Master%20-%205.8.0%20%20%28was%3A%20comms%29/topic/PR%20%233765/near/429946119" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Pavel Kalian <a href="https://leamas.github.io/zulip-archive/stream/332168-Master---5.2E8.2E0--.28was.3A-comms.29/topic/PR.20.233765.html#429946119">(Mar 27 2024 at 20:46)</a>:</h4>
+<p>But yes, the general refactoring has to wait</p>
+
+
+
+<a name="429946261"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332168-Master%20-%205.8.0%20%20%28was%3A%20comms%29/topic/PR%20%233765/near/429946261" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Dave Register <a href="https://leamas.github.io/zulip-archive/stream/332168-Master---5.2E8.2E0--.28was.3A-comms.29/topic/PR.20.233765.html#429946261">(Mar 27 2024 at 20:47)</a>:</h4>
+<p>OK on all.</p>
+
+
+
+<a name="429946402"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332168-Master%20-%205.8.0%20%20%28was%3A%20comms%29/topic/PR%20%233765/near/429946402" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Alec Leamas <a href="https://leamas.github.io/zulip-archive/stream/332168-Master---5.2E8.2E0--.28was.3A-comms.29/topic/PR.20.233765.html#429946402">(Mar 27 2024 at 20:48)</a>:</h4>
+<p>JUst curious: There is not anything in MacOS similar to the scaling done by Gnome + GTK?</p>
+
+
+
+<a name="429947561"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332168-Master%20-%205.8.0%20%20%28was%3A%20comms%29/topic/PR%20%233765/near/429947561" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Pavel Kalian <a href="https://leamas.github.io/zulip-archive/stream/332168-Master---5.2E8.2E0--.28was.3A-comms.29/topic/PR.20.233765.html#429947561">(Mar 27 2024 at 20:53)</a>:</h4>
+<p>Not really, they have a set of resolutions that they can scale to look well, so then it looks eg like this:</p>
+<div class="codehilite"><pre><span></span><code>17:51:48.094   DEBUG displays.cpp:225 Display 1:
+17:51:48.094   DEBUG displays.cpp:226   Physical Size: 285.82x178.637 mm
+17:51:48.094   DEBUG displays.cpp:228   Resolution: 1024x640 pixels
+17:51:48.094   DEBUG displays.cpp:229   Pixel resolution: 2048x1280 pixels
+17:51:48.094   DEBUG displays.cpp:243 Number of monitors: 1
+17:51:48.094   DEBUG displays.cpp:244 Monitor info:
+17:51:48.094   DEBUG displays.cpp:246 Monitor: 1 285x178mm 1024x640DIP 2048x1280px 100%
+</code></pre></div>
+
+
+
+<a name="429947902"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332168-Master%20-%205.8.0%20%20%28was%3A%20comms%29/topic/PR%20%233765/near/429947902" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Pavel Kalian <a href="https://leamas.github.io/zulip-archive/stream/332168-Master---5.2E8.2E0--.28was.3A-comms.29/topic/PR.20.233765.html#429947902">(Mar 27 2024 at 20:55)</a>:</h4>
+<p>Same display, everything bigger and still crisp</p>
+
+
+
+<a name="429948012"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332168-Master%20-%205.8.0%20%20%28was%3A%20comms%29/topic/PR%20%233765/near/429948012" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Pavel Kalian <a href="https://leamas.github.io/zulip-archive/stream/332168-Master---5.2E8.2E0--.28was.3A-comms.29/topic/PR.20.233765.html#429948012">(Mar 27 2024 at 20:56)</a>:</h4>
+<p>And if I want it smaller, again looks really good</p>
+<div class="codehilite"><pre><span></span><code>17:55:09.442   DEBUG displays.cpp:225 Display 1:
+17:55:09.442   DEBUG displays.cpp:226   Physical Size: 286.389x178.993 mm
+17:55:09.442   DEBUG displays.cpp:228   Resolution: 1680x1050 pixels
+17:55:09.442   DEBUG displays.cpp:229   Pixel resolution: 3360x2100 pixels
+17:55:09.442   DEBUG displays.cpp:243 Number of monitors: 1
+17:55:09.442   DEBUG displays.cpp:244 Monitor info:
+17:55:09.442   DEBUG displays.cpp:246 Monitor: 1 286x178mm 1680x1050DIP 3360x2100px 100%
+</code></pre></div>
+
+
+
+<a name="429948285"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332168-Master%20-%205.8.0%20%20%28was%3A%20comms%29/topic/PR%20%233765/near/429948285" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Pavel Kalian <a href="https://leamas.github.io/zulip-archive/stream/332168-Master---5.2E8.2E0--.28was.3A-comms.29/topic/PR.20.233765.html#429948285">(Mar 27 2024 at 20:58)</a>:</h4>
+<p>They can do it like this because they have the display under control and there is finite number of them. But for example on FullHD, which is a resolution they don't use, it does not look anything special even at the native resolution of the display. That the bastards of course do on purpose...</p>
+
+
+
+<a name="429948593"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332168-Master%20-%205.8.0%20%20%28was%3A%20comms%29/topic/PR%20%233765/near/429948593" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Pavel Kalian <a href="https://leamas.github.io/zulip-archive/stream/332168-Master---5.2E8.2E0--.28was.3A-comms.29/topic/PR.20.233765.html#429948593">(Mar 27 2024 at 21:00)</a>:</h4>
+<p>Internet is full of horror about trying to get a 4/5k monitor that reasonably works with Apple from other vendors, there seems to be just a few that actually do</p>
+
+
+
+<hr><p>Last updated: Mar 27 2024 at 21:07 UTC</p>
 </html>
