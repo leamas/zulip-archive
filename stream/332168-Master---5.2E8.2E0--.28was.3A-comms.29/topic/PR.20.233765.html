@@ -108,5 +108,111 @@ Later, we can use Pavel's' more general replacement solution for GetContentScale
 
 
 
-<hr><p>Last updated: Mar 27 2024 at 20:24 UTC</p>
+<a name="429942031"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332168-Master%20-%205.8.0%20%20%28was%3A%20comms%29/topic/PR%20%233765/near/429942031" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Alec Leamas <a href="https://leamas.github.io/zulip-archive/stream/332168-Master---5.2E8.2E0--.28was.3A-comms.29/topic/PR.20.233765.html#429942031">(Mar 27 2024 at 20:26)</a>:</h4>
+<p>THat's gonna get really evil. Just putting them back makes Linux HDPI fail. But,  I'll see what I can do tomorrow. Still walking on thin ice in many of these GUI parts, but sooner or later I have to start doing it.</p>
+
+
+
+<a name="429942212"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332168-Master%20-%205.8.0%20%20%28was%3A%20comms%29/topic/PR%20%233765/near/429942212" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Pavel Kalian <a href="https://leamas.github.io/zulip-archive/stream/332168-Master---5.2E8.2E0--.28was.3A-comms.29/topic/PR.20.233765.html#429942212">(Mar 27 2024 at 20:26)</a>:</h4>
+<p>Specifically on the mac the Retina  will still need the ifdef in the scaling factor function, because on the retina the OpenGL resolution simply is double. But on the other platforms it probably is not the same. I can't tell because I don't have any HiDPI display I could use there.</p>
+
+
+
+<a name="429942534"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332168-Master%20-%205.8.0%20%20%28was%3A%20comms%29/topic/PR%20%233765/near/429942534" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Pavel Kalian <a href="https://leamas.github.io/zulip-archive/stream/332168-Master---5.2E8.2E0--.28was.3A-comms.29/topic/PR.20.233765.html#429942534">(Mar 27 2024 at 20:28)</a>:</h4>
+<p>But we now have all the information (And unlike from WX it is correct) that is available from the OS on all the platforms, so it at least is doable.</p>
+
+
+
+<a name="429942820"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332168-Master%20-%205.8.0%20%20%28was%3A%20comms%29/topic/PR%20%233765/near/429942820" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Alec Leamas <a href="https://leamas.github.io/zulip-archive/stream/332168-Master---5.2E8.2E0--.28was.3A-comms.29/topic/PR.20.233765.html#429942820">(Mar 27 2024 at 20:29)</a>:</h4>
+<p>Right. Linux HDPI is basically the same. But the ifdef lives better within  GetContentScaleFactor() or whatever new function we make. Much better than around each call. Current code basically duplicates the conditions, but the duplication is broken.</p>
+
+
+
+<a name="429943182"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332168-Master%20-%205.8.0%20%20%28was%3A%20comms%29/topic/PR%20%233765/near/429943182" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Dave Register <a href="https://leamas.github.io/zulip-archive/stream/332168-Master---5.2E8.2E0--.28was.3A-comms.29/topic/PR.20.233765.html#429943182">(Mar 27 2024 at 20:31)</a>:</h4>
+<p>@pavel: The current #ifdef solution probably does not work outside of MacBook, with external HDPI display.  Never tried, but I think Tony is using that.<br>
+@alec  One step at a time.  this Mac #ifdef is scattered throughout the code base.  Lets fix the "Issue" first, if we can, and then refactor more widely.</p>
+
+
+
+<a name="429943346"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332168-Master%20-%205.8.0%20%20%28was%3A%20comms%29/topic/PR%20%233765/near/429943346" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Alec Leamas <a href="https://leamas.github.io/zulip-archive/stream/332168-Master---5.2E8.2E0--.28was.3A-comms.29/topic/PR.20.233765.html#429943346">(Mar 27 2024 at 20:32)</a>:</h4>
+<p><span class="user-mention" data-user-id="517002">@Dave Register</span> </p>
+<blockquote>
+<p>One step at a time. </p>
+</blockquote>
+<p>Agreed.</p>
+
+
+
+<a name="429943374"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332168-Master%20-%205.8.0%20%20%28was%3A%20comms%29/topic/PR%20%233765/near/429943374" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Pavel Kalian <a href="https://leamas.github.io/zulip-archive/stream/332168-Master---5.2E8.2E0--.28was.3A-comms.29/topic/PR.20.233765.html#429943374">(Mar 27 2024 at 20:32)</a>:</h4>
+<p>I don't know, if he gives us the info from the debug log, we can see how his displays are represented</p>
+
+
+
+<a name="429943469"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332168-Master%20-%205.8.0%20%20%28was%3A%20comms%29/topic/PR%20%233765/near/429943469" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Pavel Kalian <a href="https://leamas.github.io/zulip-archive/stream/332168-Master---5.2E8.2E0--.28was.3A-comms.29/topic/PR.20.233765.html#429943469">(Mar 27 2024 at 20:32)</a>:</h4>
+<p>Linux, the big monitor is the same as connected to the mac before:</p>
+<div class="codehilite"><pre><span></span><code>17:29:11.392   DEBUG displays.cpp:129 GDK Monitors: 2
+17:29:11.392   DEBUG displays.cpp:145 Monitor 1:
+17:29:11.392   DEBUG displays.cpp:146   Name: eDP-1
+17:29:11.392   DEBUG displays.cpp:147   Physical Size (mm): 340 x 190
+17:29:11.392   DEBUG displays.cpp:149   Resolution: 1920 x 1080
+17:29:11.392   DEBUG displays.cpp:151   Scale: 100
+17:29:11.392   DEBUG displays.cpp:145 Monitor 2:
+17:29:11.392   DEBUG displays.cpp:146   Name: HDMI-1
+17:29:11.392   DEBUG displays.cpp:147   Physical Size (mm): 600 x 340
+17:29:11.392   DEBUG displays.cpp:149   Resolution: 1920 x 1080
+17:29:11.392   DEBUG displays.cpp:151   Scale: 100
+17:29:11.392   DEBUG displays.cpp:243 Number of monitors: 2
+17:29:11.392   DEBUG displays.cpp:244 Monitor info:
+17:29:11.392   DEBUG displays.cpp:246 Monitor: eDP-1 340x190mm 1920x1080DIP 1920x1080px 100%
+17:29:11.392   DEBUG displays.cpp:246 Monitor: HDMI-1 600x340mm 1920x1080DIP 1920x1080px 100%
+</code></pre></div>
+
+
+
+<a name="429943820"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332168-Master%20-%205.8.0%20%20%28was%3A%20comms%29/topic/PR%20%233765/near/429943820" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Dave Register <a href="https://leamas.github.io/zulip-archive/stream/332168-Master---5.2E8.2E0--.28was.3A-comms.29/topic/PR.20.233765.html#429943820">(Mar 27 2024 at 20:34)</a>:</h4>
+<p>What does displays.cpp say about a MacBook retina display? Is it even possible to attach an external display to a modern MacBook?</p>
+
+
+
+<a name="429944139"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332168-Master%20-%205.8.0%20%20%28was%3A%20comms%29/topic/PR%20%233765/near/429944139" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Pavel Kalian <a href="https://leamas.github.io/zulip-archive/stream/332168-Master---5.2E8.2E0--.28was.3A-comms.29/topic/PR.20.233765.html#429944139">(Mar 27 2024 at 20:36)</a>:</h4>
+<p>See, above that is the Retina in my M1 Air. And yes, the USB-C ports include display port, so I have a hub with HDMI port connected there and monitor to that hub.</p>
+
+
+
+<a name="429944530"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332168-Master%20-%205.8.0%20%20%28was%3A%20comms%29/topic/PR%20%233765/near/429944530" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Pavel Kalian <a href="https://leamas.github.io/zulip-archive/stream/332168-Master---5.2E8.2E0--.28was.3A-comms.29/topic/PR.20.233765.html#429944530">(Mar 27 2024 at 20:38)</a>:</h4>
+<p>I don't know what the external 5k Apple monitors will exactly report, never seen one</p>
+
+
+
+<a name="429944632"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332168-Master%20-%205.8.0%20%20%28was%3A%20comms%29/topic/PR%20%233765/near/429944632" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Dave Register <a href="https://leamas.github.io/zulip-archive/stream/332168-Master---5.2E8.2E0--.28was.3A-comms.29/topic/PR.20.233765.html#429944632">(Mar 27 2024 at 20:38)</a>:</h4>
+<p>So, on display one, we can see from the "resolution" vs "pixel resolution".  That is useful.  Ignore the 100% report. <br>
+Will this be general for GTK scaled displays, do you expect?</p>
+
+
+
+<a name="429944909"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332168-Master%20-%205.8.0%20%20%28was%3A%20comms%29/topic/PR%20%233765/near/429944909" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Pavel Kalian <a href="https://leamas.github.io/zulip-archive/stream/332168-Master---5.2E8.2E0--.28was.3A-comms.29/topic/PR.20.233765.html#429944909">(Mar 27 2024 at 20:40)</a>:</h4>
+<p>For GTK the scale 100 is what I have configured in the Gnome Display settings, if I switch it to 200%, the number reported is 200 (And everything is so huge on the FullHD display that the system gets unusable)</p>
+
+
+
+<a name="429945374"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332168-Master%20-%205.8.0%20%20%28was%3A%20comms%29/topic/PR%20%233765/near/429945374" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Alec Leamas <a href="https://leamas.github.io/zulip-archive/stream/332168-Master---5.2E8.2E0--.28was.3A-comms.29/topic/PR.20.233765.html#429945374">(Mar 27 2024 at 20:42)</a>:</h4>
+<p>And still, 200 is what I have been using when testing the patch here.  To me, it looks like what to do on a  HDPI 3840 x 2160 display.</p>
+
+
+
+<hr><p>Last updated: Mar 27 2024 at 20:42 UTC</p>
 </html>
