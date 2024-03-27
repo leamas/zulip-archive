@@ -38,5 +38,30 @@
 
 
 
-<hr><p>Last updated: Mar 27 2024 at 17:26 UTC</p>
+<a name="429912396"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332168-Master%20-%205.8.0%20%20%28was%3A%20comms%29/topic/PR%20%233765/near/429912396" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Pavel Kalian <a href="https://leamas.github.io/zulip-archive/stream/332168-Master---5.2E8.2E0--.28was.3A-comms.29/topic/PR.20.233765.html#429912396">(Mar 27 2024 at 17:29)</a>:</h4>
+<p>Yeah, when on am external FullHD monitor it is OK, so it is just about the ratio that needs to be applied when on the Retina display. It can be calculated from the monitor info I have recently implemented.</p>
+
+
+
+<a name="429913534"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332168-Master%20-%205.8.0%20%20%28was%3A%20comms%29/topic/PR%20%233765/near/429913534" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Pavel Kalian <a href="https://leamas.github.io/zulip-archive/stream/332168-Master---5.2E8.2E0--.28was.3A-comms.29/topic/PR.20.233765.html#429913534">(Mar 27 2024 at 17:35)</a>:</h4>
+<p>It is this: <a href="https://github.com/OpenCPN/OpenCPN/pull/3765/files#diff-6120147f4aacccc806dc53d96bf56ba33d9c336d3f9a32ebfea2bad3ad81f4c6L829-L834">https://github.com/OpenCPN/OpenCPN/pull/3765/files#diff-6120147f4aacccc806dc53d96bf56ba33d9c336d3f9a32ebfea2bad3ad81f4c6L829-L834</a><br>
+What was the problem it tries to solve?</p>
+
+
+
+<a name="429914056"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332168-Master%20-%205.8.0%20%20%28was%3A%20comms%29/topic/PR%20%233765/near/429914056" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Pavel Kalian <a href="https://leamas.github.io/zulip-archive/stream/332168-Master---5.2E8.2E0--.28was.3A-comms.29/topic/PR.20.233765.html#429914056">(Mar 27 2024 at 17:38)</a>:</h4>
+<p>Removing those guards for openGL active breaks it in the non-GL mode, because there the ration must not be applied (On Retina).</p>
+
+
+
+<a name="429914673"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332168-Master%20-%205.8.0%20%20%28was%3A%20comms%29/topic/PR%20%233765/near/429914673" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Pavel Kalian <a href="https://leamas.github.io/zulip-archive/stream/332168-Master---5.2E8.2E0--.28was.3A-comms.29/topic/PR.20.233765.html#429914673">(Mar 27 2024 at 17:42)</a>:</h4>
+<p>The real solution will be to stop using wxWindow::GetContentScaleFactor, because it is buggy crap (as pretty much everything multimonitor and hidpi related in wxWidgets) and instead calculate it ourselves from the monitor info</p>
+
+
+
+<hr><p>Last updated: Mar 27 2024 at 17:42 UTC</p>
 </html>
