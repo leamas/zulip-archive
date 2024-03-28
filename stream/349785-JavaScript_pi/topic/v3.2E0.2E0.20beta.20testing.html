@@ -4453,5 +4453,27 @@ result: Success
 
 
 
-<hr><p>Last updated: Mar 28 2024 at 16:42 UTC</p>
+<a name="430118244"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/349785-JavaScript_pi/topic/v3.0.0%20beta%20testing/near/430118244" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Tony Voss <a href="https://leamas.github.io/zulip-archive/stream/349785-JavaScript_pi/topic/v3.2E0.2E0.20beta.20testing.html#430118244">(Mar 28 2024 at 16:51)</a>:</h4>
+<p>In version.h we have</p>
+<div class="codehilite" data-code-language="C++"><pre><span></span><code><span class="cp">#define DEGREE        {"\u00B0"}    </span><span class="c1">// real degree character</span>
+<span class="cp">#ifdef __WINDOWS__</span>
+<span class="cp">#define PSEUDODEGREE  {"\u0007"}    </span><span class="c1">// substitute character for degree - bell</span>
+<span class="cp">#else</span>
+<span class="cp">#define PSEUDODEGREE  DEGREE    </span><span class="c1">// keep it as real degree</span>
+<span class="cp">#endif</span>
+</code></pre></div>
+<p>which is how you get º turned into BELL.<br>
+Then in JSextensions.cpp line 107, the output is filtered by<br>
+<code>   output.Replace(PSEUDODEGREE, DEGREE, true); // internally, we are using PSEUDODEGREE to represent degree - convert any back</code></p>
+<p>So mystified why you are seeing BELL.</p>
+<p>This simple script will test:</p>
+<div class="codehilite" data-code-language="JavaScript"><pre><span></span><code><span class="nx">print</span><span class="p">(</span><span class="s2">"Bell prints as "</span><span class="p">,</span><span class="w"> </span><span class="nb">String</span><span class="p">.</span><span class="nx">fromCharCode</span><span class="p">(</span><span class="mh">0x07</span><span class="p">),</span><span class="w"> </span><span class="s2">"\n"</span><span class="p">);</span>
+</code></pre></div>
+<p>You should see it print º<br>
+This assumes  <code>#ifdef __WINDOWS__</code> is working.</p>
+
+
+
+<hr><p>Last updated: Mar 28 2024 at 17:08 UTC</p>
 </html>

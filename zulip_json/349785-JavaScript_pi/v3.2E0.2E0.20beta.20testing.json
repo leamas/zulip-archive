@@ -2194,5 +2194,11 @@
         "id": 430082359,
         "sender_full_name": "Tony Voss",
         "timestamp": 1711636693
+    },
+    {
+        "content": "<p>In version.h we have</p>\n<div class=\"codehilite\" data-code-language=\"C++\"><pre><span></span><code><span class=\"cp\">#define DEGREE        {\"\\u00B0\"}    </span><span class=\"c1\">// real degree character</span>\n<span class=\"cp\">#ifdef __WINDOWS__</span>\n<span class=\"cp\">#define PSEUDODEGREE  {\"\\u0007\"}    </span><span class=\"c1\">// substitute character for degree - bell</span>\n<span class=\"cp\">#else</span>\n<span class=\"cp\">#define PSEUDODEGREE  DEGREE    </span><span class=\"c1\">// keep it as real degree</span>\n<span class=\"cp\">#endif</span>\n</code></pre></div>\n<p>which is how you get º turned into BELL.<br>\nThen in JSextensions.cpp line 107, the output is filtered by<br>\n<code>   output.Replace(PSEUDODEGREE, DEGREE, true); // internally, we are using PSEUDODEGREE to represent degree - convert any back</code></p>\n<p>So mystified why you are seeing BELL.</p>\n<p>This simple script will test:</p>\n<div class=\"codehilite\" data-code-language=\"JavaScript\"><pre><span></span><code><span class=\"nx\">print</span><span class=\"p\">(</span><span class=\"s2\">\"Bell prints as \"</span><span class=\"p\">,</span><span class=\"w\"> </span><span class=\"nb\">String</span><span class=\"p\">.</span><span class=\"nx\">fromCharCode</span><span class=\"p\">(</span><span class=\"mh\">0x07</span><span class=\"p\">),</span><span class=\"w\"> </span><span class=\"s2\">\"\\n\"</span><span class=\"p\">);</span>\n</code></pre></div>\n<p>You should see it print º<br>\nThis assumes  <code>#ifdef __WINDOWS__</code> is working.</p>",
+        "id": 430118244,
+        "sender_full_name": "Tony Voss",
+        "timestamp": 1711644662
     }
 ]
