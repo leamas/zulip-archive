@@ -4498,5 +4498,65 @@ Need to restart my pc to show output.</p>
 
 
 
-<hr><p>Last updated: Mar 28 2024 at 17:42 UTC</p>
+<a name="430131394"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/349785-JavaScript_pi/topic/v3.0.0%20beta%20testing/near/430131394" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Mike Rossiter <a href="https://leamas.github.io/zulip-archive/stream/349785-JavaScript_pi/topic/v3.2E0.2E0.20beta.20testing.html#430131394">(Mar 28 2024 at 17:44)</a>:</h4>
+<p>Bell prints as °<br>
+result: undefined</p>
+
+
+
+<a name="430132478"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/349785-JavaScript_pi/topic/v3.0.0%20beta%20testing/near/430132478" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Tony Voss <a href="https://leamas.github.io/zulip-archive/stream/349785-JavaScript_pi/topic/v3.2E0.2E0.20beta.20testing.html#430132478">(Mar 28 2024 at 17:49)</a>:</h4>
+<p>In JSextensions.cpp change lines 107 to be</p>
+<div class="codehilite" data-code-language="C++"><pre><span></span><code><span class="w">    </span><span class="n">TRACE</span><span class="p">(</span><span class="mi">123</span><span class="p">,</span><span class="w"> </span><span class="s">"Before: "</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="n">output</span><span class="p">);</span>
+<span class="w">    </span><span class="n">output</span><span class="p">.</span><span class="n">Replace</span><span class="p">(</span><span class="n">PSEUDODEGREE</span><span class="p">,</span><span class="w"> </span><span class="n">DEGREE</span><span class="p">,</span><span class="w"> </span><span class="nb">true</span><span class="p">);</span><span class="w"> </span><span class="c1">// internally, we are using DEGREE to represent degree - convert any back</span>
+<span class="w">    </span><span class="n">TRACE</span><span class="p">(</span><span class="mi">123</span><span class="p">,</span><span class="w"> </span><span class="s">"After: "</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="n">output</span><span class="p">);</span>
+</code></pre></div>
+<p>and turn on tracing for 123</p>
+
+
+
+<a name="430132942"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/349785-JavaScript_pi/topic/v3.0.0%20beta%20testing/near/430132942" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Tony Voss <a href="https://leamas.github.io/zulip-archive/stream/349785-JavaScript_pi/topic/v3.2E0.2E0.20beta.20testing.html#430132942">(Mar 28 2024 at 17:51)</a>:</h4>
+<p>Then run</p>
+<div class="codehilite" data-code-language="JavaScript"><pre><span></span><code><span class="nx">print</span><span class="p">(</span><span class="s2">"Degree prints as º\n"</span><span class="p">);</span>
+</code></pre></div>
+
+
+
+<a name="430133102"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/349785-JavaScript_pi/topic/v3.0.0%20beta%20testing/near/430133102" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Mike Rossiter <a href="https://leamas.github.io/zulip-archive/stream/349785-JavaScript_pi/topic/v3.2E0.2E0.20beta.20testing.html#430133102">(Mar 28 2024 at 17:52)</a>:</h4>
+<p>BBL</p>
+
+
+
+<a name="430133159"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/349785-JavaScript_pi/topic/v3.0.0%20beta%20testing/near/430133159" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Tony Voss <a href="https://leamas.github.io/zulip-archive/stream/349785-JavaScript_pi/topic/v3.2E0.2E0.20beta.20testing.html#430133159">(Mar 28 2024 at 17:53)</a>:</h4>
+<p>Then get a Mac <span aria-label="speechless" class="emoji emoji-1f636" role="img" title="speechless">:speechless:</span></p>
+
+
+
+<a name="430134988"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/349785-JavaScript_pi/topic/v3.0.0%20beta%20testing/near/430134988" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Mike Rossiter <a href="https://leamas.github.io/zulip-archive/stream/349785-JavaScript_pi/topic/v3.2E0.2E0.20beta.20testing.html#430134988">(Mar 28 2024 at 18:02)</a>:</h4>
+<div class="codehilite"><pre><span></span><code>Tracing levels 123 - 123
+Degree prints as 
+result: undefined
+</code></pre></div>
+<div class="codehilite"><pre><span></span><code>L0  ------------------ Console JavaScript about to run
+L123    Before: Degree prints as 
+
+L123    After: Degree prints as 
+
+L0  ------------------ Console JavaScript wrapped up
+</code></pre></div>
+
+
+
+<a name="430135119"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/349785-JavaScript_pi/topic/v3.0.0%20beta%20testing/near/430135119" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Mike Rossiter <a href="https://leamas.github.io/zulip-archive/stream/349785-JavaScript_pi/topic/v3.2E0.2E0.20beta.20testing.html#430135119">(Mar 28 2024 at 18:02)</a>:</h4>
+<p>News and shower.</p>
+
+
+
+<hr><p>Last updated: Mar 28 2024 at 18:10 UTC</p>
 </html>
