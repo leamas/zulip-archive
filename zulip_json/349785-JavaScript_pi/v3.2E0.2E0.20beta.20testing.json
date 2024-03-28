@@ -2134,5 +2134,17 @@
         "id": 430061217,
         "sender_full_name": "Mike Rossiter",
         "timestamp": 1711630491
+    },
+    {
+        "content": "<p>Don't understand.  It is trying to read a file that  exists.  File string is correct.  Is the file still there?<br>\nIf stuck, you could in JSextensions.cpp change line 947 from<br>\n<code>pConsole-&gt;prep_for_throw(ctx, \"_wxFile unable to open file \" + filePath);</code><br>\nto<br>\n<code>pConsole-&gt;prep_for_throw(ctx, wxString::Format(\"_wxFile unable to open file %s error %d\", filePath, control.pFile-&gt;GetLastError()));\n</code><br>\nThis should add the error code to the error message.  This line compiles but I have not tested it - am on the go.<br>\nCode is platform dependent and you would need to interpret it.</p>\n<p>This all worked before,  and I have not changed anything there I think.  The test works fine for me on MacOS.  Hope you can find what is up.</p>",
+        "id": 430067756,
+        "sender_full_name": "Tony Voss",
+        "timestamp": 1711632685
+    },
+    {
+        "content": "<p>Have tested that change.  It does give the error number.  If I run with non existant file I get<br>\nerror 2.</p>",
+        "id": 430068405,
+        "sender_full_name": "Tony Voss",
+        "timestamp": 1711632888
     }
 ]
