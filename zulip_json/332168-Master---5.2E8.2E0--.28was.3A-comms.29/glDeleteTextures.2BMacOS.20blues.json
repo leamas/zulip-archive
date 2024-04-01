@@ -52,5 +52,41 @@
         "id": 430658407,
         "sender_full_name": "Alec Leamas",
         "timestamp": 1712003177
+    },
+    {
+        "content": "<p><span class=\"user-mention\" data-user-id=\"399510\">@Alec Leamas</span> <br>\nI resort to a screenshot of the crash, stack trace on lower left panel.<br>\n<a href=\"/user_uploads/33951/nMAK23ATIyiDplbRvLRnRpBS/Screenshot_20240401_162948.png\">Screenshot_20240401_162948.png</a></p>\n<div class=\"message_inline_image\"><a href=\"/user_uploads/33951/nMAK23ATIyiDplbRvLRnRpBS/Screenshot_20240401_162948.png\" title=\"Screenshot_20240401_162948.png\"><img src=\"/user_uploads/33951/nMAK23ATIyiDplbRvLRnRpBS/Screenshot_20240401_162948.png\"></a></div>",
+        "id": 430659005,
+        "sender_full_name": "Dave Register",
+        "timestamp": 1712003461
+    },
+    {
+        "content": "<p>Yes, RoutePoint calls a lambda defined in MyApp::OnInit().  The lambda does not catch anything in the closure, so I don't see any problem here (?)</p>",
+        "id": 430659324,
+        "sender_full_name": "Alec Leamas",
+        "timestamp": 1712003606
+    },
+    {
+        "content": "<p>It calls the lambda because of ocpn_app.cpp around  1790</p>",
+        "id": 430659508,
+        "sender_full_name": "Alec Leamas",
+        "timestamp": 1712003681
+    },
+    {
+        "content": "<p>Except that is has crashed due to EXC_BAD_ACCESS.  Unless I guard with if (g_bopengl).</p>\n<p>Now it is maybe theoretically possible that glDeleteTextures() is unknown if the gl context has not been setup, which is the case if running in no-GL mode.  But we only see this no-GL crash on Mac.  So...</p>",
+        "id": 430659828,
+        "sender_full_name": "Dave Register",
+        "timestamp": 1712003798
+    },
+    {
+        "content": "<p>hm... Perhaps clang has other ideas about a local lambda. hang on...</p>",
+        "id": 430660000,
+        "sender_full_name": "Alec Leamas",
+        "timestamp": 1712003860
+    },
+    {
+        "content": "<p>Does this chnage anything?</p>\n<div class=\"codehilite\"><pre><span></span><code>diff --git a/gui/src/ocpn_app.cpp b/gui/src/ocpn_app.cpp\nindex 37ec10ff9..a564417ec 100644\n--- a/gui/src/ocpn_app.cpp\n+++ b/gui/src/ocpn_app.cpp\n@@ -960,6 +960,16 @@ void MyApp::OnActivateApp(wxActivateEvent &amp;event) {\n\n static wxStopWatch init_sw;\n\n+  // Horrible Hack (tm): Make sure the RoutePoint destructor can invoke\n+  // glDeleteTextures. Truly awful.\n+#ifdef ocpnUSE_GL\n+   static auto delete_textures =\n+      [](unsigned n, const unsigned* texts) { glDeleteTextures(n, texts); };\n+#else\n+   static auto delete_textures = [](unsigned n, const unsigned* texts) { };\n+#endif\n+\n+\n int MyApp::OnRun() {\n   if (m_exitcode != -2) return m_exitcode;\n   return wxAppConsole::OnRun();\n@@ -1785,13 +1795,7 @@ bool MyApp::OnInit() {\n\n   // Horrible Hack (tm): Make sure the RoutePoint destructor can invoke\n   // glDeleteTextures. Truly awful.\n-#ifdef ocpnUSE_GL\n-  RoutePoint::delete_gl_textures =\n-      [](unsigned n, const unsigned* texts) { glDeleteTextures(n, texts); };\n-#else\n-  RoutePoint::delete_gl_textures = [](unsigned n, const unsigned* texts) { };\n-#endif\n-\n+  RoutePoint::delete_gl_textures = delete_textures;\n\n   if (g_start_fullscreen) gFrame-&gt;ToggleFullScreen();\n</code></pre></div>\n<p>Makes sure the  callback isn't referencing an automatic variable which is gone...</p>",
+        "id": 430660537,
+        "sender_full_name": "Alec Leamas",
+        "timestamp": 1712004118
     }
 ]

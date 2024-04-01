@@ -95,5 +95,82 @@ Why is that there?  I'm definitely confused.  I see a similar (sort of) definiti
 
 
 
-<hr><p>Last updated: Apr 01 2024 at 20:26 UTC</p>
+<a name="430659005"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332168-Master%20-%205.8.0%20%20%28was%3A%20comms%29/topic/glDeleteTextures%2BMacOS%20blues/near/430659005" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Dave Register <a href="https://leamas.github.io/zulip-archive/stream/332168-Master---5.2E8.2E0--.28was.3A-comms.29/topic/glDeleteTextures.2BMacOS.20blues.html#430659005">(Apr 01 2024 at 20:31)</a>:</h4>
+<p><span class="user-mention" data-user-id="399510">@Alec Leamas</span> <br>
+I resort to a screenshot of the crash, stack trace on lower left panel.<br>
+<a href="/user_uploads/33951/nMAK23ATIyiDplbRvLRnRpBS/Screenshot_20240401_162948.png">Screenshot_20240401_162948.png</a></p>
+<div class="message_inline_image"><a href="/user_uploads/33951/nMAK23ATIyiDplbRvLRnRpBS/Screenshot_20240401_162948.png" title="Screenshot_20240401_162948.png"><img src="/user_uploads/33951/nMAK23ATIyiDplbRvLRnRpBS/Screenshot_20240401_162948.png"></a></div>
+
+
+
+<a name="430659324"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332168-Master%20-%205.8.0%20%20%28was%3A%20comms%29/topic/glDeleteTextures%2BMacOS%20blues/near/430659324" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Alec Leamas <a href="https://leamas.github.io/zulip-archive/stream/332168-Master---5.2E8.2E0--.28was.3A-comms.29/topic/glDeleteTextures.2BMacOS.20blues.html#430659324">(Apr 01 2024 at 20:33)</a>:</h4>
+<p>Yes, RoutePoint calls a lambda defined in MyApp::OnInit().  The lambda does not catch anything in the closure, so I don't see any problem here (?)</p>
+
+
+
+<a name="430659508"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332168-Master%20-%205.8.0%20%20%28was%3A%20comms%29/topic/glDeleteTextures%2BMacOS%20blues/near/430659508" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Alec Leamas <a href="https://leamas.github.io/zulip-archive/stream/332168-Master---5.2E8.2E0--.28was.3A-comms.29/topic/glDeleteTextures.2BMacOS.20blues.html#430659508">(Apr 01 2024 at 20:34)</a>:</h4>
+<p>It calls the lambda because of ocpn_app.cpp around  1790</p>
+
+
+
+<a name="430659828"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332168-Master%20-%205.8.0%20%20%28was%3A%20comms%29/topic/glDeleteTextures%2BMacOS%20blues/near/430659828" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Dave Register <a href="https://leamas.github.io/zulip-archive/stream/332168-Master---5.2E8.2E0--.28was.3A-comms.29/topic/glDeleteTextures.2BMacOS.20blues.html#430659828">(Apr 01 2024 at 20:36)</a>:</h4>
+<p>Except that is has crashed due to EXC_BAD_ACCESS.  Unless I guard with if (g_bopengl).</p>
+<p>Now it is maybe theoretically possible that glDeleteTextures() is unknown if the gl context has not been setup, which is the case if running in no-GL mode.  But we only see this no-GL crash on Mac.  So...</p>
+
+
+
+<a name="430660000"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332168-Master%20-%205.8.0%20%20%28was%3A%20comms%29/topic/glDeleteTextures%2BMacOS%20blues/near/430660000" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Alec Leamas <a href="https://leamas.github.io/zulip-archive/stream/332168-Master---5.2E8.2E0--.28was.3A-comms.29/topic/glDeleteTextures.2BMacOS.20blues.html#430660000">(Apr 01 2024 at 20:37)</a>:</h4>
+<p>hm... Perhaps clang has other ideas about a local lambda. hang on...</p>
+
+
+
+<a name="430660537"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332168-Master%20-%205.8.0%20%20%28was%3A%20comms%29/topic/glDeleteTextures%2BMacOS%20blues/near/430660537" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Alec Leamas <a href="https://leamas.github.io/zulip-archive/stream/332168-Master---5.2E8.2E0--.28was.3A-comms.29/topic/glDeleteTextures.2BMacOS.20blues.html#430660537">(Apr 01 2024 at 20:41)</a>:</h4>
+<p>Does this chnage anything?</p>
+<div class="codehilite"><pre><span></span><code>diff --git a/gui/src/ocpn_app.cpp b/gui/src/ocpn_app.cpp
+index 37ec10ff9..a564417ec 100644
+--- a/gui/src/ocpn_app.cpp
++++ b/gui/src/ocpn_app.cpp
+@@ -960,6 +960,16 @@ void MyApp::OnActivateApp(wxActivateEvent &amp;event) {
+
+ static wxStopWatch init_sw;
+
++  // Horrible Hack (tm): Make sure the RoutePoint destructor can invoke
++  // glDeleteTextures. Truly awful.
++#ifdef ocpnUSE_GL
++   static auto delete_textures =
++      [](unsigned n, const unsigned* texts) { glDeleteTextures(n, texts); };
++#else
++   static auto delete_textures = [](unsigned n, const unsigned* texts) { };
++#endif
++
++
+ int MyApp::OnRun() {
+   if (m_exitcode != -2) return m_exitcode;
+   return wxAppConsole::OnRun();
+@@ -1785,13 +1795,7 @@ bool MyApp::OnInit() {
+
+   // Horrible Hack (tm): Make sure the RoutePoint destructor can invoke
+   // glDeleteTextures. Truly awful.
+-#ifdef ocpnUSE_GL
+-  RoutePoint::delete_gl_textures =
+-      [](unsigned n, const unsigned* texts) { glDeleteTextures(n, texts); };
+-#else
+-  RoutePoint::delete_gl_textures = [](unsigned n, const unsigned* texts) { };
+-#endif
+-
++  RoutePoint::delete_gl_textures = delete_textures;
+
+   if (g_start_fullscreen) gFrame-&gt;ToggleFullScreen();
+</code></pre></div>
+<p>Makes sure the  callback isn't referencing an automatic variable which is gone...</p>
+
+
+
+<hr><p>Last updated: Apr 01 2024 at 20:42 UTC</p>
 </html>
