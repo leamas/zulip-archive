@@ -1,0 +1,68 @@
+<html>
+<head><meta charset="utf-8"><title>glDeleteTextures+MacOS blues · Master - 5.8.0  (was: comms) · Zulip Chat Archive</title></head>
+<h2>Stream: <a href="https://leamas.github.io/zulip-archive/stream/332168-Master---5.2E8.2E0--.28was.3A-comms.29/index.html">Master - 5.8.0  (was: comms)</a></h2>
+<h3>Topic: <a href="https://leamas.github.io/zulip-archive/stream/332168-Master---5.2E8.2E0--.28was.3A-comms.29/topic/glDeleteTextures.2BMacOS.20blues.html">glDeleteTextures+MacOS blues</a></h3>
+
+<hr>
+
+<base href="https://opencpn.zulipchat.com">
+
+<head><link href="https://leamas.github.io/zulip-archive/style.css" rel="stylesheet"></head>
+
+<a name="430615136"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332168-Master%20-%205.8.0%20%20%28was%3A%20comms%29/topic/glDeleteTextures%2BMacOS%20blues/near/430615136" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Alec Leamas <a href="https://leamas.github.io/zulip-archive/stream/332168-Master---5.2E8.2E0--.28was.3A-comms.29/topic/glDeleteTextures.2BMacOS.20blues.html#430615136">(Apr 01 2024 at 15:49)</a>:</h4>
+<blockquote>
+<p>Is there no other way to do this "horrible hack"?</p>
+</blockquote>
+<p>There is always other ways.  But the core issue is IMHO what kind of "strange trouble" we are talking about.</p>
+<p>The background  for the hack is that  RoutePoint is a model object which is unaware of the <code> glDeleteTextures</code> method, but still need to free the  memory occupied by  for example m_dragIconTexture and m_iTextTexture.  These lives in the RoutePoint because they are accessed there, but here they are just plaint ints.</p>
+<p>A cleaner solution would be to move the m_dragIconTexture and m_iTextTexture to RoutePointGui.   While above my paygrade it would allow to get rid of the evil static destructor callback.  The problem is just the the gui object is transient -- all state is kept in the RoutePoint.</p>
+<p>However,  I don't really think this would solve this particular issue.  If using <code>if (g_bopengl)</code> actually solves the problem it probably means that some variable like  <code>m_dragIconTexture</code>  or <code>m_iTextTexture</code>  have inconsistent values if <code>g_bopengl</code>is false. And we then need to look on how these are initialized and modified to make sure they are handled correctly in this case. </p>
+<p>It would of course be helpful to understand more about what the cause this. If plain debugging does not work (I can see some problems here)  one could remove the guard and just remove one or two of the actual  invocations of <code>RoutePoint::delete_gl_textures</code> in <em>route_point.cpp</em>  to see which is failing.  After all, everything should run fine without them besides the obvious leak.</p>
+
+
+
+<a name="430615966"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332168-Master%20-%205.8.0%20%20%28was%3A%20comms%29/topic/glDeleteTextures%2BMacOS%20blues/near/430615966" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Alec Leamas <a href="https://leamas.github.io/zulip-archive/stream/332168-Master---5.2E8.2E0--.28was.3A-comms.29/topic/glDeleteTextures.2BMacOS.20blues.html#430615966">(Apr 01 2024 at 15:53)</a>:</h4>
+<div class="codehilite"><pre><span></span><code>= [](unsigned, const unsigned*) { assert(true); };
+</code></pre></div>
+<p>This does not make much sense; should be <code>= [](unsigned, const unsigned*) { };</code></p>
+
+
+
+<a name="430618124"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332168-Master%20-%205.8.0%20%20%28was%3A%20comms%29/topic/glDeleteTextures%2BMacOS%20blues/near/430618124" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Alec Leamas <a href="https://leamas.github.io/zulip-archive/stream/332168-Master---5.2E8.2E0--.28was.3A-comms.29/topic/glDeleteTextures.2BMacOS.20blues.html#430618124">(Apr 01 2024 at 16:04)</a>:</h4>
+<p>Looking at  <em>gui/src/RolloverWin.cpp</em> things looks messy.  </p>
+<p>The call to  to <code>glDeleteTextures</code></p>
+<div class="codehilite"><pre><span></span><code># ifdef ocpnUSE_GL
+  glDeleteTextures(1, &amp;m_texture);
+#endif
+</code></pre></div>
+<p>Modifed: </p>
+<div class="codehilite"><pre><span></span><code>#ifdef ocpnUSE_GL
+  if (usegl) {
+    if (!m_texture) {
+      glGenTextures(1, &amp;m_texture);
+
+      glBindTexture(g_texture_rectangle_format, m_texture);
+     [...]
+#endif
+</code></pre></div>
+<p>That is, <code>m_texture</code> might very well be modified even if <code>g_bopengl</code> is false.  Bad karma.</p>
+
+
+
+<a name="430618710"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332168-Master%20-%205.8.0%20%20%28was%3A%20comms%29/topic/glDeleteTextures%2BMacOS%20blues/near/430618710" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Notification Bot <a href="https://leamas.github.io/zulip-archive/stream/332168-Master---5.2E8.2E0--.28was.3A-comms.29/topic/glDeleteTextures.2BMacOS.20blues.html#430618710">(Apr 01 2024 at 16:07)</a>:</h4>
+<p>4 messages were moved here from <a class="stream-topic" data-stream-id="332168" href="/#narrow/stream/332168-Master---5.2E8.2E0--.28was.3A-comms.29/topic/PR.20.233765">#Master - 5.8.0  (was: comms) &gt; PR #3765</a> by <span class="user-mention silent" data-user-id="399510">Alec Leamas</span>.</p>
+
+
+
+<a name="430618814"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332168-Master%20-%205.8.0%20%20%28was%3A%20comms%29/topic/glDeleteTextures%2BMacOS%20blues/near/430618814" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Notification Bot <a href="https://leamas.github.io/zulip-archive/stream/332168-Master---5.2E8.2E0--.28was.3A-comms.29/topic/glDeleteTextures.2BMacOS.20blues.html#430618814">(Apr 01 2024 at 16:07)</a>:</h4>
+<p>2 messages were moved here from <a class="stream-topic" data-stream-id="361980" href="/#narrow/stream/361980-opencpn-commits/topic/OpenCPN.20.2F.20master">#opencpn-commits &gt; OpenCPN / master</a> by <span class="user-mention silent" data-user-id="399510">Alec Leamas</span>.</p>
+
+
+
+<hr><p>Last updated: Apr 01 2024 at 16:11 UTC</p>
+</html>
