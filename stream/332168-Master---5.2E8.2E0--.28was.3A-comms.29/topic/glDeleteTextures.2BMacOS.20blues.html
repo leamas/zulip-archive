@@ -70,5 +70,30 @@
 
 
 
-<hr><p>Last updated: Apr 01 2024 at 20:09 UTC</p>
+<a name="430657297"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332168-Master%20-%205.8.0%20%20%28was%3A%20comms%29/topic/glDeleteTextures%2BMacOS%20blues/near/430657297" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Dave Register <a href="https://leamas.github.io/zulip-archive/stream/332168-Master---5.2E8.2E0--.28was.3A-comms.29/topic/glDeleteTextures.2BMacOS.20blues.html#430657297">(Apr 01 2024 at 20:18)</a>:</h4>
+<p><span class="user-mention" data-user-id="399510">@Alec Leamas</span> <br>
+Very strange behavior.  It happens due to the line in RoutePoint DTOR.<br>
+Somehow, the code ends up at the definition of the lambda found in ocpn_app.cpp.<br>
+Why is that there?  I'm definitely confused.  I see a similar (sort of) definition in RoutePoint.cpp, but that only calls an Assert, for unknown reasons.<br>
+??</p>
+
+
+
+<a name="430658253"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332168-Master%20-%205.8.0%20%20%28was%3A%20comms%29/topic/glDeleteTextures%2BMacOS%20blues/near/430658253" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Alec Leamas <a href="https://leamas.github.io/zulip-archive/stream/332168-Master---5.2E8.2E0--.28was.3A-comms.29/topic/glDeleteTextures.2BMacOS.20blues.html#430658253">(Apr 01 2024 at 20:25)</a>:</h4>
+<p>It is as designed.</p>
+<p>RoutePoint need to call the OpenGL destructor routine, but RoutePoint is a model object which knows nothing about OpenGL. Hence,  the destructor helper is defined as a function object.</p>
+<p>By default this function does nothing, Actually, as I wrote it, it asserts(false). This is because the default implementation is not  intended to actually be used.</p>
+<p>At a later point ocpn_app i. e., MyApp sets the destructor helper to a lambda using the openGL routine. After this, RoutePoint can call the OpenGL  destructor  helper without being aware of (linked to) the gui.</p>
+
+
+
+<a name="430658407"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332168-Master%20-%205.8.0%20%20%28was%3A%20comms%29/topic/glDeleteTextures%2BMacOS%20blues/near/430658407" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Alec Leamas <a href="https://leamas.github.io/zulip-archive/stream/332168-Master---5.2E8.2E0--.28was.3A-comms.29/topic/glDeleteTextures.2BMacOS.20blues.html#430658407">(Apr 01 2024 at 20:26)</a>:</h4>
+<p>To summarize , RoutePoint basically defines a callback which is set by OcpnApp. So far I don't see any porblem here.</p>
+
+
+
+<hr><p>Last updated: Apr 01 2024 at 20:26 UTC</p>
 </html>

@@ -34,5 +34,23 @@
         "id": 430620307,
         "sender_full_name": "Alec Leamas",
         "timestamp": 1711988135
+    },
+    {
+        "content": "<p><span class=\"user-mention\" data-user-id=\"399510\">@Alec Leamas</span> <br>\nVery strange behavior.  It happens due to the line in RoutePoint DTOR.<br>\nSomehow, the code ends up at the definition of the lambda found in ocpn_app.cpp.<br>\nWhy is that there?  I'm definitely confused.  I see a similar (sort of) definition in RoutePoint.cpp, but that only calls an Assert, for unknown reasons.<br>\n??</p>",
+        "id": 430657297,
+        "sender_full_name": "Dave Register",
+        "timestamp": 1712002687
+    },
+    {
+        "content": "<p>It is as designed.</p>\n<p>RoutePoint need to call the OpenGL destructor routine, but RoutePoint is a model object which knows nothing about OpenGL. Hence,  the destructor helper is defined as a function object.</p>\n<p>By default this function does nothing, Actually, as I wrote it, it asserts(false). This is because the default implementation is not  intended to actually be used.</p>\n<p>At a later point ocpn_app i. e., MyApp sets the destructor helper to a lambda using the openGL routine. After this, RoutePoint can call the OpenGL  destructor  helper without being aware of (linked to) the gui.</p>",
+        "id": 430658253,
+        "sender_full_name": "Alec Leamas",
+        "timestamp": 1712003103
+    },
+    {
+        "content": "<p>To summarize , RoutePoint basically defines a callback which is set by OcpnApp. So far I don't see any porblem here.</p>",
+        "id": 430658407,
+        "sender_full_name": "Alec Leamas",
+        "timestamp": 1712003177
     }
 ]
