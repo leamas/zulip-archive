@@ -172,5 +172,26 @@ index 37ec10ff9..a564417ec 100644
 
 
 
-<hr><p>Last updated: Apr 01 2024 at 20:42 UTC</p>
+<a name="430662414"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332168-Master%20-%205.8.0%20%20%28was%3A%20comms%29/topic/glDeleteTextures%2BMacOS%20blues/near/430662414" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Dave Register <a href="https://leamas.github.io/zulip-archive/stream/332168-Master---5.2E8.2E0--.28was.3A-comms.29/topic/glDeleteTextures.2BMacOS.20blues.html#430662414">(Apr 01 2024 at 20:55)</a>:</h4>
+<p><span class="user-mention" data-user-id="399510">@Alec Leamas</span> <br>
+No change. Same crash signature.</p>
+
+
+
+<a name="430662424"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332168-Master%20-%205.8.0%20%20%28was%3A%20comms%29/topic/glDeleteTextures%2BMacOS%20blues/near/430662424" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Alec Leamas <a href="https://leamas.github.io/zulip-archive/stream/332168-Master---5.2E8.2E0--.28was.3A-comms.29/topic/glDeleteTextures.2BMacOS.20blues.html#430662424">(Apr 01 2024 at 20:55)</a>:</h4>
+<p>Hm... <a href="https://github.com/opencpn/OpenCPN/issues/2">#2</a>. Thinking while writing...</p>
+<p>The callback will use glDeleteTextures as long as <code>ocpnUSE_GL</code> is defined, g_bopengl  is no part of this decision. The crash is when g_bopengl is false. The idea is that the arguments <code>n</code>and <code>texts</code>both are 0 in this case, but if not?</p>
+<p>Logging (printing) <code>n</code> and <code>texts</code> in the lambda should reveal the truth here. Probably a good idea anyway until this is resolved.</p>
+
+
+
+<a name="430662528"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332168-Master%20-%205.8.0%20%20%28was%3A%20comms%29/topic/glDeleteTextures%2BMacOS%20blues/near/430662528" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Dave Register <a href="https://leamas.github.io/zulip-archive/stream/332168-Master---5.2E8.2E0--.28was.3A-comms.29/topic/glDeleteTextures.2BMacOS.20blues.html#430662528">(Apr 01 2024 at 20:56)</a>:</h4>
+<p>I'll try that.</p>
+
+
+
+<hr><p>Last updated: Apr 01 2024 at 21:07 UTC</p>
 </html>
