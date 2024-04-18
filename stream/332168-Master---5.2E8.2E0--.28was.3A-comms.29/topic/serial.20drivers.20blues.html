@@ -27,5 +27,13 @@ Namely, RX at 9600 and TX at 4800 is fundamentally unsupportable without a state
 
 
 
-<hr><p>Last updated: Apr 18 2024 at 05:28 UTC</p>
+<a name="433920854"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332168-Master%20-%205.8.0%20%20%28was%3A%20comms%29/topic/serial%20drivers%20blues/near/433920854" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Alec Leamas <a href="https://leamas.github.io/zulip-archive/stream/332168-Master---5.2E8.2E0--.28was.3A-comms.29/topic/serial.20drivers.20blues.html#433920854">(Apr 18 2024 at 05:36)</a>:</h4>
+<p>OK, I'll do some final testing and merge. Seems like I'm the only  one which can reproduce the core problem.  </p>
+<p>As for N2k, we should definitely fix the partial writes and the static mentioned in <a href="https://github.com/opencpn/OpenCPN/issues/3819">#3819</a>, the easy path would be to copy paste changes from <a href="https://github.com/opencpn/OpenCPN/issues/3819">#3819</a> after more testing. This is a no brainer and the likely starting point.   </p>
+<p>What's left then is the synchronizing, or lack thereof, in SendMessage. Since there is no need to throttle  here this could be done much simpler, but still needs to be done.</p>
+
+
+
+<hr><p>Last updated: Apr 18 2024 at 05:42 UTC</p>
 </html>
