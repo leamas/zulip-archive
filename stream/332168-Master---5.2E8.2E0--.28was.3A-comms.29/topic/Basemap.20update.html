@@ -72,5 +72,22 @@ e.g. </p>
 
 
 
-<hr><p>Last updated: Apr 19 2024 at 14:08 UTC</p>
+<a name="434371209"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332168-Master%20-%205.8.0%20%20%28was%3A%20comms%29/topic/Basemap%20update/near/434371209" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Dave Register <a href="https://leamas.github.io/zulip-archive/stream/332168-Master---5.2E8.2E0--.28was.3A-comms.29/topic/Basemap.20update.html#434371209">(Apr 19 2024 at 14:11)</a>:</h4>
+<p><span class="user-mention" data-user-id="522486">@Håkan Svensson</span> </p>
+<ol>
+<li>The new basemap code includes land detection code, but is untested in real life.</li>
+<li>You can change the colors locally if you like, to save your eyes.   The colors are set at:<p><code>void ShapeBaseChartSet::LoadBasemaps(const std::string &amp;dir)</code></p>
+</li>
+</ol>
+
+
+
+<a name="434372277"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332168-Master%20-%205.8.0%20%20%28was%3A%20comms%29/topic/Basemap%20update/near/434372277" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Pavel Kalian <a href="https://leamas.github.io/zulip-archive/stream/332168-Master---5.2E8.2E0--.28was.3A-comms.29/topic/Basemap.20update.html#434372277">(Apr 19 2024 at 14:16)</a>:</h4>
+<p>WeatherRouting does not care what basemap is being used, it just calls the API and asks whether land is crossed or not, so the change of basemap is transparent for it. The shapefiles of course will be available from the chart downloader, but first I need to implement the full production workflow. The colors are there just for the current testing phase so that it is apparent which basemap resolution is being used, we will simply use some similar to GSHHG color in the release for all of them. The performance intensive resolutions really are only high and full, the amount of detail grows pretty much exponentionally there as both smaller features are present (= many more polygons to render) and the simplification is less aggressive (= all the polygons have more edges)</p>
+
+
+
+<hr><p>Last updated: Apr 19 2024 at 14:28 UTC</p>
 </html>
