@@ -53,5 +53,24 @@ I loaded basemap-medium and that's very good so far. Well, on my Pi the green co
 
 
 
-<hr><p>Last updated: Apr 19 2024 at 13:42 UTC</p>
+<a name="434370399"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332168-Master%20-%205.8.0%20%20%28was%3A%20comms%29/topic/Basemap%20update/near/434370399" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Dave Register <a href="https://leamas.github.io/zulip-archive/stream/332168-Master---5.2E8.2E0--.28was.3A-comms.29/topic/Basemap.20update.html#434370399">(Apr 19 2024 at 14:07)</a>:</h4>
+<p><span class="user-mention" data-user-id="573239">@Pavel Kalian</span> <br>
+Windows build fail corrected, by removing<br>
+    libs/ShapefileCpp/lib/src/ShapefileWriter.cpp.<br>
+I guess we do not need that, at least right now.</p>
+<p>MSVC compiler does not like zero-length array initialization.<br>
+e.g. </p>
+<div class="codehilite"><pre><span></span><code>   SHPObject* ShapefileWriter::createPointObject(Point *pt) {
+    double x[1] = {pt-&gt;getX()};
+    double y[1] = {pt-&gt;getY()};
+    double z[1] = {pt-&gt;getZ()};
+    double m[1] = {pt-&gt;getM()};
+    int starts[0];                                        &lt;---------------- Error C2466
+    int types[0];
+</code></pre></div>
+
+
+
+<hr><p>Last updated: Apr 19 2024 at 14:08 UTC</p>
 </html>

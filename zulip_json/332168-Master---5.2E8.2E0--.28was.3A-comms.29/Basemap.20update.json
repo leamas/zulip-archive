@@ -28,5 +28,11 @@
         "id": 434362538,
         "sender_full_name": "Håkan Svensson",
         "timestamp": 1713533117
+    },
+    {
+        "content": "<p><span class=\"user-mention\" data-user-id=\"573239\">@Pavel Kalian</span> <br>\nWindows build fail corrected, by removing<br>\n    libs/ShapefileCpp/lib/src/ShapefileWriter.cpp.<br>\nI guess we do not need that, at least right now.</p>\n<p>MSVC compiler does not like zero-length array initialization.<br>\ne.g. </p>\n<div class=\"codehilite\"><pre><span></span><code>   SHPObject* ShapefileWriter::createPointObject(Point *pt) {\n    double x[1] = {pt-&gt;getX()};\n    double y[1] = {pt-&gt;getY()};\n    double z[1] = {pt-&gt;getZ()};\n    double m[1] = {pt-&gt;getM()};\n    int starts[0];                                        &lt;---------------- Error C2466\n    int types[0];\n</code></pre></div>",
+        "id": 434370399,
+        "sender_full_name": "Dave Register",
+        "timestamp": 1713535630
     }
 ]
