@@ -99,5 +99,94 @@ What is the end-game?</p>
 
 
 
-<hr><p>Last updated: Apr 26 2024 at 08:11 UTC</p>
+<a name="435538401"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/432618-OCPN%205.10%20Release%20plan/topic/Merge%20official%20and%20PPA%20toolchains/near/435538401" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Alec Leamas <a href="https://leamas.github.io/zulip-archive/stream/432618-OCPN-5.2E10-Release-plan/topic/Merge.20official.20and.20PPA.20toolchains.html#435538401">(Apr 26 2024 at 08:18)</a>:</h4>
+<p>Provisionary docs below. Parts of this is messy, in particular until things have stabilized. I just think I could point into this when needed.</p>
+<p>= Creating a Debian/Ubuntu package</p>
+<p>== General</p>
+<p>This page describes how to create .deb packages usable on Debian<br>
+based distros like vanilla Debian, Ubuntu, Raspbian, Mint, etc.</p>
+<p>Work is done on a Debian or Ubuntu host. The big picture</p>
+<ol>
+<li>Install necessary tools.</li>
+<li>Reorganize directory structure</li>
+<li>Update at least debian/changelog to create a new version</li>
+<li>Import the current master branch in upstream/latest</li>
+<li>Create testable packages</li>
+<li>(Optional) Upload packages to an Ubuntu PPA.</li>
+</ol>
+<p>== Install tools</p>
+<div class="codehilite"><pre><span></span><code>$ sudo apt install devscripts git-buildpackage equivs
+</code></pre></div>
+
+<p>== Reorganize directory structure</p>
+<p>The Debian tools creates things in the parent directory. To handle this, <br>
+create  new, empty directory and put the existing OpenCPN tree there. That <br>
+is, a typical path like <em>~/src/OpenCPN</em> should be modified to<br>
+<em>~/src/OpenCPN/OpenCPN</em> where <em>~/src/OpenCPN</em> should be empty besides<br>
+<em>~/src/OpenCPN/OpenCPN</em>.</p>
+<p>Likewise, when cloning OpenCPN do something like</p>
+<div class="codehilite"><pre><span></span><code>$ mkdir OpenCPN
+$ cd OpenCPN
+$ git clone ...
+</code></pre></div>
+
+<p>== Update  debian/changelog with a new version</p>
+<p><em>debian/changelog</em> is picky about the format. Editing by hand is hard. Instead,<br>
+use the <code>dch</code> tool. It has a multitude of options. The simplest is to create<br>
+a new, minor release using <code>dch -i</code>. </p>
+<p>dch throws you in an editor loaded with debian/changelog. Complete the entry<br>
+as you consider best (there are many conventions here, but for a local build<br>
+it's not that important).</p>
+<p>== Import the current master branch in upstream/latest</p>
+<p>For now, the debian directory needs to be removed. After that, create a<br>
+tarball based on current HEAD:</p>
+<div class="codehilite"><pre><span></span><code>$ git checkout master
+$ git switch -c tmp-build
+$ git rm -r debian
+$ git commit -m &quot;Remove unused debian/ dir&quot;
+$ git archive --prefix opencpn-1.2.3/ --output ../opencpn.tar.gz HEAD
+</code></pre></div>
+
+<p>The <code>--prefix</code> part should be modified to reflect current version, but is not<br>
+critical. Note the trailing slash!</p>
+<p>Next step is to convert the tarball to a formal debian source tarball. This <br>
+is about renaming and stripping files not used  in the Debian build. Do</p>
+<div class="codehilite"><pre><span></span><code>$ mk-origtargz ../opencpn.tar.gz
+</code></pre></div>
+
+<p>Where <em>../opencpn.tar.gz</em>  is the file created by <code>git archive</code> above. This<br>
+creates something like  <em>../opencpn_.5.10.920.orig.tar.gz</em>. The version in<br>
+the filename is read from debian/changelog</p>
+<p>The final step is to import this tarball into upstream/master. Using the<br>
+above do:</p>
+<p>$ gbp import-orig ../opencpn_.5.10.920.orig.tar.gz</p>
+<p>== Build packages</p>
+<p>The step above creates a tag named like <code>upstream/5.10.920</code> or so. Use <br>
+<code>git tag -l | grep upstream/</code> to find out the tag name. Then do</p>
+<div class="codehilite"><pre><span></span><code>$ gbp buildpackage --git-upstream-tag=upstream/whatever
+</code></pre></div>
+
+<p>This builds testable .deb packages in <em>..</em>.</p>
+<p>== Upload to PPA</p>
+<p>The artifact uploaded to an Ubuntu ppa is a <em>.source.changes</em> file.  This <br>
+is created using </p>
+<div class="codehilite"><pre><span></span><code>$ debuild -S
+</code></pre></div>
+
+<p>This requires that gpg signing keys is configured which is outside the scope<br>
+of this document. The command creates something like<br>
+<em>../opencpn.1.2.3.source.changes</em>.  Upload to a PPA using something like</p>
+<div class="codehilite"><pre><span></span><code>$ dput ppa:leamas-alec/opencpn ../opencpn.1.2.3.source.changes
+</code></pre></div>
+
+
+
+<a name="435539038"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/432618-OCPN%205.10%20Release%20plan/topic/Merge%20official%20and%20PPA%20toolchains/near/435539038" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Alec Leamas <a href="https://leamas.github.io/zulip-archive/stream/432618-OCPN-5.2E10-Release-plan/topic/Merge.20official.20and.20PPA.20toolchains.html#435539038">(Apr 26 2024 at 08:22)</a>:</h4>
+<p>... and of course I'll do the messy parts.</p>
+
+
+
+<hr><p>Last updated: Apr 26 2024 at 08:28 UTC</p>
 </html>
