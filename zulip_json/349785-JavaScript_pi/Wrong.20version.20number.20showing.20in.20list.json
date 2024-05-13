@@ -10,5 +10,17 @@
         "id": 438380607,
         "sender_full_name": "Tony Voss",
         "timestamp": 1715611473
+    },
+    {
+        "content": "<p>The filenames are irrelevant, could be anything. </p>\n<p>The two things used are the value in the metadata and the value returned by  GetPlugInVersionMajor(), GetPlugInVersionMinor() + GetPlugInVersionPatch() and friends in the API.</p>\n<p>You  should check the metadata in the metadata file,  the only xml file created in the build directory.  Here you have a <code>&lt;version&gt;</code>  tag to check; this is what is used when th plugin is not installed. </p>\n<p>The core issue here is that the tag does not match PKG_VERSION.  The tag is used when not installed, PKG_VERSION once it is installed.</p>\n<p>[could be shorter reply, I know. Thinking as I type]</p>",
+        "id": 438418819,
+        "sender_full_name": "Alec Leamas",
+        "timestamp": 1715623244
+    },
+    {
+        "content": "<p>The intended workflow:</p>\n<ol>\n<li>Release a version, say 1.2.1</li>\n<li>start working on 1.2.2. At this point update PKG_VERSION</li>\n<li>Make test builds using automated git versions, fix things.</li>\n<li>When done, tag the last working build with 1.2.2 or v1.2.2</li>\n<li>Rinse and repeat.</li>\n</ol>",
+        "id": 438419742,
+        "sender_full_name": "Alec Leamas",
+        "timestamp": 1715623542
     }
 ]
