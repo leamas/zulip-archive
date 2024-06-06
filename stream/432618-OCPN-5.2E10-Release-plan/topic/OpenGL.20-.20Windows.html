@@ -68,5 +68,35 @@ OCPN 5.9 present Git<br>
 
 
 
-<hr><p>Last updated: Jun 06 2024 at 17:42 UTC</p>
+<a name="443122593"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/432618-OCPN%205.10%20Release%20plan/topic/OpenGL%20-%20Windows/near/443122593" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Pavel Kalian <a href="https://leamas.github.io/zulip-archive/stream/432618-OCPN-5.2E10-Release-plan/topic/OpenGL.20-.20Windows.html#443122593">(Jun 06 2024 at 17:49)</a>:</h4>
+<p>Because it is able to create the OpenGL context</p>
+
+
+
+<a name="443123876"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/432618-OCPN%205.10%20Release%20plan/topic/OpenGL%20-%20Windows/near/443123876" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Dan Dickey <a href="https://leamas.github.io/zulip-archive/stream/432618-OCPN-5.2E10-Release-plan/topic/OpenGL.20-.20Windows.html#443123876">(Jun 06 2024 at 17:56)</a>:</h4>
+<p><span class="user-mention silent" data-user-id="573239">Pavel Kalian</span> <a href="#narrow/stream/432618-OCPN-5.2E10-Release-plan/topic/OpenGL.20-.20Windows/near/443105640">said</a>:</p>
+<blockquote>
+<p>BTW, <code>GDI Generic</code> means drivers for the actual GPU are completely missing, we can probably just consider that to be OpenGL incapable.</p>
+</blockquote>
+<p>I think a generic driver could be a disqualifying condition for OpenGL compatibility on Windows. Not sure about other platforms where OpenGL may not  be running on real hardware. But I would expect any system like that should support something later than V1.1.0.</p>
+<p>So maybe a combined generic driver and revision check should be considered. </p>
+<p>I have considered some kind of hack to detect crashes of OpenGL similar to the lock file hack for starting O on safe mode. It might be proudest to add a lock file feature that is activated before OpenGL is initialized and then remove the lock file a bit later once we know OpenGL did not crash.</p>
+
+
+
+<a name="443124003"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/432618-OCPN%205.10%20Release%20plan/topic/OpenGL%20-%20Windows/near/443124003" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Dan Dickey <a href="https://leamas.github.io/zulip-archive/stream/432618-OCPN-5.2E10-Release-plan/topic/OpenGL.20-.20Windows.html#443124003">(Jun 06 2024 at 17:57)</a>:</h4>
+<p>Prudent, not proudest…</p>
+
+
+
+<a name="443124324"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/432618-OCPN%205.10%20Release%20plan/topic/OpenGL%20-%20Windows/near/443124324" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Pavel Kalian <a href="https://leamas.github.io/zulip-archive/stream/432618-OCPN-5.2E10-Release-plan/topic/OpenGL.20-.20Windows.html#443124324">(Jun 06 2024 at 17:58)</a>:</h4>
+<p>That is what <code>opencpn-glutil</code> is for, it should do stuff that leads to a crash and prevent the real application from needing this at all.</p>
+
+
+
+<hr><p>Last updated: Jun 06 2024 at 18:11 UTC</p>
 </html>
