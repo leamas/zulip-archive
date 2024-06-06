@@ -1,0 +1,51 @@
+<html>
+<head><meta charset="utf-8"><title>OpenGL - Windows · OCPN 5.10 Release plan · Zulip Chat Archive</title></head>
+<h2>Stream: <a href="https://leamas.github.io/zulip-archive/stream/432618-OCPN-5.2E10-Release-plan/index.html">OCPN 5.10 Release plan</a></h2>
+<h3>Topic: <a href="https://leamas.github.io/zulip-archive/stream/432618-OCPN-5.2E10-Release-plan/topic/OpenGL.20-.20Windows.html">OpenGL - Windows</a></h3>
+
+<hr>
+
+<base href="https://opencpn.zulipchat.com">
+
+<head><link href="https://leamas.github.io/zulip-archive/style.css" rel="stylesheet"></head>
+
+<a name="443100254"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/432618-OCPN%205.10%20Release%20plan/topic/OpenGL%20-%20Windows/near/443100254" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Håkan Svensson <a href="https://leamas.github.io/zulip-archive/stream/432618-OCPN-5.2E10-Release-plan/topic/OpenGL.20-.20Windows.html#443100254">(Jun 06 2024 at 16:05)</a>:</h4>
+<p>We have got a revised handling of OpenGL in Git 5.9.<br>
+A friend of my have tested on a dated Win10 creating a crash at start and it seems we  now ignore settings in config and force OpenGL to be always used. <br>
+Alternatively is the (new?) OpenGL check not correct?</p>
+<p>Since OpenGL option is grayed out in Options-&gt;Show-&gt;Advanced I suppose these settings are present. (i.e. a guess and config file is not available.)<br>
+OpenGL=0  (Not sure about this)<br>
+DisableOpenGL=1</p>
+<p>Here are three log file examples from different O versions. The "old" are working, wo OG, present master 5.9 crashes at start.</p>
+<p>OCPN 5.8.4<br>
+OpenGL is not used<br>
+20:45:36.925 MESSAGE ocpn_frame.cpp:839  **** Connect stuff<br>
+20:45:36.949 MESSAGE chcanv.cpp:2398 Metrics:  m_display_size_mm: 531     g_Platform-&gt;getDisplaySize():  1920:1080   <br>
+20:45:36.949 MESSAGE chcanv.cpp:2403 wxDisplaySize(): 1920 1080</p>
+<p>OCPN 5.9 from februari<br>
+OpenGL is not used<br>
+11:17:42.573 MESSAGE ocpn_frame.cpp:732  **** Connect stuff<br>
+11:17:42.604 MESSAGE chcanv.cpp:2370 Metrics:  m_display_size_mm: 535     g_Platform-&gt;getDisplaySize():  1920:1080   <br>
+11:17:42.604 MESSAGE chcanv.cpp:2376 monitor size: 1920 1080</p>
+<p>Here it seems OpenGL config settings are neglected and OpenGL is found "CAPABLE" although version is 1.1.0!<br>
+OCPN 5.9 present Git<br>
+08:54:37.714 MESSAGE ocpn_frame.cpp:737  **** Connect stuff<br>
+08:54:37.714 MESSAGE OCPNPlatform.cpp:904 Starting OpenGL test...<br>
+08:54:37.714 MESSAGE OCPNPlatform.cpp:725 Starting OpenGL test utility: "C:\Program Files (x86)\OpenCPN\opencpn-glutil.exe" opengl-info "C:\ProgramData\opencpn\gl_caps.json"<br>
+08:54:39.117 MESSAGE OCPNPlatform.cpp:911 OpenGL test complete.<br>
+08:54:39.117 MESSAGE OCPNPlatform.cpp:933 OpenGL determined CAPABLE.<br>
+08:54:39.180 MESSAGE chcanv.cpp:938 Creating glChartCanvas<br>
+08:54:39.180 MESSAGE chcanv.cpp:938 Creating glChartCanvas<br>
+08:54:39.218 MESSAGE chcanv.cpp:2315 Metrics:  m_display_size_mm: 535     g_Platform-&gt;getDisplaySize():  1920:1080   <br>
+08:54:39.218 MESSAGE chcanv.cpp:2321 monitor size: 1920 1080<br>
+.....<br>
+08:54:39.790 MESSAGE ocpn_app.cpp:1843 OpenCPN initierades på 2329 ms.<br>
+08:54:40.339 MESSAGE glChartCanvas.cpp:1048 OpenGL-&gt; Renderer String: GDI Generic<br>
+08:54:40.339 MESSAGE glChartCanvas.cpp:1057 OpenGL-&gt; Version reported:  1.1.0<br>
+-- O Crash</p>
+
+
+
+<hr><p>Last updated: Jun 06 2024 at 16:11 UTC</p>
+</html>
