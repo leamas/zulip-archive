@@ -43,5 +43,26 @@ As far as I'm concerned we should implement Tony's request and of course bump th
 
 
 
-<hr><p>Last updated: Jun 11 2024 at 13:42 UTC</p>
+<a name="444004575"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/432618-OCPN%205.10%20Release%20plan/topic/Plugin%20API%20version/near/444004575" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Alec Leamas <a href="https://leamas.github.io/zulip-archive/stream/432618-OCPN-5.2E10-Release-plan/topic/Plugin.20API.20version.html#444004575">(Jun 11 2024 at 13:48)</a>:</h4>
+<p>The relevant diff against Release_5.8.4 (besides some formatting and changes without affecting functionality), at the end:</p>
+<div class="codehilite"><pre><span></span><code>+
++// API 1.19
++//
++
++/** Facade for NavAddrPluginMsg. */
++struct PluginMsgId {
++  const std::string id;
++  PluginMsgId(const std::string &amp;s) : id(s){};
++};
++
++extern DECL_EXP std::shared_ptr&lt;ObservableListener&gt; GetListener(
++    PluginMsgId id, wxEventType ev, wxEvtHandler *handler);
++
++extern DECL_EXP std::string GetPluginMsgPayload(PluginMsgId id, ObservedEvt ev);
+</code></pre></div>
+
+
+
+<hr><p>Last updated: Jun 11 2024 at 14:09 UTC</p>
 </html>
