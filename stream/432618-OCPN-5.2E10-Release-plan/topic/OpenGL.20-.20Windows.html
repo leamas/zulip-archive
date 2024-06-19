@@ -195,5 +195,60 @@ This for info. I've requested the log file. I'm back here when received.</p>
 
 
 
-<hr><p>Last updated: Jun 19 2024 at 09:42 UTC</p>
+<a name="445549907"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/432618-OCPN%205.10%20Release%20plan/topic/OpenGL%20-%20Windows/near/445549907" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Håkan Svensson <a href="https://leamas.github.io/zulip-archive/stream/432618-OCPN-5.2E10-Release-plan/topic/OpenGL.20-.20Windows.html#445549907">(Jun 19 2024 at 09:44)</a>:</h4>
+<p><span class="user-mention" data-user-id="573239">@Pavel Kalian</span> <span class="user-mention" data-user-id="517002">@Dave Register</span> <br>
+Log file from the user received. It's still similar log entries as before. Extracts below.<br>
+O version 5.9.1.10 is my build from yesterday including:</p>
+<div class="codehilite"><pre><span></span><code>#ifdef _WIN32
+    if (v[&quot;GL_RENDERER&quot;].AsString() ==
+        &quot;GDI Generic&quot;) {  // Windows software renderer is known to be unusable
+                          // and causes crashes
+      v[&quot;GL_USABLE&quot;] = false;
+</code></pre></div>
+<p>Log file extract:</p>
+<div class="codehilite"><pre><span></span><code>10:45:21.512    INFO logger.cpp:130 ------- OpenCPN version 5.9.1.10 restarted at 2024-06-19 -------
+
+10:45:21.512    INFO logger.cpp:130 Using loglevel INFO
+10:45:21.512 MESSAGE ocpn_app.cpp:1150 wxWidgets version: wxWidgets 3.2.5 Microsoft Windows NT 64 bit wxMSW
+10:45:21.512 MESSAGE ocpn_app.cpp:1155 OS Version reports as:  10.0
+10:45:21.512 MESSAGE ocpn_app.cpp:1157 MemoryStatus:  mem_total: 8109 mb,  mem_initial: 22 mb
+10:45:21.513 MESSAGE ocpn_app.cpp:1169 OCPN_OSDetail:  x86_64 ; msvc-wx32 ; 10.0.19045 ;  ;
+10:45:21.513 MESSAGE ocpn_app.cpp:1173 SData_Locn is C:\Program Files (x86)\OpenCPN\
+10:45:21.513 MESSAGE ocpn_app.cpp:1191 PrivateDataDir is C:\ProgramData\opencpn
+10:45:21.513 MESSAGE ocpn_app.cpp:1257 Using existing Config_File: C:\ProgramData\opencpn\opencpn.ini
+10:45:21.544 MESSAGE navutil.cpp:1267 winPluginDir, read from ini file:
+...........
+10:45:21.765 MESSAGE ocpn_frame.cpp:737  **** Connect stuff
+10:45:21.765 MESSAGE OCPNPlatform.cpp:913 Starting OpenGL test...
+10:45:21.765 MESSAGE OCPNPlatform.cpp:725 Starting OpenGL test utility: &quot;C:\Program Files (x86)\OpenCPN\opencpn-glutil.exe&quot; opengl-info &quot;C:\ProgramData\opencpn\gl_caps.json&quot;
+10:45:23.416 MESSAGE OCPNPlatform.cpp:920 OpenGL test complete.
+10:45:23.416 MESSAGE OCPNPlatform.cpp:942 OpenGL determined CAPABLE.
+10:45:23.500 MESSAGE chcanv.cpp:946 Creating glChartCanvas
+10:45:23.547 MESSAGE chcanv.cpp:2323 Metrics:  m_display_size_mm: 535     g_Platform-&gt;getDisplaySize():  1920:1080
+10:45:23.547 MESSAGE chcanv.cpp:2329 monitor size: 1920 1080
+..........
+10:45:24.405 MESSAGE ocpn_app.cpp:1850 OpenCPN initierades på 5586 ms.
+10:45:24.953 MESSAGE glChartCanvas.cpp:1048 OpenGL-&gt; Renderer String: GDI Generic
+10:45:24.953 MESSAGE glChartCanvas.cpp:1057 OpenGL-&gt; Version reported:  1.1.0
+&gt;&gt;Crash
+</code></pre></div>
+
+
+
+<a name="445550600"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/432618-OCPN%205.10%20Release%20plan/topic/OpenGL%20-%20Windows/near/445550600" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Pavel Kalian <a href="https://leamas.github.io/zulip-archive/stream/432618-OCPN-5.2E10-Release-plan/topic/OpenGL.20-.20Windows.html#445550600">(Jun 19 2024 at 09:48)</a>:</h4>
+<p>Build from which branch? Are you sure it includes the change? What is in his <code>gl_caps.json</code>?</p>
+
+
+
+<a name="445551173"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/432618-OCPN%205.10%20Release%20plan/topic/OpenGL%20-%20Windows/near/445551173" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Håkan Svensson <a href="https://leamas.github.io/zulip-archive/stream/432618-OCPN-5.2E10-Release-plan/topic/OpenGL.20-.20Windows.html#445551173">(Jun 19 2024 at 09:52)</a>:</h4>
+<p>Built from master.<br>
+My code copy above is from "my" console.cpp : 206<br>
+I'll ask for a copy of his gl_caps.json</p>
+
+
+
+<hr><p>Last updated: Jun 19 2024 at 10:10 UTC</p>
 </html>
