@@ -1,0 +1,63 @@
+<html>
+<head><meta charset="utf-8"><title>First start Wizard status · OCPN 5.10 Release plan · Zulip Chat Archive</title></head>
+<h2>Stream: <a href="https://leamas.github.io/zulip-archive/stream/432618-OCPN-5.2E10-Release-plan/index.html">OCPN 5.10 Release plan</a></h2>
+<h3>Topic: <a href="https://leamas.github.io/zulip-archive/stream/432618-OCPN-5.2E10-Release-plan/topic/First.20start.20Wizard.20status.html">First start Wizard status</a></h3>
+
+<hr>
+
+<base href="https://opencpn.zulipchat.com">
+
+<head><link href="https://leamas.github.io/zulip-archive/style.css" rel="stylesheet"></head>
+
+<a name="446408650"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/432618-OCPN%205.10%20Release%20plan/topic/First%20start%20Wizard%20status/near/446408650" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Håkan Svensson <a href="https://leamas.github.io/zulip-archive/stream/432618-OCPN-5.2E10-Release-plan/topic/First.20start.20Wizard.20status.html#446408650">(Jun 23 2024 at 11:22)</a>:</h4>
+<p><span class="user-mention" data-user-id="573239">@Pavel Kalian</span>  Thanks for the typo "Label" fix. Now OK.<br>
+@ All<br>
+Wizard on a Rpi400 Bookworm -X11<br>
+O crashes while searching for connections.<br>
+Today's Git master.</p>
+<p>The system from O's perspective:<br>
+11:15:46.106 MESSAGE ocpn_app.cpp:1150 wxWidgets version: wxWidgets 3.2.2 Linux 64 bit wxGTK<br>
+11:15:46.108 MESSAGE ocpn_app.cpp:1155 OS Version reports as:  6.6<br>
+11:15:46.108 MESSAGE ocpn_app.cpp:1157 MemoryStatus:  mem_total: 4041 mb,  mem_initial: 101 mb<br>
+11:15:46.108 MESSAGE ocpn_app.cpp:1169 OCPN_OSDetail:  arm64 ; Debian GNU/Linux ; 12 ; debian ; </p>
+<div class="codehilite"><pre><span></span><code>Reading symbols from opencpn...
+(gdb) run -W
+Starting program: /home/pi/builds/OpenCPN/build/opencpn -W
+................
+New Thread 0x7fdd059a80 (LWP 62112)]
+Opened 2 sockets for mDNS query
+Sending mDNS query : _signalk-ws._tcp.local. PTR
+Reading mDNS query replies
+[Thread 0x7fdda4ca80 (LWP 62101) exited]
+Read 9 records
+Closed sockets
+[Thread 0x7fdd059a80 (LWP 62112) exited]
+Unhandled unknown exception; terminating the application.
+
+Thread 1 &quot;opencpn&quot; received signal SIGSEGV, Segmentation fault.
+0x0000007ff743e3b8 in ?? () from /lib/aarch64-linux-gnu/libwx_gtk3u_core-3.2.so.0
+(gdb) bt
+#0  0x0000007ff743e3b8 in  () at /lib/aarch64-linux-gnu/libwx_gtk3u_core-3.2.so.0
+#1  0x0000007ff6fa4430 in wxMBConv::FromWChar(char*, unsigned long, wchar_t const*, unsigned long) const ()
+    at /lib/aarch64-linux-gnu/libwx_baseu-3.2.so.0
+#2  0x0000007ff6faf6e4 in wxString::AsChar(wxMBConv const&amp;) const () at /lib/aarch64-linux-gnu/libwx_baseu-3.2.so.0
+#3  0x0000007ff7021e40 in  () at /lib/aarch64-linux-gnu/libwx_baseu-3.2.so.0
+#4  0x0000007ff7022f7c in wxSingleInstanceChecker::~wxSingleInstanceChecker() () at /lib/aarch64-linux-gnu/libwx_baseu-3.2.so.0
+#5  0x0000005555d3be4c in WxInstanceCheck::~WxInstanceCheck() (this=&lt;optimized out&gt;, __in_chrg=&lt;optimized out&gt;)
+    at /home/pi/builds/OpenCPN/model/include/model/wx_instance_chk.h:32
+#6  0x0000007ff589cecc in __run_exit_handlers
+    (status=-1, listp=0x7ff5a00750 &lt;__exit_funcs&gt;, run_list_atexit=run_list_atexit@entry=true, run_dtors=run_dtors@entry=true)
+    at ./stdlib/exit.c:116
+#7  0x0000007ff589cfa0 in __GI_exit (status=&lt;optimized out&gt;) at ./stdlib/exit.c:146
+#8  0x0000007ff5887784 in __libc_start_call_main (main=main@entry=0x55557e9620 &lt;main(int, char**)&gt;, argc=argc@entry=2, argv=argv@entry=0x7ffffff088)
+    at ../sysdeps/nptl/libc_start_call_main.h:74
+#9  0x0000007ff5887858 in __libc_start_main_impl
+    (main=0x55557e9620 &lt;main(int, char**)&gt;, argc=2, argv=0x7ffffff088, init=&lt;optimized out&gt;, fini=&lt;optimized out&gt;, rtld_fini=&lt;optimized out&gt;, stack_end=&lt;optimized out&gt;) at ../csu/libc-start.c:360
+#10 0x00000055558019b0 in _start ()
+</code></pre></div>
+
+
+
+<hr><p>Last updated: Jun 23 2024 at 11:42 UTC</p>
+</html>
