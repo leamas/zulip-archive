@@ -59,5 +59,39 @@ Thread 1 &quot;opencpn&quot; received signal SIGSEGV, Segmentation fault.
 
 
 
-<hr><p>Last updated: Jun 23 2024 at 21:08 UTC</p>
+<a name="446474314"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/432618-OCPN%205.10%20Release%20plan/topic/First%20start%20Wizard%20status/near/446474314" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Håkan Svensson <a href="https://leamas.github.io/zulip-archive/stream/432618-OCPN-5.2E10-Release-plan/topic/First.20start.20Wizard.20status.html#446474314">(Jun 23 2024 at 21:08)</a>:</h4>
+<p><span class="user-mention" data-user-id="517002">@Dave Register</span> <br>
+Some tracing on the Rpi4.<br>
+If I don't run "EnumerateTCP() " (i.e. return: at wiz_ui.cpp row 429) then the Wizard connection runs wo crash and detect others. (3 of Signalk, GPSd (but not a Canable USB))</p>
+<p>If I run original code with debug I get this:</p>
+<div class="codehilite"><pre><span></span><code>pi@openplotter:~/builds/OpenCPN/build $ ./opencpn -W --loglevel debug
+Opened 3 sockets for mDNS query
+Sending mDNS query : _signalk-ws._tcp.local. PTR
+Reading mDNS query replies
+Read 64 records
+Closed sockets
+Unhandled unknown exception; terminating the application.
+22:53:49: Debug: Stopping REST service
+22:53:27: Debug: Local IPv4 address: 192.168.1.154
+22:53:27: Debug: Local IPv6 address: 2001:2042:7535:bd00:6520:70a1:fc87:6307
+22:53:27: Debug: Local IPv6 address: 2001:2042:7535:bd00:cfad:ca5b:c6b0:8e44
+Segmentation fault
+</code></pre></div>
+
+
+
+<a name="446474576"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/432618-OCPN%205.10%20Release%20plan/topic/First%20start%20Wizard%20status/near/446474576" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Håkan Svensson <a href="https://leamas.github.io/zulip-archive/stream/432618-OCPN-5.2E10-Release-plan/topic/First.20start.20Wizard.20status.html#446474576">(Jun 23 2024 at 21:12)</a>:</h4>
+<p>Btw: I get the same crash on a RPi5 running:  ./opencpn -W</p>
+
+
+
+<a name="446474866"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/432618-OCPN%205.10%20Release%20plan/topic/First%20start%20Wizard%20status/near/446474866" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Pavel Kalian <a href="https://leamas.github.io/zulip-archive/stream/432618-OCPN-5.2E10-Release-plan/topic/First.20start.20Wizard.20status.html#446474866">(Jun 23 2024 at 21:16)</a>:</h4>
+<p>Does the SocketCAN device (eg. <code>can0</code>) for CANable exist?</p>
+
+
+
+<hr><p>Last updated: Jun 23 2024 at 21:24 UTC</p>
 </html>
