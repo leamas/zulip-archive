@@ -171,5 +171,31 @@ So I guess the present crash is from any recently changed code or other circumst
 
 
 
-<hr><p>Last updated: Jun 25 2024 at 03:42 UTC</p>
+<a name="446770913"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/432618-OCPN%205.10%20Release%20plan/topic/First%20start%20Wizard%20status/near/446770913" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Dave Register <a href="https://leamas.github.io/zulip-archive/stream/432618-OCPN-5.2E10-Release-plan/topic/First.20start.20Wizard.20status.html#446770913">(Jun 25 2024 at 03:59)</a>:</h4>
+<p>Pavel...<br>
+Did some remote debugging of Hakan's machine.</p>
+<ol>
+<li>The problem happens in EnumerateTCP.</li>
+<li>The client connects to a valid server.  Local network port.</li>
+<li>The client-&gt;Read() returns without filling in any data in the buffer. Still 256 bytes of 0x00, from memset().</li>
+<li>The right-hand-side null trim is over-zealous, reduces "len" to (-1).</li>
+<li>The line std::string data(buff, len) faults, since len is (-1).  Reasonable.</li>
+</ol>
+<p>Root cause?  Dunno.</p>
+<ol>
+<li>I tried increasing the timeout to 4 secs..  No help.  </li>
+<li>Running OCPN without wizard, and with this offending TCP feed active, seems fine.  N0183 data looks fine.</li>
+</ol>
+<p>Stumped at the moment.</p>
+
+
+
+<a name="446771091"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/432618-OCPN%205.10%20Release%20plan/topic/First%20start%20Wizard%20status/near/446771091" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Dave Register <a href="https://leamas.github.io/zulip-archive/stream/432618-OCPN-5.2E10-Release-plan/topic/First.20start.20Wizard.20status.html#446771091">(Jun 25 2024 at 04:00)</a>:</h4>
+<p>BTW, I am debugging over VNC link, using ddd/gdb.  Slow but reliable.</p>
+
+
+
+<hr><p>Last updated: Jun 25 2024 at 04:11 UTC</p>
 </html>

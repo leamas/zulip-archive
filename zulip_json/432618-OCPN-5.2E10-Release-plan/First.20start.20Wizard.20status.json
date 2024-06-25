@@ -88,5 +88,17 @@
         "id": 446715249,
         "sender_full_name": "Pavel Kalian",
         "timestamp": 1719262104
+    },
+    {
+        "content": "<p>Pavel...<br>\nDid some remote debugging of Hakan's machine.</p>\n<ol>\n<li>The problem happens in EnumerateTCP.</li>\n<li>The client connects to a valid server.  Local network port.</li>\n<li>The client-&gt;Read() returns without filling in any data in the buffer. Still 256 bytes of 0x00, from memset().</li>\n<li>The right-hand-side null trim is over-zealous, reduces \"len\" to (-1).</li>\n<li>The line std::string data(buff, len) faults, since len is (-1).  Reasonable.</li>\n</ol>\n<p>Root cause?  Dunno.</p>\n<ol>\n<li>I tried increasing the timeout to 4 secs..  No help.  </li>\n<li>Running OCPN without wizard, and with this offending TCP feed active, seems fine.  N0183 data looks fine.</li>\n</ol>\n<p>Stumped at the moment.</p>",
+        "id": 446770913,
+        "sender_full_name": "Dave Register",
+        "timestamp": 1719287944
+    },
+    {
+        "content": "<p>BTW, I am debugging over VNC link, using ddd/gdb.  Slow but reliable.</p>",
+        "id": 446771091,
+        "sender_full_name": "Dave Register",
+        "timestamp": 1719288042
     }
 ]
