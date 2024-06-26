@@ -307,5 +307,40 @@ I will later see if Wireshark can provide more data. I'll get back here in that 
 
 
 
-<hr><p>Last updated: Jun 26 2024 at 00:42 UTC</p>
+<a name="447039395"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/432618-OCPN%205.10%20Release%20plan/topic/First%20start%20Wizard%20status/near/447039395" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Dave Register <a href="https://leamas.github.io/zulip-archive/stream/432618-OCPN-5.2E10-Release-plan/topic/First.20start.20Wizard.20status.html#447039395">(Jun 26 2024 at 01:39)</a>:</h4>
+<p>And so I did more debugging on Hakan's system, Windows this time.<br>
+Looking at enumerateSignalk().<br>
+I find that on Windows, no MDNS query is sent, so of course no sK datastream is found.<br>
+Testing same on my local Win10 box.  Same trouble.  No  usable network interfaces found, so no mDNS query sent.<br>
+boils down finally to :</p>
+<div class="codehilite"><pre><span></span><code>static inline int
+mdns_socket_open_ipv4(const struct sockaddr_in* saddr) {
+int sock = (int)socket(AF_INET, SOCK_DGRAM, IPPROTO_UDP);
+if (sock &lt; 0)
+    return -1;
+if (mdns_socket_setup_ipv4(sock, saddr)) {
+    mdns_socket_close(sock);
+    return -1;
+}
+return sock;
+}
+</code></pre></div>
+
+<p>The socket cannot be created.  "socke()" call returns "-1". Now that line looks pretty benign.  the saddr parm is the ip for the box itself, not LOCALHOST.<br>
+Stumped again.</p>
+
+
+
+<a name="447040944"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/432618-OCPN%205.10%20Release%20plan/topic/First%20start%20Wizard%20status/near/447040944" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Dave Register <a href="https://leamas.github.io/zulip-archive/stream/432618-OCPN-5.2E10-Release-plan/topic/First.20start.20Wizard.20status.html#447040944">(Jun 26 2024 at 01:51)</a>:</h4>
+<p>Got the error code on socket call.</p>
+<p><strong>WSANOTINITIALISED</strong></p>
+<p>10093</p>
+<p>Successful WSAStartup not yet performed.</p>
+<p>Either the application has not called <a href="https://learn.microsoft.com/en-us/windows/desktop/api/winsock/nf-winsock-wsastartup">**WSAStartup**</a> or <strong>WSAStartup</strong> failed. The application may be accessing a socket that the current active task does not own (that is, trying to share a socket between tasks), or <a href="https://learn.microsoft.com/en-us/windows/desktop/api/winsock/nf-winsock-wsacleanup">**WSACleanup**</a> has been called too many times.</p>
+
+
+
+<hr><p>Last updated: Jun 26 2024 at 01:55 UTC</p>
 </html>

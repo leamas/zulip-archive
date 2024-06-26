@@ -178,5 +178,17 @@
         "id": 446973412,
         "sender_full_name": "Håkan Svensson",
         "timestamp": 1719342906
+    },
+    {
+        "content": "<p>And so I did more debugging on Hakan's system, Windows this time.<br>\nLooking at enumerateSignalk().<br>\nI find that on Windows, no MDNS query is sent, so of course no sK datastream is found.<br>\nTesting same on my local Win10 box.  Same trouble.  No  usable network interfaces found, so no mDNS query sent.<br>\nboils down finally to :</p>\n<div class=\"codehilite\"><pre><span></span><code>static inline int\nmdns_socket_open_ipv4(const struct sockaddr_in* saddr) {\nint sock = (int)socket(AF_INET, SOCK_DGRAM, IPPROTO_UDP);\nif (sock &lt; 0)\n    return -1;\nif (mdns_socket_setup_ipv4(sock, saddr)) {\n    mdns_socket_close(sock);\n    return -1;\n}\nreturn sock;\n}\n</code></pre></div>\n\n<p>The socket cannot be created.  \"socke()\" call returns \"-1\". Now that line looks pretty benign.  the saddr parm is the ip for the box itself, not LOCALHOST.<br>\nStumped again.</p>",
+        "id": 447039395,
+        "sender_full_name": "Dave Register",
+        "timestamp": 1719365950
+    },
+    {
+        "content": "<p>Got the error code on socket call.</p>\n<p><strong>WSANOTINITIALISED</strong></p>\n<p>10093</p>\n<p>Successful WSAStartup not yet performed.</p>\n<p>Either the application has not called <a href=\"https://learn.microsoft.com/en-us/windows/desktop/api/winsock/nf-winsock-wsastartup\">**WSAStartup**</a> or <strong>WSAStartup</strong> failed. The application may be accessing a socket that the current active task does not own (that is, trying to share a socket between tasks), or <a href=\"https://learn.microsoft.com/en-us/windows/desktop/api/winsock/nf-winsock-wsacleanup\">**WSACleanup**</a> has been called too many times.</p>",
+        "id": 447040944,
+        "sender_full_name": "Dave Register",
+        "timestamp": 1719366679
     }
 ]
