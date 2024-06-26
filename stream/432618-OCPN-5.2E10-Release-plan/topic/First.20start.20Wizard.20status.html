@@ -342,5 +342,15 @@ Stumped again.</p>
 
 
 
-<hr><p>Last updated: Jun 26 2024 at 01:55 UTC</p>
+<a name="447041847"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/432618-OCPN%205.10%20Release%20plan/topic/First%20start%20Wizard%20status/near/447041847" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Dave Register <a href="https://leamas.github.io/zulip-archive/stream/432618-OCPN-5.2E10-Release-plan/topic/First.20start.20Wizard.20status.html#447041847">(Jun 26 2024 at 01:57)</a>:</h4>
+<p>I switched around the detection order.  Did UDP detection before trying mDNS query for signalK.<br>
+This fixed the socket() call, and mDNS proceeds as required.<br>
+This must mean that WSAStartup() is performed somewhere in the UDP network setup.<br>
+So, to solve, should we call WSAStartup() explicitely early in the wiz, or just switch sK detection to last in the list?<br>
+Your call?</p>
+
+
+
+<hr><p>Last updated: Jun 26 2024 at 02:27 UTC</p>
 </html>
