@@ -375,5 +375,40 @@ In below picture all SK are there. This time the available TCP is not present bu
 
 
 
-<hr><p>Last updated: Jun 26 2024 at 20:28 UTC</p>
+<a name="447330516"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/432618-OCPN%205.10%20Release%20plan/topic/First%20start%20Wizard%20status/near/447330516" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Håkan Svensson <a href="https://leamas.github.io/zulip-archive/stream/432618-OCPN-5.2E10-Release-plan/topic/First.20start.20Wizard.20status.html#447330516">(Jun 26 2024 at 20:36)</a>:</h4>
+<p>If I make this change both TCP and all SK are found three out of four scans<br>
+One or two minutes longer processing.</p>
+<div class="codehilite"><pre><span></span><code>@@ -477,15 +477,15 @@ void FirstUseWizImpl::EnumerateTCP() {
+       wxIPV4address conn_addr;
+       conn_addr.Service(port);
+       conn_addr.Hostname(ip);
+       auto client = new wxSocketClient();
+-      client-&gt;SetTimeout(1);
++      client-&gt;SetTimeout(2);
+       if (client-&gt;Connect(conn_addr, true)) {
+         DEBUG_LOG &lt;&lt; &quot;Connected to &quot; &lt;&lt; ip &lt;&lt; &quot;:&quot; &lt;&lt; port;
+         size_t len = RECEIVE_BUFFER_LENGTH;
+         char buffer[RECEIVE_BUFFER_LENGTH];
+         memset(buffer, 0, len);
+-        client-&gt;WaitForRead(1, 0);
++        client-&gt;WaitForRead(2, 0);
+         client-&gt;Read(&amp;buffer, len);
+         // Binary protocols may contain 0x00 bytes, so we have to treat the buffer as such and avoid string conversion
+         while (len &gt; 0 &amp;&amp; buffer[len-1] == 0x00) {
+           len--;
+@@ -536,9 +536,9 @@ void FirstUseWizImpl::EnumerateTCP() {
+   m_rtConnectionInfo-&gt;Newline();
+ #endif
+ }
+
+-void FirstUseWizImpl::EnumerateSignalK() { FindAllSignalKServers(1); }
++void FirstUseWizImpl::EnumerateSignalK() { FindAllSignalKServers(2); }
+
+ void FirstUseWizImpl::EnumerateCAN() {
+</code></pre></div>
+
+
+
+<hr><p>Last updated: Jun 26 2024 at 20:42 UTC</p>
 </html>

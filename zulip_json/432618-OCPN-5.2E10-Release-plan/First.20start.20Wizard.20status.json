@@ -214,5 +214,11 @@
         "id": 447282350,
         "sender_full_name": "Håkan Svensson",
         "timestamp": 1719423064
+    },
+    {
+        "content": "<p>If I make this change both TCP and all SK are found three out of four scans<br>\nOne or two minutes longer processing.</p>\n<div class=\"codehilite\"><pre><span></span><code>@@ -477,15 +477,15 @@ void FirstUseWizImpl::EnumerateTCP() {\n       wxIPV4address conn_addr;\n       conn_addr.Service(port);\n       conn_addr.Hostname(ip);\n       auto client = new wxSocketClient();\n-      client-&gt;SetTimeout(1);\n+      client-&gt;SetTimeout(2);\n       if (client-&gt;Connect(conn_addr, true)) {\n         DEBUG_LOG &lt;&lt; &quot;Connected to &quot; &lt;&lt; ip &lt;&lt; &quot;:&quot; &lt;&lt; port;\n         size_t len = RECEIVE_BUFFER_LENGTH;\n         char buffer[RECEIVE_BUFFER_LENGTH];\n         memset(buffer, 0, len);\n-        client-&gt;WaitForRead(1, 0);\n+        client-&gt;WaitForRead(2, 0);\n         client-&gt;Read(&amp;buffer, len);\n         // Binary protocols may contain 0x00 bytes, so we have to treat the buffer as such and avoid string conversion\n         while (len &gt; 0 &amp;&amp; buffer[len-1] == 0x00) {\n           len--;\n@@ -536,9 +536,9 @@ void FirstUseWizImpl::EnumerateTCP() {\n   m_rtConnectionInfo-&gt;Newline();\n #endif\n }\n\n-void FirstUseWizImpl::EnumerateSignalK() { FindAllSignalKServers(1); }\n+void FirstUseWizImpl::EnumerateSignalK() { FindAllSignalKServers(2); }\n\n void FirstUseWizImpl::EnumerateCAN() {\n</code></pre></div>",
+        "id": 447330516,
+        "sender_full_name": "Håkan Svensson",
+        "timestamp": 1719434194
     }
 ]
