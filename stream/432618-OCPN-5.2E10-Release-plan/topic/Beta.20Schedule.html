@@ -270,5 +270,60 @@ fatal: refusing to merge unrelated histories</li>
 
 
 
-<hr><p>Last updated: Jul 01 2024 at 02:46 UTC</p>
+<a name="448207265"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/432618-OCPN%205.10%20Release%20plan/topic/Beta%20Schedule/near/448207265" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Dave Register <a href="https://leamas.github.io/zulip-archive/stream/432618-OCPN-5.2E10-Release-plan/topic/Beta.20Schedule.html#448207265">(Jul 01 2024 at 02:47)</a>:</h4>
+<p>Note:  My git commands above failed "fatal, refusing to merge....<br>
+So I got nothing, I think.</p>
+
+
+
+<a name="448207426"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/432618-OCPN%205.10%20Release%20plan/topic/Beta%20Schedule/near/448207426" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Alec Leamas <a href="https://leamas.github.io/zulip-archive/stream/432618-OCPN-5.2E10-Release-plan/topic/Beta.20Schedule.html#448207426">(Jul 01 2024 at 02:49)</a>:</h4>
+<p>Yes. Merges are evil since there is no <code>git merge --abort</code>. I tend to avoid them, rebase is almost always better.</p>
+
+
+
+<a name="448207495"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/432618-OCPN%205.10%20Release%20plan/topic/Beta%20Schedule/near/448207495" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Alec Leamas <a href="https://leamas.github.io/zulip-archive/stream/432618-OCPN-5.2E10-Release-plan/topic/Beta.20Schedule.html#448207495">(Jul 01 2024 at 02:50)</a>:</h4>
+<p>The easiest might be to clone again?</p>
+
+
+
+<a name="448207629"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/432618-OCPN%205.10%20Release%20plan/topic/Beta%20Schedule/near/448207629" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Alec Leamas <a href="https://leamas.github.io/zulip-archive/stream/432618-OCPN-5.2E10-Release-plan/topic/Beta.20Schedule.html#448207629">(Jul 01 2024 at 02:52)</a>:</h4>
+<p>... if there are problems,  that is.</p>
+
+
+
+<a name="448208389"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/432618-OCPN%205.10%20Release%20plan/topic/Beta%20Schedule/near/448208389" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Dave Register <a href="https://leamas.github.io/zulip-archive/stream/432618-OCPN-5.2E10-Release-plan/topic/Beta.20Schedule.html#448208389">(Jul 01 2024 at 02:57)</a>:</h4>
+<p>A fresh clone worked, but I'd rather not switch just now.<br>
+What went wrong with my original git stuff, and how best to fix?</p>
+
+
+
+<a name="448208701"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/432618-OCPN%205.10%20Release%20plan/topic/Beta%20Schedule/near/448208701" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Alec Leamas <a href="https://leamas.github.io/zulip-archive/stream/432618-OCPN-5.2E10-Release-plan/topic/Beta.20Schedule.html#448208701">(Jul 01 2024 at 03:00)</a>:</h4>
+<p>It went wrong when you tried to merge. You might be able to fix it using something like <code>git reset --hard origin/ubuntu/noble</code>. I don't know which branch you are on or the name of  your remote so just a sketch</p>
+<p>EDIT: Trying  to improve command</p>
+
+
+
+<a name="448209050"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/432618-OCPN%205.10%20Release%20plan/topic/Beta%20Schedule/near/448209050" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Dave Register <a href="https://leamas.github.io/zulip-archive/stream/432618-OCPN-5.2E10-Release-plan/topic/Beta.20Schedule.html#448209050">(Jul 01 2024 at 03:04)</a>:</h4>
+<p>I am working on ubuntu/jammy, remote name is "github".</p>
+<div class="codehilite"><pre><span></span><code>$ git reset --hard github/ubuntu/jammy
+</code></pre></div>
+
+<p>fixed it.</p>
+
+
+
+<a name="448209083"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/432618-OCPN%205.10%20Release%20plan/topic/Beta%20Schedule/near/448209083" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Alec Leamas <a href="https://leamas.github.io/zulip-archive/stream/432618-OCPN-5.2E10-Release-plan/topic/Beta.20Schedule.html#448209083">(Jul 01 2024 at 03:05)</a>:</h4>
+<p>OK , great. Now, no more commits, please :)</p>
+
+
+
+<hr><p>Last updated: Jul 01 2024 at 03:11 UTC</p>
 </html>
