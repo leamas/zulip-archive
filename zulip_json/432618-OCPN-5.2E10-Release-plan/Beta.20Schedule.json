@@ -394,5 +394,41 @@
         "id": 448214606,
         "sender_full_name": "Alec Leamas",
         "timestamp": 1719807102
+    },
+    {
+        "content": "<p>While we are waiting (couple of minutes), is there a way to specify DEBEMAIL and  DEBFULLNAME in debuild command line?  Or must ti come from environment?</p>",
+        "id": 448214998,
+        "sender_full_name": "Dave Register",
+        "timestamp": 1719807365
+    },
+    {
+        "content": "<p>OK, NAS is up.  Safe to simple copy the backup ~/.gnupg directory to the new system?</p>",
+        "id": 448215350,
+        "sender_full_name": "Dave Register",
+        "timestamp": 1719807564
+    },
+    {
+        "content": "<p>Probably. But having it in ~ /.bashrc saves tons of time.  I have small one I copy verbatim to all virtual hosts when configuring them.</p>\n<p>As I see it, the Debian workflows are pretty focused on this kind of config files.  There are some really bad examples on this, However, thsi is IMHO not and it's much easier to just follow the flow</p>",
+        "id": 448215367,
+        "sender_full_name": "Alec Leamas",
+        "timestamp": 1719807577
+    },
+    {
+        "content": "<p>notably, there is the -k option  to debuild -S for the  key. Again IIRC, we settled for this last time</p>",
+        "id": 448215499,
+        "sender_full_name": "Alec Leamas",
+        "timestamp": 1719807652
+    },
+    {
+        "content": "<p>Yes, copying ~/.gnupg  is ok. Move or delete possibnly existinng one first.</p>",
+        "id": 448215752,
+        "sender_full_name": "Alec Leamas",
+        "timestamp": 1719807809
+    },
+    {
+        "content": "<p>Then you need to verify the password.</p>\n<p>First: <code>gpg --list-secret-keys</code> should give you at least one key,  something like </p>\n<div class=\"codehilite\"><pre><span></span><code>sec   rsa4096 2024-06-30 [SC] [expires: 2026-06-30]\n      DE3F1A75458931FF1C5FF797D9AA7A6AFC0B61EC\nuid           [ultimate] OpenCPN Releases &lt;build@opencpn.org&gt;\nssb   rsa4096 2024-06-30 [E] [expires: 2026-06-30]\n</code></pre></div>\n<p>Then <code>gpg --export-secret-keys -a DE3F1A75458931FF1C5FF797D9AA7A6AFC0B61EC</code>, the hash as printed  above. This will ask for a password which is needed to sign</p>",
+        "id": 448216157,
+        "sender_full_name": "Alec Leamas",
+        "timestamp": 1719808049
     }
 ]

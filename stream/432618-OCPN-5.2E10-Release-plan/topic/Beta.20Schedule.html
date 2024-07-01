@@ -550,5 +550,49 @@ Boot NAS backup server now...</p>
 
 
 
-<hr><p>Last updated: Jul 01 2024 at 04:11 UTC</p>
+<a name="448214998"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/432618-OCPN%205.10%20Release%20plan/topic/Beta%20Schedule/near/448214998" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Dave Register <a href="https://leamas.github.io/zulip-archive/stream/432618-OCPN-5.2E10-Release-plan/topic/Beta.20Schedule.html#448214998">(Jul 01 2024 at 04:16)</a>:</h4>
+<p>While we are waiting (couple of minutes), is there a way to specify DEBEMAIL and  DEBFULLNAME in debuild command line?  Or must ti come from environment?</p>
+
+
+
+<a name="448215350"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/432618-OCPN%205.10%20Release%20plan/topic/Beta%20Schedule/near/448215350" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Dave Register <a href="https://leamas.github.io/zulip-archive/stream/432618-OCPN-5.2E10-Release-plan/topic/Beta.20Schedule.html#448215350">(Jul 01 2024 at 04:19)</a>:</h4>
+<p>OK, NAS is up.  Safe to simple copy the backup ~/.gnupg directory to the new system?</p>
+
+
+
+<a name="448215367"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/432618-OCPN%205.10%20Release%20plan/topic/Beta%20Schedule/near/448215367" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Alec Leamas <a href="https://leamas.github.io/zulip-archive/stream/432618-OCPN-5.2E10-Release-plan/topic/Beta.20Schedule.html#448215367">(Jul 01 2024 at 04:19)</a>:</h4>
+<p>Probably. But having it in ~ /.bashrc saves tons of time.  I have small one I copy verbatim to all virtual hosts when configuring them.</p>
+<p>As I see it, the Debian workflows are pretty focused on this kind of config files.  There are some really bad examples on this, However, thsi is IMHO not and it's much easier to just follow the flow</p>
+
+
+
+<a name="448215499"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/432618-OCPN%205.10%20Release%20plan/topic/Beta%20Schedule/near/448215499" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Alec Leamas <a href="https://leamas.github.io/zulip-archive/stream/432618-OCPN-5.2E10-Release-plan/topic/Beta.20Schedule.html#448215499">(Jul 01 2024 at 04:20)</a>:</h4>
+<p>notably, there is the -k option  to debuild -S for the  key. Again IIRC, we settled for this last time</p>
+
+
+
+<a name="448215752"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/432618-OCPN%205.10%20Release%20plan/topic/Beta%20Schedule/near/448215752" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Alec Leamas <a href="https://leamas.github.io/zulip-archive/stream/432618-OCPN-5.2E10-Release-plan/topic/Beta.20Schedule.html#448215752">(Jul 01 2024 at 04:23)</a>:</h4>
+<p>Yes, copying ~/.gnupg  is ok. Move or delete possibnly existinng one first.</p>
+
+
+
+<a name="448216157"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/432618-OCPN%205.10%20Release%20plan/topic/Beta%20Schedule/near/448216157" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Alec Leamas <a href="https://leamas.github.io/zulip-archive/stream/432618-OCPN-5.2E10-Release-plan/topic/Beta.20Schedule.html#448216157">(Jul 01 2024 at 04:27)</a>:</h4>
+<p>Then you need to verify the password.</p>
+<p>First: <code>gpg --list-secret-keys</code> should give you at least one key,  something like </p>
+<div class="codehilite"><pre><span></span><code>sec   rsa4096 2024-06-30 [SC] [expires: 2026-06-30]
+      DE3F1A75458931FF1C5FF797D9AA7A6AFC0B61EC
+uid           [ultimate] OpenCPN Releases &lt;build@opencpn.org&gt;
+ssb   rsa4096 2024-06-30 [E] [expires: 2026-06-30]
+</code></pre></div>
+<p>Then <code>gpg --export-secret-keys -a DE3F1A75458931FF1C5FF797D9AA7A6AFC0B61EC</code>, the hash as printed  above. This will ask for a password which is needed to sign</p>
+
+
+
+<hr><p>Last updated: Jul 01 2024 at 04:30 UTC</p>
 </html>
