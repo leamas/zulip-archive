@@ -328,5 +328,71 @@
         "id": 448211911,
         "sender_full_name": "Alec Leamas",
         "timestamp": 1719805205
+    },
+    {
+        "content": "<p>Cloning shortcut: <a href=\"https://opencpn-manuals.github.io/main/opencpn-dev/create-deb-package.html#_make_a_fresh_opencpn_clone\">https://opencpn-manuals.github.io/main/opencpn-dev/create-deb-package.html#_make_a_fresh_opencpn_clone</a></p>",
+        "id": 448212796,
+        "sender_full_name": "Alec Leamas",
+        "timestamp": 1719805706
+    },
+    {
+        "content": "<p>Working with a fresh clone.<br>\ndebuild fails signing step.</p>\n<p>Finished running lintian.<br>\nNow signing changes and any dsc files...<br>\nsignfile dsc opencpn_5.9.2-beta2+dfsg-1ubuntu1~bpo2204.1.dsc Alec Leamas &lt;<a href=\"mailto:leamas.alec@gmail.com\">leamas.alec@gmail.com</a>&gt;<br>\ngpg: skipped \"Alec Leamas &lt;<a href=\"mailto:leamas.alec@gmail.com\">leamas.alec@gmail.com</a>&gt;\": No secret key<br>\ngpg: /tmp/debsign.pwWfrW3T/opencpn_5.9.2-beta2+dfsg-1ubuntu1~bpo2204.1.dsc: clear-sign failed: No secret key<br>\ndebsign: gpg error occurred!  Aborting....<br>\ndebuild: fatal error at line 1112:<br>\nrunning debsign failed</p>",
+        "id": 448212849,
+        "sender_full_name": "Dave Register",
+        "timestamp": 1719805784
+    },
+    {
+        "content": "<p>You ned to setup your environment (didn't we do this last time)?<br>\nParts of my  .bashrc reads:</p>\n<div class=\"codehilite\"><pre><span></span><code>export DEBEMAIL=&quot;leamas.alec@gmail.com&quot;\nexport DEBFULLNAME=&quot;Alec Leamas&quot;\n\nexport DEBSIGN_KEYID=E2EA41DCE2F8A99AD17A1E463A67D5D966D15C5C\n</code></pre></div>\n<p>You need to modiy your own ~ /.bashrc on jammy accordingly. The first two should be obvious.<br>\n DEBSIGN_KEYID  is as listed by <code>gpg --list-keys</code>  for you  if thge gpg setup in jammy still is ok.</p>\n<p>Finally: <code>source ~ /.bashrc</code>before doing debuild.</p>",
+        "id": 448213258,
+        "sender_full_name": "Alec Leamas",
+        "timestamp": 1719806118
+    },
+    {
+        "content": "<p>Looking at  laumchpad your key should be either BC21C694CCCE82D0AEA608F25961749C2E50AC4A or 4A57DDF4719374E5A8FD2637E5216EEB1ACFED1D.</p>\n<p>IIRC you were able to retrieve a backup for one of those last time</p>",
+        "id": 448213643,
+        "sender_full_name": "Alec Leamas",
+        "timestamp": 1719806415
+    },
+    {
+        "content": "<p><code>gpg --list-keys</code> gives me nothing.<br>\nBut I remember the ...D1D key from backup, I think</p>",
+        "id": 448213908,
+        "sender_full_name": "Dave Register",
+        "timestamp": 1719806548
+    },
+    {
+        "content": "<p>Yes. And you also were able to find the associated password. Without this,  the key is useless.</p>\n<p>Two paths:  find the key again, or generate a new key and register it on launchpad. Thoughts?</p>",
+        "id": 448214078,
+        "sender_full_name": "Alec Leamas",
+        "timestamp": 1719806699
+    },
+    {
+        "content": "<p>In a previous plugin workflow, I build packages with this:<br>\n$ debuild -k0x70A7C7B4 -S<br>\nIs that the correct password syntax.?  If so, can I just copy some gpg directory from back to current ! ?</p>",
+        "id": 448214373,
+        "sender_full_name": "Dave Register",
+        "timestamp": 1719806896
+    },
+    {
+        "content": "<p>That is not a password, it's just  a reference to a key in the ~/.gnupg keyring. Basically an id or a name</p>",
+        "id": 448214426,
+        "sender_full_name": "Alec Leamas",
+        "timestamp": 1719806950
+    },
+    {
+        "content": "<p>(we have done this before...)</p>",
+        "id": 448214457,
+        "sender_full_name": "Alec Leamas",
+        "timestamp": 1719806982
+    },
+    {
+        "content": "<p>Yes, we have, But we talked, and it did not actually get done on my current system.<br>\nBoot NAS backup server now...</p>",
+        "id": 448214584,
+        "sender_full_name": "Dave Register",
+        "timestamp": 1719807071
+    },
+    {
+        "content": "<p>OK.</p>",
+        "id": 448214606,
+        "sender_full_name": "Alec Leamas",
+        "timestamp": 1719807102
     }
 ]

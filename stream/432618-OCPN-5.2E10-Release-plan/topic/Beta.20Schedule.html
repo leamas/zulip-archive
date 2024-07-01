@@ -460,5 +460,95 @@ dpkg-sou</p>
 
 
 
-<hr><p>Last updated: Jul 01 2024 at 03:42 UTC</p>
+<a name="448212796"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/432618-OCPN%205.10%20Release%20plan/topic/Beta%20Schedule/near/448212796" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Alec Leamas <a href="https://leamas.github.io/zulip-archive/stream/432618-OCPN-5.2E10-Release-plan/topic/Beta.20Schedule.html#448212796">(Jul 01 2024 at 03:48)</a>:</h4>
+<p>Cloning shortcut: <a href="https://opencpn-manuals.github.io/main/opencpn-dev/create-deb-package.html#_make_a_fresh_opencpn_clone">https://opencpn-manuals.github.io/main/opencpn-dev/create-deb-package.html#_make_a_fresh_opencpn_clone</a></p>
+
+
+
+<a name="448212849"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/432618-OCPN%205.10%20Release%20plan/topic/Beta%20Schedule/near/448212849" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Dave Register <a href="https://leamas.github.io/zulip-archive/stream/432618-OCPN-5.2E10-Release-plan/topic/Beta.20Schedule.html#448212849">(Jul 01 2024 at 03:49)</a>:</h4>
+<p>Working with a fresh clone.<br>
+debuild fails signing step.</p>
+<p>Finished running lintian.<br>
+Now signing changes and any dsc files...<br>
+signfile dsc opencpn_5.9.2-beta2+dfsg-1ubuntu1~bpo2204.1.dsc Alec Leamas &lt;<a href="mailto:leamas.alec@gmail.com">leamas.alec@gmail.com</a>&gt;<br>
+gpg: skipped "Alec Leamas &lt;<a href="mailto:leamas.alec@gmail.com">leamas.alec@gmail.com</a>&gt;": No secret key<br>
+gpg: /tmp/debsign.pwWfrW3T/opencpn_5.9.2-beta2+dfsg-1ubuntu1~bpo2204.1.dsc: clear-sign failed: No secret key<br>
+debsign: gpg error occurred!  Aborting....<br>
+debuild: fatal error at line 1112:<br>
+running debsign failed</p>
+
+
+
+<a name="448213258"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/432618-OCPN%205.10%20Release%20plan/topic/Beta%20Schedule/near/448213258" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Alec Leamas <a href="https://leamas.github.io/zulip-archive/stream/432618-OCPN-5.2E10-Release-plan/topic/Beta.20Schedule.html#448213258">(Jul 01 2024 at 03:55)</a>:</h4>
+<p>You ned to setup your environment (didn't we do this last time)?<br>
+Parts of my  .bashrc reads:</p>
+<div class="codehilite"><pre><span></span><code>export DEBEMAIL=&quot;leamas.alec@gmail.com&quot;
+export DEBFULLNAME=&quot;Alec Leamas&quot;
+
+export DEBSIGN_KEYID=E2EA41DCE2F8A99AD17A1E463A67D5D966D15C5C
+</code></pre></div>
+<p>You need to modiy your own ~ /.bashrc on jammy accordingly. The first two should be obvious.<br>
+ DEBSIGN_KEYID  is as listed by <code>gpg --list-keys</code>  for you  if thge gpg setup in jammy still is ok.</p>
+<p>Finally: <code>source ~ /.bashrc</code>before doing debuild.</p>
+
+
+
+<a name="448213643"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/432618-OCPN%205.10%20Release%20plan/topic/Beta%20Schedule/near/448213643" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Alec Leamas <a href="https://leamas.github.io/zulip-archive/stream/432618-OCPN-5.2E10-Release-plan/topic/Beta.20Schedule.html#448213643">(Jul 01 2024 at 04:00)</a>:</h4>
+<p>Looking at  laumchpad your key should be either BC21C694CCCE82D0AEA608F25961749C2E50AC4A or 4A57DDF4719374E5A8FD2637E5216EEB1ACFED1D.</p>
+<p>IIRC you were able to retrieve a backup for one of those last time</p>
+
+
+
+<a name="448213908"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/432618-OCPN%205.10%20Release%20plan/topic/Beta%20Schedule/near/448213908" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Dave Register <a href="https://leamas.github.io/zulip-archive/stream/432618-OCPN-5.2E10-Release-plan/topic/Beta.20Schedule.html#448213908">(Jul 01 2024 at 04:02)</a>:</h4>
+<p><code>gpg --list-keys</code> gives me nothing.<br>
+But I remember the ...D1D key from backup, I think</p>
+
+
+
+<a name="448214078"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/432618-OCPN%205.10%20Release%20plan/topic/Beta%20Schedule/near/448214078" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Alec Leamas <a href="https://leamas.github.io/zulip-archive/stream/432618-OCPN-5.2E10-Release-plan/topic/Beta.20Schedule.html#448214078">(Jul 01 2024 at 04:04)</a>:</h4>
+<p>Yes. And you also were able to find the associated password. Without this,  the key is useless.</p>
+<p>Two paths:  find the key again, or generate a new key and register it on launchpad. Thoughts?</p>
+
+
+
+<a name="448214373"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/432618-OCPN%205.10%20Release%20plan/topic/Beta%20Schedule/near/448214373" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Dave Register <a href="https://leamas.github.io/zulip-archive/stream/432618-OCPN-5.2E10-Release-plan/topic/Beta.20Schedule.html#448214373">(Jul 01 2024 at 04:08)</a>:</h4>
+<p>In a previous plugin workflow, I build packages with this:<br>
+$ debuild -k0x70A7C7B4 -S<br>
+Is that the correct password syntax.?  If so, can I just copy some gpg directory from back to current ! ?</p>
+
+
+
+<a name="448214426"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/432618-OCPN%205.10%20Release%20plan/topic/Beta%20Schedule/near/448214426" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Alec Leamas <a href="https://leamas.github.io/zulip-archive/stream/432618-OCPN-5.2E10-Release-plan/topic/Beta.20Schedule.html#448214426">(Jul 01 2024 at 04:09)</a>:</h4>
+<p>That is not a password, it's just  a reference to a key in the ~/.gnupg keyring. Basically an id or a name</p>
+
+
+
+<a name="448214457"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/432618-OCPN%205.10%20Release%20plan/topic/Beta%20Schedule/near/448214457" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Alec Leamas <a href="https://leamas.github.io/zulip-archive/stream/432618-OCPN-5.2E10-Release-plan/topic/Beta.20Schedule.html#448214457">(Jul 01 2024 at 04:09)</a>:</h4>
+<p>(we have done this before...)</p>
+
+
+
+<a name="448214584"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/432618-OCPN%205.10%20Release%20plan/topic/Beta%20Schedule/near/448214584" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Dave Register <a href="https://leamas.github.io/zulip-archive/stream/432618-OCPN-5.2E10-Release-plan/topic/Beta.20Schedule.html#448214584">(Jul 01 2024 at 04:11)</a>:</h4>
+<p>Yes, we have, But we talked, and it did not actually get done on my current system.<br>
+Boot NAS backup server now...</p>
+
+
+
+<a name="448214606"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/432618-OCPN%205.10%20Release%20plan/topic/Beta%20Schedule/near/448214606" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Alec Leamas <a href="https://leamas.github.io/zulip-archive/stream/432618-OCPN-5.2E10-Release-plan/topic/Beta.20Schedule.html#448214606">(Jul 01 2024 at 04:11)</a>:</h4>
+<p>OK.</p>
+
+
+
+<hr><p>Last updated: Jul 01 2024 at 04:11 UTC</p>
 </html>
