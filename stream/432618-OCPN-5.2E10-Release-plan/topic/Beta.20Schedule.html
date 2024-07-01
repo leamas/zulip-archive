@@ -325,5 +325,95 @@ What went wrong with my original git stuff, and how best to fix?</p>
 
 
 
-<hr><p>Last updated: Jul 01 2024 at 03:11 UTC</p>
+<a name="448209735"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/432618-OCPN%205.10%20Release%20plan/topic/Beta%20Schedule/near/448209735" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Dave Register <a href="https://leamas.github.io/zulip-archive/stream/432618-OCPN-5.2E10-Release-plan/topic/Beta.20Schedule.html#448209735">(Jul 01 2024 at 03:12)</a>:</h4>
+<p>debuild -S fails:</p>
+<p>dsr@debian:~/Projects/opencpn/build_jammy$ debuild -S<br>
+dpkg-buildpackage -us -uc -ui -S<br>
+dpkg-buildpackage: info: source package opencpn<br>
+dpkg-buildpackage: info: source version 5.9.2-beta2+dfsg-1ubuntu1~bpo2204.1<br>
+dpkg-buildpackage: info: source distribution jammy<br>
+dpkg-buildpackage: info: source changed by Alec Leamas &lt;<a href="mailto:leamas.alec@gmail.com">leamas.alec@gmail.com</a>&gt;<br>
+dpkg-source --before-build .<br>
+debian/rules clean<br>
+dh clean<br>
+  dh_clean<br>
+dpkg-source -b .<br>
+dpkg-source: error: can't build with source format '3.0 (quilt)': no upstream tarball found at ../opencpn_5.9.2-beta2+dfsg.orig.tar.{bz2,gz,lzma,xz}<br>
+dpkg-buildpackage: error: dpkg-source -b . subprocess returned exit status 25<br>
+debuild: fatal error at line 1182:<br>
+dpkg-buildpackage -us -uc -ui -S failed<br>
+d</p>
+
+
+
+<a name="448210088"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/432618-OCPN%205.10%20Release%20plan/topic/Beta%20Schedule/near/448210088" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Alec Leamas <a href="https://leamas.github.io/zulip-archive/stream/432618-OCPN-5.2E10-Release-plan/topic/Beta.20Schedule.html#448210088">(Jul 01 2024 at 03:17)</a>:</h4>
+<p>Ah... since you did not make a test build. Sorry, my bad. Re-create the missing tarball like this:</p>
+<div class="codehilite"><pre><span></span><code>$ git fetch github pristine-tar:pristine-tar
+$ git switch pristine-tar
+$ pristine-tar checkout opencpn_5.9.2-beta2+dfsg.orig.tar.xz
+$ mv opencpn_5.9.2-beta2+dfsg.orig.tar.xz ..
+$ git switch ubuntu/jammy
+</code></pre></div>
+<p>This is a one-time setup, when you later build for noble you use the same tarball</p>
+
+
+
+<a name="448210301"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/432618-OCPN%205.10%20Release%20plan/topic/Beta%20Schedule/near/448210301" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Alec Leamas <a href="https://leamas.github.io/zulip-archive/stream/432618-OCPN-5.2E10-Release-plan/topic/Beta.20Schedule.html#448210301">(Jul 01 2024 at 03:20)</a>:</h4>
+<p>BTW:  <code>pristine-tar list</code>lists available tarballs, there is no way to deduce those filenames...</p>
+
+
+
+<a name="448210480"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/432618-OCPN%205.10%20Release%20plan/topic/Beta%20Schedule/near/448210480" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Dave Register <a href="https://leamas.github.io/zulip-archive/stream/432618-OCPN-5.2E10-Release-plan/topic/Beta.20Schedule.html#448210480">(Jul 01 2024 at 03:22)</a>:</h4>
+<p>dsr@debian:~/Projects/opencpn/build_jammy$ pristine-tar checkout opencpn_5.9.2-beta2+dfsg.orig.tar.xz<br>
+pristine-tar: cannot determine type of vcs used for the current directory</p>
+
+
+
+<a name="448210593"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/432618-OCPN%205.10%20Release%20plan/topic/Beta%20Schedule/near/448210593" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Alec Leamas <a href="https://leamas.github.io/zulip-archive/stream/432618-OCPN-5.2E10-Release-plan/topic/Beta.20Schedule.html#448210593">(Jul 01 2024 at 03:23)</a>:</h4>
+<p>hm... are you in the build directory? If so,  try  to move to  ~/Projects/opencpn</p>
+
+
+
+<a name="448210661"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/432618-OCPN%205.10%20Release%20plan/topic/Beta%20Schedule/near/448210661" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Alec Leamas <a href="https://leamas.github.io/zulip-archive/stream/432618-OCPN-5.2E10-Release-plan/topic/Beta.20Schedule.html#448210661">(Jul 01 2024 at 03:24)</a>:</h4>
+<p>... i. e., <code>cd  ~/Projects/opencpn</code></p>
+
+
+
+<a name="448210981"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/432618-OCPN%205.10%20Release%20plan/topic/Beta%20Schedule/near/448210981" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Dave Register <a href="https://leamas.github.io/zulip-archive/stream/432618-OCPN-5.2E10-Release-plan/topic/Beta.20Schedule.html#448210981">(Jul 01 2024 at 03:28)</a>:</h4>
+<p>OK, that worked. I seem to have the pristine tar. But, still fails.</p>
+<p>dsr@debian:~/Projects/opencpn/build_jammy$ debuild -S<br>
+dpkg-buildpackage -us -uc -ui -S<br>
+dpkg-buildpackage: info: source package opencpn<br>
+dpkg-buildpackage: info: source version 5.9.2-beta2+dfsg-1ubuntu1~bpo2204.1<br>
+dpkg-buildpackage: info: source distribution jammy<br>
+dpkg-buildpackage: info: source changed by Alec Leamas &lt;<a href="mailto:leamas.alec@gmail.com">leamas.alec@gmail.com</a>&gt;<br>
+dpkg-source --before-build .<br>
+debian/rules clean<br>
+dh clean<br>
+  dh_clean<br>
+dpkg-source -b .<br>
+dpkg-source: error: can't build with source format '3.0 (quilt)': no upstream tarball found at ../opencpn_5.9.2-beta2+dfsg.orig.tar.{bz2,gz,lzma,xz}<br>
+dpkg-buildpackage: error: dpkg-source -b . subprocess returned exit status 25<br>
+debuild: fatal error at line 1182:<br>
+dpkg-buildpackage -us -uc -ui -S failed</p>
+<p>dsr@debian:~/Projects/opencpn/build_jammy$ ls ../opencpn_5.9.2-beta2+dfsg.orig.tar.xz<br>
+../opencpn_5.9.2-beta2+dfsg.orig.tar.xz<br>
+dsr@debian:~/Projects/opencpn/build_jammy$</p>
+
+
+
+<a name="448211059"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/432618-OCPN%205.10%20Release%20plan/topic/Beta%20Schedule/near/448211059" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Alec Leamas <a href="https://leamas.github.io/zulip-archive/stream/432618-OCPN-5.2E10-Release-plan/topic/Beta.20Schedule.html#448211059">(Jul 01 2024 at 03:29)</a>:</h4>
+<p>As it says: it wants the tarball in .. i. e., ~/Projects</p>
+
+
+
+<hr><p>Last updated: Jul 01 2024 at 03:30 UTC</p>
 </html>

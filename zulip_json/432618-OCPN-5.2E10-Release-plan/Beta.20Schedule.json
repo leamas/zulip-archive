@@ -256,5 +256,53 @@
         "id": 448209083,
         "sender_full_name": "Alec Leamas",
         "timestamp": 1719803108
+    },
+    {
+        "content": "<p>debuild -S fails:</p>\n<p>dsr@debian:~/Projects/opencpn/build_jammy$ debuild -S<br>\ndpkg-buildpackage -us -uc -ui -S<br>\ndpkg-buildpackage: info: source package opencpn<br>\ndpkg-buildpackage: info: source version 5.9.2-beta2+dfsg-1ubuntu1~bpo2204.1<br>\ndpkg-buildpackage: info: source distribution jammy<br>\ndpkg-buildpackage: info: source changed by Alec Leamas &lt;<a href=\"mailto:leamas.alec@gmail.com\">leamas.alec@gmail.com</a>&gt;<br>\ndpkg-source --before-build .<br>\ndebian/rules clean<br>\ndh clean<br>\n  dh_clean<br>\ndpkg-source -b .<br>\ndpkg-source: error: can't build with source format '3.0 (quilt)': no upstream tarball found at ../opencpn_5.9.2-beta2+dfsg.orig.tar.{bz2,gz,lzma,xz}<br>\ndpkg-buildpackage: error: dpkg-source -b . subprocess returned exit status 25<br>\ndebuild: fatal error at line 1182:<br>\ndpkg-buildpackage -us -uc -ui -S failed<br>\nd</p>",
+        "id": 448209735,
+        "sender_full_name": "Dave Register",
+        "timestamp": 1719803578
+    },
+    {
+        "content": "<p>Ah... since you did not make a test build. Sorry, my bad. Re-create the missing tarball like this:</p>\n<div class=\"codehilite\"><pre><span></span><code>$ git fetch github pristine-tar:pristine-tar\n$ git switch pristine-tar\n$ pristine-tar checkout opencpn_5.9.2-beta2+dfsg.orig.tar.xz\n$ mv opencpn_5.9.2-beta2+dfsg.orig.tar.xz ..\n$ git switch ubuntu/jammy\n</code></pre></div>\n<p>This is a one-time setup, when you later build for noble you use the same tarball</p>",
+        "id": 448210088,
+        "sender_full_name": "Alec Leamas",
+        "timestamp": 1719803872
+    },
+    {
+        "content": "<p>BTW:  <code>pristine-tar list</code>lists available tarballs, there is no way to deduce those filenames...</p>",
+        "id": 448210301,
+        "sender_full_name": "Alec Leamas",
+        "timestamp": 1719804015
+    },
+    {
+        "content": "<p>dsr@debian:~/Projects/opencpn/build_jammy$ pristine-tar checkout opencpn_5.9.2-beta2+dfsg.orig.tar.xz<br>\npristine-tar: cannot determine type of vcs used for the current directory</p>",
+        "id": 448210480,
+        "sender_full_name": "Dave Register",
+        "timestamp": 1719804137
+    },
+    {
+        "content": "<p>hm... are you in the build directory? If so,  try  to move to  ~/Projects/opencpn</p>",
+        "id": 448210593,
+        "sender_full_name": "Alec Leamas",
+        "timestamp": 1719804233
+    },
+    {
+        "content": "<p>... i. e., <code>cd  ~/Projects/opencpn</code></p>",
+        "id": 448210661,
+        "sender_full_name": "Alec Leamas",
+        "timestamp": 1719804269
+    },
+    {
+        "content": "<p>OK, that worked. I seem to have the pristine tar. But, still fails.</p>\n<p>dsr@debian:~/Projects/opencpn/build_jammy$ debuild -S<br>\ndpkg-buildpackage -us -uc -ui -S<br>\ndpkg-buildpackage: info: source package opencpn<br>\ndpkg-buildpackage: info: source version 5.9.2-beta2+dfsg-1ubuntu1~bpo2204.1<br>\ndpkg-buildpackage: info: source distribution jammy<br>\ndpkg-buildpackage: info: source changed by Alec Leamas &lt;<a href=\"mailto:leamas.alec@gmail.com\">leamas.alec@gmail.com</a>&gt;<br>\ndpkg-source --before-build .<br>\ndebian/rules clean<br>\ndh clean<br>\n  dh_clean<br>\ndpkg-source -b .<br>\ndpkg-source: error: can't build with source format '3.0 (quilt)': no upstream tarball found at ../opencpn_5.9.2-beta2+dfsg.orig.tar.{bz2,gz,lzma,xz}<br>\ndpkg-buildpackage: error: dpkg-source -b . subprocess returned exit status 25<br>\ndebuild: fatal error at line 1182:<br>\ndpkg-buildpackage -us -uc -ui -S failed</p>\n<p>dsr@debian:~/Projects/opencpn/build_jammy$ ls ../opencpn_5.9.2-beta2+dfsg.orig.tar.xz<br>\n../opencpn_5.9.2-beta2+dfsg.orig.tar.xz<br>\ndsr@debian:~/Projects/opencpn/build_jammy$</p>",
+        "id": 448210981,
+        "sender_full_name": "Dave Register",
+        "timestamp": 1719804526
+    },
+    {
+        "content": "<p>As it says: it wants the tarball in .. i. e., ~/Projects</p>",
+        "id": 448211059,
+        "sender_full_name": "Alec Leamas",
+        "timestamp": 1719804586
     }
 ]
