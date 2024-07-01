@@ -1145,5 +1145,102 @@ Skipped that.  How?</p>
 
 
 
-<hr><p>Last updated: Jul 01 2024 at 21:09 UTC</p>
+<a name="448438795"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/432618-OCPN%205.10%20Release%20plan/topic/Beta%20Schedule/near/448438795" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Dave Register <a href="https://leamas.github.io/zulip-archive/stream/432618-OCPN-5.2E10-Release-plan/topic/Beta.20Schedule.html#448438795">(Jul 01 2024 at 21:10)</a>:</h4>
+<p>I'm dense.  I see nothing on that link about a keyring.<br>
+The launchpad instructions there I followed carefully.<br>
+I made another key, different email address.  Sent to key server.  Imported to launchpad.<br>
+Now waiting email, still.</p>
+
+
+
+<a name="448438895"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/432618-OCPN%205.10%20Release%20plan/topic/Beta%20Schedule/near/448438895" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Alec Leamas <a href="https://leamas.github.io/zulip-archive/stream/432618-OCPN-5.2E10-Release-plan/topic/Beta.20Schedule.html#448438895">(Jul 01 2024 at 21:11)</a>:</h4>
+<p>This is just so strange. I'll make a test myself</p>
+
+
+
+<a name="448439690"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/432618-OCPN%205.10%20Release%20plan/topic/Beta%20Schedule/near/448439690" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Alec Leamas <a href="https://leamas.github.io/zulip-archive/stream/432618-OCPN-5.2E10-Release-plan/topic/Beta.20Schedule.html#448439690">(Jul 01 2024 at 21:17)</a>:</h4>
+<p>... waiting for email</p>
+
+
+
+<a name="448440750"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/432618-OCPN%205.10%20Release%20plan/topic/Beta%20Schedule/near/448440750" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Alec Leamas <a href="https://leamas.github.io/zulip-archive/stream/432618-OCPN-5.2E10-Release-plan/topic/Beta.20Schedule.html#448440750">(Jul 01 2024 at 21:24)</a>:</h4>
+<p>THis is my log. Still got nothing back, as you. LP bugs?</p>
+<div class="codehilite"><pre><span></span><code>gpg --full-generate-key
+gpg (GnuPG) 2.4.4; Copyright (C) 2024 g10 Code GmbH
+This is free software: you are free to change and redistribute it.
+There is NO WARRANTY, to the extent permitted by law.
+
+Please select what kind of key you want:
+   (1) RSA and RSA
+   (2) DSA and Elgamal
+   (3) DSA (sign only)
+   (4) RSA (sign only)
+   (9) ECC (sign and encrypt) *default*
+  (10) ECC (sign only)
+  (14) Existing key from card
+Your selection? 1
+RSA keys may be between 1024 and 4096 bits long.
+What keysize do you want? (3072) 4096
+Requested keysize is 4096 bits
+Please specify how long the key should be valid.
+         0 = key does not expire
+      &lt;n&gt;  = key expires in n days
+      &lt;n&gt;w = key expires in n weeks
+      &lt;n&gt;m = key expires in n months
+      &lt;n&gt;y = key expires in n years
+Key is valid for? (0) 2y
+Key expires at Wed 01 Jul 2026 23:12:43 CEST
+Is this correct? (y/N) y
+
+GnuPG needs to construct a user ID to identify your key.
+
+Real name: foo bar
+Email address: foobar@opencpn.org
+Comment: Test key not to be used
+You selected this USER-ID:
+    &quot;foo bar (Test key not to be used) &lt;foobar@opencpn.org&gt;&quot;
+
+Change (N)ame, (C)omment, (E)mail or (O)kay/(Q)uit? O
+We need to generate a lot of random bytes. It is a good idea to perform
+some other action (type on the keyboard, move the mouse, utilize the
+disks) during the prime generation; this gives the random number
+generator a better chance to gain enough entropy.
+We need to generate a lot of random bytes. It is a good idea to perform
+some other action (type on the keyboard, move the mouse, utilize the
+disks) during the prime generation; this gives the random number
+generator a better chance to gain enough entropy.
+gpg: revocation certificate stored as &#39;/home/mk/.gnupg/openpgp-revocs.d/08939DD795ED8EA0A299A8AA7390C63F3AC690CD.rev&#39;
+public and secret key created and signed.
+
+pub   rsa4096 2024-07-01 [SC] [expires: 2026-07-01]
+      08939DD795ED8EA0A299A8AA7390C63F3AC690CD
+uid                      foo bar (Test key not to be used) &lt;foobar@opencpn.org&gt;
+sub   rsa4096 2024-07-01 [E] [expires: 2026-07-01]
+
+mk@hemulen:~/tmp/repo$ gpg --send-keys --keyserver keyserver.ubuntu.com 0x08939DD795ED8EA0A299A8AA7390C63F3AC690CD
+gpg: sending key 7390C63F3AC690CD to hkp://keyserver.ubuntu.com
+mk@hemulen:~/tmp/repo$ gpg --list-keys --fingerprint 08939DD795ED8EA0A299A8AA7390C63F3AC690CD
+gpg: checking the trustdb
+gpg: marginals needed: 3  completes needed: 1  trust model: pgp
+gpg: depth: 0  valid:   4  signed:   0  trust: 0-, 0q, 0n, 0m, 0f, 4u
+gpg: next trustdb check due at 2026-06-10
+pub   rsa4096 2024-07-01 [SC] [expires: 2026-07-01]
+      0893 9DD7 95ED 8EA0 A299  A8AA 7390 C63F 3AC6 90CD
+uid           [ultimate] foo bar (Test key not to be used) &lt;foobar@opencpn.org&gt;
+sub   rsa4096 2024-07-01 [E] [expires: 2026-07-01]
+</code></pre></div>
+
+
+
+<a name="448440891"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/432618-OCPN%205.10%20Release%20plan/topic/Beta%20Schedule/near/448440891" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Dave Register <a href="https://leamas.github.io/zulip-archive/stream/432618-OCPN-5.2E10-Release-plan/topic/Beta.20Schedule.html#448440891">(Jul 01 2024 at 21:25)</a>:</h4>
+<p>We wait for a lauchpad reboot, whenever.</p>
+
+
+
+<hr><p>Last updated: Jul 01 2024 at 21:26 UTC</p>
 </html>
