@@ -1276,5 +1276,17 @@ But I did get an email notification of that fact.  So again, all seems correct a
 
 
 
-<hr><p>Last updated: Jul 02 2024 at 07:42 UTC</p>
+<a name="448530421"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/432618-OCPN%205.10%20Release%20plan/topic/Beta%20Schedule/near/448530421" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Alec Leamas <a href="https://leamas.github.io/zulip-archive/stream/432618-OCPN-5.2E10-Release-plan/topic/Beta.20Schedule.html#448530421">(Jul 02 2024 at 07:57)</a>:</h4>
+<p>OK. I have pushed a change to ubuntu/jammy and ubuntu/numbat which should handle the version mess.</p>
+<p>The change is about using an epoch. That is. the debian version becomes 1:5.9.x... rather than 5.9.x...  Any version which has an epoch of 1 is deemed as more recent than a version without epoch (the default epoch is 0)</p>
+<p>Using an epoch is not to be taken lightly and needs to be discussed at debian-devel. I have done that, and it seems to boil down to that it's ok in this case: <a href="https://lists.debian.org/debian-devel/2024/07/msg00007.html">https://lists.debian.org/debian-devel/2024/07/msg00007.html</a>.</p>
+<p>The basic drawback is that we need to live with this epoch forever in the debian packages. Otherwise, as long as we are not confused by users reporting a version like 1:5.10.1 instead of  5.10.1,  there should not be any roadblocks.</p>
+<p>Currently rebuilding the arm packages. will take an hour or two.</p>
+<p>TL; DR; The branches ubuntu/numbat and ubuntu/jammy are ready if after being pulled from github.  After making <code>debuild -S ...</code> the generated source packages should be ok to upload to launchpad.</p>
+<p>You can check the package version by inspecting debian/changelog. The first line contains the version which should have a leading 1: prefix.</p>
+
+
+
+<hr><p>Last updated: Jul 02 2024 at 08:12 UTC</p>
 </html>

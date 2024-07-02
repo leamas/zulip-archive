@@ -898,5 +898,11 @@
         "id": 448497184,
         "sender_full_name": "Dave Register",
         "timestamp": 1719893181
+    },
+    {
+        "content": "<p>OK. I have pushed a change to ubuntu/jammy and ubuntu/numbat which should handle the version mess.</p>\n<p>The change is about using an epoch. That is. the debian version becomes 1:5.9.x... rather than 5.9.x...  Any version which has an epoch of 1 is deemed as more recent than a version without epoch (the default epoch is 0)</p>\n<p>Using an epoch is not to be taken lightly and needs to be discussed at debian-devel. I have done that, and it seems to boil down to that it's ok in this case: <a href=\"https://lists.debian.org/debian-devel/2024/07/msg00007.html\">https://lists.debian.org/debian-devel/2024/07/msg00007.html</a>.</p>\n<p>The basic drawback is that we need to live with this epoch forever in the debian packages. Otherwise, as long as we are not confused by users reporting a version like 1:5.10.1 instead of  5.10.1,  there should not be any roadblocks.</p>\n<p>Currently rebuilding the arm packages. will take an hour or two.</p>\n<p>TL; DR; The branches ubuntu/numbat and ubuntu/jammy are ready if after being pulled from github.  After making <code>debuild -S ...</code> the generated source packages should be ok to upload to launchpad.</p>\n<p>You can check the package version by inspecting debian/changelog. The first line contains the version which should have a leading 1: prefix.</p>",
+        "id": 448530421,
+        "sender_full_name": "Alec Leamas",
+        "timestamp": 1719907031
     }
 ]
