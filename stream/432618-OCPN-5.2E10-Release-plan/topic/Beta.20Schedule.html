@@ -1492,5 +1492,16 @@ So launchpad knows how to email me.</p>
 
 
 
-<hr><p>Last updated: Jul 02 2024 at 20:10 UTC</p>
+<a name="448694041"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/432618-OCPN%205.10%20Release%20plan/topic/Beta%20Schedule/near/448694041" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Alec Leamas <a href="https://leamas.github.io/zulip-archive/stream/432618-OCPN-5.2E10-Release-plan/topic/Beta.20Schedule.html#448694041">(Jul 02 2024 at 20:11)</a>:</h4>
+<p>Ah... the source.changes does not include the source tarball. For some reason debuild has decided that it already exists at lp. Do this:</p>
+<ol>
+<li>Rebuild the source package using <code>debuild --no-lintian -S -sa -k4A57DDF4719374E5A8FD2637E5216EEB1ACFED1D</code></li>
+<li>Check that  the generated opencpn_5.9.2-beta2dfsg-1ubuntu1bpo2204.2_source.changes contains a row like <code>19d2d82ae7cbc7cde9ae885c3a3ace0d 34400412 misc optional opencpn_5.9.2-beta2+dfsg.orig.tar.xz</code></li>
+<li>Push the source.changes file using dput. If dput rightfully complains that it's already pushed, use <code>dput -f</code> to override that check and push it anyway.</li>
+</ol>
+
+
+
+<hr><p>Last updated: Jul 02 2024 at 20:29 UTC</p>
 </html>
