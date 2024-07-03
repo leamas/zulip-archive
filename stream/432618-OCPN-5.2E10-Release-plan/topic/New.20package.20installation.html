@@ -102,5 +102,46 @@ They do not appear in the e.g. ubuntu/jammy branch of debian/control.</p>
 
 
 
-<hr><p>Last updated: Jul 03 2024 at 20:10 UTC</p>
+<a name="448939842"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/432618-OCPN%205.10%20Release%20plan/topic/New%20package%20installation/near/448939842" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Alec Leamas <a href="https://leamas.github.io/zulip-archive/stream/432618-OCPN-5.2E10-Release-plan/topic/New.20package.20installation.html#448939842">(Jul 03 2024 at 20:10)</a>:</h4>
+<p>Should not be a problem to add at all</p>
+
+
+
+<a name="448940064"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/432618-OCPN%205.10%20Release%20plan/topic/New%20package%20installation/near/448940064" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Alec Leamas <a href="https://leamas.github.io/zulip-archive/stream/432618-OCPN-5.2E10-Release-plan/topic/New.20package.20installation.html#448940064">(Jul 03 2024 at 20:11)</a>:</h4>
+<p>Don't remember the details. Do we build that library as part of the overall opencpn build?</p>
+
+
+
+<a name="448940637"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/432618-OCPN%205.10%20Release%20plan/topic/New%20package%20installation/near/448940637" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Dave Register <a href="https://leamas.github.io/zulip-archive/stream/432618-OCPN-5.2E10-Release-plan/topic/New.20package.20installation.html#448940637">(Jul 03 2024 at 20:14)</a>:</h4>
+<p>No, it is a separate library that I maintain in the Production PPA.<br>
+The sglock library, in turn, requires libusb-0.1-4.</p>
+<p>This is what we had in legacy PPA builds:</p>
+<div class="codehilite"><pre><span></span><code>Recommends: xcalib,xdg-utils,opencpn-doc,opencpn-sglock-amd64,opencpn-sglock-arm64,opencpn-sglock-arm32,libusb-0.1-4
+</code></pre></div>
+
+
+
+<a name="448941059"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/432618-OCPN%205.10%20Release%20plan/topic/New%20package%20installation/near/448941059" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Alec Leamas <a href="https://leamas.github.io/zulip-archive/stream/432618-OCPN-5.2E10-Release-plan/topic/New.20package.20installation.html#448941059">(Jul 03 2024 at 20:16)</a>:</h4>
+<p>OK, small steps. Adding Recommends:  is a no-brainer.  In order to resolve this users still needs the PPA, but nothing should break if they don't need it and thus don't uses the PPA.</p>
+
+
+
+<a name="448941550"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/432618-OCPN%205.10%20Release%20plan/topic/New%20package%20installation/near/448941550" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Alec Leamas <a href="https://leamas.github.io/zulip-archive/stream/432618-OCPN-5.2E10-Release-plan/topic/New.20package.20installation.html#448941550">(Jul 03 2024 at 20:18)</a>:</h4>
+<p>Moving the sglock to Debian might be hard or impossible since this is not FOSS.  I think Ubuntu is somewhat more relaxed about it. But we can postpone this to later.</p>
+
+
+
+<a name="448942054"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/432618-OCPN%205.10%20Release%20plan/topic/New%20package%20installation/near/448942054" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Dave Register <a href="https://leamas.github.io/zulip-archive/stream/432618-OCPN-5.2E10-Release-plan/topic/New.20package.20installation.html#448942054">(Jul 03 2024 at 20:21)</a>:</h4>
+<p>Indeed.  The (only) annoying part of our "plugins-in-user-space" model.<br>
+I guess the sglock libs are not included in the bookworm backports repo?</p>
+
+
+
+<hr><p>Last updated: Jul 03 2024 at 20:26 UTC</p>
 </html>
