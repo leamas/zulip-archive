@@ -322,5 +322,11 @@
         "id": 449180110,
         "sender_full_name": "Dave Register",
         "timestamp": 1720136836
+    },
+    {
+        "content": "<p>You have the final word. That said, let's try to sort out the consequences. It's about how we handle sglock in a wider perspective. Brain dump ahead.</p>\n<p>Using the PPA is not a practical solution for Debian users. We could mitigate the consequences by creating a separate PPA containing only the sglock stuff to avoid loading wrong versions of stuff in the main opencpn PPA. It would still require Debian users to add this repo manually  to /etc/apt/sources.list.d.  Workable, but not pretty -- debian users are rightfully hesitant to add Ubuntu PPA:s to the configuration creating what's known as FrankenDebian.</p>\n<p>We can package sglock in a official non-free Debian package. Debian users will have to enable the non-free section in sources.list manually but would otherwise be fine. </p>\n<p>If we package sglock this way and have a R: opencpn-sglock opencpn will have to be moved to the contrib section. This is not that dramatic on Debian, but also means that opencpn will be imported to the Ubuntu multiverse which not is enabled by default. Using S: works around this.</p>\n<p>The third option is to download the library from within opencpn in the same way as we download charts and plugins.</p>\n<p>Possible strategy could be:</p>\n<ol>\n<li>Use R: in the PPA packages for now targeting Ubuntu users.</li>\n<li>Add a separate sglock launchpad repo and documentation for Debian users as a transition solution.</li>\n<li>In 5.12 implement downloading the driver from within opencpn,  avoiding the need to mess with PPA:s and sources.list.</li>\n</ol>\n<p>Sorry for long post. Thoughts?</p>",
+        "id": 449232828,
+        "sender_full_name": "Alec Leamas",
+        "timestamp": 1720162742
     }
 ]
