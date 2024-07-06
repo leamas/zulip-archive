@@ -418,5 +418,35 @@
         "id": 449459558,
         "sender_full_name": "Alec Leamas",
         "timestamp": 1720254482
+    },
+    {
+        "content": "<p>The problem is the leamas-alec/wxWidgets repo. !t contains a broken wxWidgets 3.1 build which cannot be updated since there are also wxWidgets 3.2 builds.</p>\n<p>I have changed the leamas-alec/wxwidgets dependency (containing both 3.1 and 3.2) to leamas-alec/wxwidgets3.2.  This makes everything build.  Interestingly it also clears <a href=\"https://github.com/opencpn/OpenCPN/issues/4027\">#4027</a> i. e., all of a sudden the armhf builds  does not fail. Not digged into why.</p>\n<p>It all makes sense, wxwidgets3.1 was a transition state. We only use 3.0 for focal and 3.2 for jammy and noble. The repo we need is 3.2 for jammy, the rest is in Ubuntu</p>",
+        "id": 449478845,
+        "sender_full_name": "Alec Leamas",
+        "timestamp": 1720264960
+    },
+    {
+        "content": "<p>Reference builds: <a href=\"https://launchpad.net/~leamas-alec/+archive/ubuntu/opencpn\">https://launchpad.net/~leamas-alec/+archive/ubuntu/opencpn</a></p>",
+        "id": 449478865,
+        "sender_full_name": "Alec Leamas",
+        "timestamp": 1720264985
+    },
+    {
+        "content": "<p><span class=\"user-mention\" data-user-id=\"517002\">@Dave Register</span> ^</p>",
+        "id": 449478877,
+        "sender_full_name": "Alec Leamas",
+        "timestamp": 1720264994
+    },
+    {
+        "content": "<p>This means you might want to create new builds after changing the dependencies. I can of course help you, but here is the shortcut:</p>\n<div class=\"codehilite\"><pre><span></span><code>    $ git checkout ubuntu/whatever\n    $ git clean -fxd; git checkout .\n    $ dch -R     # Throws you in an editor. Write the log message, here &quot;Trigger new build&quot;\n    $ dch -r\n    $ git diff\n    $ git commit -am &quot; 1:5.9.2-beta2+dfsg-1ubuntu1~bpo2204.8&quot;    # Version as displayed by git diff above\n    $ debuild ...\n    $ dput ...\n    $ git push github ubuntu/whatever\n</code></pre></div>\n<p>... assuming you still call the remote github. Might of course be for example origin or upstream.</p>",
+        "id": 449481135,
+        "sender_full_name": "Alec Leamas",
+        "timestamp": 1720265855
+    },
+    {
+        "content": "<blockquote>\n<p>all of a sudden the armhf builds does not fail</p>\n</blockquote>\n<p>Except on noble, same old  <a href=\"https://github.com/opencpn/OpenCPN/issues/4027\">#4027</a> error.</p>",
+        "id": 449482000,
+        "sender_full_name": "Alec Leamas",
+        "timestamp": 1720266094
     }
 ]

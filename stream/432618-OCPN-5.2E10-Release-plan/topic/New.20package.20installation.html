@@ -517,5 +517,51 @@ opencpn_5.9.2-beta2+dfsg-1ubuntu1~bpo2004.4.dsc: Version older than that in the 
 
 
 
-<hr><p>Last updated: Jul 06 2024 at 11:22 UTC</p>
+<a name="449478845"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/432618-OCPN%205.10%20Release%20plan/topic/New%20package%20installation/near/449478845" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Alec Leamas <a href="https://leamas.github.io/zulip-archive/stream/432618-OCPN-5.2E10-Release-plan/topic/New.20package.20installation.html#449478845">(Jul 06 2024 at 11:22)</a>:</h4>
+<p>The problem is the leamas-alec/wxWidgets repo. !t contains a broken wxWidgets 3.1 build which cannot be updated since there are also wxWidgets 3.2 builds.</p>
+<p>I have changed the leamas-alec/wxwidgets dependency (containing both 3.1 and 3.2) to leamas-alec/wxwidgets3.2.  This makes everything build.  Interestingly it also clears <a href="https://github.com/opencpn/OpenCPN/issues/4027">#4027</a> i. e., all of a sudden the armhf builds  does not fail. Not digged into why.</p>
+<p>It all makes sense, wxwidgets3.1 was a transition state. We only use 3.0 for focal and 3.2 for jammy and noble. The repo we need is 3.2 for jammy, the rest is in Ubuntu</p>
+
+
+
+<a name="449478865"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/432618-OCPN%205.10%20Release%20plan/topic/New%20package%20installation/near/449478865" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Alec Leamas <a href="https://leamas.github.io/zulip-archive/stream/432618-OCPN-5.2E10-Release-plan/topic/New.20package.20installation.html#449478865">(Jul 06 2024 at 11:23)</a>:</h4>
+<p>Reference builds: <a href="https://launchpad.net/~leamas-alec/+archive/ubuntu/opencpn">https://launchpad.net/~leamas-alec/+archive/ubuntu/opencpn</a></p>
+
+
+
+<a name="449478877"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/432618-OCPN%205.10%20Release%20plan/topic/New%20package%20installation/near/449478877" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Alec Leamas <a href="https://leamas.github.io/zulip-archive/stream/432618-OCPN-5.2E10-Release-plan/topic/New.20package.20installation.html#449478877">(Jul 06 2024 at 11:23)</a>:</h4>
+<p><span class="user-mention" data-user-id="517002">@Dave Register</span> ^</p>
+
+
+
+<a name="449481135"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/432618-OCPN%205.10%20Release%20plan/topic/New%20package%20installation/near/449481135" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Alec Leamas <a href="https://leamas.github.io/zulip-archive/stream/432618-OCPN-5.2E10-Release-plan/topic/New.20package.20installation.html#449481135">(Jul 06 2024 at 11:37)</a>:</h4>
+<p>This means you might want to create new builds after changing the dependencies. I can of course help you, but here is the shortcut:</p>
+<div class="codehilite"><pre><span></span><code>    $ git checkout ubuntu/whatever
+    $ git clean -fxd; git checkout .
+    $ dch -R     # Throws you in an editor. Write the log message, here &quot;Trigger new build&quot;
+    $ dch -r
+    $ git diff
+    $ git commit -am &quot; 1:5.9.2-beta2+dfsg-1ubuntu1~bpo2204.8&quot;    # Version as displayed by git diff above
+    $ debuild ...
+    $ dput ...
+    $ git push github ubuntu/whatever
+</code></pre></div>
+<p>... assuming you still call the remote github. Might of course be for example origin or upstream.</p>
+
+
+
+<a name="449482000"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/432618-OCPN%205.10%20Release%20plan/topic/New%20package%20installation/near/449482000" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Alec Leamas <a href="https://leamas.github.io/zulip-archive/stream/432618-OCPN-5.2E10-Release-plan/topic/New.20package.20installation.html#449482000">(Jul 06 2024 at 11:41)</a>:</h4>
+<blockquote>
+<p>all of a sudden the armhf builds does not fail</p>
+</blockquote>
+<p>Except on noble, same old  <a href="https://github.com/opencpn/OpenCPN/issues/4027">#4027</a> error.</p>
+
+
+
+<hr><p>Last updated: Jul 06 2024 at 11:42 UTC</p>
 </html>
