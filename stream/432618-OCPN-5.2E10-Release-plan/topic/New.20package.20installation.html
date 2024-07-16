@@ -723,5 +723,54 @@ Thanks</p>
 
 
 
-<hr><p>Last updated: Jul 16 2024 at 15:08 UTC</p>
+<a name="451781696"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/432618-OCPN%205.10%20Release%20plan/topic/New%20package%20installation/near/451781696" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Håkan Svensson <a href="https://leamas.github.io/zulip-archive/stream/432618-OCPN-5.2E10-Release-plan/topic/New.20package.20installation.html#451781696">(Jul 16 2024 at 15:10)</a>:</h4>
+<p><span class="user-mention" data-user-id="517002">@Dave Register</span> <br>
+Present Git master gives here an error creating the package by VS2022.<br>
+That's strange since it's builds fine upstream?<br>
+What I undertand it's the .html file listed below that is causing trouble when it shall be compressed. All files, also this in question, are present in the NSIS folder to be compressed.<br>
+Could it be that the long (161 chr) file name can still have impact for Windows???<br>
+The main error as of below list: "EXEC : CPack error : Problem compressing the directory"</p>
+<div class="codehilite" data-code-language="nsisoutput.log"><pre><span></span><code>Processing script file: "C:/Builds/OCPN/OpenCPN/build/_CPack_Packages/win32/NSIS/project.nsi" (ACP)
+
+File: failed opening file "C:/Builds/OCPN/OpenCPN/build/_CPack_Packages/win32/NSIS/opencpn_5.9.1.10_setup\doc\chart_installation\tb-options-charts-chartdownloader-downloadcharts-updatecat.id.opencpn_3Amanual_basic_3Aquick_start_guide_3Achart_installation_3Achartdownloader.jpg.detail.html"
+
+Error in script "C:/Builds/OCPN/OpenCPN/build/_CPack_Packages/win32/NSIS/project.nsi" on line 827 -- aborting creation process
+
+
+
+project.nsi" line 827:
+;# Install Section /hidden
+Section "-Install Section" SecInstall
+        ;#File "C:/Builds/OCPN/OpenCPN/build\_CPack_Packages\win32\NSIS\opencpn_5.9.1.10_setup\bin\opencpn-cmd.exe"
+        ;#File "C:/Builds/OCPN/OpenCPN/build\_CPack_Packages\win32\NSIS\opencpn_5.9.1.10_setup\bin\opencpn-glutil.exe"
+    File /r "${INST_DIR}\*.*"
+
+
+
+VS error
+1&gt;EXEC : CPack error : Problem running NSIS command: "C:/Program Files (x86)/NSIS/makensis.exe"  "C:/Builds/OCPN/OpenCPN/build/_CPack_Packages/win32/NSIS/project.nsi"
+1&gt;Please check C:/Builds/OCPN/OpenCPN/build/_CPack_Packages/win32/NSIS/NSISOutput.log for errors
+1&gt;EXEC : CPack error : Problem compressing the directory
+1&gt;EXEC : CPack error : Error when generating package: OpenCPN
+1&gt;C:\Program Files\Microsoft Visual Studio\2022\Community\MSBuild\Microsoft\VC\v170\Microsoft.CppCommon.targets(166,5): error MSB3073: The command "setlocal
+1&gt;C:\Program Files\Microsoft Visual Studio\2022\Community\MSBuild\Microsoft\VC\v170\Microsoft.CppCommon.targets(166,5): error MSB3073: cd C:\Builds\OCPN\OpenCPN\build
+1&gt;C:\Program Files\Microsoft Visual Studio\2022\Community\MSBuild\Microsoft\VC\v170\Microsoft.CppCommon.targets(166,5): error MSB3073: if %errorlevel% neq 0 goto :cmEnd
+1&gt;C:\Program Files\Microsoft Visual Studio\2022\Community\MSBuild\Microsoft\VC\v170\Microsoft.CppCommon.targets(166,5): error MSB3073: C:
+1&gt;C:\Program Files\Microsoft Visual Studio\2022\Community\MSBuild\Microsoft\VC\v170\Microsoft.CppCommon.targets(166,5): error MSB3073: if %errorlevel% neq 0 goto :cmEnd
+1&gt;C:\Program Files\Microsoft Visual Studio\2022\Community\MSBuild\Microsoft\VC\v170\Microsoft.CppCommon.targets(166,5): error MSB3073: "C:\Program Files\CMake\bin\cpack.exe" -C Release --config ./CPackConfig.cmake
+1&gt;C:\Program Files\Microsoft Visual Studio\2022\Community\MSBuild\Microsoft\VC\v170\Microsoft.CppCommon.targets(166,5): error MSB3073: if %errorlevel% neq 0 goto :cmEnd
+1&gt;C:\Program Files\Microsoft Visual Studio\2022\Community\MSBuild\Microsoft\VC\v170\Microsoft.CppCommon.targets(166,5): error MSB3073: :cmEnd
+1&gt;C:\Program Files\Microsoft Visual Studio\2022\Community\MSBuild\Microsoft\VC\v170\Microsoft.CppCommon.targets(166,5): error MSB3073: endlocal &amp; call :cmErrorLevel %errorlevel% &amp; goto :cmDone
+1&gt;C:\Program Files\Microsoft Visual Studio\2022\Community\MSBuild\Microsoft\VC\v170\Microsoft.CppCommon.targets(166,5): error MSB3073: :cmErrorLevel
+1&gt;C:\Program Files\Microsoft Visual Studio\2022\Community\MSBuild\Microsoft\VC\v170\Microsoft.CppCommon.targets(166,5): error MSB3073: exit /b %1
+1&gt;C:\Program Files\Microsoft Visual Studio\2022\Community\MSBuild\Microsoft\VC\v170\Microsoft.CppCommon.targets(166,5): error MSB3073: :cmDone
+1&gt;C:\Program Files\Microsoft Visual Studio\2022\Community\MSBuild\Microsoft\VC\v170\Microsoft.CppCommon.targets(166,5): error MSB3073: if %errorlevel% neq 0 goto :VCEnd
+1&gt;C:\Program Files\Microsoft Visual Studio\2022\Community\MSBuild\Microsoft\VC\v170\Microsoft.CppCommon.targets(166,5): error MSB3073: :VCEnd" exited with code 1.
+1&gt;Done building project "PACKAGE.vcxproj" -- FAILED.
+</code></pre></div>
+
+
+
+<hr><p>Last updated: Jul 16 2024 at 15:23 UTC</p>
 </html>
