@@ -72,5 +72,85 @@ dpkg-buildpackage -us -uc -ui -S -sa failed</p>
 
 
 
-<hr><p>Last updated: Jul 21 2024 at 14:08 UTC</p>
+<a name="452990169"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/432618-OCPN%205.10%20Release%20plan/topic/beta%203/near/452990169" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Alec Leamas <a href="https://leamas.github.io/zulip-archive/stream/432618-OCPN-5.2E10-Release-plan/topic/beta.203.html#452990169">(Jul 21 2024 at 14:17)</a>:</h4>
+<p>Works for me. Attaching log, note the state of all branches and tags. Anything which differs?</p>
+<div class="codehilite"><pre><span></span><code>al@focal:~$ cd OpenCPN/OpenCPN/
+al@focal:~/OpenCPN/OpenCPN$ git branch
+  debian/sid
+  focal-backports
+  old
+  patch-queue/focal-backports
+  pristine-tar
+* ubuntu/focal
+  ubuntu/jammy
+  ubuntu/numbat
+  upstream/latest
+al@focal:~/OpenCPN/OpenCPN$ git rev-parse HEAD
+815bf583c5ecb2a34e602406ab785619fff15ba6
+
+al@focal:~/OpenCPN/OpenCPN$ git rev-parse upstream/latest
+325cac555ea76971b2642b975b72a6f67e791452
+
+al@focal:~/OpenCPN/OpenCPN$ git rev-parse pristine-tar
+962d28ca5f162b13a49c327c35cdda6172a965b3
+
+al@focal:~/OpenCPN/OpenCPN$ git rev-parse upstream/5.9.3_beta3+dfsg
+938e8849eceb24f73e34f6f827e1b98fd7621937
+
+al@focal:~/OpenCPN/OpenCPN$ git rev-parse v5.9.3-beta3
+9d702359580399c278c521201a00e1fb9eb872db
+
+
+al@focal:~/OpenCPN/OpenCPN$ git clean -fxd; git checkout .
+Removing debian/files
+Updated 0 paths from the index
+
+al@focal:~/OpenCPN/OpenCPN$ debuild --no-lintian -S -kE2EA41DCE2F8A99AD17A1E463A67D5D966D15C5C
+ dpkg-buildpackage -us -uc -ui -S
+dpkg-buildpackage: info: source package opencpn
+dpkg-buildpackage: info: source version 1:5.9.3~beta3+dfsg-1ubuntu1~bpo2004+1
+dpkg-buildpackage: info: source distribution focal
+dpkg-buildpackage: info: source changed by Alec Leamas &lt;leamas.alec@gmail.com&gt;
+ dpkg-source --before-build .
+dpkg-source: info: using patch list from debian/patches/series
+dpkg-source: info: applying 0001-build-Drop-removed-CoC-1973_2018-InlandECDIS_2022091.patch
+dpkg-source: info: applying 0002-Add-missing-libs-like-tinyxml-Debian-work-around.patch
+dpkg-source: info: applying 0003-tests-Disable-time-dependent-Buffer.RateLimit2-test.patch
+dpkg-source: info: applying 0004-build-Use-system-shapelib-if-available.patch
+dpkg-source: info: applying 0005-CMakeLists-help_web.html-path-error-fix.patch
+ debian/rules clean
+dh clean
+   dh_clean
+ dpkg-source -b .
+dpkg-source: warning: Version number suggests Ubuntu changes, but Maintainer: does not have Ubuntu address
+dpkg-source: warning: Version number suggests Ubuntu changes, but there is no XSBC-Original-Maintainer field
+dpkg-source: info: using source format &#39;3.0 (quilt)&#39;
+dpkg-source: info: building opencpn using existing ./opencpn_5.9.3~beta3+dfsg.orig.tar.xz
+dpkg-source: info: using patch list from debian/patches/series
+dpkg-source: info: building opencpn in opencpn_5.9.3~beta3+dfsg-1ubuntu1~bpo2004+1.debian.tar.xz
+dpkg-source: info: building opencpn in opencpn_5.9.3~beta3+dfsg-1ubuntu1~bpo2004+1.dsc
+ dpkg-genbuildinfo --build=source
+ dpkg-genchanges --build=source &gt;../opencpn_5.9.3~beta3+dfsg-1ubuntu1~bpo2004+1_source.changes
+dpkg-genchanges: info: including full source code in upload
+ dpkg-source --after-build .
+dpkg-source: info: unapplying 0005-CMakeLists-help_web.html-path-error-fix.patch
+dpkg-source: info: unapplying 0004-build-Use-system-shapelib-if-available.patch
+dpkg-source: info: unapplying 0003-tests-Disable-time-dependent-Buffer.RateLimit2-test.patch
+dpkg-source: info: unapplying 0002-Add-missing-libs-like-tinyxml-Debian-work-around.patch
+dpkg-source: info: unapplying 0001-build-Drop-removed-CoC-1973_2018-InlandECDIS_2022091.patch
+dpkg-buildpackage: info: full upload (original source is included)
+Now signing changes and any dsc files...
+ signfile dsc opencpn_5.9.3~beta3+dfsg-1ubuntu1~bpo2004+1.dsc E2EA41DCE2F8A99AD17A1E463A67D5D966D15C5C
+
+ fixup_buildinfo opencpn_5.9.3~beta3+dfsg-1ubuntu1~bpo2004+1.dsc opencpn_5.9.3~beta3+dfsg-1ubuntu1~bpo2004+1_source.buildinfo
+ signfile buildinfo opencpn_5.9.3~beta3+dfsg-1ubuntu1~bpo2004+1_source.buildinfo E2EA41DCE2F8A99AD17A1E463A67D5D966D15C5C
+
+ fixup_changes dsc opencpn_5.9.3~beta3+dfsg-1ubuntu1~bpo2004+1.dsc opencpn_5.9.3~beta3+dfsg-1ubuntu1~bpo2004+1_source.changes
+ fixup_changes buildinfo opencpn_5.9.3~beta3+dfsg-1ubuntu1~bpo2004+1_source.buildinfo opencpn_5.9.3~beta3+dfsg-1ubuntu1~bpo2004+1_source.changes
+</code></pre></div>
+
+
+
+<hr><p>Last updated: Jul 21 2024 at 14:27 UTC</p>
 </html>
