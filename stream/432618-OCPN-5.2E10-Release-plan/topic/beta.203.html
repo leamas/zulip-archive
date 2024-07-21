@@ -31,5 +31,46 @@
 
 
 
-<hr><p>Last updated: Jul 21 2024 at 13:42 UTC</p>
+<a name="452987522"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/432618-OCPN%205.10%20Release%20plan/topic/beta%203/near/452987522" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Alec Leamas <a href="https://leamas.github.io/zulip-archive/stream/432618-OCPN-5.2E10-Release-plan/topic/beta.203.html#452987522">(Jul 21 2024 at 13:46)</a>:</h4>
+<p>Ubuntu test builds moved to  <a href="https://launchpad.net/~leamas-alec/+archive/ubuntu/opencpn">https://launchpad.net/~leamas-alec/+archive/ubuntu/opencpn</a></p>
+
+
+
+<a name="452987753"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/432618-OCPN%205.10%20Release%20plan/topic/beta%203/near/452987753" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Dave Register <a href="https://leamas.github.io/zulip-archive/stream/432618-OCPN-5.2E10-Release-plan/topic/beta.203.html#452987753">(Jul 21 2024 at 13:48)</a>:</h4>
+<p><span class="user-mention" data-user-id="399510">@Alec Leamas</span> <br>
+debuild  for focal fails.</p>
+<div class="codehilite"><pre><span></span><code>$ debuild --no-lintian -S -sa -k4A57DDF4719374E5A8FD2637E5216EEB1ACFED1D
+</code></pre></div>
+
+<p>dpkg-buildpackage -us -uc -ui -S -sa<br>
+dpkg-buildpackage: info: source package opencpn<br>
+dpkg-buildpackage: info: source version 1:5.9.3~beta3+dfsg-1ubuntu1~bpo2004+1<br>
+dpkg-buildpackage: info: source distribution focal<br>
+dpkg-buildpackage: info: source changed by Alec Leamas &lt;<a href="mailto:leamas.alec@gmail.com">leamas.alec@gmail.com</a>&gt;<br>
+ dpkg-source --before-build .<br>
+ debian/rules clean<br>
+dh clean<br>
+   dh_clean<br>
+ dpkg-source -b .<br>
+dpkg-source: warning: Version number suggests Ubuntu changes, but Maintainer: does not have Ubuntu address<br>
+dpkg-source: warning: Version number suggests Ubuntu changes, but there is no XSBC-Original-Maintainer field<br>
+dpkg-source: info: using source format '3.0 (quilt)'<br>
+dpkg-source: info: building opencpn using existing ./opencpn_5.9.3~beta3+dfsg.orig.tar.xz<br>
+dpkg-source: info: using patch list from debian/patches/series<br>
+dpkg-source: info: local changes detected, the modified files are:<br>
+ OpenCPN/CMakeLists.txt<br>
+ OpenCPN/cmake/in-files/config.h.in<br>
+ OpenCPN/test/buffer_tests.cpp<br>
+dpkg-source: error: aborting due to unexpected upstream changes, see /tmp/opencpn_5.9.3~beta3+dfsg-1ubuntu1~bpo2004+1.diff.Z2EzLD<br>
+dpkg-source: info: Hint: make sure the version in debian/changelog matches the unpacked source tree<br>
+dpkg-source: info: you can integrate the local changes with dpkg-source --commit<br>
+dpkg-buildpackage: error: dpkg-source -b . subprocess returned exit status 2<br>
+debuild: fatal error at line 1182:<br>
+dpkg-buildpackage -us -uc -ui -S -sa failed</p>
+
+
+
+<hr><p>Last updated: Jul 21 2024 at 14:08 UTC</p>
 </html>
