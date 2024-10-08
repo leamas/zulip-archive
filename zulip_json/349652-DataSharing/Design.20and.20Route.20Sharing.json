@@ -514,5 +514,35 @@
         "id": 340929554,
         "sender_full_name": "Håkan Svensson",
         "timestamp": 1678471185
+    },
+    {
+        "content": "<p><span class=\"user-mention\" data-user-id=\"399510\">@Alec Leamas</span> <br>\nSend to peer from one specific Debian Rpi4<br>\nOn one Rpi4 it's no problem when he's a server e.g. send to Rpi 4 from a Win.<br>\nBut when that Rpi4 is client, that's send the route to another like a Win, we get the \"Curl transfer error\" \"SSL connect error\", see pict. Only seen on this particular device. Built locally using yesterday's master code in the same manner as other Pi's around. <br>\nThe server host is well detected as of the gdb prints and in the picture below.<br>\nAny hints?</p>\n<div class=\"codehilite\"><pre><span></span><code>reading mDNS query replies\n192.168.1.202:5353 : answer opencpn-object-control-service. PTR openplotter.opencpn-object-control-service. rclass 0x1 ttl 10 length 14\n192.168.1.203:5353 : answer opencpn-object-control-service. PTR openplotter.opencpn-object-control-service. rclass 0x1 ttl 10 length 14\n192.168.1.187:5353 : answer opencpn-object-control-service. PTR KONTORSDATOR.opencpn-object-control-service. rclass 0x1 ttl 10 length 15\n192.168.1.187:5353 : answer opencpn-object-control-service. PTR KONTORSDATOR.opencpn-object-control-service. rclass 0x1 ttl 10 length 15\nRead 8 records\nClosed sockets\n[Thread 0x7f99c23540 (LWP 3166) exited]\n[Thread 0x7fe445a540 (LWP 3137) exited]\n</code></pre></div>\n<p><a href=\"/user_uploads/33951/zVa11mXl0XHNRzr64m5-l8Zo/bild.png\">bild.png</a><br>\n<a href=\"/user_uploads/33951/Ekjzte_oRWO0kiggupoMgo0T/bild.png\">bild.png</a></p>\n<div class=\"message_inline_image\"><a href=\"/user_uploads/33951/zVa11mXl0XHNRzr64m5-l8Zo/bild.png\" title=\"bild.png\"><img src=\"/user_uploads/33951/zVa11mXl0XHNRzr64m5-l8Zo/bild.png\"></a></div><div class=\"message_inline_image\"><a href=\"/user_uploads/33951/Ekjzte_oRWO0kiggupoMgo0T/bild.png\" title=\"bild.png\"><img src=\"/user_uploads/33951/Ekjzte_oRWO0kiggupoMgo0T/bild.png\"></a></div>",
+        "id": 426072971,
+        "sender_full_name": "Håkan Svensson",
+        "timestamp": 1710231170
+    },
+    {
+        "content": "<p>The first test is to use curl on the command line to verify the server part. There is some docs at <a href=\"https://opencpn-manuals.github.io/main/opencpn-dev/rest-interface.html#_headless_pairing\">https://opencpn-manuals.github.io/main/opencpn-dev/rest-interface.html#_headless_pairing</a> .  Using this it should be possible to sort out if this is a server or client side problem.</p>\n<p>You don't need to mess with the  key as the first step. The complete  API is available at <em>model/include/model/rest-server.h</em>. Here you find <code>/api/get-version</code> which should return the server version; it does not need any  source or key.</p>",
+        "id": 426081922,
+        "sender_full_name": "Alec Leamas",
+        "timestamp": 1710234668
+    },
+    {
+        "content": "<p>That is, <code>curl --insecure https://raspbian:8443/api/get-version</code> should return a json reply which is sane;  you need to replace <code>raspbian:8443</code> with your actual <em>server address:port</em></p>",
+        "id": 426082363,
+        "sender_full_name": "Alec Leamas",
+        "timestamp": 1710234837
+    },
+    {
+        "content": "<p>BTW: Before diving into this: a common reason for failing https connections is that the clocks are not  synchronized . Don't ask, just check if you have a correct date and time on both peers first. If not fix it, ntp is your friend.</p>",
+        "id": 426084548,
+        "sender_full_name": "Alec Leamas",
+        "timestamp": 1710235668
+    },
+    {
+        "content": "<p>Thanks for the tip. Will try to check more tomorrow.</p>",
+        "id": 426190907,
+        "sender_full_name": "Håkan Svensson",
+        "timestamp": 1710268849
     }
 ]

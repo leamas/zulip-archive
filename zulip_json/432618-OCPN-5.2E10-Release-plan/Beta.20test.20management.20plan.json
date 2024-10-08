@@ -1,0 +1,92 @@
+[
+    {
+        "content": "<p>Gentlemen...</p>\n<p>Now time to start \"official\" Beta test leading to O5.10.x<br>\nI hope to manage the test process following the pattern we have used before.<br>\nHere is the plan:</p>\n<ol>\n<li>I will create a new branch on github, from current \"master\", called \"v5.9.x\"</li>\n<li>All Beta build artifacts, including Launchpad builds, will work from this branch.</li>\n<li>We will post Beta test bug fixes, and other improvements, to branch master.</li>\n<li>From time to time I will cherry-pick commits from master to v5.9.x, bump the OCPN displayed version number there, and announce an upgrade for Beta testing.</li>\n<li>When ready to release, we bump the version number to O5.10.0, tag the point in git. and call it good.</li>\n</ol>\n<p>There are some unresolved issues left, namely concerning the documentation.  What/how much of the new docs will be included in the release bundle?  etc..  We will work those issues in parallel, while we test the Beta for other functional problems.</p>\n<p>Thoughts on this process, or anything else I may have forgotten about, now is a good time to discuss.</p>\n<p>If all looks good, we will start the process on 9 June, 2024<br>\nDave</p>",
+        "id": 443538726,
+        "sender_full_name": "Dave Register",
+        "timestamp": 1717894657
+    },
+    {
+        "content": "<p>I'm ready to work with the Debian/Ubuntu packaging as soon as the branch exist. However, separate branch or not,  what's really needed to make downstream packaging is a tag  like <code>v5.10-1-beta1</code> or so.</p>",
+        "id": 443571566,
+        "sender_full_name": "Alec Leamas",
+        "timestamp": 1717920505
+    },
+    {
+        "content": "<p>that is, <code>v5.10.1-beta1</code>.</p>",
+        "id": 443585613,
+        "sender_full_name": "Alec Leamas",
+        "timestamp": 1717931909
+    },
+    {
+        "content": "<p>I would prefer to name and tag the beta branch points as \"v5.9.1-beta1\".  Bump to v5.10.0 on release.<br>\nOthe wise, we will end up releasing at something like \"v5.10.7\", or so.  Not so pretty.</p>",
+        "id": 443597389,
+        "sender_full_name": "Dave Register",
+        "timestamp": 1717941502
+    },
+    {
+        "content": "<p>The name of the tag basically doesn't matter. Still:</p>\n<blockquote>\n<p>Othe wise, we will end up releasing at something like \"v5.10.7\", </p>\n</blockquote>\n<p>Why? The common pattern is to release v5.10.1-beta1, v5.10.1-beta2, etc eventually releasing v5.10.1</p>",
+        "id": 443601392,
+        "sender_full_name": "Alec Leamas",
+        "timestamp": 1717944576
+    },
+    {
+        "content": "<p>I do look forward to a released OCPN v5.10.0. Lets hope the Beta test runs smooth and fast.</p>",
+        "id": 443619640,
+        "sender_full_name": "Håkan Svensson",
+        "timestamp": 1717956546
+    },
+    {
+        "content": "<p>Sounds silly, but the main issues is with the Title bar of the App,  The most reliable way that casual users may identify what they have got.  And here, we have \"5.9.1-0\", at least on Windows.  Sadly, other things on other platforms.<br>\nSo indexing the 3rd digit seems the most clear way to identify the App version during Beta.<br>\nOf course, I may be wrong, or there may be a way to get the Windows App to say \"5.10.1-beta1\".<br>\nIdeas?</p>",
+        "id": 443646383,
+        "sender_full_name": "Dave Register",
+        "timestamp": 1717969838
+    },
+    {
+        "content": "<p><span class=\"user-mention silent\" data-user-id=\"517002\">Dave Register</span> <a href=\"#narrow/stream/432618-OCPN-5.2E10-Release-plan/topic/Beta.20test.20management.20plan/near/443646383\">said</a>:</p>\n<blockquote>\n<p>Sounds silly, but the main issues is with the Title bar of the App,  The most reliable way that casual users may identify what they have got.  And here, we have \"5.9.1-0\", at least on Windows.  Sadly, other things on other platforms.<br>\nSo indexing the 3rd digit seems the most clear way to identify the App version during Beta.<br>\nOf course, I may be wrong, or there may be a way to get the Windows App to say \"5.10.1-beta1\".<br>\nIdeas?</p>\n</blockquote>\n<p>We have always used odd minor number for beta releases and it is not uncommon in other projects (like wxWidgets, Gimp etc.). I see no reason not to stick with it even for  5.9 series of betas leading to 5.10.x stable.</p>",
+        "id": 443664016,
+        "sender_full_name": "Pavel Kalian",
+        "timestamp": 1717981888
+    },
+    {
+        "content": "<p>The Beta is started.<br>\nThe build tag is: \"v5.9.1-beta1\"<br>\nLet the games begin....</p>",
+        "id": 443680847,
+        "sender_full_name": "Dave Register",
+        "timestamp": 1717994168
+    },
+    {
+        "content": "<p>OK. I have pushed the branches: ubuntu/noble, ubuntu/jammy and ubuntu/focal. Each of these are configured to build the beta basically as described in <a href=\"https://opencpn-manuals.github.io/main/opencpn-dev/create-deb-package.html\">https://opencpn-manuals.github.io/main/opencpn-dev/create-deb-package.html</a>. </p>\n<p>However, step 3  \"Update debian/changelog with a new version\" and step 4 \"Import the current master branch into upstream/latest\" are already done and should be omitted.</p>\n<p>I have still work to do on the Debian Bookworm stuff. This is more complicated since it means creating a  local apt repository, Debian has nothing like launchpad  or COPR available.  Will look into this later.</p>",
+        "id": 443767220,
+        "sender_full_name": "Alec Leamas",
+        "timestamp": 1718024902
+    },
+    {
+        "content": "<p><span class=\"user-mention\" data-user-id=\"517002\">@Dave Register</span>  ^ </p>\n<p>Please let me know if anything fails, including the docs.</p>\n<p>Note that the last step to upload the package requires a working gpg setup. Let me know if this is a problem</p>",
+        "id": 443767809,
+        "sender_full_name": "Alec Leamas",
+        "timestamp": 1718025072
+    },
+    {
+        "content": "<blockquote>\n<p>I have pushed the branches: ubuntu/noble</p>\n</blockquote>\n<p>Actually named  ubuntu/numbat which arguably is wrong, the official short name is \"noble\". Sigh</p>",
+        "id": 443771162,
+        "sender_full_name": "Alec Leamas",
+        "timestamp": 1718026047
+    },
+    {
+        "content": "<p>Pushed the Flatpak beta build at <a href=\"http://flathub.org\">flathub.org</a>. Usage instructions in the user manual: <a href=\"https://opencpn.org/wiki/dokuwiki/doku.php?id=opencpn:manual_advanced:program:flatpak_qanda#qhow_do_i_install_a_flatpak_beta_release\">https://opencpn.org/wiki/dokuwiki/doku.php?id=opencpn:manual_advanced:program:flatpak_qanda#qhow_do_i_install_a_flatpak_beta_release</a></p>",
+        "id": 443805209,
+        "sender_full_name": "Alec Leamas",
+        "timestamp": 1718035154
+    },
+    {
+        "content": "<p>The Debian Bookworm beta builds are available as an APT repository at <a href=\"http://mumin.crabdance.com/bookworm-backports\">http://mumin.crabdance.com/bookworm-backports</a><br>\nUser instructions: <a href=\"http://mumin.crabdance.com/bookworm-backports/README\">http://mumin.crabdance.com/bookworm-backports/README</a></p>",
+        "id": 443871813,
+        "sender_full_name": "Alec Leamas",
+        "timestamp": 1718057047
+    },
+    {
+        "content": "<p>I have no plans to publish the beta for bullseye at this point</p>",
+        "id": 443872139,
+        "sender_full_name": "Alec Leamas",
+        "timestamp": 1718057237
+    }
+]

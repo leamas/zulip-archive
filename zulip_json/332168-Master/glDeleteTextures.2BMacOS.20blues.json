@@ -1,0 +1,218 @@
+[
+    {
+        "content": "<p><span class=\"user-mention\" data-user-id=\"399510\">@Alec Leamas</span> <br>\nThe lambda function RoutePoint::delete_gl_textures causes some strange trouble on MacOS.  I think it relates to differences in how MacOS (apple silicon) frees memory during object deletion.  Maybe.</p>\n<p>I have added \"if (g_bopengl)\" guard, as a quick fix.<br>\nBut I wonder why this thing is necessary in the first place.</p>\n<p>Is there no other way to do this \"horrible hack\"?</p>",
+        "id": 430610206,
+        "sender_full_name": "Dave Register",
+        "timestamp": 1711984680
+    },
+    {
+        "content": "<blockquote>\n<p>Is there no other way to do this \"horrible hack\"?</p>\n</blockquote>\n<p>There is always other ways.  But the core issue is IMHO what kind of \"strange trouble\" we are talking about.</p>\n<p>The background  for the hack is that  RoutePoint is a model object which is unaware of the <code> glDeleteTextures</code> method, but still need to free the  memory occupied by  for example m_dragIconTexture and m_iTextTexture.  These lives in the RoutePoint because they are accessed there, but here they are just plaint ints.</p>\n<p>A cleaner solution would be to move the m_dragIconTexture and m_iTextTexture to RoutePointGui.   While above my paygrade it would allow to get rid of the evil static destructor callback.  The problem is just the the gui object is transient -- all state is kept in the RoutePoint.</p>\n<p>However,  I don't really think this would solve this particular issue.  If using <code>if (g_bopengl)</code> actually solves the problem it probably means that some variable like  <code>m_dragIconTexture</code>  or <code>m_iTextTexture</code>  have inconsistent values if <code>g_bopengl</code>is false. And we then need to look on how these are initialized and modified to make sure they are handled correctly in this case. </p>\n<p>It would of course be helpful to understand more about what the cause this. If plain debugging does not work (I can see some problems here)  one could remove the guard and just remove one or two of the actual  invocations of <code>RoutePoint::delete_gl_textures</code> in <em>route_point.cpp</em>  to see which is failing.  After all, everything should run fine without them besides the obvious leak.</p>",
+        "id": 430615136,
+        "sender_full_name": "Alec Leamas",
+        "timestamp": 1711986555
+    },
+    {
+        "content": "<div class=\"codehilite\"><pre><span></span><code>= [](unsigned, const unsigned*) { assert(true); };\n</code></pre></div>\n<p>This does not make much sense; should be <code>= [](unsigned, const unsigned*) { };</code></p>",
+        "id": 430615966,
+        "sender_full_name": "Alec Leamas",
+        "timestamp": 1711986839
+    },
+    {
+        "content": "<p>Looking at  <em>gui/src/RolloverWin.cpp</em> things looks messy.  </p>\n<p>The call to  to <code>glDeleteTextures</code></p>\n<div class=\"codehilite\"><pre><span></span><code># ifdef ocpnUSE_GL\n  glDeleteTextures(1, &amp;m_texture);\n#endif\n</code></pre></div>\n<p>Modifed: </p>\n<div class=\"codehilite\"><pre><span></span><code>#ifdef ocpnUSE_GL\n  if (usegl) {\n    if (!m_texture) {\n      glGenTextures(1, &amp;m_texture);\n\n      glBindTexture(g_texture_rectangle_format, m_texture);\n     [...]\n#endif\n</code></pre></div>\n<p>That is, <code>m_texture</code> might very well be modified even if <code>g_bopengl</code> is false.  Bad karma.</p>",
+        "id": 430618124,
+        "sender_full_name": "Alec Leamas",
+        "timestamp": 1711987497
+    },
+    {
+        "content": "<p>4 messages were moved here from <a class=\"stream-topic\" data-stream-id=\"332168\" href=\"/#narrow/stream/332168-Master---5.2E8.2E0--.28was.3A-comms.29/topic/PR.20.233765\">#Master - 5.8.0  (was: comms) &gt; PR #3765</a> by <span class=\"user-mention silent\" data-user-id=\"399510\">Alec Leamas</span>.</p>",
+        "id": 430618710,
+        "sender_full_name": "Notification Bot",
+        "timestamp": 1711987643
+    },
+    {
+        "content": "<p>2 messages were moved here from <a class=\"stream-topic\" data-stream-id=\"361980\" href=\"/#narrow/stream/361980-opencpn-commits/topic/OpenCPN.20.2F.20master\">#opencpn-commits &gt; OpenCPN / master</a> by <span class=\"user-mention silent\" data-user-id=\"399510\">Alec Leamas</span>.</p>",
+        "id": 430618814,
+        "sender_full_name": "Notification Bot",
+        "timestamp": 1711987671
+    },
+    {
+        "content": "<p>... or perhaps not, <code>usegl</code> is only true if  <code>g_bopengl</code> is.</p>",
+        "id": 430620307,
+        "sender_full_name": "Alec Leamas",
+        "timestamp": 1711988135
+    },
+    {
+        "content": "<p><span class=\"user-mention\" data-user-id=\"399510\">@Alec Leamas</span> <br>\nVery strange behavior.  It happens due to the line in RoutePoint DTOR.<br>\nSomehow, the code ends up at the definition of the lambda found in ocpn_app.cpp.<br>\nWhy is that there?  I'm definitely confused.  I see a similar (sort of) definition in RoutePoint.cpp, but that only calls an Assert, for unknown reasons.<br>\n??</p>",
+        "id": 430657297,
+        "sender_full_name": "Dave Register",
+        "timestamp": 1712002687
+    },
+    {
+        "content": "<p>It is as designed.</p>\n<p>RoutePoint need to call the OpenGL destructor routine, but RoutePoint is a model object which knows nothing about OpenGL. Hence,  the destructor helper is defined as a function object.</p>\n<p>By default this function does nothing, Actually, as I wrote it, it asserts(false). This is because the default implementation is not  intended to actually be used.</p>\n<p>At a later point ocpn_app i. e., MyApp sets the destructor helper to a lambda using the openGL routine. After this, RoutePoint can call the OpenGL  destructor  helper without being aware of (linked to) the gui.</p>",
+        "id": 430658253,
+        "sender_full_name": "Alec Leamas",
+        "timestamp": 1712003103
+    },
+    {
+        "content": "<p>To summarize , RoutePoint basically defines a callback which is set by OcpnApp. So far I don't see any problem here.</p>",
+        "id": 430658407,
+        "sender_full_name": "Alec Leamas",
+        "timestamp": 1712003177
+    },
+    {
+        "content": "<p><span class=\"user-mention\" data-user-id=\"399510\">@Alec Leamas</span> <br>\nI resort to a screenshot of the crash, stack trace on lower left panel.<br>\n<a href=\"/user_uploads/33951/nMAK23ATIyiDplbRvLRnRpBS/Screenshot_20240401_162948.png\">Screenshot_20240401_162948.png</a></p>\n<div class=\"message_inline_image\"><a href=\"/user_uploads/33951/nMAK23ATIyiDplbRvLRnRpBS/Screenshot_20240401_162948.png\" title=\"Screenshot_20240401_162948.png\"><img src=\"/user_uploads/33951/nMAK23ATIyiDplbRvLRnRpBS/Screenshot_20240401_162948.png\"></a></div>",
+        "id": 430659005,
+        "sender_full_name": "Dave Register",
+        "timestamp": 1712003461
+    },
+    {
+        "content": "<p>Yes, RoutePoint calls a lambda defined in MyApp::OnInit().  The lambda does not catch anything in the closure, so I don't see any problem here (?)</p>",
+        "id": 430659324,
+        "sender_full_name": "Alec Leamas",
+        "timestamp": 1712003606
+    },
+    {
+        "content": "<p>It calls the lambda because of ocpn_app.cpp around  1790</p>",
+        "id": 430659508,
+        "sender_full_name": "Alec Leamas",
+        "timestamp": 1712003681
+    },
+    {
+        "content": "<p>Except that is has crashed due to EXC_BAD_ACCESS.  Unless I guard with if (g_bopengl).</p>\n<p>Now it is maybe theoretically possible that glDeleteTextures() is unknown if the gl context has not been setup, which is the case if running in no-GL mode.  But we only see this no-GL crash on Mac.  So...</p>",
+        "id": 430659828,
+        "sender_full_name": "Dave Register",
+        "timestamp": 1712003798
+    },
+    {
+        "content": "<p>hm... Perhaps clang has other ideas about a local lambda. hang on...</p>",
+        "id": 430660000,
+        "sender_full_name": "Alec Leamas",
+        "timestamp": 1712003860
+    },
+    {
+        "content": "<p>Does this chnage anything?</p>\n<div class=\"codehilite\"><pre><span></span><code>diff --git a/gui/src/ocpn_app.cpp b/gui/src/ocpn_app.cpp\nindex 37ec10ff9..a564417ec 100644\n--- a/gui/src/ocpn_app.cpp\n+++ b/gui/src/ocpn_app.cpp\n@@ -960,6 +960,16 @@ void MyApp::OnActivateApp(wxActivateEvent &amp;event) {\n\n static wxStopWatch init_sw;\n\n+  // Horrible Hack (tm): Make sure the RoutePoint destructor can invoke\n+  // glDeleteTextures. Truly awful.\n+#ifdef ocpnUSE_GL\n+   static auto delete_textures =\n+      [](unsigned n, const unsigned* texts) { glDeleteTextures(n, texts); };\n+#else\n+   static auto delete_textures = [](unsigned n, const unsigned* texts) { };\n+#endif\n+\n+\n int MyApp::OnRun() {\n   if (m_exitcode != -2) return m_exitcode;\n   return wxAppConsole::OnRun();\n@@ -1785,13 +1795,7 @@ bool MyApp::OnInit() {\n\n   // Horrible Hack (tm): Make sure the RoutePoint destructor can invoke\n   // glDeleteTextures. Truly awful.\n-#ifdef ocpnUSE_GL\n-  RoutePoint::delete_gl_textures =\n-      [](unsigned n, const unsigned* texts) { glDeleteTextures(n, texts); };\n-#else\n-  RoutePoint::delete_gl_textures = [](unsigned n, const unsigned* texts) { };\n-#endif\n-\n+  RoutePoint::delete_gl_textures = delete_textures;\n\n   if (g_start_fullscreen) gFrame-&gt;ToggleFullScreen();\n</code></pre></div>\n<p>Makes sure the  callback isn't referencing an automatic variable which is gone...</p>",
+        "id": 430660537,
+        "sender_full_name": "Alec Leamas",
+        "timestamp": 1712004118
+    },
+    {
+        "content": "<p><span class=\"user-mention\" data-user-id=\"399510\">@Alec Leamas</span> <br>\nNo change. Same crash signature.</p>",
+        "id": 430662414,
+        "sender_full_name": "Dave Register",
+        "timestamp": 1712004929
+    },
+    {
+        "content": "<p>Hm... <a href=\"https://github.com/opencpn/OpenCPN/issues/2\">#2</a>. Thinking while writing...</p>\n<p>The callback will use glDeleteTextures as long as <code>ocpnUSE_GL</code> is defined, g_bopengl  is no part of this decision. The crash is when g_bopengl is false. The idea is that the arguments <code>n</code>and <code>texts</code>both are 0 in this case, but if not?</p>\n<p>Logging (printing) <code>n</code> and <code>texts</code> in the lambda should reveal the truth here. Probably a good idea anyway until this is resolved.</p>",
+        "id": 430662424,
+        "sender_full_name": "Alec Leamas",
+        "timestamp": 1712004933
+    },
+    {
+        "content": "<p>I'll try that.</p>",
+        "id": 430662528,
+        "sender_full_name": "Dave Register",
+        "timestamp": 1712004980
+    },
+    {
+        "content": "<p>Added the line:<br>\n    printf(\"n: %d texts %p *texts:  %d\\n\", n, (void *) texts, *texts);<br>\nResults:<br>\n    n: 1 texts 0x11ef177fc *texts:  0</p>\n<p>No crash on that line, so the args are accessible.</p>",
+        "id": 430663914,
+        "sender_full_name": "Dave Register",
+        "timestamp": 1712005690
+    },
+    {
+        "content": "<p>So, we are sending a perfectly sound  empty vector + a zero count to  glDeleteTextures(), and it crashes?</p>",
+        "id": 430664240,
+        "sender_full_name": "Alec Leamas",
+        "timestamp": 1712005829
+    },
+    {
+        "content": "<p>linkage problem?</p>",
+        "id": 430664359,
+        "sender_full_name": "Alec Leamas",
+        "timestamp": 1712005909
+    },
+    {
+        "content": "<p><span class=\"user-mention\" data-user-id=\"573239\">@Pavel Kalian</span>   Any ideas?</p>",
+        "id": 430664828,
+        "sender_full_name": "Alec Leamas",
+        "timestamp": 1712006141
+    },
+    {
+        "content": "<p>It looks like on macOS any call to the GL functions when OpenGL is not initialized crashes. Either we have been erroneously initializing the GL subsystem when it should have been disabled until now or it changed with some macOS update.</p>",
+        "id": 430665677,
+        "sender_full_name": "Pavel Kalian",
+        "timestamp": 1712006490
+    },
+    {
+        "content": "<p>I agree with pavel.<br>\nDinner now, back later.</p>",
+        "id": 430665862,
+        "sender_full_name": "Dave Register",
+        "timestamp": 1712006560
+    },
+    {
+        "content": "<p>I. e,  we only initialize OpenGL  when  <code>g_bopengl</code> is true whereas we use it if  <code>ocpnUSE_GL</code> is defined. That would make sense.</p>",
+        "id": 430666019,
+        "sender_full_name": "Alec Leamas",
+        "timestamp": 1712006636
+    },
+    {
+        "content": "<p>Perhaps not sense, but it would explain things.</p>",
+        "id": 430666239,
+        "sender_full_name": "Alec Leamas",
+        "timestamp": 1712006729
+    },
+    {
+        "content": "<p><code>ocpnUSE_GL</code> decides whether we build OpenGL support, if we do, we still are able to start with it disabled (In that case <code>g_bopengl == false</code>), so we should not make any such calls in that situation.</p>",
+        "id": 430666342,
+        "sender_full_name": "Pavel Kalian",
+        "timestamp": 1712006778
+    },
+    {
+        "content": "<p>Yup, same thing.</p>",
+        "id": 430666368,
+        "sender_full_name": "Alec Leamas",
+        "timestamp": 1712006800
+    },
+    {
+        "content": "<p>All agree. I need som sleep...</p>",
+        "id": 430666386,
+        "sender_full_name": "Alec Leamas",
+        "timestamp": 1712006816
+    },
+    {
+        "content": "<p>Back...<br>\nSo, current code (with if (g_bopengl) does the job.<br>\nAnd we do not understand why glDeleteTextures() fails on MacOS if OpenGL is not initialized, but passes on all other platforms.  Fine.</p>",
+        "id": 430686816,
+        "sender_full_name": "Dave Register",
+        "timestamp": 1712018650
+    },
+    {
+        "content": "<p>I would say there still is some stuff that needs attention when switching from non-GL to GL mode with plugins. At first sight seems like the GL overlay renderting is invoked before actually being possible.</p>",
+        "id": 430687318,
+        "sender_full_name": "Pavel Kalian",
+        "timestamp": 1712019047
+    },
+    {
+        "content": "<p><span class=\"user-mention\" data-user-id=\"573239\">@Pavel Kalian</span> <br>\nYes.  I agree.  MacOS refreshes the canvas halfway through the switch.  Introduces a vulnerability where g_bopengl is TRUE, but the GL canvas has not been built yet.  It affects the core, as well as plugins.  Working on it.</p>",
+        "id": 430691587,
+        "sender_full_name": "Dave Register",
+        "timestamp": 1712021631
+    },
+    {
+        "content": "<p><span class=\"user-mention\" data-user-id=\"573239\">@Pavel Kalian</span> <br>\nFixed the basic core problem by <a href=\"https://github.com/opencpn/OpenCPN/commit/fc836417cc8feba2f146d1eecb1465e2e4d683d0\">fc836417cc8feba2f146d1eecb1465e2e4d683d0</a><br>\nWhat plugins have similar problem?</p>\n<p>Also fixed Retina ownship size.</p>",
+        "id": 430709036,
+        "sender_full_name": "Dave Register",
+        "timestamp": 1712032243
+    },
+    {
+        "content": "<p>I have already fixed WMM and Grib which were calling GL functions in <code>Init</code><br>\nAll the plugins I have installed at the moment seem to work (But I didn't instal every single one from the catalog), with exception of  Draw, which crashes on macOS in <code>LateInit</code> if started in non-GL mode.</p>",
+        "id": 430778159,
+        "sender_full_name": "Pavel Kalian",
+        "timestamp": 1712060493
+    },
+    {
+        "content": "<p>Fix pushed also to the <code>DC</code> code <code>opencpn-libs</code></p>",
+        "id": 430798765,
+        "sender_full_name": "Pavel Kalian",
+        "timestamp": 1712066871
+    }
+]

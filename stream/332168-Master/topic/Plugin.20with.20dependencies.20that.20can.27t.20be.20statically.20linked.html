@@ -1,0 +1,79 @@
+<html>
+<head><meta charset="utf-8"><title>Plugin with dependencies that can&#x27;t be statically linked · Master · Zulip Chat Archive</title></head>
+<h2>Stream: <a href="https://leamas.github.io/zulip-archive/stream/332168-Master/index.html">Master</a></h2>
+<h3>Topic: <a href="https://leamas.github.io/zulip-archive/stream/332168-Master/topic/Plugin.20with.20dependencies.20that.20can.27t.20be.20statically.20linked.html">Plugin with dependencies that can&#x27;t be statically linked</a></h3>
+
+<hr>
+
+<base href="https://opencpn.zulipchat.com">
+
+<head><link href="https://leamas.github.io/zulip-archive/style.css" rel="stylesheet"></head>
+
+<a name="405705605"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332168-Master/topic/Plugin%20with%20dependencies%20that%20can%27t%20be%20statically%20linked/near/405705605" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Pavel Kalian <a href="https://leamas.github.io/zulip-archive/stream/332168-Master/topic/Plugin.20with.20dependencies.20that.20can.27t.20be.20statically.20linked.html#405705605">(Dec 03 2023 at 22:51)</a>:</h4>
+<p><span class="user-mention" data-user-id="399510">@Alec Leamas</span> I'm resurrecting the Survey plugin. It has dependency on a dynamically loaded SQLite extension (<code>mod_spatialite</code>), which itself has quite a few dependencies (PROJ, LibGEOS etc.). Do you have some suggestion on the least painful way to do it in flatpak? Everywhere else it will probably be OK to handle it using "Do XXX" instruction for the user, where XXX is either "Unpack an archive to the OpenCPN folder" or "Run <code>brew/apt install libspatialite</code>"</p>
+
+
+
+<a name="405706093"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332168-Master/topic/Plugin%20with%20dependencies%20that%20can%27t%20be%20statically%20linked/near/405706093" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Alec Leamas <a href="https://leamas.github.io/zulip-archive/stream/332168-Master/topic/Plugin.20with.20dependencies.20that.20can.27t.20be.20statically.20linked.html#405706093">(Dec 03 2023 at 22:57)</a>:</h4>
+<p>actually, these things are known to not work. Flatpak runs in a sandbox and will not load anything from the host. To make the plugin run in the sandbox you need to add the deps to the manifest, there is no way around.</p>
+<p>The way is to add new snippets to opencpn-libs/flatpak and then use them  as in the shipdriver manifest's use of libglu around line 34.</p>
+<p>You can of course  also add the deps right into the survey manifest. The downside is that such deps are not reusable.</p>
+
+
+
+<a name="405707425"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332168-Master/topic/Plugin%20with%20dependencies%20that%20can%27t%20be%20statically%20linked/near/405707425" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Alec Leamas <a href="https://leamas.github.io/zulip-archive/stream/332168-Master/topic/Plugin.20with.20dependencies.20that.20can.27t.20be.20statically.20linked.html#405707425">(Dec 03 2023 at 23:13)</a>:</h4>
+<p>OTOH, in my experience it's nti that complicated to add new deps in the manifest. You basically clone or download and  makes a local build. Once you have done that it's pretty straight-forward.  </p>
+<p>There are plenty of examples in OpenCPN/flatpak/org.opencpn.OpenCPN.yaml. Note that there are clever defaults demonstrated by for example zlib there.</p>
+
+
+
+<a name="405707753"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332168-Master/topic/Plugin%20with%20dependencies%20that%20can%27t%20be%20statically%20linked/near/405707753" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Pavel Kalian <a href="https://leamas.github.io/zulip-archive/stream/332168-Master/topic/Plugin.20with.20dependencies.20that.20can.27t.20be.20statically.20linked.html#405707753">(Dec 03 2023 at 23:19)</a>:</h4>
+<p>Let's see, the possible problem is that unlike with all that are already there I need a dynamic library now and some of the dependencies overla with what we already have in the core app. But we will see soon enough...</p>
+
+
+
+<a name="405707865"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332168-Master/topic/Plugin%20with%20dependencies%20that%20can%27t%20be%20statically%20linked/near/405707865" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Alec Leamas <a href="https://leamas.github.io/zulip-archive/stream/332168-Master/topic/Plugin.20with.20dependencies.20that.20can.27t.20be.20statically.20linked.html#405707865">(Dec 03 2023 at 23:20)</a>:</h4>
+<blockquote>
+<p>that unlike with all that are already there I need a dynamic library </p>
+</blockquote>
+<p>That's certainly interesting... no idea what could mean in this context. Why? Can't you just rebuild the sources?</p>
+
+
+
+<a name="405708229"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332168-Master/topic/Plugin%20with%20dependencies%20that%20can%27t%20be%20statically%20linked/near/405708229" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Pavel Kalian <a href="https://leamas.github.io/zulip-archive/stream/332168-Master/topic/Plugin.20with.20dependencies.20that.20can.27t.20be.20statically.20linked.html#405708229">(Dec 03 2023 at 23:26)</a>:</h4>
+<p>I am not sure linking the loadable extension statically is possible at all. But will of course try as I have to build it anyway.</p>
+
+
+
+<a name="405708459"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332168-Master/topic/Plugin%20with%20dependencies%20that%20can%27t%20be%20statically%20linked/near/405708459" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Alec Leamas <a href="https://leamas.github.io/zulip-archive/stream/332168-Master/topic/Plugin.20with.20dependencies.20that.20can.27t.20be.20statically.20linked.html#405708459">(Dec 03 2023 at 23:27)</a>:</h4>
+<p>Thinking about it, I have actually bundled some dynamic libraries long time ago. What I did then was to  integrate this in the cmake setup, basically a libs/ things which had a CMakelists which made it possible to link to them. This is transparent from Flatpak's perspective.</p>
+
+
+
+<a name="405708644"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332168-Master/topic/Plugin%20with%20dependencies%20that%20can%27t%20be%20statically%20linked/near/405708644" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Alec Leamas <a href="https://leamas.github.io/zulip-archive/stream/332168-Master/topic/Plugin.20with.20dependencies.20that.20can.27t.20be.20statically.20linked.html#405708644">(Dec 03 2023 at 23:29)</a>:</h4>
+<p>Here: <a href="https://github.com/Rasbats/photolayer_pi">https://github.com/Rasbats/photolayer_pi</a></p>
+
+
+
+<a name="405709137"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332168-Master/topic/Plugin%20with%20dependencies%20that%20can%27t%20be%20statically%20linked/near/405709137" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Pavel Kalian <a href="https://leamas.github.io/zulip-archive/stream/332168-Master/topic/Plugin.20with.20dependencies.20that.20can.27t.20be.20statically.20linked.html#405709137">(Dec 03 2023 at 23:35)</a>:</h4>
+<p>Will have a look, thanks.</p>
+
+
+
+<a name="405710541"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332168-Master/topic/Plugin%20with%20dependencies%20that%20can%27t%20be%20statically%20linked/near/405710541" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Alec Leamas <a href="https://leamas.github.io/zulip-archive/stream/332168-Master/topic/Plugin.20with.20dependencies.20that.20can.27t.20be.20statically.20linked.html#405710541">(Dec 03 2023 at 23:58)</a>:</h4>
+<p>it actually happens in o-charts as well, the DRM module is  a dynamic lib.</p>
+
+
+
+<hr><p>Last updated: Oct 08 2024 at 10:11 UTC</p>
+</html>

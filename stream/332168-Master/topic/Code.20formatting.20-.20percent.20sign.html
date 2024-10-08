@@ -1,0 +1,320 @@
+<html>
+<head><meta charset="utf-8"><title>Code formatting - percent sign · Master · Zulip Chat Archive</title></head>
+<h2>Stream: <a href="https://leamas.github.io/zulip-archive/stream/332168-Master/index.html">Master</a></h2>
+<h3>Topic: <a href="https://leamas.github.io/zulip-archive/stream/332168-Master/topic/Code.20formatting.20-.20percent.20sign.html">Code formatting - percent sign</a></h3>
+
+<hr>
+
+<base href="https://opencpn.zulipchat.com">
+
+<head><link href="https://leamas.github.io/zulip-archive/style.css" rel="stylesheet"></head>
+
+<a name="400202378"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332168-Master/topic/Code%20formatting%20-%20percent%20sign/near/400202378" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Håkan Svensson <a href="https://leamas.github.io/zulip-archive/stream/332168-Master/topic/Code.20formatting.20-.20percent.20sign.html#400202378">(Nov 03 2023 at 20:39)</a>:</h4>
+<p>A question about code.<br>
+VS2022: In a Format() I try to print per cent sign but it crashes all time:<br>
+Format("   Relative Humidity: %d xx ", foo )<br>
+I've for xx tried: escape u0025 and %% but both crash. Any hints?</p>
+
+
+
+<a name="400270251"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332168-Master/topic/Code%20formatting%20-%20percent%20sign/near/400270251" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Mike Rossiter <a href="https://leamas.github.io/zulip-archive/stream/332168-Master/topic/Code.20formatting.20-.20percent.20sign.html#400270251">(Nov 04 2023 at 08:44)</a>:</h4>
+<p><span class="user-mention" data-user-id="554731">@Tony Voss</span>  may be able to help. We had this issue with JavaScript_pi.</p>
+<p>wxString text = wxString::Format(_T("%c"), 0x00B0); //_T("°");</p>
+<p><a href="https://github.com/antipole2/JavaScript_pi/blob/master/src/functions.cpp">https://github.com/antipole2/JavaScript_pi/blob/master/src/functions.cpp</a></p>
+
+
+
+<a name="400273029"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332168-Master/topic/Code%20formatting%20-%20percent%20sign/near/400273029" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Alec Leamas <a href="https://leamas.github.io/zulip-archive/stream/332168-Master/topic/Code.20formatting.20-.20percent.20sign.html#400273029">(Nov 04 2023 at 09:06)</a>:</h4>
+<p>_T() is useless and should not be used since since wxWidgets 3.0:  <a href="https://docs.wxwidgets.org/3.0/group__group__funcmacro__string.html#ga437ea6ba615b75dac8603e96ec864160">https://docs.wxwidgets.org/3.0/group__group__funcmacro__string.html#ga437ea6ba615b75dac8603e96ec864160</a></p>
+<p>That is, above should be <code>wxString text = wxString::Format("%c", 0x00B0);   //"°";</code></p>
+
+
+
+<a name="400275303"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332168-Master/topic/Code%20formatting%20-%20percent%20sign/near/400275303" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Alec Leamas <a href="https://leamas.github.io/zulip-archive/stream/332168-Master/topic/Code.20formatting.20-.20percent.20sign.html#400275303">(Nov 04 2023 at 09:22)</a>:</h4>
+<p>This is a recurring issue. Perhaps we should add some convenience handling of this to opencpn-libs, It's actually non-trivial in plain C++ as-well.</p>
+
+
+
+<a name="400275829"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332168-Master/topic/Code%20formatting%20-%20percent%20sign/near/400275829" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Tony Voss <a href="https://leamas.github.io/zulip-archive/stream/332168-Master/topic/Code.20formatting.20-.20percent.20sign.html#400275829">(Nov 04 2023 at 09:26)</a>:</h4>
+<p>Yes... we had problems with various Unicode characters in JavaScript_pi.  The Duktape JavaScript engine works with ASCII only.  Text files often include (sometimes unintentionally) Unicode characters such as ‟Fancy quotes” ordinal º primes ‘’‛’′´` %  etc.  as evidenced by this very line.<br>
+In <a href="https://github.com/antipole2/JavaScript_pi/blob/master/src/functions.cpp">JavaScript_pi  functions.cpp</a> there is the function<br>
+<code>wxString JScleanString(wxString given){ // cleans script string of unacceptable characters</code><br>
+which replaces  unacceptable characters with ASCII ones.</p>
+<p>In the JavaScript_pi Tools diagnostics tab, there is a facility to paste a string and dump it in hex before and after it has been cleaned by the above function.</p>
+
+
+
+<a name="400280190"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332168-Master/topic/Code%20formatting%20-%20percent%20sign/near/400280190" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Alec Leamas <a href="https://leamas.github.io/zulip-archive/stream/332168-Master/topic/Code.20formatting.20-.20percent.20sign.html#400280190">(Nov 04 2023 at 09:50)</a>:</h4>
+<blockquote>
+<p>The Duktape JavaScript engine works with ASCII only. </p>
+</blockquote>
+<p>That's a bad limitation, local for that library. It would make no sense to impose it on the overall opencpn context, though.</p>
+
+
+
+<a name="400312438"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332168-Master/topic/Code%20formatting%20-%20percent%20sign/near/400312438" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Håkan Svensson <a href="https://leamas.github.io/zulip-archive/stream/332168-Master/topic/Code.20formatting.20-.20percent.20sign.html#400312438">(Nov 04 2023 at 16:37)</a>:</h4>
+<p>The degree symbol 0x00B0 was not the question. That and others are working fine.<br>
+But my Q was about getting the per cent symbol %. See my tests above.</p>
+<p>And, Alex, yes I saw the escape sign is also not needed anymore. (Maybe bad habit as the "_T" :) )</p>
+
+
+
+<a name="400373345"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332168-Master/topic/Code%20formatting%20-%20percent%20sign/near/400373345" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Mike Rossiter <a href="https://leamas.github.io/zulip-archive/stream/332168-Master/topic/Code.20formatting.20-.20percent.20sign.html#400373345">(Nov 05 2023 at 08:23)</a>:</h4>
+<p>Does this help?<br>
+wxString text = wxString::Format("%c", 0x0025);<br>
+wxMessageBox(text);</p>
+
+
+
+<a name="400379960"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332168-Master/topic/Code%20formatting%20-%20percent%20sign/near/400379960" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Alec Leamas <a href="https://leamas.github.io/zulip-archive/stream/332168-Master/topic/Code.20formatting.20-.20percent.20sign.html#400379960">(Nov 05 2023 at 09:44)</a>:</h4>
+<blockquote>
+<p>But my Q was about getting the per cent symbol %. S</p>
+</blockquote>
+<p>Ah, sorry, my bad.</p>
+<p>This is actually much simpler. There are two ways. One is to insist on the IMHO dangerous and unsecure wxString::Format.  The other, better approach is to  use the type safe c++ &lt;&lt; operators instead. </p>
+<p>A test program which demonstrates both approaches:</p>
+<div class="codehilite"><pre><span></span><code>#include &lt;iostream&gt;
+#include &lt;sstream&gt;
+
+#include &lt;wx/string.h&gt;
+
+int main(int argc, char**argv) {
+    std::stringstream ss;
+    ss &lt;&lt; &quot; Relative Humidity: &quot; &lt;&lt;  45 &lt;&lt; &quot;%\n&quot;;
+    std::cout &lt;&lt; ss.str();
+
+    wxString ws = wxString::Format(&quot; Relative Humidity: %d%%\n&quot;, 45);
+    std::cout &lt;&lt; ws;
+
+    wxString ws2(ss.str());
+    std::cout &lt;&lt; ws;
+}
+</code></pre></div>
+<p>As you can see, using std:.stringstream leads to  simpler code easier to read. However, the most important benefit is that  if  making a mistake like wxPrintf("foo %d", value) and value does not match %d this is not detected by the compiler and causes bad runtime errors . The &lt;&lt; operator does not suffer from this, it's type safe. </p>
+<p>If using ::Format, a percent sign is written %%.</p>
+<p>The last example shows that is simple to convert a std:.stringstream to a wxString if need be. In almost all cases this is not necessary, it's ok to use the stringstream.str() instead. As long as it compiles it's fine.</p>
+<p>TL;DR  Avoid using ::Format(...), use std::stringstream and &lt;&lt; instead.</p>
+
+
+
+<a name="400380628"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332168-Master/topic/Code%20formatting%20-%20percent%20sign/near/400380628" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Alec Leamas <a href="https://leamas.github.io/zulip-archive/stream/332168-Master/topic/Code.20formatting.20-.20percent.20sign.html#400380628">(Nov 05 2023 at 09:52)</a>:</h4>
+<p>Actually if you really,  really want's to use wxString (why?) this also works. This still avoids the problematic wxString::Format(...)</p>
+<div class="codehilite"><pre><span></span><code>    wxString ws;
+    ws &lt;&lt; &quot; Relative Humidity: &quot; &lt;&lt;  45 &lt;&lt; &quot;%\n&quot;;
+    std::cout &lt;&lt; ws;
+</code></pre></div>
+<p>EDIT: TL;DR, new version: Avoid using ::Format(...),  use &lt;&lt; instead</p>
+
+
+
+<a name="400383278"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332168-Master/topic/Code%20formatting%20-%20percent%20sign/near/400383278" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Notification Bot <a href="https://leamas.github.io/zulip-archive/stream/332168-Master/topic/Code.20formatting.20-.20percent.20sign.html#400383278">(Nov 05 2023 at 10:31)</a>:</h4>
+<p>10 messages were moved here from <a class="stream-topic" data-stream-id="332168" href="/#narrow/stream/332168-Master---5.2E8.2E0--.28was.3A-comms.29/topic/Code.20formatting">#Master - 5.8.0  (was: comms) &gt; Code formatting</a> by <span class="user-mention silent" data-user-id="399510">Alec Leamas</span>.</p>
+
+
+
+<a name="400490678"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332168-Master/topic/Code%20formatting%20-%20percent%20sign/near/400490678" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Håkan Svensson <a href="https://leamas.github.io/zulip-archive/stream/332168-Master/topic/Code.20formatting.20-.20percent.20sign.html#400490678">(Nov 06 2023 at 09:21)</a>:</h4>
+<p>Mike, Alec..<br>
+Thanks for suggestions.<br>
+Neither "wx..Format" nor "std &lt;&lt;"  works with the % char or Hex<br>
+Both gives a run time crash  "Unhandled exception at 0x7668D132 (ucrtbase.dll) " (Not found)</p>
+
+
+
+<a name="400490983"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332168-Master/topic/Code%20formatting%20-%20percent%20sign/near/400490983" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Alec Leamas <a href="https://leamas.github.io/zulip-archive/stream/332168-Master/topic/Code.20formatting.20-.20percent.20sign.html#400490983">(Nov 06 2023 at 09:23)</a>:</h4>
+<p>Can you give a some more context,  some lines around  what you are trying to do?</p>
+
+
+
+<a name="400491686"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332168-Master/topic/Code%20formatting%20-%20percent%20sign/near/400491686" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Alec Leamas <a href="https://leamas.github.io/zulip-archive/stream/332168-Master/topic/Code.20formatting.20-.20percent.20sign.html#400491686">(Nov 06 2023 at 09:28)</a>:</h4>
+<p>That is, if these crashes something else is wrong...</p>
+
+
+
+<a name="400492662"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332168-Master/topic/Code%20formatting%20-%20percent%20sign/near/400492662" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Håkan Svensson <a href="https://leamas.github.io/zulip-archive/stream/332168-Master/topic/Code.20formatting.20-.20percent.20sign.html#400492662">(Nov 06 2023 at 09:34)</a>:</h4>
+<ol>
+<li>the file "ucrtbase.dll" is present in "C:\....\OpenCPN\build\RelWithDebInfo"</li>
+<li>context: Nothing strange. A debug log message.  </li>
+</ol>
+<div class="codehilite"><pre><span></span><code>msgFi = wxString::Format(&quot;   Relative Humidity: %d Dew point: %.1f\u00b0C&quot;,
+    ptd-&gt;met_rel_humid, ptd-&gt;met_dew_point);
+    wxLogMessage(msgFi);
+
+Edit: the degree sign is working fine
+</code></pre></div>
+
+
+
+<a name="400510301"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332168-Master/topic/Code%20formatting%20-%20percent%20sign/near/400510301" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Alec Leamas <a href="https://leamas.github.io/zulip-archive/stream/332168-Master/topic/Code.20formatting.20-.20percent.20sign.html#400510301">(Nov 06 2023 at 11:14)</a>:</h4>
+<p>OK... even though that the degrees sign "works" I'm suspicious about it.   Let's take this into pieces, starting with</p>
+<p><code>msgFi &lt;&lt;  "   Relative Humidity: " &lt;&lt;   ptd-&gt;met_rel_humid &lt;&lt; "%";</code></p>
+<p>And test that. If all goes well, let's add (new lines, keep previous):</p>
+<div class="codehilite"><pre><span></span><code>using namespace std;
+msgFi &lt;&lt; &quot; Dew point: &quot; &lt;&lt; fixed  &lt;&lt; setprecision(1) &lt;&lt;  ptd-&gt;met_dew_point;
+</code></pre></div>
+<p>And if that goes well, add yet another line:</p>
+<div class="codehilite"><pre><span></span><code>msg_Fi &lt;&lt;  wxString::FromUTF8(u8&quot;\u00B0&quot;) &lt;&lt; &quot;C&quot;;
+</code></pre></div>
+<p>This is a bit awkward, but  makes it possible to piece by piece to check what actually makes it crash.</p>
+
+
+
+<a name="400600701"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332168-Master/topic/Code%20formatting%20-%20percent%20sign/near/400600701" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Håkan Svensson <a href="https://leamas.github.io/zulip-archive/stream/332168-Master/topic/Code.20formatting.20-.20percent.20sign.html#400600701">(Nov 06 2023 at 19:52)</a>:</h4>
+<p>Will test later, tomorrow.  Other obstacles for now.</p>
+
+
+
+<a name="400601368"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332168-Master/topic/Code%20formatting%20-%20percent%20sign/near/400601368" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Alec Leamas <a href="https://leamas.github.io/zulip-archive/stream/332168-Master/topic/Code.20formatting.20-.20percent.20sign.html#400601368">(Nov 06 2023 at 19:57)</a>:</h4>
+<p>NP</p>
+
+
+
+<a name="400721761"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332168-Master/topic/Code%20formatting%20-%20percent%20sign/near/400721761" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Håkan Svensson <a href="https://leamas.github.io/zulip-archive/stream/332168-Master/topic/Code.20formatting.20-.20percent.20sign.html#400721761">(Nov 07 2023 at 11:39)</a>:</h4>
+<p>This one is actually working: (Use char)<br>
+ wxString::Format("%d%c", met_rel_humid, '%');<br>
+<a href="/user_uploads/33951/yt7mLL-FW3RwbudXB35c6jFd/bild.png">bild.png</a></p>
+<div class="message_inline_image"><a href="/user_uploads/33951/yt7mLL-FW3RwbudXB35c6jFd/bild.png" title="bild.png"><img src="/user_uploads/33951/yt7mLL-FW3RwbudXB35c6jFd/bild.png"></a></div>
+
+
+
+<a name="400728773"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332168-Master/topic/Code%20formatting%20-%20percent%20sign/near/400728773" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Alec Leamas <a href="https://leamas.github.io/zulip-archive/stream/332168-Master/topic/Code.20formatting.20-.20percent.20sign.html#400728773">(Nov 07 2023 at 12:23)</a>:</h4>
+<p>Are you saying that the others don't?</p>
+
+
+
+<a name="400728937"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332168-Master/topic/Code%20formatting%20-%20percent%20sign/near/400728937" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Alec Leamas <a href="https://leamas.github.io/zulip-archive/stream/332168-Master/topic/Code.20formatting.20-.20percent.20sign.html#400728937">(Nov 07 2023 at 12:24)</a>:</h4>
+<p>That is , if my first line does not work something is actually seriously broken.</p>
+
+
+
+<a name="400729020"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332168-Master/topic/Code%20formatting%20-%20percent%20sign/near/400729020" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Alec Leamas <a href="https://leamas.github.io/zulip-archive/stream/332168-Master/topic/Code.20formatting.20-.20percent.20sign.html#400729020">(Nov 07 2023 at 12:25)</a>:</h4>
+<p>[away for a while]</p>
+
+
+
+<a name="400754758"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332168-Master/topic/Code%20formatting%20-%20percent%20sign/near/400754758" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Håkan Svensson <a href="https://leamas.github.io/zulip-archive/stream/332168-Master/topic/Code.20formatting.20-.20percent.20sign.html#400754758">(Nov 07 2023 at 14:47)</a>:</h4>
+<p>re: "Are you saying that the others don't?"<br>
+Not at all. Alla others are working as before. This was the way to get the per cent sign to work.  My wording would have been "This code is actually working for %"</p>
+
+
+
+<a name="400754772"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332168-Master/topic/Code%20formatting%20-%20percent%20sign/near/400754772" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Alec Leamas <a href="https://leamas.github.io/zulip-archive/stream/332168-Master/topic/Code.20formatting.20-.20percent.20sign.html#400754772">(Nov 07 2023 at 14:47)</a>:</h4>
+<p>No. I made a try to build on Windows. This works:</p>
+<div class="codehilite"><pre><span></span><code>  using namespace std;
+  stringstream  ss;
+  int humidity(45);
+  ss &lt;&lt; &quot;   Relative Humidity: &quot; &lt;&lt;  humidity&lt;&lt; &quot;%&quot;;
+  float dew_point(28.44);
+  ss &lt;&lt; &quot; Dew point: &quot; &lt;&lt; fixed  &lt;&lt; setprecision(1) &lt;&lt;  dew_point;
+  ss &lt;&lt;  wxString::FromUTF8(u8&quot;\u00B0&quot;) &lt;&lt; &quot;C&quot;;
+  std::cout &lt;&lt; ss.str();
+</code></pre></div>
+<p>Since this is tested in the CLI the degrees sign is not shown, the cli does not handle utf. It should work o</p>
+
+
+
+<a name="400755769"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332168-Master/topic/Code%20formatting%20-%20percent%20sign/near/400755769" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Alec Leamas <a href="https://leamas.github.io/zulip-archive/stream/332168-Master/topic/Code.20formatting.20-.20percent.20sign.html#400755769">(Nov 07 2023 at 14:52)</a>:</h4>
+<p>You know, that  it "works" is sort of fine. However, this way of producing a percent sign is extremely convoluted for no reason. It would have no chance to survive even the most sloppy of all code reviews. </p>
+<p>We have had problems with the UTF-8 degrees sign and had to make some odd things for that. But percent is <strong>not</strong> odd, it's  standard ascii and should IMHO  be handled by simpler things than this, well, let's spell it out: this mess.</p>
+
+
+
+<a name="400756954"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332168-Master/topic/Code%20formatting%20-%20percent%20sign/near/400756954" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Håkan Svensson <a href="https://leamas.github.io/zulip-archive/stream/332168-Master/topic/Code.20formatting.20-.20percent.20sign.html#400756954">(Nov 07 2023 at 14:58)</a>:</h4>
+<p>Maybe since it used as indication in "Format()". (It's said a dubble sign (%%) should work bit it's not)</p>
+
+
+
+<a name="400757289"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332168-Master/topic/Code%20formatting%20-%20percent%20sign/near/400757289" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Alec Leamas <a href="https://leamas.github.io/zulip-archive/stream/332168-Master/topic/Code.20formatting.20-.20percent.20sign.html#400757289">(Nov 07 2023 at 14:59)</a>:</h4>
+<p>It does, otherwise we need to file a bug against wxWidgets directly. Hang on I have a simple setup on Windows now.</p>
+
+
+
+<a name="400758647"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332168-Master/topic/Code%20formatting%20-%20percent%20sign/near/400758647" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Alec Leamas <a href="https://leamas.github.io/zulip-archive/stream/332168-Master/topic/Code.20formatting.20-.20percent.20sign.html#400758647">(Nov 07 2023 at 15:05)</a>:</h4>
+<p>This prints "45%":</p>
+<div class="codehilite"><pre><span></span><code>#include &lt;iostream&gt;
+#include &lt;wx/string.h&gt;
+int main(int argc, char**argv) {
+  std::cout &lt;&lt; wxString::Format(&quot;%d%%\n&quot;, 45);
+}
+</code></pre></div>
+
+
+
+<a name="400758755"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332168-Master/topic/Code%20formatting%20-%20percent%20sign/near/400758755" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Notification Bot <a href="https://leamas.github.io/zulip-archive/stream/332168-Master/topic/Code.20formatting.20-.20percent.20sign.html#400758755">(Nov 07 2023 at 15:06)</a>:</h4>
+<p><a href="#narrow/stream/332168-Master---5.2E8.2E0--.28was.3A-comms.29/topic/Code.20formatting.20-.20percent.20sign/near/400758647">A message</a> was moved here from <a class="stream-topic" data-stream-id="332168" href="/#narrow/stream/332168-Master---5.2E8.2E0--.28was.3A-comms.29/topic/Project.20opencpn-cmd">#Master - 5.8.0  (was: comms) &gt; Project opencpn-cmd</a> by <span class="user-mention silent" data-user-id="399510">Alec Leamas</span>.</p>
+
+
+
+<a name="400760628"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332168-Master/topic/Code%20formatting%20-%20percent%20sign/near/400760628" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Alec Leamas <a href="https://leamas.github.io/zulip-archive/stream/332168-Master/topic/Code.20formatting.20-.20percent.20sign.html#400760628">(Nov 07 2023 at 15:14)</a>:</h4>
+<p>As does this which is better, type safe code:</p>
+<div class="codehilite"><pre><span></span><code>#include &lt;iostream&gt;
+#include &lt;sstream&gt;
+
+int main(int argc, char**argv) {
+  std::stringstream ss;
+  ss &lt;&lt;  45 &lt;&lt; &quot;%&quot;;
+  std::cout &lt;&lt; ss.str() &lt;&lt; &quot;\n&quot;;
+}
+</code></pre></div>
+
+
+
+<a name="400823617"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332168-Master/topic/Code%20formatting%20-%20percent%20sign/near/400823617" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Alec Leamas <a href="https://leamas.github.io/zulip-archive/stream/332168-Master/topic/Code.20formatting.20-.20percent.20sign.html#400823617">(Nov 07 2023 at 22:07)</a>:</h4>
+<p>Finally I have a minimal GUI sample as playground as well.  Here some code:</p>
+<div class="codehilite"><pre><span></span><code>void MyFrame::OnAbout(wxCommandEvent&amp; WXUNUSED(event))
+{
+    using namespace std;
+    stringstream ss;
+    ss &lt;&lt; &quot;Hunidity: &quot; &lt;&lt; 45 &lt;&lt; &quot;%&quot;
+       &lt;&lt; &quot;  Dew Point: &quot; &lt;&lt; fixed &lt;&lt; setprecision(1) &lt;&lt; 18.45
+       &lt;&lt;  wxString::FromUTF8(u8&quot;\u00B0&quot;) &lt;&lt; &quot;C&quot;;
+    wxMessageBox(ss.str(),
+                 &quot;About wxWidgets minimal sample&quot;,
+                 wxOK | wxICON_INFORMATION,
+                 this);
+}
+</code></pre></div>
+<p>Result:<br>
+<a href="/user_uploads/33951/JYd2nnWTAjNU3-P-hRLCf77F/image.png">image.png</a></p>
+<div class="message_inline_image"><a href="/user_uploads/33951/JYd2nnWTAjNU3-P-hRLCf77F/image.png" title="image.png"><img src="/user_uploads/33951/JYd2nnWTAjNU3-P-hRLCf77F/image.png"></a></div><p>Ergo: Using standard mechanisms works well also on Windows without resorting to the error prone wxString::Format. The code here is no doubt more text. However, it's type safe and more right on and thus IMHO also easier to read.</p>
+
+
+
+<a name="400824683"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332168-Master/topic/Code%20formatting%20-%20percent%20sign/near/400824683" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Alec Leamas <a href="https://leamas.github.io/zulip-archive/stream/332168-Master/topic/Code.20formatting.20-.20percent.20sign.html#400824683">(Nov 07 2023 at 22:15)</a>:</h4>
+<p>Complete code samples at <a href="https://github.com/leamas/minimal">https://github.com/leamas/minimal</a> (both CLI and GUI)</p>
+
+
+
+<hr><p>Last updated: Oct 08 2024 at 10:11 UTC</p>
+</html>

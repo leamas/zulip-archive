@@ -1,0 +1,1135 @@
+<html>
+<head><meta charset="utf-8"><title>New package installation · OCPN 5.10 Release plan · Zulip Chat Archive</title></head>
+<h2>Stream: <a href="https://leamas.github.io/zulip-archive/stream/432618-OCPN-5.2E10-Release-plan/index.html">OCPN 5.10 Release plan</a></h2>
+<h3>Topic: <a href="https://leamas.github.io/zulip-archive/stream/432618-OCPN-5.2E10-Release-plan/topic/New.20package.20installation.html">New package installation</a></h3>
+
+<hr>
+
+<base href="https://opencpn.zulipchat.com">
+
+<head><link href="https://leamas.github.io/zulip-archive/style.css" rel="stylesheet"></head>
+
+<a name="448865485"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/432618-OCPN%205.10%20Release%20plan/topic/New%20package%20installation/near/448865485" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Dave Register <a href="https://leamas.github.io/zulip-archive/stream/432618-OCPN-5.2E10-Release-plan/topic/New.20package.20installation.html#448865485">(Jul 03 2024 at 14:31)</a>:</h4>
+<p>Confirmed.  On Jammy...</p>
+<ol>
+<li>clean out all wxWidgets stuff</li>
+<li>uninstall any OCPN leftover</li>
+<li>disable OCPN Beta PPa</li>
+<li>enable OCPN production PPA</li>
+<li>Install O584</li>
+<li>Re-enable OCPN Beta PPA</li>
+<li>update OCPN</li>
+</ol>
+<p>dsr@dsr-Aspire-E5-576:~$ sudo apt install opencpn<br>
+Reading package lists... Done<br>
+Building dependency tree... Done<br>
+Reading state information... Done<br>
+Some packages could not be installed. This may mean that you have<br>
+requested an impossible situation or if you are using the unstable<br>
+distribution that some required packages have not yet been created<br>
+or been moved out of Incoming.<br>
+The following information may help to resolve the situation:</p>
+<p>The following packages have unmet dependencies:<br>
+ libwxbase3.2-1 : Breaks: libwxbase3.2-0 but 3.2.1+dfsg-1ubuntu1~bpo22.04.2 is to be installed<br>
+ libwxgtk3.2-1 : Breaks: libwxgtk3.2-0 but 3.2.1+dfsg-1ubuntu1~bpo22.04.2 is to be installed<br>
+E: Error, pkgProblemResolver::Resolve generated breaks, this may be caused by held packages.<br>
+dsr@dsr-Aspire-E5-576:~$</p>
+
+
+
+<a name="448865934"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/432618-OCPN%205.10%20Release%20plan/topic/New%20package%20installation/near/448865934" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Alec Leamas <a href="https://leamas.github.io/zulip-archive/stream/432618-OCPN-5.2E10-Release-plan/topic/New.20package.20installation.html#448865934">(Jul 03 2024 at 14:32)</a>:</h4>
+<p>OK, I have something to work with. Found another issue on Focal. I'm on  it, but it will probably take some time</p>
+
+
+
+<a name="448889412"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/432618-OCPN%205.10%20Release%20plan/topic/New%20package%20installation/near/448889412" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Notification Bot <a href="https://leamas.github.io/zulip-archive/stream/432618-OCPN-5.2E10-Release-plan/topic/New.20package.20installation.html#448889412">(Jul 03 2024 at 15:56)</a>:</h4>
+<p>2 messages were moved here from <a class="stream-topic" data-stream-id="432618" href="/#narrow/stream/432618-OCPN-5.2E10-Release-plan/topic/Beta.20Schedule">#OCPN 5.10 Release plan &gt; Beta Schedule</a> by <span class="user-mention silent" data-user-id="399510">Alec Leamas</span>.</p>
+
+
+
+<a name="448892449"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/432618-OCPN%205.10%20Release%20plan/topic/New%20package%20installation/near/448892449" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Alec Leamas <a href="https://leamas.github.io/zulip-archive/stream/432618-OCPN-5.2E10-Release-plan/topic/New.20package.20installation.html#448892449">(Jul 03 2024 at 16:05)</a>:</h4>
+<p>As of now I don't really see that is is possible to make a clean update from PPA -&gt; new package. Brain dump ahead.</p>
+<p>Hard problems comes from the fact that new package is opencpn + opencpn-data while the PPA pkg is a single one.</p>
+<p>What we want to do is to let for example opencpn-data replace the PPA opencpn pkg. OTOH we can't let it replace itself. </p>
+<p>This means we want new opencpn-data to replace opencpn for versions &gt; 7000 but less than 1:1. &gt; 7000 means a PPA package , &lt; 1:1 means less than the new epoch.</p>
+<p>However, the control file does not allow for this this in the Breaks: and Replaces: stanzas.  There is basically no &amp;&amp; operation between different deps, just || . </p>
+<p>Net result: users must uninstall current version before installing the new.</p>
+<p>Need a break, my head does not work as it should. To make it more interesting I'm not that keen on coming back to debian-devel with this problem :)</p>
+
+
+
+<a name="448914813"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/432618-OCPN%205.10%20Release%20plan/topic/New%20package%20installation/near/448914813" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Alec Leamas <a href="https://leamas.github.io/zulip-archive/stream/432618-OCPN-5.2E10-Release-plan/topic/New.20package.20installation.html#448914813">(Jul 03 2024 at 17:53)</a>:</h4>
+<p>Focal: issue fixed and pushed, but see above on wxwidgets</p>
+
+
+
+<a name="448915199"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/432618-OCPN%205.10%20Release%20plan/topic/New%20package%20installation/near/448915199" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Alec Leamas <a href="https://leamas.github.io/zulip-archive/stream/432618-OCPN-5.2E10-Release-plan/topic/New.20package.20installation.html#448915199">(Jul 03 2024 at 17:55)</a>:</h4>
+<p>jammy: problem is that launchpad generates "old" deps, the build host does not look updated. The typical problem: package wants libwxgtk3.2-0, but the package available is libwxgtk3.2-1</p>
+
+
+
+<a name="448926191"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/432618-OCPN%205.10%20Release%20plan/topic/New%20package%20installation/near/448926191" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Alec Leamas <a href="https://leamas.github.io/zulip-archive/stream/432618-OCPN-5.2E10-Release-plan/topic/New.20package.20installation.html#448926191">(Jul 03 2024 at 18:57)</a>:</h4>
+<p>jammy:  problem solved, installs fine locally over both the PPA and the official package.</p>
+
+
+
+<a name="448926221"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/432618-OCPN%205.10%20Release%20plan/topic/New%20package%20installation/near/448926221" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Alec Leamas <a href="https://leamas.github.io/zulip-archive/stream/432618-OCPN-5.2E10-Release-plan/topic/New.20package.20installation.html#448926221">(Jul 03 2024 at 18:57)</a>:</h4>
+<p><span class="user-mention" data-user-id="517002">@Dave Register</span>  ^</p>
+
+
+
+<a name="448931188"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/432618-OCPN%205.10%20Release%20plan/topic/New%20package%20installation/near/448931188" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Dave Register <a href="https://leamas.github.io/zulip-archive/stream/432618-OCPN-5.2E10-Release-plan/topic/New.20package.20installation.html#448931188">(Jul 03 2024 at 19:20)</a>:</h4>
+<p>Can we replace the current 1:5.9.2 jammy in the repo?  Or must we wait for Beta-3?</p>
+
+
+
+<a name="448932518"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/432618-OCPN%205.10%20Release%20plan/topic/New%20package%20installation/near/448932518" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Alec Leamas <a href="https://leamas.github.io/zulip-archive/stream/432618-OCPN-5.2E10-Release-plan/topic/New.20package.20installation.html#448932518">(Jul 03 2024 at 19:26)</a>:</h4>
+<p>There should be no problem to update it, the changes are just in packaging i. e., the last digit.</p>
+
+
+
+<a name="448933999"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/432618-OCPN%205.10%20Release%20plan/topic/New%20package%20installation/near/448933999" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Dave Register <a href="https://leamas.github.io/zulip-archive/stream/432618-OCPN-5.2E10-Release-plan/topic/New.20package.20installation.html#448933999">(Jul 03 2024 at 19:34)</a>:</h4>
+<p>OK, Ill build and dput.</p>
+
+
+
+<a name="448935909"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/432618-OCPN%205.10%20Release%20plan/topic/New%20package%20installation/near/448935909" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Dave Register <a href="https://leamas.github.io/zulip-archive/stream/432618-OCPN-5.2E10-Release-plan/topic/New.20package.20installation.html#448935909">(Jul 03 2024 at 19:47)</a>:</h4>
+<p>Jammy building now.<br>
+Still something very funny about email messages from launchpad.  They arrive very late, maybe even the next day.  But with time stamps consistent with the actual time of the operation.<br>
+Learning to live with it.</p>
+
+
+
+<a name="448936376"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/432618-OCPN%205.10%20Release%20plan/topic/New%20package%20installation/near/448936376" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Alec Leamas <a href="https://leamas.github.io/zulip-archive/stream/432618-OCPN-5.2E10-Release-plan/topic/New.20package.20installation.html#448936376">(Jul 03 2024 at 19:50)</a>:</h4>
+<p>I suspect that it is not really about launchpad but rather something in the transport.  I get the emails as expected.</p>
+<p>If you expand the headers in a delayed email  you should be able to see all timestamps, sorting out where the delay is.</p>
+
+
+
+<a name="448937953"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/432618-OCPN%205.10%20Release%20plan/topic/New%20package%20installation/near/448937953" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Dave Register <a href="https://leamas.github.io/zulip-archive/stream/432618-OCPN-5.2E10-Release-plan/topic/New.20package.20installation.html#448937953">(Jul 03 2024 at 20:00)</a>:</h4>
+<p>New problem:<br>
+Don't know if this will break the debian model.<br>
+But we need for the OCPN package to include (as dependency) the opencpn-sglock-xxx package.  The production release of O584 on launchpad PPA does so.  But the !:5.9.2 builds do not.<br>
+Not exactly sure about bookworm backports build of O.<br>
+Not sure how this fell off the dependency list.<br>
+Thoughts?</p>
+
+
+
+<a name="448938913"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/432618-OCPN%205.10%20Release%20plan/topic/New%20package%20installation/near/448938913" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Dave Register <a href="https://leamas.github.io/zulip-archive/stream/432618-OCPN-5.2E10-Release-plan/topic/New.20package.20installation.html#448938913">(Jul 03 2024 at 20:05)</a>:</h4>
+<p>The sglock libs were in the "Recommends" section of the debian/control file used by the legacy PPA builds.<br>
+They do not appear in the e.g. ubuntu/jammy branch of debian/control.</p>
+
+
+
+<a name="448939842"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/432618-OCPN%205.10%20Release%20plan/topic/New%20package%20installation/near/448939842" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Alec Leamas <a href="https://leamas.github.io/zulip-archive/stream/432618-OCPN-5.2E10-Release-plan/topic/New.20package.20installation.html#448939842">(Jul 03 2024 at 20:10)</a>:</h4>
+<p>Should not be a problem to add at all</p>
+
+
+
+<a name="448940064"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/432618-OCPN%205.10%20Release%20plan/topic/New%20package%20installation/near/448940064" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Alec Leamas <a href="https://leamas.github.io/zulip-archive/stream/432618-OCPN-5.2E10-Release-plan/topic/New.20package.20installation.html#448940064">(Jul 03 2024 at 20:11)</a>:</h4>
+<p>Don't remember the details. Do we build that library as part of the overall opencpn build?</p>
+
+
+
+<a name="448940637"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/432618-OCPN%205.10%20Release%20plan/topic/New%20package%20installation/near/448940637" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Dave Register <a href="https://leamas.github.io/zulip-archive/stream/432618-OCPN-5.2E10-Release-plan/topic/New.20package.20installation.html#448940637">(Jul 03 2024 at 20:14)</a>:</h4>
+<p>No, it is a separate library that I maintain in the Production PPA.<br>
+The sglock library, in turn, requires libusb-0.1-4.</p>
+<p>This is what we had in legacy PPA builds:</p>
+<div class="codehilite"><pre><span></span><code>Recommends: xcalib,xdg-utils,opencpn-doc,opencpn-sglock-amd64,opencpn-sglock-arm64,opencpn-sglock-arm32,libusb-0.1-4
+</code></pre></div>
+
+
+
+<a name="448941059"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/432618-OCPN%205.10%20Release%20plan/topic/New%20package%20installation/near/448941059" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Alec Leamas <a href="https://leamas.github.io/zulip-archive/stream/432618-OCPN-5.2E10-Release-plan/topic/New.20package.20installation.html#448941059">(Jul 03 2024 at 20:16)</a>:</h4>
+<p>OK, small steps. Adding Recommends:  is a no-brainer.  In order to resolve this users still needs the PPA, but nothing should break if they don't need it and thus don't uses the PPA.</p>
+
+
+
+<a name="448941550"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/432618-OCPN%205.10%20Release%20plan/topic/New%20package%20installation/near/448941550" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Alec Leamas <a href="https://leamas.github.io/zulip-archive/stream/432618-OCPN-5.2E10-Release-plan/topic/New.20package.20installation.html#448941550">(Jul 03 2024 at 20:18)</a>:</h4>
+<p>Moving the sglock to Debian might be hard or impossible since this is not FOSS.  I think Ubuntu is somewhat more relaxed about it. But we can postpone this to later.</p>
+
+
+
+<a name="448942054"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/432618-OCPN%205.10%20Release%20plan/topic/New%20package%20installation/near/448942054" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Dave Register <a href="https://leamas.github.io/zulip-archive/stream/432618-OCPN-5.2E10-Release-plan/topic/New.20package.20installation.html#448942054">(Jul 03 2024 at 20:21)</a>:</h4>
+<p>Indeed.  The (only) annoying part of our "plugins-in-user-space" model.<br>
+I guess the sglock libs are not included in the bookworm backports repo?</p>
+
+
+
+<a name="448944628"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/432618-OCPN%205.10%20Release%20plan/topic/New%20package%20installation/near/448944628" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Alec Leamas <a href="https://leamas.github.io/zulip-archive/stream/432618-OCPN-5.2E10-Release-plan/topic/New.20package.20installation.html#448944628">(Jul 03 2024 at 20:34)</a>:</h4>
+<p>No.</p>
+<p>The basic problem is that a  sglock package needs to go into the Debian non-free section, and I don't know how it works. That said, one could argue the sglock is a driver for the dongle, so I think I should be able to sort it out.</p>
+<p>Will drop a new message on debian-devel later today. That's a start, but let's  not focus on this. Most users have no dongle.</p>
+
+
+
+<a name="448948765"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/432618-OCPN%205.10%20Release%20plan/topic/New%20package%20installation/near/448948765" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Alec Leamas <a href="https://leamas.github.io/zulip-archive/stream/432618-OCPN-5.2E10-Release-plan/topic/New.20package.20installation.html#448948765">(Jul 03 2024 at 21:02)</a>:</h4>
+<p>.... well, if we cannot package it we can download it in the same way as charts and plugins. Soemwhat more work, but unaffected by downstream policies and would work everywhere.</p>
+<p>Let's see what debian thinks: <a href="https://lists.debian.org/debian-devel/2024/07/msg00063.html">https://lists.debian.org/debian-devel/2024/07/msg00063.html</a></p>
+
+
+
+<a name="448949399"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/432618-OCPN%205.10%20Release%20plan/topic/New%20package%20installation/near/448949399" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Dave Register <a href="https://leamas.github.io/zulip-archive/stream/432618-OCPN-5.2E10-Release-plan/topic/New.20package.20installation.html#448949399">(Jul 03 2024 at 21:06)</a>:</h4>
+<p>Yes, OK, defer the debian question.  We can make it work for PPA now.<br>
+Rant<br>
+This workflow is taxing my patience.  Launchpad shows Jammy ...bpo2204.3 is published.  But does not show as installable after multiple apt updates.  Now been "published" for over 45 minutes.   I my memory, launchpad was not this slow last year.<br>
+/Rant</p>
+
+
+
+<a name="448950166"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/432618-OCPN%205.10%20Release%20plan/topic/New%20package%20installation/near/448950166" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Dave Register <a href="https://leamas.github.io/zulip-archive/stream/432618-OCPN-5.2E10-Release-plan/topic/New.20package.20installation.html#448950166">(Jul 03 2024 at 21:09)</a>:</h4>
+<p>And now it is available.  All I need do is "Rant", and the gods relent.  :)</p>
+
+
+
+<a name="448950416"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/432618-OCPN%205.10%20Release%20plan/topic/New%20package%20installation/near/448950416" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Alec Leamas <a href="https://leamas.github.io/zulip-archive/stream/432618-OCPN-5.2E10-Release-plan/topic/New.20package.20installation.html#448950416">(Jul 03 2024 at 21:10)</a>:</h4>
+<p>perhaps not your rant, perhaps it was because I just checked ;)</p>
+
+
+
+<a name="448950954"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/432618-OCPN%205.10%20Release%20plan/topic/New%20package%20installation/near/448950954" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Dave Register <a href="https://leamas.github.io/zulip-archive/stream/432618-OCPN-5.2E10-Release-plan/topic/New.20package.20installation.html#448950954">(Jul 03 2024 at 21:14)</a>:</h4>
+<p>Sorry, still problems.<br>
+Jammy, try to install Beta-2 over O584 Production</p>
+<p>The following packages have unmet dependencies:<br>
+ opencpn : Depends: libwxbase3.2-0 (&gt;= 3.2.1+dfsg) but it is not installable<br>
+           Depends: libwxgtk-webview3.2-0 (&gt;= 3.2.1+dfsg) but it is not installable<br>
+           Depends: libwxgtk3.2-0 (&gt;= 3.2.0+dfsg) but it is not installable</p>
+
+
+
+<a name="448950961"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/432618-OCPN%205.10%20Release%20plan/topic/New%20package%20installation/near/448950961" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Alec Leamas <a href="https://leamas.github.io/zulip-archive/stream/432618-OCPN-5.2E10-Release-plan/topic/New.20package.20installation.html#448950961">(Jul 03 2024 at 21:14)</a>:</h4>
+<p>No, I can see the same error also n .3</p>
+
+
+
+<a name="448951026"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/432618-OCPN%205.10%20Release%20plan/topic/New%20package%20installation/near/448951026" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Alec Leamas <a href="https://leamas.github.io/zulip-archive/stream/432618-OCPN-5.2E10-Release-plan/topic/New.20package.20installation.html#448951026">(Jul 03 2024 at 21:15)</a>:</h4>
+<p>This is despite local installation tests. Stay tuned.</p>
+
+
+
+<a name="448951134"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/432618-OCPN%205.10%20Release%20plan/topic/New%20package%20installation/near/448951134" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Dave Register <a href="https://leamas.github.io/zulip-archive/stream/432618-OCPN-5.2E10-Release-plan/topic/New.20package.20installation.html#448951134">(Jul 03 2024 at 21:16)</a>:</h4>
+<p>Not to "pile-on", but can we get the "recommends" at the same time?  CF users have noticed....</p>
+
+
+
+<a name="448951482"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/432618-OCPN%205.10%20Release%20plan/topic/New%20package%20installation/near/448951482" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Alec Leamas <a href="https://leamas.github.io/zulip-archive/stream/432618-OCPN-5.2E10-Release-plan/topic/New.20package.20installation.html#448951482">(Jul 03 2024 at 21:18)</a>:</h4>
+<p>That is no problem, will do. Wxwidgets is the problem...</p>
+
+
+
+<a name="448960470"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/432618-OCPN%205.10%20Release%20plan/topic/New%20package%20installation/near/448960470" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Alec Leamas <a href="https://leamas.github.io/zulip-archive/stream/432618-OCPN-5.2E10-Release-plan/topic/New.20package.20installation.html#448960470">(Jul 03 2024 at 22:23)</a>:</h4>
+<p>Some progress on the mess. I think the root cause is that the beta is linked against wxWidgets  3.2.1 whereas the 5.8.4 is linked against 3.2.2.  This is because  of different wxWidgets versions in the beta repo vs the production.</p>
+<p>This means that in order to install the beta we have  to downgrade wxwidgets. No packaging system likes that.</p>
+<p>This is just a plain bug we need to fix, not sure it's the complete story. That said, how complicated would it be  to update the beta repo's wxwidgets to same state as the official?</p>
+
+
+
+<a name="448960561"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/432618-OCPN%205.10%20Release%20plan/topic/New%20package%20installation/near/448960561" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Alec Leamas <a href="https://leamas.github.io/zulip-archive/stream/432618-OCPN-5.2E10-Release-plan/topic/New.20package.20installation.html#448960561">(Jul 03 2024 at 22:23)</a>:</h4>
+<p><span class="user-mention" data-user-id="517002">@Dave Register</span></p>
+
+
+
+<a name="448967225"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/432618-OCPN%205.10%20Release%20plan/topic/New%20package%20installation/near/448967225" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Alec Leamas <a href="https://leamas.github.io/zulip-archive/stream/432618-OCPN-5.2E10-Release-plan/topic/New.20package.20installation.html#448967225">(Jul 03 2024 at 23:17)</a>:</h4>
+<p>Otherwise I have created a wxwidgets3.2 repo at <a href="https://launchpad.net/~leamas-alec/+archive/ubuntu/wxwidgets3.2">https://launchpad.net/~leamas-alec/+archive/ubuntu/wxwidgets3.2</a>; it is at 3.2.2.  You should be able to just link this as a ppa dependency using  <em>leamas-alec/wxwidgets3.2</em>.  No need to remove existing 3.1.1 build, apt will use 3.2.2 from my repo</p>
+
+
+
+<a name="448969996"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/432618-OCPN%205.10%20Release%20plan/topic/New%20package%20installation/near/448969996" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Dave Register <a href="https://leamas.github.io/zulip-archive/stream/432618-OCPN-5.2E10-Release-plan/topic/New.20package.20installation.html#448969996">(Jul 03 2024 at 23:44)</a>:</h4>
+<p>I have added dependency to OCPN Beta build,  your wx3.2.2 repo.<br>
+I'll need a bumped version to rebuild.</p>
+
+
+
+<a name="448970729"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/432618-OCPN%205.10%20Release%20plan/topic/New%20package%20installation/near/448970729" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Dave Register <a href="https://leamas.github.io/zulip-archive/stream/432618-OCPN-5.2E10-Release-plan/topic/New.20package.20installation.html#448970729">(Jul 03 2024 at 23:51)</a>:</h4>
+<p><span class="user-mention" data-user-id="399510">@Alec Leamas</span> <br>
+I have added dependency to OCPN Beta build, your wx3.2.2 repo.<br>
+I'll need a bumped 5.9.2 version to rebuild the Beta-2 package.</p>
+
+
+
+<a name="449021212"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/432618-OCPN%205.10%20Release%20plan/topic/New%20package%20installation/near/449021212" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Alec Leamas <a href="https://leamas.github.io/zulip-archive/stream/432618-OCPN-5.2E10-Release-plan/topic/New.20package.20installation.html#449021212">(Jul 04 2024 at 07:34)</a>:</h4>
+<p>Good morning. Pushed a bump, ready for the debuild + dput.</p>
+
+
+
+<a name="449025576"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/432618-OCPN%205.10%20Release%20plan/topic/New%20package%20installation/near/449025576" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Alec Leamas <a href="https://leamas.github.io/zulip-archive/stream/432618-OCPN-5.2E10-Release-plan/topic/New.20package.20installation.html#449025576">(Jul 04 2024 at 07:50)</a>:</h4>
+<p>Forgot the sglock thing, fix in next bump. Let's focus on wxwidgets for now.</p>
+<p>That said, got a nice reply on debian-devel. It basically boils down to that packaging sglock should be fine. Two points:</p>
+<ul>
+<li>We need to sort out the license, the important part is clarifying that the library is redistributable.</li>
+<li>We should use Suggests: rather than Recommends: . Using Recommends: is to say that opencpn is unlikely to be used without the dongle which is wrong. The strong Recommends will also force opencpn into the contrib section since it will not be classified as fully free.  This is the only thing relevant now.</li>
+</ul>
+
+
+
+<a name="449031824"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/432618-OCPN%205.10%20Release%20plan/topic/New%20package%20installation/near/449031824" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Alec Leamas <a href="https://leamas.github.io/zulip-archive/stream/432618-OCPN-5.2E10-Release-plan/topic/New.20package.20installation.html#449031824">(Jul 04 2024 at 08:23)</a>:</h4>
+<p>hm... the safest route is probably to remove the wxwidgets 3.2.1 build in the beta repo before uploading. I see that you already have a  link to opencpn/opencpn but that wxwidgets is seemingly not used.</p>
+
+
+
+<a name="449049115"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/432618-OCPN%205.10%20Release%20plan/topic/New%20package%20installation/near/449049115" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Alec Leamas <a href="https://leamas.github.io/zulip-archive/stream/432618-OCPN-5.2E10-Release-plan/topic/New.20package.20installation.html#449049115">(Jul 04 2024 at 09:59)</a>:</h4>
+<p><span class="user-mention" data-user-id="517002">@Dave Register</span> ^</p>
+
+
+
+<a name="449091549"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/432618-OCPN%205.10%20Release%20plan/topic/New%20package%20installation/near/449091549" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Dave Register <a href="https://leamas.github.io/zulip-archive/stream/432618-OCPN-5.2E10-Release-plan/topic/New.20package.20installation.html#449091549">(Jul 04 2024 at 13:46)</a>:</h4>
+<p>dput, accepted and building now, we'll see.</p>
+
+
+
+<a name="449101046"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/432618-OCPN%205.10%20Release%20plan/topic/New%20package%20installation/near/449101046" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Dave Register <a href="https://leamas.github.io/zulip-archive/stream/432618-OCPN-5.2E10-Release-plan/topic/New.20package.20installation.html#449101046">(Jul 04 2024 at 14:26)</a>:</h4>
+<p><span class="user-mention" data-user-id="399510">@Alec Leamas</span> <br>
+For whatever reason, the dput ended up attached to focal, not jammy.  Waiting on build to see what happens.</p>
+
+
+
+<a name="449102240"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/432618-OCPN%205.10%20Release%20plan/topic/New%20package%20installation/near/449102240" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Dave Register <a href="https://leamas.github.io/zulip-archive/stream/432618-OCPN-5.2E10-Release-plan/topic/New.20package.20installation.html#449102240">(Jul 04 2024 at 14:33)</a>:</h4>
+<p>Build failed.<br>
+Missing build dependencies: <em>libgdk-pixbuf-2.0-dev</em></p>
+
+
+
+<a name="449129361"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/432618-OCPN%205.10%20Release%20plan/topic/New%20package%20installation/near/449129361" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Alec Leamas <a href="https://leamas.github.io/zulip-archive/stream/432618-OCPN-5.2E10-Release-plan/topic/New.20package.20installation.html#449129361">(Jul 04 2024 at 16:44)</a>:</h4>
+<p>My bad, what we in Sweden calls a "brain drop". In d/changelog, top line, I for some reason wrote focal instead of jammy.  Things like missinig build deps are  then expected, that is the reason why there is different branches for different distros.</p>
+<p>Now making an isolated test build to avoid any such errors before pushing.</p>
+
+
+
+<a name="449130187"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/432618-OCPN%205.10%20Release%20plan/topic/New%20package%20installation/near/449130187" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Dave Register <a href="https://leamas.github.io/zulip-archive/stream/432618-OCPN-5.2E10-Release-plan/topic/New.20package.20installation.html#449130187">(Jul 04 2024 at 16:51)</a>:</h4>
+<p>I am ready to pull/debuild/dput whenever you have pushed.</p>
+
+
+
+<a name="449130381"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/432618-OCPN%205.10%20Release%20plan/topic/New%20package%20installation/near/449130381" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Alec Leamas <a href="https://leamas.github.io/zulip-archive/stream/432618-OCPN-5.2E10-Release-plan/topic/New.20package.20installation.html#449130381">(Jul 04 2024 at 16:52)</a>:</h4>
+<p>OK. It will take same time,  doing the full check in an isolated container.  You might want to do something else meantime, I'll ping in  about 15 minutes</p>
+
+
+
+<a name="449130505"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/432618-OCPN%205.10%20Release%20plan/topic/New%20package%20installation/near/449130505" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Dave Register <a href="https://leamas.github.io/zulip-archive/stream/432618-OCPN-5.2E10-Release-plan/topic/New.20package.20installation.html#449130505">(Jul 04 2024 at 16:53)</a>:</h4>
+<p>OK.  Out for 30 mins.</p>
+
+
+
+<a name="449134740"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/432618-OCPN%205.10%20Release%20plan/topic/New%20package%20installation/near/449134740" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Alec Leamas <a href="https://leamas.github.io/zulip-archive/stream/432618-OCPN-5.2E10-Release-plan/topic/New.20package.20installation.html#449134740">(Jul 04 2024 at 17:16)</a>:</h4>
+<p><span class="user-mention" data-user-id="517002">@Dave Register</span>   pushed</p>
+
+
+
+<a name="449139312"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/432618-OCPN%205.10%20Release%20plan/topic/New%20package%20installation/near/449139312" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Dave Register <a href="https://leamas.github.io/zulip-archive/stream/432618-OCPN-5.2E10-Release-plan/topic/New.20package.20installation.html#449139312">(Jul 04 2024 at 17:48)</a>:</h4>
+<p>dput rejected, as I expected.<br>
+Rejected:<br>
+File opencpn_5.9.2-beta2+dfsg-1ubuntu1~bpo2204.4.debian.tar.xz already exists in OpenCPN, but uploaded version has different contents. See more information about this error in <a href="https://help.launchpad.net/Packaging/UploadErrors">https://help.launchpad.net/Packaging</a></p>
+<p>Need a bump to ".5"</p>
+
+
+
+<a name="449139838"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/432618-OCPN%205.10%20Release%20plan/topic/New%20package%20installation/near/449139838" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Alec Leamas <a href="https://leamas.github.io/zulip-archive/stream/432618-OCPN-5.2E10-Release-plan/topic/New.20package.20installation.html#449139838">(Jul 04 2024 at 17:53)</a>:</h4>
+<p>done</p>
+
+
+
+<a name="449163328"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/432618-OCPN%205.10%20Release%20plan/topic/New%20package%20installation/near/449163328" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Dave Register <a href="https://leamas.github.io/zulip-archive/stream/432618-OCPN-5.2E10-Release-plan/topic/New.20package.20installation.html#449163328">(Jul 04 2024 at 20:50)</a>:</h4>
+<p>OK, launchpad completes build and publish.<br>
+Upgrade from O584 is smooth, no problem.</p>
+<p>However, I really would like to see the sglock package in Recommends, rather than Suggests, at least for this PPA release.  Requiring users to manually add that package is a bit of friction that seems a reversion from previous practice.<br>
+Thoughts?</p>
+
+
+
+<a name="449168364"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/432618-OCPN%205.10%20Release%20plan/topic/New%20package%20installation/near/449168364" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Alec Leamas <a href="https://leamas.github.io/zulip-archive/stream/432618-OCPN-5.2E10-Release-plan/topic/New.20package.20installation.html#449168364">(Jul 04 2024 at 21:34)</a>:</h4>
+<p><a href="https://www.debian.org/doc/manuals/debian-faq/pkg-basics.en.html">https://www.debian.org/doc/manuals/debian-faq/pkg-basics.en.html</a>.  Chapter 7.9</p>
+
+
+
+<a name="449168695"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/432618-OCPN%205.10%20Release%20plan/topic/New%20package%20installation/near/449168695" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Alec Leamas <a href="https://leamas.github.io/zulip-archive/stream/432618-OCPN-5.2E10-Release-plan/topic/New.20package.20installation.html#449168695">(Jul 04 2024 at 21:38)</a>:</h4>
+<p>Using R: will bite us quite hard, it means opencpn will be classified as not fully free causing all sorts of friction in both the Debian and Ubuntu communities.</p>
+
+
+
+<a name="449169510"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/432618-OCPN%205.10%20Release%20plan/topic/New%20package%20installation/near/449169510" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Alec Leamas <a href="https://leamas.github.io/zulip-archive/stream/432618-OCPN-5.2E10-Release-plan/topic/New.20package.20installation.html#449169510">(Jul 04 2024 at 21:49)</a>:</h4>
+<p>Otoh, saying that suggests means manual installation is not true. On the command line it's about using an option. Graphical tools should have support like checkboxes etc.</p>
+
+
+
+<a name="449172374"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/432618-OCPN%205.10%20Release%20plan/topic/New%20package%20installation/near/449172374" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Alec Leamas <a href="https://leamas.github.io/zulip-archive/stream/432618-OCPN-5.2E10-Release-plan/topic/New.20package.20installation.html#449172374">(Jul 04 2024 at 22:11)</a>:</h4>
+<p>... But then again, we can do anything in  PPA  backports. But it will end up in confusion when packages with the same version have R: or S: depending on if they are official or PPA.</p>
+
+
+
+<a name="449180110"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/432618-OCPN%205.10%20Release%20plan/topic/New%20package%20installation/near/449180110" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Dave Register <a href="https://leamas.github.io/zulip-archive/stream/432618-OCPN-5.2E10-Release-plan/topic/New.20package.20installation.html#449180110">(Jul 04 2024 at 23:47)</a>:</h4>
+<ol>
+<li>"classified as not fully free".   Has not been a factor at all so far, and we have been shipping O with Recommends sglock for some years now.</li>
+<li>Friction is having to add "--include-suggests", or some such, to apt install CLI command.  Or remember to check the box on a GUI package manager, if you think you might someday want to use o-charts with a dongle. This workflow will be seen, reasonably, as a UX regression for our users.</li>
+</ol>
+<p>tldr;  I would like to return sglock support to "Recommends" in PPA for at least O5.10</p>
+
+
+
+<a name="449232828"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/432618-OCPN%205.10%20Release%20plan/topic/New%20package%20installation/near/449232828" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Alec Leamas <a href="https://leamas.github.io/zulip-archive/stream/432618-OCPN-5.2E10-Release-plan/topic/New.20package.20installation.html#449232828">(Jul 05 2024 at 06:59)</a>:</h4>
+<p>You have the final word. That said, let's try to sort out the consequences. It's about how we handle sglock in a wider perspective. Brain dump ahead.</p>
+<p>Using the PPA is not a practical solution for Debian users. We could mitigate the consequences by creating a separate PPA containing only the sglock stuff to avoid loading wrong versions of stuff in the main opencpn PPA. It would still require Debian users to add this repo manually  to /etc/apt/sources.list.d.  Workable, but not pretty -- debian users are rightfully hesitant to add Ubuntu PPA:s to the configuration creating what's known as FrankenDebian.</p>
+<p>We can package sglock in a official non-free Debian package. Debian users will have to enable the non-free section in sources.list manually but would otherwise be fine. </p>
+<p>If we package sglock this way and have a R: opencpn-sglock opencpn will have to be moved to the contrib section. This is not that dramatic on Debian, but also means that opencpn will be imported to the Ubuntu multiverse which not is enabled by default. Using S: works around this.</p>
+<p>The third option is to download the library from within opencpn in the same way as we download charts and plugins.</p>
+<p>Possible strategy could be:</p>
+<ol>
+<li>Use R: in the PPA packages for now targeting Ubuntu users.</li>
+<li>Add a separate sglock launchpad repo and documentation for Debian users as a transition solution.</li>
+<li>In 5.12 implement downloading the driver from within opencpn,  avoiding the need to mess with PPA:s and sources.list.</li>
+</ol>
+<p>Sorry for long post. Thoughts?</p>
+
+
+
+<a name="449289850"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/432618-OCPN%205.10%20Release%20plan/topic/New%20package%20installation/near/449289850" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Alec Leamas <a href="https://leamas.github.io/zulip-archive/stream/432618-OCPN-5.2E10-Release-plan/topic/New.20package.20installation.html#449289850">(Jul 05 2024 at 11:33)</a>:</h4>
+<p><span class="user-mention" data-user-id="517002">@Dave Register</span> ^</p>
+
+
+
+<a name="449320628"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/432618-OCPN%205.10%20Release%20plan/topic/New%20package%20installation/near/449320628" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Dave Register <a href="https://leamas.github.io/zulip-archive/stream/432618-OCPN-5.2E10-Release-plan/topic/New.20package.20installation.html#449320628">(Jul 05 2024 at 14:06)</a>:</h4>
+<p><span class="user-mention" data-user-id="399510">@Alec Leamas</span> <br>
+Your three part strategy from today sounds workable to me.</p>
+<p>On <a href="https://github.com/opencpn/OpenCPN/issues/2">#2</a>:  Maybe this should be called some sort of "opencpn-extras" repo, leaving the logical door open for other things in the future.</p>
+<p>The <a href="https://github.com/opencpn/OpenCPN/issues/3">#3</a> is the key point.  After all, sglock relates only to o-charts, and the responsibility for loading and managing sglock rightly belongs to the o-charts plugin.  Attaching to OCPN core, as either R or S, seems like a quick but questionable shortcut that we made in the moment.  We should fix that some point soon.<br>
+But not <em>right</em> now.</p>
+<p>Anyway, let us move ahead on this three part plan..<br>
+Focal and noble also ready soon?</p>
+
+
+
+<a name="449322007"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/432618-OCPN%205.10%20Release%20plan/topic/New%20package%20installation/near/449322007" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Alec Leamas <a href="https://leamas.github.io/zulip-archive/stream/432618-OCPN-5.2E10-Release-plan/topic/New.20package.20installation.html#449322007">(Jul 05 2024 at 14:12)</a>:</h4>
+<p>OK, we are looking in the same direction.  Your perspective on where the library belongs is correct and better than mine.</p>
+<p>Given the overall strategy the separate repo will be abandoned at some point. For that reason it might be better to keep it focused. If there are other needs we could add new repos. Mixing different things in the same repo carries risks for using something not intended. Less is more.</p>
+<blockquote>
+<p>But not right now.</p>
+</blockquote>
+<p>Indeed. </p>
+<p>Starting to modify branches. Stay tuned.</p>
+
+
+
+<a name="449328373"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/432618-OCPN%205.10%20Release%20plan/topic/New%20package%20installation/near/449328373" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Alec Leamas <a href="https://leamas.github.io/zulip-archive/stream/432618-OCPN-5.2E10-Release-plan/topic/New.20package.20installation.html#449328373">(Jul 05 2024 at 14:47)</a>:</h4>
+<p><span class="user-mention" data-user-id="517002">@Dave Register</span>     All branches ready.</p>
+
+
+
+<a name="449328682"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/432618-OCPN%205.10%20Release%20plan/topic/New%20package%20installation/near/449328682" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Dave Register <a href="https://leamas.github.io/zulip-archive/stream/432618-OCPN-5.2E10-Release-plan/topic/New.20package.20installation.html#449328682">(Jul 05 2024 at 14:48)</a>:</h4>
+<p>I'm out for a few hours. Grocery shopping.  Gotta eat...</p>
+
+
+
+<a name="449328720"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/432618-OCPN%205.10%20Release%20plan/topic/New%20package%20installation/near/449328720" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Alec Leamas <a href="https://leamas.github.io/zulip-archive/stream/432618-OCPN-5.2E10-Release-plan/topic/New.20package.20installation.html#449328720">(Jul 05 2024 at 14:49)</a>:</h4>
+<blockquote>
+<p>Attaching to OCPN core, as either R or S, seems like a quick but questionable shortcut that we made in the momen</p>
+</blockquote>
+<p>Indeed. The more formal rules when doing "real" packaging are not always convenient, but they do reveal  actual problems form time to time</p>
+
+
+
+<a name="449328824"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/432618-OCPN%205.10%20Release%20plan/topic/New%20package%20installation/near/449328824" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Alec Leamas <a href="https://leamas.github.io/zulip-archive/stream/432618-OCPN-5.2E10-Release-plan/topic/New.20package.20installation.html#449328824">(Jul 05 2024 at 14:49)</a>:</h4>
+<p>DInner ahead also here...</p>
+
+
+
+<a name="449328934"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/432618-OCPN%205.10%20Release%20plan/topic/New%20package%20installation/near/449328934" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Dave Register <a href="https://leamas.github.io/zulip-archive/stream/432618-OCPN-5.2E10-Release-plan/topic/New.20package.20installation.html#449328934">(Jul 05 2024 at 14:50)</a>:</h4>
+<p>I will start the three debuild/dput now.</p>
+
+
+
+<a name="449330142"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/432618-OCPN%205.10%20Release%20plan/topic/New%20package%20installation/near/449330142" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Dave Register <a href="https://leamas.github.io/zulip-archive/stream/432618-OCPN-5.2E10-Release-plan/topic/New.20package.20installation.html#449330142">(Jul 05 2024 at 14:55)</a>:</h4>
+<p>Pushed jammy, more later.</p>
+
+
+
+<a name="449337967"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/432618-OCPN%205.10%20Release%20plan/topic/New%20package%20installation/near/449337967" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Alec Leamas <a href="https://leamas.github.io/zulip-archive/stream/432618-OCPN-5.2E10-Release-plan/topic/New.20package.20installation.html#449337967">(Jul 05 2024 at 15:28)</a>:</h4>
+<p>Build errors, I did it again: wrote focall instead of jammy. Pushed a fix.</p>
+
+
+
+<a name="449376884"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/432618-OCPN%205.10%20Release%20plan/topic/New%20package%20installation/near/449376884" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Alec Leamas <a href="https://leamas.github.io/zulip-archive/stream/432618-OCPN-5.2E10-Release-plan/topic/New.20package.20installation.html#449376884">(Jul 05 2024 at 18:55)</a>:</h4>
+<p>I can build noble and jammy: <a href="https://launchpad.net/~leamas-alec/+archive/ubuntu/opencpn/+packages">https://launchpad.net/~leamas-alec/+archive/ubuntu/opencpn/+packages</a></p>
+<p>However, focal fails with  a strange error which seems to be about the builder host. I can build it using pbuilder, which is an isolated container like a light-weight vm. I don't know how to do anything about it, perhaps just wait and try a new build tomorrow.<br>
+<a href="https://launchpadlibrarian.net/738136602/buildlog_ubuntu-focal-amd64.opencpn_1%3A5.9.2-beta2+dfsg-1ubuntu1~bpo2004.5_BUILDING.txt.gz">https://launchpadlibrarian.net/738136602/buildlog_ubuntu-focal-amd64.opencpn_1%3A5.9.2-beta2+dfsg-1ubuntu1~bpo2004.5_BUILDING.txt.gz</a></p>
+
+
+
+<a name="449396132"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/432618-OCPN%205.10%20Release%20plan/topic/New%20package%20installation/near/449396132" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Dave Register <a href="https://leamas.github.io/zulip-archive/stream/432618-OCPN-5.2E10-Release-plan/topic/New.20package.20installation.html#449396132">(Jul 05 2024 at 20:50)</a>:</h4>
+<p><span class="user-mention" data-user-id="399510">@Alec Leamas</span> <br>
+Focal:<br>
+Rejected:<br>
+opencpn_5.9.2-beta2+dfsg-1ubuntu1~bpo2004.4.dsc: Version older than that in the archive. 1:5.9.2-beta2+dfsg-1ubuntu1~bpo2004.4 &lt;= 1:5.9.2-beta2+dfsg-1ubuntu1~bpo2204.6</p>
+<p>opencpn (1:5.9.2-beta2+dfsg-1ubuntu1~bpo2004.4) focal; urgency=medium</p>
+<p>Will need to bump to "2004.7" to get a new build.</p>
+
+
+
+<a name="449398302"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/432618-OCPN%205.10%20Release%20plan/topic/New%20package%20installation/near/449398302" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Dave Register <a href="https://leamas.github.io/zulip-archive/stream/432618-OCPN-5.2E10-Release-plan/topic/New.20package.20installation.html#449398302">(Jul 05 2024 at 21:04)</a>:</h4>
+<p>But that may be a problem since we have some 2204.6 files hanging around in the repo for Focal.</p>
+
+
+
+<a name="449457427"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/432618-OCPN%205.10%20Release%20plan/topic/New%20package%20installation/near/449457427" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Alec Leamas <a href="https://leamas.github.io/zulip-archive/stream/432618-OCPN-5.2E10-Release-plan/topic/New.20package.20installation.html#449457427">(Jul 06 2024 at 08:10)</a>:</h4>
+<p>Ah... the ...6 files are ffrom when I  submitted  ...6 jammy build with wrong distro focal. Sigh.</p>
+<p>Pushed a commit bumping the version "in place" shoch should make it.</p>
+
+
+
+<a name="449459558"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/432618-OCPN%205.10%20Release%20plan/topic/New%20package%20installation/near/449459558" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Alec Leamas <a href="https://leamas.github.io/zulip-archive/stream/432618-OCPN-5.2E10-Release-plan/topic/New.20package.20installation.html#449459558">(Jul 06 2024 at 08:28)</a>:</h4>
+<p>... fresh eyes: I know what the build error is about, sort of.</p>
+
+
+
+<a name="449478845"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/432618-OCPN%205.10%20Release%20plan/topic/New%20package%20installation/near/449478845" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Alec Leamas <a href="https://leamas.github.io/zulip-archive/stream/432618-OCPN-5.2E10-Release-plan/topic/New.20package.20installation.html#449478845">(Jul 06 2024 at 11:22)</a>:</h4>
+<p>The problem is the leamas-alec/wxWidgets repo. !t contains a broken wxWidgets 3.1 build which cannot be updated since there are also wxWidgets 3.2 builds.</p>
+<p>I have changed the leamas-alec/wxwidgets dependency (containing both 3.1 and 3.2) to leamas-alec/wxwidgets3.2.  This makes everything build.  Interestingly it also clears <a href="https://github.com/opencpn/OpenCPN/issues/4027">#4027</a> i. e., all of a sudden the armhf builds  does not fail. Not digged into why.</p>
+<p>It all makes sense, wxwidgets3.1 was a transition state. We only use 3.0 for focal and 3.2 for jammy and noble. The repo we need is 3.2 for jammy, the rest is in Ubuntu</p>
+
+
+
+<a name="449478865"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/432618-OCPN%205.10%20Release%20plan/topic/New%20package%20installation/near/449478865" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Alec Leamas <a href="https://leamas.github.io/zulip-archive/stream/432618-OCPN-5.2E10-Release-plan/topic/New.20package.20installation.html#449478865">(Jul 06 2024 at 11:23)</a>:</h4>
+<p>Reference builds: <a href="https://launchpad.net/~leamas-alec/+archive/ubuntu/opencpn">https://launchpad.net/~leamas-alec/+archive/ubuntu/opencpn</a></p>
+
+
+
+<a name="449478877"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/432618-OCPN%205.10%20Release%20plan/topic/New%20package%20installation/near/449478877" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Alec Leamas <a href="https://leamas.github.io/zulip-archive/stream/432618-OCPN-5.2E10-Release-plan/topic/New.20package.20installation.html#449478877">(Jul 06 2024 at 11:23)</a>:</h4>
+<p><span class="user-mention" data-user-id="517002">@Dave Register</span> ^</p>
+
+
+
+<a name="449481135"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/432618-OCPN%205.10%20Release%20plan/topic/New%20package%20installation/near/449481135" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Alec Leamas <a href="https://leamas.github.io/zulip-archive/stream/432618-OCPN-5.2E10-Release-plan/topic/New.20package.20installation.html#449481135">(Jul 06 2024 at 11:37)</a>:</h4>
+<p>This means you might want to create new builds after changing the dependencies. I can of course help you, but here is the shortcut:</p>
+<div class="codehilite"><pre><span></span><code>    $ git checkout ubuntu/whatever
+    $ git clean -fxd; git checkout .
+    $ dch -R     # Throws you in an editor. Write the log message, here &quot;Trigger new build&quot;
+    $ dch -r
+    $ git diff
+    $ git commit -am &quot; 1:5.9.2-beta2+dfsg-1ubuntu1~bpo2204.8&quot;    # Version as displayed by git diff above
+    $ debuild ...
+    $ dput ...
+    $ git push github ubuntu/whatever
+</code></pre></div>
+<p>... assuming you still call the remote github. Might of course be for example origin or upstream.</p>
+
+
+
+<a name="449482000"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/432618-OCPN%205.10%20Release%20plan/topic/New%20package%20installation/near/449482000" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Alec Leamas <a href="https://leamas.github.io/zulip-archive/stream/432618-OCPN-5.2E10-Release-plan/topic/New.20package.20installation.html#449482000">(Jul 06 2024 at 11:41)</a>:</h4>
+<blockquote>
+<p>all of a sudden the armhf builds does not fail</p>
+</blockquote>
+<p>Except on noble, same old  <a href="https://github.com/opencpn/OpenCPN/issues/4027">#4027</a> error.</p>
+
+
+
+<a name="449528677"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/432618-OCPN%205.10%20Release%20plan/topic/New%20package%20installation/near/449528677" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Dave Register <a href="https://leamas.github.io/zulip-archive/stream/432618-OCPN-5.2E10-Release-plan/topic/New.20package.20installation.html#449528677">(Jul 06 2024 at 17:05)</a>:</h4>
+<p>Sorry, lost the thread.<br>
+Should I build e.g. noble now, from current github?<br>
+Do I need to change the beta repo depndencies before I dput?</p>
+
+
+
+<a name="449538090"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/432618-OCPN%205.10%20Release%20plan/topic/New%20package%20installation/near/449538090" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Dave Register <a href="https://leamas.github.io/zulip-archive/stream/432618-OCPN-5.2E10-Release-plan/topic/New.20package.20installation.html#449538090">(Jul 06 2024 at 18:01)</a>:</h4>
+<p><span class="user-mention" data-user-id="399510">@Alec Leamas</span> <br>
+ping</p>
+
+
+
+<a name="449550944"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/432618-OCPN%205.10%20Release%20plan/topic/New%20package%20installation/near/449550944" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Alec Leamas <a href="https://leamas.github.io/zulip-archive/stream/432618-OCPN-5.2E10-Release-plan/topic/New.20package.20installation.html#449550944">(Jul 06 2024 at 19:47)</a>:</h4>
+<p>Yes, you need to change the dependencies.  And after that make  new builds.</p>
+<p>New builds means that we need to at least bumb the version. I can do it. The alternative is that you do it yourself according to above. Let me know what you prefer.</p>
+
+
+
+<a name="449550974"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/432618-OCPN%205.10%20Release%20plan/topic/New%20package%20installation/near/449550974" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Alec Leamas <a href="https://leamas.github.io/zulip-archive/stream/432618-OCPN-5.2E10-Release-plan/topic/New.20package.20installation.html#449550974">(Jul 06 2024 at 19:47)</a>:</h4>
+<p>Sorry for delay, ongoing social activities....</p>
+
+
+
+<a name="449551307"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/432618-OCPN%205.10%20Release%20plan/topic/New%20package%20installation/near/449551307" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Alec Leamas <a href="https://leamas.github.io/zulip-archive/stream/432618-OCPN-5.2E10-Release-plan/topic/New.20package.20installation.html#449551307">(Jul 06 2024 at 19:52)</a>:</h4>
+<p>Anyway I pushed the <a href="https://github.com/opencpn/OpenCPN/issues/4027">#4027</a> fix to ubuntu/numbat for now, so this one  can be rebuilt as it is without further bumping</p>
+
+
+
+<a name="449552816"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/432618-OCPN%205.10%20Release%20plan/topic/New%20package%20installation/near/449552816" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Dave Register <a href="https://leamas.github.io/zulip-archive/stream/432618-OCPN-5.2E10-Release-plan/topic/New.20package.20installation.html#449552816">(Jul 06 2024 at 20:01)</a>:</h4>
+<p>So now the require depndency is:<br>
+<a href="https://launchpad.net/~leamas-alec/+archive/ubuntu/wxwidgets3.2">https://launchpad.net/~leamas-alec/+archive/ubuntu/wxwidgets3.2</a><br>
+??</p>
+
+
+
+<a name="449553078"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/432618-OCPN%205.10%20Release%20plan/topic/New%20package%20installation/near/449553078" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Alec Leamas <a href="https://leamas.github.io/zulip-archive/stream/432618-OCPN-5.2E10-Release-plan/topic/New.20package.20installation.html#449553078">(Jul 06 2024 at 20:02)</a>:</h4>
+<p>Yes. wxWidgets is evil since it mixes both 3.1 and 3.2 builds</p>
+
+
+
+<a name="449553270"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/432618-OCPN%205.10%20Release%20plan/topic/New%20package%20installation/near/449553270" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Alec Leamas <a href="https://leamas.github.io/zulip-archive/stream/432618-OCPN-5.2E10-Release-plan/topic/New.20package.20installation.html#449553270">(Jul 06 2024 at 20:03)</a>:</h4>
+<p>BTW: My bad, sorry. But I just didn't see it coming</p>
+
+
+
+<a name="449553604"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/432618-OCPN%205.10%20Release%20plan/topic/New%20package%20installation/near/449553604" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Alec Leamas <a href="https://leamas.github.io/zulip-archive/stream/432618-OCPN-5.2E10-Release-plan/topic/New.20package.20installation.html#449553604">(Jul 06 2024 at 20:04)</a>:</h4>
+<p>Going to bed mor or less now, so please let me know if you need me to do the "bumping"</p>
+
+
+
+<a name="449554191"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/432618-OCPN%205.10%20Release%20plan/topic/New%20package%20installation/near/449554191" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Dave Register <a href="https://leamas.github.io/zulip-archive/stream/432618-OCPN-5.2E10-Release-plan/topic/New.20package.20installation.html#449554191">(Jul 06 2024 at 20:07)</a>:</h4>
+<p>Please bump jammy to 8.<br>
+I'll be lost if the shortcut fails at all...</p>
+
+
+
+<a name="449555521"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/432618-OCPN%205.10%20Release%20plan/topic/New%20package%20installation/near/449555521" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Alec Leamas <a href="https://leamas.github.io/zulip-archive/stream/432618-OCPN-5.2E10-Release-plan/topic/New.20package.20installation.html#449555521">(Jul 06 2024 at 20:12)</a>:</h4>
+<p>Pushed new commit to focal, jammy and noble.</p>
+<p>I have built myself using that dependency, so it should be reasonably safe: <a href="https://launchpad.net/~leamas-alec/+archive/ubuntu/opencpn">https://launchpad.net/~leamas-alec/+archive/ubuntu/opencpn</a></p>
+
+
+
+<a name="449555592"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/432618-OCPN%205.10%20Release%20plan/topic/New%20package%20installation/near/449555592" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Alec Leamas <a href="https://leamas.github.io/zulip-archive/stream/432618-OCPN-5.2E10-Release-plan/topic/New.20package.20installation.html#449555592">(Jul 06 2024 at 20:12)</a>:</h4>
+<p>Good night...</p>
+
+
+
+<a name="449590898"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/432618-OCPN%205.10%20Release%20plan/topic/New%20package%20installation/near/449590898" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Dave Register <a href="https://leamas.github.io/zulip-archive/stream/432618-OCPN-5.2E10-Release-plan/topic/New.20package.20installation.html#449590898">(Jul 07 2024 at 02:33)</a>:</h4>
+<p>Focal 2004.9 rejected.<br>
+Rejected:<br>
+opencpn_5.9.2-beta2+dfsg-1ubuntu1~bpo2004.9.dsc: Version older than that in the archive. 1:5.9.2-beta2+dfsg-1ubuntu1~bpo2004.9 &lt;= 1:5.9.2-beta2+dfsg-1ubuntu1~bpo2204.6</p>
+<p>opencpn (1:5.9.2-beta2+dfsg-1ubuntu1~bpo2004.9) focal; urgency=medium</p>
+<p>Might need to wait until Beta-3 to correct this, and also noble "26.04" error.</p>
+
+
+
+<a name="449603651"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/432618-OCPN%205.10%20Release%20plan/topic/New%20package%20installation/near/449603651" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Dave Register <a href="https://leamas.github.io/zulip-archive/stream/432618-OCPN-5.2E10-Release-plan/topic/New.20package.20installation.html#449603651">(Jul 07 2024 at 04:30)</a>:</h4>
+<p>Jammy and noble built and published fine.</p>
+
+
+
+<a name="449620179"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/432618-OCPN%205.10%20Release%20plan/topic/New%20package%20installation/near/449620179" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Alec Leamas <a href="https://leamas.github.io/zulip-archive/stream/432618-OCPN-5.2E10-Release-plan/topic/New.20package.20installation.html#449620179">(Jul 07 2024 at 08:18)</a>:</h4>
+<p>We should IMO try hard to build everything OK before beta3. I have pushed a new focal version using dirty tricks. Could you please give it a try.</p>
+<p>The "focal" instead of "jammy" in the jammy build was a major mistake of mine. Lessons learned: (sigh)<br>
+1: Use <code>dch -r</code> to set both date and distro correct rather  than manual editing<br>
+2: Run lintian before pushing.</p>
+
+
+
+<a name="449630586"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/432618-OCPN%205.10%20Release%20plan/topic/New%20package%20installation/near/449630586" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Alec Leamas <a href="https://leamas.github.io/zulip-archive/stream/432618-OCPN-5.2E10-Release-plan/topic/New.20package.20installation.html#449630586">(Jul 07 2024 at 09:58)</a>:</h4>
+<p><span class="user-mention" data-user-id="517002">@Dave Register</span> ^</p>
+
+
+
+<a name="449662441"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/432618-OCPN%205.10%20Release%20plan/topic/New%20package%20installation/near/449662441" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Dave Register <a href="https://leamas.github.io/zulip-archive/stream/432618-OCPN-5.2E10-Release-plan/topic/New.20package.20installation.html#449662441">(Jul 07 2024 at 14:04)</a>:</h4>
+<p><span class="user-mention" data-user-id="399510">@Alec Leamas</span> <br>
+Focal accepted, building now.<br>
+To satisfy my curiosity, what is the significance of the "bpo" version in the changes file name?</p>
+
+
+
+<a name="449667691"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/432618-OCPN%205.10%20Release%20plan/topic/New%20package%20installation/near/449667691" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Alec Leamas <a href="https://leamas.github.io/zulip-archive/stream/432618-OCPN-5.2E10-Release-plan/topic/New.20package.20installation.html#449667691">(Jul 07 2024 at 14:54)</a>:</h4>
+<p>It has no significance in the beta, but It's important in the actual release. And since it will go there,  I think  we should (try to) be consistent.</p>
+<p>Looking at 5.10 there will be two versions of this  package: the one in the PPA and the official which will land in ubuntu 26.04, whatever that will be called. The PPA releases are thus technically backports  of  a 26.04 package. </p>
+<p>The suffix (if correct!)  is about ordering the official package 5.10 which eventually lands in Ubuntu and the PPA release. That is, when a user updates to 26.04 without updating opencpn the official 5.10 package will be installed over the PPA backport, there is no needs for backports when the real thing is available. </p>
+<p>Debian uses a similar scheme for backports of the same reason. They are not that convoluted there, though.</p>
+<p>From another point of view the suffix is required to keep the good relations we  are over time establishing with the Debian and Ubuntu communities. Versioning is at the core of what they do and care about.</p>
+
+
+
+<a name="449667940"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/432618-OCPN%205.10%20Release%20plan/topic/New%20package%20installation/near/449667940" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Alec Leamas <a href="https://leamas.github.io/zulip-archive/stream/432618-OCPN-5.2E10-Release-plan/topic/New.20package.20installation.html#449667940">(Jul 07 2024 at 14:58)</a>:</h4>
+<p>... of course, they also support ordering of the backports without breaking the overall conditions.</p>
+
+
+
+<a name="449688455"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/432618-OCPN%205.10%20Release%20plan/topic/New%20package%20installation/near/449688455" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Dave Register <a href="https://leamas.github.io/zulip-archive/stream/432618-OCPN-5.2E10-Release-plan/topic/New.20package.20installation.html#449688455">(Jul 07 2024 at 17:08)</a>:</h4>
+<p>Yes, I see all that.  Makes sense to follow established practice if we really want OCPN to be in base ubuntu repos going forward.<br>
+But, what does "bpo" stand for?</p>
+<p>btw. Focal built and published OK.<br>
+Thanks</p>
+
+
+
+<a name="449694858"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/432618-OCPN%205.10%20Release%20plan/topic/New%20package%20installation/near/449694858" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Alec Leamas <a href="https://leamas.github.io/zulip-archive/stream/432618-OCPN-5.2E10-Release-plan/topic/New.20package.20installation.html#449694858">(Jul 07 2024 at 17:46)</a>:</h4>
+<p>bpo stands for backport.</p>
+<p>A correct suffix is like ~bpo2204+1. The ~ effectively means "less than" it means that anything  without the tilde is "greater than" the suffixed version</p>
+<p>bpo2204 means backport to 2204 i. e. backport to jammy</p>
+<p>+1 is the backport revision, it's the one incremented when we make new downstream versions from the same opencpn version.</p>
+<p>This is how it should be, there are numerous errors in beta2</p>
+
+
+
+<a name="449697504"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/432618-OCPN%205.10%20Release%20plan/topic/New%20package%20installation/near/449697504" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Dave Register <a href="https://leamas.github.io/zulip-archive/stream/432618-OCPN-5.2E10-Release-plan/topic/New.20package.20installation.html#449697504">(Jul 07 2024 at 18:02)</a>:</h4>
+<p>Doh.. Slap on the forehead.  "bpo"=="backport"</p>
+
+
+
+<a name="451781696"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/432618-OCPN%205.10%20Release%20plan/topic/New%20package%20installation/near/451781696" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Håkan Svensson <a href="https://leamas.github.io/zulip-archive/stream/432618-OCPN-5.2E10-Release-plan/topic/New.20package.20installation.html#451781696">(Jul 16 2024 at 15:10)</a>:</h4>
+<p><span class="user-mention" data-user-id="517002">@Dave Register</span> <br>
+Present Git master gives here an error creating the package by VS2022.<br>
+That's strange since it's builds fine upstream?<br>
+What I undertand it's the .html file listed below that is causing trouble when it shall be compressed. All files, also this in question, are present in the NSIS folder to be compressed.<br>
+Could it be that the long (161 chr) file name can still have impact for Windows???<br>
+The main error as of below list: "EXEC : CPack error : Problem compressing the directory"</p>
+<div class="codehilite" data-code-language="nsisoutput.log"><pre><span></span><code>Processing script file: "C:/Builds/OCPN/OpenCPN/build/_CPack_Packages/win32/NSIS/project.nsi" (ACP)
+
+File: failed opening file "C:/Builds/OCPN/OpenCPN/build/_CPack_Packages/win32/NSIS/opencpn_5.9.1.10_setup\doc\chart_installation\tb-options-charts-chartdownloader-downloadcharts-updatecat.id.opencpn_3Amanual_basic_3Aquick_start_guide_3Achart_installation_3Achartdownloader.jpg.detail.html"
+
+Error in script "C:/Builds/OCPN/OpenCPN/build/_CPack_Packages/win32/NSIS/project.nsi" on line 827 -- aborting creation process
+
+
+
+project.nsi" line 827:
+;# Install Section /hidden
+Section "-Install Section" SecInstall
+        ;#File "C:/Builds/OCPN/OpenCPN/build\_CPack_Packages\win32\NSIS\opencpn_5.9.1.10_setup\bin\opencpn-cmd.exe"
+        ;#File "C:/Builds/OCPN/OpenCPN/build\_CPack_Packages\win32\NSIS\opencpn_5.9.1.10_setup\bin\opencpn-glutil.exe"
+    File /r "${INST_DIR}\*.*"
+
+
+
+VS error
+1&gt;EXEC : CPack error : Problem running NSIS command: "C:/Program Files (x86)/NSIS/makensis.exe"  "C:/Builds/OCPN/OpenCPN/build/_CPack_Packages/win32/NSIS/project.nsi"
+1&gt;Please check C:/Builds/OCPN/OpenCPN/build/_CPack_Packages/win32/NSIS/NSISOutput.log for errors
+1&gt;EXEC : CPack error : Problem compressing the directory
+1&gt;EXEC : CPack error : Error when generating package: OpenCPN
+1&gt;C:\Program Files\Microsoft Visual Studio\2022\Community\MSBuild\Microsoft\VC\v170\Microsoft.CppCommon.targets(166,5): error MSB3073: The command "setlocal
+1&gt;C:\Program Files\Microsoft Visual Studio\2022\Community\MSBuild\Microsoft\VC\v170\Microsoft.CppCommon.targets(166,5): error MSB3073: cd C:\Builds\OCPN\OpenCPN\build
+1&gt;C:\Program Files\Microsoft Visual Studio\2022\Community\MSBuild\Microsoft\VC\v170\Microsoft.CppCommon.targets(166,5): error MSB3073: if %errorlevel% neq 0 goto :cmEnd
+1&gt;C:\Program Files\Microsoft Visual Studio\2022\Community\MSBuild\Microsoft\VC\v170\Microsoft.CppCommon.targets(166,5): error MSB3073: C:
+1&gt;C:\Program Files\Microsoft Visual Studio\2022\Community\MSBuild\Microsoft\VC\v170\Microsoft.CppCommon.targets(166,5): error MSB3073: if %errorlevel% neq 0 goto :cmEnd
+1&gt;C:\Program Files\Microsoft Visual Studio\2022\Community\MSBuild\Microsoft\VC\v170\Microsoft.CppCommon.targets(166,5): error MSB3073: "C:\Program Files\CMake\bin\cpack.exe" -C Release --config ./CPackConfig.cmake
+1&gt;C:\Program Files\Microsoft Visual Studio\2022\Community\MSBuild\Microsoft\VC\v170\Microsoft.CppCommon.targets(166,5): error MSB3073: if %errorlevel% neq 0 goto :cmEnd
+1&gt;C:\Program Files\Microsoft Visual Studio\2022\Community\MSBuild\Microsoft\VC\v170\Microsoft.CppCommon.targets(166,5): error MSB3073: :cmEnd
+1&gt;C:\Program Files\Microsoft Visual Studio\2022\Community\MSBuild\Microsoft\VC\v170\Microsoft.CppCommon.targets(166,5): error MSB3073: endlocal &amp; call :cmErrorLevel %errorlevel% &amp; goto :cmDone
+1&gt;C:\Program Files\Microsoft Visual Studio\2022\Community\MSBuild\Microsoft\VC\v170\Microsoft.CppCommon.targets(166,5): error MSB3073: :cmErrorLevel
+1&gt;C:\Program Files\Microsoft Visual Studio\2022\Community\MSBuild\Microsoft\VC\v170\Microsoft.CppCommon.targets(166,5): error MSB3073: exit /b %1
+1&gt;C:\Program Files\Microsoft Visual Studio\2022\Community\MSBuild\Microsoft\VC\v170\Microsoft.CppCommon.targets(166,5): error MSB3073: :cmDone
+1&gt;C:\Program Files\Microsoft Visual Studio\2022\Community\MSBuild\Microsoft\VC\v170\Microsoft.CppCommon.targets(166,5): error MSB3073: if %errorlevel% neq 0 goto :VCEnd
+1&gt;C:\Program Files\Microsoft Visual Studio\2022\Community\MSBuild\Microsoft\VC\v170\Microsoft.CppCommon.targets(166,5): error MSB3073: :VCEnd" exited with code 1.
+1&gt;Done building project "PACKAGE.vcxproj" -- FAILED.
+</code></pre></div>
+
+
+
+<a name="451836844"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/432618-OCPN%205.10%20Release%20plan/topic/New%20package%20installation/near/451836844" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Dave Register <a href="https://leamas.github.io/zulip-archive/stream/432618-OCPN-5.2E10-Release-plan/topic/New.20package.20installation.html#451836844">(Jul 16 2024 at 18:58)</a>:</h4>
+<p><span class="user-mention" data-user-id="522486">@Håkan Svensson</span> <br>
+Just for fun, if you remove that particular long file name, does it succeed in building the package?<br>
+Of course, there may be more long file names encountered later...</p>
+
+
+
+<a name="451837563"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/432618-OCPN%205.10%20Release%20plan/topic/New%20package%20installation/near/451837563" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Håkan Svensson <a href="https://leamas.github.io/zulip-archive/stream/432618-OCPN-5.2E10-Release-plan/topic/New.20package.20installation.html#451837563">(Jul 16 2024 at 19:02)</a>:</h4>
+<p><span class="user-mention" data-user-id="517002">@Dave Register</span> <br>
+I actually just tested to change the long file names to the half length in "data\doc\chart_installation" and now he instead fail on a long file-name in "data\doc\connection_setup".<br>
+So the file name lengths seems crucial. I wonder who has a limit anywhere?</p>
+
+
+
+<a name="451847295"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/432618-OCPN%205.10%20Release%20plan/topic/New%20package%20installation/near/451847295" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Håkan Svensson <a href="https://leamas.github.io/zulip-archive/stream/432618-OCPN-5.2E10-Release-plan/topic/New.20package.20installation.html#451847295">(Jul 16 2024 at 19:48)</a>:</h4>
+<p><span class="user-mention" data-user-id="517002">@Dave Register</span> <br>
+I found a note about this <a href="https://stackoverflow.com/questions/72881517/how-can-i-add-directory-with-long-name-files-more-260-symbols-to-cmake-cpack-n">here</a>  linking to this <a href="https://learn.microsoft.com/en-us/windows/win32/fileio/maximum-file-path-limitation?tabs=powershell">MS site</a><br>
+I changed the registry key "<code>\LongPathsEnabled</code> to read 1 and reboot. But..<br>
+I don't really understand the second part "The <a href="https://learn.microsoft.com/en-us/windows/win32/sbscs/application-manifests">application manifest</a> must also include the <code>longPathAware</code> element."<br>
+How can I make a "application manifest"? I suppose it would be valid for "CPack" or maybe VS2022?</p>
+
+
+
+<a name="451856760"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/432618-OCPN%205.10%20Release%20plan/topic/New%20package%20installation/near/451856760" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Håkan Svensson <a href="https://leamas.github.io/zulip-archive/stream/432618-OCPN-5.2E10-Release-plan/topic/New.20package.20installation.html#451856760">(Jul 16 2024 at 20:37)</a>:</h4>
+<p>For a test I added as of below diff, but it didn't helped. It builds but the same package creation error.<br>
+(Do we really need these long file names?)</p>
+<div class="codehilite"><pre><span></span><code>diff --git a/app.manifest b/app.manifest
+index 441de1c9b..acaf7f59b 100644
+--- a/app.manifest
++++ b/app.manifest
+@@ -31,6 +31,9 @@
+       &lt;supportedOS Id=&quot;{1f676c76-80e1-4239-95bb-83d0f6d0da78}&quot; /&gt;
+       &lt;!-- Windows 10 --&gt;
+       &lt;supportedOS Id=&quot;{8e0f7a12-bfb3-4fe8-b9a5-48fd50a15a9a}&quot; /&gt;
++         &lt;asmv3:windowsSettings xmlns:ws2=&quot;http://schemas.microsoft.com/SMI/2016/WindowsSettings&quot;&gt;
++      &lt;ws2:longPathAware&gt;true&lt;/ws2:longPathAware&gt;
++      &lt;/asmv3:windowsSettings&gt;
+     &lt;/application&gt;
+   &lt;/compatibility&gt;
+ &lt;/assembly&gt;
+</code></pre></div>
+
+
+
+<a name="451971698"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/432618-OCPN%205.10%20Release%20plan/topic/New%20package%20installation/near/451971698" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Håkan Svensson <a href="https://leamas.github.io/zulip-archive/stream/432618-OCPN-5.2E10-Release-plan/topic/New.20package.20installation.html#451971698">(Jul 17 2024 at 07:32)</a>:</h4>
+<p><span class="user-mention" data-user-id="517002">@Dave Register</span> <br>
+Instead of Windows manipulation could we somewhere, in NSIS?, set a subst for the path to .\doc since the document name itself is no longer than 260. Compare to the working upstream build where the path is like: N:\OpenCPN\... </p>
+<p>Use of  the "\\?\" prefix may be a solution but seems troublesome?</p>
+
+
+
+<a name="451974316"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/432618-OCPN%205.10%20Release%20plan/topic/New%20package%20installation/near/451974316" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Alec Leamas <a href="https://leamas.github.io/zulip-archive/stream/432618-OCPN-5.2E10-Release-plan/topic/New.20package.20installation.html#451974316">(Jul 17 2024 at 07:42)</a>:</h4>
+<p>The use of N: was introduced to make the pdb files created by the build usable for other developers. Seems that the shorter paths also have other benefits.</p>
+
+
+
+<a name="452061982"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/432618-OCPN%205.10%20Release%20plan/topic/New%20package%20installation/near/452061982" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Håkan Svensson <a href="https://leamas.github.io/zulip-archive/stream/432618-OCPN-5.2E10-Release-plan/topic/New.20package.20installation.html#452061982">(Jul 17 2024 at 12:56)</a>:</h4>
+<p>Yes, but we're still really close to the 256 limit. Using N:/ instead of, my case, C:/Builds/OCPN/  earns 12 from 263.</p>
+
+
+
+<a name="452127523"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/432618-OCPN%205.10%20Release%20plan/topic/New%20package%20installation/near/452127523" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Alec Leamas <a href="https://leamas.github.io/zulip-archive/stream/432618-OCPN-5.2E10-Release-plan/topic/New.20package.20installation.html#452127523">(Jul 17 2024 at 16:39)</a>:</h4>
+<p><span class="user-mention silent" data-user-id="522486">Håkan Svensson</span> <a href="#narrow/stream/432618-OCPN-5.2E10-Release-plan/topic/New.20package.20installation/near/451971698">said</a>:</p>
+<blockquote>
+<p><span class="user-mention silent" data-user-id="517002">Dave Register</span> <br>
+Compare to the working upstream build where the path is like: N:\OpenCPN\... </p>
+<p>Since it works it might be worth a try?</p>
+</blockquote>
+
+
+
+<a name="452134054"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/432618-OCPN%205.10%20Release%20plan/topic/New%20package%20installation/near/452134054" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Dave Register <a href="https://leamas.github.io/zulip-archive/stream/432618-OCPN-5.2E10-Release-plan/topic/New.20package.20installation.html#452134054">(Jul 17 2024 at 17:06)</a>:</h4>
+<p>We do not have explicit control of the document file naming scheme.  Working to understand that now, but appears to be "baked-in" to Wiki export utility.<br>
+More as we know it...</p>
+
+
+
+<a name="452144823"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/432618-OCPN%205.10%20Release%20plan/topic/New%20package%20installation/near/452144823" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Håkan Svensson <a href="https://leamas.github.io/zulip-archive/stream/432618-OCPN-5.2E10-Release-plan/topic/New.20package.20installation.html#452144823">(Jul 17 2024 at 17:48)</a>:</h4>
+<p><span class="user-mention" data-user-id="517002">@Dave Register</span> <br>
+We may need another copy from the Wiki?<br>
+Links and search marked at these pictures don't work or are obsolet.<br>
+<a href="/user_uploads/33951/4_4NnbS1mcaPb9lccAuqoCX_/bild.png">bild.png</a><br>
+<a href="/user_uploads/33951/W9qxnJGlfai7n4Yh6RLYYzVg/bild.png">bild.png</a></p>
+<div class="message_inline_image"><a href="/user_uploads/33951/4_4NnbS1mcaPb9lccAuqoCX_/bild.png" title="bild.png"><img src="/user_uploads/33951/4_4NnbS1mcaPb9lccAuqoCX_/bild.png"></a></div><div class="message_inline_image"><a href="/user_uploads/33951/W9qxnJGlfai7n4Yh6RLYYzVg/bild.png" title="bild.png"><img src="/user_uploads/33951/W9qxnJGlfai7n4Yh6RLYYzVg/bild.png"></a></div>
+
+
+
+<a name="452233894"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/432618-OCPN%205.10%20Release%20plan/topic/New%20package%20installation/near/452233894" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Dave Register <a href="https://leamas.github.io/zulip-archive/stream/432618-OCPN-5.2E10-Release-plan/topic/New.20package.20installation.html#452233894">(Jul 18 2024 at 02:59)</a>:</h4>
+<p><span class="user-mention" data-user-id="399510">@Alec Leamas</span> <span class="user-mention" data-user-id="573239">@Pavel Kalian</span> <br>
+About the new embedded user manual:<br>
+Currently bundled on Win and MacOS only.  CI downloads a zipped copy of directory "data/doc", unzips on the fly, adjusts permissions (MacOS only), and so is made available to the installer.<br>
+Downloading and unzipping is different from CI process for O584.  In 584, the doc files were committed to the OCPN repo.  No zip file download/unzip required.<br>
+Question:  Where is a good place to host the zipped doc files?  Presently they are on OpenCPN's DropBox account.  CI finds them there, with awful urls.<br>
+I guess the zip file could be hosted on github, in a new repo.  That seems a little strange, though.  github's tagged release process tries to publish a zipped copy of the repo.  so we would get a zipped zip.  Odd.</p>
+<p>Other ideas? Your thoughts solicited.</p>
+
+
+
+<a name="452236216"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/432618-OCPN%205.10%20Release%20plan/topic/New%20package%20installation/near/452236216" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Alec Leamas <a href="https://leamas.github.io/zulip-archive/stream/432618-OCPN-5.2E10-Release-plan/topic/New.20package.20installation.html#452236216">(Jul 18 2024 at 03:20)</a>:</h4>
+<p>A new, dedicated cloudsmith repo.</p>
+
+
+
+<a name="452332599"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/432618-OCPN%205.10%20Release%20plan/topic/New%20package%20installation/near/452332599" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Dan Dickey <a href="https://leamas.github.io/zulip-archive/stream/432618-OCPN-5.2E10-Release-plan/topic/New.20package.20installation.html#452332599">(Jul 18 2024 at 12:33)</a>:</h4>
+<p>Also, we need to add this folder to .gitignore.</p>
+
+
+
+<a name="452368560"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/432618-OCPN%205.10%20Release%20plan/topic/New%20package%20installation/near/452368560" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Dave Register <a href="https://leamas.github.io/zulip-archive/stream/432618-OCPN-5.2E10-Release-plan/topic/New.20package.20installation.html#452368560">(Jul 18 2024 at 15:05)</a>:</h4>
+<p><span class="user-mention" data-user-id="399510">@Alec Leamas</span> <br>
+Cloudsmith "RAW" repos are not available in the Core (Free) Plan.<br>
+Other ideas?</p>
+
+
+
+<a name="452383491"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/432618-OCPN%205.10%20Release%20plan/topic/New%20package%20installation/near/452383491" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Alec Leamas <a href="https://leamas.github.io/zulip-archive/stream/432618-OCPN-5.2E10-Release-plan/topic/New.20package.20installation.html#452383491">(Jul 18 2024 at 16:07)</a>:</h4>
+<p>But they are supported in the open source type repos. It's kind of tricky: you cannot really change an existing repo to an open-source one, there is only one chance when creating the repo.</p>
+<p>It's in the very first dialog where the repo is created: select open-source as the type. From this point it's smooth sailing</p>
+
+
+
+<a name="452383871"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/432618-OCPN%205.10%20Release%20plan/topic/New%20package%20installation/near/452383871" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Alec Leamas <a href="https://leamas.github.io/zulip-archive/stream/432618-OCPN-5.2E10-Release-plan/topic/New.20package.20installation.html#452383871">(Jul 18 2024 at 16:09)</a>:</h4>
+<p>I just set up a repo to verify: <a href="https://cloudsmith.io/~alec-leamas/repos/opencpn-docs/packages/">https://cloudsmith.io/~alec-leamas/repos/opencpn-docs/packages/</a></p>
+<p>Uploaded a single test item just to check.</p>
+
+
+
+<a name="452387719"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/432618-OCPN%205.10%20Release%20plan/topic/New%20package%20installation/near/452387719" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Alec Leamas <a href="https://leamas.github.io/zulip-archive/stream/432618-OCPN-5.2E10-Release-plan/topic/New.20package.20installation.html#452387719">(Jul 18 2024 at 16:26)</a>:</h4>
+<p><span class="user-mention" data-user-id="517002">@Dave Register</span>  ^^</p>
+
+
+
+<a name="452427122"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/432618-OCPN%205.10%20Release%20plan/topic/New%20package%20installation/near/452427122" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Håkan Svensson <a href="https://leamas.github.io/zulip-archive/stream/432618-OCPN-5.2E10-Release-plan/topic/New.20package.20installation.html#452427122">(Jul 18 2024 at 19:42)</a>:</h4>
+<p><span class="user-mention" data-user-id="517002">@Dave Register</span> <br>
+A late thought..<br>
+In win_deps.bat there's now a function to download and copy a possible update of QuickStartGuide.zip  to \data\doc<br>
+But the old files are still left and would be used by NSIS for next install file:<br>
+CMakeList.txt loads all files in data/doc<br>
+    file(GLOB_RECURSE WIKI_DOC_FILES "${CMAKE_SOURCE_DIR}/data/doc/*")<br>
+We may first empty ./data/doc before update to be sure if not all new files have the same name as those already there?</p>
+
+
+
+<a name="452428315"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/432618-OCPN%205.10%20Release%20plan/topic/New%20package%20installation/near/452428315" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Dave Register <a href="https://leamas.github.io/zulip-archive/stream/432618-OCPN-5.2E10-Release-plan/topic/New.20package.20installation.html#452428315">(Jul 18 2024 at 19:52)</a>:</h4>
+<p><span class="user-mention" data-user-id="399510">@Alec Leamas</span> <br>
+Got cloudsmith repo setup.  Thanks for the hint.</p>
+
+
+
+<a name="452558520"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/432618-OCPN%205.10%20Release%20plan/topic/New%20package%20installation/near/452558520" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Håkan Svensson <a href="https://leamas.github.io/zulip-archive/stream/432618-OCPN-5.2E10-Release-plan/topic/New.20package.20installation.html#452558520">(Jul 19 2024 at 12:17)</a>:</h4>
+<p><span class="user-mention" data-user-id="517002">@Dave Register</span> <br>
+With today's version of QuickStartGuide.zip VS2022 - NSIS succeeded to create the package. Long file names are gone. (Well... I'd to first delete what was in data\doc\ to get rid of old long named files. :) )<br>
+Well done! Next is to get all links to work. Further discussion in Documentation I assume.</p>
+
+
+
+<a name="452602790"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/432618-OCPN%205.10%20Release%20plan/topic/New%20package%20installation/near/452602790" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Alec Leamas <a href="https://leamas.github.io/zulip-archive/stream/432618-OCPN-5.2E10-Release-plan/topic/New.20package.20installation.html#452602790">(Jul 19 2024 at 15:48)</a>:</h4>
+<p><span class="user-mention silent" data-user-id="522729">Dan Dickey</span> <a href="#narrow/stream/432618-OCPN-5.2E10-Release-plan/topic/New.20package.20installation/near/452332599">said</a>:</p>
+<blockquote>
+<p>Also, we need to add this folder to .gitignore.</p>
+</blockquote>
+<p>Unfortunately, this is not straight forward. The directory <em>data/doc</em>  contains <em>help-web.html</em>.  This file is referenced in the build and must not be ignored. </p>
+<p>To make things more interesting it is not possible to first ignore a directory and then re-add  files like <em>help_web.html</em>.</p>
+<p>Ergo: we need to separate help_web.html and the downloaded manual into separate directories. </p>
+<p><span class="user-mention" data-user-id="517002">@Dave Register</span> :  thoughts?</p>
+
+
+
+<a name="452608858"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/432618-OCPN%205.10%20Release%20plan/topic/New%20package%20installation/near/452608858" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Håkan Svensson <a href="https://leamas.github.io/zulip-archive/stream/432618-OCPN-5.2E10-Release-plan/topic/New.20package.20installation.html#452608858">(Jul 19 2024 at 16:10)</a>:</h4>
+<p>Thought:<br>
+Another scenario could be to include all wki documents in the repo instead of being a part of e.g win_deps.bat. This means that all future changes are handled with a normal commit and are also not forgotten in local repos. And thus delete all about data\doc\ from .gitignore.</p>
+
+
+
+<a name="452613410"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/432618-OCPN%205.10%20Release%20plan/topic/New%20package%20installation/near/452613410" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Alec Leamas <a href="https://leamas.github.io/zulip-archive/stream/432618-OCPN-5.2E10-Release-plan/topic/New.20package.20installation.html#452613410">(Jul 19 2024 at 16:25)</a>:</h4>
+<blockquote>
+<p>Another scenario could be to include all wki documents in the repo</p>
+</blockquote>
+<p>This will lock down the manual version to the  state when releasing opencpn. For better or worse the current approach will use latest available download. </p>
+<p>Also note that for Linux, all such documents will be removed since they are not open source. For that reason we only bundle Mac + Win manual.</p>
+<p>The correct solution is probably <a href="https://github.com/opencpn/OpenCPN/issues/3855">#3855</a> which would work on all platforms and allow for continous updates just like the plugins. Thinking in these terms the current approach is probably the best since it  makes a new implementation a la <a href="https://github.com/opencpn/OpenCPN/issues/3855">#3855</a> reasonably simple.</p>
+
+
+
+<a name="452629605"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/432618-OCPN%205.10%20Release%20plan/topic/New%20package%20installation/near/452629605" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Håkan Svensson <a href="https://leamas.github.io/zulip-archive/stream/432618-OCPN-5.2E10-Release-plan/topic/New.20package.20installation.html#452629605">(Jul 19 2024 at 17:51)</a>:</h4>
+<p>So with present functionality we can update the wiki-doc by just rebuild the v5.10 available for official download and let the user re-install the same version?<br>
+If so it sounds handy but how can a user not present on CF  be aware of the updated inbound wiki? Well, probably nothing new for that matter. The same user won't be aware of a new O version either.</p>
+<p>A chart downloader/wiki downloader function as discussed in <a href="https://github.com/opencpn/OpenCPN/issues/3855">#3855</a> sounds interesting. Can probably come in place after v5.10 if we can find a smooth way to copy files to the program folder without being seen as a virus? Would possible need something like a installer for the user to accept?</p>
+
+
+
+<a name="452641854"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/432618-OCPN%205.10%20Release%20plan/topic/New%20package%20installation/near/452641854" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Alec Leamas <a href="https://leamas.github.io/zulip-archive/stream/432618-OCPN-5.2E10-Release-plan/topic/New.20package.20installation.html#452641854">(Jul 19 2024 at 18:56)</a>:</h4>
+<p>As I said: for better or worse.</p>
+<p>We need to keep focus on the release. <a href="https://github.com/opencpn/OpenCPN/issues/3855">#3855</a> is about the future.  For now we need to get 5.10 out of the doors. And this is I M O best done basically as now, but with different dirs for web_help.html and the manual</p>
+
+
+
+<a name="452646234"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/432618-OCPN%205.10%20Release%20plan/topic/New%20package%20installation/near/452646234" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Dave Register <a href="https://leamas.github.io/zulip-archive/stream/432618-OCPN-5.2E10-Release-plan/topic/New.20package.20installation.html#452646234">(Jul 19 2024 at 19:16)</a>:</h4>
+<p>Status report:<br>
+Now CI build of Windows package fails due to long file names in the doc files.<br>
+I'll dig into that one.</p>
+
+
+
+<a name="452651444"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/432618-OCPN%205.10%20Release%20plan/topic/New%20package%20installation/near/452651444" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Håkan Svensson <a href="https://leamas.github.io/zulip-archive/stream/432618-OCPN-5.2E10-Release-plan/topic/New.20package.20installation.html#452651444">(Jul 19 2024 at 19:32)</a>:</h4>
+<p><span class="user-mention" data-user-id="517002">@Dave Register</span> <br>
+Yes I gave up after 4 tries:</p>
+<div class="codehilite"><pre><span></span><code>Using:
+https://dl.cloudsmith.io/public/david-register/opencpn-docs/raw/files/QuickStartGuide-v0.2.zip
+
+File: failed opening file &quot;C:/Builds/OCPN/OpenCPN/build/_CPack_Packages/win32/NSIS/opencpn_5.9.1.10_setup\doc\quick_start_guide\chart_installation\tb-options-charts-chartdownloader-downloadcharts-updatecat.id.opencpn_3Amanual_basic_3Aquick_start_guide_3Achart_installation_3Achartdownloader.jpg.detail.html&quot;
+len: 281
+
+#2 Deleted above file from \data\doc
+File: failed opening file &quot;C:/Builds/OCPN/OpenCPN/build/_CPack_Packages/win32/NSIS/opencpn_5.9.1.10_setup\doc\quick_start_guide\chart_installation\tb-options-charts-chartdownloader-enable.id.opencpn_3Amanual_basic_3Aquick_start_guide_3Achart_installation_3Achartdownloader.jpg.detail.html&quot;
+len: 263
+
+#3  Deleted above file from \data\doc
+File: failed opening file &quot;C:/Builds/OCPN/OpenCPN/build/_CPack_Packages/win32/NSIS/opencpn_5.9.1.10_setup\doc\quick_start_guide\chart_installation\tb-options-charts-chartdownloader-selectcat-addcat-select.id.opencpn_3Amanual_basic_3Aquick_start_guide_3Achart_installation_3Achartdownloader.png.detail.html&quot;
+len: 280
+
+#4
+File: failed opening file &quot;C:/Builds/OCPN/OpenCPN/build/_CPack_Packages/win32/NSIS/opencpn_5.9.1.10_setup\doc\quick_start_guide\chart_installation\tb-options-charts-chartdownloader-selectcat-addcat.id.opencpn_3Amanual_basic_3Aquick_start_guide_3Achart_installation_3Achartdownloader.png.detail.html&quot;
+len: 273
+</code></pre></div>
+
+
+
+<a name="452789597"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/432618-OCPN%205.10%20Release%20plan/topic/New%20package%20installation/near/452789597" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Håkan Svensson <a href="https://leamas.github.io/zulip-archive/stream/432618-OCPN-5.2E10-Release-plan/topic/New.20package.20installation.html#452789597">(Jul 20 2024 at 07:24)</a>:</h4>
+<p><span class="user-mention" data-user-id="517002">@Dave Register</span> <br>
+Now the wiki installation builds also on my local Win. Let me guess a hard night work to shorten all paths and manage the links. Well done!<br>
+What I can see all wiki links are working and it's nicely viewed inside O's "browser".  The "Edit" links are still there but we can live with that for so long.<br>
+Also is it now different dirs for web_help.html and the manual.<br>
+<span aria-label="clap" class="emoji emoji-1f44f" role="img" title="clap">:clap:</span></p>
+
+
+
+<a name="452842874"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/432618-OCPN%205.10%20Release%20plan/topic/New%20package%20installation/near/452842874" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Dave Register <a href="https://leamas.github.io/zulip-archive/stream/432618-OCPN-5.2E10-Release-plan/topic/New.20package.20installation.html#452842874">(Jul 20 2024 at 14:04)</a>:</h4>
+<p><span class="user-mention" data-user-id="522486">@Håkan Svensson</span> <br>
+<span class="user-mention" data-user-id="399510">@Alec Leamas</span> </p>
+<p>I shortened raw paths to less than 140 characters.  There are still many paths that are greater than 130 chars.  So now we know the useful range.<br>
+The doc itself is not perfect, but acceptable for Beta-3.  Coming soon now.</p>
+<p>Wiki doc data is now unzipped to "data/doc/local".  So it is fair to ".gitignore" this dir.</p>
+
+
+
+<a name="452849698"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/432618-OCPN%205.10%20Release%20plan/topic/New%20package%20installation/near/452849698" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Alec Leamas <a href="https://leamas.github.io/zulip-archive/stream/432618-OCPN-5.2E10-Release-plan/topic/New.20package.20installation.html#452849698">(Jul 20 2024 at 15:09)</a>:</h4>
+<blockquote>
+<p>So it is fair to ".gitignore" this dir.</p>
+</blockquote>
+<p>Done:   <a href="https://github.com/opencpn/OpenCPN/commit/21bc86684">21bc86684</a></p>
+
+
+
+<a name="452852631"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/432618-OCPN%205.10%20Release%20plan/topic/New%20package%20installation/near/452852631" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Håkan Svensson <a href="https://leamas.github.io/zulip-archive/stream/432618-OCPN-5.2E10-Release-plan/topic/New.20package.20installation.html#452852631">(Jul 20 2024 at 15:32)</a>:</h4>
+<p>Linux local builds.<br>
+Wiki files copy to Win is made by win_deps.bat and there's something similar for Mac.<br>
+I may have missed a how to for Debian/Ubuntu?<br>
+Would "INSTALL" include this?</p>
+
+
+
+<a name="452866369"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/432618-OCPN%205.10%20Release%20plan/topic/New%20package%20installation/near/452866369" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Alec Leamas <a href="https://leamas.github.io/zulip-archive/stream/432618-OCPN-5.2E10-Release-plan/topic/New.20package.20installation.html#452866369">(Jul 20 2024 at 17:18)</a>:</h4>
+<p><span class="user-mention silent" data-user-id="522486">Håkan Svensson</span> <a href="#narrow/stream/432618-OCPN-5.2E10-Release-plan/topic/New.20package.20installation/near/452852631">said</a>:</p>
+<blockquote>
+<p>Linux local builds.<br>
+Wiki files copy to Win is made by win_deps.bat and there's something similar for Mac.<br>
+I may have missed a how to for Debian/Ubuntu?<br>
+Would "INSTALL" include this?</p>
+</blockquote>
+<p>As I said earlier, we cannot bundle the manual for Linux since it's not open source. It is replaced by help_web.html which basically is a pointer to the <a href="http://opencpn.org">opencpn.org</a> download site.</p>
+
+
+
+<a name="452868224"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/432618-OCPN%205.10%20Release%20plan/topic/New%20package%20installation/near/452868224" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Håkan Svensson <a href="https://leamas.github.io/zulip-archive/stream/432618-OCPN-5.2E10-Release-plan/topic/New.20package.20installation.html#452868224">(Jul 20 2024 at 17:32)</a>:</h4>
+<p>Ahh. I thought your open source cloudsmith discussion was about this, sorry.<br>
+Then we only have to regret Linux users. :(</p>
+
+
+
+<a name="452868820"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/432618-OCPN%205.10%20Release%20plan/topic/New%20package%20installation/near/452868820" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Alec Leamas <a href="https://leamas.github.io/zulip-archive/stream/432618-OCPN-5.2E10-Release-plan/topic/New.20package.20installation.html#452868820">(Jul 20 2024 at 17:38)</a>:</h4>
+<blockquote>
+<p>Then we only have to regret Linux users. :(</p>
+</blockquote>
+<p>That's one way to see it. </p>
+<p>Another is that the Linux community forces us to do the right thing. When we claim that OpenCPN is open source we cannot bundle these docs on any platform without actually breaking  our open source commitment. </p>
+<p>Anyway, we should resolve <a href="https://github.com/opencpn/OpenCPN/issues/3855">#3855</a> in next cycle to  fix  this once and for all, for all platfoems</p>
+
+
+
+<hr><p>Last updated: Oct 08 2024 at 10:11 UTC</p>
+</html>

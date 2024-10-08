@@ -1,0 +1,78 @@
+<html>
+<head><meta charset="utf-8"><title>Debugging under MacOS Xcode · general · Zulip Chat Archive</title></head>
+<h2>Stream: <a href="https://leamas.github.io/zulip-archive/stream/282854-general/index.html">general</a></h2>
+<h3>Topic: <a href="https://leamas.github.io/zulip-archive/stream/282854-general/topic/Debugging.20under.20MacOS.20Xcode.html">Debugging under MacOS Xcode</a></h3>
+
+<hr>
+
+<base href="https://opencpn.zulipchat.com">
+
+<head><link href="https://leamas.github.io/zulip-archive/style.css" rel="stylesheet"></head>
+
+<a name="416968682"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/282854-general/topic/Debugging%20under%20MacOS%20Xcode/near/416968682" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Tony Voss <a href="https://leamas.github.io/zulip-archive/stream/282854-general/topic/Debugging.20under.20MacOS.20Xcode.html#416968682">(Jan 20 2024 at 08:00)</a>:</h4>
+<p>Previously, I have been able to debug under Xcode by</p>
+<ul>
+<li>In ci/circleci-build-macos.sh setting build type to debug and building</li>
+<li>Launching Xcode and running OpenCPN</li>
+<li>Adding source files to Xcode</li>
+<li>Setting breakpoints as required.</li>
+</ul>
+<p>Now the breakpoints will not stick - they have a dotted outline.  This is likely because the debug tables are missing.<br>
+This problem seems to have arisen since the build was modified to support Apple silicon.</p>
+<p>I am running on an M2 Mac.</p>
+<p>Relevant setting is:</p>
+<div class="codehilite"><pre><span></span><code>cmake \
+  -DCMAKE_BUILD_TYPE=${CMAKE_BUILD_TYPE:-Debug} \
+  -DCMAKE_INSTALL_PREFIX= \
+  -DCMAKE_OSX_DEPLOYMENT_TARGET=${MACOSX_DEPLOYMENT_TARGET} \
+  -DOCPN_TARGET_TUPLE=&quot;darwin-wx32;10;universal&quot; \
+  -DCMAKE_OSX_ARCHITECTURES=&quot;arm64;x86_64&quot; \
+  ..
+</code></pre></div>
+<p>The above has changed since I had Xcode working OK to accommodate Apple Silicon</p>
+<p>I assume on my M2 Mac, I building for arm.<br>
+However, In order to get Xcode to run OCPN I have to set set the Product Destination to <code>My Mac (Rosetta)'.  If I choose </code>Apple Silicon<code> or </code>Show both<code>  when I launch OCPN, I get </code>Cannot launch using specified run destination`</p>
+<p>I am running with OCPN v5.8.4-0-1637c28</p>
+<p>Anyone got this working?</p>
+
+
+
+<a name="416994468"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/282854-general/topic/Debugging%20under%20MacOS%20Xcode/near/416994468" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Pavel Kalian <a href="https://leamas.github.io/zulip-archive/stream/282854-general/topic/Debugging.20under.20MacOS.20Xcode.html#416994468">(Jan 20 2024 at 14:16)</a>:</h4>
+<p>You are building the Universal binary if you use the above, but at the same time not against our dependencies bundle, that is usually not a good idea and takes twice as long to build if nothing else.<br>
+You already have all the dependencies available, so I suppose the CI build script does next to nothing useful for you.<br>
+I simply go to my build folder and do <code>cmake -GXcode .. ; open OpenCPN.xcodeproj</code> when I want to use Xcode.</p>
+
+
+
+<a name="420422742"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/282854-general/topic/Debugging%20under%20MacOS%20Xcode/near/420422742" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Tony Voss <a href="https://leamas.github.io/zulip-archive/stream/282854-general/topic/Debugging.20under.20MacOS.20Xcode.html#420422742">(Feb 08 2024 at 10:00)</a>:</h4>
+<p>Only now got back to this.  Breakpoints revert to dotted surround.  This is usually because the debug tables are not present.<br>
+Have I got the -Debug bit in the cmake file correct?  (It has changed from when I last had this working.)</p>
+
+
+
+<a name="420426498"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/282854-general/topic/Debugging%20under%20MacOS%20Xcode/near/420426498" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Tony Voss <a href="https://leamas.github.io/zulip-archive/stream/282854-general/topic/Debugging.20under.20MacOS.20Xcode.html#420426498">(Feb 08 2024 at 10:22)</a>:</h4>
+<p>We are trying to do different things.  I am only trying to debug a plugin - not OCPN. How it used to work:</p>
+<ol>
+<li>Build plugin tarball with debug set</li>
+<li>Import plugin into OCPN</li>
+<li>Launch standard OCPN from Xcode or attach OCPN process</li>
+<li>Set breakpoint in plugin code</li>
+<li>Hit breakpoint and start tracing<br>
+I could even edit plugin code, rebuild tarball and import without quitting OCPN and get to a breakpoint again.<br>
+Any ideas how to do the equivalent now, please?</li>
+</ol>
+
+
+
+<a name="420474993"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/282854-general/topic/Debugging%20under%20MacOS%20Xcode/near/420474993" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Pavel Kalian <a href="https://leamas.github.io/zulip-archive/stream/282854-general/topic/Debugging.20under.20MacOS.20Xcode.html#420474993">(Feb 08 2024 at 14:55)</a>:</h4>
+<p>As far as I can tell this works for me just fine. I will try to record my exact workflow the next time I do some development on the Mac...</p>
+
+
+
+<hr><p>Last updated: Oct 08 2024 at 10:11 UTC</p>
+</html>

@@ -1,0 +1,98 @@
+[
+    {
+        "content": "<p>Lately, the Github windows builds has started to fail. Log: <a href=\"https://github.com/leamas/OpenCPN/actions/runs/8094082558/job/22118028120\">https://github.com/leamas/OpenCPN/actions/runs/8094082558/job/22118028120</a></p>\n<p>Relevant  piece below. Seems that the standard cmake FindGettext.cmake does not locate the gettext installed by choco for some reason (the gettext installation looks OK)</p>\n<div class=\"codehilite\"><pre><span></span><code>CMake Error at C:/Program Files/Microsoft Visual Studio/2022/Enterprise/Common7/IDE/CommonExtensions/Microsoft/CMake/CMake/share/cmake-3.28/Modules/FindPackageHandleStandardArgs.cmake:230 (message):\n  Could NOT find Gettext (missing: GETTEXT_MSGMERGE_EXECUTABLE\n  GETTEXT_MSGFMT_EXECUTABLE)\nCall Stack (most recent call first):\n  C:/Program Files/Microsoft Visual Studio/2022/Enterprise/Common7/IDE/CommonExtensions/Microsoft/CMake/CMake/share/cmake-3.28/Modules/FindPackageHandleStandardArgs.cmake:600 (_FPHSA_FAILURE_MESSAGE)\n  C:/Program Files/Microsoft Visual Studio/2022/Enterprise/Common7/IDE/CommonExtensions/Microsoft/CMake/CMake/share/cmake-3.28/Modules/FindGettext.cmake:81 (FIND_PACKAGE_HANDLE_STANDARD_ARGS)\n  CMakeLists.txt:1097 (find_package)\n</code></pre></div>",
+        "id": 423996766,
+        "sender_full_name": "Alec Leamas",
+        "timestamp": 1709204835
+    },
+    {
+        "content": "<p><span class=\"user-mention\" data-user-id=\"573239\">@Pavel Kalian</span>  <span class=\"user-mention\" data-user-id=\"522729\">@Dan Dickey</span>  <span class=\"user-mention\" data-user-id=\"522486\">@Håkan Svensson</span>  <span class=\"user-mention\" data-user-id=\"517002\">@Dave Register</span>  ^  Any clue?</p>",
+        "id": 423996866,
+        "sender_full_name": "Alec Leamas",
+        "timestamp": 1709204880
+    },
+    {
+        "content": "<p>No idea, I have tried to look at it when it started yesterday, but Chocolatey does not even install poedit on my Windows VM...</p>",
+        "id": 424000366,
+        "sender_full_name": "Pavel Kalian",
+        "timestamp": 1709206279
+    },
+    {
+        "content": "<p>Perhaps about  cmake version. My successful builds is on cmake  3.27.2-msvc1, the failing on  3.28.0-msvc1 i. e.,  the github builder image is updated</p>",
+        "id": 424002626,
+        "sender_full_name": "Alec Leamas",
+        "timestamp": 1709207203
+    },
+    {
+        "content": "<p>Not that, I have the same up to date version here and everything works</p>",
+        "id": 424003220,
+        "sender_full_name": "Pavel Kalian",
+        "timestamp": 1709207453
+    },
+    {
+        "content": "<p>where is your gettext package installed?</p>",
+        "id": 424004237,
+        "sender_full_name": "Alec Leamas",
+        "timestamp": 1709207860
+    },
+    {
+        "content": "<p>For me, it is on like C:\\Program Files (x86)\\Poedit\\Gettexttools\\bin\\msgfmt.exe , and cmake finds it. </p>\n<p>This is a location not that  easy to guess for cmake, but perhaps it finds it because it's on %PATH%.  In any case, it should find  it given some hints.</p>",
+        "id": 424005832,
+        "sender_full_name": "Alec Leamas",
+        "timestamp": 1709208509
+    },
+    {
+        "content": "<p>I have a few too many in different locations (Poedit, OS4Geo, some more from God knows where)...</p>",
+        "id": 424006107,
+        "sender_full_name": "Pavel Kalian",
+        "timestamp": 1709208610
+    },
+    {
+        "content": "<p>If you look in CmakeCache.txt you should see what it uses?</p>",
+        "id": 424006215,
+        "sender_full_name": "Alec Leamas",
+        "timestamp": 1709208657
+    },
+    {
+        "content": "<p>Currently the one that came with Git (But that may be because I uninstalled Poedit). As I said, a few too many..</p>",
+        "id": 424006656,
+        "sender_full_name": "Pavel Kalian",
+        "timestamp": 1709208837
+    },
+    {
+        "content": "<p>... and git is on your %PATH% as well, for sure. I have time for a single try, here we go....</p>",
+        "id": 424008317,
+        "sender_full_name": "Alec Leamas",
+        "timestamp": 1709209511
+    },
+    {
+        "content": "<p>Yes, and so was Poedit for years and so are many other things. This is not a good reference environment...</p>",
+        "id": 424009711,
+        "sender_full_name": "Pavel Kalian",
+        "timestamp": 1709210050
+    },
+    {
+        "content": "<p>out of time. Tried patch below to no avail, still does not find msgmerge</p>\n<div class=\"codehilite\"><pre><span></span><code>diff --git a/CMakeLists.txt b/CMakeLists.txt\nindex 52e01f61e..06443de26 100644\n--- a/CMakeLists.txt\n+++ b/CMakeLists.txt\n@@ -1094,6 +1094,15 @@ if (APPLE)\n   endif ()\n endif ()\n\n+if (WIN32)\n+  find_package(Git)\n+  if (Git_FOUND)\n+    get_filename_component(GIT_DIR ${GIT_EXECUTABLE} DIRECTORY)\n+    get_filename_component(GIT_DIR ${GIT_DIR} DIRECTORY)\n+    set(Gettext_ROOT ${GIT_DIR}/usr/bin)\n+    message(STATUS &quot;Adding ${Gettext_ROOT} to gettext search path&quot;)\n+  endif ()\n+endif ()\n find_package(Gettext REQUIRED)\n\n add_subdirectory(libs/ssl_sha1)\n</code></pre></div>",
+        "id": 424012160,
+        "sender_full_name": "Alec Leamas",
+        "timestamp": 1709211032
+    },
+    {
+        "content": "<p><span class=\"user-mention\" data-user-id=\"573239\">@Pavel Kalian</span>  <a href=\"https://github.com/opencpn/OpenCPN/commit/5746940dbb6\">5746940dbb6</a> fixes it for now. Thanks!</p>",
+        "id": 424102981,
+        "sender_full_name": "Alec Leamas",
+        "timestamp": 1709238787
+    },
+    {
+        "content": "<p>Yes, but I'm not very smart as for the reason why it stopped working. Doing anything on Windows is such a pain :)</p>",
+        "id": 424103215,
+        "sender_full_name": "Pavel Kalian",
+        "timestamp": 1709238878
+    },
+    {
+        "content": "<p>Indeed it is.</p>",
+        "id": 424103244,
+        "sender_full_name": "Alec Leamas",
+        "timestamp": 1709238896
+    }
+]

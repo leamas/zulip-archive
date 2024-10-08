@@ -1,0 +1,56 @@
+[
+    {
+        "content": "<p>I have stumbled on that both the macos and windows github builds  looks to be successful although they  are not. Just a heads up-for now...<br>\n<span class=\"user-mention\" data-user-id=\"517002\">@Dave Register</span>  <span class=\"user-mention\" data-user-id=\"573239\">@Pavel Kalian</span></p>",
+        "id": 407811517,
+        "sender_full_name": "Alec Leamas",
+        "timestamp": 1702502113
+    },
+    {
+        "content": "<p>Yes, I have noticed it in the past, at least on macOS, but there was always something better to do than to actually fix it... Simply adding <code>set -e</code> should probably do it.</p>",
+        "id": 407826177,
+        "sender_full_name": "Pavel Kalian",
+        "timestamp": 1702508725
+    },
+    {
+        "content": "<p><span class=\"user-mention\" data-user-id=\"573239\">@Pavel Kalian</span> </p>\n<p>Anyway, I have problems getting the currently broken macos builds in place. So far two things:</p>\n<ol>\n<li>The build picks up /usr/local/include/geodesic.h instead of the intended  ./include/geodesic.h.</li>\n<li>I have problems with below  which just does not do what it should. </li>\n</ol>\n<p>Any ideas?</p>\n<div class=\"codehilite\"><pre><span></span><code>#if defined(__GNUC__) &amp;&amp; (__GNUC__ &lt; 8)\n#include &lt;experimental/filesystem&gt;\nnamespace fs = std::experimental::filesystem;\n\n#elif defined(__clang_major__) &amp;&amp; (__clang_major__ &lt; 15)\n#pragma message &quot;Using boost filesystem&quot;\n#include &lt;boost/filesystem.hpp&gt;\nnamespace fs = boost::filesystem;\n\n#else\n#include &lt;filesystem&gt;\n#include &lt;utility&gt;\nnamespace fs = std::filesystem;\n#endif\n</code></pre></div>",
+        "id": 407828677,
+        "sender_full_name": "Alec Leamas",
+        "timestamp": 1702510078
+    },
+    {
+        "content": "<p>Found it... clang also defines __GNU__. But  1. is still there</p>",
+        "id": 407832806,
+        "sender_full_name": "Alec Leamas",
+        "timestamp": 1702512296
+    },
+    {
+        "content": "<p>Perhaps the order of the include directories? Did you try adding ours with <code>BEFORE</code> parameter to <a href=\"https://cmake.org/cmake/help/latest/command/target_include_directories.html#command:target_include_directories\">https://cmake.org/cmake/help/latest/command/target_include_directories.html#command:target_include_directories</a> ?</p>",
+        "id": 407833303,
+        "sender_full_name": "Pavel Kalian",
+        "timestamp": 1702512579
+    },
+    {
+        "content": "<p>Will do...</p>",
+        "id": 407833356,
+        "sender_full_name": "Alec Leamas",
+        "timestamp": 1702512599
+    },
+    {
+        "content": "<p>Pushed commits for MacOS std::filesystem which I felt guilty about.  However, builds are still failing on include paths i. e., using /usr/local/include/geodesic.h.</p>\n<p>Good night.</p>",
+        "id": 407845562,
+        "sender_full_name": "Alec Leamas",
+        "timestamp": 1702518929
+    },
+    {
+        "content": "<p><span class=\"user-mention\" data-user-id=\"573239\">@Pavel Kalian</span>  MacOS builds still failing. I'm not really motivated to work with this since once I complete <a href=\"https://github.com/opencpn/OpenCPN/issues/3513\">#3513</a> this will be sorted out anyway (<em>geodesic.h</em> will become <em>model/geodesic.h</em>). So, signing off from this unless someone persuades me to come back to it.</p>",
+        "id": 407929661,
+        "sender_full_name": "Alec Leamas",
+        "timestamp": 1702549822
+    },
+    {
+        "content": "<p>Anyway, got windows in order -- build failures are now fully visible. No plans for to deal  with MacOS  for the moment.</p>",
+        "id": 408449382,
+        "sender_full_name": "Alec Leamas",
+        "timestamp": 1702826098
+    }
+]

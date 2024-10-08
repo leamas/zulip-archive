@@ -1,0 +1,374 @@
+[
+    {
+        "content": "<p>The opencpn-cmd is creating errors hindering builds. My solution so far have been to exclude it from build in \"Configuration manager\".<br>\nBut now the Package won't build because of the errors in that project.<br>\nWhat do I need to know to get rid of the errors. Do I need to actually update some files content? Is so; what and how? (And why)</p>",
+        "id": 400756201,
+        "sender_full_name": "Håkan Svensson",
+        "timestamp": 1699368888
+    },
+    {
+        "content": "<p>Hard to say without seeing the errors...</p>",
+        "id": 400756998,
+        "sender_full_name": "Alec Leamas",
+        "timestamp": 1699369115
+    },
+    {
+        "content": "<p>Just rebuilt master  and opencpn-cmd, clean build.</p>",
+        "id": 400757670,
+        "sender_full_name": "Alec Leamas",
+        "timestamp": 1699369270
+    },
+    {
+        "content": "<p>I'm not on master branch.  I've tried to clean and rebuild. No difference<br>\nThis opencpn-cmd is \"new\" for me and I may need some knowledge what it's all about?<br>\nErrors Like this when opencpn-cmd is selected for build:</p>\n<div class=\"codehilite\"><pre><span></span><code> 18&gt;   Creating library C:/Builds/OCPN/OpenCPN/build/RelWithDebInfo/opencpn-cmd.lib and object C:/Builds/OCPN/OpenCPN/build/RelWithDebInfo/opencpn-cmd.exp\n18&gt;ais_target_data.obj : error LNK2019: unresolved external symbol &quot;double __cdecl toUsrTemp(double,int)&quot; (?toUsrTemp@@YANNH@Z) referenced in function &quot;public: class wxString __thiscall AisTargetData::BuildQueryResult(void)&quot; (?BuildQueryResult@AisTargetData@@QAE?AVwxString@@XZ)\n18&gt;ais_target_data.obj : error LNK2019: unresolved external symbol &quot;class wxString __cdecl getUsrTempUnit(int)&quot; (?getUsrTempUnit@@YA?AVwxString@@H@Z) referenced in function &quot;public: class wxString __thiscall AisTargetData::BuildQueryResult(void)&quot; (?BuildQueryResult@AisTargetData@@QAE?AVwxString@@XZ)\n18&gt;navutil_base.obj : error LNK2001: unresolved external symbol &quot;int g_nDepthUnitDisplay&quot; (?g_nDepthUnitDisplay@@3HA)\n18&gt;C:\\Builds\\OCPN\\OpenCPN\\build\\RelWithDebInfo\\opencpn-cmd.exe : fatal error LNK1120: 3 unresolved externals\n18&gt;Done building project &quot;opencpn-cmd.vcxproj&quot; -- FAILED.\n</code></pre></div>",
+        "id": 400760978,
+        "sender_full_name": "Håkan Svensson",
+        "timestamp": 1699370191
+    },
+    {
+        "content": "<p>On may way again and writing in haste. </p>\n<p>opencpn-cmd is really two things. The first is a cli utility currently able to do useful things like loading and listing plugins etc. Useful but no big deal.</p>\n<p>The other thing is that it \"guards\" the dependencies in the \"model\" part of the sources so they not depend on the GUI.  It <strong>might</strong> be this which is happening here. </p>\n<p>You can see what files which belongs to the model in the top level CMakeLists.txt.  If you have made a change to any of these files which makes it depending on file not in the model you need to refactor that change.  </p>\n<p>Why? This is all about getting rid of the \"everything depends on everything\" syndrome which is a major pain in the current Opencpn (lack of) design.</p>",
+        "id": 400766911,
+        "sender_full_name": "Alec Leamas",
+        "timestamp": 1699371997
+    },
+    {
+        "content": "<blockquote>\n<p>which makes it depending on file not in the model </p>\n</blockquote>\n<p>That is, a file in the model must not call code outside the model. As a consequence of this, it also must not include any  non-model headers.</p>\n<p>Away for now. Refactoring such stuff might need the use of callbacks and/or EventVar variables. Let me know if you can figure out what is the problem, solutions are in almost all cases straight-forward.</p>",
+        "id": 400769995,
+        "sender_full_name": "Alec Leamas",
+        "timestamp": 1699372912
+    },
+    {
+        "content": "<p>Sorry. I do not understand<br>\nI've made changes to a lot files.  Added functions and variables.<br>\nAll files in ./src/  and ./include/ are listed in CMakeLists.txt.<br>\n-\"you need to refactor that change\"-  Do I have to copy the same adding to another file?<br>\nIf so: what file(s)?</p>",
+        "id": 400817881,
+        "sender_full_name": "Håkan Svensson",
+        "timestamp": 1699392098
+    },
+    {
+        "content": "<p>There are two sets of files in main CMakeLIsts.txt.  The first set is the variable MODEL_SRC, the other SRCS.</p>\n<p>There is a basic division here. The files in MODEL_SRC a. k.  a.  \"the model\"  are independet of SRCS a. k. a.  \"the GUI\".<br>\nThat is, files in GUI calls model but not the other way around.  If I understand this right you have modified some  file(s) in the model in a way where it calls code in the GUI. Long story short this is forbidden, you need to refactor this code so the gui calls the model instead. </p>\n<p>Basically, the GUI says \"Don't call us, we call you \".</p>",
+        "id": 400821674,
+        "sender_full_name": "Alec Leamas",
+        "timestamp": 1699394029
+    },
+    {
+        "content": "<p>If I look into the  error messages it seems that you have some code in the model which calls  <code>toUsrTemp()</code>. This lives in <em>navutil.cpp</em> which is not part of the model. This probably needs to be handled using a callback.</p>\n<p>Likewise, it seems like some part of the model calls  <code>getUsrTempUnit()</code>. This also lives in <em>navutil.cpp</em>, so the model cannot call it. </p>\n<p>If I'm right (knock, knock...) you could perhaps find out where you invoke these. If you need help making these  callbacks instead just let me know (using callbacks is the way to handle these kind of deps where you need a reply).</p>",
+        "id": 400827303,
+        "sender_full_name": "Alec Leamas",
+        "timestamp": 1699396718
+    },
+    {
+        "content": "<p>I don't really understand what you say.<br>\nI've done nothing \"new\". Just extended and copied like what's already there. Like using toUserTem() and likewise.<br>\nIf it can help I attache a diff file of some changes. Can you point to some changes that need completions?<br>\n<a href=\"/user_uploads/33951/FeQWE08Wfl0DFuGMiYFzm0hw/meteo.txt\">meteo.txt</a></p>",
+        "id": 400838425,
+        "sender_full_name": "Håkan Svensson",
+        "timestamp": 1699402797
+    },
+    {
+        "content": "<p>Here ARE some calls to toUserTem(). Some are mine. Should it be done in another way?</p>\n<div class=\"codehilite\"><pre><span></span><code>Status  Code    File    Line    Column  Project Read/Write\nConfirmed reference extern double toUsrTemp(double cel_temp, int unit = -1);    C:\\Builds\\OCPN\\OpenCPN\\include\\navutil.h    56  15  opencpn Unknown\n    double toUsrTemp(double cel_temp, int unit) C:\\Builds\\OCPN\\OpenCPN\\src\\navutil.cpp  3376    1\nConfirmed reference double usertemp = toUsrTemp(met_air_temp);  C:\\Builds\\OCPN\\OpenCPN\\src\\ais_target_data.cpp  881 25  opencpn Unknown\nConfirmed reference double usertempDew = toUsrTemp(met_dew_point);  C:\\Builds\\OCPN\\OpenCPN\\src\\ais_target_data.cpp  900 28  opencpn Unknown\nConfirmed reference double usertemp = toUsrTemp(met_water_temp);    C:\\Builds\\OCPN\\OpenCPN\\src\\ais_target_data.cpp  913 25  opencpn Unknown\nConfirmed reference double usertemp = toUsrTemp(met_air_temp);  C:\\Builds\\OCPN\\OpenCPN\\src\\ais_target_data.cpp  1118    25  opencpn Unknown\nConfirmed reference double toUsrTemp(double cel_temp, int unit) {   C:\\Builds\\OCPN\\OpenCPN\\src\\navutil.cpp  3376    8   opencpn Unknown\nConfirmed reference return toUsrTemp(cel_temp, unit);   C:\\Builds\\OCPN\\OpenCPN\\src\\pluginmanager.cpp    3069    10  opencpn Unknown\n</code></pre></div>",
+        "id": 400839858,
+        "sender_full_name": "Håkan Svensson",
+        "timestamp": 1699403550
+    },
+    {
+        "content": "<blockquote>\n<p>Just extended and copied like what's already there. Like using toUserTem() and likewise.</p>\n</blockquote>\n<p>tl;dr  That calling <code>toUsrTemp()</code> works in one file does not mean that it can be used in each and every file.</p>\n<p>More specifically: <code>toUsrTemp()</code> is lives in <em>navutil.cpp</em>. This file is listed in SRCS i. e., it is part of the GUI.  Since the model cannot call the gui  you cannot call <code>toUSrTemp()</code>  from any file listed in MODEL_SRC.</p>\n<p>So the question is not really <strong>how</strong> to call <code>toUserTmp()</code> from files listed in MODEL_SRC. It just cannot be done. The work around is using a callback, but in order to show how this is done I need much more context.</p>",
+        "id": 400881821,
+        "sender_full_name": "Alec Leamas",
+        "timestamp": 1699426265
+    },
+    {
+        "content": "<p>The first step would be that you look into the diff and sees where you call <code>toUserTmp()</code>. If you have done it in a file listed in MODEL_SRC you have probably included <em>navutil.h</em>. You should then remove this include, because you cannot call anything in navutil.h from files listed in MODEL_SRC. This will give a compilation error, but this is actually a good starting point.</p>\n<p>If you have added a declaration like <code>double toUsrTemp(double cel_temp, int unit)</code>directly  into a file listed in MODEL_SRC instead this works the same way. Renove the declaration and let the compiler catch the error.</p>",
+        "id": 400882949,
+        "sender_full_name": "Alec Leamas",
+        "timestamp": 1699426865
+    },
+    {
+        "content": "<p>2 messages were moved here from <a class=\"stream-topic\" data-stream-id=\"332168\" href=\"/#narrow/stream/332168-Master---5.2E8.2E0--.28was.3A-comms.29/topic/Code.20formatting.20-.20percent.20sign\">#Master - 5.8.0  (was: comms) &gt; Code formatting - percent sign</a> by <span class=\"user-mention silent\" data-user-id=\"399510\">Alec Leamas</span>.</p>",
+        "id": 400883281,
+        "sender_full_name": "Notification Bot",
+        "timestamp": 1699426971
+    },
+    {
+        "content": "<p>Next step would be that you push what you have somewhere so I could have a look. Use a temporary branch. I assume the repo is <a href=\"https://github.com/hakansv/OpenCPN\">https://github.com/hakansv/OpenCPN</a>, but I will need the branch</p>",
+        "id": 400884158,
+        "sender_full_name": "Alec Leamas",
+        "timestamp": 1699427318
+    },
+    {
+        "content": "<p>hm... you can actually make that file compile again by adding more steps after removing <code>#include navutil.h</code>.  Let's say you have changed a file like foo.cpp which did include calls to getUsrTemp() which now fails to compile. Adding a callback is done in some steps.</p>\n<ol>\n<li>Add <code>#include &lt;functional&gt;</code> to top of foo.cpp.</li>\n<li>In foo.h add a new class variable in a line like <code>std::function&lt;double(double, int)&gt; m_get_usr_temp_cb;</code></li>\n<li>Replace all occurrences like <code>getUserTmp(a, b)</code> with <code> m_get_usr_temp_cb(a, b)</code>. </li>\n<li>Anything like  <code>getUserTmp(a)</code> is replaced by <code> m_get_usr_temp_cb(a,  -1)</code></li>\n<li>Add a new function too foo.h which makes is possible to set the  callback: <code>void SetUsrTempCb(std::function&lt;double(double, int)&gt; f) { m_get_usr_temp_cb = f; }</code></li>\n</ol>\n<p>This should compile. To make it work we need to add a  <code>SetUserTmpCb()</code> call to the gui somewhere, but this is  a later step.</p>\n<p>Note Google GL naming conventions. functions uses <em>MIxedCase</em>, capital first letter. Variables uses <em>underscore_separated_words</em>, all lower case.</p>",
+        "id": 400886459,
+        "sender_full_name": "Alec Leamas",
+        "timestamp": 1699428433
+    },
+    {
+        "content": "<p>hm... <code>#include &lt;functional&gt;</code> is better placed in foo.h, sorry.</p>",
+        "id": 400888389,
+        "sender_full_name": "Alec Leamas",
+        "timestamp": 1699429319
+    },
+    {
+        "content": "<p>Now I got it to build, both code and package, also with opencpn-cmd:<br>\nI moved the function toUserTemp() from navutil to navutil-base as well as related definitions.<br>\nThe function is not new but what I may have introduced are external calls.<br>\n(There's a lot functions in navutil.cpp that may be candidates for a similar operation?)<br>\nThanks for your time and sorry I not always understand your high level discussions.</p>",
+        "id": 400892087,
+        "sender_full_name": "Håkan Svensson",
+        "timestamp": 1699431065
+    },
+    {
+        "content": "<p>No, don't do that. This means introducing a dependency on g_iTempFormat to the model. This is not kosher.</p>",
+        "id": 400898799,
+        "sender_full_name": "Alec Leamas",
+        "timestamp": 1699433840
+    },
+    {
+        "content": "<p>Believe me, I have waded through this already, trying to move as much as possible to navutil-base. The devil is in <em>as well as related definitions</em>. This is exactly the kind of stuff which does not belong to the model.</p>",
+        "id": 400899163,
+        "sender_full_name": "Alec Leamas",
+        "timestamp": 1699433949
+    },
+    {
+        "content": "<p>Instead, take the road described above. It also has the benefit that it is generally applicable. I understand that this might be an uphill battle for you with some new concepts. But stay assured that when doing GUI programming using callbacks is actually bread and butter stuff, it's just that OpenCPN has some strange habits.</p>",
+        "id": 400899750,
+        "sender_full_name": "Alec Leamas",
+        "timestamp": 1699434104
+    },
+    {
+        "content": "<p>Or, just push what you have so I can make an example for you.</p>",
+        "id": 400900105,
+        "sender_full_name": "Alec Leamas",
+        "timestamp": 1699434189
+    },
+    {
+        "content": "<p>... more exactly: Adding something like <code>extern int  g_iTempFormat</code>to navutil-base means that that navutil-base links to ocpn_app which holds the definition of <code>g_iTempFormat</code>. This is the same as the calling i. e., the model calls the gui. </p>\n<p>This is yet another example of the extremely bad habit of using extern declarations instead of including header files. I know it is common in OpenCPN, Dave loves it, but it is none the less a bad habit.</p>",
+        "id": 400901552,
+        "sender_full_name": "Alec Leamas",
+        "timestamp": 1699434688
+    },
+    {
+        "content": "<p>Alec..<br>\nI moved toUserTemp() from navutil to navutil-base since most other similar functions lives there. Also a few new functions I made like toUserWindSpeed(). To create them in navutil-base was Dave's advice so I thought toUserTemp() would benefit to live there as well?</p>\n<p>Anyhow: my implementation of AIS-Meteo presentation is soon ready for first issue. Seems to work fine here on Win at least. I'll make some Linux test as well.  I'll let you know when it's pushed to my Github so you can see.</p>",
+        "id": 400955994,
+        "sender_full_name": "Håkan Svensson",
+        "timestamp": 1699453836
+    },
+    {
+        "content": "<p>Not really. The problem is about things like  g_iTempFormat. First question is how you have handled this. Have you something like <code>extern int  g_iTempFormat</code> or solved it some other way?</p>",
+        "id": 400958268,
+        "sender_full_name": "Alec Leamas",
+        "timestamp": 1699454497
+    },
+    {
+        "content": "<p>Yes I moved that and made a new for wind speed. What I did was copy from what's already there for SpeedFormat.<br>\nSo I can't imaging any new problem is introduced. If we would change the solution it would be for all and not only one?<br>\n g_iSDMMFormat = pSDMMFormat-&gt;GetSelection();<br>\n g_iDistanceFormat = pDistanceFormat-&gt;GetSelection();<br>\n g_iSpeedFormat = pSpeedFormat-&gt;GetSelection();<br>\n g_iWindSpeedFormat = pWindSpeedFormat-&gt;GetSelection();<br>\n g_iTempFormat = pTempFormat-&gt;GetSelection();</p>",
+        "id": 400961605,
+        "sender_full_name": "Håkan Svensson",
+        "timestamp": 1699455527
+    },
+    {
+        "content": "<p>No. These belong to the GUI. Full stop.</p>\n<p>I have invested quite some work in getting these things if not right so at least in a better shape.  Changes like this basically makes the  system deteriorate, and I'm actually a bit frustrated.</p>\n<p><strong>Why</strong> can't we use the path which solves this without moving things around i. e., \"my\" path above?</p>\n<p>If you have not undersood my \"high level\" description, what makes you in a position to make these changes which are all about the overall description.</p>\n<p>Sorry for a bit edgy language, willl have some 8 guests here in upcoming dinner.</p>",
+        "id": 400979294,
+        "sender_full_name": "Alec Leamas",
+        "timestamp": 1699460644
+    },
+    {
+        "content": "<p>Late now. in better mode. Sorry for harsh language.</p>\n<p>Please push what you have  to some branch so I can have a look.</p>",
+        "id": 401021239,
+        "sender_full_name": "Alec Leamas",
+        "timestamp": 1699476855
+    },
+    {
+        "content": "<p>Again I'm sorry if I don't understand your advises. All new functions was a copy of already present So any future cleaning have not been much heavier.<br>\nI agree my knowledge is low but several testers are happy.  A Win installer <a href=\"https://www.dropbox.com/scl/fi/2fi7aouuufq70tm5acfbq/opencpn_5.9.0.12_setup.exe?rlkey=4e6ru8ts3re8a4hnswc7l0voj&amp;dl=1\">here</a></p>\n<p>Wndows is fine but I can't get it to build on Linux. I've probably missed some Linux fundamentals with the arrays.<br>\nMy changes are here: <a href=\"https://github.com/Hakansv/OpenCPN/tree/ais8dac001fi31\">https://github.com/Hakansv/OpenCPN/tree/ais8dac001fi31</a><br>\nI've asked Dave to have a look before a PR. Not less for the Linux error.<br>\nIf you like to have look I'm of course grateful. Whatever you find I'll hopefully learn more.</p>",
+        "id": 401224142,
+        "sender_full_name": "Håkan Svensson",
+        "timestamp": 1699558883
+    },
+    {
+        "content": "<p>OK. I will  have a look tomorrow. Whatever I find I hope I can express better than my last attempt. </p>\n<p>Again: I apologize  for that language. Probably some private issues which affected my doings here.</p>\n<p><span class=\"user-mention\" data-user-id=\"517002\">@Dave Register</span>  Can we continue the discussion here so we have everything in one place?</p>",
+        "id": 401232923,
+        "sender_full_name": "Alec Leamas",
+        "timestamp": 1699562452
+    },
+    {
+        "content": "<p><span class=\"user-mention\" data-user-id=\"522486\">@Håkan Svensson</span>  <span class=\"user-mention\" data-user-id=\"399510\">@Alec Leamas</span> <br>\nRegarding the model/GUI question:<br>\nWe currently have some global variables that are generally useful in OCPN GUI, tests, and CLI implementation.  They look mostly like this:</p>\n<div class=\"codehilite\"><pre><span></span><code>int g_iDistanceFormat = 0;\nint g_iSDMMFormat = 0;\nint g_iSpeedFormat = 0;\n</code></pre></div>\n\n<p>The declaration of these types of globals is today done in three (!) places:<br>\ntests.cpp<br>\nconsole.cpp<br>\nocpn_app.cpp</p>\n<p>The correct (and single) declaration is compiled depending on the build target.<br>\nThere may be better ways to do this sort of thing, and if so we should maybe move in that direction.<br>\nBut for right or wrong, this is what we are doing today.</p>\n<p>On to Hakan's linux patch and linux build failure:</p>\n<p>Hakan's approach is to add a few more global variables, using the same technique as described.  This approach is no better or worse than what we do globally today.  A reasonable solution for a point feature upgrade.</p>\n<p>However, Hakan missed one of the three declarations sources required for the new variables</p>\n<div class=\"codehilite\"><pre><span></span><code>int g_iWindSpeedFormat = 0;\nint g_iTempFormat = 0;\nint g_nDepthUnitDisplay = 0;\n</code></pre></div>\n\n<p>You have these three declarations in \"ocpn_app.cpp\", and \"console.cpp\".<br>\nThey are missing in \"tests.cpp\".<br>\nAdd those three lines at obvious place in tests.cpp, and the build succeeds.</p>\n<p>btw, I have other comments on the AIS Meteo patch.  Coming separately.</p>",
+        "id": 401272865,
+        "sender_full_name": "Dave Register",
+        "timestamp": 1699583066
+    },
+    {
+        "content": "<p>Digging a little more, now when I can see what this all about. </p>\n<p>First of all: these are part of the configuration. As such, the proper place to have the \"real\", non-extern declaration is in  <em>config_vars.cpp</em> with the corresponding update to <em>config_vars.h</em>.  Once declared there all other declarations should be removed. I'll make an update to Hakan's work in this direction after a dear visit to my dentist.</p>\n<p>Secondly: I see a massive overlap between <code> ConfigMgr::SaveTemplate()</code> and <code>MyConfig::UpdateSettings()</code>in <em>navutil.cpp</em>. About 350 lines of hard to maintain relations between the written \"spelling\" of the variable names in the config file and the actual values. Seems like a  pretty low hanging fruit. </p>\n<p>The goal should be that navutil and navutil_base handles read/write of config variables to /from the config file.</p>",
+        "id": 401309006,
+        "sender_full_name": "Alec Leamas",
+        "timestamp": 1699605244
+    },
+    {
+        "content": "<p><span class=\"user-mention\" data-user-id=\"517002\">@Dave Register</span> <span class=\"user-mention\" data-user-id=\"399510\">@Alec Leamas</span> <br>\nDave..<br>\nThanks for test.cpp corrections. Now pushed.<br>\nUnfortunately this didn't changed the Linux Debian build errors.</p>\n<p>It builds and works fine on Win (wx 3.2.3) but fails on Debian (wx 3.0)<br>\nIt's about the array \"g_pMeteoArray\" from class AISMeteoPoint  ais_decoder.h : 82 and used in ais_decoder.cpp : 4256<br>\nIt builds on Debian if I make a pointer in declaration but then I get scrap values when searching data.  (Obviously my lack of knowledge?)</p>\n<p>One example of many Linux errors:</p>\n<div class=\"codehilite\"><pre><span></span><code>In file included from /usr/include/wx-3.0/wx/wx.h:16,\n                 from /home/pi/Builds/OpenCPN/src/AISTargetAlertDialog.cpp:29:\n/home/pi/Builds/OpenCPN/include/ais_decoder.h: In member function ‘ArrayOfAISMeteoPoints::reverse_iterator ArrayOfAISMeteoPoints::rend()’:\n/home/pi/Builds/OpenCPN/include/ais_decoder.h:82:1: error: invalid use of incomplete type ‘class AISMeteoPoint’\n   82 | WX_DEFINE_ARRAY_PTR(AISMeteoPoint, ArrayOfAISMeteoPoints);\n</code></pre></div>",
+        "id": 401350828,
+        "sender_full_name": "Håkan Svensson",
+        "timestamp": 1699615408
+    },
+    {
+        "content": "<p>Here is a patch which cleans up the handling of the three global variables<br>\n<a href=\"/user_uploads/33951/VJVmh-GCrFNKs9PbKTRLquV5/0001-config_vars-Define-model-variables-in-config_vars-.c.patch\">0001-config_vars-Define-model-variables-in-config_vars-.c.patch</a></p>",
+        "id": 401362059,
+        "sender_full_name": "Alec Leamas",
+        "timestamp": 1699618096
+    },
+    {
+        "content": "<p>And here is another patch fixing the g_pMeteoArray.  Note that there is no reason whatsoever to use the antiquited wxWidgets vectors, std::vector offers much more stability, functionality and speed. <br>\n<a href=\"/user_uploads/33951/LSkll1lRpvGFaeEbA1PjmtDk/0002-Fix-global-g_pMeteoArray.patch\">0002-Fix-global-g_pMeteoArray.patch</a></p>",
+        "id": 401366443,
+        "sender_full_name": "Alec Leamas",
+        "timestamp": 1699619333
+    },
+    {
+        "content": "<p>[I would probably have used <code>find_if</code> to search in that vector, but that involves lambda closures which is yet another step]</p>",
+        "id": 401367284,
+        "sender_full_name": "Alec Leamas",
+        "timestamp": 1699619529
+    },
+    {
+        "content": "<p>Alec..<br>\nBoth fixes tested on Win. Works fine! I'll test on Debian this afternoon. (Some grout to finalize although this is more fun :) )</p>\n<p>Many thanks for the std::vector lesson. Much better!</p>",
+        "id": 401370580,
+        "sender_full_name": "Håkan Svensson",
+        "timestamp": 1699620320
+    },
+    {
+        "content": "<p>I have some more remarks here:</p>\n<p>- Adding yet another global variable is not the way to go. It's a wide-spread bad habit, not the the one which should be copied. Singletons are slightly  better, I'll show you how to create one instead.<br>\n  - Overall, our naming conventions are non-existing. However, we have a decisions to use the Google GL  convnetions for new code, and this does not adher to this.</p>",
+        "id": 401377019,
+        "sender_full_name": "Alec Leamas",
+        "timestamp": 1699621856
+    },
+    {
+        "content": "<p><a href=\"/user_uploads/33951/UbE1mX8imYa4zOllKLtAJ5nT/0003-Use-a-singleton-instead-of-a-gloabl.patch\">0003-Use-a-singleton-instead-of-a-gloabl.patch</a></p>",
+        "id": 401377603,
+        "sender_full_name": "Alec Leamas",
+        "timestamp": 1699622024
+    },
+    {
+        "content": "<p>Using a singleton adds a lot of value. It one way it's just a glorified global. OTOH, it comes with strong compiler checks that is is always valid (no need to check for uninitialized stuff) and also ensures that the vector is never copied. The latter is otherwise a mistake which is easy to do.</p>\n<p>In short: singletons are bad, but much better than global variables.</p>",
+        "id": 401378338,
+        "sender_full_name": "Alec Leamas",
+        "timestamp": 1699622204
+    },
+    {
+        "content": "<p>You should probably, just for clarity, add this on top of singleton patch above:</p>\n<div class=\"codehilite\"><pre><span></span><code>diff --git a/src/ais_decoder.cpp b/src/ais_decoder.cpp\nindex 8c73161da..516a0ead8 100644\n--- a/src/ais_decoder.cpp\n+++ b/src/ais_decoder.cpp\n@@ -4250,7 +4250,7 @@ int AisMeteoNewMmsi(int m_mmsi, int m_lat, int m_lon, double pt_Lat,\n     bool found = false;\n     int new_mmsi;\n\n-    auto points = AisMeteoPoints::GetInstance().GetPoints();\n+    auto&amp; points = AisMeteoPoints::GetInstance().GetPoints();\n     if (points.size()) {\n       wxString t_lat, t_lon;\n       for (const auto&amp; point: points) {\n</code></pre></div>",
+        "id": 401382700,
+        "sender_full_name": "Alec Leamas",
+        "timestamp": 1699623774
+    },
+    {
+        "content": "<p>Taking a step back I can see two overall routes here.</p>\n<p>The first would be to let this vector become an attribute of some existing class which already is exported as  an evil global var.  In this case the singleton is not useful.</p>\n<p>The other would be to use it as a singleton. In this case the best would be to split it out as a separate header, with just the MeteoPoint and singleton definitions.  This would be a nice and well defined header-only component.</p>",
+        "id": 401385826,
+        "sender_full_name": "Alec Leamas",
+        "timestamp": 1699624923
+    },
+    {
+        "content": "<p><span class=\"user-mention\" data-user-id=\"517002\">@Dave Register</span>  ^</p>",
+        "id": 401385886,
+        "sender_full_name": "Alec Leamas",
+        "timestamp": 1699624931
+    },
+    {
+        "content": "<p><span class=\"user-mention\" data-user-id=\"399510\">@Alec Leamas</span>  <span class=\"user-mention\" data-user-id=\"522486\">@Håkan Svensson</span> </p>\n<p>I don't much like the global static array, agreed.<br>\nThe singleton pattern for this array seems a good fit, given the structure of the  current AISMeteo  implementation.</p>\n<p>Also, the config_vars patch seems good, too.  Will you PR this one?</p>",
+        "id": 401400111,
+        "sender_full_name": "Dave Register",
+        "timestamp": 1699630238
+    },
+    {
+        "content": "<p>Håkan has already merged the config_vars stuff, and I presume he can handle the  singleton patch as well. Could  make yet another patch on top of it which makes it s separate header file later</p>",
+        "id": 401410783,
+        "sender_full_name": "Alec Leamas",
+        "timestamp": 1699634685
+    },
+    {
+        "content": "<p><span class=\"user-mention\" data-user-id=\"522486\">@Håkan Svensson</span>   \"up arrow\" (on phone...)</p>",
+        "id": 401411031,
+        "sender_full_name": "Alec Leamas",
+        "timestamp": 1699634802
+    },
+    {
+        "content": "<p>Now finished today's grouting and got some halibut for dinner. Mmmm,<br>\nWith the two first of Alec's patches and some degree symbol tweaks it builds and runs fine on Linux as well.  Thanks<br>\nI tried the \"singelton\" patch but it was rejected, see below. <br>\nSome friend just turned in so I may stop keying for now...</p>\n<div class=\"codehilite\"><pre><span></span><code>C:\\Builds\\OCPN\\OpenCPN&gt;git apply C:\\Builds\\OCPN\\diff\\0003-Use-a-singleton-instead-of-a-gloabl.patch\nC:/Builds/OCPN/diff/0003-Use-a-singleton-instead-of-a-gloabl.patch:49: trailing whitespace.\n\nwarning: 1 line adds whitespace errors.  (Håkan: fixed in between)\n\nC:\\Builds\\OCPN\\OpenCPN&gt;git apply C:\\Builds\\OCPN\\diff\\0003-Use-a-singleton-instead-of-a-gloabl.patch\nerror: patch failed: include/ais_decoder.h:43\nerror: include/ais_decoder.h: patch does not apply\nerror: patch failed: src/ais_decoder.cpp:166\nerror: src/ais_decoder.cpp: patch does not apply\n</code></pre></div>",
+        "id": 401421142,
+        "sender_full_name": "Håkan Svensson",
+        "timestamp": 1699640116
+    },
+    {
+        "content": "<p>Ok .. you could either apply the patch \"ny hand\", apply it using the 'patch' command not generally available on windows. Or push what you have and let me rebase the patch.</p>",
+        "id": 401431633,
+        "sender_full_name": "Alec Leamas",
+        "timestamp": 1699646553
+    },
+    {
+        "content": "<p>I tried to adapt your changes but several inconsistencies  and  &gt;100 errors.  How I tried to make it logical I didn't succeed. (The pure std::vector was more understandable :-) )<br>\nHow can a vector of class  AISMeteoPoint be pushed to vector AISMeteoPoints  (Very similar names?) </p>\n<p>Changes are all time pushed upstream to my <a href=\"https://github.com/Hakansv/OpenCPN/tree/ais8dac001fi31\">Git</a></p>",
+        "id": 401440260,
+        "sender_full_name": "Håkan Svensson",
+        "timestamp": 1699652309
+    },
+    {
+        "content": "<p>Here is a new patch against <a href=\"https://github.com/opencpn/OpenCPN/commit/587c21159\">587c21159</a>. Notes:</p>\n<p>- It's not ok to insert an <code>#include</code> anywhere. Please note that the list of includes is sorted. Fixed here.<br>\n  - Google GL says the AISMeteoPoints is bad while AisMetePoints is fine. Fixed here.<br>\n  - The new file meteo_points.h has several FIXME which needs to by handled by you.</p>\n<p><a href=\"/user_uploads/33951/TnMEyhspK18O5NsW97STGq_l/0001-AisMeteoPoints-Use-s-singleton-instead-of-global-arr.patch\">0001-AisMeteoPoints-Use-s-singleton-instead-of-global-arr.patch</a></p>",
+        "id": 401491245,
+        "sender_full_name": "Alec Leamas",
+        "timestamp": 1699690356
+    },
+    {
+        "content": "<p>Your new patch applied wo problem. Nice work!<br>\nIt seems to run as before but I will test more here on Win and on Linux. I suppose this change of vector handling benefits program performance.<br>\nThe TODO's I'll take care of before push.<br>\nMany thanks.</p>",
+        "id": 401500882,
+        "sender_full_name": "Håkan Svensson",
+        "timestamp": 1699699378
+    },
+    {
+        "content": "<p>I have two new remarks, these should be the last.</p>\n<ul>\n<li>The usage pattern of the AisMeteoPoint is basically that it is created and then never changed. Such objects should be marked <code>const</code>.  Marking objects const makes it much easier to read the code since you know that the data will never change.  At also allows the compiler to make better optimizations. I'll make a patch for this </li>\n<li>You have added a large number of attributes to ais_target_data.h. This is also following some not so good existing patterns. A better solution would be to define a new struct containing this data,  and  then add a single struct of this kind to AisTargetData. This is more work, but I'll see what I can do.</li>\n</ul>",
+        "id": 401504876,
+        "sender_full_name": "Alec Leamas",
+        "timestamp": 1699703072
+    },
+    {
+        "content": "<p>Here is a patch for the const issue: <br>\n<a href=\"/user_uploads/33951/PFNOMo9f6e5LA7fIMyFs2TL0/0002-AisMeteoPoint-make-it-const.patch\">0002-AisMeteoPoint-make-it-const.patch</a></p>",
+        "id": 401504969,
+        "sender_full_name": "Alec Leamas",
+        "timestamp": 1699703136
+    },
+    {
+        "content": "<ul>\n<li>To make Meteopoint const is OK. I'll later take one out. The origin_ mmsi was never used here.</li>\n<li>Yes a lot new attributes to the already long AisTargetData list. If the use of these can be more efficient in another way it must be good.</li>\n</ul>\n<p>BTW. The new file meteo_points.h copywriter would rather be you than me.  Like this?<br>\nCopyright (C) 2023 Alec Leamas</p>",
+        "id": 401506937,
+        "sender_full_name": "Håkan Svensson",
+        "timestamp": 1699704978
+    },
+    {
+        "content": "<p>... and here a patch which reorganizes the Ais meteo data,  avoiding littering existing objects with tons of attributes.</p>\n<p><a href=\"/user_uploads/33951/x44aS_TQAnDx17qm4ByBoiwQ/0003-AisMeteoData-New-POD-struct-for-AIS-target-meteo-dat.patch\">0003-AisMeteoData-New-POD-struct-for-AIS-target-meteo-dat.patch</a></p>",
+        "id": 401506951,
+        "sender_full_name": "Alec Leamas",
+        "timestamp": 1699705008
+    },
+    {
+        "content": "<blockquote>\n<p>points.h copywriter would rather be you than me.</p>\n</blockquote>\n<p>No way. If you wan't to credit me, you can add a new line below the existing one for my copyright. Several  copyright lines is normal. That said, this is your work and you should be there.</p>",
+        "id": 401507054,
+        "sender_full_name": "Alec Leamas",
+        "timestamp": 1699705126
+    },
+    {
+        "content": "<p>Very good. Will take care of that and the last patch later. Now calls for some more grouting...</p>",
+        "id": 401507163,
+        "sender_full_name": "Håkan Svensson",
+        "timestamp": 1699705222
+    },
+    {
+        "content": "<p>No, don't do you grouting now, that will probably make the patch fail. Especially the last patch  affects  a lot of places, and chances are high for collisions if you make changes before applying the patch.</p>",
+        "id": 401507276,
+        "sender_full_name": "Alec Leamas",
+        "timestamp": 1699705345
+    },
+    {
+        "content": "<p><span class=\"user-mention\" data-user-id=\"522486\">@Håkan Svensson</span> <br>\n\" A better solution would be to define a new struct containing this data, and then add a single struct of this kind to AisTargetData.\"</p>\n<p>This was exactly the same as my pending comment.  Much easier reading of code.<br>\nThanks, Alec.</p>",
+        "id": 401514717,
+        "sender_full_name": "Dave Register",
+        "timestamp": 1699712249
+    },
+    {
+        "content": "<p><span class=\"user-mention\" data-user-id=\"517002\">@Dave Register</span> <br>\nYes, I do agree. That was also one of my concerns. To extend this targetlist even more. Just my lack of knowledge. This solution will be fine. Thanks a lot and my knowledge base will hopefully increase. <br>\n<span class=\"user-mention\" data-user-id=\"399510\">@Alec Leamas</span>  Grout I understand as the fill between tiles in the ongoing construction of my daughter's  utility room. I may be wrong or it's also a term of filling gaps in code? <span aria-label=\"+1\" class=\"emoji emoji-1f44d\" role=\"img\" title=\"+1\">:+1:</span> <br>\nNow for another handcraft. Adding your patch ... and some more.</p>",
+        "id": 401520850,
+        "sender_full_name": "Håkan Svensson",
+        "timestamp": 1699717338
+    },
+    {
+        "content": "<p>POD struct patch added. Builds and run wo obstacles. It must have been a result of macros to change all conditions? Nice to see professionals in work. Thanks.</p>",
+        "id": 401527548,
+        "sender_full_name": "Håkan Svensson",
+        "timestamp": 1699720336
+    },
+    {
+        "content": "<p><span class=\"user-mention\" data-user-id=\"522486\">@Håkan Svensson</span> <br>\nGrout is as described.  Same term here.<br>\nBut maybe grout is bad luck for code?  Anyway, an entirely different skill set.</p>",
+        "id": 401530426,
+        "sender_full_name": "Dave Register",
+        "timestamp": 1699723291
+    }
+]

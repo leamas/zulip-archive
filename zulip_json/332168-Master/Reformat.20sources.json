@@ -1,0 +1,122 @@
+[
+    {
+        "content": "<p>After the 5.10 release Its IMO time to reformat all sources using clang-format. </p>\n<p>Anyone against? Time to speak up.</p>\n<p><span class=\"user-mention\" data-user-id=\"517002\">@Dave Register</span>  <span class=\"user-mention\" data-user-id=\"573239\">@Pavel Kalian</span></p>",
+        "id": 462065994,
+        "sender_full_name": "Alec Leamas",
+        "timestamp": 1723542214
+    },
+    {
+        "content": "<p>...done</p>",
+        "id": 462537176,
+        "sender_full_name": "Alec Leamas",
+        "timestamp": 1723723927
+    },
+    {
+        "content": "<p>Maybe time we all start to actually use <code>pre-commit</code> with at least the <code>clang-format</code> hook, otherwise it will wall apart again...</p>",
+        "id": 462537811,
+        "sender_full_name": "Pavel Kalian",
+        "timestamp": 1723724181
+    },
+    {
+        "content": "<p>Yes, we should, and I'm fine with it. But we need <span class=\"user-mention\" data-user-id=\"517002\">@Dave Register</span>  on board.</p>",
+        "id": 462540488,
+        "sender_full_name": "Alec Leamas",
+        "timestamp": 1723724811
+    },
+    {
+        "content": "<p>... but one problem is that we should probably not blindly apply \"our\" style to the 3-rd party sources in libs. That is, we would need to patch the standard hook a little</p>",
+        "id": 462547253,
+        "sender_full_name": "Alec Leamas",
+        "timestamp": 1723727289
+    },
+    {
+        "content": "<p>We don't need to patch it, just add excludes, as in what I use in the dashboardsk plugin</p>\n<div class=\"codehilite\" data-code-language=\"YAML\"><pre><span></span><code><span class=\"p p-Indicator\">-</span><span class=\"w\"> </span><span class=\"nt\">repo</span><span class=\"p\">:</span><span class=\"w\"> </span><span class=\"l l-Scalar l-Scalar-Plain\">https://github.com/pre-commit/mirrors-clang-format</span>\n<span class=\"w\">    </span><span class=\"l l-Scalar l-Scalar-Plain\">rev</span><span class=\"p p-Indicator\">:</span><span class=\"w\"> </span><span class=\"l l-Scalar l-Scalar-Plain\">v17.0.6</span>\n<span class=\"w\">    </span><span class=\"l l-Scalar l-Scalar-Plain\">hooks</span><span class=\"p p-Indicator\">:</span>\n<span class=\"w\">      </span><span class=\"p p-Indicator\">-</span><span class=\"w\"> </span><span class=\"nt\">id</span><span class=\"p\">:</span><span class=\"w\"> </span><span class=\"l l-Scalar l-Scalar-Plain\">clang-format</span>\n<span class=\"w\">        </span><span class=\"nt\">exclude</span><span class=\"p\">:</span><span class=\"w\"> </span><span class=\"p p-Indicator\">|</span>\n<span class=\"w\">            </span><span class=\"no\">(?x)^(</span>\n<span class=\"w\">                </span><span class=\"no\">sqlite.*|</span>\n<span class=\"w\">                </span><span class=\"no\">wxsqlite.*|</span>\n<span class=\"w\">                </span><span class=\"no\">.*json|</span>\n<span class=\"w\">                </span><span class=\"no\">.*yml</span>\n<span class=\"w\">            </span><span class=\"no\">)$</span>\n</code></pre></div>",
+        "id": 462547556,
+        "sender_full_name": "Pavel Kalian",
+        "timestamp": 1723727419
+    },
+    {
+        "content": "<p>righth, hadn't  checked. Let's wait for Dave then</p>",
+        "id": 462547698,
+        "sender_full_name": "Alec Leamas",
+        "timestamp": 1723727461
+    },
+    {
+        "content": "<p>I'm there.<br>\nWe should publish concise instructions/policy (somewhere?) so that all new PRs conform to the plan.</p>",
+        "id": 462558153,
+        "sender_full_name": "Dave Register",
+        "timestamp": 1723730698
+    },
+    {
+        "content": "<p>Yes, and configure GA to fail for PRs that are not formatted</p>",
+        "id": 462558273,
+        "sender_full_name": "Pavel Kalian",
+        "timestamp": 1723730757
+    },
+    {
+        "content": "<blockquote>\n<p>(somewhere?)</p>\n</blockquote>\n<p>Developer manual</p>",
+        "id": 462558333,
+        "sender_full_name": "Alec Leamas",
+        "timestamp": 1723730768
+    },
+    {
+        "content": "<p><span class=\"user-mention\" data-user-id=\"573239\">@Pavel Kalian</span> </p>\n<p>Something like this?</p>\n<div class=\"codehilite\"><pre><span></span><code>repos:\n-   repo: https://github.com/pre-commit/pre-commit-hooks\n    rev: v2.3.0\n    hooks:\n    -   id: check-yaml\n    -   id: end-of-file-fixer\n    -   id: trailing-whitespace\n-   repo: https://github.com/pre-commit/mirrors-clang-format\n    rev: v18.1.8\n    hooks:\n    -   id: clang-format\n        exclude: &quot;libs&quot;\n</code></pre></div>",
+        "id": 462563274,
+        "sender_full_name": "Alec Leamas",
+        "timestamp": 1723732228
+    },
+    {
+        "content": "<p>Not quite, <code>exclude</code> must be a Python regular expression, like</p>\n<div class=\"codehilite\"><pre><span></span><code>exclude: |\n            (?x)^(\n                libs.*|\n                data.*\n            )$\n</code></pre></div>",
+        "id": 462564866,
+        "sender_full_name": "Pavel Kalian",
+        "timestamp": 1723732678
+    },
+    {
+        "content": "<p>this looks ok to me:</p>\n<div class=\"codehilite\"><pre><span></span><code>repos:\n-   repo: https://github.com/pre-commit/pre-commit-hooks\n    rev: v2.3.0\n    hooks:\n    -   id: check-yaml\n    -   id: end-of-file-fixer\n    -   id: trailing-whitespace\n-   repo: https://github.com/pre-commit/mirrors-clang-format\n    rev: v18.1.8\n    hooks:\n    -   id: clang-format\n        exclude: (?x)^( libs.*| data.*)$\n</code></pre></div>",
+        "id": 462566482,
+        "sender_full_name": "Alec Leamas",
+        "timestamp": 1723733227
+    },
+    {
+        "content": "<p>Yes. In <a href=\"https://github.com/nohal/dashboardsk_pi/blob/main/.pre-commit-config.yamlI\">https://github.com/nohal/dashboardsk_pi/blob/main/.pre-commit-config.yamlI</a> also exclude images from the end of file fixer and apply formatting to cmake files, but otherwise it is prety similar</p>",
+        "id": 462566896,
+        "sender_full_name": "Pavel Kalian",
+        "timestamp": 1723733393
+    },
+    {
+        "content": "<p>OK, lets go with this for now. Nothing is yet set in stone</p>",
+        "id": 462567833,
+        "sender_full_name": "Alec Leamas",
+        "timestamp": 1723733727
+    },
+    {
+        "content": "<p>OK, we have a starter.</p>\n<ol>\n<li>I have checked in  <em>.pre-commit-config.yaml</em> .</li>\n<li>We have some docs at <a href=\"https://opencpn-manuals.github.io/main/opencpn-dev/code-formatting.html#_cc\">https://opencpn-manuals.github.io/main/opencpn-dev/code-formatting.html#_cc</a></li>\n</ol>\n<p>The short story is that the only thing  needed is <code>pip install pre-commit</code>. </p>\n<p>Things to do:</p>\n<ul>\n<li>Let's use this for a time without announcing it so we can fix possible rough corners</li>\n<li>Install the GA action which  rejects unformatted sources when pushed</li>\n<li>Announce the new policy on github.</li>\n</ul>",
+        "id": 462577225,
+        "sender_full_name": "Alec Leamas",
+        "timestamp": 1723735969
+    },
+    {
+        "content": "<p>And the dev has to run <code>pre-commit install</code> in the OpenCPN's root directory to actually start using it.</p>",
+        "id": 462590240,
+        "sender_full_name": "Pavel Kalian",
+        "timestamp": 1723739795
+    },
+    {
+        "content": "<p>Manual updated. Fat fingers, missed to add [skip ci]. Sigh</p>",
+        "id": 462597109,
+        "sender_full_name": "Alec Leamas",
+        "timestamp": 1723742148
+    },
+    {
+        "content": "<p>Which manual?  Where?</p>",
+        "id": 462627131,
+        "sender_full_name": "Dave Register",
+        "timestamp": 1723751555
+    },
+    {
+        "content": "<p>Link above, at 2.</p>",
+        "id": 462627232,
+        "sender_full_name": "Alec Leamas",
+        "timestamp": 1723751580
+    }
+]

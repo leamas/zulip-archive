@@ -1,0 +1,270 @@
+<html>
+<head><meta charset="utf-8"><title>Merge official and PPA toolchains · OCPN 5.10 Release plan · Zulip Chat Archive</title></head>
+<h2>Stream: <a href="https://leamas.github.io/zulip-archive/stream/432618-OCPN-5.2E10-Release-plan/index.html">OCPN 5.10 Release plan</a></h2>
+<h3>Topic: <a href="https://leamas.github.io/zulip-archive/stream/432618-OCPN-5.2E10-Release-plan/topic/Merge.20official.20and.20PPA.20toolchains.html">Merge official and PPA toolchains</a></h3>
+
+<hr>
+
+<base href="https://opencpn.zulipchat.com">
+
+<head><link href="https://leamas.github.io/zulip-archive/style.css" rel="stylesheet"></head>
+
+<a name="432129282"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/432618-OCPN%205.10%20Release%20plan/topic/Merge%20official%20and%20PPA%20toolchains/near/432129282" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Alec Leamas <a href="https://leamas.github.io/zulip-archive/stream/432618-OCPN-5.2E10-Release-plan/topic/Merge.20official.20and.20PPA.20toolchains.html#432129282">(Apr 09 2024 at 05:52)</a>:</h4>
+<p>After  handling the buffering I need to update the Debian packaging, given that there are no more structural changes. In particular, no more libraries.</p>
+
+
+
+<a name="432264056"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/432618-OCPN%205.10%20Release%20plan/topic/Merge%20official%20and%20PPA%20toolchains/near/432264056" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Dave Register <a href="https://leamas.github.io/zulip-archive/stream/432618-OCPN-5.2E10-Release-plan/topic/Merge.20official.20and.20PPA.20toolchains.html#432264056">(Apr 09 2024 at 14:55)</a>:</h4>
+<p>We have talked about this before, and I would like to (gently) approach the concept again.<br>
+We have made enough changes to our internal plumbing that we can consider moving upstream in our linux release build and distribution strategy.  Specifically, moving away from Ubuntu-centric PPA building and hosting.  And moving toward a "pure" debian-centric system.<br>
+I'm sure we could use CCI as we do today to do the building of OCPN .deb release packages.  And we could host them on Cloudsmith.<br>
+My concern/question is this:  I worry that a bare .deb package will introduce the dreaded "dependency-hell" scenario for many of our users, especially users new to linux on rPI systems.  Installing from "apt" is relatively foolproof.  Installing from "dpkg" not so much.</p>
+<p>Let's talk about this...</p>
+
+
+
+<a name="432273239"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/432618-OCPN%205.10%20Release%20plan/topic/Merge%20official%20and%20PPA%20toolchains/near/432273239" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Alec Leamas <a href="https://leamas.github.io/zulip-archive/stream/432618-OCPN-5.2E10-Release-plan/topic/Merge.20official.20and.20PPA.20toolchains.html#432273239">(Apr 09 2024 at 15:31)</a>:</h4>
+<p>I don't see the problem. The idea is that we should build and distribute our packages using the PPA, exactly as today. No visible user changes whatsoever.</p>
+<p>The difference is just <strong>how</strong> we build them in the PPA environment. It actually doesn't make much sense to have two different build chains for the PPA and the official packaging. It's a lot of work for no benefit. If we could use one common workflow it would save a lot of work in the long run.</p>
+<p>It would also mean the things would work as they are supposed to do: New packages are published in the PPA. Over time the exact same package moves into the official builds. Once there, we don't have to worry any more, we can trust Ubuntu (and Debian) to distribute the packages.</p>
+
+
+
+<a name="432317741"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/432618-OCPN%205.10%20Release%20plan/topic/Merge%20official%20and%20PPA%20toolchains/near/432317741" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Dave Register <a href="https://leamas.github.io/zulip-archive/stream/432618-OCPN-5.2E10-Release-plan/topic/Merge.20official.20and.20PPA.20toolchains.html#432317741">(Apr 09 2024 at 18:54)</a>:</h4>
+<p>Not following.<br>
+How is the current PPA build chain different from CCI?  And what do we need to do to fix that?</p>
+
+
+
+<a name="432328776"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/432618-OCPN%205.10%20Release%20plan/topic/Merge%20official%20and%20PPA%20toolchains/near/432328776" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Alec Leamas <a href="https://leamas.github.io/zulip-archive/stream/432618-OCPN-5.2E10-Release-plan/topic/Merge.20official.20and.20PPA.20toolchains.html#432328776">(Apr 09 2024 at 19:54)</a>:</h4>
+<p>The current build chain in the PPA uses opencpn's  own packaging based on cmake to build the debs. This has many drawbacks, we could discuss this later.</p>
+<p>What I suggest is that we use the same flow as in the official packaging to create the debs. This is basically about moving the packaging to a separate repo. Here we import the master branch and creates packages from that using the battle-hardened Debian toolchain which creates packages directly without using cmake at all for this. This actually gives many advantages.</p>
+<p>Now, because of the official packaging I need to do this work anyway . Maybe it would be easier to discuss if I could actually show you how it works rather than trying to describe it?</p>
+
+
+
+<a name="432328954"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/432618-OCPN%205.10%20Release%20plan/topic/Merge%20official%20and%20PPA%20toolchains/near/432328954" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Alec Leamas <a href="https://leamas.github.io/zulip-archive/stream/432618-OCPN-5.2E10-Release-plan/topic/Merge.20official.20and.20PPA.20toolchains.html#432328954">(Apr 09 2024 at 19:55)</a>:</h4>
+<p>Do you have any idea when we should release the first beta?</p>
+
+
+
+<a name="432336311"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/432618-OCPN%205.10%20Release%20plan/topic/Merge%20official%20and%20PPA%20toolchains/near/432336311" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Dave Register <a href="https://leamas.github.io/zulip-archive/stream/432618-OCPN-5.2E10-Release-plan/topic/Merge.20official.20and.20PPA.20toolchains.html#432336311">(Apr 09 2024 at 20:38)</a>:</h4>
+<p>Yes, I think doing it while I watch is best, if we (you) have the energy.<br>
+First Beta might be in about two weeks.  With the startup wizard, we are essentially feature complete now.  Our Alpha testing is definitely identifying bugs, better now than at Beta.</p>
+
+
+
+<a name="432339265"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/432618-OCPN%205.10%20Release%20plan/topic/Merge%20official%20and%20PPA%20toolchains/near/432339265" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Alec Leamas <a href="https://leamas.github.io/zulip-archive/stream/432618-OCPN-5.2E10-Release-plan/topic/Merge.20official.20and.20PPA.20toolchains.html#432339265">(Apr 09 2024 at 20:58)</a>:</h4>
+<p>I should be able to have things in place for that.</p>
+
+
+
+<a name="433876184"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/432618-OCPN%205.10%20Release%20plan/topic/Merge%20official%20and%20PPA%20toolchains/near/433876184" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Alec Leamas <a href="https://leamas.github.io/zulip-archive/stream/432618-OCPN-5.2E10-Release-plan/topic/Merge.20official.20and.20PPA.20toolchains.html#433876184">(Apr 17 2024 at 21:15)</a>:</h4>
+<p>I have setup things which builds an alpha release from current master. Will be simple to apply when we have a beta tag. Let me know when it's time.</p>
+
+
+
+<a name="435152996"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/432618-OCPN%205.10%20Release%20plan/topic/Merge%20official%20and%20PPA%20toolchains/near/435152996" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Notification Bot <a href="https://leamas.github.io/zulip-archive/stream/432618-OCPN-5.2E10-Release-plan/topic/Merge.20official.20and.20PPA.20toolchains.html#435152996">(Apr 24 2024 at 09:53)</a>:</h4>
+<p><a href="#narrow/stream/432618-OCPN-5.2E10-Release-plan/topic/Merge.20official.20and.20PPA.20toolchains/near/432129282">A message</a> was moved here from <a class="stream-topic" data-stream-id="432618" href="/#narrow/stream/432618-OCPN-5.2E10-Release-plan/topic/libusb.20dependency">#OCPN 5.10 Release plan &gt; libusb dependency</a> by <span class="user-mention silent" data-user-id="399510">Alec Leamas</span>.</p>
+
+
+
+<a name="435153138"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/432618-OCPN%205.10%20Release%20plan/topic/Merge%20official%20and%20PPA%20toolchains/near/435153138" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Notification Bot <a href="https://leamas.github.io/zulip-archive/stream/432618-OCPN-5.2E10-Release-plan/topic/Merge.20official.20and.20PPA.20toolchains.html#435153138">(Apr 24 2024 at 09:54)</a>:</h4>
+<p><a href="#narrow/stream/432618-OCPN-5.2E10-Release-plan/topic/Merge.20official.20and.20PPA.20toolchains/near/432273239">A message</a> was moved here from <a class="stream-topic" data-stream-id="432618" href="/#narrow/stream/432618-OCPN-5.2E10-Release-plan/topic/libusb.20dependency">#OCPN 5.10 Release plan &gt; libusb dependency</a> by <span class="user-mention silent" data-user-id="399510">Alec Leamas</span>.</p>
+
+
+
+<a name="435153191"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/432618-OCPN%205.10%20Release%20plan/topic/Merge%20official%20and%20PPA%20toolchains/near/435153191" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Notification Bot <a href="https://leamas.github.io/zulip-archive/stream/432618-OCPN-5.2E10-Release-plan/topic/Merge.20official.20and.20PPA.20toolchains.html#435153191">(Apr 24 2024 at 09:54)</a>:</h4>
+<p><a href="#narrow/stream/432618-OCPN-5.2E10-Release-plan/topic/Merge.20official.20and.20PPA.20toolchains/near/432317741">A message</a> was moved here from <a class="stream-topic" data-stream-id="432618" href="/#narrow/stream/432618-OCPN-5.2E10-Release-plan/topic/libusb.20dependency">#OCPN 5.10 Release plan &gt; libusb dependency</a> by <span class="user-mention silent" data-user-id="399510">Alec Leamas</span>.</p>
+
+
+
+<a name="435153233"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/432618-OCPN%205.10%20Release%20plan/topic/Merge%20official%20and%20PPA%20toolchains/near/435153233" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Notification Bot <a href="https://leamas.github.io/zulip-archive/stream/432618-OCPN-5.2E10-Release-plan/topic/Merge.20official.20and.20PPA.20toolchains.html#435153233">(Apr 24 2024 at 09:54)</a>:</h4>
+<p><a href="#narrow/stream/432618-OCPN-5.2E10-Release-plan/topic/Merge.20official.20and.20PPA.20toolchains/near/432328776">A message</a> was moved here from <a class="stream-topic" data-stream-id="432618" href="/#narrow/stream/432618-OCPN-5.2E10-Release-plan/topic/libusb.20dependency">#OCPN 5.10 Release plan &gt; libusb dependency</a> by <span class="user-mention silent" data-user-id="399510">Alec Leamas</span>.</p>
+
+
+
+<a name="435153303"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/432618-OCPN%205.10%20Release%20plan/topic/Merge%20official%20and%20PPA%20toolchains/near/435153303" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Notification Bot <a href="https://leamas.github.io/zulip-archive/stream/432618-OCPN-5.2E10-Release-plan/topic/Merge.20official.20and.20PPA.20toolchains.html#435153303">(Apr 24 2024 at 09:55)</a>:</h4>
+<p><a href="#narrow/stream/432618-OCPN-5.2E10-Release-plan/topic/Merge.20official.20and.20PPA.20toolchains/near/432264056">A message</a> was moved here from <a class="stream-topic" data-stream-id="432618" href="/#narrow/stream/432618-OCPN-5.2E10-Release-plan/topic/libusb.20dependency">#OCPN 5.10 Release plan &gt; libusb dependency</a> by <span class="user-mention silent" data-user-id="399510">Alec Leamas</span>.</p>
+
+
+
+<a name="435153360"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/432618-OCPN%205.10%20Release%20plan/topic/Merge%20official%20and%20PPA%20toolchains/near/435153360" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Notification Bot <a href="https://leamas.github.io/zulip-archive/stream/432618-OCPN-5.2E10-Release-plan/topic/Merge.20official.20and.20PPA.20toolchains.html#435153360">(Apr 24 2024 at 09:55)</a>:</h4>
+<p><a href="#narrow/stream/432618-OCPN-5.2E10-Release-plan/topic/Merge.20official.20and.20PPA.20toolchains/near/432328954">A message</a> was moved here from <a class="stream-topic" data-stream-id="432618" href="/#narrow/stream/432618-OCPN-5.2E10-Release-plan/topic/libusb.20dependency">#OCPN 5.10 Release plan &gt; libusb dependency</a> by <span class="user-mention silent" data-user-id="399510">Alec Leamas</span>.</p>
+
+
+
+<a name="435153392"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/432618-OCPN%205.10%20Release%20plan/topic/Merge%20official%20and%20PPA%20toolchains/near/435153392" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Notification Bot <a href="https://leamas.github.io/zulip-archive/stream/432618-OCPN-5.2E10-Release-plan/topic/Merge.20official.20and.20PPA.20toolchains.html#435153392">(Apr 24 2024 at 09:55)</a>:</h4>
+<p><a href="#narrow/stream/432618-OCPN-5.2E10-Release-plan/topic/Merge.20official.20and.20PPA.20toolchains/near/432336311">A message</a> was moved here from <a class="stream-topic" data-stream-id="432618" href="/#narrow/stream/432618-OCPN-5.2E10-Release-plan/topic/libusb.20dependency">#OCPN 5.10 Release plan &gt; libusb dependency</a> by <span class="user-mention silent" data-user-id="399510">Alec Leamas</span>.</p>
+
+
+
+<a name="435153472"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/432618-OCPN%205.10%20Release%20plan/topic/Merge%20official%20and%20PPA%20toolchains/near/435153472" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Notification Bot <a href="https://leamas.github.io/zulip-archive/stream/432618-OCPN-5.2E10-Release-plan/topic/Merge.20official.20and.20PPA.20toolchains.html#435153472">(Apr 24 2024 at 09:56)</a>:</h4>
+<p><a href="#narrow/stream/432618-OCPN-5.2E10-Release-plan/topic/Merge.20official.20and.20PPA.20toolchains/near/432339265">A message</a> was moved here from <a class="stream-topic" data-stream-id="432618" href="/#narrow/stream/432618-OCPN-5.2E10-Release-plan/topic/libusb.20dependency">#OCPN 5.10 Release plan &gt; libusb dependency</a> by <span class="user-mention silent" data-user-id="399510">Alec Leamas</span>.</p>
+
+
+
+<a name="435153499"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/432618-OCPN%205.10%20Release%20plan/topic/Merge%20official%20and%20PPA%20toolchains/near/435153499" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Notification Bot <a href="https://leamas.github.io/zulip-archive/stream/432618-OCPN-5.2E10-Release-plan/topic/Merge.20official.20and.20PPA.20toolchains.html#435153499">(Apr 24 2024 at 09:56)</a>:</h4>
+<p><a href="#narrow/stream/432618-OCPN-5.2E10-Release-plan/topic/Merge.20official.20and.20PPA.20toolchains/near/433876184">A message</a> was moved here from <a class="stream-topic" data-stream-id="432618" href="/#narrow/stream/432618-OCPN-5.2E10-Release-plan/topic/libusb.20dependency">#OCPN 5.10 Release plan &gt; libusb dependency</a> by <span class="user-mention silent" data-user-id="399510">Alec Leamas</span>.</p>
+
+
+
+<a name="435462560"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/432618-OCPN%205.10%20Release%20plan/topic/Merge%20official%20and%20PPA%20toolchains/near/435462560" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Alec Leamas <a href="https://leamas.github.io/zulip-archive/stream/432618-OCPN-5.2E10-Release-plan/topic/Merge.20official.20and.20PPA.20toolchains.html#435462560">(Apr 25 2024 at 20:29)</a>:</h4>
+<p>I have reworked the official packaging so it can exist  in the same repo as the rest of the code.  Practically this means that we would add 6 branches to current repo without affecting anything in existing branches.</p>
+<p>The packaging  builds packages for debian/sid, ubuntu/numbat, ubuntu/jammy and ubuntu/focal. Currently these have an alpha2 level, roughly  master as of "yesterday". </p>
+<p>I intend to push these branches unless you have anything against it. It's non-destructive, if we remove them no traces will be left</p>
+
+
+
+<a name="435462575"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/432618-OCPN%205.10%20Release%20plan/topic/Merge%20official%20and%20PPA%20toolchains/near/435462575" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Alec Leamas <a href="https://leamas.github.io/zulip-archive/stream/432618-OCPN-5.2E10-Release-plan/topic/Merge.20official.20and.20PPA.20toolchains.html#435462575">(Apr 25 2024 at 20:29)</a>:</h4>
+<p><span class="user-mention" data-user-id="517002">@Dave Register</span>  ^</p>
+
+
+
+<a name="435483031"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/432618-OCPN%205.10%20Release%20plan/topic/Merge%20official%20and%20PPA%20toolchains/near/435483031" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Dave Register <a href="https://leamas.github.io/zulip-archive/stream/432618-OCPN-5.2E10-Release-plan/topic/Merge.20official.20and.20PPA.20toolchains.html#435483031">(Apr 25 2024 at 23:35)</a>:</h4>
+<p><span class="user-mention" data-user-id="399510">@Alec Leamas</span> <br>
+Will you talk me thru the build/release process, then?<br>
+Does this eliminate the need for PPA build?<br>
+What is the end-game?</p>
+
+
+
+<a name="435513521"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/432618-OCPN%205.10%20Release%20plan/topic/Merge%20official%20and%20PPA%20toolchains/near/435513521" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Alec Leamas <a href="https://leamas.github.io/zulip-archive/stream/432618-OCPN-5.2E10-Release-plan/topic/Merge.20official.20and.20PPA.20toolchains.html#435513521">(Apr 26 2024 at 04:39)</a>:</h4>
+<p>Of course  I will talk you through this. </p>
+<p>The end game is that you can do two things:</p>
+<ol>
+<li><code>gbp buildpackage &lt;...&gt;</code> This creates testable packages.</li>
+<li><code>debuild -S</code>. This creates a "source.changes" file. This is the thing eventually uploaded to the PPA.</li>
+</ol>
+<p>Each of these steps is done done in the actual branch; packages for numbat is created in the ubuntu/numbat branch, etc.</p>
+<p>Creating packages needs to be done in a vm,  the source.changes  could be created on any host. The  packages created in these two ways are basically identical.</p>
+
+
+
+<a name="435538401"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/432618-OCPN%205.10%20Release%20plan/topic/Merge%20official%20and%20PPA%20toolchains/near/435538401" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Alec Leamas <a href="https://leamas.github.io/zulip-archive/stream/432618-OCPN-5.2E10-Release-plan/topic/Merge.20official.20and.20PPA.20toolchains.html#435538401">(Apr 26 2024 at 08:18)</a>:</h4>
+<p>Provisionary docs below. Parts of this is messy, in particular until things have stabilized. I just think I could point into this when needed.</p>
+<p>= Creating a Debian/Ubuntu package</p>
+<p>== General</p>
+<p>This page describes how to create .deb packages usable on Debian<br>
+based distros like vanilla Debian, Ubuntu, Raspbian, Mint, etc.</p>
+<p>Work is done on a Debian or Ubuntu host. The big picture</p>
+<ol>
+<li>Install necessary tools.</li>
+<li>Reorganize directory structure</li>
+<li>Update at least debian/changelog to create a new version</li>
+<li>Import the current master branch in upstream/latest</li>
+<li>Create testable packages</li>
+<li>(Optional) Upload packages to an Ubuntu PPA.</li>
+</ol>
+<p>== Install tools</p>
+<div class="codehilite"><pre><span></span><code>$ sudo apt install devscripts git-buildpackage equivs
+</code></pre></div>
+
+<p>== Reorganize directory structure</p>
+<p>The Debian tools creates things in the parent directory. To handle this, <br>
+create  new, empty directory and put the existing OpenCPN tree there. That <br>
+is, a typical path like <em>~/src/OpenCPN</em> should be modified to<br>
+<em>~/src/OpenCPN/OpenCPN</em> where <em>~/src/OpenCPN</em> should be empty besides<br>
+<em>~/src/OpenCPN/OpenCPN</em>.</p>
+<p>Likewise, when cloning OpenCPN do something like</p>
+<div class="codehilite"><pre><span></span><code>$ mkdir OpenCPN
+$ cd OpenCPN
+$ git clone ...
+</code></pre></div>
+
+<p>== Update  debian/changelog with a new version</p>
+<p><em>debian/changelog</em> is picky about the format. Editing by hand is hard. Instead,<br>
+use the <code>dch</code> tool. It has a multitude of options. The simplest is to create<br>
+a new, minor release using <code>dch -i</code>. </p>
+<p>dch throws you in an editor loaded with debian/changelog. Complete the entry<br>
+as you consider best (there are many conventions here, but for a local build<br>
+it's not that important).</p>
+<p>== Import the current master branch in upstream/latest</p>
+<p>For now, the debian directory needs to be removed. After that, create a<br>
+tarball based on current HEAD:</p>
+<div class="codehilite"><pre><span></span><code>$ git checkout master
+$ git switch -c tmp-build
+$ git rm -r debian
+$ git commit -m &quot;Remove unused debian/ dir&quot;
+$ git archive --prefix opencpn-1.2.3/ --output ../opencpn.tar.gz HEAD
+</code></pre></div>
+
+<p>The <code>--prefix</code> part should be modified to reflect current version, but is not<br>
+critical. Note the trailing slash!</p>
+<p>Next step is to convert the tarball to a formal debian source tarball. This <br>
+is about renaming and stripping files not used  in the Debian build. Do</p>
+<div class="codehilite"><pre><span></span><code>$ mk-origtargz ../opencpn.tar.gz
+</code></pre></div>
+
+<p>Where <em>../opencpn.tar.gz</em>  is the file created by <code>git archive</code> above. This<br>
+creates something like  <em>../opencpn_.5.10.920.orig.tar.gz</em>. The version in<br>
+the filename is read from debian/changelog</p>
+<p>The final step is to import this tarball into upstream/latest. Using the<br>
+above do:</p>
+<p>$ gbp import-orig ../opencpn_.5.10.920.orig.tar.gz</p>
+<p>== Build packages</p>
+<p>The step above creates a tag named like <code>upstream/5.10.920</code> or so. Use <br>
+<code>git tag -l | grep upstream/</code> to find out the tag name. Then do</p>
+<div class="codehilite"><pre><span></span><code>$ gbp buildpackage --git-upstream-tag=upstream/whatever
+</code></pre></div>
+
+<p>This builds testable .deb packages in <em>..</em>.</p>
+<p>== Upload to PPA</p>
+<p>The artifact uploaded to an Ubuntu ppa is a <em>.source.changes</em> file.  This <br>
+is created using </p>
+<div class="codehilite"><pre><span></span><code>$ debuild -S
+</code></pre></div>
+
+<p>This requires that gpg signing keys is configured which is outside the scope<br>
+of this document. The command creates something like<br>
+<em>../opencpn.1.2.3.source.changes</em>.  Upload to a PPA using something like</p>
+<div class="codehilite"><pre><span></span><code>$ dput ppa:leamas-alec/opencpn ../opencpn.1.2.3.source.changes
+</code></pre></div>
+
+
+
+<a name="435539038"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/432618-OCPN%205.10%20Release%20plan/topic/Merge%20official%20and%20PPA%20toolchains/near/435539038" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Alec Leamas <a href="https://leamas.github.io/zulip-archive/stream/432618-OCPN-5.2E10-Release-plan/topic/Merge.20official.20and.20PPA.20toolchains.html#435539038">(Apr 26 2024 at 08:22)</a>:</h4>
+<p>... and of course I'll do the messy parts.</p>
+
+
+
+<a name="435595959"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/432618-OCPN%205.10%20Release%20plan/topic/Merge%20official%20and%20PPA%20toolchains/near/435595959" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Dave Register <a href="https://leamas.github.io/zulip-archive/stream/432618-OCPN-5.2E10-Release-plan/topic/Merge.20official.20and.20PPA.20toolchains.html#435595959">(Apr 26 2024 at 14:18)</a>:</h4>
+<p>OK, thanks.  Much of this is familiar, but I am no expert on deb packaging.<br>
+On PPA, the workflow used for previous releases is: <br>
+I have linked the PPA for OpenCPN to the github master repo.  Using the PPA  Web UI, I can trigger a fetch and build of a specific branch from github.  Corresponds to last two steps above.  Might be nicer to do as you have shown, to avoid futzing with PPA UI, which is a bit rough...</p>
+
+
+
+<a name="435597064"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/432618-OCPN%205.10%20Release%20plan/topic/Merge%20official%20and%20PPA%20toolchains/near/435597064" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Alec Leamas <a href="https://leamas.github.io/zulip-archive/stream/432618-OCPN-5.2E10-Release-plan/topic/Merge.20official.20and.20PPA.20toolchains.html#435597064">(Apr 26 2024 at 14:24)</a>:</h4>
+<p>As long as you feel comfortable  all is fine.  Let's have first shot when you tag a beta. Of course, if you could give some kind of   notice in advance about when the beta will happen it would make my task easier.</p>
+
+
+
+<hr><p>Last updated: Oct 08 2024 at 10:11 UTC</p>
+</html>

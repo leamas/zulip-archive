@@ -1,0 +1,321 @@
+<html>
+<head><meta charset="utf-8"><title>OpenGL - Windows · OCPN 5.10 Release plan · Zulip Chat Archive</title></head>
+<h2>Stream: <a href="https://leamas.github.io/zulip-archive/stream/432618-OCPN-5.2E10-Release-plan/index.html">OCPN 5.10 Release plan</a></h2>
+<h3>Topic: <a href="https://leamas.github.io/zulip-archive/stream/432618-OCPN-5.2E10-Release-plan/topic/OpenGL.20-.20Windows.html">OpenGL - Windows</a></h3>
+
+<hr>
+
+<base href="https://opencpn.zulipchat.com">
+
+<head><link href="https://leamas.github.io/zulip-archive/style.css" rel="stylesheet"></head>
+
+<a name="443100254"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/432618-OCPN%205.10%20Release%20plan/topic/OpenGL%20-%20Windows/near/443100254" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Håkan Svensson <a href="https://leamas.github.io/zulip-archive/stream/432618-OCPN-5.2E10-Release-plan/topic/OpenGL.20-.20Windows.html#443100254">(Jun 06 2024 at 16:05)</a>:</h4>
+<p>We have got a revised handling of OpenGL in Git 5.9.<br>
+A friend of my have tested on a dated Win10 creating a crash at start and it seems we  now ignore settings in config and force OpenGL to be always used. <br>
+Alternatively is the (new?) OpenGL check not correct?</p>
+<p>Since OpenGL option is grayed out in Options-&gt;Show-&gt;Advanced I suppose these settings are present. (i.e. a guess and config file is not available.)<br>
+OpenGL=0  (Not sure about this)<br>
+DisableOpenGL=1</p>
+<p>Here are three log file examples from different O versions. The "old" are working, wo OG, present master 5.9 crashes at start.</p>
+<p>OCPN 5.8.4<br>
+OpenGL is not used<br>
+20:45:36.925 MESSAGE ocpn_frame.cpp:839  **** Connect stuff<br>
+20:45:36.949 MESSAGE chcanv.cpp:2398 Metrics:  m_display_size_mm: 531     g_Platform-&gt;getDisplaySize():  1920:1080   <br>
+20:45:36.949 MESSAGE chcanv.cpp:2403 wxDisplaySize(): 1920 1080</p>
+<p>OCPN 5.9 from februari<br>
+OpenGL is not used<br>
+11:17:42.573 MESSAGE ocpn_frame.cpp:732  **** Connect stuff<br>
+11:17:42.604 MESSAGE chcanv.cpp:2370 Metrics:  m_display_size_mm: 535     g_Platform-&gt;getDisplaySize():  1920:1080   <br>
+11:17:42.604 MESSAGE chcanv.cpp:2376 monitor size: 1920 1080</p>
+<p>Here it seems OpenGL config settings are neglected and OpenGL is found "CAPABLE" although version is 1.1.0!<br>
+OCPN 5.9 present Git<br>
+08:54:37.714 MESSAGE ocpn_frame.cpp:737  **** Connect stuff<br>
+08:54:37.714 MESSAGE OCPNPlatform.cpp:904 Starting OpenGL test...<br>
+08:54:37.714 MESSAGE OCPNPlatform.cpp:725 Starting OpenGL test utility: "C:\Program Files (x86)\OpenCPN\opencpn-glutil.exe" opengl-info "C:\ProgramData\opencpn\gl_caps.json"<br>
+08:54:39.117 MESSAGE OCPNPlatform.cpp:911 OpenGL test complete.<br>
+08:54:39.117 MESSAGE OCPNPlatform.cpp:933 OpenGL determined CAPABLE.<br>
+08:54:39.180 MESSAGE chcanv.cpp:938 Creating glChartCanvas<br>
+08:54:39.180 MESSAGE chcanv.cpp:938 Creating glChartCanvas<br>
+08:54:39.218 MESSAGE chcanv.cpp:2315 Metrics:  m_display_size_mm: 535     g_Platform-&gt;getDisplaySize():  1920:1080   <br>
+08:54:39.218 MESSAGE chcanv.cpp:2321 monitor size: 1920 1080<br>
+.....<br>
+08:54:39.790 MESSAGE ocpn_app.cpp:1843 OpenCPN initierades på 2329 ms.<br>
+08:54:40.339 MESSAGE glChartCanvas.cpp:1048 OpenGL-&gt; Renderer String: GDI Generic<br>
+08:54:40.339 MESSAGE glChartCanvas.cpp:1057 OpenGL-&gt; Version reported:  1.1.0<br>
+-- O Crash</p>
+
+
+
+<a name="443105271"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/432618-OCPN%205.10%20Release%20plan/topic/OpenGL%20-%20Windows/near/443105271" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Pavel Kalian <a href="https://leamas.github.io/zulip-archive/stream/432618-OCPN-5.2E10-Release-plan/topic/OpenGL.20-.20Windows.html#443105271">(Jun 06 2024 at 16:28)</a>:</h4>
+<p>We do not force OpenGL to be always active. Unlike in 5.8.4 If it is disabled in the config by OpenGL=0, we honor that. The DislableOpenGL=1 hack in 5.8.4 is gone. If <code>opencpn-glutil</code> detects OpenGL works and the main app still crashes when trying to use it, we need to find out exactly where and extend the initial check to detect that.</p>
+
+
+
+<a name="443105640"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/432618-OCPN%205.10%20Release%20plan/topic/OpenGL%20-%20Windows/near/443105640" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Pavel Kalian <a href="https://leamas.github.io/zulip-archive/stream/432618-OCPN-5.2E10-Release-plan/topic/OpenGL.20-.20Windows.html#443105640">(Jun 06 2024 at 16:30)</a>:</h4>
+<p>BTW, <code>GDI Generic</code> means drivers for the actual GPU are completely missing, we can probably just consider that to be OpenGL incapable.</p>
+
+
+
+<a name="443109424"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/432618-OCPN%205.10%20Release%20plan/topic/OpenGL%20-%20Windows/near/443109424" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Håkan Svensson <a href="https://leamas.github.io/zulip-archive/stream/432618-OCPN-5.2E10-Release-plan/topic/OpenGL.20-.20Windows.html#443109424">(Jun 06 2024 at 16:45)</a>:</h4>
+<blockquote>
+<p>DI Generic` means drivers for the actual GPU are completely missing, we can probably just consider that to be OpenGL incapable.</p>
+</blockquote>
+<p>Yes, that was my assumption as well. So why is "OpenGL determined CAPABLE" and still used?</p>
+
+
+
+<a name="443122593"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/432618-OCPN%205.10%20Release%20plan/topic/OpenGL%20-%20Windows/near/443122593" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Pavel Kalian <a href="https://leamas.github.io/zulip-archive/stream/432618-OCPN-5.2E10-Release-plan/topic/OpenGL.20-.20Windows.html#443122593">(Jun 06 2024 at 17:49)</a>:</h4>
+<p>Because it is able to create the OpenGL context</p>
+
+
+
+<a name="443123876"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/432618-OCPN%205.10%20Release%20plan/topic/OpenGL%20-%20Windows/near/443123876" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Dan Dickey <a href="https://leamas.github.io/zulip-archive/stream/432618-OCPN-5.2E10-Release-plan/topic/OpenGL.20-.20Windows.html#443123876">(Jun 06 2024 at 17:56)</a>:</h4>
+<p><span class="user-mention silent" data-user-id="573239">Pavel Kalian</span> <a href="#narrow/stream/432618-OCPN-5.2E10-Release-plan/topic/OpenGL.20-.20Windows/near/443105640">said</a>:</p>
+<blockquote>
+<p>BTW, <code>GDI Generic</code> means drivers for the actual GPU are completely missing, we can probably just consider that to be OpenGL incapable.</p>
+</blockquote>
+<p>I think a generic driver could be a disqualifying condition for OpenGL compatibility on Windows. Not sure about other platforms where OpenGL may not  be running on real hardware. But I would expect any system like that should support something later than V1.1.0.</p>
+<p>So maybe a combined generic driver and revision check should be considered. </p>
+<p>I have considered some kind of hack to detect crashes of OpenGL similar to the lock file hack for starting O on safe mode. It might be proudest to add a lock file feature that is activated before OpenGL is initialized and then remove the lock file a bit later once we know OpenGL did not crash.</p>
+
+
+
+<a name="443124003"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/432618-OCPN%205.10%20Release%20plan/topic/OpenGL%20-%20Windows/near/443124003" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Dan Dickey <a href="https://leamas.github.io/zulip-archive/stream/432618-OCPN-5.2E10-Release-plan/topic/OpenGL.20-.20Windows.html#443124003">(Jun 06 2024 at 17:57)</a>:</h4>
+<p>Prudent, not proudest…</p>
+
+
+
+<a name="443124324"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/432618-OCPN%205.10%20Release%20plan/topic/OpenGL%20-%20Windows/near/443124324" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Pavel Kalian <a href="https://leamas.github.io/zulip-archive/stream/432618-OCPN-5.2E10-Release-plan/topic/OpenGL.20-.20Windows.html#443124324">(Jun 06 2024 at 17:58)</a>:</h4>
+<p>That is what <code>opencpn-glutil</code> is for, it should do stuff that leads to a crash and prevent the real application from needing this at all.</p>
+
+
+
+<a name="443129598"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/432618-OCPN%205.10%20Release%20plan/topic/OpenGL%20-%20Windows/near/443129598" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Håkan Svensson <a href="https://leamas.github.io/zulip-archive/stream/432618-OCPN-5.2E10-Release-plan/topic/OpenGL.20-.20Windows.html#443129598">(Jun 06 2024 at 18:25)</a>:</h4>
+<p>Not less in my example where the user on v5.8.4 can't control the use of OpenGL from GUI since the option is greyed out and if you ask him to disable OpenGL it's not possible without editing the config file.</p>
+
+
+
+<a name="443145045"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/432618-OCPN%205.10%20Release%20plan/topic/OpenGL%20-%20Windows/near/443145045" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Pavel Kalian <a href="https://leamas.github.io/zulip-archive/stream/432618-OCPN-5.2E10-Release-plan/topic/OpenGL.20-.20Windows.html#443145045">(Jun 06 2024 at 19:37)</a>:</h4>
+<p>Yes, that is why we introduced <code>opengl-glutil</code>, I have now made it mark the <code>GDI Genereic</code> renderer unusable even though it passes the basic GL initialization check.</p>
+
+
+
+<a name="443148822"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/432618-OCPN%205.10%20Release%20plan/topic/OpenGL%20-%20Windows/near/443148822" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Håkan Svensson <a href="https://leamas.github.io/zulip-archive/stream/432618-OCPN-5.2E10-Release-plan/topic/OpenGL.20-.20Windows.html#443148822">(Jun 06 2024 at 19:57)</a>:</h4>
+<p>This:</p>
+<div class="codehilite"><pre><span></span><code>&quot;GDI Generic&quot;) {  // Windows software renderer is known to be unusable
+                          // and causes crashes
+      v[&quot;GL_USABLE&quot;] = false;
+</code></pre></div>
+<p>Looks reliable. I'll build and let the user try. It could though take some time since that PC is at home and he today went out cruising for a while.<br>
+Many thanks.</p>
+
+
+
+<a name="443271217"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/432618-OCPN%205.10%20Release%20plan/topic/OpenGL%20-%20Windows/near/443271217" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Pavel Kalian <a href="https://leamas.github.io/zulip-archive/stream/432618-OCPN-5.2E10-Release-plan/topic/OpenGL.20-.20Windows.html#443271217">(Jun 07 2024 at 10:58)</a>:</h4>
+<p>The GA Windows test failures are <a href="https://github.com/actions/runner-images/issues/10004">https://github.com/actions/runner-images/issues/10004</a> (via <a href="https://github.com/google/googletest/issues/4556">https://github.com/google/googletest/issues/4556</a>), not our code.</p>
+
+
+
+<a name="443281833"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/432618-OCPN%205.10%20Release%20plan/topic/OpenGL%20-%20Windows/near/443281833" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Alec Leamas <a href="https://leamas.github.io/zulip-archive/stream/432618-OCPN-5.2E10-Release-plan/topic/OpenGL.20-.20Windows.html#443281833">(Jun 07 2024 at 11:53)</a>:</h4>
+<p><span class="user-mention" data-user-id="573239">@Pavel Kalian</span>  Good finding. Thanks!</p>
+
+
+
+<a name="443282115"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/432618-OCPN%205.10%20Release%20plan/topic/OpenGL%20-%20Windows/near/443282115" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Pavel Kalian <a href="https://leamas.github.io/zulip-archive/stream/432618-OCPN-5.2E10-Release-plan/topic/OpenGL.20-.20Windows.html#443282115">(Jun 07 2024 at 11:55)</a>:</h4>
+<p>I'm a bit affraid that it is actually the latest VisualStudio as they started to fail exactly the same for me locally after the latest update to it. But we should probably simply sit quiet for now and let Microsoft do something about it.</p>
+
+
+
+<a name="443304852"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/432618-OCPN%205.10%20Release%20plan/topic/OpenGL%20-%20Windows/near/443304852" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Håkan Svensson <a href="https://leamas.github.io/zulip-archive/stream/432618-OCPN-5.2E10-Release-plan/topic/OpenGL.20-.20Windows.html#443304852">(Jun 07 2024 at 14:01)</a>:</h4>
+<p>I'd a similar local experience using VS v17.10.1 so I returned to  17.9.5</p>
+
+
+
+<a name="443327226"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/432618-OCPN%205.10%20Release%20plan/topic/OpenGL%20-%20Windows/near/443327226" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Dave Register <a href="https://leamas.github.io/zulip-archive/stream/432618-OCPN-5.2E10-Release-plan/topic/OpenGL.20-.20Windows.html#443327226">(Jun 07 2024 at 16:14)</a>:</h4>
+<p>I guess we need to temporarily disable the "run tests" step on github GA job for Windows, so that we can continue user testing?</p>
+
+
+
+<a name="443331583"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/432618-OCPN%205.10%20Release%20plan/topic/OpenGL%20-%20Windows/near/443331583" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Pavel Kalian <a href="https://leamas.github.io/zulip-archive/stream/432618-OCPN-5.2E10-Release-plan/topic/OpenGL.20-.20Windows.html#443331583">(Jun 07 2024 at 16:46)</a>:</h4>
+<p>It actually seems to be worse than just the tests, we will need to add <code>/D_DISABLE_CONSTEXPR_MUTEX_CONSTRUCTOR</code> to actually produce usable <code>opencpn.exe</code>. The background is described in <a href="https://github.com/actions/runner-images/issues/10004#issuecomment-2153091255">https://github.com/actions/runner-images/issues/10004#issuecomment-2153091255</a></p>
+
+
+
+<a name="443334934"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/432618-OCPN%205.10%20Release%20plan/topic/OpenGL%20-%20Windows/near/443334934" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Pavel Kalian <a href="https://leamas.github.io/zulip-archive/stream/432618-OCPN-5.2E10-Release-plan/topic/OpenGL.20-.20Windows.html#443334934">(Jun 07 2024 at 17:06)</a>:</h4>
+<p><a href="https://github.com/OpenCPN/OpenCPN/pull/3971">https://github.com/OpenCPN/OpenCPN/pull/3971</a> should pass, it produces usable application and makes the tests pass for me locally, but let's wait for GA...</p>
+
+
+
+<a name="443337712"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/432618-OCPN%205.10%20Release%20plan/topic/OpenGL%20-%20Windows/near/443337712" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Pavel Kalian <a href="https://leamas.github.io/zulip-archive/stream/432618-OCPN-5.2E10-Release-plan/topic/OpenGL.20-.20Windows.html#443337712">(Jun 07 2024 at 17:21)</a>:</h4>
+<p>If I understand it correctly, if <a href="https://github.com/OpenCPN/OCPNWindowsCoreBuildSupport/tree/main/buildwin/vc">https://github.com/OpenCPN/OCPNWindowsCoreBuildSupport/tree/main/buildwin/vc</a> is replaced with the currently newest MSVC runtime we will be able to remove the flag again. Maybe.</p>
+
+
+
+<a name="443375285"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/432618-OCPN%205.10%20Release%20plan/topic/OpenGL%20-%20Windows/near/443375285" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Dave Register <a href="https://leamas.github.io/zulip-archive/stream/432618-OCPN-5.2E10-Release-plan/topic/OpenGL.20-.20Windows.html#443375285">(Jun 07 2024 at 20:35)</a>:</h4>
+<p>OK, looks like GA succeeded, and the image is uploaded to Cloudsmith.<br>
+I guess we conclude that the workaround in <a href="https://github.com/OpenCPN/OpenCPN/pull/3971">https://github.com/OpenCPN/OpenCPN/pull/3971</a> is good, for now.<br>
+Thanks</p>
+
+
+
+<a name="445446222"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/432618-OCPN%205.10%20Release%20plan/topic/OpenGL%20-%20Windows/near/445446222" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Håkan Svensson <a href="https://leamas.github.io/zulip-archive/stream/432618-OCPN-5.2E10-Release-plan/topic/OpenGL.20-.20Windows.html#445446222">(Jun 18 2024 at 19:42)</a>:</h4>
+<p><span class="user-mention silent" data-user-id="522486">Håkan Svensson</span> <a href="#narrow/stream/432618-OCPN-5.2E10-Release-plan/topic/OpenGL.20-.20Windows/near/443148822">said</a>:</p>
+<blockquote>
+<p>This:</p>
+<div class="codehilite"><pre><span></span><code>&quot;GDI Generic&quot;) {  // Windows software renderer is known to be unusable
+                          // and causes crashes
+      v[&quot;GL_USABLE&quot;] = false;
+</code></pre></div>
+<p>Looks reliable. I'll build and let the user try. It could though take some time since that PC is at home and he today went out cruising for a while.<br>
+Many thanks.</p>
+</blockquote>
+<p>Now the user is back testing a version from yesterday's Git. Again instantly crash at start up.<br>
+This for info. I've requested the log file. I'm back here when received.</p>
+
+
+
+<a name="445549907"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/432618-OCPN%205.10%20Release%20plan/topic/OpenGL%20-%20Windows/near/445549907" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Håkan Svensson <a href="https://leamas.github.io/zulip-archive/stream/432618-OCPN-5.2E10-Release-plan/topic/OpenGL.20-.20Windows.html#445549907">(Jun 19 2024 at 09:44)</a>:</h4>
+<p><span class="user-mention" data-user-id="573239">@Pavel Kalian</span> <span class="user-mention" data-user-id="517002">@Dave Register</span> <br>
+Log file from the user received. It's still similar log entries as before. Extracts below.<br>
+O version 5.9.1.10 is my build from yesterday including:</p>
+<div class="codehilite"><pre><span></span><code>#ifdef _WIN32
+    if (v[&quot;GL_RENDERER&quot;].AsString() ==
+        &quot;GDI Generic&quot;) {  // Windows software renderer is known to be unusable
+                          // and causes crashes
+      v[&quot;GL_USABLE&quot;] = false;
+</code></pre></div>
+<p>Log file extract:</p>
+<div class="codehilite"><pre><span></span><code>10:45:21.512    INFO logger.cpp:130 ------- OpenCPN version 5.9.1.10 restarted at 2024-06-19 -------
+
+10:45:21.512    INFO logger.cpp:130 Using loglevel INFO
+10:45:21.512 MESSAGE ocpn_app.cpp:1150 wxWidgets version: wxWidgets 3.2.5 Microsoft Windows NT 64 bit wxMSW
+10:45:21.512 MESSAGE ocpn_app.cpp:1155 OS Version reports as:  10.0
+10:45:21.512 MESSAGE ocpn_app.cpp:1157 MemoryStatus:  mem_total: 8109 mb,  mem_initial: 22 mb
+10:45:21.513 MESSAGE ocpn_app.cpp:1169 OCPN_OSDetail:  x86_64 ; msvc-wx32 ; 10.0.19045 ;  ;
+10:45:21.513 MESSAGE ocpn_app.cpp:1173 SData_Locn is C:\Program Files (x86)\OpenCPN\
+10:45:21.513 MESSAGE ocpn_app.cpp:1191 PrivateDataDir is C:\ProgramData\opencpn
+10:45:21.513 MESSAGE ocpn_app.cpp:1257 Using existing Config_File: C:\ProgramData\opencpn\opencpn.ini
+10:45:21.544 MESSAGE navutil.cpp:1267 winPluginDir, read from ini file:
+...........
+10:45:21.765 MESSAGE ocpn_frame.cpp:737  **** Connect stuff
+10:45:21.765 MESSAGE OCPNPlatform.cpp:913 Starting OpenGL test...
+10:45:21.765 MESSAGE OCPNPlatform.cpp:725 Starting OpenGL test utility: &quot;C:\Program Files (x86)\OpenCPN\opencpn-glutil.exe&quot; opengl-info &quot;C:\ProgramData\opencpn\gl_caps.json&quot;
+10:45:23.416 MESSAGE OCPNPlatform.cpp:920 OpenGL test complete.
+10:45:23.416 MESSAGE OCPNPlatform.cpp:942 OpenGL determined CAPABLE.
+10:45:23.500 MESSAGE chcanv.cpp:946 Creating glChartCanvas
+10:45:23.547 MESSAGE chcanv.cpp:2323 Metrics:  m_display_size_mm: 535     g_Platform-&gt;getDisplaySize():  1920:1080
+10:45:23.547 MESSAGE chcanv.cpp:2329 monitor size: 1920 1080
+..........
+10:45:24.405 MESSAGE ocpn_app.cpp:1850 OpenCPN initierades på 5586 ms.
+10:45:24.953 MESSAGE glChartCanvas.cpp:1048 OpenGL-&gt; Renderer String: GDI Generic
+10:45:24.953 MESSAGE glChartCanvas.cpp:1057 OpenGL-&gt; Version reported:  1.1.0
+&gt;&gt;Crash
+</code></pre></div>
+
+
+
+<a name="445550600"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/432618-OCPN%205.10%20Release%20plan/topic/OpenGL%20-%20Windows/near/445550600" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Pavel Kalian <a href="https://leamas.github.io/zulip-archive/stream/432618-OCPN-5.2E10-Release-plan/topic/OpenGL.20-.20Windows.html#445550600">(Jun 19 2024 at 09:48)</a>:</h4>
+<p>Build from which branch? Are you sure it includes the change? What is in his <code>gl_caps.json</code>?</p>
+
+
+
+<a name="445551173"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/432618-OCPN%205.10%20Release%20plan/topic/OpenGL%20-%20Windows/near/445551173" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Håkan Svensson <a href="https://leamas.github.io/zulip-archive/stream/432618-OCPN-5.2E10-Release-plan/topic/OpenGL.20-.20Windows.html#445551173">(Jun 19 2024 at 09:52)</a>:</h4>
+<p>Built from master.<br>
+My code copy above is from "my" console.cpp : 206<br>
+I'll ask for a copy of his gl_caps.json</p>
+
+
+
+<a name="445554843"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/432618-OCPN%205.10%20Release%20plan/topic/OpenGL%20-%20Windows/near/445554843" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Håkan Svensson <a href="https://leamas.github.io/zulip-archive/stream/432618-OCPN-5.2E10-Release-plan/topic/OpenGL.20-.20Windows.html#445554843">(Jun 19 2024 at 10:12)</a>:</h4>
+<p>gl_caps.json attached.<br>
+<a href="/user_uploads/33951/Tgi0iZeLiQNaXlt0hc_PXlDJ/gl_caps.json">gl_caps.json</a></p>
+
+
+
+<a name="445556938"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/432618-OCPN%205.10%20Release%20plan/topic/OpenGL%20-%20Windows/near/445556938" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Pavel Kalian <a href="https://leamas.github.io/zulip-archive/stream/432618-OCPN-5.2E10-Release-plan/topic/OpenGL.20-.20Windows.html#445556938">(Jun 19 2024 at 10:26)</a>:</h4>
+<p>Very simple, not reporting <code>GDI Generic</code>, but an Intel adapter. Why? I have absolutely no idea.</p>
+
+
+
+<a name="445655227"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/432618-OCPN%205.10%20Release%20plan/topic/OpenGL%20-%20Windows/near/445655227" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Håkan Svensson <a href="https://leamas.github.io/zulip-archive/stream/432618-OCPN-5.2E10-Release-plan/topic/OpenGL.20-.20Windows.html#445655227">(Jun 19 2024 at 16:38)</a>:</h4>
+<p>We know that O 5.8.4 works on that PC but that's since OpenGl is shut off in config. This setting is rejected by O 5.9....<br>
+If it's true what gl-caps.json says: "GL_RENDERER" : "Intel(R) HD Graphics 3000" OpenGl would have worked both in 8.5.4 and 9.1?<br>
+So from where is log entry: "<code>OpenGL-&gt; Renderer String: GDI Generic</code>"?<br>
+It's sad that I don't have access to that PC but can I contribute something more? There could be more people who want to use O 5.9 with the same type of PC?</p>
+
+
+
+<a name="445655752"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/432618-OCPN%205.10%20Release%20plan/topic/OpenGL%20-%20Windows/near/445655752" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Håkan Svensson <a href="https://leamas.github.io/zulip-archive/stream/432618-OCPN-5.2E10-Release-plan/topic/OpenGL.20-.20Windows.html#445655752">(Jun 19 2024 at 16:40)</a>:</h4>
+<p>And of course, that PC worked with early 5.9 from Jan/Feb this year. Before the OpenGl changed handling.</p>
+
+
+
+<a name="445684762"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/432618-OCPN%205.10%20Release%20plan/topic/OpenGL%20-%20Windows/near/445684762" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Pavel Kalian <a href="https://leamas.github.io/zulip-archive/stream/432618-OCPN-5.2E10-Release-plan/topic/OpenGL.20-.20Windows.html#445684762">(Jun 19 2024 at 19:23)</a>:</h4>
+<p>I'm afraid there is not much I can do here when the system reports one thing to <code>opencpn-glutil.exe</code> and another to <code>opencpn.exe</code>. Not without access to such a broken system.<br>
+FWIW in a VM where OpenGL is not available at all, <code>GDI Generic</code> is reported to both.</p>
+
+
+
+<a name="445693377"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/432618-OCPN%205.10%20Release%20plan/topic/OpenGL%20-%20Windows/near/445693377" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Håkan Svensson <a href="https://leamas.github.io/zulip-archive/stream/432618-OCPN-5.2E10-Release-plan/topic/OpenGL.20-.20Windows.html#445693377">(Jun 19 2024 at 20:08)</a>:</h4>
+<p>I'm in the boat right now. When home again I'll try to help him to update the Intel card driver directly from Intel and see if it changes anything. Win say's it's the latest, as usual.</p>
+
+
+
+<a name="445693570"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/432618-OCPN%205.10%20Release%20plan/topic/OpenGL%20-%20Windows/near/445693570" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Pavel Kalian <a href="https://leamas.github.io/zulip-archive/stream/432618-OCPN-5.2E10-Release-plan/topic/OpenGL.20-.20Windows.html#445693570">(Jun 19 2024 at 20:09)</a>:</h4>
+<p>We actually need other thing than fixing one single system. We need to find out why there is a difference between the driver it uses with both the programs.</p>
+
+
+
+<a name="445699862"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/432618-OCPN%205.10%20Release%20plan/topic/OpenGL%20-%20Windows/near/445699862" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Håkan Svensson <a href="https://leamas.github.io/zulip-archive/stream/432618-OCPN-5.2E10-Release-plan/topic/OpenGL.20-.20Windows.html#445699862">(Jun 19 2024 at 20:47)</a>:</h4>
+<p>Ok, agree,</p>
+
+
+
+<a name="447295877"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/432618-OCPN%205.10%20Release%20plan/topic/OpenGL%20-%20Windows/near/447295877" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Dave Register <a href="https://leamas.github.io/zulip-archive/stream/432618-OCPN-5.2E10-Release-plan/topic/OpenGL.20-.20Windows.html#447295877">(Jun 26 2024 at 18:22)</a>:</h4>
+<p>I can see one difference between gl_util and core OCPN:<br>
+In core OCPN, the finction <code>glGetString(GL_RENDERER)</code> is called <strong><em>before</em></strong> glewInit().<br>
+Maybe?</p>
+
+
+
+<a name="447316888"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/432618-OCPN%205.10%20Release%20plan/topic/OpenGL%20-%20Windows/near/447316888" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Dave Register <a href="https://leamas.github.io/zulip-archive/stream/432618-OCPN-5.2E10-Release-plan/topic/OpenGL.20-.20Windows.html#447316888">(Jun 26 2024 at 19:48)</a>:</h4>
+<p>We are testing my theory on affected user's system overnight.  More tomorrow.</p>
+
+
+
+<hr><p>Last updated: Oct 08 2024 at 10:11 UTC</p>
+</html>

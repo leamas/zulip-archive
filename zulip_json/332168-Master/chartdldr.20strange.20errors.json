@@ -1,0 +1,14 @@
+[
+    {
+        "content": "<p><span class=\"user-mention\" data-user-id=\"573239\">@Pavel Kalian</span> </p>\n<p>Hi,</p>\n<p>I'm working on <a href=\"https://github.com/opencpn/OpenCPN/issues/4005\">#4005</a>,  the unarr stuff.  The changes are pretty trivial. However, when testing I run into dialog below.  This happens in chartdldr_pi.cpp:1376  </p>\n<div class=\"codehilite\"><pre><span></span><code>   wxURI url(pPlugIn-&gt;m_pChartCatalog.charts.at(index)-&gt;GetDownloadLocation());\n    wxLogDebug(\"Loading chart URL: %s\",  url.BuildURI().c_str());\n    if (url.IsReference()) {\n      OCPNMessageBox_PlugIn(\n</code></pre></div>\n<p>I just dont get this check. The url is a complete url like <code>https:/www.dhn.mil.pe/Archivos/cartografia/cartas_raster/cartas/BSB_111.rar</code>.  IsReference() returns true if it's a complete URL, which it indeed is. But should it not?</p>\n<p>I can test my own code by negating this test, but that is probably not the way to do it. Have you any ideas?<br>\n<a href=\"/user_uploads/33951/X5bDTeJItWbBHJib7JI5uZMj/image.png\">image.png</a></p>\n<div class=\"message_inline_image\"><a href=\"/user_uploads/33951/X5bDTeJItWbBHJib7JI5uZMj/image.png\" title=\"image.png\"><img data-original-dimensions=\"852x242\" src=\"/user_uploads/thumbnail/33951/X5bDTeJItWbBHJib7JI5uZMj/image.png/840x560.webp\"></a></div>",
+        "id": 463973883,
+        "sender_full_name": "Alec Leamas",
+        "timestamp": 1724227060
+    },
+    {
+        "content": "<p>Thanks for listening. It seems to be about a catalog which uses https:/ instead of the correct <a href=\"https://.\">https://.</a> Sigh</p>",
+        "id": 463995456,
+        "sender_full_name": "Alec Leamas",
+        "timestamp": 1724232626
+    }
+]

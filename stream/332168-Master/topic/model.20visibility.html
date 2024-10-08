@@ -1,0 +1,64 @@
+<html>
+<head><meta charset="utf-8"><title>model visibility · Master · Zulip Chat Archive</title></head>
+<h2>Stream: <a href="https://leamas.github.io/zulip-archive/stream/332168-Master/index.html">Master</a></h2>
+<h3>Topic: <a href="https://leamas.github.io/zulip-archive/stream/332168-Master/topic/model.20visibility.html">model visibility</a></h3>
+
+<hr>
+
+<base href="https://opencpn.zulipchat.com">
+
+<head><link href="https://leamas.github.io/zulip-archive/style.css" rel="stylesheet"></head>
+
+<a name="402545874"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332168-Master/topic/model%20visibility/near/402545874" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Alec Leamas <a href="https://leamas.github.io/zulip-archive/stream/332168-Master/topic/model.20visibility.html#402545874">(Nov 16 2023 at 20:00)</a>:</h4>
+<p><span class="user-mention" data-user-id="517002">@Dave Register</span> </p>
+<p>We are obviously running into problem trying to grasp the concept of model + GUI. Not least  the question about  whch files that belongs to the model vs the gui  is muddy with a list in CMakeLists as the only definiion.</p>
+<p>I think the boundaries between the two layers are  reasonably stable right now.</p>
+<p>What if we divided bot src/ and include/ into src/model, src/gui, include/model and include/gui? That would IMHO make it much clearer. </p>
+<p>Both src/ and include/ are BTW quite big and would perhaps benifit from some  organization. </p>
+<p>just an idea...</p>
+
+
+
+<a name="402560773"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332168-Master/topic/model%20visibility/near/402560773" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Dave Register <a href="https://leamas.github.io/zulip-archive/stream/332168-Master/topic/model.20visibility.html#402560773">(Nov 16 2023 at 21:35)</a>:</h4>
+<p><span class="user-mention" data-user-id="399510">@Alec Leamas</span> <br>
+I think basically a good idea.  A source organization that helps us to refactor intelligently makes sense.<br>
+On more refactor thought, we have lots of non-GUI utility functions lying around, placed for convenience rather than general utility.<br>
+Indeed, a large part of the entire set of bare subroutines called by a plugin (i.e. plugin-&gt;core) should be moved out of pluginmanager, and into something else that can logically live in the model.  I'm thinking about non-GUI plugins, if there ever was such a beast.  Useful for plugin functional test also, for instance.<br>
+Anyway, lots of old-fashioned C-style code to refactor as the opportunity arises.</p>
+
+
+
+<a name="402561419"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332168-Master/topic/model%20visibility/near/402561419" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Alec Leamas <a href="https://leamas.github.io/zulip-archive/stream/332168-Master/topic/model.20visibility.html#402561419">(Nov 16 2023 at 21:39)</a>:</h4>
+<blockquote>
+<p>ndeed, a large part of the entire set of bare subroutines called by a plugin (i.e. plugin-&gt;core) should be moved out of pluginmanager,</p>
+</blockquote>
+<p>Indeed. src/plugin_api.cpp. Problem is that many of these are gui related, what plugins wants from opencpn core is actually gui to a large extent. This could be solved using callbacks, but it will take some man hours.</p>
+
+
+
+<a name="402561564"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332168-Master/topic/model%20visibility/near/402561564" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Alec Leamas <a href="https://leamas.github.io/zulip-archive/stream/332168-Master/topic/model.20visibility.html#402561564">(Nov 16 2023 at 21:40)</a>:</h4>
+<p>Making the split  model/gui split is not that hard, will need som sed voodoo. However, It will break each and every pending PR, including some of mine ;)</p>
+
+
+
+<a name="402562291"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332168-Master/topic/model%20visibility/near/402562291" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Alec Leamas <a href="https://leamas.github.io/zulip-archive/stream/332168-Master/topic/model.20visibility.html#402562291">(Nov 16 2023 at 21:45)</a>:</h4>
+<p>BTW. pluginmanager was and still is sort of an abomination. From the beginning it was about three things: plugin loading, the plugin handling gui and implementation of large parts of ocpn_plugin.h.  These are actually not that related.</p>
+<p>We have now split out the loading stuff whcih is good. Splitting API implementation and plugin handling GUI would be the next step.</p>
+<p>Good ntght!</p>
+
+
+
+<a name="403048845"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332168-Master/topic/model%20visibility/near/403048845" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Alec Leamas <a href="https://leamas.github.io/zulip-archive/stream/332168-Master/topic/model.20visibility.html#403048845">(Nov 19 2023 at 20:11)</a>:</h4>
+<p>Made a manual page: <a href="https://opencpn-manuals.github.io/main/opencpn-dev/gui-model.html">https://opencpn-manuals.github.io/main/opencpn-dev/gui-model.html</a></p>
+<p>Planning to announce it later.</p>
+
+
+
+<hr><p>Last updated: Oct 08 2024 at 10:11 UTC</p>
+</html>

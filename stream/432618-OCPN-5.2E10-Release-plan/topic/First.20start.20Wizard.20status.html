@@ -1,0 +1,447 @@
+<html>
+<head><meta charset="utf-8"><title>First start Wizard status · OCPN 5.10 Release plan · Zulip Chat Archive</title></head>
+<h2>Stream: <a href="https://leamas.github.io/zulip-archive/stream/432618-OCPN-5.2E10-Release-plan/index.html">OCPN 5.10 Release plan</a></h2>
+<h3>Topic: <a href="https://leamas.github.io/zulip-archive/stream/432618-OCPN-5.2E10-Release-plan/topic/First.20start.20Wizard.20status.html">First start Wizard status</a></h3>
+
+<hr>
+
+<base href="https://opencpn.zulipchat.com">
+
+<head><link href="https://leamas.github.io/zulip-archive/style.css" rel="stylesheet"></head>
+
+<a name="446408650"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/432618-OCPN%205.10%20Release%20plan/topic/First%20start%20Wizard%20status/near/446408650" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Håkan Svensson <a href="https://leamas.github.io/zulip-archive/stream/432618-OCPN-5.2E10-Release-plan/topic/First.20start.20Wizard.20status.html#446408650">(Jun 23 2024 at 11:22)</a>:</h4>
+<p><span class="user-mention" data-user-id="573239">@Pavel Kalian</span>  Thanks for the typo "Label" fix. Now OK.<br>
+@ All<br>
+Wizard on a Rpi400 Bookworm -X11<br>
+O crashes while searching for connections.<br>
+Today's Git master.</p>
+<p>The system from O's perspective:<br>
+11:15:46.106 MESSAGE ocpn_app.cpp:1150 wxWidgets version: wxWidgets 3.2.2 Linux 64 bit wxGTK<br>
+11:15:46.108 MESSAGE ocpn_app.cpp:1155 OS Version reports as:  6.6<br>
+11:15:46.108 MESSAGE ocpn_app.cpp:1157 MemoryStatus:  mem_total: 4041 mb,  mem_initial: 101 mb<br>
+11:15:46.108 MESSAGE ocpn_app.cpp:1169 OCPN_OSDetail:  arm64 ; Debian GNU/Linux ; 12 ; debian ; </p>
+<div class="codehilite"><pre><span></span><code>Reading symbols from opencpn...
+(gdb) run -W
+Starting program: /home/pi/builds/OpenCPN/build/opencpn -W
+................
+New Thread 0x7fdd059a80 (LWP 62112)]
+Opened 2 sockets for mDNS query
+Sending mDNS query : _signalk-ws._tcp.local. PTR
+Reading mDNS query replies
+[Thread 0x7fdda4ca80 (LWP 62101) exited]
+Read 9 records
+Closed sockets
+[Thread 0x7fdd059a80 (LWP 62112) exited]
+Unhandled unknown exception; terminating the application.
+
+Thread 1 &quot;opencpn&quot; received signal SIGSEGV, Segmentation fault.
+0x0000007ff743e3b8 in ?? () from /lib/aarch64-linux-gnu/libwx_gtk3u_core-3.2.so.0
+(gdb) bt
+#0  0x0000007ff743e3b8 in  () at /lib/aarch64-linux-gnu/libwx_gtk3u_core-3.2.so.0
+#1  0x0000007ff6fa4430 in wxMBConv::FromWChar(char*, unsigned long, wchar_t const*, unsigned long) const ()
+    at /lib/aarch64-linux-gnu/libwx_baseu-3.2.so.0
+#2  0x0000007ff6faf6e4 in wxString::AsChar(wxMBConv const&amp;) const () at /lib/aarch64-linux-gnu/libwx_baseu-3.2.so.0
+#3  0x0000007ff7021e40 in  () at /lib/aarch64-linux-gnu/libwx_baseu-3.2.so.0
+#4  0x0000007ff7022f7c in wxSingleInstanceChecker::~wxSingleInstanceChecker() () at /lib/aarch64-linux-gnu/libwx_baseu-3.2.so.0
+#5  0x0000005555d3be4c in WxInstanceCheck::~WxInstanceCheck() (this=&lt;optimized out&gt;, __in_chrg=&lt;optimized out&gt;)
+    at /home/pi/builds/OpenCPN/model/include/model/wx_instance_chk.h:32
+#6  0x0000007ff589cecc in __run_exit_handlers
+    (status=-1, listp=0x7ff5a00750 &lt;__exit_funcs&gt;, run_list_atexit=run_list_atexit@entry=true, run_dtors=run_dtors@entry=true)
+    at ./stdlib/exit.c:116
+#7  0x0000007ff589cfa0 in __GI_exit (status=&lt;optimized out&gt;) at ./stdlib/exit.c:146
+#8  0x0000007ff5887784 in __libc_start_call_main (main=main@entry=0x55557e9620 &lt;main(int, char**)&gt;, argc=argc@entry=2, argv=argv@entry=0x7ffffff088)
+    at ../sysdeps/nptl/libc_start_call_main.h:74
+#9  0x0000007ff5887858 in __libc_start_main_impl
+    (main=0x55557e9620 &lt;main(int, char**)&gt;, argc=2, argv=0x7ffffff088, init=&lt;optimized out&gt;, fini=&lt;optimized out&gt;, rtld_fini=&lt;optimized out&gt;, stack_end=&lt;optimized out&gt;) at ../csu/libc-start.c:360
+#10 0x00000055558019b0 in _start ()
+</code></pre></div>
+
+
+
+<a name="446474314"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/432618-OCPN%205.10%20Release%20plan/topic/First%20start%20Wizard%20status/near/446474314" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Håkan Svensson <a href="https://leamas.github.io/zulip-archive/stream/432618-OCPN-5.2E10-Release-plan/topic/First.20start.20Wizard.20status.html#446474314">(Jun 23 2024 at 21:08)</a>:</h4>
+<p><span class="user-mention" data-user-id="517002">@Dave Register</span> <br>
+Some tracing on the Rpi4.<br>
+If I don't run "EnumerateTCP() " (i.e. return: at wiz_ui.cpp row 429) then the Wizard connection runs wo crash and detect others. (3 of Signalk, GPSd (but not a Canable USB))</p>
+<p>If I run original code with debug I get this:</p>
+<div class="codehilite"><pre><span></span><code>pi@openplotter:~/builds/OpenCPN/build $ ./opencpn -W --loglevel debug
+Opened 3 sockets for mDNS query
+Sending mDNS query : _signalk-ws._tcp.local. PTR
+Reading mDNS query replies
+Read 64 records
+Closed sockets
+Unhandled unknown exception; terminating the application.
+22:53:49: Debug: Stopping REST service
+22:53:27: Debug: Local IPv4 address: 192.168.1.154
+22:53:27: Debug: Local IPv6 address: 2001:2042:7535:bd00:6520:70a1:fc87:6307
+22:53:27: Debug: Local IPv6 address: 2001:2042:7535:bd00:cfad:ca5b:c6b0:8e44
+Segmentation fault
+</code></pre></div>
+
+
+
+<a name="446474576"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/432618-OCPN%205.10%20Release%20plan/topic/First%20start%20Wizard%20status/near/446474576" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Håkan Svensson <a href="https://leamas.github.io/zulip-archive/stream/432618-OCPN-5.2E10-Release-plan/topic/First.20start.20Wizard.20status.html#446474576">(Jun 23 2024 at 21:12)</a>:</h4>
+<p>Btw: I get the same crash on a RPi5 running:  ./opencpn -W</p>
+
+
+
+<a name="446474866"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/432618-OCPN%205.10%20Release%20plan/topic/First%20start%20Wizard%20status/near/446474866" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Pavel Kalian <a href="https://leamas.github.io/zulip-archive/stream/432618-OCPN-5.2E10-Release-plan/topic/First.20start.20Wizard.20status.html#446474866">(Jun 23 2024 at 21:16)</a>:</h4>
+<p>Does the SocketCAN device (eg. <code>can0</code>) for CANable exist?</p>
+
+
+
+<a name="446521825"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/432618-OCPN%205.10%20Release%20plan/topic/First%20start%20Wizard%20status/near/446521825" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Håkan Svensson <a href="https://leamas.github.io/zulip-archive/stream/432618-OCPN-5.2E10-Release-plan/topic/First.20start.20Wizard.20status.html#446521825">(Jun 24 2024 at 05:42)</a>:</h4>
+<p>The CANable exist yes. <br>
+Bus 001 Device 006: ID 16d0:117e MCS CANable2 b158aa7 <a href="http://github.com/normaldotcom/canable2.git">github.com/normaldotcom/canable2.git</a><br>
+It's  by Openplotter "Serial"  connected to SignalK.<br>
+Before the TCP test I also checked it's not disturbing and causing the crash by unplugging the USB.</p>
+
+
+
+<a name="446594950"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/432618-OCPN%205.10%20Release%20plan/topic/First%20start%20Wizard%20status/near/446594950" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Håkan Svensson <a href="https://leamas.github.io/zulip-archive/stream/432618-OCPN-5.2E10-Release-plan/topic/First.20start.20Wizard.20status.html#446594950">(Jun 24 2024 at 11:55)</a>:</h4>
+<p>I think I've found the bug for this <a href="https://www.cruisersforum.com/forums/f134/android-radar-plugin-and-missing-data-on-signalk-287183.html#post3911601">CF post</a><br>
+PR to come soon.</p>
+
+
+
+<a name="446595414"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/432618-OCPN%205.10%20Release%20plan/topic/First%20start%20Wizard%20status/near/446595414" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Håkan Svensson <a href="https://leamas.github.io/zulip-archive/stream/432618-OCPN-5.2E10-Release-plan/topic/First.20start.20Wizard.20status.html#446595414">(Jun 24 2024 at 11:57)</a>:</h4>
+<p>Blocking task?<br>
+If the first start wizard crash on my RPi's is not a show stopper? Or is just my system?</p>
+
+
+
+<a name="446596201"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/432618-OCPN%205.10%20Release%20plan/topic/First%20start%20Wizard%20status/near/446596201" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Pavel Kalian <a href="https://leamas.github.io/zulip-archive/stream/432618-OCPN-5.2E10-Release-plan/topic/First.20start.20Wizard.20status.html#446596201">(Jun 24 2024 at 12:01)</a>:</h4>
+<p>OK, so you are using it in serial mode, not SocketCAN? We do not check that, I will have to reconfigure mine and add it to the USB serial device codeblock if it is so.</p>
+
+
+
+<a name="446596352"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/432618-OCPN%205.10%20Release%20plan/topic/First%20start%20Wizard%20status/near/446596352" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Pavel Kalian <a href="https://leamas.github.io/zulip-archive/stream/432618-OCPN-5.2E10-Release-plan/topic/First.20start.20Wizard.20status.html#446596352">(Jun 24 2024 at 12:02)</a>:</h4>
+<p>The stacktrace you posted does not seem to have anything to do with the wizard (looks to be in the check for multiple OpenCPN instances running at the same time) and I can't reproduce it. If you try to pinpoint what exactly makes it crash, we may fix it.</p>
+
+
+
+<a name="446603480"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/432618-OCPN%205.10%20Release%20plan/topic/First%20start%20Wizard%20status/near/446603480" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Håkan Svensson <a href="https://leamas.github.io/zulip-archive/stream/432618-OCPN-5.2E10-Release-plan/topic/First.20start.20Wizard.20status.html#446603480">(Jun 24 2024 at 12:41)</a>:</h4>
+<p>This CANable device is a little special I think and I did not expect OCPN to identify it. I just mentioned it since the device is there. In Signalk it uses CANBOATjs. I so far suppose users of this kind of device will use openplotter-serial and SK to use it?</p>
+
+
+
+<a name="446605946"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/432618-OCPN%205.10%20Release%20plan/topic/First%20start%20Wizard%20status/near/446605946" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Pavel Kalian <a href="https://leamas.github.io/zulip-archive/stream/432618-OCPN-5.2E10-Release-plan/topic/First.20start.20Wizard.20status.html#446605946">(Jun 24 2024 at 12:54)</a>:</h4>
+<p>I really don't know. When you configure it manually, what do you configure? SocketCAN or serial connection? If serial, we need to add it as a well known device in <a href="https://github.com/OpenCPN/OpenCPN/blob/master/gui/include/gui/wiz_ui.h#L60">https://github.com/OpenCPN/OpenCPN/blob/master/gui/include/gui/wiz_ui.h#L60</a> (Or alternatively test for the payload it produces later in <code>FirstUseWizImpl::EnumerateUSB()</code>)<br>
+If socketCAN, then we need to see why it is not found in <code>FirstUseWizImpl::EnumerateCAN()</code></p>
+
+
+
+<a name="446615448"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/432618-OCPN%205.10%20Release%20plan/topic/First%20start%20Wizard%20status/near/446615448" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Håkan Svensson <a href="https://leamas.github.io/zulip-archive/stream/432618-OCPN-5.2E10-Release-plan/topic/First.20start.20Wizard.20status.html#446615448">(Jun 24 2024 at 13:29)</a>:</h4>
+<p>I used Openplotter-serial to give it a "nick name"<br>
+Then I used Openplotter-CAN_Bus to connect it to SignalK<br>
+The result in SignalK as of the picture:</p>
+<p><a href="/user_uploads/33951/GwwVpe4oNk8N-rx-KrRpr_gG/bild.png">bild.png</a></p>
+<div class="message_inline_image"><a href="/user_uploads/33951/GwwVpe4oNk8N-rx-KrRpr_gG/bild.png" title="bild.png"><img src="/user_uploads/33951/GwwVpe4oNk8N-rx-KrRpr_gG/bild.png"></a></div>
+
+
+
+<a name="446616481"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/432618-OCPN%205.10%20Release%20plan/topic/First%20start%20Wizard%20status/near/446616481" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Håkan Svensson <a href="https://leamas.github.io/zulip-archive/stream/432618-OCPN-5.2E10-Release-plan/topic/First.20start.20Wizard.20status.html#446616481">(Jun 24 2024 at 13:34)</a>:</h4>
+<p>It's a MKS CANable V2.0 module See this <a href="https://github.com/makerbase-mks/CANable-MKS">link</a></p>
+
+
+
+<a name="446625162"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/432618-OCPN%205.10%20Release%20plan/topic/First%20start%20Wizard%20status/near/446625162" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Pavel Kalian <a href="https://leamas.github.io/zulip-archive/stream/432618-OCPN-5.2E10-Release-plan/topic/First.20start.20Wizard.20status.html#446625162">(Jun 24 2024 at 14:11)</a>:</h4>
+<p>I know next to nothing about OpenPlotter, how do you configure it in OpenCPN?</p>
+
+
+
+<a name="446642111"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/432618-OCPN%205.10%20Release%20plan/topic/First%20start%20Wizard%20status/near/446642111" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Håkan Svensson <a href="https://leamas.github.io/zulip-archive/stream/432618-OCPN-5.2E10-Release-plan/topic/First.20start.20Wizard.20status.html#446642111">(Jun 24 2024 at 15:16)</a>:</h4>
+<p>I haven't tried to convince O to speak to this type of device. I thought it was not supported since it's not like "Actisense". But btw I'd really like this to be supported, not less in Windows. The prize is really good.<br>
+Now I only connect O to SignalK</p>
+
+
+
+<a name="446649624"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/432618-OCPN%205.10%20Release%20plan/topic/First%20start%20Wizard%20status/near/446649624" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Håkan Svensson <a href="https://leamas.github.io/zulip-archive/stream/432618-OCPN-5.2E10-Release-plan/topic/First.20start.20Wizard.20status.html#446649624">(Jun 24 2024 at 15:46)</a>:</h4>
+<p>My Linux knowledge is low. I can only state that wizard crashes on both RPi4 and RPi5. If I comment out EnumerateTCP() it doesn't crash.<br>
+I tried to use gdb to find the cause but that was obviously not good enough? Any advice?</p>
+
+
+
+<a name="446650531"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/432618-OCPN%205.10%20Release%20plan/topic/First%20start%20Wizard%20status/near/446650531" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Pavel Kalian <a href="https://leamas.github.io/zulip-archive/stream/432618-OCPN-5.2E10-Release-plan/topic/First.20start.20Wizard.20status.html#446650531">(Jun 24 2024 at 15:49)</a>:</h4>
+<p>Add some debug printouts in the code to narrow down where the crash actually happens, <code>EnumerateTCP()</code> is too big of a target to guess why it crashes for you.</p>
+
+
+
+<a name="446692328"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/432618-OCPN%205.10%20Release%20plan/topic/First%20start%20Wizard%20status/near/446692328" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Håkan Svensson <a href="https://leamas.github.io/zulip-archive/stream/432618-OCPN-5.2E10-Release-plan/topic/First.20start.20Wizard.20status.html#446692328">(Jun 24 2024 at 19:00)</a>:</h4>
+<p>Can the existing four debug prints I copied above narrow it down to further printouts?</p>
+
+
+
+<a name="446706015"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/432618-OCPN%205.10%20Release%20plan/topic/First%20start%20Wizard%20status/near/446706015" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Håkan Svensson <a href="https://leamas.github.io/zulip-archive/stream/432618-OCPN-5.2E10-Release-plan/topic/First.20start.20Wizard.20status.html#446706015">(Jun 24 2024 at 20:05)</a>:</h4>
+<p>Just an observation. My previous wizard test on the RPi5 was working as can be seen on the "User comment" on the shot below.<br>
+So I guess the present crash is from any recently changed code or other circumstance? I though don't remember when that wizard run was performed.<br>
+<a href="/user_uploads/33951/0FrO_WE7sfENvXdFQilJSREx/bild.png">bild.png</a></p>
+<div class="message_inline_image"><a href="/user_uploads/33951/0FrO_WE7sfENvXdFQilJSREx/bild.png" title="bild.png"><img src="/user_uploads/33951/0FrO_WE7sfENvXdFQilJSREx/bild.png"></a></div>
+
+
+
+<a name="446715249"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/432618-OCPN%205.10%20Release%20plan/topic/First%20start%20Wizard%20status/near/446715249" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Pavel Kalian <a href="https://leamas.github.io/zulip-archive/stream/432618-OCPN-5.2E10-Release-plan/topic/First.20start.20Wizard.20status.html#446715249">(Jun 24 2024 at 20:48)</a>:</h4>
+<p>No, the so far provided info does not shed any light on it for me.</p>
+
+
+
+<a name="446770913"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/432618-OCPN%205.10%20Release%20plan/topic/First%20start%20Wizard%20status/near/446770913" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Dave Register <a href="https://leamas.github.io/zulip-archive/stream/432618-OCPN-5.2E10-Release-plan/topic/First.20start.20Wizard.20status.html#446770913">(Jun 25 2024 at 03:59)</a>:</h4>
+<p>Pavel...<br>
+Did some remote debugging of Hakan's machine.</p>
+<ol>
+<li>The problem happens in EnumerateTCP.</li>
+<li>The client connects to a valid server.  Local network port.</li>
+<li>The client-&gt;Read() returns without filling in any data in the buffer. Still 256 bytes of 0x00, from memset().</li>
+<li>The right-hand-side null trim is over-zealous, reduces "len" to (-1).</li>
+<li>The line std::string data(buff, len) faults, since len is (-1).  Reasonable.</li>
+</ol>
+<p>Root cause?  Dunno.</p>
+<ol>
+<li>I tried increasing the timeout to 4 secs..  No help.  </li>
+<li>Running OCPN without wizard, and with this offending TCP feed active, seems fine.  N0183 data looks fine.</li>
+</ol>
+<p>Stumped at the moment.</p>
+
+
+
+<a name="446771091"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/432618-OCPN%205.10%20Release%20plan/topic/First%20start%20Wizard%20status/near/446771091" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Dave Register <a href="https://leamas.github.io/zulip-archive/stream/432618-OCPN-5.2E10-Release-plan/topic/First.20start.20Wizard.20status.html#446771091">(Jun 25 2024 at 04:00)</a>:</h4>
+<p>BTW, I am debugging over VNC link, using ddd/gdb.  Slow but reliable.</p>
+
+
+
+<a name="446908499"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/432618-OCPN%205.10%20Release%20plan/topic/First%20start%20Wizard%20status/near/446908499" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Dave Register <a href="https://leamas.github.io/zulip-archive/stream/432618-OCPN-5.2E10-Release-plan/topic/First.20start.20Wizard.20status.html#446908499">(Jun 25 2024 at 15:00)</a>:</h4>
+<p>Can I do anything to help here?</p>
+
+
+
+<a name="446945601"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/432618-OCPN%205.10%20Release%20plan/topic/First%20start%20Wizard%20status/near/446945601" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Pavel Kalian <a href="https://leamas.github.io/zulip-archive/stream/432618-OCPN-5.2E10-Release-plan/topic/First.20start.20Wizard.20status.html#446945601">(Jun 25 2024 at 17:17)</a>:</h4>
+<p>Do we know what is that server? Something I can get? Protecting against the crash is simple, skip the rest if <code>len</code> returned from <code>Read</code> is zero, but of course we will still not detect that particular source.</p>
+
+
+
+<a name="446950175"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/432618-OCPN%205.10%20Release%20plan/topic/First%20start%20Wizard%20status/near/446950175" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Pavel Kalian <a href="https://leamas.github.io/zulip-archive/stream/432618-OCPN-5.2E10-Release-plan/topic/First.20start.20Wizard.20status.html#446950175">(Jun 25 2024 at 17:32)</a>:</h4>
+<p>Or a pcap capture with <code>tcpdump</code> or Wireshark during the scan and during opening a manually configured connection could show something.</p>
+
+
+
+<a name="446955938"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/432618-OCPN%205.10%20Release%20plan/topic/First%20start%20Wizard%20status/near/446955938" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Pavel Kalian <a href="https://leamas.github.io/zulip-archive/stream/432618-OCPN-5.2E10-Release-plan/topic/First.20start.20Wizard.20status.html#446955938">(Jun 25 2024 at 17:52)</a>:</h4>
+<p>Current master should not crash in this situation anymore.</p>
+
+
+
+<a name="446957151"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/432618-OCPN%205.10%20Release%20plan/topic/First%20start%20Wizard%20status/near/446957151" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Håkan Svensson <a href="https://leamas.github.io/zulip-archive/stream/432618-OCPN-5.2E10-Release-plan/topic/First.20start.20Wizard.20status.html#446957151">(Jun 25 2024 at 17:58)</a>:</h4>
+<p>I'll test current master and come back.<br>
+Before that, running wizard on a Win10 on the same network yields no crash. But no connections at all was found.<br>
+These are the connections used used when O is running.<br>
+<a href="/user_uploads/33951/vBfKIr7z-nKJdgebZaeOmWxr/bild.png">bild.png</a></p>
+<div class="message_inline_image"><a href="/user_uploads/33951/vBfKIr7z-nKJdgebZaeOmWxr/bild.png" title="bild.png"><img src="/user_uploads/33951/vBfKIr7z-nKJdgebZaeOmWxr/bild.png"></a></div>
+
+
+
+<a name="446957341"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/432618-OCPN%205.10%20Release%20plan/topic/First%20start%20Wizard%20status/near/446957341" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Pavel Kalian <a href="https://leamas.github.io/zulip-archive/stream/432618-OCPN-5.2E10-Release-plan/topic/First.20start.20Wizard.20status.html#446957341">(Jun 25 2024 at 17:59)</a>:</h4>
+<p>Your network must be cursed :)</p>
+
+
+
+<a name="446958242"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/432618-OCPN%205.10%20Release%20plan/topic/First%20start%20Wizard%20status/near/446958242" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Håkan Svensson <a href="https://leamas.github.io/zulip-archive/stream/432618-OCPN-5.2E10-Release-plan/topic/First.20start.20Wizard.20status.html#446958242">(Jun 25 2024 at 18:02)</a>:</h4>
+<p>Well, It is a router provided by the network provider and thus quite common. We use it daily without other problem.</p>
+
+
+
+<a name="446958884"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/432618-OCPN%205.10%20Release%20plan/topic/First%20start%20Wizard%20status/near/446958884" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Pavel Kalian <a href="https://leamas.github.io/zulip-archive/stream/432618-OCPN-5.2E10-Release-plan/topic/First.20start.20Wizard.20status.html#446958884">(Jun 25 2024 at 18:05)</a>:</h4>
+<p>Run wireshark and look at what is happening, I really don't have any better advice</p>
+
+
+
+<a name="446959647"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/432618-OCPN%205.10%20Release%20plan/topic/First%20start%20Wizard%20status/near/446959647" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Håkan Svensson <a href="https://leamas.github.io/zulip-archive/stream/432618-OCPN-5.2E10-Release-plan/topic/First.20start.20Wizard.20status.html#446959647">(Jun 25 2024 at 18:09)</a>:</h4>
+<p>And the serial COM3 is not on the network. It's a USB-YD</p>
+<p>I've seen using "Send to peer" the mDNS query and response  is not always reliable passed by the router. Could be a reason?</p>
+
+
+
+<a name="446960114"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/432618-OCPN%205.10%20Release%20plan/topic/First%20start%20Wizard%20status/near/446960114" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Pavel Kalian <a href="https://leamas.github.io/zulip-archive/stream/432618-OCPN-5.2E10-Release-plan/topic/First.20start.20Wizard.20status.html#446960114">(Jun 25 2024 at 18:11)</a>:</h4>
+<p>I don't know, run Wireshark and have a look at what is happening. Serial datasources, all I have available, are 100% detected on Windows for me.</p>
+
+
+
+<a name="446962119"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/432618-OCPN%205.10%20Release%20plan/topic/First%20start%20Wizard%20status/near/446962119" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Håkan Svensson <a href="https://leamas.github.io/zulip-archive/stream/432618-OCPN-5.2E10-Release-plan/topic/First.20start.20Wizard.20status.html#446962119">(Jun 25 2024 at 18:21)</a>:</h4>
+<p>Using present master code on the RPi5:<br>
+No crash!  No TCP found but maybe not surprising?<br>
+<a href="/user_uploads/33951/BH22sIqXWgNHYiLA9aU5RMe-/bild.png">bild.png</a></p>
+<div class="message_inline_image"><a href="/user_uploads/33951/BH22sIqXWgNHYiLA9aU5RMe-/bild.png" title="bild.png"><img src="/user_uploads/33951/BH22sIqXWgNHYiLA9aU5RMe-/bild.png"></a></div>
+
+
+
+<a name="446962368"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/432618-OCPN%205.10%20Release%20plan/topic/First%20start%20Wizard%20status/near/446962368" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Pavel Kalian <a href="https://leamas.github.io/zulip-archive/stream/432618-OCPN-5.2E10-Release-plan/topic/First.20start.20Wizard.20status.html#446962368">(Jun 25 2024 at 18:22)</a>:</h4>
+<p>If you have a TCP server that has data and has been tried, it is surprising it was not found.</p>
+
+
+
+<a name="446973412"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/432618-OCPN%205.10%20Release%20plan/topic/First%20start%20Wizard%20status/near/446973412" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Håkan Svensson <a href="https://leamas.github.io/zulip-archive/stream/432618-OCPN-5.2E10-Release-plan/topic/First.20start.20Wizard.20status.html#446973412">(Jun 25 2024 at 19:15)</a>:</h4>
+<p>Some tests on W10 in both Debug and runtime.<br>
+More sources are found in debug than runtime. I assume we at runtime don't get required answers in due time.</p>
+<p>For TCP these address are found:<br>
+-       ips { size=17 } std::vector&lt;std::string,std::allocator&lt;std::string&gt;&gt;<br>
+        [capacity]  19  unsigned int<br>
++       [allocator] allocator   std::_Compressed_pair&lt;std::allocator&lt;std::string&gt;,std::_Vector_val&lt;std::_Simple_types&lt;std::string&gt;&gt;,1&gt;<br>
++       [0] "127.0.0.1" std::string<br>
++       [1] "192.168.1.1"   std::string<br>
++       [2] "192.168.1.67"  std::string<br>
++       [3] "192.168.1.72"  std::string<br>
++       [4] "192.168.1.79"  std::string<br>
++       [5] "192.168.1.87"  std::string<br>
++       [6] "192.168.1.178" std::string<br>
++       [7] "192.168.1.204" std::string<br>
++       [8] "192.168.1.233" std::string<br>
++       [9] "192.168.1.255" std::string</p>
+<p>6]  "192.168.1.178" has data on port 10110 (Some of the other have data but not on 10110 or the other ports searched for.)</p>
+<p>In "slowly" debug mode these was found:<br>
+<a href="/user_uploads/33951/NAF6qdezfH3n_wUz7DlrMM9H/bild.png">bild.png</a></p>
+<div class="message_inline_image"><a href="/user_uploads/33951/NAF6qdezfH3n_wUz7DlrMM9H/bild.png" title="bild.png"><img src="/user_uploads/33951/NAF6qdezfH3n_wUz7DlrMM9H/bild.png"></a></div><p>In runtime this was (once) found:<br>
+<a href="/user_uploads/33951/9ljj85fptx5pWPsiPjEpPLVZ/bild.png">bild.png</a></p>
+<div class="message_inline_image"><a href="/user_uploads/33951/9ljj85fptx5pWPsiPjEpPLVZ/bild.png" title="bild.png"><img src="/user_uploads/33951/9ljj85fptx5pWPsiPjEpPLVZ/bild.png"></a></div><p>This all is as I've seen and discussed before.<br>
+On my W10 in the boat four out of five serials are normally found. Seldom all.</p>
+<p>Maybe we can't get any further with this? <br>
+I will later see if Wireshark can provide more data. I'll get back here in that case.</p>
+
+
+
+<a name="447039395"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/432618-OCPN%205.10%20Release%20plan/topic/First%20start%20Wizard%20status/near/447039395" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Dave Register <a href="https://leamas.github.io/zulip-archive/stream/432618-OCPN-5.2E10-Release-plan/topic/First.20start.20Wizard.20status.html#447039395">(Jun 26 2024 at 01:39)</a>:</h4>
+<p>And so I did more debugging on Hakan's system, Windows this time.<br>
+Looking at enumerateSignalk().<br>
+I find that on Windows, no MDNS query is sent, so of course no sK datastream is found.<br>
+Testing same on my local Win10 box.  Same trouble.  No  usable network interfaces found, so no mDNS query sent.<br>
+boils down finally to :</p>
+<div class="codehilite"><pre><span></span><code>static inline int
+mdns_socket_open_ipv4(const struct sockaddr_in* saddr) {
+int sock = (int)socket(AF_INET, SOCK_DGRAM, IPPROTO_UDP);
+if (sock &lt; 0)
+    return -1;
+if (mdns_socket_setup_ipv4(sock, saddr)) {
+    mdns_socket_close(sock);
+    return -1;
+}
+return sock;
+}
+</code></pre></div>
+
+<p>The socket cannot be created.  "socke()" call returns "-1". Now that line looks pretty benign.  the saddr parm is the ip for the box itself, not LOCALHOST.<br>
+Stumped again.</p>
+
+
+
+<a name="447040944"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/432618-OCPN%205.10%20Release%20plan/topic/First%20start%20Wizard%20status/near/447040944" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Dave Register <a href="https://leamas.github.io/zulip-archive/stream/432618-OCPN-5.2E10-Release-plan/topic/First.20start.20Wizard.20status.html#447040944">(Jun 26 2024 at 01:51)</a>:</h4>
+<p>Got the error code on socket call.</p>
+<p><strong>WSANOTINITIALISED</strong></p>
+<p>10093</p>
+<p>Successful WSAStartup not yet performed.</p>
+<p>Either the application has not called <a href="https://learn.microsoft.com/en-us/windows/desktop/api/winsock/nf-winsock-wsastartup">**WSAStartup**</a> or <strong>WSAStartup</strong> failed. The application may be accessing a socket that the current active task does not own (that is, trying to share a socket between tasks), or <a href="https://learn.microsoft.com/en-us/windows/desktop/api/winsock/nf-winsock-wsacleanup">**WSACleanup**</a> has been called too many times.</p>
+
+
+
+<a name="447041847"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/432618-OCPN%205.10%20Release%20plan/topic/First%20start%20Wizard%20status/near/447041847" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Dave Register <a href="https://leamas.github.io/zulip-archive/stream/432618-OCPN-5.2E10-Release-plan/topic/First.20start.20Wizard.20status.html#447041847">(Jun 26 2024 at 01:57)</a>:</h4>
+<p>I switched around the detection order.  Did UDP detection before trying mDNS query for signalK.<br>
+This fixed the socket() call, and mDNS proceeds as required.<br>
+This must mean that WSAStartup() is performed somewhere in the UDP network setup.<br>
+So, to solve, should we call WSAStartup() explicitely early in the wiz, or just switch sK detection to last in the list?<br>
+Your call?</p>
+
+
+
+<a name="447176080"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/432618-OCPN%205.10%20Release%20plan/topic/First%20start%20Wizard%20status/near/447176080" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Pavel Kalian <a href="https://leamas.github.io/zulip-archive/stream/432618-OCPN-5.2E10-Release-plan/topic/First.20start.20Wizard.20status.html#447176080">(Jun 26 2024 at 10:14)</a>:</h4>
+<p>I would just switch the order, it really does not matter.</p>
+
+
+
+<a name="447187186"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/432618-OCPN%205.10%20Release%20plan/topic/First%20start%20Wizard%20status/near/447187186" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Pavel Kalian <a href="https://leamas.github.io/zulip-archive/stream/432618-OCPN-5.2E10-Release-plan/topic/First.20start.20Wizard.20status.html#447187186">(Jun 26 2024 at 11:06)</a>:</h4>
+<p>Done.</p>
+
+
+
+<a name="447282350"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/432618-OCPN%205.10%20Release%20plan/topic/First%20start%20Wizard%20status/near/447282350" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Håkan Svensson <a href="https://leamas.github.io/zulip-archive/stream/432618-OCPN-5.2E10-Release-plan/topic/First.20start.20Wizard.20status.html#447282350">(Jun 26 2024 at 17:31)</a>:</h4>
+<p>Now it's better.<br>
+After three scans all available sources are sometime detected although not all together any time. <br>
+Some SK are now detected all times. That's good. (And SK mdns is of course seen by WS)<br>
+In below picture all SK are there. This time the available TCP is not present but it was the two previous scans. <br>
+<a href="/user_uploads/33951/z1mn_r2rWSAdKaPlnWp_Lno9/bild.png">bild.png</a></p>
+<div class="message_inline_image"><a href="/user_uploads/33951/z1mn_r2rWSAdKaPlnWp_Lno9/bild.png" title="bild.png"><img src="/user_uploads/33951/z1mn_r2rWSAdKaPlnWp_Lno9/bild.png"></a></div>
+
+
+
+<a name="447330516"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/432618-OCPN%205.10%20Release%20plan/topic/First%20start%20Wizard%20status/near/447330516" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Håkan Svensson <a href="https://leamas.github.io/zulip-archive/stream/432618-OCPN-5.2E10-Release-plan/topic/First.20start.20Wizard.20status.html#447330516">(Jun 26 2024 at 20:36)</a>:</h4>
+<p>If I make this change both TCP and all SK are found three out of four scans<br>
+One or two minutes longer processing.</p>
+<div class="codehilite"><pre><span></span><code>@@ -477,15 +477,15 @@ void FirstUseWizImpl::EnumerateTCP() {
+       wxIPV4address conn_addr;
+       conn_addr.Service(port);
+       conn_addr.Hostname(ip);
+       auto client = new wxSocketClient();
+-      client-&gt;SetTimeout(1);
++      client-&gt;SetTimeout(2);
+       if (client-&gt;Connect(conn_addr, true)) {
+         DEBUG_LOG &lt;&lt; &quot;Connected to &quot; &lt;&lt; ip &lt;&lt; &quot;:&quot; &lt;&lt; port;
+         size_t len = RECEIVE_BUFFER_LENGTH;
+         char buffer[RECEIVE_BUFFER_LENGTH];
+         memset(buffer, 0, len);
+-        client-&gt;WaitForRead(1, 0);
++        client-&gt;WaitForRead(2, 0);
+         client-&gt;Read(&amp;buffer, len);
+         // Binary protocols may contain 0x00 bytes, so we have to treat the buffer as such and avoid string conversion
+         while (len &gt; 0 &amp;&amp; buffer[len-1] == 0x00) {
+           len--;
+@@ -536,9 +536,9 @@ void FirstUseWizImpl::EnumerateTCP() {
+   m_rtConnectionInfo-&gt;Newline();
+ #endif
+ }
+
+-void FirstUseWizImpl::EnumerateSignalK() { FindAllSignalKServers(1); }
++void FirstUseWizImpl::EnumerateSignalK() { FindAllSignalKServers(2); }
+
+ void FirstUseWizImpl::EnumerateCAN() {
+</code></pre></div>
+
+
+
+<hr><p>Last updated: Oct 08 2024 at 10:11 UTC</p>
+</html>

@@ -1,0 +1,397 @@
+<html>
+<head><meta charset="utf-8"><title>beta 3 · OCPN 5.10 Release plan · Zulip Chat Archive</title></head>
+<h2>Stream: <a href="https://leamas.github.io/zulip-archive/stream/432618-OCPN-5.2E10-Release-plan/index.html">OCPN 5.10 Release plan</a></h2>
+<h3>Topic: <a href="https://leamas.github.io/zulip-archive/stream/432618-OCPN-5.2E10-Release-plan/topic/beta.203.html">beta 3</a></h3>
+
+<hr>
+
+<base href="https://opencpn.zulipchat.com">
+
+<head><link href="https://leamas.github.io/zulip-archive/style.css" rel="stylesheet"></head>
+
+<a name="452970454"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/432618-OCPN%205.10%20Release%20plan/topic/beta%203/near/452970454" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Alec Leamas <a href="https://leamas.github.io/zulip-archive/stream/432618-OCPN-5.2E10-Release-plan/topic/beta.203.html#452970454">(Jul 21 2024 at 10:37)</a>:</h4>
+<p>The v5.9.3-beta3 tag is available.</p>
+<p>The Flatpak build is done but waits to be published: <a href="https://buildbot.flathub.org/#/builders/6/builds/135576">https://buildbot.flathub.org/#/builders/6/builds/135576</a></p>
+<p>The Ubuntu branches ubuntu/focal, ubuntu/jammy and ubuntu/numbat are ready to be pushed. Test builds at <a href="https://launchpad.net/~leamas-alec/+archive/ubuntu/foo">https://launchpad.net/~leamas-alec/+archive/ubuntu/foo</a></p>
+<p>Working with the Debian stuff, back later</p>
+
+
+
+<a name="452970469"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/432618-OCPN%205.10%20Release%20plan/topic/beta%203/near/452970469" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Alec Leamas <a href="https://leamas.github.io/zulip-archive/stream/432618-OCPN-5.2E10-Release-plan/topic/beta.203.html#452970469">(Jul 21 2024 at 10:37)</a>:</h4>
+<p><span class="user-mention" data-user-id="517002">@Dave Register</span>  ^</p>
+
+
+
+<a name="452986658"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/432618-OCPN%205.10%20Release%20plan/topic/beta%203/near/452986658" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Alec Leamas <a href="https://leamas.github.io/zulip-archive/stream/432618-OCPN-5.2E10-Release-plan/topic/beta.203.html#452986658">(Jul 21 2024 at 13:39)</a>:</h4>
+<p>The debian packages are available but untested at <a href="http://mumin.crabdance.com/bookworm-backports/">http://mumin.crabdance.com/bookworm-backports/</a></p>
+<p>Will try to find some time to test later today, but signing off for now.</p>
+
+
+
+<a name="452987522"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/432618-OCPN%205.10%20Release%20plan/topic/beta%203/near/452987522" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Alec Leamas <a href="https://leamas.github.io/zulip-archive/stream/432618-OCPN-5.2E10-Release-plan/topic/beta.203.html#452987522">(Jul 21 2024 at 13:46)</a>:</h4>
+<p>Ubuntu test builds moved to  <a href="https://launchpad.net/~leamas-alec/+archive/ubuntu/opencpn">https://launchpad.net/~leamas-alec/+archive/ubuntu/opencpn</a></p>
+
+
+
+<a name="452987753"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/432618-OCPN%205.10%20Release%20plan/topic/beta%203/near/452987753" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Dave Register <a href="https://leamas.github.io/zulip-archive/stream/432618-OCPN-5.2E10-Release-plan/topic/beta.203.html#452987753">(Jul 21 2024 at 13:48)</a>:</h4>
+<p><span class="user-mention" data-user-id="399510">@Alec Leamas</span> <br>
+debuild  for focal fails.</p>
+<div class="codehilite"><pre><span></span><code>$ debuild --no-lintian -S -sa -k4A57DDF4719374E5A8FD2637E5216EEB1ACFED1D
+</code></pre></div>
+
+<p>dpkg-buildpackage -us -uc -ui -S -sa<br>
+dpkg-buildpackage: info: source package opencpn<br>
+dpkg-buildpackage: info: source version 1:5.9.3~beta3+dfsg-1ubuntu1~bpo2004+1<br>
+dpkg-buildpackage: info: source distribution focal<br>
+dpkg-buildpackage: info: source changed by Alec Leamas &lt;<a href="mailto:leamas.alec@gmail.com">leamas.alec@gmail.com</a>&gt;<br>
+ dpkg-source --before-build .<br>
+ debian/rules clean<br>
+dh clean<br>
+   dh_clean<br>
+ dpkg-source -b .<br>
+dpkg-source: warning: Version number suggests Ubuntu changes, but Maintainer: does not have Ubuntu address<br>
+dpkg-source: warning: Version number suggests Ubuntu changes, but there is no XSBC-Original-Maintainer field<br>
+dpkg-source: info: using source format '3.0 (quilt)'<br>
+dpkg-source: info: building opencpn using existing ./opencpn_5.9.3~beta3+dfsg.orig.tar.xz<br>
+dpkg-source: info: using patch list from debian/patches/series<br>
+dpkg-source: info: local changes detected, the modified files are:<br>
+ OpenCPN/CMakeLists.txt<br>
+ OpenCPN/cmake/in-files/config.h.in<br>
+ OpenCPN/test/buffer_tests.cpp<br>
+dpkg-source: error: aborting due to unexpected upstream changes, see /tmp/opencpn_5.9.3~beta3+dfsg-1ubuntu1~bpo2004+1.diff.Z2EzLD<br>
+dpkg-source: info: Hint: make sure the version in debian/changelog matches the unpacked source tree<br>
+dpkg-source: info: you can integrate the local changes with dpkg-source --commit<br>
+dpkg-buildpackage: error: dpkg-source -b . subprocess returned exit status 2<br>
+debuild: fatal error at line 1182:<br>
+dpkg-buildpackage -us -uc -ui -S -sa failed</p>
+
+
+
+<a name="452990169"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/432618-OCPN%205.10%20Release%20plan/topic/beta%203/near/452990169" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Alec Leamas <a href="https://leamas.github.io/zulip-archive/stream/432618-OCPN-5.2E10-Release-plan/topic/beta.203.html#452990169">(Jul 21 2024 at 14:17)</a>:</h4>
+<p>Works for me. Attaching log, note the state of all branches and tags. Anything which differs?</p>
+<div class="codehilite"><pre><span></span><code>al@focal:~$ cd OpenCPN/OpenCPN/
+al@focal:~/OpenCPN/OpenCPN$ git branch
+  debian/sid
+  focal-backports
+  old
+  patch-queue/focal-backports
+  pristine-tar
+* ubuntu/focal
+  ubuntu/jammy
+  ubuntu/numbat
+  upstream/latest
+al@focal:~/OpenCPN/OpenCPN$ git rev-parse HEAD
+815bf583c5ecb2a34e602406ab785619fff15ba6
+
+al@focal:~/OpenCPN/OpenCPN$ git rev-parse upstream/latest
+325cac555ea76971b2642b975b72a6f67e791452
+
+al@focal:~/OpenCPN/OpenCPN$ git rev-parse pristine-tar
+962d28ca5f162b13a49c327c35cdda6172a965b3
+
+al@focal:~/OpenCPN/OpenCPN$ git rev-parse upstream/5.9.3_beta3+dfsg
+938e8849eceb24f73e34f6f827e1b98fd7621937
+
+al@focal:~/OpenCPN/OpenCPN$ git rev-parse v5.9.3-beta3
+9d702359580399c278c521201a00e1fb9eb872db
+
+
+al@focal:~/OpenCPN/OpenCPN$ git clean -fxd; git checkout .
+Removing debian/files
+Updated 0 paths from the index
+
+al@focal:~/OpenCPN/OpenCPN$ debuild --no-lintian -S -kE2EA41DCE2F8A99AD17A1E463A67D5D966D15C5C
+ dpkg-buildpackage -us -uc -ui -S
+dpkg-buildpackage: info: source package opencpn
+dpkg-buildpackage: info: source version 1:5.9.3~beta3+dfsg-1ubuntu1~bpo2004+1
+dpkg-buildpackage: info: source distribution focal
+dpkg-buildpackage: info: source changed by Alec Leamas &lt;leamas.alec@gmail.com&gt;
+ dpkg-source --before-build .
+dpkg-source: info: using patch list from debian/patches/series
+dpkg-source: info: applying 0001-build-Drop-removed-CoC-1973_2018-InlandECDIS_2022091.patch
+dpkg-source: info: applying 0002-Add-missing-libs-like-tinyxml-Debian-work-around.patch
+dpkg-source: info: applying 0003-tests-Disable-time-dependent-Buffer.RateLimit2-test.patch
+dpkg-source: info: applying 0004-build-Use-system-shapelib-if-available.patch
+dpkg-source: info: applying 0005-CMakeLists-help_web.html-path-error-fix.patch
+ debian/rules clean
+dh clean
+   dh_clean
+ dpkg-source -b .
+dpkg-source: warning: Version number suggests Ubuntu changes, but Maintainer: does not have Ubuntu address
+dpkg-source: warning: Version number suggests Ubuntu changes, but there is no XSBC-Original-Maintainer field
+dpkg-source: info: using source format &#39;3.0 (quilt)&#39;
+dpkg-source: info: building opencpn using existing ./opencpn_5.9.3~beta3+dfsg.orig.tar.xz
+dpkg-source: info: using patch list from debian/patches/series
+dpkg-source: info: building opencpn in opencpn_5.9.3~beta3+dfsg-1ubuntu1~bpo2004+1.debian.tar.xz
+dpkg-source: info: building opencpn in opencpn_5.9.3~beta3+dfsg-1ubuntu1~bpo2004+1.dsc
+ dpkg-genbuildinfo --build=source
+ dpkg-genchanges --build=source &gt;../opencpn_5.9.3~beta3+dfsg-1ubuntu1~bpo2004+1_source.changes
+dpkg-genchanges: info: including full source code in upload
+ dpkg-source --after-build .
+dpkg-source: info: unapplying 0005-CMakeLists-help_web.html-path-error-fix.patch
+dpkg-source: info: unapplying 0004-build-Use-system-shapelib-if-available.patch
+dpkg-source: info: unapplying 0003-tests-Disable-time-dependent-Buffer.RateLimit2-test.patch
+dpkg-source: info: unapplying 0002-Add-missing-libs-like-tinyxml-Debian-work-around.patch
+dpkg-source: info: unapplying 0001-build-Drop-removed-CoC-1973_2018-InlandECDIS_2022091.patch
+dpkg-buildpackage: info: full upload (original source is included)
+Now signing changes and any dsc files...
+ signfile dsc opencpn_5.9.3~beta3+dfsg-1ubuntu1~bpo2004+1.dsc E2EA41DCE2F8A99AD17A1E463A67D5D966D15C5C
+
+ fixup_buildinfo opencpn_5.9.3~beta3+dfsg-1ubuntu1~bpo2004+1.dsc opencpn_5.9.3~beta3+dfsg-1ubuntu1~bpo2004+1_source.buildinfo
+ signfile buildinfo opencpn_5.9.3~beta3+dfsg-1ubuntu1~bpo2004+1_source.buildinfo E2EA41DCE2F8A99AD17A1E463A67D5D966D15C5C
+
+ fixup_changes dsc opencpn_5.9.3~beta3+dfsg-1ubuntu1~bpo2004+1.dsc opencpn_5.9.3~beta3+dfsg-1ubuntu1~bpo2004+1_source.changes
+ fixup_changes buildinfo opencpn_5.9.3~beta3+dfsg-1ubuntu1~bpo2004+1_source.buildinfo opencpn_5.9.3~beta3+dfsg-1ubuntu1~bpo2004+1_source.changes
+</code></pre></div>
+
+
+
+<a name="452991660"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/432618-OCPN%205.10%20Release%20plan/topic/beta%203/near/452991660" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Dave Register <a href="https://leamas.github.io/zulip-archive/stream/432618-OCPN-5.2E10-Release-plan/topic/beta.203.html#452991660">(Jul 21 2024 at 14:34)</a>:</h4>
+<p><span class="user-mention" data-user-id="399510">@Alec Leamas</span> <br>
+Ahh.  Here was the magic git  line missing.</p>
+<p><code>git clean -fxd; git checkout .</code></p>
+<p>What does "git checkout ." actually do?  I was having a hard time getting the correct checkout of ubuntu/focal at the correct tag.</p>
+<p>debuild OK now.</p>
+
+
+
+<a name="452995828"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/432618-OCPN%205.10%20Release%20plan/topic/beta%203/near/452995828" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Dave Register <a href="https://leamas.github.io/zulip-archive/stream/432618-OCPN-5.2E10-Release-plan/topic/beta.203.html#452995828">(Jul 21 2024 at 15:06)</a>:</h4>
+<p>Now trouble with jammy.</p>
+<div class="codehilite"><pre><span></span><code>$ git rev-parse HEAD
+ccf965d12b23202d7483cc0577b325718d49a629
+
+$ debuild --no-lintian -S -sa -k4A57DDF4719374E5A8FD2637E5216EEB1ACFED1D
+debuild: found debian/changelog for package opencpn in the directory
+  /home/dsr/Projects/opencpn/OpenCPN
+but this directory name does not match the package name according to the
+regex  PACKAGE(-.+)?.
+</code></pre></div>
+
+
+
+<a name="452996292"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/432618-OCPN%205.10%20Release%20plan/topic/beta%203/near/452996292" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Alec Leamas <a href="https://leamas.github.io/zulip-archive/stream/432618-OCPN-5.2E10-Release-plan/topic/beta.203.html#452996292">(Jul 21 2024 at 15:09)</a>:</h4>
+<p>On phone. Git checkout . Resets all changed files I. E. The diff becomes zero</p>
+
+
+
+<a name="452996573"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/432618-OCPN%205.10%20Release%20plan/topic/beta%203/near/452996573" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Alec Leamas <a href="https://leamas.github.io/zulip-archive/stream/432618-OCPN-5.2E10-Release-plan/topic/beta.203.html#452996573">(Jul 21 2024 at 15:10)</a>:</h4>
+<p>Jammy looks weird. Put it aside for now until I'm home in an hour or so</p>
+
+
+
+<a name="452996712"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/432618-OCPN%205.10%20Release%20plan/topic/beta%203/near/452996712" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Dave Register <a href="https://leamas.github.io/zulip-archive/stream/432618-OCPN-5.2E10-Release-plan/topic/beta.203.html#452996712">(Jul 21 2024 at 15:11)</a>:</h4>
+<div class="codehilite"><pre><span></span><code>$ git checkout .
+error: pathspec &#39;.&#39; did not match any file(s) known to git
+</code></pre></div>
+
+
+
+<a name="452996981"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/432618-OCPN%205.10%20Release%20plan/topic/beta%203/near/452996981" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Alec Leamas <a href="https://leamas.github.io/zulip-archive/stream/432618-OCPN-5.2E10-Release-plan/topic/beta.203.html#452996981">(Jul 21 2024 at 15:12)</a>:</h4>
+<p>You are in wrong directory, youneef to be in the top dir.</p>
+
+
+
+<a name="453001818"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/432618-OCPN%205.10%20Release%20plan/topic/beta%203/near/453001818" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Alec Leamas <a href="https://leamas.github.io/zulip-archive/stream/432618-OCPN-5.2E10-Release-plan/topic/beta.203.html#453001818">(Jul 21 2024 at 16:05)</a>:</h4>
+<p>Jammy log below. Extended to show how to create the source tarball and to stress working in top of the cloned sources.</p>
+<div class="codehilite"><pre><span></span><code>al@jammy:~$ cd OpenCPN/OpenCPN/
+al@jammy:~/OpenCPN/OpenCPN$ git branch
+  debian/master
+  debian/sid
+  jammy-backports
+  patch-queue/jammy-backports
+  ppa-test
+  pristine-tar
+  tmp
+  ubuntu/focal
+* ubuntu/jammy
+  ubuntu/kinetic
+  ubuntu/numbat
+  ubuntu/old-jammy
+  upstream/latest
+al@jammy:~/OpenCPN/OpenCPN$ pwd
+/home/al/OpenCPN/OpenCPN
+
+al@jammy:~/OpenCPN/OpenCPN$ git rev-parse HEAD
+ccf965d12b23202d7483cc0577b325718d49a629
+
+al@jammy:~/OpenCPN/OpenCPN$ git rev-parse upstream/latest
+325cac555ea76971b2642b975b72a6f67e791452
+
+al@jammy:~/OpenCPN/OpenCPN$ git rev-parse pristine-tar
+962d28ca5f162b13a49c327c35cdda6172a965b3
+
+al@jammy:~/OpenCPN/OpenCPN$ git rev-parse upstream/5.9.3_beta3+dfsg
+938e8849eceb24f73e34f6f827e1b98fd7621937
+
+al@jammy:~/OpenCPN/OpenCPN$ git rev-parse v5.9.3-beta3
+9d702359580399c278c521201a00e1fb9eb872db
+
+al@jammy:~/OpenCPN/OpenCPN$ rm -f ../opencpn_5.9.3~beta3+dfsg.orig.tar.xz
+al@jammy:~/OpenCPN/OpenCPN$ gbp export-orig
+gbp:info: Creating /home/al/OpenCPN/opencpn_5.9.3~beta3+dfsg.orig.tar.xz
+
+al@jammy:~/OpenCPN/OpenCPN$ git checkout .; git clean -fxd
+Updated 3 paths from the index
+Removing debian/files
+al@jammy:~/OpenCPN/OpenCPN$ debuild --no-lintian -S -kE2EA41DCE2F8A99AD17A1E463A67D5D966D15C5C
+ dpkg-buildpackage -us -uc -ui -S
+dpkg-buildpackage: info: source package opencpn
+dpkg-buildpackage: info: source version 1:5.9.3~beta3+dfsg-1ubuntu1~bpo2204+1
+dpkg-buildpackage: info: source distribution jammy
+dpkg-buildpackage: info: source changed by Alec Leamas &lt;leamas.alec@gmail.com&gt;
+ dpkg-source --before-build .
+dpkg-source: info: using patch list from debian/patches/series
+dpkg-source: info: applying 0001-build-Drop-removed-CoC-1973_2018-InlandECDIS_2022091.patch
+dpkg-source: info: applying 0002-Add-missing-libs-like-tinyxml-Debian-work-around.patch
+dpkg-source: info: applying 0003-tests-Disable-time-dependent-Buffer.RateLimit2-test.patch
+dpkg-source: info: applying 0004-build-Use-system-shapelib-if-available.patch
+dpkg-source: info: applying 0005-CMakeLists-help_web.html-path-error-fix.patch
+ debian/rules clean
+dh clean
+   dh_clean
+ dpkg-source -b .
+dpkg-source: warning: Version number suggests Ubuntu changes, but Maintainer: does not have Ubuntu address
+dpkg-source: warning: Version number suggests Ubuntu changes, but there is no XSBC-Original-Maintainer field
+dpkg-source: info: using source format &#39;3.0 (quilt)&#39;
+dpkg-source: info: building opencpn using existing ./opencpn_5.9.3~beta3+dfsg.orig.tar.xz
+dpkg-source: info: using patch list from debian/patches/series
+dpkg-source: info: building opencpn in opencpn_5.9.3~beta3+dfsg-1ubuntu1~bpo2204+1.debian.tar.xz
+dpkg-source: info: building opencpn in opencpn_5.9.3~beta3+dfsg-1ubuntu1~bpo2204+1.dsc
+ dpkg-genbuildinfo --build=source -O../opencpn_5.9.3~beta3+dfsg-1ubuntu1~bpo2204+1_source.buildinfo
+ dpkg-genchanges --build=source -O../opencpn_5.9.3~beta3+dfsg-1ubuntu1~bpo2204+1_source.changes
+dpkg-genchanges: info: including full source code in upload
+ dpkg-source --after-build .
+dpkg-source: info: unapplying 0005-CMakeLists-help_web.html-path-error-fix.patch
+dpkg-source: info: unapplying 0004-build-Use-system-shapelib-if-available.patch
+dpkg-source: info: unapplying 0003-tests-Disable-time-dependent-Buffer.RateLimit2-test.patch
+dpkg-source: info: unapplying 0002-Add-missing-libs-like-tinyxml-Debian-work-around.patch
+dpkg-source: info: unapplying 0001-build-Drop-removed-CoC-1973_2018-InlandECDIS_2022091.patch
+dpkg-buildpackage: info: source-only upload (original source is included)
+Now signing changes and any dsc files...
+ signfile dsc opencpn_5.9.3~beta3+dfsg-1ubuntu1~bpo2204+1.dsc E2EA41DCE2F8A99AD17A1E463A67D5D966D15C5C
+
+ fixup_buildinfo opencpn_5.9.3~beta3+dfsg-1ubuntu1~bpo2204+1.dsc opencpn_5.9.3~beta3+dfsg-1ubuntu1~bpo2204+1_source.buildinfo
+ signfile buildinfo opencpn_5.9.3~beta3+dfsg-1ubuntu1~bpo2204+1_source.buildinfo E2EA41DCE2F8A99AD17A1E463A67D5D966D15C5C
+
+ fixup_changes dsc opencpn_5.9.3~beta3+dfsg-1ubuntu1~bpo2204+1.dsc opencpn_5.9.3~beta3+dfsg-1ubuntu1~bpo2204+1_source.changes
+ fixup_changes buildinfo opencpn_5.9.3~beta3+dfsg-1ubuntu1~bpo2204+1_source.buildinfo opencpn_5.9.3~beta3+dfsg-1ubuntu1~bpo2204+1_source.changes
+ signfile changes opencpn_5.9.3~beta3+dfsg-1ubuntu1~bpo2204+1_source.changes E2EA41DCE2F8A99AD17A1E463A67D5D966D15C5C
+
+Successfully signed dsc, buildinfo, changes files
+al@jammy:~/OpenCPN/OpenCPN$
+</code></pre></div>
+
+
+
+<a name="453006527"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/432618-OCPN%205.10%20Release%20plan/topic/beta%203/near/453006527" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Alec Leamas <a href="https://leamas.github.io/zulip-archive/stream/432618-OCPN-5.2E10-Release-plan/topic/beta.203.html#453006527">(Jul 21 2024 at 16:29)</a>:</h4>
+<p>Back to keyboard....</p>
+<blockquote>
+<p>What does <code>git checkout .</code> actually do?</p>
+</blockquote>
+<p>It resets all modified files to the HEAD commit, ensuring a reproducible state.  <code>debuild</code> will accept and use modified files, but it's an extremely bad idea to use this "feature". Changes should be committed so they are archived in the repo and can be reused.</p>
+
+
+
+<a name="453008460"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/432618-OCPN%205.10%20Release%20plan/topic/beta%203/near/453008460" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Håkan Svensson <a href="https://leamas.github.io/zulip-archive/stream/432618-OCPN-5.2E10-Release-plan/topic/beta.203.html#453008460">(Jul 21 2024 at 16:39)</a>:</h4>
+<p>In windows I use Git checkout .<br>
+On my RPi I've to use Git checkout  ..</p>
+
+
+
+<a name="453008863"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/432618-OCPN%205.10%20Release%20plan/topic/beta%203/near/453008863" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Alec Leamas <a href="https://leamas.github.io/zulip-archive/stream/432618-OCPN-5.2E10-Release-plan/topic/beta.203.html#453008863">(Jul 21 2024 at 16:41)</a>:</h4>
+<p><span class="user-mention" data-user-id="522486">@Håkan Svensson</span> </p>
+<p>A bit of sidetracking. This has nothing to do with Windows vs Debian, it depends on which directory you are in.</p>
+
+
+
+<a name="453011307"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/432618-OCPN%205.10%20Release%20plan/topic/beta%203/near/453011307" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Alec Leamas <a href="https://leamas.github.io/zulip-archive/stream/432618-OCPN-5.2E10-Release-plan/topic/beta.203.html#453011307">(Jul 21 2024 at 17:04)</a>:</h4>
+<p><span class="user-mention" data-user-id="517002">@Dave Register</span> </p>
+<blockquote>
+<p>I was having a hard time getting the correct checkout of ubuntu/focal at the correct tag.</p>
+</blockquote>
+<p>Should not be that hard. See <a href="https://opencpn-manuals.github.io/main/opencpn-dev/create-deb-package.html#create-clone">https://opencpn-manuals.github.io/main/opencpn-dev/create-deb-package.html#create-clone</a></p>
+
+
+
+<a name="453030748"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/432618-OCPN%205.10%20Release%20plan/topic/beta%203/near/453030748" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Dave Register <a href="https://leamas.github.io/zulip-archive/stream/432618-OCPN-5.2E10-Release-plan/topic/beta.203.html#453030748">(Jul 21 2024 at 19:27)</a>:</h4>
+<p><span class="user-mention" data-user-id="399510">@Alec Leamas</span> <br>
+"You are in wrong directory, you need to be in the top dir."<br>
+Well, yes, I guess so.  This works.<br>
+Sorry I am so dense about this debian package workflow.  I'm taking notes for next time.</p>
+
+
+
+<a name="453031284"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/432618-OCPN%205.10%20Release%20plan/topic/beta%203/near/453031284" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Alec Leamas <a href="https://leamas.github.io/zulip-archive/stream/432618-OCPN-5.2E10-Release-plan/topic/beta.203.html#453031284">(Jul 21 2024 at 19:31)</a>:</h4>
+<p>No need to apologize! </p>
+<blockquote>
+<p>I'm taking notes for next time.</p>
+</blockquote>
+<p>Taking notes is good. Fixing the page at <a href="https://opencpn-manuals.github.io/main/opencpn-dev/create-deb-package.html">https://opencpn-manuals.github.io/main/opencpn-dev/create-deb-package.html</a> even better;)</p>
+
+
+
+<a name="453031765"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/432618-OCPN%205.10%20Release%20plan/topic/beta%203/near/453031765" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Dave Register <a href="https://leamas.github.io/zulip-archive/stream/432618-OCPN-5.2E10-Release-plan/topic/beta.203.html#453031765">(Jul 21 2024 at 19:38)</a>:</h4>
+<p>jammy and numbat accepted, building now.<br>
+Also, flatpak published.</p>
+<p>Done, except for bookworm backport?</p>
+
+
+
+<a name="453031810"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/432618-OCPN%205.10%20Release%20plan/topic/beta%203/near/453031810" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Alec Leamas <a href="https://leamas.github.io/zulip-archive/stream/432618-OCPN-5.2E10-Release-plan/topic/beta.203.html#453031810">(Jul 21 2024 at 19:39)</a>:</h4>
+<p>Bookworm backports are available at <a href="http://mumin.crabdance.com/bookworm-backports/">http://mumin.crabdance.com/bookworm-backports/</a></p>
+
+
+
+<a name="453031879"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/432618-OCPN%205.10%20Release%20plan/topic/beta%203/near/453031879" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Dave Register <a href="https://leamas.github.io/zulip-archive/stream/432618-OCPN-5.2E10-Release-plan/topic/beta.203.html#453031879">(Jul 21 2024 at 19:40)</a>:</h4>
+<p>Then done.  Announcing on CF now.</p>
+
+
+
+<a name="453031888"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/432618-OCPN%205.10%20Release%20plan/topic/beta%203/near/453031888" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Alec Leamas <a href="https://leamas.github.io/zulip-archive/stream/432618-OCPN-5.2E10-Release-plan/topic/beta.203.html#453031888">(Jul 21 2024 at 19:40)</a>:</h4>
+<p>The readme is the same as are the instructions</p>
+
+
+
+<a name="453032272"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/432618-OCPN%205.10%20Release%20plan/topic/beta%203/near/453032272" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Dave Register <a href="https://leamas.github.io/zulip-archive/stream/432618-OCPN-5.2E10-Release-plan/topic/beta.203.html#453032272">(Jul 21 2024 at 19:47)</a>:</h4>
+<p>Thanks for your packaging prowess.</p>
+
+
+
+<a name="453077244"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/432618-OCPN%205.10%20Release%20plan/topic/beta%203/near/453077244" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Alec Leamas <a href="https://leamas.github.io/zulip-archive/stream/432618-OCPN-5.2E10-Release-plan/topic/beta.203.html#453077244">(Jul 22 2024 at 04:32)</a>:</h4>
+<p>Announce: <a href="https://www.cruisersforum.com/forums/f134/opencpn-v5-9-3-beta-test-released-287967.html">https://www.cruisersforum.com/forums/f134/opencpn-v5-9-3-beta-test-released-287967.html</a></p>
+
+
+
+<a name="453077432"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/432618-OCPN%205.10%20Release%20plan/topic/beta%203/near/453077432" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Notification Bot <a href="https://leamas.github.io/zulip-archive/stream/432618-OCPN-5.2E10-Release-plan/topic/beta.203.html#453077432">(Jul 22 2024 at 04:33)</a>:</h4>
+<p><a href="#narrow/stream/432618-OCPN-5.2E10-Release-plan/topic/beta.203/near/453077244">A message</a> was moved here from <a class="stream-topic" data-stream-id="432618" href="/#narrow/stream/432618-OCPN-5.2E10-Release-plan/topic/.28no.20topic.29">#OCPN 5.10 Release plan &gt; (no topic)</a> by <span class="user-mention silent" data-user-id="399510">Alec Leamas</span>.</p>
+
+
+
+<hr><p>Last updated: Oct 08 2024 at 10:11 UTC</p>
+</html>

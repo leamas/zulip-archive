@@ -1,0 +1,129 @@
+<html>
+<head><meta charset="utf-8"><title>IPC feature · Master · Zulip Chat Archive</title></head>
+<h2>Stream: <a href="https://leamas.github.io/zulip-archive/stream/332168-Master/index.html">Master</a></h2>
+<h3>Topic: <a href="https://leamas.github.io/zulip-archive/stream/332168-Master/topic/IPC.20feature.html">IPC feature</a></h3>
+
+<hr>
+
+<base href="https://opencpn.zulipchat.com">
+
+<head><link href="https://leamas.github.io/zulip-archive/style.css" rel="stylesheet"></head>
+
+<a name="419654018"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332168-Master/topic/IPC%20feature/near/419654018" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Dan Dickey <a href="https://leamas.github.io/zulip-archive/stream/332168-Master/topic/IPC.20feature.html#419654018">(Feb 04 2024 at 00:21)</a>:</h4>
+<p>At least on Windows (and probably other platforms) during startup O creates an IPC server. It appears to me it throws away the pointer to the server so there is no way to release it. Then when O terminates wxWidgets is mad because the Windows DDE connection is still up and it has to tear it down. This causes an ASSERT in debug builds but is probably bad form in all builds.</p>
+<p>Has this been discussed before.</p>
+
+
+
+<a name="419796805"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332168-Master/topic/IPC%20feature/near/419796805" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Alec Leamas <a href="https://leamas.github.io/zulip-archive/stream/332168-Master/topic/IPC.20feature.html#419796805">(Feb 05 2024 at 09:34)</a>:</h4>
+<p><span class="user-mention" data-user-id="522729">@Dan Dickey</span> </p>
+<p>No, it has not been discussed. Perhaps needed.</p>
+
+
+
+<a name="419796881"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332168-Master/topic/IPC%20feature/near/419796881" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Notification Bot <a href="https://leamas.github.io/zulip-archive/stream/332168-Master/topic/IPC.20feature.html#419796881">(Feb 05 2024 at 09:34)</a>:</h4>
+<p>This topic was moved here from <a class="stream-topic" data-stream-id="282854" href="/#narrow/stream/282854-general/topic/IPC.20feature">#general &gt; IPC feature</a> by <span class="user-mention silent" data-user-id="399510">Alec Leamas</span>.</p>
+
+
+
+<a name="419801946"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332168-Master/topic/IPC%20feature/near/419801946" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Alec Leamas <a href="https://leamas.github.io/zulip-archive/stream/332168-Master/topic/IPC.20feature.html#419801946">(Feb 05 2024 at 10:02)</a>:</h4>
+<p>There is no pointer, and hence nothing to delete. The server is created in <br>
+<em>ocpn_frame.cpp</em> using <code>auto&amp; server = LocalServerApi::GetInstance();</code>.  That is a reference to a singleton, no pointer.  As such it could not really be deleted but  is managed by  the runtime system.</p>
+<p>On Linux, this should not be a problem. The DBusServer used to implement LocalServerAPI does not use any wxWindows components and is thus happy with the runtime system handling it. This is really how things should be.</p>
+<p>But when you say it, I think I might understand  the problem.  The runtime system's  clean up of  static variables occurs after wxWidgets' clean  up of wxWidgets resources.  This means that wxWidgets might become upset for no reason if there is a yet not cleaned up singleton when closing down.</p>
+<p>We could handle this without breaking any  major interfaces in a four step approach</p>
+<ol>
+<li>Add a new method <code>Close()</code> to <code>LocalServerApi</code>, by default empty;</li>
+<li>Make the internal  server variable in <code>IpcConnection</code>  a pointer rather than a reference. (Remains to see if it is possible to return a reference to a *pointer.)</li>
+<li>Let the Close() on IpcConnection() delete that pointer.</li>
+<li>Invoke <code>Close()</code>on   <code>LocalServerApi::GetInstance()</code> on exit.</li>
+</ol>
+<p>This is a lot of code which generally makes things worse to satisfy wxWidgets'  internal needs. Sigh. </p>
+<p>Do you see alternatives?</p>
+
+
+
+<a name="419827688"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332168-Master/topic/IPC%20feature/near/419827688" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Dan Dickey <a href="https://leamas.github.io/zulip-archive/stream/332168-Master/topic/IPC.20feature.html#419827688">(Feb 05 2024 at 12:27)</a>:</h4>
+<p>There are a ton of pointers (and arrays of pointers) that remain allocated when O closes.  This is just one that triggers a wx assert.  All of them are "bad form" in my experience.</p>
+<p>The LocalServerApi::GetInstance() function returns a pointer to the one and only IpcServer object.  Just retaining and then deleting that pointer on exit should suffice. The destructor of inherited wxServer class should get rid of the DDE connection.  I think that is what you are suggesting.</p>
+
+
+
+<a name="419836325"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332168-Master/topic/IPC%20feature/near/419836325" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Alec Leamas <a href="https://leamas.github.io/zulip-archive/stream/332168-Master/topic/IPC.20feature.html#419836325">(Feb 05 2024 at 13:13)</a>:</h4>
+<blockquote>
+<p>The LocalServerApi::GetInstance() function returns a pointer to the one and only IpcServer</p>
+</blockquote>
+<p>No. It's a reference to an automatically allocated variable. It cannot be deleted.</p>
+
+
+
+<a name="419839701"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332168-Master/topic/IPC%20feature/near/419839701" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Alec Leamas <a href="https://leamas.github.io/zulip-archive/stream/332168-Master/topic/IPC.20feature.html#419839701">(Feb 05 2024 at 13:30)</a>:</h4>
+<p>The core issue he is that wxWidgets requires that it can collect all wxWidgets components at exit. This is actually not meaningful for static objects such as singletons, but required anyway.</p>
+<p>However, we should no let this particular wxWidgets requirement be the overall solution to everything. Global/static variables are evil, agreed (also true for singletons).  But  the c++ runtime is perfectly capable of invoking destructors on them on exit. Using these mechanisms it's possible to avoid the evil  raw pointers.</p>
+<p>So the  solution should IMHO be an internal pointer in IpcConnection which is possible to tear down at exit.  Basically a band aid for semi functional wxWidgets exit procedures.  And keep the overall reference handling of the objects which is much less error prone. </p>
+<p>Or?</p>
+
+
+
+<a name="419887960"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332168-Master/topic/IPC%20feature/near/419887960" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Pavel Kalian <a href="https://leamas.github.io/zulip-archive/stream/332168-Master/topic/IPC.20feature.html#419887960">(Feb 05 2024 at 17:05)</a>:</h4>
+<p>FWIW I don't see unreleased memory at shutdown on Linux or macOS with ASAN. Are we sure that what we see on Windows aren't false positives? While actually harmless, we should still try to clean up properly if they are real...</p>
+
+
+
+<a name="419890699"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332168-Master/topic/IPC%20feature/near/419890699" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Alec Leamas <a href="https://leamas.github.io/zulip-archive/stream/332168-Master/topic/IPC.20feature.html#419890699">(Feb 05 2024 at 17:20)</a>:</h4>
+<p>These are static globals, and the runtime system eventually takes care of them as required. However, before the runtime system clean things up wxWidgets does. And wxWidgets does not like wxWindow components which are not deleted when exiting.</p>
+<p>Furthermore,. the code paths here are platform dependent. In particular, windows has some of it's own. </p>
+<p>IMHO we should try to fix this without breaking the overall design</p>
+
+
+
+<a name="419891637"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332168-Master/topic/IPC%20feature/near/419891637" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Pavel Kalian <a href="https://leamas.github.io/zulip-archive/stream/332168-Master/topic/IPC.20feature.html#419891637">(Feb 05 2024 at 17:25)</a>:</h4>
+<p>Sure true for the assert here, I'm just not sure about the other supposed leaks VS used to report</p>
+
+
+
+<a name="419999863"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332168-Master/topic/IPC%20feature/near/419999863" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Dan Dickey <a href="https://leamas.github.io/zulip-archive/stream/332168-Master/topic/IPC.20feature.html#419999863">(Feb 06 2024 at 08:48)</a>:</h4>
+<p>Alec, I tried your idea and it seems to work.  But at the moment I don't have a way to run a client to actually use the ipc connection.  Will try to set something up to test when I get back from my current travels.  I don't think this is urgent.</p>
+
+
+
+<a name="420004938"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332168-Master/topic/IPC%20feature/near/420004938" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Alec Leamas <a href="https://leamas.github.io/zulip-archive/stream/332168-Master/topic/IPC.20feature.html#420004938">(Feb 06 2024 at 09:20)</a>:</h4>
+<blockquote>
+<p>There are a ton of pointers (and arrays of pointers) that remain allocated when O closes This is just one that triggers a wx assert</p>
+</blockquote>
+<p>It might be enough to invoke wxConnection::Disconnect() to handle the assertion, dunno</p>
+
+
+
+<a name="420009000"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332168-Master/topic/IPC%20feature/near/420009000" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Alec Leamas <a href="https://leamas.github.io/zulip-archive/stream/332168-Master/topic/IPC.20feature.html#420009000">(Feb 06 2024 at 09:44)</a>:</h4>
+<blockquote>
+<p>But at the moment I don't have a way to run a client to actually use the ipc connection. Will try to set something up to test when I get back from my current travels.</p>
+</blockquote>
+<p>These things actually have  good coverage in the unit tests. If they pass, you should be quite safe.</p>
+
+
+
+<a name="420009078"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332168-Master/topic/IPC%20feature/near/420009078" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Alec Leamas <a href="https://leamas.github.io/zulip-archive/stream/332168-Master/topic/IPC.20feature.html#420009078">(Feb 06 2024 at 09:45)</a>:</h4>
+<blockquote>
+<p>I don't think this is urgent.</p>
+</blockquote>
+<p>agreed</p>
+
+
+
+<hr><p>Last updated: Oct 08 2024 at 10:11 UTC</p>
+</html>

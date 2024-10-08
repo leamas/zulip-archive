@@ -1,0 +1,50 @@
+[
+    {
+        "content": "<p>The script for Appveyor, unlike CircleCI, results in two builds for a commit with a tag, one for the code commit and another for the tag.  CircleCI has no workflow for the tag. Is it possible to adapt the Appeyor work to ignore the workflow for the tag?</p>",
+        "id": 431917651,
+        "sender_full_name": "Mike Rossiter",
+        "timestamp": 1712569619
+    },
+    {
+        "content": "<p>Anything is possible. However,  it's seems to be more broken than so. The correct behaviour is to build the tag but not the commit . This applies to both appveyor and CCI.</p>\n<p>I'll try to find some time later this week.</p>",
+        "id": 431930692,
+        "sender_full_name": "Alec Leamas",
+        "timestamp": 1712572261
+    },
+    {
+        "content": "<p>This would prevent the checksum error when both Appveyor builds have not completed and the fork of the plugins repo is used to make a PR.</p>",
+        "id": 431931452,
+        "sender_full_name": "Mike Rossiter",
+        "timestamp": 1712572478
+    },
+    {
+        "content": "<p>\"This\" as in only building the tag, or as only building the commit?</p>",
+        "id": 432025772,
+        "sender_full_name": "Alec Leamas",
+        "timestamp": 1712595525
+    },
+    {
+        "content": "<p>Tag build is last so if this has not completed we get a checksum from the commit build metadata file, which will not match the tag build, if that makes any sense.</p>",
+        "id": 432026791,
+        "sender_full_name": "Mike Rossiter",
+        "timestamp": 1712595777
+    },
+    {
+        "content": "<p>hm... do I understand you correctly  that it is the duplicated builds which is the problem? That is, does it matter for you if we build the tag or the commit as long as it's only one of them?</p>",
+        "id": 432046239,
+        "sender_full_name": "Alec Leamas",
+        "timestamp": 1712602426
+    },
+    {
+        "content": "<p>You probably want to build the tag as it has a better looking version and name</p>",
+        "id": 432046822,
+        "sender_full_name": "Pavel Kalian",
+        "timestamp": 1712602567
+    },
+    {
+        "content": "<p>And they do not have to be born at the same time, so it is pretty much impossible to \"build one or the other\"</p>",
+        "id": 432046975,
+        "sender_full_name": "Pavel Kalian",
+        "timestamp": 1712602612
+    }
+]

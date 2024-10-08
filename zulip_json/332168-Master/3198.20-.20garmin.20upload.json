@@ -1,0 +1,98 @@
+[
+    {
+        "content": "<p><span class=\"user-mention\" data-user-id=\"517002\">@Dave Register</span>     <a href=\"https://github.com/opencpn/OpenCPN/issues/3198\">#3198</a> is as ready as I can make it. However, my basic problem is that I no longer have any possiblity to test it I did have a garmin 120 when I started this work, but  it broke beyond repair. </p>\n<p>I have talked to Håkan which also has a 120 in hi's boat. However, that one is not connected for uploading.</p>\n<p>Which ends up in a question to  you:  have you possibilities (time, equipment)  to test this one? Since it's basically untested we should expect some problem(s)</p>",
+        "id": 401798570,
+        "sender_full_name": "Alec Leamas",
+        "timestamp": 1699891798
+    },
+    {
+        "content": "<p><span class=\"user-mention\" data-user-id=\"399510\">@Alec Leamas</span> <br>\nSure, I can test it.  I keep a Garmin handheld safely hidden away just for this testing.<br>\nI simply did not want to invest the time until you had it \"as ready as you can make it\".<br>\nSounds like now is the time.<br>\nI'll dig into it.</p>",
+        "id": 401800605,
+        "sender_full_name": "Dave Register",
+        "timestamp": 1699892201
+    },
+    {
+        "content": "<p>Thanks!</p>\n<p>Also, please note the open issues listed which needs your attention.</p>",
+        "id": 401801031,
+        "sender_full_name": "Alec Leamas",
+        "timestamp": 1699892294
+    },
+    {
+        "content": "<p><span class=\"user-mention\" data-user-id=\"399510\">@Alec Leamas</span> <br>\nI saw those.  It will be a few days...</p>",
+        "id": 401801375,
+        "sender_full_name": "Dave Register",
+        "timestamp": 1699892372
+    },
+    {
+        "content": "<p>no problems, take your time!</p>",
+        "id": 401801962,
+        "sender_full_name": "Alec Leamas",
+        "timestamp": 1699892492
+    },
+    {
+        "content": "<p><span class=\"user-mention\" data-user-id=\"399510\">@Alec Leamas</span> <br>\nre PR <a href=\"https://github.com/opencpn/OpenCPN/issues/3198\">#3198</a>:<br>\nMerged your PR with my fix for <a href=\"https://github.com/opencpn/OpenCPN/issues/3496\">#3496</a>, pushed to master.<br>\nWorks fine on Garmin serial, not tested yet on Garmin USB.</p>\n<p>Also looked at and fixed a couple of FIXME's.  But one I am not too comfortable with.<br>\nIn \"void BroadcastNMEA0183Message()\", I think we want to echo the broadcast NMEA message to all plugins, to process as they choose. <br>\nI implemented this by converting \"void PlugInManager::SendNMEASentenceToAllPlugIns(const wxString&amp; sentence)\" to a class static method, so I can call it essentially from anywhere.  The result in BroadcastNMEA0183Message() now looks like:</p>\n<p>// Send to plugins<br>\n    #ifndef CLIAPP<br>\n      PlugInManager::SendNMEASentenceToAllPlugIns(msg);<br>\n    #endif</p>\n<p>I don't know why this bothers me.  Maybe there is a better technique here, that preserves the model. And I don't know why it wont work in CLIAPP build.<br>\nThoughts?</p>",
+        "id": 402371959,
+        "sender_full_name": "Dave Register",
+        "timestamp": 1700104228
+    },
+    {
+        "content": "<p>It bothers you since it means that we build in knowledge about pluginmanager into the low-level serial model code handling the communications.  This does not fly since comm_n0183_output #include pluginmanager.h. This is model code including non-model gui code, exactly the things we should avoid -- it is the everything includes everything evil path.</p>\n<p>This is also the reason it does not work in a CLIAPP build. These builds does not contain any GUI code and hence not pluginmanager.</p>\n<p>There are two ways of handling this. One is the asynchronous, basically to send an event to whoever wants it and let them process it. On our case this would be using an EventVar. This is basically fire and forget, there is no feedback.</p>\n<p>The other way is using a callback. This is synchronous, the model code can get return values from the GUI.</p>\n<p>In both cases this is more to write than usual since comm_n0183_output is  using free functions, there is no class which can house an EventVar or a callback.</p>",
+        "id": 402414286,
+        "sender_full_name": "Alec Leamas",
+        "timestamp": 1700123992
+    },
+    {
+        "content": "<p>Here is a patch using the EventVar mechanism: <br>\n<a href=\"/user_uploads/33951/SX1UiU-q7d5tatFOk1xO2mRM/0002-comm_n0183_output-et.-al.-Don-t-refer-to-non-model-c.patch\">0002-comm_n0183_output-et.-al.-Don-t-refer-to-non-model-c.patch</a></p>\n<p>This is against my private master, you might need to rebase it but it should not be that bad.</p>",
+        "id": 402414637,
+        "sender_full_name": "Alec Leamas",
+        "timestamp": 1700124114
+    },
+    {
+        "content": "<p>And here is a patch using a callback: <br>\n<a href=\"/user_uploads/33951/-LH8qqFnvkgtxb51S8xX8E2j/0001-comm_n0183_output-et.-al.-Don-t-invoke-model-code-cb.patch\">0001-comm_n0183_output-et.-al.-Don-t-invoke-model-code-cb.patch</a></p>\n<p>Likewise, this is against my private master.</p>",
+        "id": 402414831,
+        "sender_full_name": "Alec Leamas",
+        "timestamp": 1700124166
+    },
+    {
+        "content": "<p>These compiles, but are obviously not tested. One of them needs to be applied so we can get rid of the nasty <code>#ifndef CLIAPP</code> which actually breaks all sorts of assumptions</p>",
+        "id": 402415074,
+        "sender_full_name": "Alec Leamas",
+        "timestamp": 1700124246
+    },
+    {
+        "content": "<p>BTW: The EventVar patch demonstrates how simple it is to set up listening using the new ObsListener. No need to define events etc...</p>",
+        "id": 402415929,
+        "sender_full_name": "Alec Leamas",
+        "timestamp": 1700124572
+    },
+    {
+        "content": "<p><span class=\"user-mention\" data-user-id=\"517002\">@Dave Register</span> ^</p>",
+        "id": 402422852,
+        "sender_full_name": "Alec Leamas",
+        "timestamp": 1700126794
+    },
+    {
+        "content": "<p><span class=\"user-mention\" data-user-id=\"399510\">@Alec Leamas</span> <br>\nThanks for the therapy session.  I suspected that this was evil, but too late at night to parse it.<br>\nI'll fix it, one way or another.</p>\n<p>Does basic model code contain any plugin management at all? Yes, of course it does, e.g.  plugin_loader, and friends.<br>\nSo it seems to me that pluginmanager.(cpp/h) could sensibly be refactored to pull out some \"model-safe\" bare functions, like \"SendNMEASentenceToAllPlugIns()\".  This is no more GUI-centric than many other functions in the model, and might be useful in CLIAPP.<br>\nThoughts?</p>",
+        "id": 402496511,
+        "sender_full_name": "Dave Register",
+        "timestamp": 1700148577
+    },
+    {
+        "content": "<p>Maybe into a new file called \"plugin_util.cpp/h\", or so?  Becomes part of model...</p>",
+        "id": 402506375,
+        "sender_full_name": "Dave Register",
+        "timestamp": 1700151303
+    },
+    {
+        "content": "<p>Sounds basically ok. Plugin-utils indicates free functions but no class. Perhaps right, perhaps not.</p>",
+        "id": 402518242,
+        "sender_full_name": "Alec Leamas",
+        "timestamp": 1700154821
+    },
+    {
+        "content": "<p>Corrected by EventVar method.<br>\nThanks for the clean patch.</p>",
+        "id": 402592587,
+        "sender_full_name": "Dave Register",
+        "timestamp": 1700184361
+    }
+]

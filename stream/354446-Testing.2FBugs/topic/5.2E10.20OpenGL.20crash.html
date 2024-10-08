@@ -1,0 +1,31 @@
+<html>
+<head><meta charset="utf-8"><title>5.10 OpenGL crash · Testing/Bugs · Zulip Chat Archive</title></head>
+<h2>Stream: <a href="https://leamas.github.io/zulip-archive/stream/354446-Testing.2FBugs/index.html">Testing/Bugs</a></h2>
+<h3>Topic: <a href="https://leamas.github.io/zulip-archive/stream/354446-Testing.2FBugs/topic/5.2E10.20OpenGL.20crash.html">5.10 OpenGL crash</a></h3>
+
+<hr>
+
+<base href="https://opencpn.zulipchat.com">
+
+<head><link href="https://leamas.github.io/zulip-archive/style.css" rel="stylesheet"></head>
+
+<a name="445803762"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/354446-Testing/Bugs/topic/5.10%20OpenGL%20crash/near/445803762" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Dan Dickey <a href="https://leamas.github.io/zulip-archive/stream/354446-Testing.2FBugs/topic/5.2E10.20OpenGL.20crash.html#445803762">(Jun 20 2024 at 09:46)</a>:</h4>
+<p>I have been testing 5.10 on Windows.  Today I got an unexplained crash.  I am building from master @commit:</p>
+<div class="codehilite"><pre><span></span><code>commit 6d9ca2927461d4599e5f8f9b377be5d265d5ce6f (HEAD -&gt; master, upstream/master, origin/master, origin/HEAD)
+Merge: 77daf5745 99354794c
+Author: bdbcat &lt;bdbcat@yahoo.com&gt;
+Date:   Tue Jun 18 16:19:20 2024 -0400
+
+    Merge pull request #4002 from RooieDirk/Grib
+
+    Set PluginViewport at Gribdialog init.
+</code></pre></div>
+<p>OpenCPN crashed in OpenGL.  It seems like OPENGL32.DLL went into an infinite recursion and killed itself. I was running RelWithDebInfo version when it crashed.  In the debug log I see the same call sequence over and over until crash.  This is the tail of the debug log from Visual Studio:<br>
+<a href="/user_uploads/33951/xQ2ASqQDlGnmwMtzVUcX3saC/ldrCrashLog.txt">ldrCrashLog.txt</a><br>
+The stack was blown so no possibility to get stack trace.</p>
+
+
+
+<hr><p>Last updated: Oct 08 2024 at 10:11 UTC</p>
+</html>

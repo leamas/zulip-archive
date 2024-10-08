@@ -1,0 +1,195 @@
+<html>
+<head><meta charset="utf-8"><title>Reformat sources · Master · Zulip Chat Archive</title></head>
+<h2>Stream: <a href="https://leamas.github.io/zulip-archive/stream/332168-Master/index.html">Master</a></h2>
+<h3>Topic: <a href="https://leamas.github.io/zulip-archive/stream/332168-Master/topic/Reformat.20sources.html">Reformat sources</a></h3>
+
+<hr>
+
+<base href="https://opencpn.zulipchat.com">
+
+<head><link href="https://leamas.github.io/zulip-archive/style.css" rel="stylesheet"></head>
+
+<a name="462065994"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332168-Master/topic/Reformat%20sources/near/462065994" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Alec Leamas <a href="https://leamas.github.io/zulip-archive/stream/332168-Master/topic/Reformat.20sources.html#462065994">(Aug 13 2024 at 09:43)</a>:</h4>
+<p>After the 5.10 release Its IMO time to reformat all sources using clang-format. </p>
+<p>Anyone against? Time to speak up.</p>
+<p><span class="user-mention" data-user-id="517002">@Dave Register</span>  <span class="user-mention" data-user-id="573239">@Pavel Kalian</span></p>
+
+
+
+<a name="462537176"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332168-Master/topic/Reformat%20sources/near/462537176" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Alec Leamas <a href="https://leamas.github.io/zulip-archive/stream/332168-Master/topic/Reformat.20sources.html#462537176">(Aug 15 2024 at 12:12)</a>:</h4>
+<p>...done</p>
+
+
+
+<a name="462537811"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332168-Master/topic/Reformat%20sources/near/462537811" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Pavel Kalian <a href="https://leamas.github.io/zulip-archive/stream/332168-Master/topic/Reformat.20sources.html#462537811">(Aug 15 2024 at 12:16)</a>:</h4>
+<p>Maybe time we all start to actually use <code>pre-commit</code> with at least the <code>clang-format</code> hook, otherwise it will wall apart again...</p>
+
+
+
+<a name="462540488"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332168-Master/topic/Reformat%20sources/near/462540488" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Alec Leamas <a href="https://leamas.github.io/zulip-archive/stream/332168-Master/topic/Reformat.20sources.html#462540488">(Aug 15 2024 at 12:26)</a>:</h4>
+<p>Yes, we should, and I'm fine with it. But we need <span class="user-mention" data-user-id="517002">@Dave Register</span>  on board.</p>
+
+
+
+<a name="462547253"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332168-Master/topic/Reformat%20sources/near/462547253" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Alec Leamas <a href="https://leamas.github.io/zulip-archive/stream/332168-Master/topic/Reformat.20sources.html#462547253">(Aug 15 2024 at 13:08)</a>:</h4>
+<p>... but one problem is that we should probably not blindly apply "our" style to the 3-rd party sources in libs. That is, we would need to patch the standard hook a little</p>
+
+
+
+<a name="462547556"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332168-Master/topic/Reformat%20sources/near/462547556" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Pavel Kalian <a href="https://leamas.github.io/zulip-archive/stream/332168-Master/topic/Reformat.20sources.html#462547556">(Aug 15 2024 at 13:10)</a>:</h4>
+<p>We don't need to patch it, just add excludes, as in what I use in the dashboardsk plugin</p>
+<div class="codehilite" data-code-language="YAML"><pre><span></span><code><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">repo</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">https://github.com/pre-commit/mirrors-clang-format</span>
+<span class="w">    </span><span class="l l-Scalar l-Scalar-Plain">rev</span><span class="p p-Indicator">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">v17.0.6</span>
+<span class="w">    </span><span class="l l-Scalar l-Scalar-Plain">hooks</span><span class="p p-Indicator">:</span>
+<span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">id</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">clang-format</span>
+<span class="w">        </span><span class="nt">exclude</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">|</span>
+<span class="w">            </span><span class="no">(?x)^(</span>
+<span class="w">                </span><span class="no">sqlite.*|</span>
+<span class="w">                </span><span class="no">wxsqlite.*|</span>
+<span class="w">                </span><span class="no">.*json|</span>
+<span class="w">                </span><span class="no">.*yml</span>
+<span class="w">            </span><span class="no">)$</span>
+</code></pre></div>
+
+
+
+<a name="462547698"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332168-Master/topic/Reformat%20sources/near/462547698" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Alec Leamas <a href="https://leamas.github.io/zulip-archive/stream/332168-Master/topic/Reformat.20sources.html#462547698">(Aug 15 2024 at 13:11)</a>:</h4>
+<p>righth, hadn't  checked. Let's wait for Dave then</p>
+
+
+
+<a name="462558153"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332168-Master/topic/Reformat%20sources/near/462558153" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Dave Register <a href="https://leamas.github.io/zulip-archive/stream/332168-Master/topic/Reformat.20sources.html#462558153">(Aug 15 2024 at 14:04)</a>:</h4>
+<p>I'm there.<br>
+We should publish concise instructions/policy (somewhere?) so that all new PRs conform to the plan.</p>
+
+
+
+<a name="462558273"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332168-Master/topic/Reformat%20sources/near/462558273" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Pavel Kalian <a href="https://leamas.github.io/zulip-archive/stream/332168-Master/topic/Reformat.20sources.html#462558273">(Aug 15 2024 at 14:05)</a>:</h4>
+<p>Yes, and configure GA to fail for PRs that are not formatted</p>
+
+
+
+<a name="462558333"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332168-Master/topic/Reformat%20sources/near/462558333" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Alec Leamas <a href="https://leamas.github.io/zulip-archive/stream/332168-Master/topic/Reformat.20sources.html#462558333">(Aug 15 2024 at 14:06)</a>:</h4>
+<blockquote>
+<p>(somewhere?)</p>
+</blockquote>
+<p>Developer manual</p>
+
+
+
+<a name="462563274"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332168-Master/topic/Reformat%20sources/near/462563274" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Alec Leamas <a href="https://leamas.github.io/zulip-archive/stream/332168-Master/topic/Reformat.20sources.html#462563274">(Aug 15 2024 at 14:30)</a>:</h4>
+<p><span class="user-mention" data-user-id="573239">@Pavel Kalian</span> </p>
+<p>Something like this?</p>
+<div class="codehilite"><pre><span></span><code>repos:
+-   repo: https://github.com/pre-commit/pre-commit-hooks
+    rev: v2.3.0
+    hooks:
+    -   id: check-yaml
+    -   id: end-of-file-fixer
+    -   id: trailing-whitespace
+-   repo: https://github.com/pre-commit/mirrors-clang-format
+    rev: v18.1.8
+    hooks:
+    -   id: clang-format
+        exclude: &quot;libs&quot;
+</code></pre></div>
+
+
+
+<a name="462564866"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332168-Master/topic/Reformat%20sources/near/462564866" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Pavel Kalian <a href="https://leamas.github.io/zulip-archive/stream/332168-Master/topic/Reformat.20sources.html#462564866">(Aug 15 2024 at 14:37)</a>:</h4>
+<p>Not quite, <code>exclude</code> must be a Python regular expression, like</p>
+<div class="codehilite"><pre><span></span><code>exclude: |
+            (?x)^(
+                libs.*|
+                data.*
+            )$
+</code></pre></div>
+
+
+
+<a name="462566482"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332168-Master/topic/Reformat%20sources/near/462566482" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Alec Leamas <a href="https://leamas.github.io/zulip-archive/stream/332168-Master/topic/Reformat.20sources.html#462566482">(Aug 15 2024 at 14:47)</a>:</h4>
+<p>this looks ok to me:</p>
+<div class="codehilite"><pre><span></span><code>repos:
+-   repo: https://github.com/pre-commit/pre-commit-hooks
+    rev: v2.3.0
+    hooks:
+    -   id: check-yaml
+    -   id: end-of-file-fixer
+    -   id: trailing-whitespace
+-   repo: https://github.com/pre-commit/mirrors-clang-format
+    rev: v18.1.8
+    hooks:
+    -   id: clang-format
+        exclude: (?x)^( libs.*| data.*)$
+</code></pre></div>
+
+
+
+<a name="462566896"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332168-Master/topic/Reformat%20sources/near/462566896" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Pavel Kalian <a href="https://leamas.github.io/zulip-archive/stream/332168-Master/topic/Reformat.20sources.html#462566896">(Aug 15 2024 at 14:49)</a>:</h4>
+<p>Yes. In <a href="https://github.com/nohal/dashboardsk_pi/blob/main/.pre-commit-config.yamlI">https://github.com/nohal/dashboardsk_pi/blob/main/.pre-commit-config.yamlI</a> also exclude images from the end of file fixer and apply formatting to cmake files, but otherwise it is prety similar</p>
+
+
+
+<a name="462567833"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332168-Master/topic/Reformat%20sources/near/462567833" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Alec Leamas <a href="https://leamas.github.io/zulip-archive/stream/332168-Master/topic/Reformat.20sources.html#462567833">(Aug 15 2024 at 14:55)</a>:</h4>
+<p>OK, lets go with this for now. Nothing is yet set in stone</p>
+
+
+
+<a name="462577225"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332168-Master/topic/Reformat%20sources/near/462577225" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Alec Leamas <a href="https://leamas.github.io/zulip-archive/stream/332168-Master/topic/Reformat.20sources.html#462577225">(Aug 15 2024 at 15:32)</a>:</h4>
+<p>OK, we have a starter.</p>
+<ol>
+<li>I have checked in  <em>.pre-commit-config.yaml</em> .</li>
+<li>We have some docs at <a href="https://opencpn-manuals.github.io/main/opencpn-dev/code-formatting.html#_cc">https://opencpn-manuals.github.io/main/opencpn-dev/code-formatting.html#_cc</a></li>
+</ol>
+<p>The short story is that the only thing  needed is <code>pip install pre-commit</code>. </p>
+<p>Things to do:</p>
+<ul>
+<li>Let's use this for a time without announcing it so we can fix possible rough corners</li>
+<li>Install the GA action which  rejects unformatted sources when pushed</li>
+<li>Announce the new policy on github.</li>
+</ul>
+
+
+
+<a name="462590240"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332168-Master/topic/Reformat%20sources/near/462590240" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Pavel Kalian <a href="https://leamas.github.io/zulip-archive/stream/332168-Master/topic/Reformat.20sources.html#462590240">(Aug 15 2024 at 16:36)</a>:</h4>
+<p>And the dev has to run <code>pre-commit install</code> in the OpenCPN's root directory to actually start using it.</p>
+
+
+
+<a name="462597109"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332168-Master/topic/Reformat%20sources/near/462597109" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Alec Leamas <a href="https://leamas.github.io/zulip-archive/stream/332168-Master/topic/Reformat.20sources.html#462597109">(Aug 15 2024 at 17:15)</a>:</h4>
+<p>Manual updated. Fat fingers, missed to add [skip ci]. Sigh</p>
+
+
+
+<a name="462627131"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332168-Master/topic/Reformat%20sources/near/462627131" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Dave Register <a href="https://leamas.github.io/zulip-archive/stream/332168-Master/topic/Reformat.20sources.html#462627131">(Aug 15 2024 at 19:52)</a>:</h4>
+<p>Which manual?  Where?</p>
+
+
+
+<a name="462627232"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332168-Master/topic/Reformat%20sources/near/462627232" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Alec Leamas <a href="https://leamas.github.io/zulip-archive/stream/332168-Master/topic/Reformat.20sources.html#462627232">(Aug 15 2024 at 19:53)</a>:</h4>
+<p>Link above, at 2.</p>
+
+
+
+<hr><p>Last updated: Oct 08 2024 at 10:11 UTC</p>
+</html>

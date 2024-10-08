@@ -1,0 +1,249 @@
+<html>
+<head><meta charset="utf-8"><title>bugs handling · Master · Zulip Chat Archive</title></head>
+<h2>Stream: <a href="https://leamas.github.io/zulip-archive/stream/332168-Master/index.html">Master</a></h2>
+<h3>Topic: <a href="https://leamas.github.io/zulip-archive/stream/332168-Master/topic/bugs.20handling.html">bugs handling</a></h3>
+
+<hr>
+
+<base href="https://opencpn.zulipchat.com">
+
+<head><link href="https://leamas.github.io/zulip-archive/style.css" rel="stylesheet"></head>
+
+<a name="395503771"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332168-Master/topic/bugs%20handling/near/395503771" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Alec Leamas <a href="https://leamas.github.io/zulip-archive/stream/332168-Master/topic/bugs.20handling.html#395503771">(Oct 08 2023 at 07:36)</a>:</h4>
+<p><span class="user-mention" data-user-id="517002">@Dave Register</span> : <a href="https://github.com/OpenCPN/plugins/issues/884">https://github.com/OpenCPN/plugins/issues/884</a>: Needs to be closed.</p>
+
+
+
+<a name="395540014"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332168-Master/topic/bugs%20handling/near/395540014" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Notification Bot <a href="https://leamas.github.io/zulip-archive/stream/332168-Master/topic/bugs.20handling.html#395540014">(Oct 08 2023 at 12:59)</a>:</h4>
+<p><a href="#narrow/stream/332168-Master---5.2E8.2E0--.28was.3A-comms.29/topic/bugs.20handling/near/395503771">A message</a> was moved here from <a class="stream-topic" data-stream-id="332168" href="/#narrow/stream/332168-Master---5.2E8.2E0--.28was.3A-comms.29/topic/Common.20plugin.20library">#Master - 5.8.0  (was: comms) &gt; Common plugin library</a> by <span class="user-mention silent" data-user-id="399510">Alec Leamas</span>.</p>
+
+
+
+<a name="418416671"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332168-Master/topic/bugs%20handling/near/418416671" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Håkan Svensson <a href="https://leamas.github.io/zulip-archive/stream/332168-Master/topic/bugs.20handling.html#418416671">(Jan 27 2024 at 13:10)</a>:</h4>
+<p><span class="user-mention" data-user-id="399510">@Alec Leamas</span> <span class="user-mention" data-user-id="517002">@Dave Register</span> <span class="user-mention" data-user-id="573239">@Pavel Kalian</span> <br>
+Maybe not worth a bug report?<br>
+Rpi4 Bullseye. Today's master 5.9<br>
+O crash at start up after accepted "New version ..."</p>
+<p>gdb crash and bt:</p>
+<div class="codehilite"><pre><span></span><code>GLEW init success!nGLEW init success!n SENC: nCPU: 4    m_max_jobs :3
+
+(opencpn:968058): Gtk-CRITICAL **: 13:35:18.266: gtk_window_resize: assertion &#39;height &gt; 0&#39; failed
+--Type &lt;RET&gt; for more, q to quit, c to continue without paging--
+
+Thread 1 &quot;opencpn&quot; received signal SIGSEGV, Segmentation fault.
+0x0000007ff72401e8 in wxString::compare(wxString const&amp;) const ()
+   from /lib/aarch64-linux-gnu/libwx_baseu-3.0.so.0
+(gdb) bt
+#0  0x0000007ff72401e8 in wxString::compare(wxString const&amp;) const ()
+    at /lib/aarch64-linux-gnu/libwx_baseu-3.0.so.0
+#1  0x0000005555d2778c in wxString::Cmp(wxString const&amp;) const (s=..., this=0x555c7bd978)
+    at /usr/include/wx-3.0/wx/string.h:2111
+#2  wxString::IsSameAs(wxString const&amp;, bool) const (compareWithCase=true, str=..., this=0x555c7bd978)
+    at /usr/include/wx-3.0/wx/string.h:2130
+#3  wxString::IsSameAs(wxString const&amp;, bool) const (compareWithCase=true, str=..., this=0x555c7bd978)
+    at /usr/include/wx-3.0/wx/string.h:2123
+#4  s52plib::GetAndAddCSRules(_ObjRazRules*, _Rules*)
+    (this=this@entry=0x55591f73e0, rzRules=rzRules@entry=0x555a60acb0, rules=rules@entry=0x555a60ac30)
+    at /home/pi/Builds/OpenCPN/libs/s52plib/src/s52plib.cpp:9234
+#5  0x0000005555d27a78 in s52plib::SetLineFeaturePriority(_ObjRazRules*, int)
+    (this=0x55591f73e0, rzRules=0x555a60acb0, npriority=npriority@entry=3)
+    at /home/pi/Builds/OpenCPN/libs/s52plib/src/s52plib.cpp:6672
+#6  0x0000005555a8eb84 in s57chart::SetLinePriorities() (this=this@entry=0x555a2a1580)
+    at /home/pi/Builds/OpenCPN/gui/src/s57chart.cpp:788
+#7  0x0000005555aa4530 in s57chart::DoRenderRegionViewOnGL(wxGLContext const&amp;, ViewPort const&amp;, OCPNRegion const&amp;, LLRegion const&amp;, bool)
+    (this=0x555a2a1580, glc=..., VPoint=..., RectRegion=..., Region=..., b_overlay=b_overlay@entry=false)
+    at /home/pi/Builds/OpenCPN/gui/src/s57chart.cpp:1628
+#8  0x0000005555aa4858 in s57chart::RenderRegionViewOnGLNoText(wxGLContext const&amp;, ViewPort const&amp;, OCPNRegion const&amp;, LLRegion const&amp;)
+    (Region=&lt;optimized out&gt;, RectRegion=&lt;optimized out&gt;, VPoint=&lt;optimized out&gt;, glc=&lt;optimized out&gt;, this=&lt;optimized out&gt;) at /home/pi/Builds/OpenCPN/gui/src/s57chart.cpp:1572
+
+
+i@RPi400:~/Builds/OpenCPN/build $ cat /proc/version
+Linux version 6.1.21-v8+ (dom@buildbot) (aarch64-linux-gnu-gcc-8 (Ubuntu/Linaro 8.4.0-3ubuntu1) 8.4.0, GNU ld (GNU Binutils for Ubuntu) 2.34) #1642 SMP PREEMPT Mon Apr  3 17:24:16 BST 2023
+
+pi@RPi400:~/Builds/OpenCPN/build $ cat /etc/os-release
+PRETTY_NAME=&quot;Debian GNU/Linux 11 (bullseye)&quot;
+NAME=&quot;Debian GNU/Linux&quot;
+VERSION_ID=&quot;11&quot;
+VERSION=&quot;11 (bullseye)&quot;
+VERSION_CODENAME=bullseye
+ID=debian
+HOME_URL=&quot;https://www.debian.org/&quot;
+SUPPORT_URL=&quot;https://www.debian.org/support&quot;
+BUG_REPORT_URL=&quot;https://bugs.debian.org/&quot;
+</code></pre></div>
+
+
+
+<a name="418417083"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332168-Master/topic/bugs%20handling/near/418417083" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Pavel Kalian <a href="https://leamas.github.io/zulip-archive/stream/332168-Master/topic/bugs.20handling.html#418417083">(Jan 27 2024 at 13:16)</a>:</h4>
+<p>It is related to <a href="https://github.com/OpenCPN/OpenCPN/issues/3600">https://github.com/OpenCPN/OpenCPN/issues/3600</a><br>
+Try this:</p>
+<div class="codehilite" data-code-language="Diff"><pre><span></span><code><span class="gh">diff --git a/libs/s52plib/src/chartsymbols.cpp b/libs/s52plib/src/chartsymbols.cpp</span>
+<span class="gh">index 755163b31..91b9cd4d4 100644</span>
+<span class="gd">--- a/libs/s52plib/src/chartsymbols.cpp</span>
+<span class="gi">+++ b/libs/s52plib/src/chartsymbols.cpp</span>
+<span class="gu">@@ -474,7 +474,7 @@ void ChartSymbols::ProcessSymbols(pugi::xml_node &amp;node) {</span>
+
+
+<span class="w"> </span>void ChartSymbols::BuildLookup(Lookup &amp;lookup) {
+<span class="gd">-  LUPrec *LUP = (LUPrec *)calloc(1, sizeof(LUPrec));</span>
+<span class="gi">+  LUPrec *LUP = new LUPrec();</span>
+<span class="w"> </span>  //plib-&gt;pAlloc-&gt;Add(LUP);
+
+<span class="w"> </span>  LUP-&gt;RCID = lookup.RCID;
+<span class="gh">diff --git a/libs/s52plib/src/s52plib.cpp b/libs/s52plib/src/s52plib.cpp</span>
+<span class="gh">index 49463cd61..e7f64ae2f 100755</span>
+<span class="gd">--- a/libs/s52plib/src/s52plib.cpp</span>
+<span class="gi">+++ b/libs/s52plib/src/s52plib.cpp</span>
+<span class="gu">@@ -9245,7 +9245,7 @@ void s52plib::GetAndAddCSRules(ObjRazRules *rzRules, Rules *rules) {</span>
+
+<span class="w"> </span>  if (NULL == LUP)  // Not found
+<span class="w"> </span>  {
+<span class="gd">-    NewLUP = (LUPrec *)calloc(1, sizeof(LUPrec));</span>
+<span class="gi">+    NewLUP = new LUPrec();</span>
+<span class="w"> </span>    //pAlloc-&gt;Add(NewLUP);
+
+<span class="w"> </span>    NewLUP-&gt;DISC = rzRules-&gt;LUP-&gt;DISC;  // as a default
+</code></pre></div>
+
+
+
+<a name="418418471"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332168-Master/topic/bugs%20handling/near/418418471" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Håkan Svensson <a href="https://leamas.github.io/zulip-archive/stream/332168-Master/topic/bugs.20handling.html#418418471">(Jan 27 2024 at 13:40)</a>:</h4>
+<p><span class="user-mention" data-user-id="573239">@Pavel Kalian</span> <br>
+Yes, with your changes it starts and run. Thanks<br>
+If below msg are new I can't tell since it was a while since starting from terminal.</p>
+<div class="codehilite"><pre><span></span><code>pi@RPi400:~/Builds/OpenCPN/build $ ./opencpn
+GLEW init success!nGLEW init success!n SENC: nCPU: 4    m_max_jobs :3
+
+(opencpn:977893): Gtk-CRITICAL **: 14:35:58.703: gtk_window_resize: assertion &#39;height &gt; 0&#39; failed
+
+(opencpn:977893): Gtk-CRITICAL **: 14:36:05.213: gtk_widget_set_allocation: assertion &#39;_gtk_widget_get_visible (widget) || _gtk_widget_is_toplevel (widget)&#39; failed
+</code></pre></div>
+
+
+
+<a name="418418534"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332168-Master/topic/bugs%20handling/near/418418534" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Pavel Kalian <a href="https://leamas.github.io/zulip-archive/stream/332168-Master/topic/bugs.20handling.html#418418534">(Jan 27 2024 at 13:41)</a>:</h4>
+<p>No, they have always been there and are harmless, probably nothing we can do to get rid of them as they originate somewhere between wx and gtk</p>
+
+
+
+<a name="418418592"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332168-Master/topic/bugs%20handling/near/418418592" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Håkan Svensson <a href="https://leamas.github.io/zulip-archive/stream/332168-Master/topic/bugs.20handling.html#418418592">(Jan 27 2024 at 13:42)</a>:</h4>
+<p><span aria-label="+1" class="emoji emoji-1f44d" role="img" title="+1">:+1:</span></p>
+
+
+
+<a name="418418619"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332168-Master/topic/bugs%20handling/near/418418619" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Pavel Kalian <a href="https://leamas.github.io/zulip-archive/stream/332168-Master/topic/bugs.20handling.html#418418619">(Jan 27 2024 at 13:43)</a>:</h4>
+<p>I will not commit this patch until I confirm with <span class="user-mention" data-user-id="517002">@Dave Register</span> it was his actual intention to do it like this...</p>
+
+
+
+<a name="418422743"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332168-Master/topic/bugs%20handling/near/418422743" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Dave Register <a href="https://leamas.github.io/zulip-archive/stream/332168-Master/topic/bugs.20handling.html#418422743">(Jan 27 2024 at 14:44)</a>:</h4>
+<p>Fixed it.  Embarrassed by that old code...</p>
+
+
+
+<a name="418422898"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332168-Master/topic/bugs%20handling/near/418422898" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Alec Leamas <a href="https://leamas.github.io/zulip-archive/stream/332168-Master/topic/bugs.20handling.html#418422898">(Jan 27 2024 at 14:47)</a>:</h4>
+<p>oops... any chance you could bisect it?</p>
+
+
+
+<a name="418422981"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332168-Master/topic/bugs%20handling/near/418422981" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Alec Leamas <a href="https://leamas.github.io/zulip-archive/stream/332168-Master/topic/bugs.20handling.html#418422981">(Jan 27 2024 at 14:48)</a>:</h4>
+<p>sorry, missed the thread. disregard</p>
+
+
+
+<a name="418423107"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332168-Master/topic/bugs%20handling/near/418423107" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Pavel Kalian <a href="https://leamas.github.io/zulip-archive/stream/332168-Master/topic/bugs.20handling.html#418423107">(Jan 27 2024 at 14:50)</a>:</h4>
+<p><a href="/user_uploads/33951/N9VYScnMaNYNJkssWWyTzpWD/leaks.txt">leaks.txt</a><br>
+This is what we are down to now, I don't think we can resolve any of the rest in the application code. But being less than 1KB, we can probably live with it...</p>
+
+
+
+<a name="418423668"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332168-Master/topic/bugs%20handling/near/418423668" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Dave Register <a href="https://leamas.github.io/zulip-archive/stream/332168-Master/topic/bugs.20handling.html#418423668">(Jan 27 2024 at 14:58)</a>:</h4>
+<p>Hmmmm<br>
+In OCPNPlatform.cpp:753</p>
+<div class="codehilite"><pre><span></span><code>  delete tcanvas;
+  delete pctx;
+</code></pre></div>
+
+<p>Try flipping the order of the deletes here, maybe unwinding in reverse order of creation will help?</p>
+
+
+
+<a name="418423723"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332168-Master/topic/bugs%20handling/near/418423723" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Pavel Kalian <a href="https://leamas.github.io/zulip-archive/stream/332168-Master/topic/bugs.20handling.html#418423723">(Jan 27 2024 at 14:59)</a>:</h4>
+<p>I already did I think, but will try again to make sure</p>
+
+
+
+<a name="418424017"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332168-Master/topic/bugs%20handling/near/418424017" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Pavel Kalian <a href="https://leamas.github.io/zulip-archive/stream/332168-Master/topic/bugs.20handling.html#418424017">(Jan 27 2024 at 15:03)</a>:</h4>
+<p>Yes, indeed I did and it is the same</p>
+
+
+
+<a name="418424176"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332168-Master/topic/bugs%20handling/near/418424176" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Dave Register <a href="https://leamas.github.io/zulip-archive/stream/332168-Master/topic/bugs.20handling.html#418424176">(Jan 27 2024 at 15:05)</a>:</h4>
+<p>OK, that's what we have, I guess.</p>
+
+
+
+<a name="418424267"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332168-Master/topic/bugs%20handling/near/418424267" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Pavel Kalian <a href="https://leamas.github.io/zulip-archive/stream/332168-Master/topic/bugs.20handling.html#418424267">(Jan 27 2024 at 15:06)</a>:</h4>
+<h1>AddressSanitizer</h1>
+<h2>suppr.txt</h2>
+<p>There are (supposedly false positive) leaks detected in libfontconfig, we want to suppress them</p>
+<div class="codehilite"><pre><span></span><code>leak:FcPatternObjectInsertElt
+leak:FcValueSave
+</code></pre></div>
+<div class="codehilite" data-code-language="Bash"><pre><span></span><code>cmake<span class="w"> </span>-DENABLE_SANITIZER<span class="o">=</span>address<span class="w"> </span>..
+make
+<span class="nv">ASAN_OPTIONS</span><span class="o">=</span><span class="nv">detect_leaks</span><span class="o">=</span><span class="m">1</span>,halt_on_error<span class="o">=</span><span class="m">0</span><span class="w"> </span><span class="nv">LSAN_OPTIONS</span><span class="o">=</span><span class="nv">suppressions</span><span class="o">=</span>../suppr.txt<span class="w"> </span>./opencpn<span class="w"> </span>&gt;<span class="w"> </span>leaks.txt<span class="w"> </span><span class="m">2</span>&gt;<span class="p">&amp;</span><span class="m">1</span>
+</code></pre></div>
+
+
+
+<a name="418424303"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332168-Master/topic/bugs%20handling/near/418424303" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Pavel Kalian <a href="https://leamas.github.io/zulip-archive/stream/332168-Master/topic/bugs.20handling.html#418424303">(Jan 27 2024 at 15:07)</a>:</h4>
+<p>This is how I do it</p>
+
+
+
+<a name="418427417"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332168-Master/topic/bugs%20handling/near/418427417" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Dan Dickey <a href="https://leamas.github.io/zulip-archive/stream/332168-Master/topic/bugs.20handling.html#418427417">(Jan 27 2024 at 15:51)</a>:</h4>
+<p>Can anyone point me to code that causes this leak reported by Visual C debug heap library:</p>
+<blockquote>
+<p>{311223} normal block at 0x0F531340, 18 bytes long.<br>
+ Data: &lt;:America/Asuncio&gt; 3A 41 6D 65 72 69 63 61 2F 41 73 75 6E 63 69 6F <br>
+{311222} normal block at 0x0F531740, 15 bytes long.<br>
+ Data: &lt;:America/Aruba &gt; 3A 41 6D 65 72 69 63 61 2F 41 72 75 62 61 00 <br>
+{311221} normal block at 0x0F531100, 19 bytes long.<br>
+ Data: &lt;:America/Araguai&gt; 3A 41 6D 65 72 69 63 61 2F 41 72 61 67 75 61 69 <br>
+{311220} normal block at 0x0F5311C0, 17 bytes long.<br>
+ Data: &lt;:America/Antigua&gt; 3A 41 6D 65 72 69 63 61 2F 41 6E 74 69 67 75 61 <br>
+{311219} normal block at 0x0F5317C0, 18 bytes long.<br>
+ Data: &lt;:America/Anguill&gt; 3A 41 6D 65 72 69 63 61 2F 41 6E 67 75 69 6C 6C</p>
+</blockquote>
+<p>Any idea what kind of data that is?  Maybe tide stations or something similar?</p>
+
+
+
+<a name="418427767"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332168-Master/topic/bugs%20handling/near/418427767" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Pavel Kalian <a href="https://leamas.github.io/zulip-archive/stream/332168-Master/topic/bugs.20handling.html#418427767">(Jan 27 2024 at 15:56)</a>:</h4>
+<p>Looks like timezone data from <code>NV_CHAR tzfile[DEFAULT_TZFILES][DEFAULT_TZFILE_SIZE]</code> in <code>gui/src/tcmgr.cpp</code></p>
+
+
+
+<hr><p>Last updated: Oct 08 2024 at 10:11 UTC</p>
+</html>

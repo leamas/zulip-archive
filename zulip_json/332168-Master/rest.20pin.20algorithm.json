@@ -1,0 +1,26 @@
+[
+    {
+        "content": "<p>Looking into how a random int is converted to a some obfuscated value which is transferred on the network. </p>\n<p>The basic idea here is that it should no be possible to deduce what was used to create the obfuscated value by sniffing this obfuscated value on the network.</p>\n<p>To that end,  we use a random number generator to generate a random string from the original secret. hoping that it is not possible to find out the int by looking at the output from the random generator.</p>\n<p>However, this is not completely correct implemented.  The alghoritms optimized for this purpose is hashing algorithms like sha 512 etc. These are matematically \"safe\" for this purpose, a random number generator is not.</p>\n<p>Now, this would be a simple fix. However, such a fix would break all currently paired connections out there. So the question becomes: is it worth it?</p>\n<p><span class=\"user-mention\" data-user-id=\"517002\">@Dave Register</span> ^</p>",
+        "id": 403009507,
+        "sender_full_name": "Alec Leamas",
+        "timestamp": 1700399931
+    },
+    {
+        "content": "<p><span class=\"user-mention\" data-user-id=\"399510\">@Alec Leamas</span> <br>\nYes, I think so.<br>\nI think we have very few actual users exploring O5.9.x at this point.  Users affected by this issue will mostly be testers, looking at one or two specific issues.  Requiring a \"re-pair\" on release of O5.10.x will not be a burden to the wider user base.  Upgrades are expected to come with glitches.<br>\nCarry on, please.</p>",
+        "id": 403019040,
+        "sender_full_name": "Dave Register",
+        "timestamp": 1700406402
+    },
+    {
+        "content": "<p><span class=\"user-mention\" data-user-id=\"517002\">@Dave Register</span> </p>\n<p>Continuing on rest server here.</p>\n<p>I'm unhappy about the LoadConfig/SaveConfig stuff.  This means that we read and even write to the overall config file from the worker thread. This obviously carries risks if the file is accessed by the main thread in parallel. Yes, it's not \"likely\", but still...</p>\n<p>Thoughts?</p>",
+        "id": 403549900,
+        "sender_full_name": "Alec Leamas",
+        "timestamp": 1700644384
+    },
+    {
+        "content": "<blockquote>\n<p>Thoughts?</p>\n</blockquote>\n<p>False alarm. LoadConfig/SaveConfig is in the main thread. Sorry for the noise</p>",
+        "id": 403569164,
+        "sender_full_name": "Alec Leamas",
+        "timestamp": 1700650874
+    }
+]

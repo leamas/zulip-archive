@@ -1,0 +1,62 @@
+[
+    {
+        "content": "<p><span class=\"user-mention\" data-user-id=\"399510\">@Alec Leamas</span> I'm resurrecting the Survey plugin. It has dependency on a dynamically loaded SQLite extension (<code>mod_spatialite</code>), which itself has quite a few dependencies (PROJ, LibGEOS etc.). Do you have some suggestion on the least painful way to do it in flatpak? Everywhere else it will probably be OK to handle it using \"Do XXX\" instruction for the user, where XXX is either \"Unpack an archive to the OpenCPN folder\" or \"Run <code>brew/apt install libspatialite</code>\"</p>",
+        "id": 405705605,
+        "sender_full_name": "Pavel Kalian",
+        "timestamp": 1701643885
+    },
+    {
+        "content": "<p>actually, these things are known to not work. Flatpak runs in a sandbox and will not load anything from the host. To make the plugin run in the sandbox you need to add the deps to the manifest, there is no way around.</p>\n<p>The way is to add new snippets to opencpn-libs/flatpak and then use them  as in the shipdriver manifest's use of libglu around line 34.</p>\n<p>You can of course  also add the deps right into the survey manifest. The downside is that such deps are not reusable.</p>",
+        "id": 405706093,
+        "sender_full_name": "Alec Leamas",
+        "timestamp": 1701644272
+    },
+    {
+        "content": "<p>OTOH, in my experience it's nti that complicated to add new deps in the manifest. You basically clone or download and  makes a local build. Once you have done that it's pretty straight-forward.  </p>\n<p>There are plenty of examples in OpenCPN/flatpak/org.opencpn.OpenCPN.yaml. Note that there are clever defaults demonstrated by for example zlib there.</p>",
+        "id": 405707425,
+        "sender_full_name": "Alec Leamas",
+        "timestamp": 1701645230
+    },
+    {
+        "content": "<p>Let's see, the possible problem is that unlike with all that are already there I need a dynamic library now and some of the dependencies overla with what we already have in the core app. But we will see soon enough...</p>",
+        "id": 405707753,
+        "sender_full_name": "Pavel Kalian",
+        "timestamp": 1701645543
+    },
+    {
+        "content": "<blockquote>\n<p>that unlike with all that are already there I need a dynamic library </p>\n</blockquote>\n<p>That's certainly interesting... no idea what could mean in this context. Why? Can't you just rebuild the sources?</p>",
+        "id": 405707865,
+        "sender_full_name": "Alec Leamas",
+        "timestamp": 1701645659
+    },
+    {
+        "content": "<p>I am not sure linking the loadable extension statically is possible at all. But will of course try as I have to build it anyway.</p>",
+        "id": 405708229,
+        "sender_full_name": "Pavel Kalian",
+        "timestamp": 1701645999
+    },
+    {
+        "content": "<p>Thinking about it, I have actually bundled some dynamic libraries long time ago. What I did then was to  integrate this in the cmake setup, basically a libs/ things which had a CMakelists which made it possible to link to them. This is transparent from Flatpak's perspective.</p>",
+        "id": 405708459,
+        "sender_full_name": "Alec Leamas",
+        "timestamp": 1701646072
+    },
+    {
+        "content": "<p>Here: <a href=\"https://github.com/Rasbats/photolayer_pi\">https://github.com/Rasbats/photolayer_pi</a></p>",
+        "id": 405708644,
+        "sender_full_name": "Alec Leamas",
+        "timestamp": 1701646172
+    },
+    {
+        "content": "<p>Will have a look, thanks.</p>",
+        "id": 405709137,
+        "sender_full_name": "Pavel Kalian",
+        "timestamp": 1701646557
+    },
+    {
+        "content": "<p>it actually happens in o-charts as well, the DRM module is  a dynamic lib.</p>",
+        "id": 405710541,
+        "sender_full_name": "Alec Leamas",
+        "timestamp": 1701647884
+    }
+]

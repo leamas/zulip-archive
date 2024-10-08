@@ -1,0 +1,32 @@
+[
+    {
+        "content": "<p>Some of the issues mile-stoned for OCPN v5.10 look like they will require a bump in the plugin API from v118.  Examples:</p>\n<ul>\n<li>Extend plugin API to allow contextual menus on waypoints, routes, tracks and AIS targets, <a href=\"https://github.com/opencpn/OpenCPN/issues/3586\">#3586</a></li>\n<li>Add API attributes for tracks as is now for routes <a href=\"https://github.com/opencpn/OpenCPN/issues/3166\">#3166</a></li>\n</ul>\n<p>I have seen no mention of an update from API 118 for OCPN 5.10.<br>\nAm I missing something?</p>",
+        "id": 443971675,
+        "sender_full_name": "Tony Voss",
+        "timestamp": 1718103005
+    },
+    {
+        "content": "<blockquote>\n<p>Am I missing something?</p>\n</blockquote>\n<p>Probably not. There are new functions in ocpn_plugin.h which are marked as 1.19,  but the overall   API_VERSION_MINOR is still at 18.  Probably an oversight</p>",
+        "id": 443974005,
+        "sender_full_name": "Alec Leamas",
+        "timestamp": 1718103871
+    },
+    {
+        "content": "<p><span class=\"user-mention\" data-user-id=\"517002\">@Dave Register</span>   <span class=\"user-mention\" data-user-id=\"573239\">@Pavel Kalian</span>  ^</p>",
+        "id": 443974055,
+        "sender_full_name": "Alec Leamas",
+        "timestamp": 1718103893
+    },
+    {
+        "content": "<p>I haven't done anything to the plugin API in  this cycle and the above issues don't seem to be implemented to me, so they are not a reason for a new API level. The only actual change I see is <a href=\"https://github.com/OpenCPN/OpenCPN/commit/55b5e629681b905d69d391461d53bc73a47abe52\">55b5e629681b905d69d391461d53bc73a47abe52</a><br>\nAs far as I'm concerned we should implement Tony's request and of course bump the API version.</p>",
+        "id": 443975360,
+        "sender_full_name": "Pavel Kalian",
+        "timestamp": 1718104347
+    },
+    {
+        "content": "<p>The relevant diff against Release_5.8.4 (besides some formatting and changes without affecting functionality), at the end:</p>\n<div class=\"codehilite\"><pre><span></span><code>+\n+// API 1.19\n+//\n+\n+/** Facade for NavAddrPluginMsg. */\n+struct PluginMsgId {\n+  const std::string id;\n+  PluginMsgId(const std::string &amp;s) : id(s){};\n+};\n+\n+extern DECL_EXP std::shared_ptr&lt;ObservableListener&gt; GetListener(\n+    PluginMsgId id, wxEventType ev, wxEvtHandler *handler);\n+\n+extern DECL_EXP std::string GetPluginMsgPayload(PluginMsgId id, ObservedEvt ev);\n</code></pre></div>",
+        "id": 444004575,
+        "sender_full_name": "Alec Leamas",
+        "timestamp": 1718113712
+    }
+]

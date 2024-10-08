@@ -1,0 +1,56 @@
+[
+    {
+        "content": "<p><span class=\"user-mention\" data-user-id=\"517002\">@Dave Register</span> </p>\n<p>About <a href=\"https://github.com/opencpn/OpenCPN/issues/3552\">#3552</a>. This is caused by <a href=\"https://github.com/opencpn/OpenCPN/commit/01ec5466a0c9a\">01ec5466a0c9a</a>. </p>\n<p>Looking at that commit : what is the purpose of it?  Am I right  thinking it makes the portable  behaviour sort of default on Linux?</p>",
+        "id": 409237257,
+        "sender_full_name": "Alec Leamas",
+        "timestamp": 1703095551
+    },
+    {
+        "content": "<p>TBH, I do not remember exactly.<br>\nGetting a hint from the bug purported to be fixed by this patch.<br>\n<a href=\"https://github.com/opencpn/OpenCPN/issues/3267\">#3267</a></p>\n<p>Have  a look at that, as will I.</p>",
+        "id": 409249700,
+        "sender_full_name": "Dave Register",
+        "timestamp": 1703101542
+    },
+    {
+        "content": "<p>Thanks for the link.</p>\n<p>Anyway, we need to add the path to the system plugins. This is, on linux, <em>$base_plugin_path/../$libdir/opencpn</em>. <em>$base_plugin_path</em> is known, the installation path. In the standard  scenario it is <em>/usr/bin/opencpn</em>; viable alternatives includes <em>/usr/local/bin/opencpn</em>,  <em>/opt/opencpn/bin/opencpn</em> and what not. </p>\n<p>However, <em>$libdir</em> is problematic. It could at least be <em>lib</em> or <em>lib64</em>. On a Debian system it might even  be a triple like <em>x86_64-linux-gnu</em>. Our own  packages alway uses <em>lib</em>, though.</p>\n<p>We have the OPENCPN_PLUGIN_DIRS loophole, so we could probably get away with using just <em>lib</em>.</p>\n<p>TL; DR; we should add <em>$base_plugin_path/../lib/opencpn</em> to the search paths. </p>\n<p>OK?</p>",
+        "id": 409258180,
+        "sender_full_name": "Alec Leamas",
+        "timestamp": 1703105480
+    },
+    {
+        "content": "<p>... which is what we are trying to do already today. Somethin wrong, though.</p>",
+        "id": 409259821,
+        "sender_full_name": "Alec Leamas",
+        "timestamp": 1703106174
+    },
+    {
+        "content": "<p>If the drop both /usr/local/bin and /usr/bin, OK  We do not want paths that resolve to those locations both to exist.  That was the original bug.</p>",
+        "id": 409259877,
+        "sender_full_name": "Dave Register",
+        "timestamp": 1703106194
+    },
+    {
+        "content": "<p>? don't follow...</p>",
+        "id": 409260084,
+        "sender_full_name": "Alec Leamas",
+        "timestamp": 1703106257
+    },
+    {
+        "content": "<p>IT cannot be two paths, just one.</p>",
+        "id": 409260137,
+        "sender_full_name": "Alec Leamas",
+        "timestamp": 1703106287
+    },
+    {
+        "content": "<p>Oops, my bad. will report in bug.</p>",
+        "id": 409262210,
+        "sender_full_name": "Alec Leamas",
+        "timestamp": 1703107220
+    },
+    {
+        "content": "<p>Sorry for the noise.</p>",
+        "id": 409262949,
+        "sender_full_name": "Alec Leamas",
+        "timestamp": 1703107574
+    }
+]

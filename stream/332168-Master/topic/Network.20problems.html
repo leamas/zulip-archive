@@ -1,0 +1,89 @@
+<html>
+<head><meta charset="utf-8"><title>Network problems · Master · Zulip Chat Archive</title></head>
+<h2>Stream: <a href="https://leamas.github.io/zulip-archive/stream/332168-Master/index.html">Master</a></h2>
+<h3>Topic: <a href="https://leamas.github.io/zulip-archive/stream/332168-Master/topic/Network.20problems.html">Network problems</a></h3>
+
+<hr>
+
+<base href="https://opencpn.zulipchat.com">
+
+<head><link href="https://leamas.github.io/zulip-archive/style.css" rel="stylesheet"></head>
+
+<a name="393537644"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332168-Master/topic/Network%20problems/near/393537644" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Håkan Svensson <a href="https://leamas.github.io/zulip-archive/stream/332168-Master/topic/Network.20problems.html#393537644">(Sep 27 2023 at 17:17)</a>:</h4>
+<p><span class="user-mention" data-user-id="517002">@Dave Register</span>  <span class="user-mention" data-user-id="573239">@Pavel Kalian</span>  <span class="user-mention" data-user-id="399510">@Alec Leamas</span> <br>
+About Windows suspend/hibernation issues for TCP connections.<br>
+We have some discussions on the CF and more about this.<br>
+It's of course connected to the general (Win?) timeout issue where I after diskussions with Pavel made the PR <a href="https://github.com/opencpn/OpenCPN/issues/3356">#3356</a>.<br>
+Now to test if Win suspend is well detected I made some test hacks that's working good. TCP connections are restarted after a suspend resume.  See attached Git diff.<br>
+The ideas mentioned in ocpn_frame.cpp: 6955:<br>
+      g_pMUX-&gt;ClearStreams();    and  g_pMUX-&gt;StartAllStreams();<br>
+would of course be two valuable funktions if established.</p>
+<p>My ideas with the hack in the diff file is just to verify the detection of the Win suspend method. <br>
+The result is clear from the log:  (the "Reconnect after Windows suspend" comes from my hack.)<br>
+So, I think the Win hibernation issue would be rather easy to solve?</p>
+<div class="codehilite"><pre><span></span><code>12:47:53.407 MESSAGE ocpn_frame.cpp:6936 System is going to suspend.
+17:23:46.757 MESSAGE ocpn_frame.cpp:6949 System resumed from suspend.
+17:24:00.653 MESSAGE ocpn_frame.cpp:6952 Restarting streams.
+.....
+.....
+17:24:01.533 MESSAGE comm_drv_n0183_net.cpp:350  TCP NetworkDataStream watchdog timeout: TCP:signalk.stupan.se:10112. Reconnection is disabled, waiting another 5 seconds.
+17:24:03.062 MESSAGE comm_drv_n0183_net.cpp:361 Reconnect after Windows suspend
+17:24:07.226 MESSAGE comm_bridge.cpp:186    ***GPS Watchdog timeout at Lat:57.6413   Lon: 11.6637
+17:24:08.072 MESSAGE comm_drv_n0183_net.cpp:541 TCP NetworkDataStream connection established: TCP:signalk.stupan.se:10112
+</code></pre></div>
+<p><a href="/user_uploads/33951/SsV6DAOsUefzMnpcfppKm59X/suspend_diff.txt">suspend_diff.txt</a></p>
+
+
+
+<a name="394892978"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332168-Master/topic/Network%20problems/near/394892978" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Håkan Svensson <a href="https://leamas.github.io/zulip-archive/stream/332168-Master/topic/Network.20problems.html#394892978">(Oct 04 2023 at 18:12)</a>:</h4>
+<p>I can see also a SignalK connection doesn't reconnect  after a Win hibernation/suspend. Bu there I can't find a watchdog handling to "hack" in the same way as for TCP(N0183)?</p>
+
+
+
+<a name="402917302"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332168-Master/topic/Network%20problems/near/402917302" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Håkan Svensson <a href="https://leamas.github.io/zulip-archive/stream/332168-Master/topic/Network.20problems.html#402917302">(Nov 18 2023 at 21:50)</a>:</h4>
+<p><span class="user-mention" data-user-id="517002">@Dave Register</span> <br>
+About TCP connection and comm_drv_n0183_net.cpp.<br>
+I've a constant log flood caused by the 5 seconds, nothing received, timer. (m_dog_value = N_DOG_TIMEOUT)<br>
+One TCP feed don't send that much data. Some AIS targets now and then. Upstart log below.<br>
+Two questions:</p>
+<ol>
+<li>Why a time out on 5 seconds? My connection example is nothing strange. In a boat you can by TCP connect an AIS receiver seeing only one target. A class B updates every 3 to 5 minutes. This should not cause any failure action or reconnect?</li>
+<li>Why do we at all monitor the the TCP data flow? Is there not a general socket handling for TCP taking care of the connection and request a at live respons every now and then? Do we have to redo that?<div class="codehilite"><pre><span></span><code> 22:07:49.459 MESSAGE comm_drv_n0183_net.cpp:541 TCP NetworkDataStream connection established: TCP:92.39.188.126:11101
+ 22:08:09.580 MESSAGE comm_drv_n0183_net.cpp:350  TCP NetworkDataStream watchdog timeout: TCP:92.39.188.126:11101. Reconnection is disabled, waiting another 5 seconds.
+ 22:08:19.518 MESSAGE comm_drv_n0183_net.cpp:350  TCP NetworkDataStream watchdog timeout: TCP:92.39.188.126:11101. Reconnection is disabled, waiting another 5 seconds.
+</code></pre></div>
+
+</li>
+</ol>
+
+
+
+<a name="403024254"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332168-Master/topic/Network%20problems/near/403024254" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Dave Register <a href="https://leamas.github.io/zulip-archive/stream/332168-Master/topic/Network.20problems.html#403024254">(Nov 19 2023 at 15:54)</a>:</h4>
+<p><span class="user-mention" data-user-id="522486">@Håkan Svensson</span> <br>
+I understand the issue.<br>
+I never imagined a TCP connection providing only one AIS-B target, without any AIVDO messages.  Of course this will time-out every 5 seconds.<br>
+I believe that we need some sort of watchdog on TCP connections.  The case I think of is when one has a local OCPN server which provides NMEA service to possibly a number of OCPN clients, also local.  In fact, this is my "everyday" mode for testing.  If the server should die, I want the clients to reconnect automatically when the server returns to life.</p>
+<p>How to handle?<br>
+Perhaps simply throttle the log messages, allow only one log event per (example) 5 minutes after the first is issued?  <br>
+Or more clever:  Measure the average time interval between TCP incoming messages, and compute the watchdog timeout value dynamically as some multiple of the average message interval?</p>
+<p>Thoughts?</p>
+
+
+
+<a name="403040736"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332168-Master/topic/Network%20problems/near/403040736" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Håkan Svensson <a href="https://leamas.github.io/zulip-archive/stream/332168-Master/topic/Network.20problems.html#403040736">(Nov 19 2023 at 18:36)</a>:</h4>
+<p><span class="user-mention" data-user-id="517002">@Dave Register</span> <br>
+When I refererad to any kind of "inbound" keep alive methods it was something like discussed <a href="https://stackoverflow.com/questions/37917947/when-is-a-tcp-connection-considered-idle">here</a> and <a href="https://my.f5.com/manage/s/article/K13004262">here</a>.</p>
+<p>I didn't know we need to handle a TCP idle timeout in the program like we do now. (UDP is different. He just wait?)<br>
+But if so a longer upstart dog time and then a dynamic timer sounds of course efficient if worth the efforts. But then we may need one timer for every single TCP connection? (May be complex.)<br>
+My example with one class B target, wo VDO, is not usual but still it can be long time idle sometimes. My own log flooding was solved by setting the dog to 15 seconds. <br>
+I suppose the present 5 second was meant to be shorter than the former 6 seconds GPS-dog, now prolonged to 10 seconds (and 20 at start up)? So if nothing else we may consider lengthen the TCP dog accordingly?</p>
+
+
+
+<hr><p>Last updated: Oct 08 2024 at 10:11 UTC</p>
+</html>

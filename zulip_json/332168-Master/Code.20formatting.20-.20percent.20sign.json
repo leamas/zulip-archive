@@ -1,0 +1,194 @@
+[
+    {
+        "content": "<p>A question about code.<br>\nVS2022: In a Format() I try to print per cent sign but it crashes all time:<br>\nFormat(\"   Relative Humidity: %d xx \", foo )<br>\nI've for xx tried: escape u0025 and %% but both crash. Any hints?</p>",
+        "id": 400202378,
+        "sender_full_name": "Håkan Svensson",
+        "timestamp": 1699043950
+    },
+    {
+        "content": "<p><span class=\"user-mention\" data-user-id=\"554731\">@Tony Voss</span>  may be able to help. We had this issue with JavaScript_pi.</p>\n<p>wxString text = wxString::Format(_T(\"%c\"), 0x00B0); //_T(\"°\");</p>\n<p><a href=\"https://github.com/antipole2/JavaScript_pi/blob/master/src/functions.cpp\">https://github.com/antipole2/JavaScript_pi/blob/master/src/functions.cpp</a></p>",
+        "id": 400270251,
+        "sender_full_name": "Mike Rossiter",
+        "timestamp": 1699087448
+    },
+    {
+        "content": "<p>_T() is useless and should not be used since since wxWidgets 3.0:  <a href=\"https://docs.wxwidgets.org/3.0/group__group__funcmacro__string.html#ga437ea6ba615b75dac8603e96ec864160\">https://docs.wxwidgets.org/3.0/group__group__funcmacro__string.html#ga437ea6ba615b75dac8603e96ec864160</a></p>\n<p>That is, above should be <code>wxString text = wxString::Format(\"%c\", 0x00B0);   //\"°\";</code></p>",
+        "id": 400273029,
+        "sender_full_name": "Alec Leamas",
+        "timestamp": 1699088785
+    },
+    {
+        "content": "<p>This is a recurring issue. Perhaps we should add some convenience handling of this to opencpn-libs, It's actually non-trivial in plain C++ as-well.</p>",
+        "id": 400275303,
+        "sender_full_name": "Alec Leamas",
+        "timestamp": 1699089761
+    },
+    {
+        "content": "<p>Yes... we had problems with various Unicode characters in JavaScript_pi.  The Duktape JavaScript engine works with ASCII only.  Text files often include (sometimes unintentionally) Unicode characters such as ‟Fancy quotes” ordinal º primes ‘’‛’′´` %  etc.  as evidenced by this very line.<br>\nIn <a href=\"https://github.com/antipole2/JavaScript_pi/blob/master/src/functions.cpp\">JavaScript_pi  functions.cpp</a> there is the function<br>\n<code>wxString JScleanString(wxString given){ // cleans script string of unacceptable characters</code><br>\nwhich replaces  unacceptable characters with ASCII ones.</p>\n<p>In the JavaScript_pi Tools diagnostics tab, there is a facility to paste a string and dump it in hex before and after it has been cleaned by the above function.</p>",
+        "id": 400275829,
+        "sender_full_name": "Tony Voss",
+        "timestamp": 1699089966
+    },
+    {
+        "content": "<blockquote>\n<p>The Duktape JavaScript engine works with ASCII only. </p>\n</blockquote>\n<p>That's a bad limitation, local for that library. It would make no sense to impose it on the overall opencpn context, though.</p>",
+        "id": 400280190,
+        "sender_full_name": "Alec Leamas",
+        "timestamp": 1699091414
+    },
+    {
+        "content": "<p>The degree symbol 0x00B0 was not the question. That and others are working fine.<br>\nBut my Q was about getting the per cent symbol %. See my tests above.</p>\n<p>And, Alex, yes I saw the escape sign is also not needed anymore. (Maybe bad habit as the \"_T\" :) )</p>",
+        "id": 400312438,
+        "sender_full_name": "Håkan Svensson",
+        "timestamp": 1699115824
+    },
+    {
+        "content": "<p>Does this help?<br>\nwxString text = wxString::Format(\"%c\", 0x0025);<br>\nwxMessageBox(text);</p>",
+        "id": 400373345,
+        "sender_full_name": "Mike Rossiter",
+        "timestamp": 1699172583
+    },
+    {
+        "content": "<blockquote>\n<p>But my Q was about getting the per cent symbol %. S</p>\n</blockquote>\n<p>Ah, sorry, my bad.</p>\n<p>This is actually much simpler. There are two ways. One is to insist on the IMHO dangerous and unsecure wxString::Format.  The other, better approach is to  use the type safe c++ &lt;&lt; operators instead. </p>\n<p>A test program which demonstrates both approaches:</p>\n<div class=\"codehilite\"><pre><span></span><code>#include &lt;iostream&gt;\n#include &lt;sstream&gt;\n\n#include &lt;wx/string.h&gt;\n\nint main(int argc, char**argv) {\n    std::stringstream ss;\n    ss &lt;&lt; &quot; Relative Humidity: &quot; &lt;&lt;  45 &lt;&lt; &quot;%\\n&quot;;\n    std::cout &lt;&lt; ss.str();\n\n    wxString ws = wxString::Format(&quot; Relative Humidity: %d%%\\n&quot;, 45);\n    std::cout &lt;&lt; ws;\n\n    wxString ws2(ss.str());\n    std::cout &lt;&lt; ws;\n}\n</code></pre></div>\n<p>As you can see, using std:.stringstream leads to  simpler code easier to read. However, the most important benefit is that  if  making a mistake like wxPrintf(\"foo %d\", value) and value does not match %d this is not detected by the compiler and causes bad runtime errors . The &lt;&lt; operator does not suffer from this, it's type safe. </p>\n<p>If using ::Format, a percent sign is written %%.</p>\n<p>The last example shows that is simple to convert a std:.stringstream to a wxString if need be. In almost all cases this is not necessary, it's ok to use the stringstream.str() instead. As long as it compiles it's fine.</p>\n<p>TL;DR  Avoid using ::Format(...), use std::stringstream and &lt;&lt; instead.</p>",
+        "id": 400379960,
+        "sender_full_name": "Alec Leamas",
+        "timestamp": 1699177471
+    },
+    {
+        "content": "<p>Actually if you really,  really want's to use wxString (why?) this also works. This still avoids the problematic wxString::Format(...)</p>\n<div class=\"codehilite\"><pre><span></span><code>    wxString ws;\n    ws &lt;&lt; &quot; Relative Humidity: &quot; &lt;&lt;  45 &lt;&lt; &quot;%\\n&quot;;\n    std::cout &lt;&lt; ws;\n</code></pre></div>\n<p>EDIT: TL;DR, new version: Avoid using ::Format(...),  use &lt;&lt; instead</p>",
+        "id": 400380628,
+        "sender_full_name": "Alec Leamas",
+        "timestamp": 1699177930
+    },
+    {
+        "content": "<p>10 messages were moved here from <a class=\"stream-topic\" data-stream-id=\"332168\" href=\"/#narrow/stream/332168-Master---5.2E8.2E0--.28was.3A-comms.29/topic/Code.20formatting\">#Master - 5.8.0  (was: comms) &gt; Code formatting</a> by <span class=\"user-mention silent\" data-user-id=\"399510\">Alec Leamas</span>.</p>",
+        "id": 400383278,
+        "sender_full_name": "Notification Bot",
+        "timestamp": 1699180316
+    },
+    {
+        "content": "<p>Mike, Alec..<br>\nThanks for suggestions.<br>\nNeither \"wx..Format\" nor \"std &lt;&lt;\"  works with the % char or Hex<br>\nBoth gives a run time crash  \"Unhandled exception at 0x7668D132 (ucrtbase.dll) \" (Not found)</p>",
+        "id": 400490678,
+        "sender_full_name": "Håkan Svensson",
+        "timestamp": 1699262472
+    },
+    {
+        "content": "<p>Can you give a some more context,  some lines around  what you are trying to do?</p>",
+        "id": 400490983,
+        "sender_full_name": "Alec Leamas",
+        "timestamp": 1699262606
+    },
+    {
+        "content": "<p>That is, if these crashes something else is wrong...</p>",
+        "id": 400491686,
+        "sender_full_name": "Alec Leamas",
+        "timestamp": 1699262884
+    },
+    {
+        "content": "<ol>\n<li>the file \"ucrtbase.dll\" is present in \"C:\\....\\OpenCPN\\build\\RelWithDebInfo\"</li>\n<li>context: Nothing strange. A debug log message.  </li>\n</ol>\n<div class=\"codehilite\"><pre><span></span><code>msgFi = wxString::Format(&quot;   Relative Humidity: %d Dew point: %.1f\\u00b0C&quot;,\n    ptd-&gt;met_rel_humid, ptd-&gt;met_dew_point);\n    wxLogMessage(msgFi);\n\nEdit: the degree sign is working fine\n</code></pre></div>",
+        "id": 400492662,
+        "sender_full_name": "Håkan Svensson",
+        "timestamp": 1699263256
+    },
+    {
+        "content": "<p>OK... even though that the degrees sign \"works\" I'm suspicious about it.   Let's take this into pieces, starting with</p>\n<p><code>msgFi &lt;&lt;  \"   Relative Humidity: \" &lt;&lt;   ptd-&gt;met_rel_humid &lt;&lt; \"%\";</code></p>\n<p>And test that. If all goes well, let's add (new lines, keep previous):</p>\n<div class=\"codehilite\"><pre><span></span><code>using namespace std;\nmsgFi &lt;&lt; &quot; Dew point: &quot; &lt;&lt; fixed  &lt;&lt; setprecision(1) &lt;&lt;  ptd-&gt;met_dew_point;\n</code></pre></div>\n<p>And if that goes well, add yet another line:</p>\n<div class=\"codehilite\"><pre><span></span><code>msg_Fi &lt;&lt;  wxString::FromUTF8(u8&quot;\\u00B0&quot;) &lt;&lt; &quot;C&quot;;\n</code></pre></div>\n<p>This is a bit awkward, but  makes it possible to piece by piece to check what actually makes it crash.</p>",
+        "id": 400510301,
+        "sender_full_name": "Alec Leamas",
+        "timestamp": 1699269295
+    },
+    {
+        "content": "<p>Will test later, tomorrow.  Other obstacles for now.</p>",
+        "id": 400600701,
+        "sender_full_name": "Håkan Svensson",
+        "timestamp": 1699300333
+    },
+    {
+        "content": "<p>NP</p>",
+        "id": 400601368,
+        "sender_full_name": "Alec Leamas",
+        "timestamp": 1699300622
+    },
+    {
+        "content": "<p>This one is actually working: (Use char)<br>\n wxString::Format(\"%d%c\", met_rel_humid, '%');<br>\n<a href=\"/user_uploads/33951/yt7mLL-FW3RwbudXB35c6jFd/bild.png\">bild.png</a></p>\n<div class=\"message_inline_image\"><a href=\"/user_uploads/33951/yt7mLL-FW3RwbudXB35c6jFd/bild.png\" title=\"bild.png\"><img src=\"/user_uploads/33951/yt7mLL-FW3RwbudXB35c6jFd/bild.png\"></a></div>",
+        "id": 400721761,
+        "sender_full_name": "Håkan Svensson",
+        "timestamp": 1699357166
+    },
+    {
+        "content": "<p>Are you saying that the others don't?</p>",
+        "id": 400728773,
+        "sender_full_name": "Alec Leamas",
+        "timestamp": 1699359819
+    },
+    {
+        "content": "<p>That is , if my first line does not work something is actually seriously broken.</p>",
+        "id": 400728937,
+        "sender_full_name": "Alec Leamas",
+        "timestamp": 1699359875
+    },
+    {
+        "content": "<p>[away for a while]</p>",
+        "id": 400729020,
+        "sender_full_name": "Alec Leamas",
+        "timestamp": 1699359917
+    },
+    {
+        "content": "<p>re: \"Are you saying that the others don't?\"<br>\nNot at all. Alla others are working as before. This was the way to get the per cent sign to work.  My wording would have been \"This code is actually working for %\"</p>",
+        "id": 400754758,
+        "sender_full_name": "Håkan Svensson",
+        "timestamp": 1699368469
+    },
+    {
+        "content": "<p>No. I made a try to build on Windows. This works:</p>\n<div class=\"codehilite\"><pre><span></span><code>  using namespace std;\n  stringstream  ss;\n  int humidity(45);\n  ss &lt;&lt; &quot;   Relative Humidity: &quot; &lt;&lt;  humidity&lt;&lt; &quot;%&quot;;\n  float dew_point(28.44);\n  ss &lt;&lt; &quot; Dew point: &quot; &lt;&lt; fixed  &lt;&lt; setprecision(1) &lt;&lt;  dew_point;\n  ss &lt;&lt;  wxString::FromUTF8(u8&quot;\\u00B0&quot;) &lt;&lt; &quot;C&quot;;\n  std::cout &lt;&lt; ss.str();\n</code></pre></div>\n<p>Since this is tested in the CLI the degrees sign is not shown, the cli does not handle utf. It should work o</p>",
+        "id": 400754772,
+        "sender_full_name": "Alec Leamas",
+        "timestamp": 1699368474
+    },
+    {
+        "content": "<p>You know, that  it \"works\" is sort of fine. However, this way of producing a percent sign is extremely convoluted for no reason. It would have no chance to survive even the most sloppy of all code reviews. </p>\n<p>We have had problems with the UTF-8 degrees sign and had to make some odd things for that. But percent is <strong>not</strong> odd, it's  standard ascii and should IMHO  be handled by simpler things than this, well, let's spell it out: this mess.</p>",
+        "id": 400755769,
+        "sender_full_name": "Alec Leamas",
+        "timestamp": 1699368751
+    },
+    {
+        "content": "<p>Maybe since it used as indication in \"Format()\". (It's said a dubble sign (%%) should work bit it's not)</p>",
+        "id": 400756954,
+        "sender_full_name": "Håkan Svensson",
+        "timestamp": 1699369103
+    },
+    {
+        "content": "<p>It does, otherwise we need to file a bug against wxWidgets directly. Hang on I have a simple setup on Windows now.</p>",
+        "id": 400757289,
+        "sender_full_name": "Alec Leamas",
+        "timestamp": 1699369187
+    },
+    {
+        "content": "<p>This prints \"45%\":</p>\n<div class=\"codehilite\"><pre><span></span><code>#include &lt;iostream&gt;\n#include &lt;wx/string.h&gt;\nint main(int argc, char**argv) {\n  std::cout &lt;&lt; wxString::Format(&quot;%d%%\\n&quot;, 45);\n}\n</code></pre></div>",
+        "id": 400758647,
+        "sender_full_name": "Alec Leamas",
+        "timestamp": 1699369526
+    },
+    {
+        "content": "<p><a href=\"#narrow/stream/332168-Master---5.2E8.2E0--.28was.3A-comms.29/topic/Code.20formatting.20-.20percent.20sign/near/400758647\">A message</a> was moved here from <a class=\"stream-topic\" data-stream-id=\"332168\" href=\"/#narrow/stream/332168-Master---5.2E8.2E0--.28was.3A-comms.29/topic/Project.20opencpn-cmd\">#Master - 5.8.0  (was: comms) &gt; Project opencpn-cmd</a> by <span class=\"user-mention silent\" data-user-id=\"399510\">Alec Leamas</span>.</p>",
+        "id": 400758755,
+        "sender_full_name": "Notification Bot",
+        "timestamp": 1699369560
+    },
+    {
+        "content": "<p>As does this which is better, type safe code:</p>\n<div class=\"codehilite\"><pre><span></span><code>#include &lt;iostream&gt;\n#include &lt;sstream&gt;\n\nint main(int argc, char**argv) {\n  std::stringstream ss;\n  ss &lt;&lt;  45 &lt;&lt; &quot;%&quot;;\n  std::cout &lt;&lt; ss.str() &lt;&lt; &quot;\\n&quot;;\n}\n</code></pre></div>",
+        "id": 400760628,
+        "sender_full_name": "Alec Leamas",
+        "timestamp": 1699370080
+    },
+    {
+        "content": "<p>Finally I have a minimal GUI sample as playground as well.  Here some code:</p>\n<div class=\"codehilite\"><pre><span></span><code>void MyFrame::OnAbout(wxCommandEvent&amp; WXUNUSED(event))\n{\n    using namespace std;\n    stringstream ss;\n    ss &lt;&lt; &quot;Hunidity: &quot; &lt;&lt; 45 &lt;&lt; &quot;%&quot;\n       &lt;&lt; &quot;  Dew Point: &quot; &lt;&lt; fixed &lt;&lt; setprecision(1) &lt;&lt; 18.45\n       &lt;&lt;  wxString::FromUTF8(u8&quot;\\u00B0&quot;) &lt;&lt; &quot;C&quot;;\n    wxMessageBox(ss.str(),\n                 &quot;About wxWidgets minimal sample&quot;,\n                 wxOK | wxICON_INFORMATION,\n                 this);\n}\n</code></pre></div>\n<p>Result:<br>\n<a href=\"/user_uploads/33951/JYd2nnWTAjNU3-P-hRLCf77F/image.png\">image.png</a></p>\n<div class=\"message_inline_image\"><a href=\"/user_uploads/33951/JYd2nnWTAjNU3-P-hRLCf77F/image.png\" title=\"image.png\"><img src=\"/user_uploads/33951/JYd2nnWTAjNU3-P-hRLCf77F/image.png\"></a></div><p>Ergo: Using standard mechanisms works well also on Windows without resorting to the error prone wxString::Format. The code here is no doubt more text. However, it's type safe and more right on and thus IMHO also easier to read.</p>",
+        "id": 400823617,
+        "sender_full_name": "Alec Leamas",
+        "timestamp": 1699394833
+    },
+    {
+        "content": "<p>Complete code samples at <a href=\"https://github.com/leamas/minimal\">https://github.com/leamas/minimal</a> (both CLI and GUI)</p>",
+        "id": 400824683,
+        "sender_full_name": "Alec Leamas",
+        "timestamp": 1699395353
+    }
+]

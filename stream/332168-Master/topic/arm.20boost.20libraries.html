@@ -1,0 +1,295 @@
+<html>
+<head><meta charset="utf-8"><title>arm boost libraries · Master · Zulip Chat Archive</title></head>
+<h2>Stream: <a href="https://leamas.github.io/zulip-archive/stream/332168-Master/index.html">Master</a></h2>
+<h3>Topic: <a href="https://leamas.github.io/zulip-archive/stream/332168-Master/topic/arm.20boost.20libraries.html">arm boost libraries</a></h3>
+
+<hr>
+
+<base href="https://opencpn.zulipchat.com">
+
+<head><link href="https://leamas.github.io/zulip-archive/style.css" rel="stylesheet"></head>
+
+<a name="408866895"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332168-Master/topic/arm%20boost%20libraries/near/408866895" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Alec Leamas <a href="https://leamas.github.io/zulip-archive/stream/332168-Master/topic/arm.20boost.20libraries.html#408866895">(Dec 19 2023 at 09:32)</a>:</h4>
+<p><span class="user-mention" data-user-id="573239">@Pavel Kalian</span>  About to merge <a href="https://github.com/opencpn/OpenCPN/issues/3539">#3539</a>. This moves c++ standard to c++17.</p>
+<p>Problem with the unversal build. It's using boost to substitute the missing std::filesystem in MacOS 10.13, boost::filesystem  effectively works as a preview.</p>
+<p>Now, we can link to homebrew's boost library. However, the arm build fails. I assume we need to build boost for arm and add to the bundle (?)</p>
+<p>Thoughts?</p>
+
+
+
+<a name="408872946"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332168-Master/topic/arm%20boost%20libraries/near/408872946" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Alec Leamas <a href="https://leamas.github.io/zulip-archive/stream/332168-Master/topic/arm.20boost.20libraries.html#408872946">(Dec 19 2023 at 09:52)</a>:</h4>
+<p>At a closer look. it seems that homebrew does provide arm builds if used properly. It's just that I don't know how to do that. So, if you have some time...</p>
+
+
+
+<a name="408904895"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332168-Master/topic/arm%20boost%20libraries/near/408904895" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Pavel Kalian <a href="https://leamas.github.io/zulip-archive/stream/332168-Master/topic/arm.20boost.20libraries.html#408904895">(Dec 19 2023 at 11:18)</a>:</h4>
+<p>No, we can't use Homebrew. If we need new dependency it must go to either <code>/libs/</code> and be built with the application or to  <code>/ci/macos-universal-deps.sh</code> and become part of the dependency bundle.</p>
+
+
+
+<a name="408905178"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332168-Master/topic/arm%20boost%20libraries/near/408905178" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Alec Leamas <a href="https://leamas.github.io/zulip-archive/stream/332168-Master/topic/arm.20boost.20libraries.html#408905178">(Dec 19 2023 at 11:19)</a>:</h4>
+<p>ok... if I make a build. can you add it to the bundle?</p>
+
+
+
+<a name="408905701"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332168-Master/topic/arm%20boost%20libraries/near/408905701" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Pavel Kalian <a href="https://leamas.github.io/zulip-archive/stream/332168-Master/topic/arm.20boost.20libraries.html#408905701">(Dec 19 2023 at 11:20)</a>:</h4>
+<p>Sure. Can you give me the URL of the Boost tarball that we need to build?</p>
+
+
+
+<a name="408908995"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332168-Master/topic/arm%20boost%20libraries/near/408908995" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Alec Leamas <a href="https://leamas.github.io/zulip-archive/stream/332168-Master/topic/arm.20boost.20libraries.html#408908995">(Dec 19 2023 at 11:30)</a>:</h4>
+<p>They are at sourceforge :<a href="https://sourceforge.net/projects/boost/files/boost/1.82.0/">https://sourceforge.net/projects/boost/files/boost/1.82.0/</a></p>
+<p>Building boost is non-trivial, they are using Yet Another Build System...<br>
+Some info here: <a href="https://theboostcpplibraries.com/introduction-installation">https://theboostcpplibraries.com/introduction-installation</a></p>
+
+
+
+<a name="408915643"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332168-Master/topic/arm%20boost%20libraries/near/408915643" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Pavel Kalian <a href="https://leamas.github.io/zulip-archive/stream/332168-Master/topic/arm.20boost.20libraries.html#408915643">(Dec 19 2023 at 11:49)</a>:</h4>
+<p>Do we need the whole boost just because of the <code>filesystem</code> stuff?</p>
+
+
+
+<a name="408915872"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332168-Master/topic/arm%20boost%20libraries/near/408915872" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Pavel Kalian <a href="https://leamas.github.io/zulip-archive/stream/332168-Master/topic/arm.20boost.20libraries.html#408915872">(Dec 19 2023 at 11:50)</a>:</h4>
+<p>I remember that when I needed just <code>asio</code> it was happy living without the monster</p>
+
+
+
+<a name="408916476"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332168-Master/topic/arm%20boost%20libraries/near/408916476" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Pavel Kalian <a href="https://leamas.github.io/zulip-archive/stream/332168-Master/topic/arm.20boost.20libraries.html#408916476">(Dec 19 2023 at 11:52)</a>:</h4>
+<p>And one more thing, why do we need it at all for the universal build? It will never run on 10.x</p>
+
+
+
+<a name="408928911"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332168-Master/topic/arm%20boost%20libraries/near/408928911" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Alec Leamas <a href="https://leamas.github.io/zulip-archive/stream/332168-Master/topic/arm.20boost.20libraries.html#408928911">(Dec 19 2023 at 12:59)</a>:</h4>
+<p>What's actiually needed is filesystem + system, the latter is a dependency of filesystem.</p>
+<p>However, all remaining stuff is header only and thus included in <em>include/</em>.  And while it probaly probably possible to figure out some parts which can be stripped therefrom, I don't think it's worth the effort.  The directory is somewhat big, but compresses well. </p>
+<p>My android port (not used for various reasons) contains binaries for two architectures and the include/ directory. All in all about 17 MB</p>
+
+
+
+<a name="408933024"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332168-Master/topic/arm%20boost%20libraries/near/408933024" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Alec Leamas <a href="https://leamas.github.io/zulip-archive/stream/332168-Master/topic/arm.20boost.20libraries.html#408933024">(Dec 19 2023 at 13:23)</a>:</h4>
+<blockquote>
+<p>nd one more thing, why do we need it at all for the universal build? It will never run on 10.x</p>
+</blockquote>
+<p>This is <strong>the</strong>  comment.  </p>
+<p>Still, the build links to boost. This seems to be about the ci runner, the compiler version is 13.4.1 . If I understand this correctly it is about using an old xcode version for compiling.  What's needed for std:.filesystem support is a compiler &gt;= 15.0.</p>
+<p>CAn we handle this by updating the development environment, or would  it break the 10.13 target?</p>
+
+
+
+<a name="408934161"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332168-Master/topic/arm%20boost%20libraries/near/408934161" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Alec Leamas <a href="https://leamas.github.io/zulip-archive/stream/332168-Master/topic/arm.20boost.20libraries.html#408934161">(Dec 19 2023 at 13:29)</a>:</h4>
+<blockquote>
+<p>is a compiler &gt;= 15.0.</p>
+</blockquote>
+<p>i. e., clang &gt;= 15.0</p>
+
+
+
+<a name="408936970"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332168-Master/topic/arm%20boost%20libraries/near/408936970" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Alec Leamas <a href="https://leamas.github.io/zulip-archive/stream/332168-Master/topic/arm.20boost.20libraries.html#408936970">(Dec 19 2023 at 13:45)</a>:</h4>
+<p>i. e.,  is there anything blocking us from using Xcode 15.0.0 or 15.1.0, both of which available for both arm and intel: <a href="https://circleci.com/docs/testing-ios/#supported-xcode-versions">https://circleci.com/docs/testing-ios/#supported-xcode-versions</a></p>
+
+
+
+<a name="408937918"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332168-Master/topic/arm%20boost%20libraries/near/408937918" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Pavel Kalian <a href="https://leamas.github.io/zulip-archive/stream/332168-Master/topic/arm.20boost.20libraries.html#408937918">(Dec 19 2023 at 13:51)</a>:</h4>
+<p>I read a bit and it seems that whatever we do, <code>std::filesystem</code> can be used only with macOS 10.15 and newer deployment targets. Anything built like that does not run on 10.13 or 10.14</p>
+
+
+
+<a name="408938508"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332168-Master/topic/arm%20boost%20libraries/near/408938508" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Pavel Kalian <a href="https://leamas.github.io/zulip-archive/stream/332168-Master/topic/arm.20boost.20libraries.html#408938508">(Dec 19 2023 at 13:54)</a>:</h4>
+<p>I kind of can't believe that a C++17 feature like this would be available only with the absolutely latest compiler toolchain available on macOS, which Xcode 15 is, the problem should really be the SDK used for the old deployment targets.</p>
+
+
+
+<a name="408938690"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332168-Master/topic/arm%20boost%20libraries/near/408938690" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Alec Leamas <a href="https://leamas.github.io/zulip-archive/stream/332168-Master/topic/arm.20boost.20libraries.html#408938690">(Dec 19 2023 at 13:55)</a>:</h4>
+<p>Yes. But for 10.13, as you say, we only build intel stuff. here we can use the homebrew boost, specifically boost::filesystem which effectively is a preview of std::filesystem. The overall code to handle this is already in place. This already at least compiles and links.</p>
+
+
+
+<a name="408938883"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332168-Master/topic/arm%20boost%20libraries/near/408938883" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Alec Leamas <a href="https://leamas.github.io/zulip-archive/stream/332168-Master/topic/arm.20boost.20libraries.html#408938883">(Dec 19 2023 at 13:56)</a>:</h4>
+<p>My question: what is the target for the universal build?</p>
+
+
+
+<a name="408938918"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332168-Master/topic/arm%20boost%20libraries/near/408938918" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Pavel Kalian <a href="https://leamas.github.io/zulip-archive/stream/332168-Master/topic/arm.20boost.20libraries.html#408938918">(Dec 19 2023 at 13:56)</a>:</h4>
+<p>Yes, and for the universal build we use 11 deployment target, so we should not need boost at all</p>
+
+
+
+<a name="408939035"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332168-Master/topic/arm%20boost%20libraries/near/408939035" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Alec Leamas <a href="https://leamas.github.io/zulip-archive/stream/332168-Master/topic/arm.20boost.20libraries.html#408939035">(Dec 19 2023 at 13:57)</a>:</h4>
+<p>That is, we could compile the universal build using Xcode 15.0 or higher ?</p>
+
+
+
+<a name="408939309"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332168-Master/topic/arm%20boost%20libraries/near/408939309" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Pavel Kalian <a href="https://leamas.github.io/zulip-archive/stream/332168-Master/topic/arm.20boost.20libraries.html#408939309">(Dec 19 2023 at 13:58)</a>:</h4>
+<p>Probably yes, the product needs to be tried on macOS 11</p>
+
+
+
+<a name="408939516"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332168-Master/topic/arm%20boost%20libraries/near/408939516" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Pavel Kalian <a href="https://leamas.github.io/zulip-archive/stream/332168-Master/topic/arm.20boost.20libraries.html#408939516">(Dec 19 2023 at 13:59)</a>:</h4>
+<p>But the dependency bundle already is built with Xcode 15 anyway, so I do not see much reason why upgrading the compiler used in the CI builds should break something</p>
+
+
+
+<a name="408939690"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332168-Master/topic/arm%20boost%20libraries/near/408939690" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Pavel Kalian <a href="https://leamas.github.io/zulip-archive/stream/332168-Master/topic/arm.20boost.20libraries.html#408939690">(Dec 19 2023 at 14:00)</a>:</h4>
+<p>The bundle for the universal build, the one for Intel is built on 10.14 using Xcode 11</p>
+
+
+
+<a name="408940051"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332168-Master/topic/arm%20boost%20libraries/near/408940051" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Alec Leamas <a href="https://leamas.github.io/zulip-archive/stream/332168-Master/topic/arm.20boost.20libraries.html#408940051">(Dec 19 2023 at 14:02)</a>:</h4>
+<p>So, if I update Xcode as part of  <a href="https://github.com/opencpn/OpenCPN/issues/3539">#3539</a> you are on board? If we run into problems it can of course be reverted and we will have to evaluate the situation again. But, it's  worth a try.</p>
+<p>Or?</p>
+
+
+
+<a name="408940238"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332168-Master/topic/arm%20boost%20libraries/near/408940238" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Pavel Kalian <a href="https://leamas.github.io/zulip-archive/stream/332168-Master/topic/arm.20boost.20libraries.html#408940238">(Dec 19 2023 at 14:02)</a>:</h4>
+<p>Least costly is to try, for sure.</p>
+
+
+
+<a name="408940621"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332168-Master/topic/arm%20boost%20libraries/near/408940621" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Alec Leamas <a href="https://leamas.github.io/zulip-archive/stream/332168-Master/topic/arm.20boost.20libraries.html#408940621">(Dec 19 2023 at 14:04)</a>:</h4>
+<p>OK. I'll add that to the PR. It will probably go in today</p>
+<p>I could merge this myself, but since the focus is android I think it's better if Dave pushes the final button. We have  had a similar discussion with roughly the same result for android.</p>
+
+
+
+<a name="408944820"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332168-Master/topic/arm%20boost%20libraries/near/408944820" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Alec Leamas <a href="https://leamas.github.io/zulip-archive/stream/332168-Master/topic/arm.20boost.20libraries.html#408944820">(Dec 19 2023 at 14:26)</a>:</h4>
+<p>Seems to compile and link.</p>
+
+
+
+<a name="408945972"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332168-Master/topic/arm%20boost%20libraries/near/408945972" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Pavel Kalian <a href="https://leamas.github.io/zulip-archive/stream/332168-Master/topic/arm.20boost.20libraries.html#408945972">(Dec 19 2023 at 14:32)</a>:</h4>
+<p>Yes, it would be surprising if it didn't, but we need to see it running on old enough system with macOS 11. Which I don't have.</p>
+
+
+
+<a name="408946788"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332168-Master/topic/arm%20boost%20libraries/near/408946788" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Alec Leamas <a href="https://leamas.github.io/zulip-archive/stream/332168-Master/topic/arm.20boost.20libraries.html#408946788">(Dec 19 2023 at 14:36)</a>:</h4>
+<p>I have a virtual Monterey, but that's about how close I am. There is also a Catalina, if it runs on that I guess we should be happy...</p>
+<p>It is perfectly possible to set up a virtual Big Sur, but a lot of work...</p>
+
+
+
+<a name="408948563"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332168-Master/topic/arm%20boost%20libraries/near/408948563" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Pavel Kalian <a href="https://leamas.github.io/zulip-archive/stream/332168-Master/topic/arm.20boost.20libraries.html#408948563">(Dec 19 2023 at 14:46)</a>:</h4>
+<p>Yes, but for me even just downloading the image takes hours...</p>
+
+
+
+<a name="408951762"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332168-Master/topic/arm%20boost%20libraries/near/408951762" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Alec Leamas <a href="https://leamas.github.io/zulip-archive/stream/332168-Master/topic/arm.20boost.20libraries.html#408951762">(Dec 19 2023 at 15:01)</a>:</h4>
+<p>A little faster for me. I'll try to do it, but later, at earliest after Xmas</p>
+<p>Currently hunting bugs and making painful rebasing on open PRs...</p>
+
+
+
+<a name="408963928"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332168-Master/topic/arm%20boost%20libraries/near/408963928" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Pavel Kalian <a href="https://leamas.github.io/zulip-archive/stream/332168-Master/topic/arm.20boost.20libraries.html#408963928">(Dec 19 2023 at 16:03)</a>:</h4>
+<p>There's still some problem in the Mac build - <a href="https://app.circleci.com/pipelines/github/OpenCPN/OpenCPN/2167/workflows/d7ba64ad-e193-4ef8-8dd9-3bb513a6d594/jobs/6620?invite=true#step-103-116969_108">https://app.circleci.com/pipelines/github/OpenCPN/OpenCPN/2167/workflows/d7ba64ad-e193-4ef8-8dd9-3bb513a6d594/jobs/6620?invite=true#step-103-116969_108</a></p>
+
+
+
+<a name="408964970"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332168-Master/topic/arm%20boost%20libraries/near/408964970" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Alec Leamas <a href="https://leamas.github.io/zulip-archive/stream/332168-Master/topic/arm.20boost.20libraries.html#408964970">(Dec 19 2023 at 16:08)</a>:</h4>
+<p>Yes, we  have talked about it earlier. The build picks up wrong geodesic.h. As I said, this is will eventually be fixed by <a href="https://github.com/opencpn/OpenCPN/issues/3540">#3540</a>.  I tried the BEFORE argument to cmake target_include_directories to no avail. </p>
+<p>It <strong>can</strong> be fixed in current state, but for now focusing on my big things  <a href="https://github.com/opencpn/OpenCPN/issues/3502">#3502</a> and eventually <a href="https://github.com/opencpn/OpenCPN/issues/3540">#3540</a></p>
+
+
+
+<a name="409041882"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332168-Master/topic/arm%20boost%20libraries/near/409041882" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Alec Leamas <a href="https://leamas.github.io/zulip-archive/stream/332168-Master/topic/arm.20boost.20libraries.html#409041882">(Dec 20 2023 at 00:39)</a>:</h4>
+<p><span class="user-mention" data-user-id="573239">@Pavel Kalian</span> </p>
+<p>And we have new problems with the MacOS builds after using -e: <a href="https://app.circleci.com/pipelines/github/leamas/OpenCPN/3893/workflows/69d624ee-4d19-42bf-8f3b-bcdbcb03ee39/jobs/6950">https://app.circleci.com/pipelines/github/leamas/OpenCPN/3893/workflows/69d624ee-4d19-42bf-8f3b-bcdbcb03ee39/jobs/6950</a></p>
+<p>Basically, error codes we have ignored now breaks the builds in an early stage.  Perhaps we should revert that change? The alternative would be to actually fix all these non-significant error returns.</p>
+<p>BTW: It was these kind of problems which made me go for another solution for windows: Here I check that the build artifacts are available after the build rather than using -e</p>
+
+
+
+<a name="409042689"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332168-Master/topic/arm%20boost%20libraries/near/409042689" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Pavel Kalian <a href="https://leamas.github.io/zulip-archive/stream/332168-Master/topic/arm.20boost.20libraries.html#409042689">(Dec 20 2023 at 00:44)</a>:</h4>
+<p>We can sure simply move the <code>set -e</code> right in front of the build itself, but I will have a look what produces the non-zero error codes and if it can be fixed.</p>
+
+
+
+<a name="409042791"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332168-Master/topic/arm%20boost%20libraries/near/409042791" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Alec Leamas <a href="https://leamas.github.io/zulip-archive/stream/332168-Master/topic/arm.20boost.20libraries.html#409042791">(Dec 20 2023 at 00:44)</a>:</h4>
+<p>OK. Your desk...</p>
+
+
+
+<a name="409046215"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332168-Master/topic/arm%20boost%20libraries/near/409046215" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Pavel Kalian <a href="https://leamas.github.io/zulip-archive/stream/332168-Master/topic/arm.20boost.20libraries.html#409046215">(Dec 20 2023 at 01:03)</a>:</h4>
+<p>Looks like adding <code>--overwrite</code> to brew installing boost might solve it, I will try as we probably do want those updated packages there anyway. Maybe, maybe they will not be built properly to work on 10.13. I hate this.</p>
+
+
+
+<a name="409052603"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332168-Master/topic/arm%20boost%20libraries/near/409052603" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Pavel Kalian <a href="https://leamas.github.io/zulip-archive/stream/332168-Master/topic/arm.20boost.20libraries.html#409052603">(Dec 20 2023 at 01:31)</a>:</h4>
+<p>OK. it does not do what I was hoping for, so let's fail just on actual build failures and see if it is good enough</p>
+
+
+
+<a name="409065206"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332168-Master/topic/arm%20boost%20libraries/near/409065206" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Pavel Kalian <a href="https://leamas.github.io/zulip-archive/stream/332168-Master/topic/arm.20boost.20libraries.html#409065206">(Dec 20 2023 at 02:20)</a>:</h4>
+<p>The broken Python is completely new... No idea why everything worked just a couple of hours ago. We will probably have to move the dependency bundle for the universal build out of /usr/local to solve it. Which will very likely make a mess in the detection of the dependencies by cmake. Not something I will resolve tonight.</p>
+
+
+
+<a name="409119026"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332168-Master/topic/arm%20boost%20libraries/near/409119026" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Alec Leamas <a href="https://leamas.github.io/zulip-archive/stream/332168-Master/topic/arm.20boost.20libraries.html#409119026">(Dec 20 2023 at 08:25)</a>:</h4>
+<p>Did a quick check where the first line in <a href="http://universal-build-macos.sh">universal-build-macos.sh</a> was <code>exit  1</code>. Logged in to the build host and did <code>python3 install pip</code>. And indeed, same error.</p>
+<p>Looks like the circleci image is updated to  a broken state.</p>
+
+
+
+<a name="409121379"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332168-Master/topic/arm%20boost%20libraries/near/409121379" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Alec Leamas <a href="https://leamas.github.io/zulip-archive/stream/332168-Master/topic/arm.20boost.20libraries.html#409121379">(Dec 20 2023 at 08:42)</a>:</h4>
+<p>Filed a circleci support ticket</p>
+
+
+
+<a name="409126794"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332168-Master/topic/arm%20boost%20libraries/near/409126794" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Alec Leamas <a href="https://leamas.github.io/zulip-archive/stream/332168-Master/topic/arm.20boost.20libraries.html#409126794">(Dec 20 2023 at 09:17)</a>:</h4>
+<p>Leaving this for now. I'll let you know if/when circleci gets in touch</p>
+
+
+
+<a name="409208249"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332168-Master/topic/arm%20boost%20libraries/near/409208249" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Dave Register <a href="https://leamas.github.io/zulip-archive/stream/332168-Master/topic/arm.20boost.20libraries.html#409208249">(Dec 20 2023 at 15:22)</a>:</h4>
+<p>FWIW, I have MacBook with BigSur/x86 (11.7.10) available for test, whenever...</p>
+
+
+
+<a name="409287820"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332168-Master/topic/arm%20boost%20libraries/near/409287820" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Alec Leamas <a href="https://leamas.github.io/zulip-archive/stream/332168-Master/topic/arm.20boost.20libraries.html#409287820">(Dec 21 2023 at 01:37)</a>:</h4>
+<p>Fixed the macos builds, at least the CCI ones runs fine by me. No feedback from CCI, but whatever the problem was it is now fixed by them</p>
+
+
+
+<hr><p>Last updated: Oct 08 2024 at 10:11 UTC</p>
+</html>

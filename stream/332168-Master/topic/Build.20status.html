@@ -1,0 +1,350 @@
+<html>
+<head><meta charset="utf-8"><title>Build status · Master · Zulip Chat Archive</title></head>
+<h2>Stream: <a href="https://leamas.github.io/zulip-archive/stream/332168-Master/index.html">Master</a></h2>
+<h3>Topic: <a href="https://leamas.github.io/zulip-archive/stream/332168-Master/topic/Build.20status.html">Build status</a></h3>
+
+<hr>
+
+<base href="https://opencpn.zulipchat.com">
+
+<head><link href="https://leamas.github.io/zulip-archive/style.css" rel="stylesheet"></head>
+
+<a name="427629182"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332168-Master/topic/Build%20status/near/427629182" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Håkan Svensson <a href="https://leamas.github.io/zulip-archive/stream/332168-Master/topic/Build.20status.html#427629182">(Mar 19 2024 at 06:43)</a>:</h4>
+<p><span class="user-mention" data-user-id="517002">@Dave Register</span> <span class="user-mention" data-user-id="573239">@Pavel Kalian</span> <span class="user-mention" data-user-id="399510">@Alec Leamas</span> <br>
+Build on VS2022:<br>
+The new bin\opencpn-glutil.exe is not copied to build environment like opencpn-cmd.exe<br>
+It would likewise have been copied to ..\Release\bin\ , ..\RelWithDebInfo\bin\ and ..\Debug\bin\<br>
+See log.<br>
+That's also leading to config file "corruption" during debug:<br>
+OpenGL=0<br>
+DisableOpenGL=0</p>
+<p>The temporary work around is obviously to copy the  opencpn-glutil.exe to where it's needed during debug but I think it would be handled like opencpn-cmd.exe for possible future change?</p>
+<p>btw is the Win installer handling this new opencpn-glutil.exe in a proper way so run-time is ok. :)</p>
+<div class="codehilite"><pre><span></span><code>07:05:41.651 MESSAGE OCPNPlatform.cpp:901 Starting OpenGL test...
+07:05:41.651 MESSAGE OCPNPlatform.cpp:714 OpenGL test utility not found at C:\Builds\OCPN\OpenCPN\build\RelWithDebInfo\bin\opencpn-glutil.exe.
+07:05:41.651 MESSAGE OCPNPlatform.cpp:908 OpenGL test complete.
+07:05:41.651 MESSAGE OCPNPlatform.cpp:910 BuildGLCaps fails.
+</code></pre></div>
+
+
+
+<a name="427686748"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332168-Master/topic/Build%20status/near/427686748" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Pavel Kalian <a href="https://leamas.github.io/zulip-archive/stream/332168-Master/topic/Build.20status.html#427686748">(Mar 19 2024 at 12:50)</a>:</h4>
+<p>Just used <code>winConfig.bat</code> and everything is directly usable with <code>opencpn-glutil.exe</code> in <code>RelWithDebInfo\bin</code>, being found fine by the main process and OpenGL working. It is exactly the same as with <code>opencpn-cmd.exe</code>, which is in the same folder</p>
+
+
+
+<a name="427799819"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332168-Master/topic/Build%20status/near/427799819" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Håkan Svensson <a href="https://leamas.github.io/zulip-archive/stream/332168-Master/topic/Build.20status.html#427799819">(Mar 19 2024 at 19:46)</a>:</h4>
+<p>Ok, thanks. Point taken.</p>
+
+
+
+<a name="427839156"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332168-Master/topic/Build%20status/near/427839156" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Dan Dickey <a href="https://leamas.github.io/zulip-archive/stream/332168-Master/topic/Build.20status.html#427839156">(Mar 20 2024 at 01:50)</a>:</h4>
+<p><span class="user-mention" data-user-id="573239">@Pavel Kalian</span>  Would you mind testing newest winConfig.bat located in <a href="https://github.com/transmitterdan/OpenCPN/tree/winConfigTest">https://github.com/transmitterdan/OpenCPN/tree/winConfigTest</a> ?</p>
+<p>This update fixes few minor bugs but also adds the ability to get wxWidgets sources from github if git is installed. Due to conflicts with git I put the wxWidgets build folder in same location as root OpenCPN folder.  I hope this is ok because git gets confused if you try to clone another repository into the OpenCPN tree. This makes it easier to keep up with the correct git branch even if there are no source zip files.  Best way to test is to clone and build it like this from a VS2022 command prompt:</p>
+<div class="codehilite"><pre><span></span><code>mkdir test
+cd test
+git clone https://github.com/transmitterdan/OpenCPN --depth 1 --branch winConfigTest
+cd OpenCPN
+buildwin\winconfig.bat
+</code></pre></div>
+<p>I would like to know if this works for somebody else besides me.</p>
+
+
+
+<a name="427906449"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332168-Master/topic/Build%20status/near/427906449" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Pavel Kalian <a href="https://leamas.github.io/zulip-archive/stream/332168-Master/topic/Build.20status.html#427906449">(Mar 20 2024 at 11:29)</a>:</h4>
+<p><span class="user-mention silent" data-user-id="522729">Dan Dickey</span> <a href="#narrow/stream/332168-Master---5.2E8.2E0--.28was.3A-comms.29/topic/Build.20status/near/427839156">said</a>:</p>
+<blockquote>
+<p><span class="user-mention silent" data-user-id="573239">Pavel Kalian</span>  Would you mind testing newest winConfig.bat located in <a href="https://github.com/transmitterdan/OpenCPN/tree/winConfigTest">https://github.com/transmitterdan/OpenCPN/tree/winConfigTest</a> ?</p>
+<p>This update fixes few minor bugs but also adds the ability to get wxWidgets sources from github if git is installed. Due to conflicts with git I put the wxWidgets build folder in same location as root OpenCPN folder.  I hope this is ok because git gets confused if you try to clone another repository into the OpenCPN tree. This makes it easier to keep up with the correct git branch even if there are no source zip files.  Best way to test is to clone and build it like this from a VS2022 command prompt:</p>
+<div class="codehilite"><pre><span></span><code>mkdir test
+cd test
+git clone https://github.com/transmitterdan/OpenCPN --depth 1 --branch winConfigTest
+cd OpenCPN
+buildwin\winconfig.bat
+</code></pre></div>
+<p>I would like to know if this works for somebody else besides me.</p>
+</blockquote>
+<p>So far got here:</p>
+<ul>
+<li>Cloning wxWidgets failed on some submodule ("normal" with the quality of my connection)</li>
+<li>The script did not fail and tried to build the incomplete wx, which failed</li>
+<li>The script hapily continued to OpenCPN</li>
+<li>OpenCPN cmake configure step failed because there is no wxWidgets</li>
+<li>re-runinng the script does not fix it, assumes WX is OK and continues directly to the failing O build</li>
+</ul>
+<p>I can eventually finish to clone wx manually repeatedly running <code>git submodule update</code>, but the script should actually check for some signs of wx being built, not just the directory present.</p>
+
+
+
+<a name="427908172"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332168-Master/topic/Build%20status/near/427908172" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Dan Dickey <a href="https://leamas.github.io/zulip-archive/stream/332168-Master/topic/Build.20status.html#427908172">(Mar 20 2024 at 11:40)</a>:</h4>
+<p>Ok, thank you. Will fix that.</p>
+
+
+
+<a name="428042865"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332168-Master/topic/Build%20status/near/428042865" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Dan Dickey <a href="https://leamas.github.io/zulip-archive/stream/332168-Master/topic/Build.20status.html#428042865">(Mar 21 2024 at 01:30)</a>:</h4>
+<p>I pushed a fix so now it should abort the script if wxWidgets build fails.</p>
+
+
+
+<a name="428048109"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332168-Master/topic/Build%20status/near/428048109" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Pavel Kalian <a href="https://leamas.github.io/zulip-archive/stream/332168-Master/topic/Build.20status.html#428048109">(Mar 21 2024 at 02:38)</a>:</h4>
+<p>Still no joy. I now have buildable wxWidgets in ocpn_wxWidgets (confirmed by doing a manual buid with cmake there)<br>
+But winConfig.bat does not even try to build WX, proceeds to OpenCPN and fails like this:</p>
+<div class="codehilite"><pre><span></span><code>**********************************************************************
+** Visual Studio 2022 Developer Command Prompt v17.9.2
+** Copyright (c) 2022 Microsoft Corporation
+**********************************************************************
+[vcvarsall.bat] Environment initialized for: &#39;x86&#39;
+
+C:\Users\pavel&gt;cd Source
+
+C:\Users\pavel\Source&gt;cd Repos
+
+C:\Users\pavel\Source\Repos&gt;cd OpenCPN
+
+C:\Users\pavel\Source\Repos\OpenCPN&gt;buildwin\winConfig.bat
+OD=C:\Users\pavel\Source\Repos\OpenCPN\buildwin\..
+C:\Program Files\Microsoft Visual Studio\2022\Community\MSBuild\Current\Bin\amd64\MSBuild.exe
+C:\Windows\Microsoft.NET\Framework\v4.0.30319\MSBuild.exe
+Git found @ \Program Files\Git\cmd\git.exe
+Patch found @ \Program Files\Git\cmd\..\usr\bin\patch.exe
+4 File(s) copied
+wxWidgets Debug build OK
+48 File(s) copied
+wxWidgets Debug build OK
+ocpn_relwithdebinfo=1
+ocpn_release=1
+ocpn_debug=1
+ocpn_minsizerel=1
+xcopy /d /y &quot;C:\Program Files (x86)\Windows Kits\10\\lib\10.0.22621.0\\um\x86\iphlpapi.lib&quot; &quot;C:\Users\pavel\Source\Repos\OpenCPN\cache\buildwin&quot;
+0 File(s) copied
+xcopy /d /y &quot;C:\Program Files (x86)\Windows Kits\10\\include\10.0.22621.0\\um\iphlpapi.h&quot; &quot;C:\Users\pavel\Source\Repos\OpenCPN\cache\buildwin\include&quot;
+0 File(s) copied
+Feeds used:
+  https://api.nuget.org/v3/index.json
+
+Installing package &#39;Gettext.Tools&#39; to &#39;C:\Users\pavel\Source\Repos\OpenCPN\build&#39;.
+  CACHE https://api.nuget.org/v3/registration5-gz-semver2/gettext.tools/index.json
+Package &quot;Gettext.Tools.0.22.5&quot; is already installed.
+Found Gettext.Tools
+Feeds used:
+  https://api.nuget.org/v3/index.json
+
+Installing package &#39;NSIS-Package&#39; to &#39;C:\Users\pavel\Source\Repos\OpenCPN\build&#39;.
+  CACHE https://api.nuget.org/v3/registration5-gz-semver2/nsis-package/index.json
+Package &quot;NSIS-Package.3.0.9.1&quot; is already installed.
+Found NSIS-Package
+gettext=C:\Users\pavel\Source\Repos\OpenCPN\build\Gettext.Tools.0.22.5
+nsis=C:\Users\pavel\Source\Repos\OpenCPN\build\NSIS-Package.3.0.9.1
+Finishing C:\Users\pavel\Source\Repos\OpenCPN\buildwin\configdev.bat
+In folder C:\Users\pavel\Source\Repos\OpenCPN
+In folder C:\Users\pavel\Source\Repos\OpenCPN\build
+Building Debug
+-- cmake version: 3.28.0-msvc1
+-- Could NOT find PkgConfig (missing: PKG_CONFIG_EXECUTABLE)
+-- tests using vcan0 are NOT available: &quot;&quot;
+-- *** Host Build Architecture is x86_64
+-- Setting C++17 standard via cmake standard mechanism
+-- Final compiler options:
+-- CMAKE_CXX_FLAGS: /MP /EHsc /DWIN32
+-- CMAKE_CXX_FLAGS_DEBUG: /MP /MDd /Ob0 /Od  /D_DEBUG  /Zi /RTC1 /EHa
+-- CMAKE_CXX_FLAGS_MINSIZEREL: /MP /MD  /O1  /Ob1 /D NDEBUG /EHa
+-- CMAKE_CXX_FLAGS_RELEASE: /MP /MD  /O2  /Ob2 /D NDEBUG /Zi /EHa /wd4068
+-- CMAKE_CXX_FLAGS_RELWITHDEBINFO: /MP /MD  /O2  /Ob1 /D NDEBUG /Zi /EHa /wd4068
+-- Building version 5.9.0
+-- *** Staging to build opencpn 5.9.0 ***
+-- *** Package will include documentation ***
+-- Found OpenGL....
+--     GL Lib: opengl32glu32
+--     GL Include:
+--     Revised GL Lib: opengl32
+-- Could NOT find wxWidgets (missing: gl net xml html adv aui core base webview) (found version &quot;3.2.5&quot;)
+-- Could not find wxWidgets webview add-on
+-- Could NOT find wxWidgets (missing: gl net xml html adv aui core base) (found version &quot;3.2.5&quot;)
+CMake Error at CMakeLists.txt:654 (message):
+  Cannot find wxWidgets, giving up.  On linux you might want to try using
+  -DOCPN_FORCE_GTK3.
+
+
+-- Configuring incomplete, errors occurred!
+Running with debug output on for the `find` commands.
+-- cmake version: 3.28.0-msvc1
+CMake Debug Log at C:/Program Files/Microsoft Visual Studio/2022/Community/Common7/IDE/CommonExtensions/Microsoft/CMake/CMake/share/cmake-3.28/Modules/FindPkgConfig.cmake:62 (find_program):
+  find_program called with the following settings:
+
+    VAR: PKG_CONFIG_EXECUTABLE
+    NAMES: &quot;pkg-config.bat&quot;
+.....
+</code></pre></div>
+
+
+
+<a name="428104944"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332168-Master/topic/Build%20status/near/428104944" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Dan Dickey <a href="https://leamas.github.io/zulip-archive/stream/332168-Master/topic/Build.20status.html#428104944">(Mar 21 2024 at 11:18)</a>:</h4>
+<p>I tried to make it more robust. Pull and run it again. Send the output.</p>
+
+
+
+<a name="428105418"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332168-Master/topic/Build%20status/near/428105418" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Pavel Kalian <a href="https://leamas.github.io/zulip-archive/stream/332168-Master/topic/Build.20status.html#428105418">(Mar 21 2024 at 11:21)</a>:</h4>
+<p>wx started building with this last update. <span aria-label="+1" class="emoji emoji-1f44d" role="img" title="+1">:+1:</span>  will let you know in a while</p>
+
+
+
+<a name="428137482"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332168-Master/topic/Build%20status/near/428137482" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Pavel Kalian <a href="https://leamas.github.io/zulip-archive/stream/332168-Master/topic/Build.20status.html#428137482">(Mar 21 2024 at 14:07)</a>:</h4>
+<p>Everything built now and works. The only issue was I had to delete the build folder and run second time (Some leftover from yesterday made Release and RelWithDebInfo executables link the UD wx DLLs instead of U). I don't think the script should do this (or at least not as brutally as completely removing the folder) as there may be stuff the dev wants there.</p>
+
+
+
+<a name="428238089"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332168-Master/topic/Build%20status/near/428238089" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Dan Dickey <a href="https://leamas.github.io/zulip-archive/stream/332168-Master/topic/Build.20status.html#428238089">(Mar 22 2024 at 00:06)</a>:</h4>
+<p>The --rebuild and --clean options are not totally brutal.  They save the config stuff  like OpenCPN.ini, logs, navobj, anything in the '.build\%buildtype%\plugins' folders and '.build\%buildtype%\Charts' folder.</p>
+
+
+
+<a name="429184367"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332168-Master/topic/Build%20status/near/429184367" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Dan Dickey <a href="https://leamas.github.io/zulip-archive/stream/332168-Master/topic/Build.20status.html#429184367">(Mar 24 2024 at 10:49)</a>:</h4>
+<p><span class="user-mention" data-user-id="573239">@Pavel Kalian</span>  if you have time can you please test again?</p>
+<div class="codehilite"><pre><span></span><code>mkdir test
+cd test
+git clone https://github.com/transmitterdan/OpenCPN --depth 1 --branch winConfigTest
+cd OpenCPN
+buildwin\winconfig.bat --relwithdebinfo --debug
+</code></pre></div>
+<p>I tried to reduce the amount of wxWidgets files downloaded to the bare minimum. It should be faster on slow connections.</p>
+
+
+
+<a name="429184486"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332168-Master/topic/Build%20status/near/429184486" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Dan Dickey <a href="https://leamas.github.io/zulip-archive/stream/332168-Master/topic/Build.20status.html#429184486">(Mar 24 2024 at 10:51)</a>:</h4>
+<p>BTW, the wrong linking can happen if the initial config does not create all 4 configurations.  Later, if you build one of the missing configurations with the VS IDE it will wrongly link.</p>
+
+
+
+<a name="429204520"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332168-Master/topic/Build%20status/near/429204520" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Pavel Kalian <a href="https://leamas.github.io/zulip-archive/stream/332168-Master/topic/Build.20status.html#429204520">(Mar 24 2024 at 13:40)</a>:</h4>
+<p>Seems to be working fine.</p>
+
+
+
+<a name="430392723"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332168-Master/topic/Build%20status/near/430392723" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Dan Dickey <a href="https://leamas.github.io/zulip-archive/stream/332168-Master/topic/Build.20status.html#430392723">(Mar 30 2024 at 14:04)</a>:</h4>
+<p>I made some "improvements" and optimizations.  Close to good enough to make a PR to master.  Would appreciate any and all testing/feedback.</p>
+<div class="codehilite"><pre><span></span><code>mkdir test
+cd test
+git clone https://github.com/transmitterdan/OpenCPN --depth 1 --branch winConfigTest
+cd OpenCPN
+buildwin\winconfig.bat --relwithdebinfo --debug
+</code></pre></div>
+<p>After initial build, run O in VS debugger and add some charts/connections,/etc. Then try the winconfig.bat script again with various options such as --rebuild and --clean.</p>
+
+
+
+<a name="430401009"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332168-Master/topic/Build%20status/near/430401009" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Pavel Kalian <a href="https://leamas.github.io/zulip-archive/stream/332168-Master/topic/Build.20status.html#430401009">(Mar 30 2024 at 16:03)</a>:</h4>
+<p>Seems to be working fine, I'm not able to break it so far :). The only thing I noticed until now is that running with <code>--clean</code> did not remove the binary build products, which is what I would expect it to do (being a windows counterpart of <code>make clean</code>), but did a build.</p>
+
+
+
+<a name="430419508"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332168-Master/topic/Build%20status/near/430419508" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Dan Dickey <a href="https://leamas.github.io/zulip-archive/stream/332168-Master/topic/Build.20status.html#430419508">(Mar 30 2024 at 20:55)</a>:</h4>
+<p>Hmmm..--clean should have deleted the entire build folder and recreated it from scratch.  Are there binary build products created somewhere besides build?</p>
+<p>Or did you mean --rebuild? I think that might have some issue as you described.</p>
+
+
+
+<a name="430419893"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332168-Master/topic/Build%20status/near/430419893" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Pavel Kalian <a href="https://leamas.github.io/zulip-archive/stream/332168-Master/topic/Build.20status.html#430419893">(Mar 30 2024 at 21:02)</a>:</h4>
+<p><code>--rebuild</code> deletes the build products and starts the build, exactly what I expect. <code>--clean</code> does not delete anything and starts the build. And it takes the same time as running without any paramters, so I start to suspect it is ignored.</p>
+
+
+
+<a name="430420354"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332168-Master/topic/Build%20status/near/430420354" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Dan Dickey <a href="https://leamas.github.io/zulip-archive/stream/332168-Master/topic/Build.20status.html#430420354">(Mar 30 2024 at 21:11)</a>:</h4>
+<p>Ok, I'm seeing same.  Standby...</p>
+
+
+
+<a name="430420355"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332168-Master/topic/Build%20status/near/430420355" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Pavel Kalian <a href="https://leamas.github.io/zulip-archive/stream/332168-Master/topic/Build.20status.html#430420355">(Mar 30 2024 at 21:11)</a>:</h4>
+<p>Line 285? Isn't it skipping everything if internet connection is active?</p>
+
+
+
+<a name="430421554"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332168-Master/topic/Build%20status/near/430421554" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Dan Dickey <a href="https://leamas.github.io/zulip-archive/stream/332168-Master/topic/Build.20status.html#430421554">(Mar 30 2024 at 21:36)</a>:</h4>
+<p>Yeah, misplacced paren.  Testing now...</p>
+
+
+
+<a name="430434342"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332168-Master/topic/Build%20status/near/430434342" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Dan Dickey <a href="https://leamas.github.io/zulip-archive/stream/332168-Master/topic/Build.20status.html#430434342">(Mar 31 2024 at 01:25)</a>:</h4>
+<p>Ok, pushed a fix. Please test more, thanks.</p>
+
+
+
+<a name="430473822"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332168-Master/topic/Build%20status/near/430473822" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Pavel Kalian <a href="https://leamas.github.io/zulip-archive/stream/332168-Master/topic/Build.20status.html#430473822">(Mar 31 2024 at 12:34)</a>:</h4>
+<p>with <code>--clean</code> I still end up with the build folder full after 15 minutes</p>
+
+
+
+<a name="430477733"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332168-Master/topic/Build%20status/near/430477733" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Dan Dickey <a href="https://leamas.github.io/zulip-archive/stream/332168-Master/topic/Build.20status.html#430477733">(Mar 31 2024 at 13:42)</a>:</h4>
+<p>I think that is what I intended. The clean option deletes ‘ocpn_wxWidgets’ and ‘build’ folders. Then recreates them the same as if an initial run. This fixes up any errant files in wxWidgets or the build tree. Also, allows you to “up/down size” the build tree to just the configurations you want. The ‘rebuild’ option only cleans and rebuilds the build folder without changing the types of configurations. It also saves the O configuration for deleted configs so if you later decide you want one back it can restore the configuration files.</p>
+<p>So ‘clean’ is pretty much a do-over from scratch without losing the confs. If you don’t give it any additions options it will build all 4 configurations same as initial run without options. If you want less than that, specify the configurations desired along with the ‘clean’ option.</p>
+<p>There is no option that will just “clean” like ‘make clean’. I was going to do that but it didn’t make sense because the initial install is necessary to set up the runtime environment. You cannot do anything useful with a “clean” build folder.</p>
+<p>If you don’t see the build tree disappear early in the ‘clean’ process something is wrong.</p>
+
+
+
+<a name="430477796"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332168-Master/topic/Build%20status/near/430477796" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Pavel Kalian <a href="https://leamas.github.io/zulip-archive/stream/332168-Master/topic/Build.20status.html#430477796">(Mar 31 2024 at 13:43)</a>:</h4>
+<p>Ah, OK, then it all works as far as I could test</p>
+
+
+
+<a name="440558500"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332168-Master/topic/Build%20status/near/440558500" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Dan Dickey <a href="https://leamas.github.io/zulip-archive/stream/332168-Master/topic/Build.20status.html#440558500">(May 24 2024 at 18:29)</a>:</h4>
+<p>I found a few issues and made some "improvements".<br>
+Improvements include:</p>
+<ul>
+<li>Can run from any Windows shell (CMD, PowerShell, git bash, git cmd).</li>
+<li>Does not need to be run from a VS command prompt.</li>
+<li>Builds debug version last since it currently fails</li>
+</ul>
+<p>The new winConfig.bat can be tested on Windows:</p>
+<p>git clone <a href="https://github.com/transmitterdan/OpenCPN">https://github.com/transmitterdan/OpenCPN</a> --branch winconfig4<br>
+cd OpenCPN<br>
+.\buildwin\winconfig.bat --relwithdebinfo</p>
+
+
+
+<a name="462778904"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332168-Master/topic/Build%20status/near/462778904" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Alec Leamas <a href="https://leamas.github.io/zulip-archive/stream/332168-Master/topic/Build.20status.html#462778904">(Aug 16 2024 at 12:41)</a>:</h4>
+<p>I have broken the Flatpak builds despite all sorts of testing. Will fix over the weekend</p>
+
+
+
+<a name="462779056"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332168-Master/topic/Build%20status/near/462779056" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Alec Leamas <a href="https://leamas.github.io/zulip-archive/stream/332168-Master/topic/Build.20status.html#462779056">(Aug 16 2024 at 12:42)</a>:</h4>
+<p>CircleCI MacOS builders also has some issue for the monent</p>
+
+
+
+<a name="462793224"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332168-Master/topic/Build%20status/near/462793224" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Alec Leamas <a href="https://leamas.github.io/zulip-archive/stream/332168-Master/topic/Build.20status.html#462793224">(Aug 16 2024 at 13:57)</a>:</h4>
+<p>Flatpak fixed</p>
+
+
+
+<hr><p>Last updated: Oct 08 2024 at 10:11 UTC</p>
+</html>

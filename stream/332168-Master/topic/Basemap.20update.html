@@ -1,0 +1,132 @@
+<html>
+<head><meta charset="utf-8"><title>Basemap update · Master · Zulip Chat Archive</title></head>
+<h2>Stream: <a href="https://leamas.github.io/zulip-archive/stream/332168-Master/index.html">Master</a></h2>
+<h3>Topic: <a href="https://leamas.github.io/zulip-archive/stream/332168-Master/topic/Basemap.20update.html">Basemap update</a></h3>
+
+<hr>
+
+<base href="https://opencpn.zulipchat.com">
+
+<head><link href="https://leamas.github.io/zulip-archive/style.css" rel="stylesheet"></head>
+
+<a name="434275910"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332168-Master/topic/Basemap%20update/near/434275910" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Dave Register <a href="https://leamas.github.io/zulip-archive/stream/332168-Master/topic/Basemap.20update.html#434275910">(Apr 19 2024 at 03:40)</a>:</h4>
+<p>Hello team.<br>
+I have pushed a patch which implements a new OCPN basemap using ESRI shapefiles.  This patch comes from experimental work that Pavel has been building for some time.  Pavel also hand-crafted the actual shapefiles used for the basemap rendering.<br>
+Couple of things to note:</p>
+<ol>
+<li>The OCPN package must be build and installed to properly place the basemap data files in the proper system location.</li>
+<li>The base install comes with "crude" and "low" resolution data files.  We plan to follow the same strategy as GSHHS, namely, users may download higher resolution basemaps using the chart downloader.  Not implemented yet.</li>
+<li>On the distribution basemaps, there are today two colors used.  This will help us to monitor and understand the algorithm for switching basemap scales, in the same way as GSHHS.  In production, the basemap colors will likely be the same, or similar to, the existing GSHHS colors.</li>
+</ol>
+<p>There is more work to do here, but I think we are structurally complete.<br>
+Comments appreciated.  Pavel, please fill as appropriate.</p>
+
+
+
+<a name="434279572"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332168-Master/topic/Basemap%20update/near/434279572" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Dave Register <a href="https://leamas.github.io/zulip-archive/stream/332168-Master/topic/Basemap.20update.html#434279572">(Apr 19 2024 at 04:20)</a>:</h4>
+<p>And there is a Windows build problem.<br>
+I will investigate tomorrow.</p>
+
+
+
+<a name="434339653"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332168-Master/topic/Basemap%20update/near/434339653" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Pavel Kalian <a href="https://leamas.github.io/zulip-archive/stream/332168-Master/topic/Basemap.20update.html#434339653">(Apr 19 2024 at 11:10)</a>:</h4>
+<p>The higher res datasets can be downloaded from <a href="https://github.com/chartcatalogs/shapefiles/releases/tag/v0.0.1">https://github.com/chartcatalogs/shapefiles/releases/tag/v0.0.1</a> - just unpack and place the files next to the existing ones.<br>
+Note that the high and full resolutions contain an extreme level of detail, which especially in areas with complicated geography still leads to IMHO unacceptable performance that needs more optimization.</p>
+
+
+
+<a name="434345130"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332168-Master/topic/Basemap%20update/near/434345130" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Håkan Svensson <a href="https://leamas.github.io/zulip-archive/stream/332168-Master/topic/Basemap.20update.html#434345130">(Apr 19 2024 at 11:46)</a>:</h4>
+<p>Thanks Pavel. I was looking in Chartdownloader for that but there's only the "old" GSHHG.<br>
+Q: Before testing, do you think WeatherRouting will detect this new land contour or do we still need GSHHG for that?</p>
+
+
+
+<a name="434362538"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332168-Master/topic/Basemap%20update/near/434362538" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Håkan Svensson <a href="https://leamas.github.io/zulip-archive/stream/332168-Master/topic/Basemap.20update.html#434362538">(Apr 19 2024 at 13:25)</a>:</h4>
+<p>On a RPi400<br>
+I loaded basemap-medium and that's very good so far. Well, on my Pi the green color is very bright. Nearly stings in the eyes. Could we make it more soft?</p>
+<p>Anyhow -  I'd suggest we also include basemap-medium in the install packages. Today's system would manage that I suppose.</p>
+
+
+
+<a name="434370399"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332168-Master/topic/Basemap%20update/near/434370399" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Dave Register <a href="https://leamas.github.io/zulip-archive/stream/332168-Master/topic/Basemap.20update.html#434370399">(Apr 19 2024 at 14:07)</a>:</h4>
+<p><span class="user-mention" data-user-id="573239">@Pavel Kalian</span> <br>
+Windows build fail corrected, by removing</p>
+<div class="codehilite"><pre><span></span><code>libs/ShapefileCpp/lib/src/ShapefileWriter.cpp.
+</code></pre></div>
+
+<p>I guess we do not need that, at least right now.</p>
+<p>MSVC compiler does not like zero-length array initialization.<br>
+e.g. </p>
+<div class="codehilite"><pre><span></span><code>   SHPObject* ShapefileWriter::createPointObject(Point *pt) {
+    double x[1] = {pt-&gt;getX()};
+    double y[1] = {pt-&gt;getY()};
+    double z[1] = {pt-&gt;getZ()};
+    double m[1] = {pt-&gt;getM()};
+    int starts[0];                                        &lt;---------------- Error C2466
+    int types[0];
+</code></pre></div>
+
+
+
+<a name="434371209"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332168-Master/topic/Basemap%20update/near/434371209" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Dave Register <a href="https://leamas.github.io/zulip-archive/stream/332168-Master/topic/Basemap.20update.html#434371209">(Apr 19 2024 at 14:11)</a>:</h4>
+<p><span class="user-mention" data-user-id="522486">@Håkan Svensson</span> </p>
+<ol>
+<li>The new basemap code includes land detection code, but is untested in real life.</li>
+<li>You can change the colors locally if you like, to save your eyes.   The colors are set at:<p><code>void ShapeBaseChartSet::LoadBasemaps(const std::string &amp;dir)</code></p>
+</li>
+</ol>
+
+
+
+<a name="434372277"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332168-Master/topic/Basemap%20update/near/434372277" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Pavel Kalian <a href="https://leamas.github.io/zulip-archive/stream/332168-Master/topic/Basemap.20update.html#434372277">(Apr 19 2024 at 14:16)</a>:</h4>
+<p>WeatherRouting does not care what basemap is being used, it just calls the API and asks whether land is crossed or not, so the change of basemap is transparent for it. The shapefiles of course will be available from the chart downloader, but first I need to implement the full production workflow. The colors are there just for the current testing phase so that it is apparent which basemap resolution is being used, we will simply use some similar to GSHHG color in the release for all of them. The performance intensive resolutions really are only high and full, the amount of detail grows pretty much exponentionally there as both smaller features are present (= many more polygons to render) and the simplification is less aggressive (= all the polygons have more edges)</p>
+
+
+
+<a name="434374650"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332168-Master/topic/Basemap%20update/near/434374650" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Håkan Svensson <a href="https://leamas.github.io/zulip-archive/stream/332168-Master/topic/Basemap.20update.html#434374650">(Apr 19 2024 at 14:28)</a>:</h4>
+<p>Very good info, thanks. This will be nice.</p>
+
+
+
+<a name="434376664"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332168-Master/topic/Basemap%20update/near/434376664" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Dave Register <a href="https://leamas.github.io/zulip-archive/stream/332168-Master/topic/Basemap.20update.html#434376664">(Apr 19 2024 at 14:39)</a>:</h4>
+<p><span class="user-mention" data-user-id="573239">@Pavel Kalian</span> <br>
+If you have time, will you please take a look at macOS CCI build fail?</p>
+<div class="codehilite"><pre><span></span><code> /Users/runner/work/OpenCPN/OpenCPN/gui/include/gui/shapefile_basemap.h:102:35: error: &#39;exists&#39; is unavailable: introduced in macOS 10.15
+
+ _is_usable = std::filesystem::exists(filename);
+</code></pre></div>
+
+
+
+<a name="434376885"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332168-Master/topic/Basemap%20update/near/434376885" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Pavel Kalian <a href="https://leamas.github.io/zulip-archive/stream/332168-Master/topic/Basemap.20update.html#434376885">(Apr 19 2024 at 14:40)</a>:</h4>
+<p>Just pushed the fix (There is no <code>std::filesystem</code> on old macOS so we need the same logic as everywhere else we use it)</p>
+
+
+
+<a name="434405998"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332168-Master/topic/Basemap%20update/near/434405998" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Håkan Svensson <a href="https://leamas.github.io/zulip-archive/stream/332168-Master/topic/Basemap.20update.html#434405998">(Apr 19 2024 at 17:28)</a>:</h4>
+<p>current master: Yes, WeatherRouting now detects also "Basemaps" as land. <span aria-label="+1" class="emoji emoji-1f44d" role="img" title="+1">:+1:</span> <br>
+And also VS does build and Linux wo warnings.</p>
+
+
+
+<a name="434411357"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332168-Master/topic/Basemap%20update/near/434411357" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Dave Register <a href="https://leamas.github.io/zulip-archive/stream/332168-Master/topic/Basemap.20update.html#434411357">(Apr 19 2024 at 18:08)</a>:</h4>
+<p><span class="user-mention" data-user-id="573239">@Pavel Kalian</span> <br>
+Thanks.</p>
+
+
+
+<hr><p>Last updated: Oct 08 2024 at 10:11 UTC</p>
+</html>

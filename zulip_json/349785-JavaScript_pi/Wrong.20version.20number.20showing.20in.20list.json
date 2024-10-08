@@ -1,0 +1,38 @@
+[
+    {
+        "content": "<p>I have just updated the JavaScript plugin to version v3.0.4e (e indicting it was the fifth try to get it go through OK).</p>\n<ul>\n<li>In my plugins/cmake file I have <code>set(PKG_VERSION  3.0.4)</code></li>\n<li>I gave it a tag of <code>v3.0.4e</code></li>\n<li>The files in Cloudsmith start with <code>javascript-v3.0.4e</code></li>\n<li>When I install from the catalogue it invites me to install <code>javascript-v3.0.4e</code></li>\n</ul>\n<p>But in the list of installed plugins it is shown as <code>v3.0.0</code><br>\nI have tried uninstalling and downloading again but no change.</p>\n<p>What am I missing?</p>",
+        "id": 438375664,
+        "sender_full_name": "Tony Voss",
+        "timestamp": 1715610267
+    },
+    {
+        "content": "<p>Maybe including the 'e' is preventing parsing the version number?</p>",
+        "id": 438380607,
+        "sender_full_name": "Tony Voss",
+        "timestamp": 1715611473
+    },
+    {
+        "content": "<p>The filenames are irrelevant, could be anything. </p>\n<p>The two things used are the value in the metadata and the value returned by  GetPlugInVersionMajor(), GetPlugInVersionMinor() + GetPlugInVersionPatch() and friends in the API.</p>\n<p>You  should check the metadata in the metadata file,  the only xml file created in the build directory.  Here you have a <code>&lt;version&gt;</code>  tag to check; this is what is used when th plugin is not installed. </p>\n<p>The core issue here is that the tag does not match PKG_VERSION.  The tag is used when not installed, PKG_VERSION once it is installed.</p>\n<p>[could be shorter reply, I know. Thinking as I type]</p>",
+        "id": 438418819,
+        "sender_full_name": "Alec Leamas",
+        "timestamp": 1715623244
+    },
+    {
+        "content": "<p>The intended workflow:</p>\n<ol>\n<li>Release a version, say 1.2.1</li>\n<li>start working on 1.2.2. At this point update PKG_VERSION</li>\n<li>Make test builds using automated git versions, fix things.</li>\n<li>When done, tag the last working build with 1.2.2 or v1.2.2</li>\n<li>Rinse and repeat.</li>\n</ol>",
+        "id": 438419742,
+        "sender_full_name": "Alec Leamas",
+        "timestamp": 1715623542
+    },
+    {
+        "content": "<p><span class=\"user-mention\" data-user-id=\"399510\">@Alec Leamas</span>  This is very helpful - thank you.<br>\nTurns out I was missing the GetPlugInVersionPatch() method.  It is in a later part of the ocpn_plugins.h file. I am suprised it did not show up as a missing symbol.  I guess plugin manager was assuming zero and hence my issue.</p>\n<p>On my pull request, the checks failed again with a checksum error for<br>\n<code>metadata/javascript-3.0.5-msvc-wx32-10.xml: javascript-3.0.5_msvc-wx32-10-x86.tar.gz</code><br>\nThis is the second time I have had this - in 2 out for 4 builds and always msvc.<br>\nBuilding again usually works.<br>\nAny thoughts?</p>\n<p>Also I note there are 14 binary &amp;  metadata pairs put into the cloudsmith repository but only 13 metadata files in my auto branch.<br>\nIt seems one metadata file is not being inserted into auto</p>",
+        "id": 438526609,
+        "sender_full_name": "Tony Voss",
+        "timestamp": 1715675515
+    },
+    {
+        "content": "<blockquote>\n<p>It seems one metadata file is not being inserted into auto</p>\n</blockquote>\n<p>It's just to checkout that branch and see what's missing. Then, look into the build log for corresponding build. See also <a href=\"https://opencpn-manuals.github.io/main/AlternativeWorkflow/InstallConfigure/Catalog-Github-Integration.html#_troubleshooting\">https://opencpn-manuals.github.io/main/AlternativeWorkflow/InstallConfigure/Catalog-Github-Integration.html#_troubleshooting</a></p>",
+        "id": 438527171,
+        "sender_full_name": "Alec Leamas",
+        "timestamp": 1715675714
+    }
+]

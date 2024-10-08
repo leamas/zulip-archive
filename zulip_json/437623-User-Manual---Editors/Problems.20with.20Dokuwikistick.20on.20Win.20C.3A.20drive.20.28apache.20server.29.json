@@ -1,0 +1,116 @@
+[
+    {
+        "content": "<p>I have a local version of the OpenCPN wiki running. I need this because a plugin the creates the portable versions of html and pdf for the User Manual, times out on the OpenCPN Server.  I have set up ACL and can edit and do all the normal things we can do on the OpenCPN server, but the two plugins Epub and SiteExplorer cannot seem to save files and I have not been able to figure out what is causing this.  I have tried turning off Norton AV and Firewall (no difference),  moving the DokuwikiStick entire directory to a user directory such as   C:/user/username/Documents. I have tried to change the permissions on the entire Dokuwiiki directory from \"read only\" and all subdir and files, but it just changes back to read-only.  I am out of ideas... can anyone with apache server experience (runnning on the C:drive) please advise?</p>",
+        "id": 443432957,
+        "sender_full_name": "Rick Gleason",
+        "timestamp": 1717829602
+    },
+    {
+        "content": "<p><span class=\"user-mention\" data-user-id=\"399865\">@Rick Gleason</span> , what's the error you're getting?  Are you absolutely sure it is unable to save files and not something else that results in no file created?</p>",
+        "id": 443463166,
+        "sender_full_name": "Fabio Paoli",
+        "timestamp": 1717849652
+    },
+    {
+        "content": "<p>The siteexport plugin simply reports  \"Finished but download failed.\"    and ebup  just sits there and never completes. I have two log files I can post, but I am not sure they will help.  The apache server is a special miniapache that is bundled and intended for running with windows.  Will post the log files.</p>",
+        "id": 443464160,
+        "sender_full_name": "Rick Gleason",
+        "timestamp": 1717850431
+    },
+    {
+        "content": "<p>**Dokuwiki Error Log<br>\n**</p>\n<p>024-06-08 00:04:08    C:\\Users\\fcgle\\DokuWikiStick\\dokuwiki\\lib\\plugins\\epub\\action.php(104)    E_WARNING: Trying to access array offset on value of type null<br>\n<a href=\"https://github.com/opencpn/OpenCPN/issues/0\">#0</a> C:\\Users\\fcgle\\DokuWikiStick\\dokuwiki\\lib\\plugins\\epub\\action.php(104): dokuwiki\\ErrorHandler::errorHandler()<br>\n<a href=\"https://github.com/opencpn/OpenCPN/issues/1\">#1</a> C:\\Users\\fcgle\\DokuWikiStick\\dokuwiki\\inc\\Extension\\EventHandler.php(80): action_plugin_epub-&gt;prevent_cache()<br>\n<a href=\"https://github.com/opencpn/OpenCPN/issues/2\">#2</a> C:\\Users\\fcgle\\DokuWikiStick\\dokuwiki\\inc\\Extension\\Event.php(75): dokuwiki\\Extension\\EventHandler-&gt;process_event()<br>\n<a href=\"https://github.com/opencpn/OpenCPN/issues/3\">#3</a> C:\\Users\\fcgle\\DokuWikiStick\\dokuwiki\\inc\\Extension\\Event.php(133): dokuwiki\\Extension\\Event-&gt;advise_before()<br>\n<a href=\"https://github.com/opencpn/OpenCPN/issues/4\">#4</a> C:\\Users\\fcgle\\DokuWikiStick\\dokuwiki\\inc\\Extension\\Event.php(200): dokuwiki\\Extension\\Event-&gt;trigger()<br>\n<a href=\"https://github.com/opencpn/OpenCPN/issues/5\">#5</a> C:\\Users\\fcgle\\DokuWikiStick\\dokuwiki\\inc\\Cache\\Cache.php(83): dokuwiki\\Extension\\Event::createAndTrigger()<br>\n<a href=\"https://github.com/opencpn/OpenCPN/issues/6\">#6</a> C:\\Users\\fcgle\\DokuWikiStick\\dokuwiki\\inc\\parserutils.php(289): dokuwiki\\Cache\\Cache-&gt;useCache()<br>\n<a href=\"https://github.com/opencpn/OpenCPN/issues/7\">#7</a> C:\\Users\\fcgle\\DokuWikiStick\\dokuwiki\\inc\\common.php(262): p_get_metadata()<br>\n<a href=\"https://github.com/opencpn/OpenCPN/issues/8\">#8</a> C:\\Users\\fcgle\\DokuWikiStick\\dokuwiki\\doku.php(101): pageinfo()<br>\n<a href=\"https://github.com/opencpn/OpenCPN/issues/9\">#9</a> {main}<br>\n2024-06-08 00:04:15    C:\\Users\\fcgle\\DokuWikiStick\\dokuwiki\\lib\\plugins\\epub\\action.php(104)    E_WARNING: Trying to access array offset on value of type null<br>\n<a href=\"https://github.com/opencpn/OpenCPN/issues/0\">#0</a> C:\\Users\\fcgle\\DokuWikiStick\\dokuwiki\\lib\\plugins\\epub\\action.php(104): dokuwiki\\ErrorHandler::errorHandler()<br>\n<a href=\"https://github.com/opencpn/OpenCPN/issues/1\">#1</a> C:\\Users\\fcgle\\DokuWikiStick\\dokuwiki\\inc\\Extension\\EventHandler.php(80): action_plugin_epub-&gt;prevent_cache()<br>\n<a href=\"https://github.com/opencpn/OpenCPN/issues/2\">#2</a> C:\\Users\\fcgle\\DokuWikiStick\\dokuwiki\\inc\\Extension\\Event.php(75): dokuwiki\\Extension\\EventHandler-&gt;process_event()<br>\n<a href=\"https://github.com/opencpn/OpenCPN/issues/3\">#3</a> C:\\Users\\fcgle\\DokuWikiStick\\dokuwiki\\inc\\Extension\\Event.php(133): dokuwiki\\Extension\\Event-&gt;advise_before()<br>\n<a href=\"https://github.com/opencpn/OpenCPN/issues/4\">#4</a> C:\\Users\\fcgle\\DokuWikiStick\\dokuwiki\\inc\\Extension\\Event.php(200): dokuwiki\\Extension\\Event-&gt;trigger()<br>\n<a href=\"https://github.com/opencpn/OpenCPN/issues/5\">#5</a> C:\\Users\\fcgle\\DokuWikiStick\\dokuwiki\\inc\\Cache\\Cache.php(83): dokuwiki\\Extension\\Event::createAndTrigger()<br>\n<a href=\"https://github.com/opencpn/OpenCPN/issues/6\">#6</a> C:\\Users\\fcgle\\DokuWikiStick\\dokuwiki\\inc\\parserutils.php(289): dokuwiki\\Cache\\Cache-&gt;useCache()<br>\n<a href=\"https://github.com/opencpn/OpenCPN/issues/7\">#7</a> C:\\Users\\fcgle\\DokuWikiStick\\dokuwiki\\inc\\common.php(262): p_get_metadata()<br>\n<a href=\"https://github.com/opencpn/OpenCPN/issues/8\">#8</a> C:\\Users\\fcgle\\DokuWikiStick\\dokuwiki\\doku.php(101): pageinfo()<br>\n<a href=\"https://github.com/opencpn/OpenCPN/issues/9\">#9</a> {main}<br>\n2024-06-08 00:04:15    C:\\Users\\fcgle\\DokuWikiStick\\dokuwiki\\lib\\plugins\\siteexport\\helper.php(183)    E_WARNING: Undefined array key \"depthType\"<br>\n<a href=\"https://github.com/opencpn/OpenCPN/issues/0\">#0</a> C:\\Users\\fcgle\\DokuWikiStick\\dokuwiki\\lib\\plugins\\siteexport\\helper.php(183): dokuwiki\\ErrorHandler::errorHandler()<br>\n<a href=\"https://github.com/opencpn/OpenCPN/issues/1\">#1</a> C:\\Users\\fcgle\\DokuWikiStick\\dokuwiki\\lib\\plugins\\siteexport\\admin.php(50): helper_plugin_siteexport-&gt;__siteexport_addpage()<br>\n<a href=\"https://github.com/opencpn/OpenCPN/issues/2\">#2</a> C:\\Users\\fcgle\\DokuWikiStick\\dokuwiki\\inc\\template.php(205): admin_plugin_siteexport-&gt;html()<br>\n<a href=\"https://github.com/opencpn/OpenCPN/issues/3\">#3</a> C:\\Users\\fcgle\\DokuWikiStick\\dokuwiki\\inc\\Action\\Admin.php(43): tpl_admin()<br>\n<a href=\"https://github.com/opencpn/OpenCPN/issues/4\">#4</a> C:\\Users\\fcgle\\DokuWikiStick\\dokuwiki\\inc\\template.php(120): dokuwiki\\Action\\Admin-&gt;tplContent()<br>\n<a href=\"https://github.com/opencpn/OpenCPN/issues/5\">#5</a> [internal function]: tpl_content_core()<br>\n<a href=\"https://github.com/opencpn/OpenCPN/issues/6\">#6</a> C:\\Users\\fcgle\\DokuWikiStick\\dokuwiki\\inc\\Extension\\Event.php(134): call_user_func_array()<br>\n<a href=\"https://github.com/opencpn/OpenCPN/issues/7\">#7</a> C:\\Users\\fcgle\\DokuWikiStick\\dokuwiki\\inc\\Extension\\Event.php(200): dokuwiki\\Extension\\Event-&gt;trigger()<br>\n<a href=\"https://github.com/opencpn/OpenCPN/issues/8\">#8</a> C:\\Users\\fcgle\\DokuWikiStick\\dokuwiki\\inc\\template.php(102): dokuwiki\\Extension\\Event::createAndTrigger()<br>\n<a href=\"https://github.com/opencpn/OpenCPN/issues/9\">#9</a> C:\\Users\\fcgle\\DokuWikiStick\\dokuwiki\\lib\\tpl\\dokuwiki\\main.php(60): tpl_content()<br>\n<a href=\"https://github.com/opencpn/OpenCPN/issues/10\">#10</a> C:\\Users\\fcgle\\DokuWikiStick\\dokuwiki\\inc\\actions.php(30): include('...')<br>\n<a href=\"https://github.com/opencpn/OpenCPN/issues/11\">#11</a> C:\\Users\\fcgle\\DokuWikiStick\\dokuwiki\\doku.php(131): act_dispatch()<br>\n<a href=\"https://github.com/opencpn/OpenCPN/issues/12\">#12</a> {main}</p>",
+        "id": 443464219,
+        "sender_full_name": "Rick Gleason",
+        "timestamp": 1717850476
+    },
+    {
+        "content": "<p><strong>Apache  Server  Recent Server Logs</strong></p>\n<p>[Thu Jun 06 19:23:10.362700 2024] [core:warn] [pid 21672:tid 360] AH00098: pid file C:/Users/fcgle/DokuWikiStick/server/logs/httpd.pid overwritten -- Unclean shutdown of previous Apache run?<br>\n[Thu Jun 06 19:23:10.708920 2024] [mpm_winnt:notice] [pid 21672:tid 360] AH00455: Apache/2.4.58 (Win64) PHP/8.2.13 configured -- resuming normal operations<br>\n[Thu Jun 06 19:23:10.708920 2024] [mpm_winnt:notice] [pid 21672:tid 360] AH00456: Apache Lounge VS17 Server built: Oct 18 2023 13:03:18<br>\n[Thu Jun 06 19:23:10.708920 2024] [core:notice] [pid 21672:tid 360] AH00094: Command line: 'mapache.exe -d C:/Users/fcgle/DokuWikiStick/server'<br>\n[Thu Jun 06 19:23:10.818148 2024] [mpm_winnt:notice] [pid 21672:tid 360] AH00418: Parent: Created child process 22360<br>\n[Thu Jun 06 19:23:11.476602 2024] [mpm_winnt:notice] [pid 22360:tid 356] AH00354: Child: Starting 24 worker threads.<br>\n[Thu Jun 06 21:14:19.776802 2024] [authz_core:error] [pid 22360:tid 828] [client 127.0.0.1:61699] AH01630: client denied by server configuration: C:/Users/fcgle/DokuWikiStick/dokuwiki/data/dont-panic-if-you-see-this-in-your-logs-it-means-your-directory-permissions-are-correct.png, referer: <a href=\"http://localhost:8800/doku.php?id=opencpn:editor_manual:epub-user-manual-advanced&amp;do=admin\">http://localhost:8800/doku.php?id=opencpn:editor_manual:epub-user-manual-advanced&amp;do=admin</a><br>\n[Fri Jun 07 19:37:24.273086 2024] [core:warn] [pid 16748:tid 188] AH00098: pid file C:/Users/fcgle/DokuWikiStick/server/logs/httpd.pid overwritten -- Unclean shutdown of previous Apache run?<br>\n[Fri Jun 07 19:37:27.724582 2024] [mpm_winnt:notice] [pid 16748:tid 188] AH00455: Apache/2.4.58 (Win64) PHP/8.2.13 configured -- resuming normal operations<br>\n[Fri Jun 07 19:37:27.724582 2024] [mpm_winnt:notice] [pid 16748:tid 188] AH00456: Apache Lounge VS17 Server built: Oct 18 2023 13:03:18<br>\n[Fri Jun 07 19:37:27.724582 2024] [core:notice] [pid 16748:tid 188] AH00094: Command line: 'mapache.exe -d C:/Users/fcgle/DokuWikiStick/server'<br>\n[Fri Jun 07 19:37:27.908595 2024] [mpm_winnt:notice] [pid 16748:tid 188] AH00418: Parent: Created child process 21196<br>\n[Fri Jun 07 19:37:28.968576 2024] [mpm_winnt:notice] [pid 21196:tid 352] AH00354: Child: Starting 24 worker threads.<br>\n[Fri Jun 07 19:38:11.011546 2024] [authz_core:error] [pid 21196:tid 832] [client 127.0.0.1:51286] AH01630: client denied by server configuration: C:/Users/fcgle/DokuWikiStick/dokuwiki/data/dont-panic-if-you-see-this-in-your-logs-it-means-your-directory-permissions-are-correct.png, referer: <a href=\"http://localhost:8800/doku.php?id=opencpn&amp;do=admin\">http://localhost:8800/doku.php?id=opencpn&amp;do=admin</a></p>",
+        "id": 443464252,
+        "sender_full_name": "Rick Gleason",
+        "timestamp": 1717850505
+    },
+    {
+        "content": "<p>The depthType error is what I'd look into, if it makes sense in docuwiki lingo.  Doesn't seem like a folder permission error.</p>",
+        "id": 443467587,
+        "sender_full_name": "Fabio Paoli",
+        "timestamp": 1717852744
+    },
+    {
+        "content": "<p>I don't have an Apache to help, it's been a while since I worked on one.</p>",
+        "id": 443467615,
+        "sender_full_name": "Fabio Paoli",
+        "timestamp": 1717852794
+    },
+    {
+        "content": "<p>client denied by server configuration: C:/Users/fcgle/DokuWikiStick/dokuwiki/data/dont-panic-if-you-see-this-in-your-logs-it-means-your-directory-permissions-are-correct.png, referer: <a href=\"http://localhost:8800/doku.php?id=opencpn:editor_manual:epub-user-manual-advanced&amp;do=admin\">http://localhost:8800/doku.php?id=opencpn:editor_manual:epub-user-manual-advanced&amp;do=admin</a></p>",
+        "id": 443505534,
+        "sender_full_name": "Alec Leamas",
+        "timestamp": 1717869941
+    },
+    {
+        "content": "<p>Yes Alec. I am not sure what this really means can you explain?</p>",
+        "id": 443510022,
+        "sender_full_name": "Rick Gleason",
+        "timestamp": 1717872434
+    },
+    {
+        "content": "<p>[Sat Jun 08 15:05:33.712883 2024] [mpm_winnt:notice] [pid 19380:tid 356] AH00455: Apache/2.4.58 (Win64) PHP/8.2.13 configured -- resuming normal operations<br>\n[Sat Jun 08 15:05:33.712883 2024] [mpm_winnt:notice] [pid 19380:tid 356] AH00456: Apache Lounge VS17 Server built: Oct 18 2023 13:03:18<br>\n[Sat Jun 08 15:05:33.712883 2024] [core:notice] [pid 19380:tid 356] AH00094: Command line: 'mapache.exe -d C:/Users/fcgle/Documents/DokuWikiStick/server'<br>\n[Sat Jun 08 15:05:33.712883 2024] [mpm_winnt:notice] [pid 19380:tid 356] AH00418: Parent: Created child process 14072<br>\n[Sat Jun 08 15:05:34.332794 2024] [mpm_winnt:notice] [pid 14072:tid 356] AH00354: Child: Starting 24 worker threads.<br>\n[Sat Jun 08 15:10:47.971825 2024] [authz_core:error] [pid 14072:tid 820] [client 127.0.0.1:50200] AH01630: client denied by server configuration: C:/Users/fcgle/Documents/DokuWikiStick/dokuwiki/data/dont-panic-if-you-see-this-in-your-logs-it-means-your-directory-permissions-are-correct.png, referer: <a href=\"http://localhost:8800/doku.php?id=opencpn:toc_manual_basic&amp;do=admin\">http://localhost:8800/doku.php?id=opencpn:toc_manual_basic&amp;do=admin</a></p>\n<p>Here it is again, Client denied by server configuration.  So how do I avoid this?   I don't know what the problem is, but we are denied writing files to the disk, and when I try to change properties of the dokuwiki directory from readonly, it just goes back to readonly automatically.</p>",
+        "id": 443514582,
+        "sender_full_name": "Rick Gleason",
+        "timestamp": 1717875329
+    },
+    {
+        "content": "<p>I haven't changed the .htacess files and they all seem to have <br>\n&lt;IfModule mod_authz_core.c&gt;<br>\n    Require all denied<br>\n&lt;/IfModule&gt;<br>\n&lt;IfModule !mod_authz_core.c&gt;<br>\n    Order allow,deny<br>\n    Deny from all<br>\n&lt;/IfModule&gt;</p>",
+        "id": 443515083,
+        "sender_full_name": "Rick Gleason",
+        "timestamp": 1717875830
+    },
+    {
+        "content": "<p>So it just denies me and any files.  I wonder where I allow stuff. I've been through ACL in dokuwiki.</p>",
+        "id": 443516493,
+        "sender_full_name": "Rick Gleason",
+        "timestamp": 1717876978
+    },
+    {
+        "content": "<p>I've checked the ACL each file and each directory and I am basically a superuser, with delete rights etc, so that should not be the problem.</p>",
+        "id": 443520242,
+        "sender_full_name": "Rick Gleason",
+        "timestamp": 1717879112
+    },
+    {
+        "content": "<p>Found one problem, in siteexport  plugin»siteexport»defaultAuthenticationUser   was not admin</p>",
+        "id": 443523157,
+        "sender_full_name": "Rick Gleason",
+        "timestamp": 1717881025
+    },
+    {
+        "content": "<p>@Dave Register   FYI</p>\n<p>Its taken a day and half so far to get to this point, siteexport  is almost working, but not working.<br>\n<a href=\"https://github.com/samuelet/indexmenu/issues/314#issuecomment-2156210366\">https://github.com/samuelet/indexmenu/issues/314#issuecomment-2156210366</a></p>",
+        "id": 443530084,
+        "sender_full_name": "Rick Gleason",
+        "timestamp": 1717886407
+    },
+    {
+        "content": "<p>Siteexport-45.zip downloaded to my drive. I expanded it and found that there was a bright message from Captcha saying that login to captcha failed and none of the pages are accessible.</p>",
+        "id": 443531395,
+        "sender_full_name": "Rick Gleason",
+        "timestamp": 1717887297
+    },
+    {
+        "content": "<p>I've got to get dokuwikistick or dokuwiki  working locally before I will be able to produce the siteexport package.</p>",
+        "id": 443540981,
+        "sender_full_name": "Rick Gleason",
+        "timestamp": 1717896883
+    },
+    {
+        "content": "<p>I think i have basic details worked out, but the server times out at 97 pages and it is showing as 147 pages total.</p>",
+        "id": 443541021,
+        "sender_full_name": "Rick Gleason",
+        "timestamp": 1717896950
+    },
+    {
+        "content": "<p>Please see <a href=\"#narrow/stream/432618-OCPN-5.2E10-Release-plan/topic/Documentation\">https://opencpn.zulipchat.com/#narrow/stream/432618-OCPN-5.2E10-Release-plan/topic/Documentation</a></p>",
+        "id": 443653392,
+        "sender_full_name": "Rick Gleason",
+        "timestamp": 1717973890
+    }
+]

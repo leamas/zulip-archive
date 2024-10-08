@@ -1,0 +1,68 @@
+<html>
+<head><meta charset="utf-8"><title>Plugin API version · OCPN 5.10 Release plan · Zulip Chat Archive</title></head>
+<h2>Stream: <a href="https://leamas.github.io/zulip-archive/stream/432618-OCPN-5.2E10-Release-plan/index.html">OCPN 5.10 Release plan</a></h2>
+<h3>Topic: <a href="https://leamas.github.io/zulip-archive/stream/432618-OCPN-5.2E10-Release-plan/topic/Plugin.20API.20version.html">Plugin API version</a></h3>
+
+<hr>
+
+<base href="https://opencpn.zulipchat.com">
+
+<head><link href="https://leamas.github.io/zulip-archive/style.css" rel="stylesheet"></head>
+
+<a name="443971675"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/432618-OCPN%205.10%20Release%20plan/topic/Plugin%20API%20version/near/443971675" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Tony Voss <a href="https://leamas.github.io/zulip-archive/stream/432618-OCPN-5.2E10-Release-plan/topic/Plugin.20API.20version.html#443971675">(Jun 11 2024 at 10:50)</a>:</h4>
+<p>Some of the issues mile-stoned for OCPN v5.10 look like they will require a bump in the plugin API from v118.  Examples:</p>
+<ul>
+<li>Extend plugin API to allow contextual menus on waypoints, routes, tracks and AIS targets, <a href="https://github.com/opencpn/OpenCPN/issues/3586">#3586</a></li>
+<li>Add API attributes for tracks as is now for routes <a href="https://github.com/opencpn/OpenCPN/issues/3166">#3166</a></li>
+</ul>
+<p>I have seen no mention of an update from API 118 for OCPN 5.10.<br>
+Am I missing something?</p>
+
+
+
+<a name="443974005"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/432618-OCPN%205.10%20Release%20plan/topic/Plugin%20API%20version/near/443974005" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Alec Leamas <a href="https://leamas.github.io/zulip-archive/stream/432618-OCPN-5.2E10-Release-plan/topic/Plugin.20API.20version.html#443974005">(Jun 11 2024 at 11:04)</a>:</h4>
+<blockquote>
+<p>Am I missing something?</p>
+</blockquote>
+<p>Probably not. There are new functions in ocpn_plugin.h which are marked as 1.19,  but the overall   API_VERSION_MINOR is still at 18.  Probably an oversight</p>
+
+
+
+<a name="443974055"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/432618-OCPN%205.10%20Release%20plan/topic/Plugin%20API%20version/near/443974055" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Alec Leamas <a href="https://leamas.github.io/zulip-archive/stream/432618-OCPN-5.2E10-Release-plan/topic/Plugin.20API.20version.html#443974055">(Jun 11 2024 at 11:04)</a>:</h4>
+<p><span class="user-mention" data-user-id="517002">@Dave Register</span>   <span class="user-mention" data-user-id="573239">@Pavel Kalian</span>  ^</p>
+
+
+
+<a name="443975360"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/432618-OCPN%205.10%20Release%20plan/topic/Plugin%20API%20version/near/443975360" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Pavel Kalian <a href="https://leamas.github.io/zulip-archive/stream/432618-OCPN-5.2E10-Release-plan/topic/Plugin.20API.20version.html#443975360">(Jun 11 2024 at 11:12)</a>:</h4>
+<p>I haven't done anything to the plugin API in  this cycle and the above issues don't seem to be implemented to me, so they are not a reason for a new API level. The only actual change I see is <a href="https://github.com/OpenCPN/OpenCPN/commit/55b5e629681b905d69d391461d53bc73a47abe52">55b5e629681b905d69d391461d53bc73a47abe52</a><br>
+As far as I'm concerned we should implement Tony's request and of course bump the API version.</p>
+
+
+
+<a name="444004575"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/432618-OCPN%205.10%20Release%20plan/topic/Plugin%20API%20version/near/444004575" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Alec Leamas <a href="https://leamas.github.io/zulip-archive/stream/432618-OCPN-5.2E10-Release-plan/topic/Plugin.20API.20version.html#444004575">(Jun 11 2024 at 13:48)</a>:</h4>
+<p>The relevant diff against Release_5.8.4 (besides some formatting and changes without affecting functionality), at the end:</p>
+<div class="codehilite"><pre><span></span><code>+
++// API 1.19
++//
++
++/** Facade for NavAddrPluginMsg. */
++struct PluginMsgId {
++  const std::string id;
++  PluginMsgId(const std::string &amp;s) : id(s){};
++};
++
++extern DECL_EXP std::shared_ptr&lt;ObservableListener&gt; GetListener(
++    PluginMsgId id, wxEventType ev, wxEvtHandler *handler);
++
++extern DECL_EXP std::string GetPluginMsgPayload(PluginMsgId id, ObservedEvt ev);
+</code></pre></div>
+
+
+
+<hr><p>Last updated: Oct 08 2024 at 10:11 UTC</p>
+</html>

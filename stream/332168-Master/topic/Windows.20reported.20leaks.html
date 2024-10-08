@@ -1,0 +1,88 @@
+<html>
+<head><meta charset="utf-8"><title>Windows reported leaks · Master · Zulip Chat Archive</title></head>
+<h2>Stream: <a href="https://leamas.github.io/zulip-archive/stream/332168-Master/index.html">Master</a></h2>
+<h3>Topic: <a href="https://leamas.github.io/zulip-archive/stream/332168-Master/topic/Windows.20reported.20leaks.html">Windows reported leaks</a></h3>
+
+<hr>
+
+<base href="https://opencpn.zulipchat.com">
+
+<head><link href="https://leamas.github.io/zulip-archive/style.css" rel="stylesheet"></head>
+
+<a name="419950745"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332168-Master/topic/Windows%20reported%20leaks/near/419950745" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Pavel Kalian <a href="https://leamas.github.io/zulip-archive/stream/332168-Master/topic/Windows.20reported.20leaks.html#419950745">(Feb 06 2024 at 00:06)</a>:</h4>
+<p>Had a brief look at what VS actually does. It, unlike ASAN and Valgrind, reports reachable memory at exit as leaks. We will need to actually clean up everything properly to make the VS leak analysis any usable... Some fruit is clearly low hanging, like shutting down the singleton instances, some probably not that much.</p>
+
+
+
+<a name="420003771"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332168-Master/topic/Windows%20reported%20leaks/near/420003771" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Alec Leamas <a href="https://leamas.github.io/zulip-archive/stream/332168-Master/topic/Windows.20reported.20leaks.html#420003771">(Feb 06 2024 at 09:14)</a>:</h4>
+<p>The underlying problem is the widespread usage of globals, singletons are basically just glorified globals in this context.  They are evil more many reasons, this is one of them. And we keep adding them, one after one. </p>
+<p>We need a path to avoid this. One could be to attach them to ocpn_app instead.  It's in the gui, but it should be possible to make partly available in the model as welll. Certainly not low hanging fruits.</p>
+
+
+
+<a name="420005075"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332168-Master/topic/Windows%20reported%20leaks/near/420005075" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Dan Dickey <a href="https://leamas.github.io/zulip-archive/stream/332168-Master/topic/Windows.20reported.20leaks.html#420005075">(Feb 06 2024 at 09:21)</a>:</h4>
+<p>In another thread we talked about leads reported by Windows.  I think these are leaks of singletons (maybe not the true definition of a leak).  Here is a snippet of the long dump of heap objects as they are cleaned up by the debug runtime (release runtime silently releases all memory).  This just a small part of the entire dump.  There are many more that are less identifiable.  I think the majority of this comes from some old C code that was inherited from other projects.  This example come from tide tables, I think. They are singletons allocated at startup.</p>
+<blockquote>
+<p>{279114} normal block at 0x09913CA8, 64 bytes long.<br>
+ Data: &lt;Little Back Rive&gt; 4C 69 74 74 6C 65 20 42 61 63 6B 20 52 69 76 65 <br>
+{279112} normal block at 0x09921FB8, 80 bytes long.<br>
+ Data: &lt;Point Beenar, 10&gt; 50 6F 69 6E 74 20 42 65 65 6E 61 72 2C 20 31 30 <br>
+{279110} normal block at 0x09921138, 77 bytes long.<br>
+ Data: &lt;Mark Island, 0.3&gt; 4D 61 72 6B 20 49 73 6C 61 6E 64 2C 20 30 2E 33 <br>
+{279108} normal block at 0x098CDF50, 50 bytes long.<br>
+ Data: &lt;Point Adams, NNE&gt; 50 6F 69 6E 74 20 41 64 61 6D 73 2C 20 4E 4E 45 <br>
+{279106} normal block at 0x09921C38, 82 bytes long.<br>
+ Data: &lt;Point Sacramento&gt; 50 6F 69 6E 74 20 53 61 63 72 61 6D 65 6E 74 6F <br>
+{279104} normal block at 0x099214B8, 82 bytes long.<br>
+ Data: &lt;Janes Island Lig&gt; 4A 61 6E 65 73 20 49 73 6C 61 6E 64 20 4C 69 67 <br>
+{279102} normal block at 0x09921938, 82 bytes long.<br>
+ Data: &lt;Janes Island Lig&gt; 4A 61 6E 65 73 20 49 73 6C 61 6E 64 20 4C 69 67 <br>
+{279100} normal block at 0x09921438, 82 bytes long.<br>
+ Data: &lt;Janes Island Lig&gt; 4A 61 6E 65 73 20 49 73 6C 61 6E 64 20 4C 69 67 <br>
+{279098} normal block at 0x098E0D00, 32 bytes long.<br>
+ Data: &lt;Fort Canby, Jett&gt; 46 6F 72 74 20 43 61 6E 62 79 2C 20 4A 65 74 74 <br>
+{279096} normal block at 0x098FB980, 55 bytes long.<br>
+ Data: &lt;Hog Island, chan&gt; 48 6F 67 20 49 73 6C 61 6E 64 2C 20 63 68 61 6E <br>
+{279094} normal block at 0x09913A78, 63 bytes long.<br>
+ Data: &lt;Ben Davis Point,&gt; 42 65 6E 20 44 61 76 69 73 20 50 6F 69 6E 74 2C <br>
+{279092} normal block at 0x09900348, 70 bytes long.<br>
+ Data: &lt;Miah Maull Range&gt; 4D 69 61 68 20 4D 61 75 6C 6C 20 52 61 6E 67 65 <br>
+{279090} normal block at 0x098CDA10, 49 bytes long.<br>
+ Data: &lt;Broadkill Slough&gt; 42 72 6F 61 64 6B 69 6C 6C 20 53 6C 6F 75 67 68 <br>
+{279088} normal block at 0x099000F0, 74 bytes long.<br>
+ Data: &lt;Sand Island Towe&gt; 53 61 6E 64 20 49 73 6C 61 6E 64 20 54 6F 77 65 <br>
+{279086} normal block at 0x09900B40, 75 bytes long.<br>
+ Data: &lt;Fort Clinch, 0.3&gt; 46 6F 72 74 20 43 6C 69 6E 63 68 2C 20 30 2E 33 <br>
+{279084} normal block at 0x098FB778, 53 bytes long.<br>
+ Data: &lt;Fort Pulaski, Sa&gt; 46 6F 72 74 20 50 75 6C 61 73 6B 69 2C 20 53 61 <br>
+{279082} normal block at 0x098CE010, 50 bytes long.<br>
+ Data: &lt;Virginia Beach, &gt; 56 69 72 67 69 6E 69 61 20 42 65 61 63 68 2C 20 <br>
+{279080} normal block at 0x09900168, 71 bytes long.<br>
+ Data: &lt;Red Hook, 1 mi w&gt; 52 65 64 20 48 6F 6F 6B 2C 20 31 20 6D 69 20 77 <br>
+{279078} normal block at 0x09900BB8, 69 bytes long.<br>
+ Data: &lt;East Pt., 4.1 mi&gt; 45 61 73 74 20 50 74 2E 2C 20 34 2E 31 20 6D 69 <br>
+{279076} normal block at 0x09921738, 80 bytes long.<br>
+ Data: &lt;Henderson Point,&gt; 48 65 6E 64 65 72 73 6F 6E 20 50 6F 69 6E 74 2C <br>
+{279074} normal block at 0x099137D8, 67 bytes long.<br>
+ Data: &lt;Waldron Island, &gt; 57 61 6C 64 72 6F 6E 20 49 73 6C 61 6E 64 2C 20 </p>
+</blockquote>
+
+
+
+<a name="420007122"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332168-Master/topic/Windows%20reported%20leaks/near/420007122" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Notification Bot <a href="https://leamas.github.io/zulip-archive/stream/332168-Master/topic/Windows.20reported.20leaks.html#420007122">(Feb 06 2024 at 09:33)</a>:</h4>
+<p><a href="#narrow/stream/332168-Master---5.2E8.2E0--.28was.3A-comms.29/topic/Windows.20reported.20leaks/near/419950745">A message</a> was moved here from <a class="stream-topic" data-stream-id="332168" href="/#narrow/stream/332168-Master---5.2E8.2E0--.28was.3A-comms.29/topic/IPC.20feature">#Master - 5.8.0  (was: comms) &gt; IPC feature</a> by <span class="user-mention silent" data-user-id="399510">Alec Leamas</span>.</p>
+
+
+
+<a name="420007278"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332168-Master/topic/Windows%20reported%20leaks/near/420007278" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Notification Bot <a href="https://leamas.github.io/zulip-archive/stream/332168-Master/topic/Windows.20reported.20leaks.html#420007278">(Feb 06 2024 at 09:34)</a>:</h4>
+<p><a href="#narrow/stream/332168-Master---5.2E8.2E0--.28was.3A-comms.29/topic/Windows.20reported.20leaks/near/420003771">A message</a> was moved here from <a class="stream-topic" data-stream-id="332168" href="/#narrow/stream/332168-Master---5.2E8.2E0--.28was.3A-comms.29/topic/IPC.20feature">#Master - 5.8.0  (was: comms) &gt; IPC feature</a> by <span class="user-mention silent" data-user-id="399510">Alec Leamas</span>.</p>
+
+
+
+<hr><p>Last updated: Oct 08 2024 at 10:11 UTC</p>
+</html>

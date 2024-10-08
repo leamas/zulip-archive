@@ -1,0 +1,32 @@
+[
+    {
+        "content": "<p><span class=\"user-mention\" data-user-id=\"573239\">@Pavel Kalian</span> <br>\nI have not been closely following the ups &amp; downs, ins &amp; outs, of the MacOS Universal build production strategy.<br>\nHaving now come to some tests and debug of the current CI/GA artifacts, I have some questions and concerns.<br>\nThis is what I find:</p>\n<ol>\n<li>The Universal build artifact fails to start on MacOS 11.7, x86 native arch.</li>\n<li>The Universal build artifact starts and runs nicely on M1 MacBook.</li>\n<li>The generic x86 .pkg built by GA has many asserts and ultimately crashes on 11.7 x86.  I think this is to be expected, from the notes in the build script.  So what is the purpose of this build?</li>\n<li>The Universal build on M1 hardware does not show very many plugins in the master catalog.  Is this expected?  Will we need to revise the plugin templates for supporting of the universal build?  Indeed, will an x86 plugin somehow use Rosetta to run on Apple silicon?</li>\n</ol>\n<p>As you see, a bit confused at the current state of play, and wondering about future plans.</p>",
+        "id": 405587621,
+        "sender_full_name": "Dave Register",
+        "timestamp": 1701567217
+    },
+    {
+        "content": "<p>The universal binary package produced by CircleCI <strong>build-macos-universal</strong> build targets macOS 12 and newer. Runs natively on both Intel and Apple Silicon machines.</p>\n<p>For macOS 10.13+ and 11.x (Which are always running on Intel HW) we have CircleCI <strong>build-macos-intel-legacy</strong> build producing an Intel-only package - latest artifact at <a href=\"https://dl.cloudsmith.io/public/david-register/opencpn-unstable/raw/files/OpenCPN_5.9.0-legacyintel+6477.f2b8ead32.dmg\">https://dl.cloudsmith.io/public/david-register/opencpn-unstable/raw/files/OpenCPN_5.9.0-legacyintel+6477.f2b8ead32.dmg</a> It can use even the universal builds of plugins on my macOS 10.14 VM, as all the problems with compatibility are actually with the core app dependencies, not with our code.<br>\nWe will have to publish both the core app packages to maintain support for Mac HW older than 2015 and take advantage of running natively on the new ARM machines. We do not need to publish two packages for plugins, the universal one is usable everywhere (As far as I can tell based on all the plugins I have built until now).</p>\n<p>The GA build now really is just used to confirm we can build on and against the latest available stuff, I don't expect it to run on anything but macOS 12+ at all and be compatible with anything.</p>\n<p>The universal binary runs natively on either platform, that means if started on Intel HW, it is an x86 process and can load plugins built as x86-only (most currently in the catalogs) or universal. If it runs on Apple Silicon, it can load plugins built for arm64-only (currently none exist) or universal (My plugins in their current releases)</p>\n<p>When the process is running natively on ARM, it can't use Rosetta for the plugins, we simply have only one process which is an ARM64 one and the plugin must support that ABI to be usable.<br>\nThis means that during the beta cycle we need to update the plugin build process to use a new dependency bundle and produce universal binaries - should be very simple, in my case looks like <a href=\"https://github.com/nohal/objsearch_pi/commit/d26b45c59f78c2c46f4ab48f89f6bfddd2c812a6\">https://github.com/nohal/objsearch_pi/commit/d26b45c59f78c2c46f4ab48f89f6bfddd2c812a6</a><br>\nEven on Apple Silicon a universal binary can be forced to run under Rosetta as an x86 process (<code>arch -arch x86_64 /Applications/OpenCPN.app/Contents/MacOS/OpenCPN</code>), in case anybody desperately needs a plugin only available for x86.</p>",
+        "id": 405601345,
+        "sender_full_name": "Pavel Kalian",
+        "timestamp": 1701577159
+    },
+    {
+        "content": "<p><span class=\"user-mention\" data-user-id=\"573239\">@Pavel Kalian</span> <br>\nOK, thanks for the info fill.  I'll need to absorb this all, and see what it means for our (Rick's) plugin matrix, as well as our general user messaging.</p>",
+        "id": 405604500,
+        "sender_full_name": "Dave Register",
+        "timestamp": 1701580077
+    },
+    {
+        "content": "<p>For shipdriver, Pavel made a PR: <a href=\"https://github.com/Rasbats/shipdriver_pi/pull/562\">https://github.com/Rasbats/shipdriver_pi/pull/562</a>. After that we should be fine building universal plugins. </p>\n<blockquote>\n<p>This means that during the beta cycle we need to update the plugin build process to use a new dependency bundle</p>\n</blockquote>\n<p>Indeed. Perhaps something we could distribute using opencpn-libs. Either directly as a tarball, or a as a thin wrapper which hides details about download url, etc.</p>",
+        "id": 405675019,
+        "sender_full_name": "Alec Leamas",
+        "timestamp": 1701617495
+    },
+    {
+        "content": "<p>We will need to implement the equivalent process for the FE2 plugin workflow.  I guess I will take that as a TODO, or at least give it a shot.<br>\nI have recently updated o-charts to be fully \"ship-driver\" compliant, using latest SD scripts..  I will test on MacOS universal to confirm.</p>",
+        "id": 405677540,
+        "sender_full_name": "Dave Register",
+        "timestamp": 1701619681
+    }
+]

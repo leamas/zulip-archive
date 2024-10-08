@@ -1,0 +1,329 @@
+<html>
+<head><meta charset="utf-8"><title>PR #3765 · Master · Zulip Chat Archive</title></head>
+<h2>Stream: <a href="https://leamas.github.io/zulip-archive/stream/332168-Master/index.html">Master</a></h2>
+<h3>Topic: <a href="https://leamas.github.io/zulip-archive/stream/332168-Master/topic/PR.20.233765.html">PR #3765</a></h3>
+
+<hr>
+
+<base href="https://opencpn.zulipchat.com">
+
+<head><link href="https://leamas.github.io/zulip-archive/style.css" rel="stylesheet"></head>
+
+<a name="429906382"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332168-Master/topic/PR%20%233765/near/429906382" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Alec Leamas <a href="https://leamas.github.io/zulip-archive/stream/332168-Master/topic/PR.20.233765.html#429906382">(Mar 27 2024 at 16:56)</a>:</h4>
+<p>I need help testing <a href="https://github.com/opencpn/OpenCPN/issues/3765">#3765</a>. I have checked native Linux and Flatpak myself, it looks OK.</p>
+<p>However, I cannot test Windows, Macos or Android since testing needs to be done on bare metal, my virtual machines does not make it.  I have tested using Gnome <em>Settings</em> | <em>Displays</em> which has a 100%/200% <em>Scale</em> switch..  </p>
+<p>For windows I don't expect things to work in HDPI displays  but still needs to verify that nothing is broken by the patch.</p>
+<p>For MacOS I expect this to work.</p>
+<p>To check: Start opencpn with some charts availlable, check the chart "tooltip" bubbles displayed when hovering over the chart piano tabs at bottom looks OK; in particalur that the text matches the tab hovered over.</p>
+<p>EDIT: ... and, the little detail:  do this testing on a HDPI display + a "normal" one.</p>
+
+
+
+<a name="429907006"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332168-Master/topic/PR%20%233765/near/429907006" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Alec Leamas <a href="https://leamas.github.io/zulip-archive/stream/332168-Master/topic/PR.20.233765.html#429907006">(Mar 27 2024 at 16:59)</a>:</h4>
+<p><span class="user-mention" data-user-id="573239">@Pavel Kalian</span>  <span class="user-mention" data-user-id="522486">@Håkan Svensson</span>  <span class="user-mention" data-user-id="517002">@Dave Register</span>  ^</p>
+
+
+
+<a name="429911495"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332168-Master/topic/PR%20%233765/near/429911495" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Pavel Kalian <a href="https://leamas.github.io/zulip-archive/stream/332168-Master/topic/PR.20.233765.html#429911495">(Mar 27 2024 at 17:24)</a>:</h4>
+<p>On macOS with Retina it seems completely broken</p>
+
+
+
+<a name="429911669"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332168-Master/topic/PR%20%233765/near/429911669" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Pavel Kalian <a href="https://leamas.github.io/zulip-archive/stream/332168-Master/topic/PR.20.233765.html#429911669">(Mar 27 2024 at 17:25)</a>:</h4>
+<p>The DIP-&gt;physical ration is 2x there that probably is not taken into account. It is also broken differently between GL and non-GL mode</p>
+
+
+
+<a name="429912396"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332168-Master/topic/PR%20%233765/near/429912396" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Pavel Kalian <a href="https://leamas.github.io/zulip-archive/stream/332168-Master/topic/PR.20.233765.html#429912396">(Mar 27 2024 at 17:29)</a>:</h4>
+<p>Yeah, when on am external FullHD monitor it is OK, so it is just about the ratio that needs to be applied when on the Retina display. It can be calculated from the monitor info I have recently implemented.</p>
+
+
+
+<a name="429913534"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332168-Master/topic/PR%20%233765/near/429913534" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Pavel Kalian <a href="https://leamas.github.io/zulip-archive/stream/332168-Master/topic/PR.20.233765.html#429913534">(Mar 27 2024 at 17:35)</a>:</h4>
+<p>It is this: <a href="https://github.com/OpenCPN/OpenCPN/pull/3765/files#diff-6120147f4aacccc806dc53d96bf56ba33d9c336d3f9a32ebfea2bad3ad81f4c6L829-L834">https://github.com/OpenCPN/OpenCPN/pull/3765/files#diff-6120147f4aacccc806dc53d96bf56ba33d9c336d3f9a32ebfea2bad3ad81f4c6L829-L834</a><br>
+What was the problem it tries to solve?</p>
+
+
+
+<a name="429914056"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332168-Master/topic/PR%20%233765/near/429914056" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Pavel Kalian <a href="https://leamas.github.io/zulip-archive/stream/332168-Master/topic/PR.20.233765.html#429914056">(Mar 27 2024 at 17:38)</a>:</h4>
+<p>Removing those guards for openGL active breaks it in the non-GL mode, because there the ration must not be applied (On Retina).</p>
+
+
+
+<a name="429914673"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332168-Master/topic/PR%20%233765/near/429914673" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Pavel Kalian <a href="https://leamas.github.io/zulip-archive/stream/332168-Master/topic/PR.20.233765.html#429914673">(Mar 27 2024 at 17:42)</a>:</h4>
+<p>The real solution will be to stop using wxWindow::GetContentScaleFactor, because it is buggy crap (as pretty much everything multimonitor and hidpi related in wxWidgets) and instead calculate it ourselves from the monitor info</p>
+
+
+
+<a name="429936039"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332168-Master/topic/PR%20%233765/near/429936039" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Alec Leamas <a href="https://leamas.github.io/zulip-archive/stream/332168-Master/topic/PR.20.233765.html#429936039">(Mar 27 2024 at 19:52)</a>:</h4>
+<blockquote>
+<p>Removing those guards for openGL active breaks it in the non-GL mode, because there the ration must not be applied (On Retina).</p>
+</blockquote>
+<p>OTOH, not removing them breaks the Linux scaled display without openGL. Sigh.</p>
+<p>Thanks for feedback. will work tomorrow  with it.</p>
+
+
+
+<a name="429936624"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332168-Master/topic/PR%20%233765/near/429936624" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Alec Leamas <a href="https://leamas.github.io/zulip-archive/stream/332168-Master/topic/PR.20.233765.html#429936624">(Mar 27 2024 at 19:56)</a>:</h4>
+<blockquote>
+<p>What was the problem it tries to solve?</p>
+</blockquote>
+<p>On  a scaled display, the chart "tooltip" is not displayed because it fails to recognize that the mouse coordinates are within the correct bottom piano tab. i. e., <a href="https://github.com/opencpn/OpenCPN/issues/3612">#3612</a></p>
+
+
+
+<a name="429941341"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332168-Master/topic/PR%20%233765/near/429941341" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Pavel Kalian <a href="https://leamas.github.io/zulip-archive/stream/332168-Master/topic/PR.20.233765.html#429941341">(Mar 27 2024 at 20:22)</a>:</h4>
+<p>The info about the two displays from the Mac</p>
+<div class="codehilite"><pre><span></span><code>17:15:07.901   DEBUG displays.cpp:225 Display 1:
+17:15:07.901   DEBUG displays.cpp:226   Physical Size: 286.871x179.294 mm
+17:15:07.901   DEBUG displays.cpp:228   Resolution: 1440x900 pixels
+17:15:07.901   DEBUG displays.cpp:229   Pixel resolution: 2880x1800 pixels
+17:15:07.902   DEBUG displays.cpp:225 Display 2:
+17:15:07.902   DEBUG displays.cpp:226   Physical Size: 602.074x338.667 mm
+17:15:07.902   DEBUG displays.cpp:228   Resolution: 1920x1080 pixels
+17:15:07.902   DEBUG displays.cpp:229   Pixel resolution: 1920x1080 pixels
+17:15:07.902   DEBUG displays.cpp:243 Number of monitors: 2
+17:15:07.902   DEBUG displays.cpp:244 Monitor info:
+17:15:07.902   DEBUG displays.cpp:246 Monitor: 1 286x179mm 1440x900DIP 2880x1800px 100%
+17:15:07.902   DEBUG displays.cpp:246 Monitor: 2 602x338mm 1920x1080DIP 1920x1080px 100%
+</code></pre></div>
+
+
+
+<a name="429941503"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332168-Master/topic/PR%20%233765/near/429941503" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Dave Register <a href="https://leamas.github.io/zulip-archive/stream/332168-Master/topic/PR.20.233765.html#429941503">(Mar 27 2024 at 20:23)</a>:</h4>
+<p>Just needs an evil #ifdef today.<br>
+Later, we can use Pavel's' more general replacement solution for GetContentScaleFactor().</p>
+
+
+
+<a name="429942031"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332168-Master/topic/PR%20%233765/near/429942031" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Alec Leamas <a href="https://leamas.github.io/zulip-archive/stream/332168-Master/topic/PR.20.233765.html#429942031">(Mar 27 2024 at 20:26)</a>:</h4>
+<p>THat's gonna get really evil. Just putting them back makes Linux HDPI fail. But,  I'll see what I can do tomorrow. Still walking on thin ice in many of these GUI parts, but sooner or later I have to start doing it.</p>
+
+
+
+<a name="429942212"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332168-Master/topic/PR%20%233765/near/429942212" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Pavel Kalian <a href="https://leamas.github.io/zulip-archive/stream/332168-Master/topic/PR.20.233765.html#429942212">(Mar 27 2024 at 20:26)</a>:</h4>
+<p>Specifically on the mac the Retina  will still need the ifdef in the scaling factor function, because on the retina the OpenGL resolution simply is double. But on the other platforms it probably is not the same. I can't tell because I don't have any HiDPI display I could use there.</p>
+
+
+
+<a name="429942534"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332168-Master/topic/PR%20%233765/near/429942534" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Pavel Kalian <a href="https://leamas.github.io/zulip-archive/stream/332168-Master/topic/PR.20.233765.html#429942534">(Mar 27 2024 at 20:28)</a>:</h4>
+<p>But we now have all the information (And unlike from WX it is correct) that is available from the OS on all the platforms, so it at least is doable.</p>
+
+
+
+<a name="429942820"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332168-Master/topic/PR%20%233765/near/429942820" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Alec Leamas <a href="https://leamas.github.io/zulip-archive/stream/332168-Master/topic/PR.20.233765.html#429942820">(Mar 27 2024 at 20:29)</a>:</h4>
+<p>Right. Linux HDPI is basically the same. But the ifdef lives better within  GetContentScaleFactor() or whatever new function we make. Much better than around each call. Current code basically duplicates the conditions, but the duplication is broken.</p>
+
+
+
+<a name="429943182"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332168-Master/topic/PR%20%233765/near/429943182" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Dave Register <a href="https://leamas.github.io/zulip-archive/stream/332168-Master/topic/PR.20.233765.html#429943182">(Mar 27 2024 at 20:31)</a>:</h4>
+<p>@pavel: The current #ifdef solution probably does not work outside of MacBook, with external HDPI display.  Never tried, but I think Tony is using that.<br>
+@alec  One step at a time.  this Mac #ifdef is scattered throughout the code base.  Lets fix the "Issue" first, if we can, and then refactor more widely.</p>
+
+
+
+<a name="429943346"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332168-Master/topic/PR%20%233765/near/429943346" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Alec Leamas <a href="https://leamas.github.io/zulip-archive/stream/332168-Master/topic/PR.20.233765.html#429943346">(Mar 27 2024 at 20:32)</a>:</h4>
+<p><span class="user-mention" data-user-id="517002">@Dave Register</span> </p>
+<blockquote>
+<p>One step at a time. </p>
+</blockquote>
+<p>Agreed.</p>
+
+
+
+<a name="429943374"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332168-Master/topic/PR%20%233765/near/429943374" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Pavel Kalian <a href="https://leamas.github.io/zulip-archive/stream/332168-Master/topic/PR.20.233765.html#429943374">(Mar 27 2024 at 20:32)</a>:</h4>
+<p>I don't know, if he gives us the info from the debug log, we can see how his displays are represented</p>
+
+
+
+<a name="429943469"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332168-Master/topic/PR%20%233765/near/429943469" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Pavel Kalian <a href="https://leamas.github.io/zulip-archive/stream/332168-Master/topic/PR.20.233765.html#429943469">(Mar 27 2024 at 20:32)</a>:</h4>
+<p>Linux, the big monitor is the same as connected to the mac before:</p>
+<div class="codehilite"><pre><span></span><code>17:29:11.392   DEBUG displays.cpp:129 GDK Monitors: 2
+17:29:11.392   DEBUG displays.cpp:145 Monitor 1:
+17:29:11.392   DEBUG displays.cpp:146   Name: eDP-1
+17:29:11.392   DEBUG displays.cpp:147   Physical Size (mm): 340 x 190
+17:29:11.392   DEBUG displays.cpp:149   Resolution: 1920 x 1080
+17:29:11.392   DEBUG displays.cpp:151   Scale: 100
+17:29:11.392   DEBUG displays.cpp:145 Monitor 2:
+17:29:11.392   DEBUG displays.cpp:146   Name: HDMI-1
+17:29:11.392   DEBUG displays.cpp:147   Physical Size (mm): 600 x 340
+17:29:11.392   DEBUG displays.cpp:149   Resolution: 1920 x 1080
+17:29:11.392   DEBUG displays.cpp:151   Scale: 100
+17:29:11.392   DEBUG displays.cpp:243 Number of monitors: 2
+17:29:11.392   DEBUG displays.cpp:244 Monitor info:
+17:29:11.392   DEBUG displays.cpp:246 Monitor: eDP-1 340x190mm 1920x1080DIP 1920x1080px 100%
+17:29:11.392   DEBUG displays.cpp:246 Monitor: HDMI-1 600x340mm 1920x1080DIP 1920x1080px 100%
+</code></pre></div>
+
+
+
+<a name="429943820"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332168-Master/topic/PR%20%233765/near/429943820" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Dave Register <a href="https://leamas.github.io/zulip-archive/stream/332168-Master/topic/PR.20.233765.html#429943820">(Mar 27 2024 at 20:34)</a>:</h4>
+<p>What does displays.cpp say about a MacBook retina display? Is it even possible to attach an external display to a modern MacBook?</p>
+
+
+
+<a name="429944139"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332168-Master/topic/PR%20%233765/near/429944139" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Pavel Kalian <a href="https://leamas.github.io/zulip-archive/stream/332168-Master/topic/PR.20.233765.html#429944139">(Mar 27 2024 at 20:36)</a>:</h4>
+<p>See, above that is the Retina in my M1 Air. And yes, the USB-C ports include display port, so I have a hub with HDMI port connected there and monitor to that hub.</p>
+
+
+
+<a name="429944530"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332168-Master/topic/PR%20%233765/near/429944530" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Pavel Kalian <a href="https://leamas.github.io/zulip-archive/stream/332168-Master/topic/PR.20.233765.html#429944530">(Mar 27 2024 at 20:38)</a>:</h4>
+<p>I don't know what the external 5k Apple monitors will exactly report, never seen one</p>
+
+
+
+<a name="429944632"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332168-Master/topic/PR%20%233765/near/429944632" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Dave Register <a href="https://leamas.github.io/zulip-archive/stream/332168-Master/topic/PR.20.233765.html#429944632">(Mar 27 2024 at 20:38)</a>:</h4>
+<p>So, on display one, we can see from the "resolution" vs "pixel resolution".  That is useful.  Ignore the 100% report. <br>
+Will this be general for GTK scaled displays, do you expect?</p>
+
+
+
+<a name="429944909"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332168-Master/topic/PR%20%233765/near/429944909" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Pavel Kalian <a href="https://leamas.github.io/zulip-archive/stream/332168-Master/topic/PR.20.233765.html#429944909">(Mar 27 2024 at 20:40)</a>:</h4>
+<p>For GTK the scale 100 is what I have configured in the Gnome Display settings, if I switch it to 200%, the number reported is 200 (And everything is so huge on the FullHD display that the system gets unusable)</p>
+
+
+
+<a name="429945374"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332168-Master/topic/PR%20%233765/near/429945374" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Alec Leamas <a href="https://leamas.github.io/zulip-archive/stream/332168-Master/topic/PR.20.233765.html#429945374">(Mar 27 2024 at 20:42)</a>:</h4>
+<p>And still, 200 is what I have been using when testing the patch here.  To me, it looks like what to do on a  HDPI 3840 x 2160 display.</p>
+
+
+
+<a name="429945500"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332168-Master/topic/PR%20%233765/near/429945500" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Dave Register <a href="https://leamas.github.io/zulip-archive/stream/332168-Master/topic/PR.20.233765.html#429945500">(Mar 27 2024 at 20:43)</a>:</h4>
+<p>I agree that it would be nice to confine all this contorted display detection/scaling to one place.  Maybe we can even do something about Windows here, too.<br>
+But later days..</p>
+
+
+
+<a name="429945764"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332168-Master/topic/PR%20%233765/near/429945764" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Alec Leamas <a href="https://leamas.github.io/zulip-archive/stream/332168-Master/topic/PR.20.233765.html#429945764">(Mar 27 2024 at 20:44)</a>:</h4>
+<p>But this is perhaps something else. A minimal patch solving <a href="https://github.com/opencpn/OpenCPN/issues/3612">#3612</a> is probably smaller. I agree that we are in the wrong phase in this cycle for refactoring if it can be avoided.</p>
+
+
+
+<a name="429945972"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332168-Master/topic/PR%20%233765/near/429945972" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Pavel Kalian <a href="https://leamas.github.io/zulip-archive/stream/332168-Master/topic/PR.20.233765.html#429945972">(Mar 27 2024 at 20:46)</a>:</h4>
+<p>FWIW on retina we probably should do something, the chart symbols and ownship are too small, the AIS targets I have already fixed.</p>
+
+
+
+<a name="429946119"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332168-Master/topic/PR%20%233765/near/429946119" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Pavel Kalian <a href="https://leamas.github.io/zulip-archive/stream/332168-Master/topic/PR.20.233765.html#429946119">(Mar 27 2024 at 20:46)</a>:</h4>
+<p>But yes, the general refactoring has to wait</p>
+
+
+
+<a name="429946261"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332168-Master/topic/PR%20%233765/near/429946261" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Dave Register <a href="https://leamas.github.io/zulip-archive/stream/332168-Master/topic/PR.20.233765.html#429946261">(Mar 27 2024 at 20:47)</a>:</h4>
+<p>OK on all.</p>
+
+
+
+<a name="429946402"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332168-Master/topic/PR%20%233765/near/429946402" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Alec Leamas <a href="https://leamas.github.io/zulip-archive/stream/332168-Master/topic/PR.20.233765.html#429946402">(Mar 27 2024 at 20:48)</a>:</h4>
+<p>JUst curious: There is not anything in MacOS similar to the scaling done by Gnome + GTK?</p>
+
+
+
+<a name="429947561"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332168-Master/topic/PR%20%233765/near/429947561" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Pavel Kalian <a href="https://leamas.github.io/zulip-archive/stream/332168-Master/topic/PR.20.233765.html#429947561">(Mar 27 2024 at 20:53)</a>:</h4>
+<p>Not really, they have a set of resolutions that they can scale to look well, so then it looks eg like this:</p>
+<div class="codehilite"><pre><span></span><code>17:51:48.094   DEBUG displays.cpp:225 Display 1:
+17:51:48.094   DEBUG displays.cpp:226   Physical Size: 285.82x178.637 mm
+17:51:48.094   DEBUG displays.cpp:228   Resolution: 1024x640 pixels
+17:51:48.094   DEBUG displays.cpp:229   Pixel resolution: 2048x1280 pixels
+17:51:48.094   DEBUG displays.cpp:243 Number of monitors: 1
+17:51:48.094   DEBUG displays.cpp:244 Monitor info:
+17:51:48.094   DEBUG displays.cpp:246 Monitor: 1 285x178mm 1024x640DIP 2048x1280px 100%
+</code></pre></div>
+
+
+
+<a name="429947902"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332168-Master/topic/PR%20%233765/near/429947902" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Pavel Kalian <a href="https://leamas.github.io/zulip-archive/stream/332168-Master/topic/PR.20.233765.html#429947902">(Mar 27 2024 at 20:55)</a>:</h4>
+<p>Same display, everything bigger and still crisp</p>
+
+
+
+<a name="429948012"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332168-Master/topic/PR%20%233765/near/429948012" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Pavel Kalian <a href="https://leamas.github.io/zulip-archive/stream/332168-Master/topic/PR.20.233765.html#429948012">(Mar 27 2024 at 20:56)</a>:</h4>
+<p>And if I want it smaller, again looks really good</p>
+<div class="codehilite"><pre><span></span><code>17:55:09.442   DEBUG displays.cpp:225 Display 1:
+17:55:09.442   DEBUG displays.cpp:226   Physical Size: 286.389x178.993 mm
+17:55:09.442   DEBUG displays.cpp:228   Resolution: 1680x1050 pixels
+17:55:09.442   DEBUG displays.cpp:229   Pixel resolution: 3360x2100 pixels
+17:55:09.442   DEBUG displays.cpp:243 Number of monitors: 1
+17:55:09.442   DEBUG displays.cpp:244 Monitor info:
+17:55:09.442   DEBUG displays.cpp:246 Monitor: 1 286x178mm 1680x1050DIP 3360x2100px 100%
+</code></pre></div>
+
+
+
+<a name="429948285"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332168-Master/topic/PR%20%233765/near/429948285" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Pavel Kalian <a href="https://leamas.github.io/zulip-archive/stream/332168-Master/topic/PR.20.233765.html#429948285">(Mar 27 2024 at 20:58)</a>:</h4>
+<p>They can do it like this because they have the display under control and there is finite number of them. But for example on FullHD, which is a resolution they don't use, it does not look anything special even at the native resolution of the display. That the bastards of course do on purpose...</p>
+
+
+
+<a name="429948593"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332168-Master/topic/PR%20%233765/near/429948593" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Pavel Kalian <a href="https://leamas.github.io/zulip-archive/stream/332168-Master/topic/PR.20.233765.html#429948593">(Mar 27 2024 at 21:00)</a>:</h4>
+<p>Internet is full of horror about trying to get a 4/5k monitor that reasonably works with Apple from other vendors, there seems to be just a few that actually do</p>
+
+
+
+<a name="430235251"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332168-Master/topic/PR%20%233765/near/430235251" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Alec Leamas <a href="https://leamas.github.io/zulip-archive/stream/332168-Master/topic/PR.20.233765.html#430235251">(Mar 29 2024 at 10:31)</a>:</h4>
+<p>Easter is upon us, no time to code. Back after holidays...</p>
+
+
+
+<a name="430581626"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332168-Master/topic/PR%20%233765/near/430581626" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Alec Leamas <a href="https://leamas.github.io/zulip-archive/stream/332168-Master/topic/PR.20.233765.html#430581626">(Apr 01 2024 at 11:50)</a>:</h4>
+<p><span class="user-mention" data-user-id="573239">@Pavel Kalian</span>  I have updated <a href="https://github.com/opencpn/OpenCPN/issues/3765">#3765</a>. It's now a minimal patch which basically should leave both MacOS and windows as-is while solving <a href="https://github.com/opencpn/OpenCPN/issues/3612">#3612</a> on Linux/GTK3.  Still, if you have some time: could you make a check?</p>
+
+
+
+<a name="430587477"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332168-Master/topic/PR%20%233765/near/430587477" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Pavel Kalian <a href="https://leamas.github.io/zulip-archive/stream/332168-Master/topic/PR.20.233765.html#430587477">(Apr 01 2024 at 12:48)</a>:</h4>
+<p><span class="user-mention silent" data-user-id="399510">Alec Leamas</span> <a href="#narrow/stream/332168-Master---5.2E8.2E0--.28was.3A-comms.29/topic/PR.20.233765/near/430581626">said</a>:</p>
+<blockquote>
+<p><span class="user-mention silent" data-user-id="573239">Pavel Kalian</span>  I have updated <a href="https://github.com/opencpn/OpenCPN/issues/3765">#3765</a>. It's now a minimal patch which basically should leave both MacOS and windows as-is while solving <a href="https://github.com/opencpn/OpenCPN/issues/3612">#3612</a> on Linux/GTK3.  Still, if you have some time: could you make a check?</p>
+</blockquote>
+<p>Works for me</p>
+
+
+
+<a name="430599356"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332168-Master/topic/PR%20%233765/near/430599356" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Alec Leamas <a href="https://leamas.github.io/zulip-archive/stream/332168-Master/topic/PR.20.233765.html#430599356">(Apr 01 2024 at 14:15)</a>:</h4>
+<p><span class="user-mention" data-user-id="573239">@Pavel Kalian</span>  Thanks!  Will merge.</p>
+
+
+
+<hr><p>Last updated: Oct 08 2024 at 10:11 UTC</p>
+</html>

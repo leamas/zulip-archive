@@ -1,0 +1,143 @@
+<html>
+<head><meta charset="utf-8"><title>3198 - garmin upload · Master · Zulip Chat Archive</title></head>
+<h2>Stream: <a href="https://leamas.github.io/zulip-archive/stream/332168-Master/index.html">Master</a></h2>
+<h3>Topic: <a href="https://leamas.github.io/zulip-archive/stream/332168-Master/topic/3198.20-.20garmin.20upload.html">3198 - garmin upload</a></h3>
+
+<hr>
+
+<base href="https://opencpn.zulipchat.com">
+
+<head><link href="https://leamas.github.io/zulip-archive/style.css" rel="stylesheet"></head>
+
+<a name="401798570"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332168-Master/topic/3198%20-%20garmin%20upload/near/401798570" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Alec Leamas <a href="https://leamas.github.io/zulip-archive/stream/332168-Master/topic/3198.20-.20garmin.20upload.html#401798570">(Nov 13 2023 at 16:09)</a>:</h4>
+<p><span class="user-mention" data-user-id="517002">@Dave Register</span>     <a href="https://github.com/opencpn/OpenCPN/issues/3198">#3198</a> is as ready as I can make it. However, my basic problem is that I no longer have any possiblity to test it I did have a garmin 120 when I started this work, but  it broke beyond repair. </p>
+<p>I have talked to Håkan which also has a 120 in hi's boat. However, that one is not connected for uploading.</p>
+<p>Which ends up in a question to  you:  have you possibilities (time, equipment)  to test this one? Since it's basically untested we should expect some problem(s)</p>
+
+
+
+<a name="401800605"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332168-Master/topic/3198%20-%20garmin%20upload/near/401800605" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Dave Register <a href="https://leamas.github.io/zulip-archive/stream/332168-Master/topic/3198.20-.20garmin.20upload.html#401800605">(Nov 13 2023 at 16:16)</a>:</h4>
+<p><span class="user-mention" data-user-id="399510">@Alec Leamas</span> <br>
+Sure, I can test it.  I keep a Garmin handheld safely hidden away just for this testing.<br>
+I simply did not want to invest the time until you had it "as ready as you can make it".<br>
+Sounds like now is the time.<br>
+I'll dig into it.</p>
+
+
+
+<a name="401801031"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332168-Master/topic/3198%20-%20garmin%20upload/near/401801031" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Alec Leamas <a href="https://leamas.github.io/zulip-archive/stream/332168-Master/topic/3198.20-.20garmin.20upload.html#401801031">(Nov 13 2023 at 16:18)</a>:</h4>
+<p>Thanks!</p>
+<p>Also, please note the open issues listed which needs your attention.</p>
+
+
+
+<a name="401801375"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332168-Master/topic/3198%20-%20garmin%20upload/near/401801375" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Dave Register <a href="https://leamas.github.io/zulip-archive/stream/332168-Master/topic/3198.20-.20garmin.20upload.html#401801375">(Nov 13 2023 at 16:19)</a>:</h4>
+<p><span class="user-mention" data-user-id="399510">@Alec Leamas</span> <br>
+I saw those.  It will be a few days...</p>
+
+
+
+<a name="401801962"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332168-Master/topic/3198%20-%20garmin%20upload/near/401801962" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Alec Leamas <a href="https://leamas.github.io/zulip-archive/stream/332168-Master/topic/3198.20-.20garmin.20upload.html#401801962">(Nov 13 2023 at 16:21)</a>:</h4>
+<p>no problems, take your time!</p>
+
+
+
+<a name="402371959"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332168-Master/topic/3198%20-%20garmin%20upload/near/402371959" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Dave Register <a href="https://leamas.github.io/zulip-archive/stream/332168-Master/topic/3198.20-.20garmin.20upload.html#402371959">(Nov 16 2023 at 03:10)</a>:</h4>
+<p><span class="user-mention" data-user-id="399510">@Alec Leamas</span> <br>
+re PR <a href="https://github.com/opencpn/OpenCPN/issues/3198">#3198</a>:<br>
+Merged your PR with my fix for <a href="https://github.com/opencpn/OpenCPN/issues/3496">#3496</a>, pushed to master.<br>
+Works fine on Garmin serial, not tested yet on Garmin USB.</p>
+<p>Also looked at and fixed a couple of FIXME's.  But one I am not too comfortable with.<br>
+In "void BroadcastNMEA0183Message()", I think we want to echo the broadcast NMEA message to all plugins, to process as they choose. <br>
+I implemented this by converting "void PlugInManager::SendNMEASentenceToAllPlugIns(const wxString&amp; sentence)" to a class static method, so I can call it essentially from anywhere.  The result in BroadcastNMEA0183Message() now looks like:</p>
+<p>// Send to plugins<br>
+    #ifndef CLIAPP<br>
+      PlugInManager::SendNMEASentenceToAllPlugIns(msg);<br>
+    #endif</p>
+<p>I don't know why this bothers me.  Maybe there is a better technique here, that preserves the model. And I don't know why it wont work in CLIAPP build.<br>
+Thoughts?</p>
+
+
+
+<a name="402414286"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332168-Master/topic/3198%20-%20garmin%20upload/near/402414286" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Alec Leamas <a href="https://leamas.github.io/zulip-archive/stream/332168-Master/topic/3198.20-.20garmin.20upload.html#402414286">(Nov 16 2023 at 08:39)</a>:</h4>
+<p>It bothers you since it means that we build in knowledge about pluginmanager into the low-level serial model code handling the communications.  This does not fly since comm_n0183_output #include pluginmanager.h. This is model code including non-model gui code, exactly the things we should avoid -- it is the everything includes everything evil path.</p>
+<p>This is also the reason it does not work in a CLIAPP build. These builds does not contain any GUI code and hence not pluginmanager.</p>
+<p>There are two ways of handling this. One is the asynchronous, basically to send an event to whoever wants it and let them process it. On our case this would be using an EventVar. This is basically fire and forget, there is no feedback.</p>
+<p>The other way is using a callback. This is synchronous, the model code can get return values from the GUI.</p>
+<p>In both cases this is more to write than usual since comm_n0183_output is  using free functions, there is no class which can house an EventVar or a callback.</p>
+
+
+
+<a name="402414637"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332168-Master/topic/3198%20-%20garmin%20upload/near/402414637" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Alec Leamas <a href="https://leamas.github.io/zulip-archive/stream/332168-Master/topic/3198.20-.20garmin.20upload.html#402414637">(Nov 16 2023 at 08:41)</a>:</h4>
+<p>Here is a patch using the EventVar mechanism: <br>
+<a href="/user_uploads/33951/SX1UiU-q7d5tatFOk1xO2mRM/0002-comm_n0183_output-et.-al.-Don-t-refer-to-non-model-c.patch">0002-comm_n0183_output-et.-al.-Don-t-refer-to-non-model-c.patch</a></p>
+<p>This is against my private master, you might need to rebase it but it should not be that bad.</p>
+
+
+
+<a name="402414831"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332168-Master/topic/3198%20-%20garmin%20upload/near/402414831" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Alec Leamas <a href="https://leamas.github.io/zulip-archive/stream/332168-Master/topic/3198.20-.20garmin.20upload.html#402414831">(Nov 16 2023 at 08:42)</a>:</h4>
+<p>And here is a patch using a callback: <br>
+<a href="/user_uploads/33951/-LH8qqFnvkgtxb51S8xX8E2j/0001-comm_n0183_output-et.-al.-Don-t-invoke-model-code-cb.patch">0001-comm_n0183_output-et.-al.-Don-t-invoke-model-code-cb.patch</a></p>
+<p>Likewise, this is against my private master.</p>
+
+
+
+<a name="402415074"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332168-Master/topic/3198%20-%20garmin%20upload/near/402415074" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Alec Leamas <a href="https://leamas.github.io/zulip-archive/stream/332168-Master/topic/3198.20-.20garmin.20upload.html#402415074">(Nov 16 2023 at 08:44)</a>:</h4>
+<p>These compiles, but are obviously not tested. One of them needs to be applied so we can get rid of the nasty <code>#ifndef CLIAPP</code> which actually breaks all sorts of assumptions</p>
+
+
+
+<a name="402415929"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332168-Master/topic/3198%20-%20garmin%20upload/near/402415929" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Alec Leamas <a href="https://leamas.github.io/zulip-archive/stream/332168-Master/topic/3198.20-.20garmin.20upload.html#402415929">(Nov 16 2023 at 08:49)</a>:</h4>
+<p>BTW: The EventVar patch demonstrates how simple it is to set up listening using the new ObsListener. No need to define events etc...</p>
+
+
+
+<a name="402422852"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332168-Master/topic/3198%20-%20garmin%20upload/near/402422852" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Alec Leamas <a href="https://leamas.github.io/zulip-archive/stream/332168-Master/topic/3198.20-.20garmin.20upload.html#402422852">(Nov 16 2023 at 09:26)</a>:</h4>
+<p><span class="user-mention" data-user-id="517002">@Dave Register</span> ^</p>
+
+
+
+<a name="402496511"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332168-Master/topic/3198%20-%20garmin%20upload/near/402496511" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Dave Register <a href="https://leamas.github.io/zulip-archive/stream/332168-Master/topic/3198.20-.20garmin.20upload.html#402496511">(Nov 16 2023 at 15:29)</a>:</h4>
+<p><span class="user-mention" data-user-id="399510">@Alec Leamas</span> <br>
+Thanks for the therapy session.  I suspected that this was evil, but too late at night to parse it.<br>
+I'll fix it, one way or another.</p>
+<p>Does basic model code contain any plugin management at all? Yes, of course it does, e.g.  plugin_loader, and friends.<br>
+So it seems to me that pluginmanager.(cpp/h) could sensibly be refactored to pull out some "model-safe" bare functions, like "SendNMEASentenceToAllPlugIns()".  This is no more GUI-centric than many other functions in the model, and might be useful in CLIAPP.<br>
+Thoughts?</p>
+
+
+
+<a name="402506375"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332168-Master/topic/3198%20-%20garmin%20upload/near/402506375" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Dave Register <a href="https://leamas.github.io/zulip-archive/stream/332168-Master/topic/3198.20-.20garmin.20upload.html#402506375">(Nov 16 2023 at 16:15)</a>:</h4>
+<p>Maybe into a new file called "plugin_util.cpp/h", or so?  Becomes part of model...</p>
+
+
+
+<a name="402518242"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332168-Master/topic/3198%20-%20garmin%20upload/near/402518242" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Alec Leamas <a href="https://leamas.github.io/zulip-archive/stream/332168-Master/topic/3198.20-.20garmin.20upload.html#402518242">(Nov 16 2023 at 17:13)</a>:</h4>
+<p>Sounds basically ok. Plugin-utils indicates free functions but no class. Perhaps right, perhaps not.</p>
+
+
+
+<a name="402592587"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332168-Master/topic/3198%20-%20garmin%20upload/near/402592587" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Dave Register <a href="https://leamas.github.io/zulip-archive/stream/332168-Master/topic/3198.20-.20garmin.20upload.html#402592587">(Nov 17 2023 at 01:26)</a>:</h4>
+<p>Corrected by EventVar method.<br>
+Thanks for the clean patch.</p>
+
+
+
+<hr><p>Last updated: Oct 08 2024 at 10:11 UTC</p>
+</html>

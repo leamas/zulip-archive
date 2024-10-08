@@ -1,0 +1,151 @@
+<html>
+<head><meta charset="utf-8"><title>Plugin Manager problem · Master · Zulip Chat Archive</title></head>
+<h2>Stream: <a href="https://leamas.github.io/zulip-archive/stream/332168-Master/index.html">Master</a></h2>
+<h3>Topic: <a href="https://leamas.github.io/zulip-archive/stream/332168-Master/topic/Plugin.20Manager.20problem.html">Plugin Manager problem</a></h3>
+
+<hr>
+
+<base href="https://opencpn.zulipchat.com">
+
+<head><link href="https://leamas.github.io/zulip-archive/style.css" rel="stylesheet"></head>
+
+<a name="422610060"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332168-Master/topic/Plugin%20Manager%20problem/near/422610060" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Dan Dickey <a href="https://leamas.github.io/zulip-archive/stream/332168-Master/topic/Plugin.20Manager.20problem.html#422610060">(Feb 21 2024 at 12:51)</a>:</h4>
+<p><span class="user-mention" data-user-id="399510">@Alec Leamas</span> : Alec, we are looking at a bug which I think is a plugin manager issue.  When language is changed the options dialog gets destroyed.  As part of this process at least the chart downloader plugin (and possibly other plugins) get unloaded.  When they are reloaded again the plugin manager does not notify them that they can add their content to the options dialog panel.  Specifically, this snippet:</p>
+<blockquote>
+<p>void PluginLoader::NotifySetupOptionsPlugin(const PlugInData* pd) {<br>
+  auto pic = GetContainer(*pd, *GetPlugInArray());<br>
+  if (!pic) return;<br>
+  if (pic-&gt;m_has_setup_options) return;</p>
+</blockquote>
+<p>Will always return because when the plugin was unloaded the m_has_setup_options flag was not cleared. At least I think that is the problem (or maybe just one of multiple problems).</p>
+
+
+
+<a name="422613208"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332168-Master/topic/Plugin%20Manager%20problem/near/422613208" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Dan Dickey <a href="https://leamas.github.io/zulip-archive/stream/332168-Master/topic/Plugin.20Manager.20problem.html#422613208">(Feb 21 2024 at 13:06)</a>:</h4>
+<p>Info: This patch:</p>
+<div class="codehilite"><pre><span></span><code>diff --git a/model/src/plugin_loader.cpp b/model/src/plugin_loader.cpp
+index d36ea7af9..4c31be25b 100644
+--- a/model/src/plugin_loader.cpp
++++ b/model/src/plugin_loader.cpp
+@@ -752,7 +752,7 @@ bool PluginLoader::UpdatePlugIns() {
+       wxString msg(&quot;PluginLoader: Initializing PlugIn: &quot;);
+       msg += pic-&gt;m_plugin_file;
+       wxLogMessage(msg);
+-
++      pic-&gt;m_has_setup_options = false;
+       pic-&gt;m_cap_flag = pic-&gt;m_pplugin-&gt;Init();
+       pic-&gt;m_pplugin-&gt;SetDefaults();
+       pic-&gt;m_init_state = true;
+</code></pre></div>
+<p>Fixed the reported problem.  But I am pretty sure this is not the right place for this hack.</p>
+
+
+
+<a name="422613510"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332168-Master/topic/Plugin%20Manager%20problem/near/422613510" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Alec Leamas <a href="https://leamas.github.io/zulip-archive/stream/332168-Master/topic/Plugin.20Manager.20problem.html#422613510">(Feb 21 2024 at 13:08)</a>:</h4>
+<p>This code is extremely convoluted, for sure.  We could of course clear <code>pic-&gt;m_has_setup_options</code>, but  it might be dangerous since the overall assumption until now has been that this only is done once.</p>
+<p>Another path would be to make chartdldr listen to a new PluginMsg which PluginLoader sends after the plugin has been completely loaded.  It could then do what it needs.  This would not affect other plugins unless they listen to it. I don't know if this is for better or worse.</p>
+
+
+
+<a name="422613961"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332168-Master/topic/Plugin%20Manager%20problem/near/422613961" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Pavel Kalian <a href="https://leamas.github.io/zulip-archive/stream/332168-Master/topic/Plugin.20Manager.20problem.html#422613961">(Feb 21 2024 at 13:10)</a>:</h4>
+<p>If done by implementing a new event, it will need to be done also in S63 and o-charts plugins. Not aware of any more that add own tabs to the toolbox.</p>
+
+
+
+<a name="422614429"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332168-Master/topic/Plugin%20Manager%20problem/near/422614429" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Alec Leamas <a href="https://leamas.github.io/zulip-archive/stream/332168-Master/topic/Plugin.20Manager.20problem.html#422614429">(Feb 21 2024 at 13:13)</a>:</h4>
+<p>Well, we could do that, no major problem.  Sending a new event/PluginMsg is probably the "safe route", but somewhat more complex.  Thoughts?</p>
+
+
+
+<a name="422614684"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332168-Master/topic/Plugin%20Manager%20problem/near/422614684" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Alec Leamas <a href="https://leamas.github.io/zulip-archive/stream/332168-Master/topic/Plugin.20Manager.20problem.html#422614684">(Feb 21 2024 at 13:14)</a>:</h4>
+<p>It will also require API 1.19 with all ramifications related to that...</p>
+
+
+
+<a name="422616009"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332168-Master/topic/Plugin%20Manager%20problem/near/422616009" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Dan Dickey <a href="https://leamas.github.io/zulip-archive/stream/332168-Master/topic/Plugin.20Manager.20problem.html#422616009">(Feb 21 2024 at 13:21)</a>:</h4>
+<p>The plugin itself knows it is being destroyed because its DeInit() and the plugin destructor is called.  Why, if the plugin itself is unloaded and destroyed, cannot that process itself clear this flag?</p>
+
+
+
+<a name="422617491"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332168-Master/topic/Plugin%20Manager%20problem/near/422617491" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Alec Leamas <a href="https://leamas.github.io/zulip-archive/stream/332168-Master/topic/Plugin.20Manager.20problem.html#422617491">(Feb 21 2024 at 13:28)</a>:</h4>
+<p>The plugin does not see it. It's defined in <code>class PlugInData</code> which is not visible for the plugin.</p>
+
+
+
+<a name="422617506"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332168-Master/topic/Plugin%20Manager%20problem/near/422617506" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Pavel Kalian <a href="https://leamas.github.io/zulip-archive/stream/332168-Master/topic/Plugin.20Manager.20problem.html#422617506">(Feb 21 2024 at 13:28)</a>:</h4>
+<p>We want to avoid the need for new API level here if simply reloading the plugins will do us the same service...</p>
+
+
+
+<a name="422617707"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332168-Master/topic/Plugin%20Manager%20problem/near/422617707" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Alec Leamas <a href="https://leamas.github.io/zulip-archive/stream/332168-Master/topic/Plugin.20Manager.20problem.html#422617707">(Feb 21 2024 at 13:29)</a>:</h4>
+<blockquote>
+<p>We want to avoid the need for new API level here if simply reloading the plugins will do us the same service...</p>
+</blockquote>
+<p>Yes.</p>
+
+
+
+<a name="422618019"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332168-Master/topic/Plugin%20Manager%20problem/near/422618019" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Alec Leamas <a href="https://leamas.github.io/zulip-archive/stream/332168-Master/topic/Plugin.20Manager.20problem.html#422618019">(Feb 21 2024 at 13:31)</a>:</h4>
+<p>If we want to be really, really safe we could hardcode a list of plugins and only clear the flag  for those in the list. Certainly not kosher...</p>
+
+
+
+<a name="422618461"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332168-Master/topic/Plugin%20Manager%20problem/near/422618461" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Pavel Kalian <a href="https://leamas.github.io/zulip-archive/stream/332168-Master/topic/Plugin.20Manager.20problem.html#422618461">(Feb 21 2024 at 13:33)</a>:</h4>
+<p>We don't need to, we can check for <code>INSTALLS_TOOLBOX_PAGE</code></p>
+
+
+
+<a name="422618815"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332168-Master/topic/Plugin%20Manager%20problem/near/422618815" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Alec Leamas <a href="https://leamas.github.io/zulip-archive/stream/332168-Master/topic/Plugin.20Manager.20problem.html#422618815">(Feb 21 2024 at 13:35)</a>:</h4>
+<p>Almost kosher, I'd say. In practice, we could test these three plugins and make sure it works and rest assured that other plugins are not affected.</p>
+
+
+
+<a name="422619282"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332168-Master/topic/Plugin%20Manager%20problem/near/422619282" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Alec Leamas <a href="https://leamas.github.io/zulip-archive/stream/332168-Master/topic/Plugin.20Manager.20problem.html#422619282">(Feb 21 2024 at 13:37)</a>:</h4>
+<p>... and sending a message is perhaps  a good thing to do anyway for the future. It's cheap.</p>
+
+
+
+<a name="422619459"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332168-Master/topic/Plugin%20Manager%20problem/near/422619459" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Dan Dickey <a href="https://leamas.github.io/zulip-archive/stream/332168-Master/topic/Plugin.20Manager.20problem.html#422619459">(Feb 21 2024 at 13:37)</a>:</h4>
+<p>But surely plug-in manager knows the plug-in is being destroyed. How can it not? Whoever destroyed the plug-in should clear this flag.</p>
+
+
+
+<a name="422619987"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332168-Master/topic/Plugin%20Manager%20problem/near/422619987" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Alec Leamas <a href="https://leamas.github.io/zulip-archive/stream/332168-Master/topic/Plugin.20Manager.20problem.html#422619987">(Feb 21 2024 at 13:40)</a>:</h4>
+<p>Yes, it does, it's basically the UnloadPlugIn. So we could check  INSTALLS_TOOLBOX_PAGE in UnloadPlugin and clear it there instead. I don't see any major advantage doing so, do you?</p>
+
+
+
+<a name="422620835"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332168-Master/topic/Plugin%20Manager%20problem/near/422620835" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Alec Leamas <a href="https://leamas.github.io/zulip-archive/stream/332168-Master/topic/Plugin.20Manager.20problem.html#422620835">(Feb 21 2024 at 13:44)</a>:</h4>
+<p>...no, probably not at a glance.</p>
+
+
+
+<a name="422628924"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332168-Master/topic/Plugin%20Manager%20problem/near/422628924" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Alec Leamas <a href="https://leamas.github.io/zulip-archive/stream/332168-Master/topic/Plugin.20Manager.20problem.html#422628924">(Feb 21 2024 at 14:25)</a>:</h4>
+<p>So. trying top summarize </p>
+<ol>
+<li>The current patch is basically fine but it should check for  <code> INSTALLS_TOOLBOX_PAGE</code> before  it actually clears <code>m_has_setup_options</code></li>
+<li>It might make sense to send a <code>load_complete</code> PluginMsg after loading a plugin  for future needs.</li>
+</ol>
+
+
+
+<hr><p>Last updated: Oct 08 2024 at 10:11 UTC</p>
+</html>

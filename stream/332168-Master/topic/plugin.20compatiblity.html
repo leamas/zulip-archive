@@ -1,0 +1,178 @@
+<html>
+<head><meta charset="utf-8"><title>plugin compatiblity · Master · Zulip Chat Archive</title></head>
+<h2>Stream: <a href="https://leamas.github.io/zulip-archive/stream/332168-Master/index.html">Master</a></h2>
+<h3>Topic: <a href="https://leamas.github.io/zulip-archive/stream/332168-Master/topic/plugin.20compatiblity.html">plugin compatiblity</a></h3>
+
+<hr>
+
+<base href="https://opencpn.zulipchat.com">
+
+<head><link href="https://leamas.github.io/zulip-archive/style.css" rel="stylesheet"></head>
+
+<a name="421745846"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332168-Master/topic/plugin%20compatiblity/near/421745846" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Alec Leamas <a href="https://leamas.github.io/zulip-archive/stream/332168-Master/topic/plugin.20compatiblity.html#421745846">(Feb 15 2024 at 21:42)</a>:</h4>
+<p>From <a href="https://github.com/opencpn/OpenCPN/issues/3609">#3609</a></p>
+<p><span class="user-mention" data-user-id="522486">@Håkan Svensson</span> </p>
+<blockquote>
+<p>So If a plugin developer exchange the use of WANTS_NMEA_SENTENCES by Observer it also means old the plugin version need to be left when updating Github plugins and Pluginmanager need to fetch correct version?</p>
+</blockquote>
+
+
+
+<a name="421746813"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332168-Master/topic/plugin%20compatiblity/near/421746813" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Alec Leamas <a href="https://leamas.github.io/zulip-archive/stream/332168-Master/topic/plugin.20compatiblity.html#421746813">(Feb 15 2024 at 21:49)</a>:</h4>
+<p>The core issue is which API level the plugin uses. For shipdriver-based ones this is about the <code>set(PKG_API_LIB api-18)  </code> in _Plugin.cmake_.  If you use api-18 it means that you need  an OpenCPN recent enough to support this . We should have a table...</p>
+<p>If a plugin uses upcoming api-19 it will only be loaded by 5.10 or later.  The usual approach taken by most plugin devs is basically to wait until next release 5.12 and from that point use the new API, leaving anything older behind.</p>
+<p>It should certainly be possible in a case like this to make a conditional build which uses api-19 when building for bookworm and api-18 otherwise. Never seen it , but I see no major problems.</p>
+
+
+
+<a name="421747709"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332168-Master/topic/plugin%20compatiblity/near/421747709" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Alec Leamas <a href="https://leamas.github.io/zulip-archive/stream/332168-Master/topic/plugin.20compatiblity.html#421747709">(Feb 15 2024 at 21:56)</a>:</h4>
+<p>And in other cases plugins just leaves their existing, working builds  for older version as they are in the catalog while updating plugins heading for the latest OpenCPN version</p>
+
+
+
+<a name="421747809"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332168-Master/topic/plugin%20compatiblity/near/421747809" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Dave Register <a href="https://leamas.github.io/zulip-archive/stream/332168-Master/topic/plugin.20compatiblity.html#421747809">(Feb 15 2024 at 21:57)</a>:</h4>
+<p>"If a plugin uses upcoming api-19 it will only be loaded by 5.10 or later."<br>
+where in the code does this happen, please?<br>
+Maybe I missed an important patch.</p>
+
+
+
+<a name="421748849"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332168-Master/topic/plugin%20compatiblity/near/421748849" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Alec Leamas <a href="https://leamas.github.io/zulip-archive/stream/332168-Master/topic/plugin.20compatiblity.html#421748849">(Feb 15 2024 at 22:04)</a>:</h4>
+<p>You didn't, it was me cutting some corners.   Sorry.</p>
+<p>The net result is the same, though: Using API level 1.19 requires OpenCPN 5.10.</p>
+
+
+
+<a name="421750233"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332168-Master/topic/plugin%20compatiblity/near/421750233" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Dave Register <a href="https://leamas.github.io/zulip-archive/stream/332168-Master/topic/plugin.20compatiblity.html#421750233">(Feb 15 2024 at 22:15)</a>:</h4>
+<p>What we know from experience is that users are very, VERY slow to update OCPN core version.  "I want to let someone else discover the bugs.  I'll wait until it is stable, thank you."</p>
+<p>So, if a user tries to load an API-19 plugin (which uses some new API-19 function), it will fail to load on O584, and produce the "Plugin not compatible, please get a new plugin" message dialog.<br>
+This is hard-fixed production code, and we can do nothing about this situation in real life.</p>
+<p>I have always recommended to plugin devs to use only the latest plugin API that satisfies their functional requirements.<br>
+Or, said another way,  If you do not require the new functionality of API-19, do not use it.  Stay with API-18 or earlier.</p>
+
+
+
+<a name="421750496"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332168-Master/topic/plugin%20compatiblity/near/421750496" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Alec Leamas <a href="https://leamas.github.io/zulip-archive/stream/332168-Master/topic/plugin.20compatiblity.html#421750496">(Feb 15 2024 at 22:17)</a>:</h4>
+<p>Yes, this  is more or less my message above as well.</p>
+
+
+
+<a name="421755044"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332168-Master/topic/plugin%20compatiblity/near/421755044" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Pavel Kalian <a href="https://leamas.github.io/zulip-archive/stream/332168-Master/topic/plugin.20compatiblity.html#421755044">(Feb 15 2024 at 22:57)</a>:</h4>
+<p>FWIW I have bumped all my plugins to API-18 when O5.8 was released and never heard anybody complaining. There won't be that many plugins that need to switch to API-19 at the beginning, so the complaints should be somewhat limited.</p>
+
+
+
+<a name="421755351"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332168-Master/topic/plugin%20compatiblity/near/421755351" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Pavel Kalian <a href="https://leamas.github.io/zulip-archive/stream/332168-Master/topic/plugin.20compatiblity.html#421755351">(Feb 15 2024 at 23:00)</a>:</h4>
+<p>And yes, learning from own mistakes, we should actually implement handling of the <code>api-version</code> tag from the catalog to prevent this in the future...</p>
+
+
+
+<a name="421774493"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332168-Master/topic/plugin%20compatiblity/near/421774493" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Dave Register <a href="https://leamas.github.io/zulip-archive/stream/332168-Master/topic/plugin.20compatiblity.html#421774493">(Feb 16 2024 at 02:13)</a>:</h4>
+<p>"we should actually implement handling of the api-version tag from the catalog to prevent this in the future..."<br>
+Yes, we'll do it now in O59. <br>
+16 &lt;= API &lt;=19 will work for O5.10.0, and allow API-20+ sometime later.</p>
+
+
+
+<a name="421802931"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332168-Master/topic/plugin%20compatiblity/near/421802931" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Håkan Svensson <a href="https://leamas.github.io/zulip-archive/stream/332168-Master/topic/plugin.20compatiblity.html#421802931">(Feb 16 2024 at 07:16)</a>:</h4>
+<p>Plans for 5.10 sounds good.<br>
+I though think we still have the situation that if a plugin is updated to API 19 it will be in the catalog for a O v5.8 and fails to run. (Is that correct?)<br>
+One workaround would be to left the previous plugin version in Github plugins and the 5.8 user may try that instead. In 5.10 we can possible show the latest version only.<br>
+On the other hand it may be those refusing update to O 5.10 not either search for plugin updates? Pavel's experiences may support that.<br>
+But a general conclusion would be to not update plugins to higher API than necessary.</p>
+<p>And for 5.10 implement in e.g. Pluginmanager a function to detect old O versions and suggest the user to update OCPN when applicable. For example a subroutine in "Update catalog..." when the Internet would be available. It's not only that some user hesitate updates for reasons Dave mentioned but I think most are not aware. They neither visit the CF nor OCPN web site.</p>
+
+
+
+<a name="421822754"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332168-Master/topic/plugin%20compatiblity/near/421822754" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Alec Leamas <a href="https://leamas.github.io/zulip-archive/stream/332168-Master/topic/plugin.20compatiblity.html#421822754">(Feb 16 2024 at 09:42)</a>:</h4>
+<blockquote>
+<p>though think we still have the situation that if a plugin is updated to API 19 it will be in the catalog for a O v5.8</p>
+</blockquote>
+<p>What we do is actually to create for example a bookworm plugin, something like <code>debian-x86_64</code> version <code>12</code>. Main OpenCPN determines plugin compatibility  from this tuple called the ABI. </p>
+<p>And for bookworm this becomes a problem. Bookworm plugins are already used by OpenCPN 5.8 on Debian (notably Raspbian). So if we create new 1.19 plugins they will indeed be loaded by existing Debian OpenCPN 5.8 builds, and this will fail.</p>
+<p>For that reason Dave and Pavel is right: we should check not only the ABI but also the metadata API level.  But this will not fix the current situation, the fix will not  be available in already existing  OpenCPN 5.8.</p>
+<p>Which means we have a problem.  The only thing actually checked by 5.8 builds is <code>&lt;target&gt;</code> and <code>&lt;target-version&gt;</code>.  And hence we need to modify these for 1.19 plugins so they are not loaded by 5.8. </p>
+<p>The only thing checked everywhere is <code>&lt;target&gt;</code>. It might thus  be necessary to create a complete set of new targets, for example  with a _-19_ suffix like <code>msvc-wx32-19</code>.   This means that the list of ABIs will explode,. Are there better options?</p>
+
+
+
+<a name="421824094"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332168-Master/topic/plugin%20compatiblity/near/421824094" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Alec Leamas <a href="https://leamas.github.io/zulip-archive/stream/332168-Master/topic/plugin.20compatiblity.html#421824094">(Feb 16 2024 at 09:49)</a>:</h4>
+<blockquote>
+<p>And for 5.10 implement in e.g. Pluginmanager a function to detect old O versions and suggest the user to update OCPN when applicable. </p>
+</blockquote>
+<p>Indeed. IIRC, this has been discussed earlier.</p>
+
+
+
+<a name="421836006"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332168-Master/topic/plugin%20compatiblity/near/421836006" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Pavel Kalian <a href="https://leamas.github.io/zulip-archive/stream/332168-Master/topic/plugin.20compatiblity.html#421836006">(Feb 16 2024 at 10:58)</a>:</h4>
+<p>No new ABI targets please, that will do by orders of magnitude more bad than good. We will simply survive this as it is, case closed.</p>
+
+
+
+<a name="421836149"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332168-Master/topic/plugin%20compatiblity/near/421836149" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Alec Leamas <a href="https://leamas.github.io/zulip-archive/stream/332168-Master/topic/plugin.20compatiblity.html#421836149">(Feb 16 2024 at 10:59)</a>:</h4>
+<p>I don't like it either. But it's a bad situation</p>
+
+
+
+<a name="421836579"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332168-Master/topic/plugin%20compatiblity/near/421836579" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Pavel Kalian <a href="https://leamas.github.io/zulip-archive/stream/332168-Master/topic/plugin.20compatiblity.html#421836579">(Feb 16 2024 at 11:01)</a>:</h4>
+<p>It is not, it is the exactly same situation as there always was and it never was a real problem</p>
+
+
+
+<a name="421836883"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332168-Master/topic/plugin%20compatiblity/near/421836883" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Pavel Kalian <a href="https://leamas.github.io/zulip-archive/stream/332168-Master/topic/plugin.20compatiblity.html#421836883">(Feb 16 2024 at 11:03)</a>:</h4>
+<p>There simply won't be many plugins that will be using API-19 at the time of release and the important majority of the users will be at O5.10 by the moment there will. It was like this with all the 18 API releases until now and will be the same with the 19th.</p>
+
+
+
+<a name="421837027"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332168-Master/topic/plugin%20compatiblity/near/421837027" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Pavel Kalian <a href="https://leamas.github.io/zulip-archive/stream/332168-Master/topic/plugin.20compatiblity.html#421837027">(Feb 16 2024 at 11:04)</a>:</h4>
+<p>Ideal? Not. Good enough? Yes.</p>
+
+
+
+<a name="421837679"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332168-Master/topic/plugin%20compatiblity/near/421837679" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Pavel Kalian <a href="https://leamas.github.io/zulip-archive/stream/332168-Master/topic/plugin.20compatiblity.html#421837679">(Feb 16 2024 at 11:08)</a>:</h4>
+<p>BTW a less painful solution than new set of ABI targets would be to have a new default branch for the catalog in O5.10 instead of <code>master</code>. If we really wanted to do something, but IMHO we really don't need to.</p>
+
+
+
+<a name="421839230"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332168-Master/topic/plugin%20compatiblity/near/421839230" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Alec Leamas <a href="https://leamas.github.io/zulip-archive/stream/332168-Master/topic/plugin.20compatiblity.html#421839230">(Feb 16 2024 at 11:18)</a>:</h4>
+<blockquote>
+<p>BTW a less painful solution than new set of ABI targets would be to have a new default branch for the catalog in O5.10 instead of master. I</p>
+</blockquote>
+<p>Yes, would be  a better solution. Or we could simply let the 1.19 plugins stay in Beta for the time being.</p>
+
+
+
+<a name="421839520"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332168-Master/topic/plugin%20compatiblity/near/421839520" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Pavel Kalian <a href="https://leamas.github.io/zulip-archive/stream/332168-Master/topic/plugin.20compatiblity.html#421839520">(Feb 16 2024 at 11:20)</a>:</h4>
+<p>Exactly, what we have is good enough, let's close this subject and do the important stuff ;)</p>
+
+
+
+<a name="421839696"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332168-Master/topic/plugin%20compatiblity/near/421839696" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Pavel Kalian <a href="https://leamas.github.io/zulip-archive/stream/332168-Master/topic/plugin.20compatiblity.html#421839696">(Feb 16 2024 at 11:22)</a>:</h4>
+<p>The only thing we really want to do here is implement the <code>api-target</code> filter in the plugin manager, which will solve it for the future</p>
+
+
+
+<hr><p>Last updated: Oct 08 2024 at 10:11 UTC</p>
+</html>

@@ -1,0 +1,51 @@
+<html>
+<head><meta charset="utf-8"><title>rest pin algorithm · Master · Zulip Chat Archive</title></head>
+<h2>Stream: <a href="https://leamas.github.io/zulip-archive/stream/332168-Master/index.html">Master</a></h2>
+<h3>Topic: <a href="https://leamas.github.io/zulip-archive/stream/332168-Master/topic/rest.20pin.20algorithm.html">rest pin algorithm</a></h3>
+
+<hr>
+
+<base href="https://opencpn.zulipchat.com">
+
+<head><link href="https://leamas.github.io/zulip-archive/style.css" rel="stylesheet"></head>
+
+<a name="403009507"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332168-Master/topic/rest%20pin%20algorithm/near/403009507" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Alec Leamas <a href="https://leamas.github.io/zulip-archive/stream/332168-Master/topic/rest.20pin.20algorithm.html#403009507">(Nov 19 2023 at 13:18)</a>:</h4>
+<p>Looking into how a random int is converted to a some obfuscated value which is transferred on the network. </p>
+<p>The basic idea here is that it should no be possible to deduce what was used to create the obfuscated value by sniffing this obfuscated value on the network.</p>
+<p>To that end,  we use a random number generator to generate a random string from the original secret. hoping that it is not possible to find out the int by looking at the output from the random generator.</p>
+<p>However, this is not completely correct implemented.  The alghoritms optimized for this purpose is hashing algorithms like sha 512 etc. These are matematically "safe" for this purpose, a random number generator is not.</p>
+<p>Now, this would be a simple fix. However, such a fix would break all currently paired connections out there. So the question becomes: is it worth it?</p>
+<p><span class="user-mention" data-user-id="517002">@Dave Register</span> ^</p>
+
+
+
+<a name="403019040"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332168-Master/topic/rest%20pin%20algorithm/near/403019040" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Dave Register <a href="https://leamas.github.io/zulip-archive/stream/332168-Master/topic/rest.20pin.20algorithm.html#403019040">(Nov 19 2023 at 15:06)</a>:</h4>
+<p><span class="user-mention" data-user-id="399510">@Alec Leamas</span> <br>
+Yes, I think so.<br>
+I think we have very few actual users exploring O5.9.x at this point.  Users affected by this issue will mostly be testers, looking at one or two specific issues.  Requiring a "re-pair" on release of O5.10.x will not be a burden to the wider user base.  Upgrades are expected to come with glitches.<br>
+Carry on, please.</p>
+
+
+
+<a name="403549900"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332168-Master/topic/rest%20pin%20algorithm/near/403549900" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Alec Leamas <a href="https://leamas.github.io/zulip-archive/stream/332168-Master/topic/rest.20pin.20algorithm.html#403549900">(Nov 22 2023 at 09:13)</a>:</h4>
+<p><span class="user-mention" data-user-id="517002">@Dave Register</span> </p>
+<p>Continuing on rest server here.</p>
+<p>I'm unhappy about the LoadConfig/SaveConfig stuff.  This means that we read and even write to the overall config file from the worker thread. This obviously carries risks if the file is accessed by the main thread in parallel. Yes, it's not "likely", but still...</p>
+<p>Thoughts?</p>
+
+
+
+<a name="403569164"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332168-Master/topic/rest%20pin%20algorithm/near/403569164" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Alec Leamas <a href="https://leamas.github.io/zulip-archive/stream/332168-Master/topic/rest.20pin.20algorithm.html#403569164">(Nov 22 2023 at 11:01)</a>:</h4>
+<blockquote>
+<p>Thoughts?</p>
+</blockquote>
+<p>False alarm. LoadConfig/SaveConfig is in the main thread. Sorry for the noise</p>
+
+
+
+<hr><p>Last updated: Oct 08 2024 at 10:11 UTC</p>
+</html>

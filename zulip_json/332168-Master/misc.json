@@ -1,0 +1,62 @@
+[
+    {
+        "content": "<p>Win VS2022  Debug -p switch<br>\nDoes anyone know why a new build, from /build scratch, has got the -p switch for Debug runs?<br>\nIt's not that often but every time I start from scratch I have to delete a \"-p\" from \"OpenCPN properties-&gt;Configuration properties-&gt;Debugging-&gt;Command Arguments\".<br>\nWhy and where is that set? I think it's implemented last autumn.<br>\nPersonally I not interested in running the Debug \"portable\" as the first hand choice.</p>",
+        "id": 420337609,
+        "sender_full_name": "Håkan Svensson",
+        "timestamp": 1707337953
+    },
+    {
+        "content": "<p>No VS expert. But generally I don't understand how the opencpn source code could set the default  command line switches used by VS.  What would that connection be?  \"mystified\"</p>",
+        "id": 420342340,
+        "sender_full_name": "Alec Leamas",
+        "timestamp": 1707339851
+    },
+    {
+        "content": "<p>It comes from <a href=\"https://github.com/OpenCPN/OpenCPN/commit/5d43f01a8567ba62d141b55db283553daf9b84a4#diff-1e7de1ae2d059d21e1dd75d5812d5a34b0222cef273b7c3a2af62eb747f9d20aR1254\">https://github.com/OpenCPN/OpenCPN/commit/5d43f01a8567ba62d141b55db283553daf9b84a4#diff-1e7de1ae2d059d21e1dd75d5812d5a34b0222cef273b7c3a2af62eb747f9d20aR1254</a> If I remember correctly <span class=\"user-mention\" data-user-id=\"522729\">@Dan Dickey</span> explained the rationale behind that is being able to debug local builds of plugins using the same workflow.</p>",
+        "id": 420353741,
+        "sender_full_name": "Pavel Kalian",
+        "timestamp": 1707344717
+    },
+    {
+        "content": "<p>Thanks Pavel. My bad. I was searching for  \"-p \", with a space, so therefor no hit.<br>\nI'm debugging, also with plugins, using the the normal run environment.<br>\nCouldn't this setting confuse other builders as well? Maybe take it out and use a cmake option if desired. <br>\nWell, no big issue, I use to build on a local branch and not master so I can edit that.</p>",
+        "id": 420459567,
+        "sender_full_name": "Håkan Svensson",
+        "timestamp": 1707399626
+    },
+    {
+        "content": "<p>Well, it really depends on what you do and what types of builds you use. As Debug and Release can't be mixed or you can actually be using a completely different wx version for development, the portable switch makes a lot of sense. Making it optional with a flag is of course possible, but I actually have nothing against the current default.</p>",
+        "id": 420474499,
+        "sender_full_name": "Pavel Kalian",
+        "timestamp": 1707404000
+    },
+    {
+        "content": "<p>I find it convenient to  use RelWithDebInfo for all builds so it's easy.<br>\nFor wxWidgets I'm on 3.2.4 for all builds.<br>\nNow when the \"-p\" is located I've no trouble to take it out for my builds so if used by others I agree to have it default.</p>",
+        "id": 420476714,
+        "sender_full_name": "Håkan Svensson",
+        "timestamp": 1707404597
+    },
+    {
+        "content": "<p><span class=\"user-mention\" data-user-id=\"522486\">@Håkan Svensson</span> I think if you take a little time to study the build system created by winConfig.bat you will end up liking it. It allows all 4 different build types to coexist and you and jump between them at any time. Debugging is easy from inside Visual Studio.</p>\n<p>Plugin debugging is also simplified. Just install the plugin in the correct place (e.g. build\\Debug\\Plugins) and you can easily step into the plugin with full source code debugging. </p>\n<p>The -p option is what keeps all these building types isolated and functional. The -p option is created by the cmake file.</p>",
+        "id": 422667814,
+        "sender_full_name": "Dan Dickey",
+        "timestamp": 1708535647
+    },
+    {
+        "content": "<p>Thanks Dan.<br>\nI've tested the winconfig.bat some times. Works great. I do however use my old setup and other common environment variables.<br>\nAlthough using realwithdebinfo I do automatically the same with plugins but to that folder instead. <br>\nI, with help from Pavel, found the -p option, no problem. Without it I can debug using the same config file as for runtime and it's easy to compare any issues.</p>",
+        "id": 422674763,
+        "sender_full_name": "Håkan Svensson",
+        "timestamp": 1708537907
+    },
+    {
+        "content": "<p>I could be convinced to make the config file stuff common between all for configurations. It’s not hard.</p>",
+        "id": 422698544,
+        "sender_full_name": "Dan Dickey",
+        "timestamp": 1708546645
+    },
+    {
+        "content": "<p>Four, not for…</p>",
+        "id": 422698568,
+        "sender_full_name": "Dan Dickey",
+        "timestamp": 1708546662
+    }
+]

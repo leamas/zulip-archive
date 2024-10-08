@@ -1,0 +1,332 @@
+[
+    {
+        "content": "<p>I think we are all ready for Prod Release 5.10.0<br>\nAny last minute concerns or comments?</p>",
+        "id": 457251762,
+        "sender_full_name": "Dave Register",
+        "timestamp": 1723087123
+    },
+    {
+        "content": "<p>There are <a href=\"https://github.com/OpenCPN/OpenCPN/milestone/8\">42 open issues on GitHub milestoned for 5.10.0.</a><br>\nI guess they need reviewing and either closed or the milestone adjusted.  Maybe after the release.</p>",
+        "id": 457289323,
+        "sender_full_name": "Tony Voss",
+        "timestamp": 1723102528
+    },
+    {
+        "content": "<p><span class=\"user-mention\" data-user-id=\"517002\">@Dave Register</span> <br>\nI am seeing a consistent crash in Windows 11. It happens within few minutes of running O when multiple AIS targets produce CPA alarms.</p>\n<p><a href=\"/user_uploads/33951/JLQikLw9zPX18oBqmGUkhIa3/image.png\">image.png</a></p>\n<div class=\"message_inline_image\"><a href=\"/user_uploads/33951/JLQikLw9zPX18oBqmGUkhIa3/image.png\" title=\"image.png\"><img data-original-dimensions=\"1920x1032\" src=\"/user_uploads/thumbnail/33951/JLQikLw9zPX18oBqmGUkhIa3/image.png/840x560.webp\"></a></div>",
+        "id": 463382667,
+        "sender_full_name": "Dan Dickey",
+        "timestamp": 1724068398
+    },
+    {
+        "content": "<p><span class=\"user-mention\" data-user-id=\"522729\">@Dan Dickey</span> <br>\nNo luck reproducing this.  Is this live data, or from a VDR recording?</p>",
+        "id": 463498958,
+        "sender_full_name": "Dave Register",
+        "timestamp": 1724097261
+    },
+    {
+        "content": "<p>It’s a VDR.</p>",
+        "id": 463529194,
+        "sender_full_name": "Dan Dickey",
+        "timestamp": 1724107297
+    },
+    {
+        "content": "<p>Dan<br>\nwill you post the VDR you are using?<br>\nThanks<br>\nDave</p>",
+        "id": 463547160,
+        "sender_full_name": "Dave Register",
+        "timestamp": 1724114528
+    },
+    {
+        "content": "<p><a href=\"/user_uploads/33951/UpMKWDtIdHWV_1cLL-ldxKjE/PacCupStartLong.txt\">PacCupStartLong.txt</a><br>\nSee if attached file makes it through all the filters.</p>",
+        "id": 463547384,
+        "sender_full_name": "Dan Dickey",
+        "timestamp": 1724114701
+    },
+    {
+        "content": "<p>The crash generally happens before \"ownship\" makes it past Pt Bonita.</p>",
+        "id": 463547588,
+        "sender_full_name": "Dan Dickey",
+        "timestamp": 1724114774
+    },
+    {
+        "content": "<p><span class=\"user-mention\" data-user-id=\"522729\">@Dan Dickey</span> <br>\nGot the file.  Seen this one before.<br>\nNo failures yet on W10.  Starting W11 test next.<br>\nPlease tell me your AIS CPA parameters.</p>",
+        "id": 463553626,
+        "sender_full_name": "Dave Register",
+        "timestamp": 1724117637
+    },
+    {
+        "content": "<p><a href=\"/user_uploads/33951/VPlx3uL_yffvss5bGRg1gsdM/image.png\">image.png</a></p>\n<div class=\"message_inline_image\"><a href=\"/user_uploads/33951/VPlx3uL_yffvss5bGRg1gsdM/image.png\" title=\"image.png\"><img data-original-dimensions=\"735x968\" src=\"/user_uploads/thumbnail/33951/VPlx3uL_yffvss5bGRg1gsdM/image.png/840x560.webp\"></a></div>",
+        "id": 463553775,
+        "sender_full_name": "Dan Dickey",
+        "timestamp": 1724117727
+    },
+    {
+        "content": "<p><span class=\"user-mention\" data-user-id=\"522729\">@Dan Dickey</span> <br>\nSorry, cannot get a fail.  Do you ACK any of the alerts?  Any other hints, or special requirements?</p>",
+        "id": 463557952,
+        "sender_full_name": "Dave Register",
+        "timestamp": 1724119153
+    },
+    {
+        "content": "<p>No, just let it run a while.</p>",
+        "id": 463557985,
+        "sender_full_name": "Dan Dickey",
+        "timestamp": 1724119180
+    },
+    {
+        "content": "<p><span class=\"user-mention\" data-user-id=\"522729\">@Dan Dickey</span> <span class=\"user-mention\" data-user-id=\"517002\">@Dave Register</span> <br>\nI've played the same VDR file a couple of times without issues.<br>\nOn Win10, latest master code.<br>\nSimilar AIS CPA settings as Dan. My alert sound is beep_ssl.wav. Sound device: OcpnWxSound</p>",
+        "id": 463655616,
+        "sender_full_name": "Håkan Svensson",
+        "timestamp": 1724148259
+    },
+    {
+        "content": "<p><span class=\"user-mention\" data-user-id=\"522729\">@Dan Dickey</span> <br>\nMore digging required.<br>\nLooking at the stack trace on your crash above, it seems that a new alert dialog is being created.  In the process, the variable <br>\n<code>m_pAlertTextCtl</code><br>\nis created in the method CreateControls(), at line 174.  The control is accessed normally, e.g at line 180.<br>\nLater, is called <br>\n<code>UpdateText();</code><br>\nat line 222.</p>\n<p>The fault happens in UpdateText(), at line 266.<br>\n<code>m_pAlertTextCtl-&gt;SetFonts(face, face, sizes);</code></p>\n<p>So what has happened to the m_pAlertTextCtrl ?<br>\nAll this code is synchronous, no parallel threads active.<br>\nHead scratching....</p>",
+        "id": 463720739,
+        "sender_full_name": "Dave Register",
+        "timestamp": 1724164834
+    },
+    {
+        "content": "<p>Yeah, me too. I’ll keep looking into it. First I need to pull latest so I can build again.</p>",
+        "id": 463720931,
+        "sender_full_name": "Dan Dickey",
+        "timestamp": 1724164892
+    },
+    {
+        "content": "<p>If Alec is not finished fixing libdnet, just do:<br>\n<code>$ git checkout 610815eb1e392b20269772ced4c890ce80feb020</code></p>",
+        "id": 463721305,
+        "sender_full_name": "Dave Register",
+        "timestamp": 1724164997
+    },
+    {
+        "content": "<p><span class=\"user-mention silent\" data-user-id=\"517002\">Dave Register</span> <a href=\"#narrow/stream/432618-OCPN-5.2E10-Release-plan/topic/Production.20Release.205.2E10.2E0/near/463721305\">said</a>:</p>\n<blockquote>\n<p>If Alec is not finished fixing libdnet</p>\n</blockquote>\n<p>done</p>",
+        "id": 463771683,
+        "sender_full_name": "Alec Leamas",
+        "timestamp": 1724176988
+    },
+    {
+        "content": "<p><span class=\"user-mention\" data-user-id=\"399510\">@Alec Leamas</span> <br>\n\"done\"<br>\nReally?  I see CCI fails on bookworm.</p>",
+        "id": 463781345,
+        "sender_full_name": "Dave Register",
+        "timestamp": 1724179306
+    },
+    {
+        "content": "<p>Ok...  I only checked the PR builds, notablyu windows. Will fix,</p>",
+        "id": 463781597,
+        "sender_full_name": "Alec Leamas",
+        "timestamp": 1724179381
+    },
+    {
+        "content": "<p><span class=\"user-mention silent\" data-user-id=\"517002\">Dave Register</span> <a href=\"#narrow/stream/432618-OCPN-5.2E10-Release-plan/topic/Production.20Release.205.2E10.2E0/near/463720739\">said</a>:</p>\n<blockquote>\n<p><span class=\"user-mention silent\" data-user-id=\"522729\">Dan Dickey</span> <br>\nMore digging required.<br>\nLooking at the stack trace on your crash above, it seems that a new alert dialog is being created.  In the process, the variable <br>\n<code>m_pAlertTextCtl</code><br>\nis created in the method CreateControls(), at line 174.  The control is accessed normally, e.g at line 180.<br>\nLater, is called <br>\n<code>UpdateText();</code><br>\nat line 222.</p>\n<p>The fault happens in UpdateText(), at line 266.<br>\n<code>m_pAlertTextCtl-&gt;SetFonts(face, face, sizes);</code></p>\n<p>So what has happened to the m_pAlertTextCtrl ?<br>\nAll this code is synchronous, no parallel threads active.<br>\nHead scratching....</p>\n</blockquote>\n<p><span class=\"user-mention\" data-user-id=\"517002\">@Dave Register</span> i think the problem still exists. So far have seen 2 manifestations. On is as previously reported, another is illegal address trap in OpenGL driver DLL. Both of these suggest some pointer somewhere has gone bad and thus overwriting  something important. I’ll keep digging and try to find it.</p>",
+        "id": 464107890,
+        "sender_full_name": "Dan Dickey",
+        "timestamp": 1724258461
+    },
+    {
+        "content": "<p><strong>Dave Register</strong> I have been running the official download version and it crashes reliably too.</p>",
+        "id": 464605519,
+        "sender_full_name": "Dan Dickey",
+        "timestamp": 1724407628
+    },
+    {
+        "content": "<p>Probably done this, but have you disabled all plugins?</p>",
+        "id": 464667686,
+        "sender_full_name": "Dave Register",
+        "timestamp": 1724425604
+    },
+    {
+        "content": "<p>All disabled but the in-place “four”.  I’m working to get a debug build flavor that will also crash so I can track it down. If i am only one seeing it, then it isn’t super urgent.</p>",
+        "id": 464668245,
+        "sender_full_name": "Dan Dickey",
+        "timestamp": 1724425769
+    },
+    {
+        "content": "<p><span class=\"user-mention\" data-user-id=\"522729\">@Dan Dickey</span> <br>\nJust looking at the screenshot of the crash, reported above.<br>\nThe contents of  <code>m_pAlertTextCtl</code> are a little suspicious.  m_cell == NULL.  Hmmm...<br>\nPlease add this quick patch, for debug information:</p>\n<div class=\"codehilite\"><pre><span></span><code>void AISTargetAlertDialog::UpdateText() {\n  if (GetAlertText()) {\n\n     // checking for m_cell == NULL\n    if (!m_pAlertTextCtl-&gt;GetInternalRepresentation())\n      return;    // Might like to set a breakpoint here.\n\n    // Capture current scroll position\n</code></pre></div>\n<p>Just casting about.....</p>",
+        "id": 464766192,
+        "sender_full_name": "Dave Register",
+        "timestamp": 1724459550
+    },
+    {
+        "content": "<p>Dave, I already did that and a few other asserts to see what’s happening. Just been real busy with life this week. Will report what I find.</p>",
+        "id": 464766284,
+        "sender_full_name": "Dan Dickey",
+        "timestamp": 1724459658
+    },
+    {
+        "content": "<p>I see this in log file quite a bit too:</p>\n<div class=\"codehilite\"><pre><span></span><code>21:43:19.437 MESSAGE instrument.cpp:296 DashboardInstrument::OnPaint() fatal: wxAutoBufferedPaintDC.IsOk() false.\n</code></pre></div>\n<p>anybody else see it?</p>",
+        "id": 464769336,
+        "sender_full_name": "Dan Dickey",
+        "timestamp": 1724462057
+    },
+    {
+        "content": "<p>Dan...<br>\nLooking at the \"hint\" on the github issue:<br>\nInteresting.  As you can see, there was a new SENC file created during the startup and initial chart display.  The error reported there is probably not involved.  However, the AIS AelrtDialog failures started immediately afterword.<br>\nWhat is most interesting is the the SENC file creation happens in its own thread.  So, theoretically if something went wild in the SENC thread and corrupted the main thread image, it could explain the fault.<br>\nSo I hacked the code so that SENC file creation threads start on every chart load, just to stress the system.  Ran without problem for 60 minutes.  So....<br>\nHave you ever seen a similar log case before?  In normal operation, multithread SENC file creation is pretty infrequent, happens only when a chartset is initially installed, or updated.</p>",
+        "id": 464932311,
+        "sender_full_name": "Dave Register",
+        "timestamp": 1724558340
+    },
+    {
+        "content": "<p>Dave...<br>\nI am not convinced it is the creation of SENC files that goes awry.  No, I have not seen these log messages before.  One issue I do see is that in log level \"Debug\" we get way too many AIS log messages.  Creates hundreds of megabytes of log file.  Once we figure this issue out, I will submit a PR for a logging scheme that allows to limit the number of repeated messages in a somewhat generic way.</p>",
+        "id": 465012104,
+        "sender_full_name": "Dan Dickey",
+        "timestamp": 1724592658
+    },
+    {
+        "content": "<p>I assume they are not identical. If they indeed are, there is <a href=\"https://docs.wxwidgets.org/latest/classwx_log.html#ae814f9b9b4c8b4a52e34d7c919f98296\">https://docs.wxwidgets.org/latest/classwx_log.html#ae814f9b9b4c8b4a52e34d7c919f98296</a> already.</p>\n<p>We could probably override this in some clever way if we want, we are alredy using a custom target derived from the standard log target class.</p>",
+        "id": 465013505,
+        "sender_full_name": "Alec Leamas",
+        "timestamp": 1724593523
+    },
+    {
+        "content": "<p>Alex, I have created a macro that does it. Just waiting until I finish debugging this “possible” issue.</p>",
+        "id": 465022042,
+        "sender_full_name": "Dan Dickey",
+        "timestamp": 1724598242
+    },
+    {
+        "content": "<p>Alex, no they are not identical.  This is the macro I created:</p>\n<div class=\"codehilite\"><pre><span></span><code>#include &lt;mutex&gt;\n\n#define LOG_MACRO(ABBREV, LOG_LEVEL, MAX_COUNT)                          \\\n  static int m_##ABBREV##LOG_LEVEL##Count = 0;                           \\\n  static std::mutex m_##ABBREV##_##LOG_LEVEL##Mutex;                     \\\n  static void ABBREV##Log##LOG_LEVEL##1(wxString s) {                    \\\n    std::lock_guard&lt;std::mutex&gt; lock(m_##ABBREV##_##LOG_LEVEL##Mutex);   \\\n    if (m_##ABBREV##LOG_LEVEL##Count++ &lt; MAX_COUNT) wxLog##LOG_LEVEL(s); \\\n    if (m_##ABBREV##LOG_LEVEL##Count == MAX_COUNT)                       \\\n      wxLog##LOG_LEVEL(_T(#ABBREV &quot;: Too many messages, stopping.&quot;));    \\\n  }                                                                      \\\n  extern &quot;C&quot; static void ABBREV##Log##LOG_LEVEL(const char* s) {         \\\n    ABBREV##Log##LOG_LEVEL##1(wxString::FromUTF8(s));                    \\\n  }\n\n// Usage examples:\n// Step 1. Create the local static logging functions with various count limits\n// LOG_MACRO(AIS, Warning, 10000)\n// LOG_MACRO(AIS, Message, 100000)\n// LOG_MACRO(AIS, Debug, 1000)\n//\n// Step 2. Use on of the the created functions\n// AISLogDebug(&quot;m_pAlertTxtCtl is bad.&quot;);\n</code></pre></div>\n<p>Not pretty, but it works.  Within a single source file, you can create different functions by changing the abbreviation when invoking the macro. Only the log function calls with same beginning abbreviation will be counted against the limit.</p>",
+        "id": 465028831,
+        "sender_full_name": "Dan Dickey",
+        "timestamp": 1724605330
+    },
+    {
+        "content": "<blockquote>\n<p>Not pretty, </p>\n</blockquote>\n<p>;)</p>\n<p>Perhaps cleaner done using something like</p>\n<div class=\"codehilite\"><pre><span></span><code>using LogHandle = std::pair&lt;std::string, int&gt;;\nvoid LogLimited(LogHandle, const char* format, ...) {...}\n</code></pre></div>\n<p>used like</p>\n<div class=\"codehilite\"><pre><span></span><code>auto handle = LogHandle(&quot;AIS&quot;, 100);\nLogLimited(handle,  &quot;Strange thing logged : %s&quot;, strange_thing);\n</code></pre></div>\n<p>This would avoid the macro mess and also work across source files.</p>\n<p>That said, I wonder if not the right thing would be just to convert the noisy AIS LogDebug() statements to LogTrace(). This would make it possible to actually log everything if needed if using <code>--loglevel trace</code>, avoiding it otherwise</p>",
+        "id": 465033095,
+        "sender_full_name": "Alec Leamas",
+        "timestamp": 1724609821
+    },
+    {
+        "content": "<p>It crashed again:<br>\n<a href=\"/user_uploads/33951/FhOl9htSQTFQsLweqN8NswtV/image.png\">image.png</a></p>\n<div class=\"message_inline_image\"><a href=\"/user_uploads/33951/FhOl9htSQTFQsLweqN8NswtV/image.png\" title=\"image.png\"><img data-original-dimensions=\"1920x1032\" src=\"/user_uploads/thumbnail/33951/FhOl9htSQTFQsLweqN8NswtV/image.png/840x560.webp\"></a></div><p><a href=\"/user_uploads/33951/9svHrkFp1xTlsiljpGs5LLtU/opencpn.log\">opencpn.log</a></p>",
+        "id": 465034191,
+        "sender_full_name": "Dan Dickey",
+        "timestamp": 1724610784
+    },
+    {
+        "content": "<p>hm... looking at that log: this is not just about one thread. Around ocpn_frame.cpp:5616:</p>\n<div class=\"codehilite\"><pre><span></span><code>       wxCommandEvent ev(BELLS_PLAYED_EVTYPE);\n       wxPostEvent(this, ev);\n</code></pre></div>\n<p>which eventually ends up in  <code>sound-&gt;Play()</code> in ocpn_frame.cpp:926, and this starts a new thread in <em>libs/sound/src/MswSound.cpp</em></p>\n<p>Just a hint, I'm not able to debug.</p>",
+        "id": 465034894,
+        "sender_full_name": "Alec Leamas",
+        "timestamp": 1724611549
+    },
+    {
+        "content": "<p><span class=\"user-mention\" data-user-id=\"522729\">@Dan Dickey</span> <br>\nThe latest crash is in OpenGL driver.  Probably not related.<br>\nAs forward motion on AISAlertDialog crash:<br>\nThis may not be very rewarding, but we might learn some more.  If  during <code>UpdateText()</code>we find that the m_pAlertTextCtl is busted, why not just delete it and make a new one?</p>\n<div class=\"codehilite\"><pre><span></span><code>   if (!m_pAlertTextCtl-&gt;GetInternalRepresentation()) {\n      delete m_pAlertTextCtl;\n      long style = wxHW_SCROLLBAR_AUTO;\n      m_pAlertTextCtl =\n          new wxHtmlWindow(this, wxID_ANY, wxDefaultPosition, wxDefaultSize, style);\n      m_pAlertTextCtl-&gt;SetBorders(5);\n      m_pAlertTextCtl-&gt;SetScrollRate(1, 1);\n    }\n</code></pre></div>\n<p>I know, not at all pretty.  But still, if this avoids a crash, then we are somewhat better.  Even if we do not understand the root cause.</p>",
+        "id": 465038172,
+        "sender_full_name": "Dave Register",
+        "timestamp": 1724614922
+    },
+    {
+        "content": "<p>Or, maybe try with Alert sound disabled, nods to Alec.</p>",
+        "id": 465038258,
+        "sender_full_name": "Dave Register",
+        "timestamp": 1724614989
+    },
+    {
+        "content": "<p>Alert sounds are already off in this scenario.<br>\nAnother crash found.  I had modified the main loop exception code as follows:<br>\n<a href=\"/user_uploads/33951/Waz-aXBaX1AfePt_whB6Wo7t/image.png\">image.png</a></p>\n<div class=\"message_inline_image\"><a href=\"/user_uploads/33951/Waz-aXBaX1AfePt_whB6Wo7t/image.png\" title=\"image.png\"><img data-original-dimensions=\"1920x1032\" src=\"/user_uploads/thumbnail/33951/Waz-aXBaX1AfePt_whB6Wo7t/image.png/840x560.webp\"></a></div><p>Log file snippit after those changes made:</p>\n<div class=\"codehilite\"><pre><span></span><code>15:00:00.840 MESSAGE ocpn_frame.cpp:5616 LOGBOOK:  2024-08-25 20:00:00 UTC  GPS Lat   37.81550 Lon -122.47238 COG  281.00000 SOG   7.10 kts\n15:15:21.480 WARNING ocpn_app.cpp:960 Caught MainLoopException, continuing...\n15:15:21.483   ERROR ocpn_app.cpp:964 Memory allocation failure: bad allocation\n15:15:21.516   DEBUG msgdlg.cpp:559 C:\\storage\\transmitterdan\\ocpn_wxWidgets\\src\\msw\\msgdlg.cpp(559): 'TaskDialogIndirect' failed with error 0x80004005 (Unspecified error).\n15:15:21.552 MESSAGE ocpn_app.cpp:1966 opencpn::MyApp starting exit.\n15:15:21.554 MESSAGE ocpn_app.cpp:2006 LOGBOOK:  2024-08-25 20:15:21 UTC OFF: Lat   37.81517 Lon -122.50046 COG  266.60000 SOG   6.50 kts\n15:15:21.554 MESSAGE TCDataSource.cpp:41 UnLoading Tide/Current data source: tcdata\\harmonics-dwf-20210110-free.tcd\n15:15:21.607 MESSAGE TCDataSource.cpp:41 UnLoading Tide/Current data source: tcdata\\HARMONICS_NO_US.IDX\n15:15:21.621 MESSAGE ocpn_app.cpp:2034 opencpn::MyApp exiting cleanly...\n</code></pre></div>",
+        "id": 465040613,
+        "sender_full_name": "Dan Dickey",
+        "timestamp": 1724617297
+    },
+    {
+        "content": "<p>I like your new code around exception handling.<br>\nSo, can we put a breakpoint here and get a stack trace on failure?</p>",
+        "id": 465041502,
+        "sender_full_name": "Dave Register",
+        "timestamp": 1724618172
+    },
+    {
+        "content": "<p>We can put a breakpoint.  But stacktrace from a call from the main message loop dispatcher isn't usually very interesting.  A breakpoint at the point that raised the exception is probably more fruitful which I am trying now.</p>",
+        "id": 465048232,
+        "sender_full_name": "Dan Dickey",
+        "timestamp": 1724626193
+    },
+    {
+        "content": "<p><span class=\"user-mention silent\" data-user-id=\"517002\">Dave Register</span> <a href=\"#narrow/stream/432618-OCPN-5.2E10-Release-plan/topic/Production.20Release.205.2E10.2E0/near/465041502\">said</a>:</p>\n<blockquote>\n<p>I like your new code around exception handling.</p>\n</blockquote>\n<p>Copilot wrote it. Ha ha.</p>",
+        "id": 465048680,
+        "sender_full_name": "Dan Dickey",
+        "timestamp": 1724626701
+    },
+    {
+        "content": "<p><span class=\"user-mention\" data-user-id=\"522729\">@Dan Dickey</span> <br>\nConsidering the recent crashes. I am beginning to think that this all has nothing to do with OCPN.  The AISAlertDialog may be just a signal of more fundamental memory problems on your machine.  We have chased it around, and now it has gone back into hiding, only to surface somewhere else completely unrelated.  A familiar signature...<br>\nNo surprise, of course, but I suspect the OpenGL driver in this case.<br>\nEasy to check.  Switch to normal DC rendering, and see if the system stabilizes.</p>",
+        "id": 465056075,
+        "sender_full_name": "Dave Register",
+        "timestamp": 1724632041
+    },
+    {
+        "content": "<p><span class=\"user-mention\" data-user-id=\"517002\">@Dave Register</span>  I think there is something wrong with the process of  unzipping downloaded chart files.  Just did an experiment of downloading latest ENCs for the region around San Fran and boom. Everything went haywire.<br>\n<a href=\"/user_uploads/33951/JxBiQWXytEbmhd8NxhxASdb1/opencpn.log\">opencpn.log</a></p>",
+        "id": 465060088,
+        "sender_full_name": "Dan Dickey",
+        "timestamp": 1724635585
+    },
+    {
+        "content": "<p><span class=\"user-mention\" data-user-id=\"522729\">@Dan Dickey</span> <br>\nWhat can I say?  Works fine here.  This is very mature code. No other field reports of anything like this.<br>\nI suppose that it is just possible that the Debug logging is somehow exploding memory...<br>\nI note that nearly 1 hour passed between downloading of charts and serious trouble.</p>\n<div class=\"codehilite\"><pre><span></span><code>19:05:56.249 MESSAGE chartdldr_pi.cpp:2020 chartdldr_pi: Going to extract &#39;C:\\storage\\transmitterdan\\Charts\\ENC\\US_REGION14\\US5WA70M.zip&#39;.\n19:30:00.916 MESSAGE ocpn_frame.cpp:5616 LOGBOOK:  2024-08-26 00:30:00 UTC  GPS Lat   37.81689 Lon -122.61119 COG  287.34433 SOG   5.86 kts\n19:51:49.606   DEBUG dib.cpp:141 C:\\storage\\transmitterdan\\ocpn_wxWidgets\\src\\msw\\dib.cpp(141): &#39;CreateDIBSection&#39; failed with error 0x00000008 (Not enough memory resources are available to process this command.).\n19:51:49.621   ERROR dlmsw.cpp:167 Failed to load shared library\n</code></pre></div>",
+        "id": 465068689,
+        "sender_full_name": "Dave Register",
+        "timestamp": 1724640304
+    },
+    {
+        "content": "<p>Not trying to gaslight you, or minimize the severity of the faults.<br>\nBut this sort of chasing apparently unrelated bugs left and right is almost always indicative of memory corruption  issues, potentially even hardware troubles.<br>\nRecommend that you temporarily revert to O584, and try to get to some stability.</p>",
+        "id": 465069502,
+        "sender_full_name": "Dave Register",
+        "timestamp": 1724640614
+    },
+    {
+        "content": "<p>There are tools available for Windows that force memory heap checking on every alloc/free operation.  This could be useful.<br>\n<a href=\"https://learn.microsoft.com/en-us/cpp/c-runtime-library/crt-debug-heap-details?view=msvc-170\">https://learn.microsoft.com/en-us/cpp/c-runtime-library/crt-debug-heap-details?view=msvc-170</a></p>",
+        "id": 465069844,
+        "sender_full_name": "Dave Register",
+        "timestamp": 1724640825
+    },
+    {
+        "content": "<p>Dave, thanks for suggestions. I am close to having this issue reproducible I think. Let me work on that and see if I can create a test case that reliably fails. Right not it’s too hit and miss.</p>",
+        "id": 465186399,
+        "sender_full_name": "Dan Dickey",
+        "timestamp": 1724678981
+    },
+    {
+        "content": "<p><span class=\"user-mention\" data-user-id=\"399510\">@Alec Leamas</span> <br>\nI see that you are working flathub builds.<br>\nThe patches you have added are mostly what I plan for 5.10.2, so nice to test ahead of time.  I have a local branch \"v5.10.x\", where I am accumulating cherry-picks.  Not quite ready to push and tag, but soon.  Only blocker is (still) mbtiles on WIndows.  I continue to fuss with tile memory management.</p>\n<p>Did you remember the patch for access to host's /etc directory?</p>",
+        "id": 467282961,
+        "sender_full_name": "Dave Register",
+        "timestamp": 1725375953
+    },
+    {
+        "content": "<p><span class=\"user-mention silent\" data-user-id=\"517002\">Dave Register</span> <a href=\"#narrow/stream/432618-OCPN-5.2E10-Release-plan/topic/Production.20Release.205.2E10.2E0/near/467282961\">said</a>:</p>\n<blockquote>\n<p>Did you remember the patch for access to host's /etc directory?</p>\n</blockquote>\n<p>No, so far I have focused on the patches which have been available on master for some time and thus have been minimally tested.</p>\n<p>I can add it later today, it's not much work.</p>\n<p>I have BTW added the same patches besides the last two TileCache ones also to the crabdance bookworm repos.</p>\n<p>The official backport is finally under way.  I need it to pass a final administrative step. After that I can push myself, exactly as for sid/trixie.</p>",
+        "id": 467293322,
+        "sender_full_name": "Alec Leamas",
+        "timestamp": 1725377668
+    },
+    {
+        "content": "<p><span class=\"user-mention silent\" data-user-id=\"517002\">Dave Register</span> <a href=\"#narrow/stream/432618-OCPN-5.2E10-Release-plan/topic/Production.20Release.205.2E10.2E0/near/467282961\">said</a>:</p>\n<blockquote>\n<p>Did you remember the patch for access to host's /etc directory?</p>\n</blockquote>\n<p>Done, release 5</p>",
+        "id": 467499394,
+        "sender_full_name": "Alec Leamas",
+        "timestamp": 1725448323
+    },
+    {
+        "content": "<p><span class=\"user-mention\" data-user-id=\"399510\">@Alec Leamas</span> <br>\nI have this on my 5.10.2 list:</p>\n<div class=\"codehilite\"><pre><span></span><code>15.   Some trouble with send to peer.\n        CF post/thread\n                https://www.cruisersforum.com/forums/f134/ocpn-5-10-0-and-send-to-peer-288593-2.html#post3925759\n        .need to fix crabdance repo to use curl-ssl instead of curl-gnu\n        On Alec&#39;s list.\n</code></pre></div>\n<p>Thoughts?</p>\n<p>Other wise, my list nearly done.  Building O5.10.2 branch/tag now.<br>\nReady Real Soon Now.</p>",
+        "id": 468427514,
+        "sender_full_name": "Dave Register",
+        "timestamp": 1725723399
+    },
+    {
+        "content": "<p>Already fixed</p>",
+        "id": 468432818,
+        "sender_full_name": "Alec Leamas",
+        "timestamp": 1725725314
+    },
+    {
+        "content": "<p>Great. Thanks</p>",
+        "id": 468442109,
+        "sender_full_name": "Dave Register",
+        "timestamp": 1725728928
+    },
+    {
+        "content": "<p>BTW, when you announce this: This version will not be going into the crabdance repo, it will be available in  official bookworm-backports only. It will take about a week after the tag is available.</p>\n<p>The actual diff between new version and current Debian version is probably minimal, most patches are already in place.</p>",
+        "id": 468552944,
+        "sender_full_name": "Alec Leamas",
+        "timestamp": 1725793887
+    },
+    {
+        "content": "<p>That's great news.<br>\nSo our friend crabdance waits patiently for the next Beta series, whenever...</p>",
+        "id": 468567462,
+        "sender_full_name": "Dave Register",
+        "timestamp": 1725802147
+    },
+    {
+        "content": "<p>Service Release 5.10.2 is prepared, and ready to go.<br>\nTag is:  \"Release_5.10.2\"</p>",
+        "id": 469269060,
+        "sender_full_name": "Dave Register",
+        "timestamp": 1726025770
+    }
+]

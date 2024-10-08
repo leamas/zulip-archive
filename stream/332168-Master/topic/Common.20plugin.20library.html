@@ -1,0 +1,2229 @@
+<html>
+<head><meta charset="utf-8"><title>Common plugin library · Master · Zulip Chat Archive</title></head>
+<h2>Stream: <a href="https://leamas.github.io/zulip-archive/stream/332168-Master/index.html">Master</a></h2>
+<h3>Topic: <a href="https://leamas.github.io/zulip-archive/stream/332168-Master/topic/Common.20plugin.20library.html">Common plugin library</a></h3>
+
+<hr>
+
+<base href="https://opencpn.zulipchat.com">
+
+<head><link href="https://leamas.github.io/zulip-archive/style.css" rel="stylesheet"></head>
+
+<a name="389948607"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332168-Master/topic/Common%20plugin%20library/near/389948607" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Dave Register <a href="https://leamas.github.io/zulip-archive/stream/332168-Master/topic/Common.20plugin.20library.html#389948607">(Sep 08 2023 at 20:52)</a>:</h4>
+<p><span class="user-mention" data-user-id="399510">@Alec Leamas</span> <br>
+I am preparing a PR to opencpn-libs to add more commonly used libraries to the current set.  This is part of an effort to harmonize all the plugins built using the "TP" template, to improve maintenance chores.<br>
+Would you prefer the PR to target "main", or "devel" branch?  I assume the plugins using opencpn-libs now are using "main" as their sub-module.  Correct me if wrong, or any other notes regarding your workflow.<br>
+Thanks</p>
+
+
+
+<a name="389984806"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332168-Master/topic/Common%20plugin%20library/near/389984806" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Alec Leamas <a href="https://leamas.github.io/zulip-archive/stream/332168-Master/topic/Common.20plugin.20library.html#389984806">(Sep 09 2023 at 03:14)</a>:</h4>
+<p>Devel</p>
+
+
+
+<a name="389990637"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332168-Master/topic/Common%20plugin%20library/near/389990637" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Dave Register <a href="https://leamas.github.io/zulip-archive/stream/332168-Master/topic/Common.20plugin.20library.html#389990637">(Sep 09 2023 at 04:26)</a>:</h4>
+<p>OK, thanks</p>
+
+
+
+<a name="390006919"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332168-Master/topic/Common%20plugin%20library/near/390006919" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Alec Leamas <a href="https://leamas.github.io/zulip-archive/stream/332168-Master/topic/Common.20plugin.20library.html#390006919">(Sep 09 2023 at 07:47)</a>:</h4>
+<p>This makes opencpn-plugins a more central piece in the puzzle and not just a Shipdriver thing. This was my original plan, and I'm happy with it. In  this situation it makes sense to invite you and Pavel as maintainers to opencpn-libs for the same reasons that not only  you have permissions on OpenCPN.</p>
+<p>The model on opencpn-libs is basically that devel is the testing area while the master is the rolling release branch.  Hence I suggest that  all feel free to commit to devel. Still, I would appreciate  if I for now could be the one handling master as long as I'm in the project.</p>
+<p>OK?<br>
+<span class="user-mention" data-user-id="517002">@Dave Register</span>  <span class="user-mention" data-user-id="573239">@Pavel Kalian</span></p>
+
+
+
+<a name="390038376"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332168-Master/topic/Common%20plugin%20library/near/390038376" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Dave Register <a href="https://leamas.github.io/zulip-archive/stream/332168-Master/topic/Common.20plugin.20library.html#390038376">(Sep 09 2023 at 14:14)</a>:</h4>
+<p>OK.  I will Sandbox in Devel, discuss upstream to main as we move along.</p>
+
+
+
+<a name="390433222"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332168-Master/topic/Common%20plugin%20library/near/390433222" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Dave Register <a href="https://leamas.github.io/zulip-archive/stream/332168-Master/topic/Common.20plugin.20library.html#390433222">(Sep 12 2023 at 02:42)</a>:</h4>
+<p><span class="user-mention" data-user-id="399510">@Alec Leamas</span> <br>
+Details:<br>
+on Appveyor only, submodule update fails at build time.</p>
+<div class="codehilite"><pre><span></span><code>git submodule update --init opencpn-libs
+
+Submodule &#39;opencpn-libs&#39; (git@github.com:leamas/opencpn-libs.git) registered for path &#39;opencpn-libs&#39;
+Cloning into &#39;C:/project/ocpn_project/opencpn-libs&#39;...
+git@github.com: Permission denied (publickey).
+fatal: Could not read from remote repository.
+Please make sure you have the correct access rights
+and the repository exists.
+fatal: clone of &#39;git@github.com:leamas/opencpn-libs.git&#39; into submodule path &#39;C:/project/ocpn_project/opencpn-libs&#39; failed
+</code></pre></div>
+
+<p>Ideas?</p>
+
+
+
+<a name="390452962"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332168-Master/topic/Common%20plugin%20library/near/390452962" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Alec Leamas <a href="https://leamas.github.io/zulip-archive/stream/332168-Master/topic/Common.20plugin.20library.html#390452962">(Sep 12 2023 at 06:25)</a>:</h4>
+<p>You ate using a git URL which requires a SSH key registered at GitHub. This is wrong in general for ci builds, use the https URL instead.</p>
+
+
+
+<a name="390591234"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332168-Master/topic/Common%20plugin%20library/near/390591234" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Dave Register <a href="https://leamas.github.io/zulip-archive/stream/332168-Master/topic/Common.20plugin.20library.html#390591234">(Sep 12 2023 at 20:27)</a>:</h4>
+<p><span class="user-mention" data-user-id="399510">@Alec Leamas</span> <br>
+Yep, that's it.  Thanks<br>
+But we have other problems with Appveyor.  Might need to drop VS2017 (and wx3.1) Windows builds.</p>
+
+
+
+<a name="390709470"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332168-Master/topic/Common%20plugin%20library/near/390709470" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Alec Leamas <a href="https://leamas.github.io/zulip-archive/stream/332168-Master/topic/Common.20plugin.20library.html#390709470">(Sep 13 2023 at 12:11)</a>:</h4>
+<p>what is it? Any logs?</p>
+
+
+
+<a name="390837782"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332168-Master/topic/Common%20plugin%20library/near/390837782" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Dave Register <a href="https://leamas.github.io/zulip-archive/stream/332168-Master/topic/Common.20plugin.20library.html#390837782">(Sep 14 2023 at 02:36)</a>:</h4>
+<p><span class="user-mention" data-user-id="399510">@Alec Leamas</span> <br>
+Here is one:<br>
+<a href="https://ci.appveyor.com/project/bdbcat/watchdog-pi/builds/48027882">https://ci.appveyor.com/project/bdbcat/watchdog-pi/builds/48027882</a></p>
+<p>The problem is not directly related to opencpn-libs.  I think the VS2017 pre-load in Appveyor is missing some standard Windows header files.  <br>
+There are some hack-y things that we could do, but really, the problem belongs to Appveyor.<br>
+We are trying to get Appveyor's support line to take a look.</p>
+<p>Otherwise, I have added a few directories to opencpn-libs, tweaked a few header includes, and we have adapted now three TP plugins without serious problems.  When we get the matrix complete, I'll have some suggestions before merging devel to main.<br>
+Thanks</p>
+
+
+
+<a name="390882073"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332168-Master/topic/Common%20plugin%20library/near/390882073" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Alec Leamas <a href="https://leamas.github.io/zulip-archive/stream/332168-Master/topic/Common.20plugin.20library.html#390882073">(Sep 14 2023 at 08:42)</a>:</h4>
+<p>This actually seems to be a bug in the SDK which ms does not intend to fix: <a href="https://developercommunity.visualstudio.com/t/file-winapifamilyh-is-missing-from-toolkit-folder/720522">https://developercommunity.visualstudio.com/t/file-winapifamilyh-is-missing-from-toolkit-folder/720522</a>.</p>
+<p>OTOH, it shouldn't be that bad to bundle this header in case cmake can't locate it.  The natural place to do this would be the WindowsHeaders library. Let's say we add  a <em>WindowsHeaders/include-2017-compat</em> directory and put winapifamily.h there.<br>
+Then , in <em>WindowsHeaders CMakeLists.txt</em> add</p>
+<div class="codehilite"><pre><span></span><code>check_include_file(winapifamily.h HAVE_WINAPIFAMILY_H)
+if (NOT HAVE_WINAPIFAMILY_H)
+  # Work around known VS2017 bug:
+  target_include_directories(
+     _windows_headers INTERFACE  ${CMAKE_CURRENT_SOURCE_DIR}/include-2017-compat
+  )
+endif ()
+</code></pre></div>
+
+
+
+<a name="390936542"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332168-Master/topic/Common%20plugin%20library/near/390936542" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Dave Register <a href="https://leamas.github.io/zulip-archive/stream/332168-Master/topic/Common.20plugin.20library.html#390936542">(Sep 14 2023 at 13:59)</a>:</h4>
+<p><span class="user-mention" data-user-id="399510">@Alec Leamas</span> <br>
+We can try that.  I expect that there may be a flood of missing headers, some google suggests 8 files.  We shall see.</p>
+
+
+
+<a name="390963986"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332168-Master/topic/Common%20plugin%20library/near/390963986" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Alec Leamas <a href="https://leamas.github.io/zulip-archive/stream/332168-Master/topic/Common.20plugin.20library.html#390963986">(Sep 14 2023 at 15:17)</a>:</h4>
+<p>Another question is of course from which release Windows provides the  corresponding libraries....</p>
+
+
+
+<a name="391325238"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332168-Master/topic/Common%20plugin%20library/near/391325238" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Dave Register <a href="https://leamas.github.io/zulip-archive/stream/332168-Master/topic/Common.20plugin.20library.html#391325238">(Sep 16 2023 at 04:33)</a>:</h4>
+<p><span class="user-mention" data-user-id="399510">@Alec Leamas</span> <br>
+Some discussion:<br>
+<a href="https://github.com/rgleason/watchdog_pi/issues/66">https://github.com/rgleason/watchdog_pi/issues/66</a></p>
+
+
+
+<a name="391376650"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332168-Master/topic/Common%20plugin%20library/near/391376650" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Alec Leamas <a href="https://leamas.github.io/zulip-archive/stream/332168-Master/topic/Common.20plugin.20library.html#391376650">(Sep 16 2023 at 13:14)</a>:</h4>
+<p>That discussion  is now closed.  As I see it, of all bad alternatives we have is keeping things as they are perhaps the least awful. That would then mean that we just dropped vs2017 builds for those plugins which does not work.</p>
+<p>What people seem to do is to download and install vs2017 as part of the CI build. Perhaps doable, perhaps not. But: is it worth it?</p>
+
+
+
+<a name="391601507"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332168-Master/topic/Common%20plugin%20library/near/391601507" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Dave Register <a href="https://leamas.github.io/zulip-archive/stream/332168-Master/topic/Common.20plugin.20library.html#391601507">(Sep 18 2023 at 02:03)</a>:</h4>
+<p><span class="user-mention" data-user-id="399510">@Alec Leamas</span> <br>
+All...<br>
+There is a very small error in opencpn-libs, in the file api-18/ocpn_plugin.h.   This error prevents using plugin API-118 on Android platforms.<br>
+This error will be corrected shortly, and a new OpenCPN for Android will be published to correspond.<br>
+Alec, will you make the change to master, or shall I?</p>
+
+
+
+<a name="391623295"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332168-Master/topic/Common%20plugin%20library/near/391623295" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Alec Leamas <a href="https://leamas.github.io/zulip-archive/stream/332168-Master/topic/Common.20plugin.20library.html#391623295">(Sep 18 2023 at 05:40)</a>:</h4>
+<p>I think it's a bad idea that opencpn-libs would diverge from main opencpn in this case. Furthermore, in opencpn-libs master should never be ahead of devel. Hence I suggest we do this change like this:</p>
+<ol>
+<li>You update ocpn_plugin.h in main opencpn</li>
+<li>You update the devel branch with an exact copy from main opencpn. </li>
+<li>I cherry-pick the commit from devel to master.</li>
+</ol>
+
+
+
+<a name="391713176"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332168-Master/topic/Common%20plugin%20library/near/391713176" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Dave Register <a href="https://leamas.github.io/zulip-archive/stream/332168-Master/topic/Common.20plugin.20library.html#391713176">(Sep 18 2023 at 14:30)</a>:</h4>
+<p><span class="user-mention" data-user-id="399510">@Alec Leamas</span>  <br>
+ Good plan.<br>
+I'll also cherry-pick back to v5.8.x for Android build.</p>
+
+
+
+<a name="391714906"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332168-Master/topic/Common%20plugin%20library/near/391714906" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Alec Leamas <a href="https://leamas.github.io/zulip-archive/stream/332168-Master/topic/Common.20plugin.20library.html#391714906">(Sep 18 2023 at 14:39)</a>:</h4>
+<p>OK. Ping me when devel is updated.</p>
+
+
+
+<a name="391723621"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332168-Master/topic/Common%20plugin%20library/near/391723621" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Dave Register <a href="https://leamas.github.io/zulip-archive/stream/332168-Master/topic/Common.20plugin.20library.html#391723621">(Sep 18 2023 at 15:21)</a>:</h4>
+<p><span class="user-mention" data-user-id="399510">@Alec Leamas</span> <br>
+"devel" updated.</p>
+
+
+
+<a name="391724891"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332168-Master/topic/Common%20plugin%20library/near/391724891" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Alec Leamas <a href="https://leamas.github.io/zulip-archive/stream/332168-Master/topic/Common.20plugin.20library.html#391724891">(Sep 18 2023 at 15:27)</a>:</h4>
+<p>Pushed to main, verbatim copy.</p>
+
+
+
+<a name="391868455"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332168-Master/topic/Common%20plugin%20library/near/391868455" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Mike Rossiter <a href="https://leamas.github.io/zulip-archive/stream/332168-Master/topic/Common.20plugin.20library.html#391868455">(Sep 19 2023 at 09:25)</a>:</h4>
+<p><span class="user-mention" data-user-id="399510">@Alec Leamas</span>  Do I need to delete <em>opencpn-libs</em> and start over?</p>
+<div class="codehilite"><pre><span></span><code>D:\Documents\Github\shipdriver_pi&gt;git submodule update --remote --merge opencpn-libs
+Auto-merging api-18/ocpn_plugin.h
+CONFLICT (content): Merge conflict in api-18/ocpn_plugin.h
+Automatic merge failed; fix conflicts and then commit the result.
+fatal: Unable to merge &#39;e1e9352eca09bf383dfa141c464dc611779a75fc&#39; in submodule path &#39;opencpn-libs&#39;
+</code></pre></div>
+
+
+
+<a name="391870836"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332168-Master/topic/Common%20plugin%20library/near/391870836" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Alec Leamas <a href="https://leamas.github.io/zulip-archive/stream/332168-Master/topic/Common.20plugin.20library.html#391870836">(Sep 19 2023 at 09:37)</a>:</h4>
+<p>oops... No, you should not have to delete the submodule. Deleting it is actually a convoluted task , see  opencpn-libs/README.md</p>
+<p>This should basically be about selecting the right version. Something like this:</p>
+<div class="codehilite"><pre><span></span><code>    $ cd opencpn-libs
+    $ git remote update origin
+    $ git checkout -f origin/main
+</code></pre></div>
+<p>There might be things to sort out first since you have  a failed merge, though. Perhaps <code>git merge --abort</code> can clean up the state first.</p>
+
+
+
+<a name="391875209"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332168-Master/topic/Common%20plugin%20library/near/391875209" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Mike Rossiter <a href="https://leamas.github.io/zulip-archive/stream/332168-Master/topic/Common.20plugin.20library.html#391875209">(Sep 19 2023 at 09:55)</a>:</h4>
+<p>Thanks.  Fixed and commit made to ShipDriver master.</p>
+
+
+
+<a name="391875513"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332168-Master/topic/Common%20plugin%20library/near/391875513" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Mike Rossiter <a href="https://leamas.github.io/zulip-archive/stream/332168-Master/topic/Common.20plugin.20library.html#391875513">(Sep 19 2023 at 09:56)</a>:</h4>
+<p>BTW the Zulip standalone app is not loading for me this morning.</p>
+
+
+
+<a name="391877203"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332168-Master/topic/Common%20plugin%20library/near/391877203" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Mike Rossiter <a href="https://leamas.github.io/zulip-archive/stream/332168-Master/topic/Common.20plugin.20library.html#391877203">(Sep 19 2023 at 10:05)</a>:</h4>
+<p>Installed 5.10.2 and working again.</p>
+
+
+
+<a name="391883341"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332168-Master/topic/Common%20plugin%20library/near/391883341" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Alec Leamas <a href="https://leamas.github.io/zulip-archive/stream/332168-Master/topic/Common.20plugin.20library.html#391883341">(Sep 19 2023 at 10:41)</a>:</h4>
+<blockquote>
+<p>. Fixed and commit made to ShipDriver master.</p>
+</blockquote>
+<p>Great to hear!</p>
+<blockquote>
+<p>BTW the Zulip standalone app is not loading for me this morning.</p>
+</blockquote>
+<p>I'm using Flatpak, so it's automatically updated ;)</p>
+
+
+
+<a name="392023917"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332168-Master/topic/Common%20plugin%20library/near/392023917" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Dave Register <a href="https://leamas.github.io/zulip-archive/stream/332168-Master/topic/Common.20plugin.20library.html#392023917">(Sep 20 2023 at 01:33)</a>:</h4>
+<p><span class="user-mention" data-user-id="399510">@Alec Leamas</span> <br>
+Question about submodule use.<br>
+In our CCI scripts, we say:</p>
+<div class="codehilite"><pre><span></span><code>$ git submodule update --init opencpn-libs
+</code></pre></div>
+
+<p>This does not pull the HEAD of the opencpn-libs/devel repo.  It seems to pull the commit of the repo that was HEAD at the time that opencpn-libs was added to the project.<br>
+To fix this, we can then say:</p>
+<div class="codehilite"><pre><span></span><code>$ git submodule update --remote --merge opencpn-libs
+</code></pre></div>
+
+<p>And this will pull the HEAD of the opencpn-libs repo.<br>
+This is what we want. Seems to work.<br>
+But is this best practice, when the submodule is a moving target, as opencpn-libs/devel is today?</p>
+
+
+
+<a name="392034921"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332168-Master/topic/Common%20plugin%20library/near/392034921" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Dave Register <a href="https://leamas.github.io/zulip-archive/stream/332168-Master/topic/Common.20plugin.20library.html#392034921">(Sep 20 2023 at 03:13)</a>:</h4>
+<p>More:<br>
+Turns out that flatpak builder is smart enough to update submodules in the source tree, without explicit direction.<br>
+As a result, even if we do  "git submodule update --remote --merge opencpn-libs", the flatpak builder later does another "git submodule update --init opencpn-libs".  So the submodule fetch is not necessarily pointing at HEAD.<br>
+Conclusion:  For flatpak, we need to explicitly update the submodule in the parent tree, every time the submodule changes.  Sigh...</p>
+
+
+
+<a name="392055379"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332168-Master/topic/Common%20plugin%20library/near/392055379" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Alec Leamas <a href="https://leamas.github.io/zulip-archive/stream/332168-Master/topic/Common.20plugin.20library.html#392055379">(Sep 20 2023 at 07:02)</a>:</h4>
+<blockquote>
+<p>But is this best practice, when the submodule is a moving target, as opencpn-libs/devel is today?</p>
+</blockquote>
+<p>Perhaps, perhaps not. </p>
+<p>In the shipdriver case, we use a specific commit as part of the template. This is locked when doing the final <code>git add opencpn-libs; git commit ...</code> which locks the version used. Updating opencpn-libs  happens when the template is updated. So far, I think this is a reasonable strategy.</p>
+
+
+
+<a name="392055628"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332168-Master/topic/Common%20plugin%20library/near/392055628" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Alec Leamas <a href="https://leamas.github.io/zulip-archive/stream/332168-Master/topic/Common.20plugin.20library.html#392055628">(Sep 20 2023 at 07:04)</a>:</h4>
+<p>For Flatpak, this should be no differerence. Whatever it pulls from the remote opencpn-libs repo, the version it actually uses is the one checked in into the plugin, normally defined by the template.</p>
+
+
+
+<a name="392056130"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332168-Master/topic/Common%20plugin%20library/near/392056130" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Alec Leamas <a href="https://leamas.github.io/zulip-archive/stream/332168-Master/topic/Common.20plugin.20library.html#392056130">(Sep 20 2023 at 07:09)</a>:</h4>
+<p>Added to this is the extra layer: plugins in production should use the opencpn-libs main branch which we only update when we are overall happy with the state of devel. Updating main is sort of making a new release, so to speak.</p>
+<p>Which raises the question: are we ready to merge devel into main?</p>
+
+
+
+<a name="392125921"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332168-Master/topic/Common%20plugin%20library/near/392125921" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Dave Register <a href="https://leamas.github.io/zulip-archive/stream/332168-Master/topic/Common.20plugin.20library.html#392125921">(Sep 20 2023 at 14:09)</a>:</h4>
+<p><span class="user-mention" data-user-id="399510">@Alec Leamas</span> <br>
+Thanks for the discussion.<br>
+Not ready yet to merge devel.  I want to get Rick's entire array for plugins built from devel, then do a little cleanup.<br>
+I don't know if you have looked at devel commits.  They are a little rough, especially all the gl/glu stuff.  Needs some consolidation.</p>
+
+
+
+<a name="392131717"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332168-Master/topic/Common%20plugin%20library/near/392131717" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Alec Leamas <a href="https://leamas.github.io/zulip-archive/stream/332168-Master/topic/Common.20plugin.20library.html#392131717">(Sep 20 2023 at 14:37)</a>:</h4>
+<p>No, I havn't checked anything so far. However, as long as the end result is ok it's probably better to merge it as it is rather than rewriting (and thus rebasing the history. One alternative might be to squash all changes into a single commit when merging.</p>
+
+
+
+<a name="392132294"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332168-Master/topic/Common%20plugin%20library/near/392132294" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Dave Register <a href="https://leamas.github.io/zulip-archive/stream/332168-Master/topic/Common.20plugin.20library.html#392132294">(Sep 20 2023 at 14:40)</a>:</h4>
+<p><span class="user-mention" data-user-id="399510">@Alec Leamas</span> <br>
+re opencpn-libs:<br>
+Any particular reason we need  a core opencpn.pdb in the api-18/msvc-wx32 directory?  It is pretty heavy (43MB)...</p>
+
+
+
+<a name="392132860"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332168-Master/topic/Common%20plugin%20library/near/392132860" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Alec Leamas <a href="https://leamas.github.io/zulip-archive/stream/332168-Master/topic/Common.20plugin.20library.html#392132860">(Sep 20 2023 at 14:43)</a>:</h4>
+<p>It's the natural place to make it possible to debug and make usable coredumps. It could possible be replaced by code downloading it on demand, but this would require some work.</p>
+<p>I'm not that worried about  the weight of opencpn-libs. After all, it's a build dependency, not a runtime one.</p>
+
+
+
+<a name="392133795"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332168-Master/topic/Common%20plugin%20library/near/392133795" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Dave Register <a href="https://leamas.github.io/zulip-archive/stream/332168-Master/topic/Common.20plugin.20library.html#392133795">(Sep 20 2023 at 14:48)</a>:</h4>
+<p><span class="user-mention" data-user-id="399510">@Alec Leamas</span> <br>
+We post production release pdb on github:<br>
+<a href="https://github.com/OpenCPN/OpenCPN/releases/download/Release_5.8.4/opencpn+627.1637c28f.pdb.tar.gz">https://github.com/OpenCPN/OpenCPN/releases/download/Release_5.8.4/opencpn+627.1637c28f.pdb.tar.gz</a></p>
+<p>I am sensitive to Rick's situation, packaging and dealing with some 24 plugins at one time.<br>
+Not a big deal, just optimizing storage and workflow.</p>
+
+
+
+<a name="392134114"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332168-Master/topic/Common%20plugin%20library/near/392134114" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Dave Register <a href="https://leamas.github.io/zulip-archive/stream/332168-Master/topic/Common.20plugin.20library.html#392134114">(Sep 20 2023 at 14:50)</a>:</h4>
+<p><span class="user-mention silent" data-user-id="517002">Dave Register</span> <a href="#narrow/stream/332168-Master---5.2E8.2E0--.28was.3A-comms.29/topic/Common.20plugin.20library/near/392125921">said</a>:</p>
+<blockquote>
+<p><span class="user-mention silent" data-user-id="399510">Alec Leamas</span> <br>
+Thanks for the discussion.<br>
+Not ready yet to merge devel.  I want to get Rick's entire array for plugins built from devel, then do a little cleanup.<br>
+I don't know if you have looked at devel commits.  They are a little rough, especially all the gl/glu stuff.  Needs some consolidation.</p>
+</blockquote>
+<p>Definitely needs a squash merge.</p>
+
+
+
+<a name="392134352"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332168-Master/topic/Common%20plugin%20library/near/392134352" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Alec Leamas <a href="https://leamas.github.io/zulip-archive/stream/332168-Master/topic/Common.20plugin.20library.html#392134352">(Sep 20 2023 at 14:51)</a>:</h4>
+<p>I know, but just removing would be a step backwards on the road to usable coredumps.  Worth filing an issue, but my hands are full with other things right now...</p>
+
+
+
+<a name="392134499"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332168-Master/topic/Common%20plugin%20library/near/392134499" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Alec Leamas <a href="https://leamas.github.io/zulip-archive/stream/332168-Master/topic/Common.20plugin.20library.html#392134499">(Sep 20 2023 at 14:52)</a>:</h4>
+<blockquote>
+<p>Definitely needs a squash merge.</p>
+</blockquote>
+<p>OK</p>
+
+
+
+<a name="392135509"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332168-Master/topic/Common%20plugin%20library/near/392135509" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Dave Register <a href="https://leamas.github.io/zulip-archive/stream/332168-Master/topic/Common.20plugin.20library.html#392135509">(Sep 20 2023 at 14:57)</a>:</h4>
+<p><span class="user-mention" data-user-id="399510">@Alec Leamas</span> <br>
+OK, let it stand as-is for now.<br>
+We need stability more than we need peep-hole optimization.</p>
+
+
+
+<a name="392732827"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332168-Master/topic/Common%20plugin%20library/near/392732827" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Dave Register <a href="https://leamas.github.io/zulip-archive/stream/332168-Master/topic/Common.20plugin.20library.html#392732827">(Sep 23 2023 at 19:36)</a>:</h4>
+<p><span class="user-mention" data-user-id="399510">@Alec Leamas</span> <br>
+General (philosophical?) question.<br>
+opencpn-libs contains several static library builds that I have been constructing so as to build cleanly without reference to the calling source tree at all. Further, a library should not depend on definitions found in peer libaries, if at all possible. This is the general linux model for dependent libraries, and for one thing is a guaranteed method of reducing spaghetti-code.  Good.</p>
+<p>So, how shall we in general handle the cases where one of the static libraries depends on a header included in another library?<br>
+Here is a specific example that I am working now:<br>
+"ocpn::glu_static" library needs a definition found in  "ocpn::api".<br>
+Shall we declare that libraries can be dependent upon peers?  Or shall we duplicate definitions as necessary?<br>
+Wondering...</p>
+
+
+
+<a name="392858810"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332168-Master/topic/Common%20plugin%20library/near/392858810" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Alec Leamas <a href="https://leamas.github.io/zulip-archive/stream/332168-Master/topic/Common.20plugin.20library.html#392858810">(Sep 24 2023 at 18:56)</a>:</h4>
+<p>Sorry, a bit overloaded these days. I'll be back on other stuff.</p>
+<p>LIbraries depending on other libraries is no problem, and is indeed common in all operating systems. Practically, in a plugin scenario:</p>
+<ol>
+<li>Assume we have a library foo exporting the transitive target ocpn::foo</li>
+<li>Assume we have another library bar which depends on foo.</li>
+<li>In <em>bar/CMakeLists.txt</em> we add <code>target_link_libraries(bar PRIVATE ocpn::foo)</code></li>
+<li>If the plugin depends on foo it adds <code>target_link_libraries(plugin_name PRIVATE ocpn::bar)</code>  to it's own CMakelists.txt or Plugin.cmake.</li>
+</ol>
+<p>And that's it. Problem arises if there are circular dependencies or if the library depends on the plugin. The latter is a blocking error.</p>
+
+
+
+<a name="392890995"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332168-Master/topic/Common%20plugin%20library/near/392890995" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Dave Register <a href="https://leamas.github.io/zulip-archive/stream/332168-Master/topic/Common.20plugin.20library.html#392890995">(Sep 25 2023 at 02:27)</a>:</h4>
+<p><span class="user-mention" data-user-id="399510">@Alec Leamas</span> <br>
+OK.   There is a little bit of "not pretty" required to actually include and build foo in the cmake context of bar.<br>
+We need a step 2.9:<br>
+in bar/CmakeLists.txt, add :  (assuming the source for foo is in opencpn-libs, and is a subdir called "libfoo".<br>
+    add_subdirectory(../libfoo)</p>
+<p>To my mind, this is not so pretty.</p>
+<p>Further, if the plugin itself links both foo and bar, there could be duplicated references to foo.  We must trust that the linker will sort this out.</p>
+<p>Maybe I make trouble where none exists.</p>
+
+
+
+<a name="392912946"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332168-Master/topic/Common%20plugin%20library/near/392912946" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Alec Leamas <a href="https://leamas.github.io/zulip-archive/stream/332168-Master/topic/Common.20plugin.20library.html#392912946">(Sep 25 2023 at 05:31)</a>:</h4>
+<p>Yes, <code>add_subdirectory(../libfoo)</code> isn't that pretty. One basic reason is that in the cmake community relative paths are frowned upon.</p>
+<p>IMHO, a better approach is to use </p>
+<div class="codehilite"><pre><span></span><code>if (NOT TARGET ocpn::foo)
+  add_subdirectory(${CMAKE_SOURCE_DIR}/opencpn-libs/libfoo)
+endif ()
+</code></pre></div>
+<p>You cant really get around the fact that you need a path to the sources. The conditional gives the overall build a chance to fix things if the paths are different for some reason, though.</p>
+<p>The duplicated library references is not a problem, this is what linkers do. All reasonably sized builds have these kind of duplicates. </p>
+<p>The same is true for the duplicated <code>-I</code> and other compilation flags brought to the build by <code>target_link_libraries()</code> They are duplicated, but it doesn't matter.</p>
+
+
+
+<a name="393018997"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332168-Master/topic/Common%20plugin%20library/near/393018997" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Dave Register <a href="https://leamas.github.io/zulip-archive/stream/332168-Master/topic/Common.20plugin.20library.html#393018997">(Sep 25 2023 at 13:48)</a>:</h4>
+<p><span class="user-mention" data-user-id="399510">@Alec Leamas</span> <br>
+I don't like this much better:</p>
+<div class="codehilite"><pre><span></span><code>add_subdirectory(${CMAKE_SOURCE_DIR}/opencpn-libs/libfoo)
+</code></pre></div>
+
+<p>Implies a full plugin build, where CMAKE_SOURCE_DIR is the plugin base.<br>
+But that's what we have to work with, I suppose..</p>
+
+
+
+<a name="393019663"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332168-Master/topic/Common%20plugin%20library/near/393019663" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Alec Leamas <a href="https://leamas.github.io/zulip-archive/stream/332168-Master/topic/Common.20plugin.20library.html#393019663">(Sep 25 2023 at 13:51)</a>:</h4>
+<p>Using the conditional, the path is sort of a default or fallback path used if the main build, whatever that is, does not include the proper path. Assuming a plugin build as such a default is perhaps not that bad. </p>
+<p>It's definitely not ideal, but I don't see any alternative. Do you?</p>
+
+
+
+<a name="393020698"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332168-Master/topic/Common%20plugin%20library/near/393020698" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Dave Register <a href="https://leamas.github.io/zulip-archive/stream/332168-Master/topic/Common.20plugin.20library.html#393020698">(Sep 25 2023 at 13:55)</a>:</h4>
+<p><span class="user-mention" data-user-id="399510">@Alec Leamas</span> <br>
+We can agree that this is generally not pretty, but no alternatives.  I'm content.</p>
+
+
+
+<a name="394657702"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332168-Master/topic/Common%20plugin%20library/near/394657702" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Dave Register <a href="https://leamas.github.io/zulip-archive/stream/332168-Master/topic/Common.20plugin.20library.html#394657702">(Oct 03 2023 at 15:22)</a>:</h4>
+<p><span class="user-mention" data-user-id="399510">@Alec Leamas</span> <br>
+Trying to come up with a script to completely remove a submodule from a plugin project.<br>
+So far I have this:</p>
+<div class="codehilite"><pre><span></span><code>$ git submodule deinit opencpn-libs
+$ git rm --cached opencpn-libs
+$ rm -rf .git/modules/opencpn-libs
+$ git add .
+$ git commit -m &quot;Remove opencpn-libs submodule.&quot;
+</code></pre></div>
+
+<p>Works OK, but leaves an invalid section in .gitmodules.<br>
+Any automatic way to fix that, short of manual edit?</p>
+<p>Rant:  Why is this so hard?  Seems like a "normal" git task.</p>
+
+
+
+<a name="394696633"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332168-Master/topic/Common%20plugin%20library/near/394696633" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Alec Leamas <a href="https://leamas.github.io/zulip-archive/stream/332168-Master/topic/Common.20plugin.20library.html#394696633">(Oct 03 2023 at 19:29)</a>:</h4>
+<p>It is actually extremely hard. Have you seen the note in opencpn-libs/README.md? Including the stackoverflow link?</p>
+
+
+
+<a name="394696944"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332168-Master/topic/Common%20plugin%20library/near/394696944" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Alec Leamas <a href="https://leamas.github.io/zulip-archive/stream/332168-Master/topic/Common.20plugin.20library.html#394696944">(Oct 03 2023 at 19:31)</a>:</h4>
+<blockquote>
+<p>Any automatic way to fix that, short of manual edit?</p>
+</blockquote>
+<p>well, any form of manual edit could be replaced with automated sed or ed driven by a script. Still, it's some work...</p>
+
+
+
+<a name="394702897"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332168-Master/topic/Common%20plugin%20library/near/394702897" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Dave Register <a href="https://leamas.github.io/zulip-archive/stream/332168-Master/topic/Common.20plugin.20library.html#394702897">(Oct 03 2023 at 20:17)</a>:</h4>
+<p><span class="user-mention" data-user-id="399510">@Alec Leamas</span> <br>
+git-fu...<br>
+The required commands are::</p>
+<div class="codehilite"><pre><span></span><code>$ git config -f .gitmodules --remove-section submodule.opencpn-libs
+$ git add .gitmodules
+</code></pre></div>
+
+<p>So, my complete solution is (for posterity):</p>
+<div class="codehilite"><pre><span></span><code>$ git submodule deinit -f opencpn-libs
+$ git rm --cached opencpn-libs
+$ rm -rf .git/modules/opencpn-libs
+$ git config -f .gitmodules --remove-section submodule.opencpn-libs
+$ git add .gitmodules
+$ git commit -m &quot;Remove opencpn-libs submodule.&quot;
+</code></pre></div>
+
+
+
+<a name="394703091"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332168-Master/topic/Common%20plugin%20library/near/394703091" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Alec Leamas <a href="https://leamas.github.io/zulip-archive/stream/332168-Master/topic/Common.20plugin.20library.html#394703091">(Oct 03 2023 at 20:19)</a>:</h4>
+<p>Ok, seems like you found the complete solution. Could you update README.md so we don't lose it?</p>
+
+
+
+<a name="394709908"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332168-Master/topic/Common%20plugin%20library/near/394709908" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Dave Register <a href="https://leamas.github.io/zulip-archive/stream/332168-Master/topic/Common.20plugin.20library.html#394709908">(Oct 03 2023 at 20:53)</a>:</h4>
+<p>Done, pushed to "devel"</p>
+
+
+
+<a name="395263390"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332168-Master/topic/Common%20plugin%20library/near/395263390" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Dave Register <a href="https://leamas.github.io/zulip-archive/stream/332168-Master/topic/Common.20plugin.20library.html#395263390">(Oct 06 2023 at 13:44)</a>:</h4>
+<p><span class="user-mention" data-user-id="399510">@Alec Leamas</span> <br>
+After some fuss, the opencpn-libs "devel" branch is now ready for review and squash merge to "main".<br>
+At your convenience.<br>
+Thanks</p>
+
+
+
+<a name="395468225"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332168-Master/topic/Common%20plugin%20library/near/395468225" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Pavel Kalian <a href="https://leamas.github.io/zulip-archive/stream/332168-Master/topic/Common.20plugin.20library.html#395468225">(Oct 08 2023 at 00:45)</a>:</h4>
+<p>I just tried switching to the devel branch and the Windows builds fail like <a href="https://github.com/nohal/dashboardsk_pi/actions/runs/6444082725/job/17496664120">https://github.com/nohal/dashboardsk_pi/actions/runs/6444082725/job/17496664120</a> So far unable to convince them not to use the GLU from the system SDK...</p>
+
+
+
+<a name="395503562"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332168-Master/topic/Common%20plugin%20library/near/395503562" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Alec Leamas <a href="https://leamas.github.io/zulip-archive/stream/332168-Master/topic/Common.20plugin.20library.html#395503562">(Oct 08 2023 at 07:34)</a>:</h4>
+<p><span class="user-mention" data-user-id="517002">@Dave Register</span>  I'm having a deliberate delay before merging into main for reasons like above.</p>
+
+
+
+<a name="395505100"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332168-Master/topic/Common%20plugin%20library/near/395505100" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Alec Leamas <a href="https://leamas.github.io/zulip-archive/stream/332168-Master/topic/Common.20plugin.20library.html#395505100">(Oct 08 2023 at 07:49)</a>:</h4>
+<p>Besides the windows problems reported by <span class="user-mention" data-user-id="573239">@Pavel Kalian</span>  some random initial remarks on cuirrent code.</p>
+<div class="codehilite"><pre><span></span><code>ifndef DECL_EXP
+#ifdef __WXMSW__
+#  define DECL_EXP     __declspec(dllexport)
+#else
+# ifdef __GNUC__
+# define DECL_EXP       __attribute__((visibility(&quot;default&quot;)))
+#else
+#  define DECL_EXP
+# endif
+#endif
+#endif
+</code></pre></div>
+<p>This snippet misses clang which should use the the same DECL_EXP as gcc</p>
+
+
+
+<a name="395505506"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332168-Master/topic/Common%20plugin%20library/near/395505506" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Alec Leamas <a href="https://leamas.github.io/zulip-archive/stream/332168-Master/topic/Common.20plugin.20library.html#395505506">(Oct 08 2023 at 07:51)</a>:</h4>
+<p>Formatting is not really well defined for plugins. That said, since some parts are more or less completely rewritten it might make sense to apply the same formatting as used by core OpenCPN i. e. using clang-format and the same .clang-format configuration. </p>
+<p>In any case, the new code contains trailing whitespace which should be removed.</p>
+
+
+
+<a name="395506202"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332168-Master/topic/Common%20plugin%20library/near/395506202" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Alec Leamas <a href="https://leamas.github.io/zulip-archive/stream/332168-Master/topic/Common.20plugin.20library.html#395506202">(Oct 08 2023 at 07:59)</a>:</h4>
+<p>The formal copyright statement contradicts the <em>Author:   Jon Gough based on work by Sean D'Epagnier</em>. The correct way to state this is to modify the copyright statement to read</p>
+<div class="codehilite"><pre><span></span><code>Copyright (C) 2011 by Sean D&#39;Epagnier.
+Copyright (C) 2023 Jon Gough.
+...
+</code></pre></div>
+<p>With this copyright statement, the <em>Author:</em> statement is redundant and could (i. e., should) be removed.<br>
+Current form means legal problems, potentially making it impossible to include code in Linux distros.</p>
+
+
+
+<a name="395508605"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332168-Master/topic/Common%20plugin%20library/near/395508605" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Alec Leamas <a href="https://leamas.github.io/zulip-archive/stream/332168-Master/topic/Common.20plugin.20library.html#395508605">(Oct 08 2023 at 08:21)</a>:</h4>
+<p>This: <code>#if defined(__ANDROID__) || defined(__OCPN__ANDROID__)</code></p>
+<p>__ANDROID__ is defined by the compiler and thus always available on arm builds. __OCPN__ANDROID__ is actually an illegal symbol (only compiler and frameworks should use a __ prefix) and should be replaced with __ANDROID__</p>
+
+
+
+<a name="395509677"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332168-Master/topic/Common%20plugin%20library/near/395509677" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Alec Leamas <a href="https://leamas.github.io/zulip-archive/stream/332168-Master/topic/Common.20plugin.20library.html#395509677">(Oct 08 2023 at 08:31)</a>:</h4>
+<p>For example in  pidc.cpp around line  368 we have</p>
+<div class="codehilite"><pre><span></span><code>#endif
+
+#endif
+</code></pre></div>
+<p>Current code in main has </p>
+<div class="codehilite"><pre><span></span><code>#endif  // USE_ANDROID_GLES2
+
+#endif  // ocpnUSE_GL
+</code></pre></div>
+<p>IMHO, the comments here are important since the #ifdef blocks involved are long (~200 lines) and it might make sense to restore them.</p>
+
+
+
+<a name="395510804"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332168-Master/topic/Common%20plugin%20library/near/395510804" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Alec Leamas <a href="https://leamas.github.io/zulip-archive/stream/332168-Master/topic/Common.20plugin.20library.html#395510804">(Oct 08 2023 at 08:43)</a>:</h4>
+<p>in the diff: </p>
+<div class="codehilite"><pre><span></span><code>-#if wxUSE_GRAPHICS_CONTEXT
++    Init();
++#if wxUSE_GRAPHICS_CONTEXT == 1
+</code></pre></div>
+<p>This is a bit odd way to test if wxUSE_GRAPHICS_CONTEXT is defined. The normal way is to just use <code>#if wxUSE_GRAPHICS_CONTEXT</code>, and this is the way used for all other precompiler symbols used as switches. It might make make sense to add a comment why  <code>#if wxUSE_GRAPHICS_CONTEXT == 1</code> is used.</p>
+
+
+
+<a name="395510935"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332168-Master/topic/Common%20plugin%20library/near/395510935" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Alec Leamas <a href="https://leamas.github.io/zulip-archive/stream/332168-Master/topic/Common.20plugin.20library.html#395510935">(Oct 08 2023 at 08:44)</a>:</h4>
+<p>... and that's it.   This is all I see at a quick glance at the diff.</p>
+
+
+
+<a name="395535664"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332168-Master/topic/Common%20plugin%20library/near/395535664" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Alec Leamas <a href="https://leamas.github.io/zulip-archive/stream/332168-Master/topic/Common.20plugin.20library.html#395535664">(Oct 08 2023 at 12:07)</a>:</h4>
+<p><span class="user-mention" data-user-id="400132">@Jon</span> ^</p>
+
+
+
+<a name="395545580"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332168-Master/topic/Common%20plugin%20library/near/395545580" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Dave Register <a href="https://leamas.github.io/zulip-archive/stream/332168-Master/topic/Common.20plugin.20library.html#395545580">(Oct 08 2023 at 14:04)</a>:</h4>
+<p><span class="user-mention" data-user-id="573239">@Pavel Kalian</span> <br>
+Hmmm...<br>
+watchdog_pi, building on CCI workflow instead of ga, succeeds.<br>
+<a href="https://app.circleci.com/pipelines/github/bdbcat/watchdog_pi/85/workflows/f01e709d-de6f-41b8-a1a5-169297805f10/jobs/1607">https://app.circleci.com/pipelines/github/bdbcat/watchdog_pi/85/workflows/f01e709d-de6f-41b8-a1a5-169297805f10/jobs/1607</a><br>
+Nearly identical cl invocation, especially header paths and compiler options.<br>
+What could this be?</p>
+
+
+
+<a name="395547182"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332168-Master/topic/Common%20plugin%20library/near/395547182" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Pavel Kalian <a href="https://leamas.github.io/zulip-archive/stream/332168-Master/topic/Common.20plugin.20library.html#395547182">(Oct 08 2023 at 14:22)</a>:</h4>
+<p>It seems like this has solved it for me:</p>
+<div class="codehilite" data-code-language="Diff"><pre><span></span><code><span class="gh">diff --git a/plugingl/CMakeLists.txt b/plugingl/CMakeLists.txt</span>
+<span class="gh">index 8e87f28..270af7f 100644</span>
+<span class="gd">--- a/plugingl/CMakeLists.txt</span>
+<span class="gi">+++ b/plugingl/CMakeLists.txt</span>
+<span class="gu">@@ -44,13 +44,13 @@ if (TARGET ocpn::glu_static)</span>
+<span class="w"> </span>  target_link_libraries(PLUGINGL PRIVATE ocpn::glu_static)
+<span class="w"> </span>endif()
+
+<span class="gd">-if (WIN32)</span>
+<span class="gi">+if(WIN32)</span>
+<span class="w"> </span>  target_link_libraries(PLUGINGL PRIVATE windows::headers)
+<span class="gd">-endif ()</span>
+<span class="gd">-</span>
+<span class="gd">-find_path(GLU_HEADERS NAMES GL/glu.h)</span>
+<span class="gd">-if (GLU_HEADERS)</span>
+<span class="gd">-  target_include_directories(PLUGINGL PRIVATE ${GLU_HEADERS})</span>
+<span class="gd">-endif ()</span>
+<span class="gi">+else()</span>
+<span class="gi">+  find_path(GLU_HEADERS NAMES GL/glu.h)</span>
+<span class="gi">+  if (GLU_HEADERS)</span>
+<span class="gi">+    target_include_directories(PLUGINGL PRIVATE ${GLU_HEADERS})</span>
+<span class="gi">+  endif()</span>
+<span class="gi">+endif()</span>
+</code></pre></div>
+
+
+
+<a name="395547878"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332168-Master/topic/Common%20plugin%20library/near/395547878" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Dave Register <a href="https://leamas.github.io/zulip-archive/stream/332168-Master/topic/Common.20plugin.20library.html#395547878">(Oct 08 2023 at 14:31)</a>:</h4>
+<p>OK, I recognize this late change.  I think it needs another tweak to verify that external windows::headers target actually exists. I'll do that.</p>
+
+
+
+<a name="395552102"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332168-Master/topic/Common%20plugin%20library/near/395552102" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Dave Register <a href="https://leamas.github.io/zulip-archive/stream/332168-Master/topic/Common.20plugin.20library.html#395552102">(Oct 08 2023 at 15:18)</a>:</h4>
+<p><span class="user-mention" data-user-id="399510">@Alec Leamas</span> <br>
+I see a .clang-format.yaml in opencpn-libs already.<br>
+Use that, or replace with ocpn core version?</p>
+
+
+
+<a name="395552602"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332168-Master/topic/Common%20plugin%20library/near/395552602" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Alec Leamas <a href="https://leamas.github.io/zulip-archive/stream/332168-Master/topic/Common.20plugin.20library.html#395552602">(Oct 08 2023 at 15:24)</a>:</h4>
+<p>Replace with opencpn core.</p>
+
+
+
+<a name="395552663"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332168-Master/topic/Common%20plugin%20library/near/395552663" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Dave Register <a href="https://leamas.github.io/zulip-archive/stream/332168-Master/topic/Common.20plugin.20library.html#395552663">(Oct 08 2023 at 15:25)</a>:</h4>
+<p>Pavel<br>
+updated all, except clang-format.<br>
+<a href="https://github.com/opencpn/OpenCPN/commit/988a3d069b7b05ed7b4de7b422323b7a2f15bf00">988a3d069b7b05ed7b4de7b422323b7a2f15bf00</a> is current.</p>
+
+
+
+<a name="395555175"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332168-Master/topic/Common%20plugin%20library/near/395555175" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Pavel Kalian <a href="https://leamas.github.io/zulip-archive/stream/332168-Master/topic/Common.20plugin.20library.html#395555175">(Oct 08 2023 at 15:58)</a>:</h4>
+<p>Looks good, all my CI builds passed</p>
+
+
+
+<a name="395574197"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332168-Master/topic/Common%20plugin%20library/near/395574197" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Dave Register <a href="https://leamas.github.io/zulip-archive/stream/332168-Master/topic/Common.20plugin.20library.html#395574197">(Oct 08 2023 at 20:31)</a>:</h4>
+<p><span class="user-mention" data-user-id="399510">@Alec Leamas</span> <br>
+I re-formatted the entire "devel" tree to OCPN standard .clang-format.  Adopted your other recommendations. Thanks.<br>
+Pavel's builds are OK, as are mine.<br>
+Ready for --squash merge to "main"<br>
+Thanks</p>
+
+
+
+<a name="395574639"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332168-Master/topic/Common%20plugin%20library/near/395574639" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Alec Leamas <a href="https://leamas.github.io/zulip-archive/stream/332168-Master/topic/Common.20plugin.20library.html#395574639">(Oct 08 2023 at 20:40)</a>:</h4>
+<p>Shipdriver bullseye builds fail:</p>
+<div class="codehilite"><pre><span></span><code>[In file included from /home/circleci/project/opencpn-libs/plugingl/src/pidc.cpp:49:
+/home/circleci/project/opencpn-libs/plugingl/include/pidc.h:106:45: error: ‘GLint’ has not been declared
+  106 |                        wxCoord outerRadius, GLint textureID,
+      |                                             ^~~~~
+/home/circleci/project/opencpn-libs/plugingl/include/pidc.h:163:24: error: ‘GLint’ has not been declared
+  163 |   void SetTextureParms(GLint textureId, int width, int height);
+      |                        ^~~~~
+</code></pre></div>
+<p>I'll see what I can do.</p>
+
+
+
+<a name="395574712"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332168-Master/topic/Common%20plugin%20library/near/395574712" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Alec Leamas <a href="https://leamas.github.io/zulip-archive/stream/332168-Master/topic/Common.20plugin.20library.html#395574712">(Oct 08 2023 at 20:41)</a>:</h4>
+<p>That is, almost all builds fail...</p>
+
+
+
+<a name="395574858"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332168-Master/topic/Common%20plugin%20library/near/395574858" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Dave Register <a href="https://leamas.github.io/zulip-archive/stream/332168-Master/topic/Common.20plugin.20library.html#395574858">(Oct 08 2023 at 20:43)</a>:</h4>
+<p>Seems simple enough.  looks like pidc.h needs GL/gl.h</p>
+
+
+
+<a name="395576860"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332168-Master/topic/Common%20plugin%20library/near/395576860" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Alec Leamas <a href="https://leamas.github.io/zulip-archive/stream/332168-Master/topic/Common.20plugin.20library.html#395576860">(Oct 08 2023 at 21:19)</a>:</h4>
+<blockquote>
+<p>Seems simple enough. looks like pidc.h needs GL/gl.h</p>
+</blockquote>
+<p>... which it finds and includes if I get this correct.   But still this error..</p>
+
+
+
+<a name="395577105"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332168-Master/topic/Common%20plugin%20library/near/395577105" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Dave Register <a href="https://leamas.github.io/zulip-archive/stream/332168-Master/topic/Common.20plugin.20library.html#395577105">(Oct 08 2023 at 21:24)</a>:</h4>
+<p><span class="user-mention" data-user-id="399510">@Alec Leamas</span> <br>
+Build link?  or local?</p>
+
+
+
+<a name="395577206"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332168-Master/topic/Common%20plugin%20library/near/395577206" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Alec Leamas <a href="https://leamas.github.io/zulip-archive/stream/332168-Master/topic/Common.20plugin.20library.html#395577206">(Oct 08 2023 at 21:25)</a>:</h4>
+<p><a href="https://app.circleci.com/pipelines/github/leamas/shipdriver_pi/1880/workflows/1f43c5b7-b1a6-432e-ae6a-e672e8e028f0/jobs/20048">https://app.circleci.com/pipelines/github/leamas/shipdriver_pi/1880/workflows/1f43c5b7-b1a6-432e-ae6a-e672e8e028f0/jobs/20048</a></p>
+
+
+
+<a name="395577400"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332168-Master/topic/Common%20plugin%20library/near/395577400" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Alec Leamas <a href="https://leamas.github.io/zulip-archive/stream/332168-Master/topic/Common.20plugin.20library.html#395577400">(Oct 08 2023 at 21:28)</a>:</h4>
+<p>Found it:   pidc.h does nto include things as it should. Seems like the includes are in pidc.cpp.  Have you time to fix?</p>
+
+
+
+<a name="395577554"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332168-Master/topic/Common%20plugin%20library/near/395577554" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Dave Register <a href="https://leamas.github.io/zulip-archive/stream/332168-Master/topic/Common.20plugin.20library.html#395577554">(Oct 08 2023 at 21:31)</a>:</h4>
+<p>Yes, no problem.<br>
+I wonder why none of my builds have trouble.  Must be include order, or some such.<br>
+I'll fix.</p>
+
+
+
+<a name="395578231"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332168-Master/topic/Common%20plugin%20library/near/395578231" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Dave Register <a href="https://leamas.github.io/zulip-archive/stream/332168-Master/topic/Common.20plugin.20library.html#395578231">(Oct 08 2023 at 21:42)</a>:</h4>
+<p>Fixed.  devel branch now at:<br>
+<a href="https://github.com/opencpn/OpenCPN/commit/f262b101abd9f5aff184649851014330c25513fd">f262b101abd9f5aff184649851014330c25513fd</a></p>
+
+
+
+<a name="395578693"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332168-Master/topic/Common%20plugin%20library/near/395578693" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Notification Bot <a href="https://leamas.github.io/zulip-archive/stream/332168-Master/topic/Common.20plugin.20library.html#395578693">(Oct 08 2023 at 21:50)</a>:</h4>
+<p><a href="#narrow/stream/332168-Master---5.2E8.2E0--.28was.3A-comms.29/topic/Code.20formatting/near/395577098">A message</a> was moved here from <a class="stream-topic" data-stream-id="332168" href="/#narrow/stream/332168-Master---5.2E8.2E0--.28was.3A-comms.29/topic/Common.20plugin.20library">#Master - 5.8.0  (was: comms) &gt; Common plugin library</a> by <span class="user-mention silent" data-user-id="399510">Alec Leamas</span>.</p>
+
+
+
+<a name="395578709"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332168-Master/topic/Common%20plugin%20library/near/395578709" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Notification Bot <a href="https://leamas.github.io/zulip-archive/stream/332168-Master/topic/Common.20plugin.20library.html#395578709">(Oct 08 2023 at 21:51)</a>:</h4>
+<p>2 messages were moved here from <a class="stream-topic" data-stream-id="332168" href="/#narrow/stream/332168-Master---5.2E8.2E0--.28was.3A-comms.29/topic/Common.20plugin.20library">#Master - 5.8.0  (was: comms) &gt; Common plugin library</a> by <span class="user-mention silent" data-user-id="399510">Alec Leamas</span>.</p>
+
+
+
+<a name="395578727"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332168-Master/topic/Common%20plugin%20library/near/395578727" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Notification Bot <a href="https://leamas.github.io/zulip-archive/stream/332168-Master/topic/Common.20plugin.20library.html#395578727">(Oct 08 2023 at 21:51)</a>:</h4>
+<p>3 messages were moved here from <a class="stream-topic" data-stream-id="332168" href="/#narrow/stream/332168-Master---5.2E8.2E0--.28was.3A-comms.29/topic/Code.20formatting">#Master - 5.8.0  (was: comms) &gt; Code formatting</a> by <span class="user-mention silent" data-user-id="399510">Alec Leamas</span>.</p>
+
+
+
+<a name="395578815"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332168-Master/topic/Common%20plugin%20library/near/395578815" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Alec Leamas <a href="https://leamas.github.io/zulip-archive/stream/332168-Master/topic/Common.20plugin.20library.html#395578815">(Oct 08 2023 at 21:53)</a>:</h4>
+<p>OK, now builds OK  for Shipdriver as well.</p>
+
+
+
+<a name="395579199"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332168-Master/topic/Common%20plugin%20library/near/395579199" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Alec Leamas <a href="https://leamas.github.io/zulip-archive/stream/332168-Master/topic/Common.20plugin.20library.html#395579199">(Oct 08 2023 at 22:00)</a>:</h4>
+<p><span class="user-mention" data-user-id="517002">@Dave Register</span> One curios questions while merging devel into main: What are the changes in plugingl all about? That is, any hint for a commit message?</p>
+
+
+
+<a name="395579943"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332168-Master/topic/Common%20plugin%20library/near/395579943" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Alec Leamas <a href="https://leamas.github.io/zulip-archive/stream/332168-Master/topic/Common.20plugin.20library.html#395579943">(Oct 08 2023 at 22:13)</a>:</h4>
+<p>Anyway,  main now on b22adb2, identical to devel better but history more or less squashed.</p>
+
+
+
+<a name="395583504"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332168-Master/topic/Common%20plugin%20library/near/395583504" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Dave Register <a href="https://leamas.github.io/zulip-archive/stream/332168-Master/topic/Common.20plugin.20library.html#395583504">(Oct 08 2023 at 23:16)</a>:</h4>
+<p>Message something like:<br>
+"Extend pidc class to add additional rendering methods., e.g. tessellated polygons, bitmaps, etc".<br>
+Thanks for the commit.</p>
+
+
+
+<a name="395587930"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332168-Master/topic/Common%20plugin%20library/near/395587930" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Dave Register <a href="https://leamas.github.io/zulip-archive/stream/332168-Master/topic/Common.20plugin.20library.html#395587930">(Oct 09 2023 at 00:23)</a>:</h4>
+<p><span class="user-mention" data-user-id="399510">@Alec Leamas</span> <br>
+Sorry, no.  OpenCPN/opencpn-libs branch main has not been updated at github.<br>
+Please advise.</p>
+
+
+
+<a name="395635016"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332168-Master/topic/Common%20plugin%20library/near/395635016" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Alec Leamas <a href="https://leamas.github.io/zulip-archive/stream/332168-Master/topic/Common.20plugin.20library.html#395635016">(Oct 09 2023 at 07:23)</a>:</h4>
+<p>Damned. I pushed to the wrong remote (my own).  This is what's happening at late nights...   </p>
+<p>Sorry. Now fixed.</p>
+
+
+
+<a name="395789441"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332168-Master/topic/Common%20plugin%20library/near/395789441" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Dave Register <a href="https://leamas.github.io/zulip-archive/stream/332168-Master/topic/Common.20plugin.20library.html#395789441">(Oct 10 2023 at 01:45)</a>:</h4>
+<p>Got it, thanks.</p>
+
+
+
+<a name="396514853"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332168-Master/topic/Common%20plugin%20library/near/396514853" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Dave Register <a href="https://leamas.github.io/zulip-archive/stream/332168-Master/topic/Common.20plugin.20library.html#396514853">(Oct 13 2023 at 14:17)</a>:</h4>
+<p><span class="user-mention" data-user-id="399510">@Alec Leamas</span> <br>
+Nearly finished with adapting Rick's plugins to opencpn-libs.<br>
+As expected, we found a couple of tweaks needed in opencpn-libs.  These tweaks are required for full functionality of certain plugins.<br>
+I request a review and merge of devel-&gt;main at your convenience.</p>
+
+
+
+<a name="396519404"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332168-Master/topic/Common%20plugin%20library/near/396519404" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Dave Register <a href="https://leamas.github.io/zulip-archive/stream/332168-Master/topic/Common.20plugin.20library.html#396519404">(Oct 13 2023 at 14:43)</a>:</h4>
+<p><span class="user-mention" data-user-id="399510">@Alec Leamas</span> <br>
+Recently appeared this error in several plugins builds:</p>
+<div class="codehilite"><pre><span></span><code>sudo add-apt-repository -y ppa:alexlarsson/flatpak
+Cannot add PPA: &#39;ppa:~alexlarsson/ubuntu/flatpak&#39;.
+The user named &#39;~alexlarsson&#39; has no PPA named &#39;ubuntu/flatpak&#39;
+Please choose from the following available PPAs:
+
+ * &#39;flatpak&#39;:  Flatpak
+ * &#39;glib260&#39;:  Glib 2.60
+</code></pre></div>
+
+<p>Thoughts?</p>
+
+
+
+<a name="396633028"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332168-Master/topic/Common%20plugin%20library/near/396633028" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Alec Leamas <a href="https://leamas.github.io/zulip-archive/stream/332168-Master/topic/Common.20plugin.20library.html#396633028">(Oct 14 2023 at 09:18)</a>:</h4>
+<p>I pushed your changes to main. Added a new commit which completely removed the ancient IMPLEMENT_DYNAMIC_CLASS which I presume is a left over from older c++ environments.</p>
+
+
+
+<a name="396633211"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332168-Master/topic/Common%20plugin%20library/near/396633211" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Alec Leamas <a href="https://leamas.github.io/zulip-archive/stream/332168-Master/topic/Common.20plugin.20library.html#396633211">(Oct 14 2023 at 09:21)</a>:</h4>
+<p>The plugin builds looks strange, actually like a bug in add-apt-repository.  Have you got a build link?<br>
+Seems to not happen to shipdriver, the flatpak build looks fine: <a href="https://app.circleci.com/pipelines/github/leamas/shipdriver_pi/1882/workflows/7be91a85-10fd-4730-b404-e818bf16310c/jobs/20090">https://app.circleci.com/pipelines/github/leamas/shipdriver_pi/1882/workflows/7be91a85-10fd-4730-b404-e818bf16310c/jobs/20090</a></p>
+<p>Old  host running the build? You might want to compare <em>.circleci/config</em> to shipdriver</p>
+
+
+
+<a name="396653544"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332168-Master/topic/Common%20plugin%20library/near/396653544" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Dave Register <a href="https://leamas.github.io/zulip-archive/stream/332168-Master/topic/Common.20plugin.20library.html#396653544">(Oct 14 2023 at 14:03)</a>:</h4>
+<p><span class="user-mention" data-user-id="399510">@Alec Leamas</span> <br>
+Thanks.<br>
+The wxWidgets legacy RTTI stuff can be removed everywhere.  It can be particularly annoying in debug mode.  It will ASSERT if the same class is instantiated twice.  This does happen in plugin environment (e.g.wxCURL dialogs and events used in multiple plugins).<br>
+Good riddance.<br>
+Flatpak builds:  It seems to be some transient.  The builds will complete, usually, if retried.<br>
+Just another CCI quirk.<br>
+Failing log:<br>
+<a href="https://app.circleci.com/pipelines/github/rgleason/testplugin_pi/393/workflows/d759e103-a35d-450e-b412-5450247b57f4/jobs/4424">https://app.circleci.com/pipelines/github/rgleason/testplugin_pi/393/workflows/d759e103-a35d-450e-b412-5450247b57f4/jobs/4424</a></p>
+
+
+
+<a name="396660477"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332168-Master/topic/Common%20plugin%20library/near/396660477" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Mike Rossiter <a href="https://leamas.github.io/zulip-archive/stream/332168-Master/topic/Common.20plugin.20library.html#396660477">(Oct 14 2023 at 15:44)</a>:</h4>
+<blockquote>
+<p>Flatpak builds: It seems to be some transient.</p>
+</blockquote>
+<p>Same experience with my builds of ShipDriver and others.</p>
+
+
+
+<a name="397264664"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332168-Master/topic/Common%20plugin%20library/near/397264664" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Alec Leamas <a href="https://leamas.github.io/zulip-archive/stream/332168-Master/topic/Common.20plugin.20library.html#397264664">(Oct 18 2023 at 09:00)</a>:</h4>
+<p>Well, looking at that error message I cannot really fathom how this would be about our code. For now assuming that this is due to external problems in circleci and/or the ubuntu repos.</p>
+
+
+
+<a name="397665706"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332168-Master/topic/Common%20plugin%20library/near/397665706" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Alec Leamas <a href="https://leamas.github.io/zulip-archive/stream/332168-Master/topic/Common.20plugin.20library.html#397665706">(Oct 20 2023 at 09:12)</a>:</h4>
+<p><span class="user-mention" data-user-id="517002">@Dave Register</span>  Last  commit  to opencpn-libs gives new error for shipdriver android builds.</p>
+<div class="codehilite"><pre><span></span><code>/home/circleci/project/opencpn-libs/plugingl/include/pidc.h:34:10: fatal error: &#39;GL/gl_private.h&#39; file not found
+#include &quot;GL/gl_private.h
+</code></pre></div>
+<p>Failing commit  <a href="https://github.com/opencpn/OpenCPN/commit/98ec0548cb">98ec0548cb</a>, last good commit  <a href="https://github.com/opencpn/OpenCPN/commit/7ca85b14b">7ca85b14b</a>.  My bad, should have tested before merging to main. </p>
+<p>Build link:  <a href="https://app.circleci.com/pipelines/github/leamas/shipdriver_pi/1885/workflows/ee19e011-0c80-4d3e-92b2-6f97444ff037">https://app.circleci.com/pipelines/github/leamas/shipdriver_pi/1885/workflows/ee19e011-0c80-4d3e-92b2-6f97444ff037</a></p>
+
+
+
+<a name="397674725"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332168-Master/topic/Common%20plugin%20library/near/397674725" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Alec Leamas <a href="https://leamas.github.io/zulip-archive/stream/332168-Master/topic/Common.20plugin.20library.html#397674725">(Oct 20 2023 at 10:07)</a>:</h4>
+<p>Nope, the other way around: failing commit 7ca85b1, last good commit 9e502bf</p>
+
+
+
+<a name="397712577"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332168-Master/topic/Common%20plugin%20library/near/397712577" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Dave Register <a href="https://leamas.github.io/zulip-archive/stream/332168-Master/topic/Common.20plugin.20library.html#397712577">(Oct 20 2023 at 13:42)</a>:</h4>
+<p><span class="user-mention" data-user-id="399510">@Alec Leamas</span> <br>
+As I mentioned once before, the GL support in opencpn-libs is a rats nest, and needs some refactoring.<br>
+For now, the best solution is to add to plugin.cmake:</p>
+<div class="codehilite"><pre><span></span><code>    add_subdirectory(opencpn-libs/glu)
+    target_link_libraries(${PACKAGE_NAME} ocpn::glu_static)
+</code></pre></div>
+
+<p>Sorry for the problem, hope this is not too disruptive.</p>
+
+
+
+<a name="397712950"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332168-Master/topic/Common%20plugin%20library/near/397712950" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Alec Leamas <a href="https://leamas.github.io/zulip-archive/stream/332168-Master/topic/Common.20plugin.20library.html#397712950">(Oct 20 2023 at 13:44)</a>:</h4>
+<p>Not that disruptive, but why can't we just add that dependency to plugingl?</p>
+
+
+
+<a name="397713184"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332168-Master/topic/Common%20plugin%20library/near/397713184" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Alec Leamas <a href="https://leamas.github.io/zulip-archive/stream/332168-Master/topic/Common.20plugin.20library.html#397713184">(Oct 20 2023 at 13:45)</a>:</h4>
+<p>ah... I see. It's there, but optional. I'll look into it.</p>
+
+
+
+<a name="397713901"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332168-Master/topic/Common%20plugin%20library/near/397713901" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Alec Leamas <a href="https://leamas.github.io/zulip-archive/stream/332168-Master/topic/Common.20plugin.20library.html#397713901">(Oct 20 2023 at 13:48)</a>:</h4>
+<blockquote>
+<p>As I mentioned once before, the GL support in opencpn-libs is a rats nest</p>
+</blockquote>
+<p>Indeed.</p>
+
+
+
+<a name="397720769"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332168-Master/topic/Common%20plugin%20library/near/397720769" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Alec Leamas <a href="https://leamas.github.io/zulip-archive/stream/332168-Master/topic/Common.20plugin.20library.html#397720769">(Oct 20 2023 at 14:22)</a>:</h4>
+<p><span class="user-mention" data-user-id="517002">@Dave Register</span>   The plot thickens. Android uses GLES which is more or less a subset of GL,  right?</p>
+<p>The current build uses GL/gl_private.h. I think we can agree that this is not a good idea. However, most (all)  of the required symbols exists in GL/gl.h. But that file does not exist on android for good reasons, so the build should use GLES/gl.h.</p>
+<p>This gives a some undefined. GLDouble does not worry me that much. However, there are also missing definitions of GL_POLYGON_SMOOTH and  GL_LINE_STIPPLE.  Does this reflect the actual limitations in GLES as compared to GL, or what?</p>
+
+
+
+<a name="397722633"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332168-Master/topic/Common%20plugin%20library/near/397722633" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Alec Leamas <a href="https://leamas.github.io/zulip-archive/stream/332168-Master/topic/Common.20plugin.20library.html#397722633">(Oct 20 2023 at 14:31)</a>:</h4>
+<p>Seems like pidc has a hard dependency on glu, right?  But glu does not exist on Android. What does this mean?</p>
+
+
+
+<a name="397724518"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332168-Master/topic/Common%20plugin%20library/near/397724518" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Dave Register <a href="https://leamas.github.io/zulip-archive/stream/332168-Master/topic/Common.20plugin.20library.html#397724518">(Oct 20 2023 at 14:41)</a>:</h4>
+<p><span class="user-mention" data-user-id="399510">@Alec Leamas</span> <br>
+gl_private is very old cruft from early Android days, and needs to die.<br>
+pidc does hard-depend on glu.  This is new, coming from the new rendering methods added for tesselated objects.<br>
+Maybe what is needed is a refactor, building an interface lib to bring in the correct platform specific header locations.  Then make glu depend on that interface lib.<br>
+Gotta go now, back later.</p>
+
+
+
+<a name="397724849"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332168-Master/topic/Common%20plugin%20library/near/397724849" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Alec Leamas <a href="https://leamas.github.io/zulip-archive/stream/332168-Master/topic/Common.20plugin.20library.html#397724849">(Oct 20 2023 at 14:42)</a>:</h4>
+<p>The short question is: is GLU supported by the GLES implementation on Android?</p>
+<p>I'll make it build without includes for now.</p>
+
+
+
+<a name="397740204"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332168-Master/topic/Common%20plugin%20library/near/397740204" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Alec Leamas <a href="https://leamas.github.io/zulip-archive/stream/332168-Master/topic/Common.20plugin.20library.html#397740204">(Oct 20 2023 at 16:01)</a>:</h4>
+<p>I just bundled  gl_private.h into plugingl. It compiles, but I'm suspicious about if it works. The standard android headers seems to indicate that these functions are not generally available.</p>
+
+
+
+<a name="397771433"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332168-Master/topic/Common%20plugin%20library/near/397771433" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Dave Register <a href="https://leamas.github.io/zulip-archive/stream/332168-Master/topic/Common.20plugin.20library.html#397771433">(Oct 20 2023 at 20:22)</a>:</h4>
+<p><span class="user-mention" data-user-id="399510">@Alec Leamas</span> </p>
+<p>Short answer:  Yes.<br>
+glu is a platform agnostic set of utilities mainly used for composition of complex 2D shapes into arrays of triangles.  Our current troubles are largely the result of cross compilation environment, where we cannot use the system GL headers.</p>
+<p>Elaborate, please?<br>
+" The standard android headers seems to indicate that these functions are not generally available."</p>
+<p>More:<br>
+I find that we can eliminate gl_private.h by a simple preprocessor definition that allows a common gl.h and glu.h to be used in pidc.h and .cpp</p>
+<div class="codehilite"><pre><span></span><code>#ifdef __ANDROID__
+#include &lt;qopengl.h&gt;
+//#include &quot;GL/gl_private.h&quot;
+
+#define GL_GLEXT_LEGACY 1
+#include &quot;GL/gl.h&quot;
+#include &quot;GL/glu.h&quot;
+</code></pre></div>
+
+<p>This change causes gl.h to avoid loading glext.h, thus avoiding some typedef redefinition problems.<br>
+More testing needed, but I am on it.</p>
+
+
+
+<a name="397776184"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332168-Master/topic/Common%20plugin%20library/near/397776184" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Alec Leamas <a href="https://leamas.github.io/zulip-archive/stream/332168-Master/topic/Common.20plugin.20library.html#397776184">(Oct 20 2023 at 21:05)</a>:</h4>
+<p>My <strong>extremely</strong> limited understanding is that GLES  and GLES2 are  subsets of GL.  And that the android API only supports  GLES/GLES2.          </p>
+<p>There seems to be some abandoned attempt to port at least a subset of glu to GLES, but they seem  not healthy.</p>
+<p>As I understand it we are in a bad place when we try to run code which requires GL on GLES. But then again, I don't understand much.</p>
+
+
+
+<a name="397777284"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332168-Master/topic/Common%20plugin%20library/near/397777284" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Dave Register <a href="https://leamas.github.io/zulip-archive/stream/332168-Master/topic/Common.20plugin.20library.html#397777284">(Oct 20 2023 at 21:17)</a>:</h4>
+<p>It is true that GLES and GLES2 are functional subsets of classic GL.<br>
+But this does not involve glu.  glu is straight-forward C code, with no hardware dependencies.<br>
+Indeed, GLES2 is now becoming the preferred API for all GL programming.  The reason is that only GLES will give programmatic access to the GPU, thus offloading much of the graphics nuts and bolts to that independent processor stack.  Huge performance win.</p>
+<p>Proof, if required:  we have been using glu on OCPN Android since forever.  Has always been fiddly to get the headers right.  But experience shows that if it compiles, it will run.</p>
+
+
+
+<a name="397777635"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332168-Master/topic/Common%20plugin%20library/near/397777635" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Dave Register <a href="https://leamas.github.io/zulip-archive/stream/332168-Master/topic/Common.20plugin.20library.html#397777635">(Oct 20 2023 at 21:20)</a>:</h4>
+<p><span class="user-mention" data-user-id="399510">@Alec Leamas</span> <br>
+You may be referring to something known as as a GL-Shim.  This is a piece of very state-aware code that intercepts traditional GL calls, and performs the desired on-screen action using GLES instead.  Was concocted in early days of GLES, help support legacy GL apps.  Not much used anymore, now that devs (including us) have come up to speed with GLES.</p>
+
+
+
+<a name="397777877"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332168-Master/topic/Common%20plugin%20library/near/397777877" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Alec Leamas <a href="https://leamas.github.io/zulip-archive/stream/332168-Master/topic/Common.20plugin.20library.html#397777877">(Oct 20 2023 at 21:23)</a>:</h4>
+<blockquote>
+<p>But this does not involve glu. glu is straight-forward C code, with no hardware dependencies.</p>
+</blockquote>
+<p>OK, this is my missing piece. So glu can run on top of GLES, without GL?</p>
+
+
+
+<a name="397778972"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332168-Master/topic/Common%20plugin%20library/near/397778972" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Alec Leamas <a href="https://leamas.github.io/zulip-archive/stream/332168-Master/topic/Common.20plugin.20library.html#397778972">(Oct 20 2023 at 21:37)</a>:</h4>
+<blockquote>
+<p>Not much used anymore, now that devs (including us) have come up to speed with GLES.</p>
+</blockquote>
+<p>Reasonable. BUt why  would we then include GL/whatever.h  on android?</p>
+
+
+
+<a name="397779196"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332168-Master/topic/Common%20plugin%20library/near/397779196" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Alec Leamas <a href="https://leamas.github.io/zulip-archive/stream/332168-Master/topic/Common.20plugin.20library.html#397779196">(Oct 20 2023 at 21:39)</a>:</h4>
+<p>"Confused". Bedtime!</p>
+
+
+
+<a name="397792131"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332168-Master/topic/Common%20plugin%20library/near/397792131" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Dave Register <a href="https://leamas.github.io/zulip-archive/stream/332168-Master/topic/Common.20plugin.20library.html#397792131">(Oct 21 2023 at 00:26)</a>:</h4>
+<p><span class="user-mention" data-user-id="399510">@Alec Leamas</span> <br>
+Some study.  The picture becomes more clear.</p>
+<ol>
+<li>On most platforms we support, glu is provided by the system along with the base opengl headers and libraries.</li>
+<li>However, there is no standard glu for GLES/GLES2.  This means we need a private version of a glu-compatible library for Android.</li>
+<li>And we have that. The code of opencpn-libs/glu is a partial port of glu provided by SGI, licensed as compatible with GPL.</li>
+<li>In point of fact, we are using our private(SGI)  glu for all TP template plugin builds, , on all platforms, for no particular reason other than code commonality.  Not exactly the linux way, but as I have said, glu is just simple C code.  If it works, it works.</li>
+</ol>
+<p>So, coming to the question of GL/gl.h, vs GLES2/gl.h.<br>
+History shows that we can safely use a generic GL/gl.h, even on GLES2.  The constants, typedefs, and functions that we use are fully compatible between GL and GLES. Further, we actually need to use it, since the SGI glu is actually written against GL, not GLES.<br>
+We could switch to GLES/gl2.h if we want to look nice.  If we did that, we would have to privately typedef glDouble at least.  This typedef is missing from GLES.  But we would need it to be compatible with glu (SGI).</p>
+<p>This is all a little unavoidably muddy, since we are using the same code base for GL and GLES.  Bound to be some funny #ifdefs.</p>
+
+
+
+<a name="397825865"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332168-Master/topic/Common%20plugin%20library/near/397825865" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Alec Leamas <a href="https://leamas.github.io/zulip-archive/stream/332168-Master/topic/Common.20plugin.20library.html#397825865">(Oct 21 2023 at 07:32)</a>:</h4>
+<p>Seen from another point of view the situation is then</p>
+<ol>
+<li>plugingl has a hard dependency on glu</li>
+<li>We resolve this using our own glu library in glu/ on all platforms.</li>
+<li>Our glu/ library pulls in GL/gl.h on all platforms, even those using GLES</li>
+</ol>
+<p>I have problems with 2. However. it should be simple to modify glu/ to use system glu if available and otherwise fall back to the bundled implementation.</p>
+<p>Since it is glu/ which makes the need of GL/gl.h required it is also glu/ which should provide this header's include dir. That is, linking to ocpn::glu_static should provide all necessary headers (and of course libraries).</p>
+<p>Since plugingl-&gt;glu is a hard dependency  it cannot be optional as now. One solution could be to make the overall build fail with a proper message if the plugin hasn't included the glu/ library. Another, probably better one would be to move the glu/ library so it becomes a subdirectory of plugingl which then just could pull it in.</p>
+<p>I'll try to do some experiments.</p>
+
+
+
+<a name="397834003"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332168-Master/topic/Common%20plugin%20library/near/397834003" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Alec Leamas <a href="https://leamas.github.io/zulip-archive/stream/332168-Master/topic/Common.20plugin.20library.html#397834003">(Oct 21 2023 at 09:46)</a>:</h4>
+<p>working... The need to include the complete gl.h can be avoided by adding 5 #defines from gl.h. This is IMHO more visible and thus better. Please stay tuned.</p>
+
+
+
+<a name="397837609"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332168-Master/topic/Common%20plugin%20library/near/397837609" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Alec Leamas <a href="https://leamas.github.io/zulip-archive/stream/332168-Master/topic/Common.20plugin.20library.html#397837609">(Oct 21 2023 at 10:37)</a>:</h4>
+<p>I have pushed a sketch to a new branch <em>plugingl</em>. That is, I pushed it somewhere...</p>
+<p>The changes:</p>
+<ul>
+<li>Created a new include file <em>glu_gl.h</em>. It's quite small, contains the bits and pieces glu requires from gl.h. Currently available at <em>plugingl/utils/include/android/glu_gl.h</em>,  the location needs a review...</li>
+<li>Made plugingl to a top directory for two subdirectories. Overall, it exports opengl and glu as required.</li>
+<li>The glu subdirectory is a verbatim copy of  opencpn/glu. It's built on platforms without native glu support.</li>
+<li>The utils subdirectory is the current plugingl stuff.</li>
+</ul>
+<p>Thoughts?</p>
+
+
+
+<a name="397838370"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332168-Master/topic/Common%20plugin%20library/near/397838370" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Alec Leamas <a href="https://leamas.github.io/zulip-archive/stream/332168-Master/topic/Common.20plugin.20library.html#397838370">(Oct 21 2023 at 10:48)</a>:</h4>
+<p>The utils library has a painful dependency on ocpn::api.  It's pidc.cpp which requires ocpn_plugin.h. Im not that happy with this dependency, perhaps it would be better to bundle ocpn_plugin.h with plugingl?</p>
+
+
+
+<a name="397842605"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332168-Master/topic/Common%20plugin%20library/near/397842605" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Pavel Kalian <a href="https://leamas.github.io/zulip-archive/stream/332168-Master/topic/Common.20plugin.20library.html#397842605">(Oct 21 2023 at 11:27)</a>:</h4>
+<p><span class="user-mention silent" data-user-id="399510">Alec Leamas</span> <a href="#narrow/stream/332168-Master---5.2E8.2E0--.28was.3A-comms.29/topic/Common.20plugin.20library/near/397838370">said</a>:</p>
+<blockquote>
+<p>Im not that happy with this dependency, perhaps it would be better to bundle ocpn_plugin.h with plugingl?</p>
+</blockquote>
+<p>Wouldn't that be another pain that will possibly eat our kittens with future plugin API updates?</p>
+
+
+
+<a name="397843095"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332168-Master/topic/Common%20plugin%20library/near/397843095" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Alec Leamas <a href="https://leamas.github.io/zulip-archive/stream/332168-Master/topic/Common.20plugin.20library.html#397843095">(Oct 21 2023 at 11:35)</a>:</h4>
+<p>Not necessarily. This copy would only be used by the code in plugingl, it  should definitely not be exported. So as long as we keep our API compatibility promise, the only thing which should require an update of it would be an update of the files in plugingl/utils (actually, pidc.cpp).</p>
+
+
+
+<a name="397843186"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332168-Master/topic/Common%20plugin%20library/near/397843186" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Alec Leamas <a href="https://leamas.github.io/zulip-archive/stream/332168-Master/topic/Common.20plugin.20library.html#397843186">(Oct 21 2023 at 11:37)</a>:</h4>
+<p>plugin overall links to ocpn:.api which is some version of the api like api-17, api-18, etc. But that's another story.</p>
+
+
+
+<a name="397843409"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332168-Master/topic/Common%20plugin%20library/near/397843409" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Alec Leamas <a href="https://leamas.github.io/zulip-archive/stream/332168-Master/topic/Common.20plugin.20library.html#397843409">(Oct 21 2023 at 11:40)</a>:</h4>
+<p>WTF... That dependency is not even used! Will fix.</p>
+
+
+
+<a name="397843651"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332168-Master/topic/Common%20plugin%20library/near/397843651" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Alec Leamas <a href="https://leamas.github.io/zulip-archive/stream/332168-Master/topic/Common.20plugin.20library.html#397843651">(Oct 21 2023 at 11:44)</a>:</h4>
+<p>.,.. nope, it was just included in multiple places.</p>
+
+
+
+<a name="397844257"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332168-Master/topic/Common%20plugin%20library/near/397844257" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Alec Leamas <a href="https://leamas.github.io/zulip-archive/stream/332168-Master/topic/Common.20plugin.20library.html#397844257">(Oct 21 2023 at 11:52)</a>:</h4>
+<p><span class="user-mention" data-user-id="517002">@Dave Register</span>  pidc.cpp also have </p>
+<div class="codehilite"><pre><span></span><code>#ifdef ocpnUSE_GL
+#include &lt;wx/glcanvas.h&gt;
+#endif
+</code></pre></div>
+<p>Isn't ocpnUSE_GL supposed to be true in this context?</p>
+
+
+
+<a name="397849886"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332168-Master/topic/Common%20plugin%20library/near/397849886" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Alec Leamas <a href="https://leamas.github.io/zulip-archive/stream/332168-Master/topic/Common.20plugin.20library.html#397849886">(Oct 21 2023 at 13:21)</a>:</h4>
+<p>The opencpn-libs plugingl is  currently broken for flatpak builds, I'm on it, but there is some other life as well.</p>
+
+
+
+<a name="397852472"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332168-Master/topic/Common%20plugin%20library/near/397852472" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Alec Leamas <a href="https://leamas.github.io/zulip-archive/stream/332168-Master/topic/Common.20plugin.20library.html#397852472">(Oct 21 2023 at 14:03)</a>:</h4>
+<p>plugingl now also builds Flatpak</p>
+
+
+
+<a name="397859921"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332168-Master/topic/Common%20plugin%20library/near/397859921" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Alec Leamas <a href="https://leamas.github.io/zulip-archive/stream/332168-Master/topic/Common.20plugin.20library.html#397859921">(Oct 21 2023 at 15:48)</a>:</h4>
+<p>... but not windows</p>
+
+
+
+<a name="397877301"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332168-Master/topic/Common%20plugin%20library/near/397877301" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Dave Register <a href="https://leamas.github.io/zulip-archive/stream/332168-Master/topic/Common.20plugin.20library.html#397877301">(Oct 21 2023 at 20:57)</a>:</h4>
+<p><span class="user-mention" data-user-id="399510">@Alec Leamas</span> <br>
+"Isn't ocpnUSE_GL supposed to be true in this context?"<br>
+Well, no, not necessarily.  Actually, piDC is a generalized DisplayContext, usable in non-GL environments as well. The idea is (was) to allow access to the lib methods using no conditional code (e.g. #ifdef ocpnUSE_GL)in the caller.  At one point, I debated renaming the entire subdirectory to something like "pluginDC".  But I retreated when I saw that this would seriously break ShipDriver.</p>
+
+
+
+<a name="397919003"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332168-Master/topic/Common%20plugin%20library/near/397919003" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Alec Leamas <a href="https://leamas.github.io/zulip-archive/stream/332168-Master/topic/Common.20plugin.20library.html#397919003">(Oct 22 2023 at 07:12)</a>:</h4>
+<blockquote>
+<p>Actually, piDC is a generalized DisplayContext, </p>
+</blockquote>
+<p>Indeed. However, in this plugingl context ocpnUSE_GL should be set  since including plugingl means adding GL capabilities. Or?</p>
+<blockquote>
+<p>I debated renaming the entire subdirectory to something like "pluginDC"</p>
+</blockquote>
+<p>This could  be done in the new plugingl branch without breaking anything since it is a subdirectory under plugingl. Will do.</p>
+
+
+
+<a name="397927488"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332168-Master/topic/Common%20plugin%20library/near/397927488" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Alec Leamas <a href="https://leamas.github.io/zulip-archive/stream/332168-Master/topic/Common.20plugin.20library.html#397927488">(Oct 22 2023 at 08:52)</a>:</h4>
+<p>The plugingl branch is ready for review. In particular, I would appreciate if you could check it in other contexts (TP).  It builds fine in shipdriver.</p>
+<p>As of now I think it represents a reasonable refactoring of the plugingl/glu mess, offering a plugin one stop shop for the  openGL stuff. Both the glu/ and libglu/ could and should be retired.</p>
+<p>Thoughts?</p>
+
+
+
+<a name="397945222"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332168-Master/topic/Common%20plugin%20library/near/397945222" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Dave Register <a href="https://leamas.github.io/zulip-archive/stream/332168-Master/topic/Common.20plugin.20library.html#397945222">(Oct 22 2023 at 13:32)</a>:</h4>
+<p><span class="user-mention" data-user-id="399510">@Alec Leamas</span> <br>
+What should I glean from this?</p>
+
+
+
+<a name="397945256"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332168-Master/topic/Common%20plugin%20library/near/397945256" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Alec Leamas <a href="https://leamas.github.io/zulip-archive/stream/332168-Master/topic/Common.20plugin.20library.html#397945256">(Oct 22 2023 at 13:33)</a>:</h4>
+<p>googling "glean meaning"</p>
+
+
+
+<a name="397945363"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332168-Master/topic/Common%20plugin%20library/near/397945363" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Alec Leamas <a href="https://leamas.github.io/zulip-archive/stream/332168-Master/topic/Common.20plugin.20library.html#397945363">(Oct 22 2023 at 13:34)</a>:</h4>
+<p>I'd really appreciate input on two aspects:</p>
+<ol>
+<li>Does it build also for TP (have no working such setup)</li>
+<li>Does the overall structure of  plugingl looks sound? Four eyes hopfully sees more than two.</li>
+</ol>
+
+
+
+<a name="397945378"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332168-Master/topic/Common%20plugin%20library/near/397945378" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Alec Leamas <a href="https://leamas.github.io/zulip-archive/stream/332168-Master/topic/Common.20plugin.20library.html#397945378">(Oct 22 2023 at 13:35)</a>:</h4>
+<p>That is, if I got "glean" right. Did I?</p>
+
+
+
+<a name="397945579"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332168-Master/topic/Common%20plugin%20library/near/397945579" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Dave Register <a href="https://leamas.github.io/zulip-archive/stream/332168-Master/topic/Common.20plugin.20library.html#397945579">(Oct 22 2023 at 13:38)</a>:</h4>
+<p><span class="user-mention" data-user-id="399510">@Alec Leamas</span> <br>
+Yes, but maybe this is not the best zulip thread.  I see your comments in "common plugin library" thread, and I'm on it.</p>
+
+
+
+<a name="397945614"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332168-Master/topic/Common%20plugin%20library/near/397945614" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Notification Bot <a href="https://leamas.github.io/zulip-archive/stream/332168-Master/topic/Common.20plugin.20library.html#397945614">(Oct 22 2023 at 13:39)</a>:</h4>
+<p>5 messages were moved here from <a class="stream-topic" data-stream-id="342818" href="/#narrow/stream/342818-CI/topic/shipdriver_pi">#CI &gt; shipdriver_pi</a> by <span class="user-mention silent" data-user-id="399510">Alec Leamas</span>.</p>
+
+
+
+<a name="397949088"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332168-Master/topic/Common%20plugin%20library/near/397949088" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Dave Register <a href="https://leamas.github.io/zulip-archive/stream/332168-Master/topic/Common.20plugin.20library.html#397949088">(Oct 22 2023 at 14:38)</a>:</h4>
+<p><span class="user-mention" data-user-id="399510">@Alec Leamas</span> <br>
+Structure seems OK.<br>
+Android builds fails.  Ediited compiler invocation:</p>
+<div class="codehilite"><pre><span></span><code>-I/home/dsr/Projects/statusbar_pi/build_android_32/CMakeFiles/include 
+-I/home/dsr/Projects/statusbar_pi/src 
+-I/home/dsr/Projects/statusbar_pi/opencpn-libs/plugingl/plugin_dc/include/android 
+-I/home/dsr/Projects/statusbar_pi/opencpn-libs/plugingl/plugin_dc/include 
+-I/home/dsr/Projects/statusbar_pi/opencpn-libs/api-17 
+-I/home/dsr/Projects/statusbar_pi/opencpn-libs/glu/include
+
+In file included from /home/dsr/Projects/statusbar_pi/opencpn-libs/plugingl/plugin_dc/src/pidc.cpp:48:
+/home/dsr/Projects/statusbar_pi/opencpn-libs/plugingl/plugin_dc/include/pidc.h:37:10: fatal error: &#39;glu_gl.h&#39; file not found
+</code></pre></div>
+
+<p>I change "glu_gl" to "GL/glu_gl".  No help.<br>
+The correct header location </p>
+<div class="codehilite"><pre><span></span><code>&quot;/home/dsr/Projects/statusbar_pi/opencpn-libs/plugingl/glu/include&quot;
+</code></pre></div>
+
+<p>is not in the list above</p>
+
+
+
+<a name="397949367"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332168-Master/topic/Common%20plugin%20library/near/397949367" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Alec Leamas <a href="https://leamas.github.io/zulip-archive/stream/332168-Master/topic/Common.20plugin.20library.html#397949367">(Oct 22 2023 at 14:42)</a>:</h4>
+<p>Hm... this strange situation again: what''s the difference betwenen your builds and mine which works? Have you got a complete build log?<br>
+EDIT link, that is</p>
+
+
+
+<a name="397950468"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332168-Master/topic/Common%20plugin%20library/near/397950468" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Alec Leamas <a href="https://leamas.github.io/zulip-archive/stream/332168-Master/topic/Common.20plugin.20library.html#397950468">(Oct 22 2023 at 15:00)</a>:</h4>
+<p>hm... testing a possible fix. Stay tuned.</p>
+
+
+
+<a name="397951278"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332168-Master/topic/Common%20plugin%20library/near/397951278" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Dave Register <a href="https://leamas.github.io/zulip-archive/stream/332168-Master/topic/Common.20plugin.20library.html#397951278">(Oct 22 2023 at 15:12)</a>:</h4>
+<p><span class="user-mention" data-user-id="399510">@Alec Leamas</span> <br>
+Slight tweak to TP  required. He loads opencpn-libs/glu/ by default.  This means that the plugingl/ load later skips the glu/ part.  That somehow prevents the correct header path from coming in.  If I drop that initial glu/ load, all is well on Android.<br>
+I think I can remove that default behavior in TP, and depend on the plugingl "one-stop-shop" to do the right thing.<br>
+This is healthy, since we can then drop the separate "glu/" entirely.  One less subdir to wonder about.</p>
+<p>Another small CMake glitch.  The directive </p>
+<p>set(CMAKE_POSITION_INDEPENDENT_CODE ON)</p>
+<p>Seems to be required BEFORE any "add_library" directive.<br>
+plugin_dc/CMakeLists.txt:</p>
+<div class="codehilite"><pre><span></span><code>set(CMAKE_POSITION_INDEPENDENT_CODE ON)
+
+add_library(_PLUGIN_DC STATIC ${SRC})
+add_library(ocpn::plugin_dc ALIAS _PLUGIN_DC)
+
+#set(CMAKE_POSITION_INDEPENDENT_CODE ON)
+</code></pre></div>
+
+
+
+<a name="397951410"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332168-Master/topic/Common%20plugin%20library/near/397951410" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Dave Register <a href="https://leamas.github.io/zulip-archive/stream/332168-Master/topic/Common.20plugin.20library.html#397951410">(Oct 22 2023 at 15:14)</a>:</h4>
+<p>btw, builds OK on debian 12, properly finds and uses system GLU<br>
+Good.</p>
+
+
+
+<a name="397951616"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332168-Master/topic/Common%20plugin%20library/near/397951616" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Dave Register <a href="https://leamas.github.io/zulip-archive/stream/332168-Master/topic/Common.20plugin.20library.html#397951616">(Oct 22 2023 at 15:17)</a>:</h4>
+<p>If not obvious, merging this as-is to "main" will break all Android TP builds.  Just sayin'.</p>
+
+
+
+<a name="397952743"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332168-Master/topic/Common%20plugin%20library/near/397952743" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Alec Leamas <a href="https://leamas.github.io/zulip-archive/stream/332168-Master/topic/Common.20plugin.20library.html#397952743">(Oct 22 2023 at 15:31)</a>:</h4>
+<p>Right... the problem is of course that glu/ and plugingl/glu uses the same symbols  which then "collides". I'll try to fix that.</p>
+<p>CMAKE_POSITION_INDEPENDENT_CODE is a good catch as well, will fix. Stay tuned.</p>
+
+
+
+<a name="397954247"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332168-Master/topic/Common%20plugin%20library/near/397954247" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Alec Leamas <a href="https://leamas.github.io/zulip-archive/stream/332168-Master/topic/Common.20plugin.20library.html#397954247">(Oct 22 2023 at 15:59)</a>:</h4>
+<p>We should of course not merge anything until we agree on it, and we should not break any android builds.  That said, just  merging to main does not change anything for the plugins until they update their own version of opencpn-libs. So, there are some safety nets.</p>
+
+
+
+<a name="397954629"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332168-Master/topic/Common%20plugin%20library/near/397954629" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Alec Leamas <a href="https://leamas.github.io/zulip-archive/stream/332168-Master/topic/Common.20plugin.20library.html#397954629">(Oct 22 2023 at 16:03)</a>:</h4>
+<p>I have pushed  some new commits to the plugingl branch. Fixes since last push:</p>
+<ul>
+<li>The CMAKE_POSITION_INDEPENDENT_CODE stuff</li>
+<li>Including openpn-libs/glu  now terminates the build with a hopefully clarifying message(?)</li>
+<li>The include paths for the bundled glu, the one used by Android, has a bugfix.</li>
+</ul>
+<p>glu_gl.h does not live in <em>GL/glu_gl.h</em>, its just <code>#include &lt;glu_gl.h&gt;</code> </p>
+<p>Could you possibly give it a try?</p>
+
+
+
+<a name="397968274"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332168-Master/topic/Common%20plugin%20library/near/397968274" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Dave Register <a href="https://leamas.github.io/zulip-archive/stream/332168-Master/topic/Common.20plugin.20library.html#397968274">(Oct 22 2023 at 19:52)</a>:</h4>
+<p><span class="user-mention" data-user-id="399510">@Alec Leamas</span> <br>
+If I use unmodified plugin source, I get the nice clear message, and the build stops.  As expected.<br>
+After I modify plugin source to avoid adding glu/, then all is well.</p>
+<p>I still have the idea of renaming plugingl/ to something more generic, like "plugindc/".  The idea is this:<br>
+"If you need to draw on the chart surface, simply add subdir "plugindc/".  All GL dependencies will be handled automagically, for all platforms."</p>
+<p>Now would be a good time.<br>
+Thoughts?</p>
+
+
+
+<a name="397968456"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332168-Master/topic/Common%20plugin%20library/near/397968456" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Alec Leamas <a href="https://leamas.github.io/zulip-archive/stream/332168-Master/topic/Common.20plugin.20library.html#397968456">(Oct 22 2023 at 19:55)</a>:</h4>
+<p>Not really fond of the idea, it would IMHO break too many builds with little advantage. </p>
+<p>Why not add that sentence to a new plugingl/README.md file? Such a file would allow for much more info than the hint in a filename...</p>
+
+
+
+<a name="397969064"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332168-Master/topic/Common%20plugin%20library/near/397969064" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Dave Register <a href="https://leamas.github.io/zulip-archive/stream/332168-Master/topic/Common.20plugin.20library.html#397969064">(Oct 22 2023 at 20:04)</a>:</h4>
+<p>Every TP build against merge will fail on all platforms, since they all add glu/.<br>
+So we (Rick and I) will be rebuilding them anyway.<br>
+Maybe a manageable number of other builds beyond TP?</p>
+
+
+
+<a name="397969246"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332168-Master/topic/Common%20plugin%20library/near/397969246" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Alec Leamas <a href="https://leamas.github.io/zulip-archive/stream/332168-Master/topic/Common.20plugin.20library.html#397969246">(Oct 22 2023 at 20:08)</a>:</h4>
+<p>That is just to say that we should not care about Mike. If this was important, but... plugindc instead of plugingl isn't  that much of a change.</p>
+<p>My idea is a README, something  like below. It's way more information than what's conveyed in a name:</p>
+<div class="codehilite"><pre><span></span><code>plugingl README
+==============
+
+This directory contains all necessary GL dependencies as well as
+some utilities for drawing on the chart canvas. All supported
+platforms are handled.
+
+For plugins requiring the OpenGL setup for drawings this library
+contains all necessary dependencies for all platforms.
+
+The formerly  separate libraries glu and libglu are part of
+plugingl and will be retired.
+</code></pre></div>
+
+
+
+<a name="397969434"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332168-Master/topic/Common%20plugin%20library/near/397969434" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Alec Leamas <a href="https://leamas.github.io/zulip-archive/stream/332168-Master/topic/Common.20plugin.20library.html#397969434">(Oct 22 2023 at 20:12)</a>:</h4>
+<p><span class="user-mention" data-user-id="399559">@Mike Rossiter</span>  Ping? The question is if you are using <code>add_submodule(opencpn-libs/glu)</code> in a substantial number of plugins?</p>
+
+
+
+<a name="397969614"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332168-Master/topic/Common%20plugin%20library/near/397969614" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Dave Register <a href="https://leamas.github.io/zulip-archive/stream/332168-Master/topic/Common.20plugin.20library.html#397969614">(Oct 22 2023 at 20:16)</a>:</h4>
+<p>Wordsmithing:<br>
+I would turn this around.</p>
+<p>Instead of</p>
+<div class="codehilite"><pre><span></span><code>This directory contains all necessary GL dependencies as well as
+some utilities for drawing on the chart canvas. All supported
+platforms are handled.
+</code></pre></div>
+
+<p>I would say</p>
+<div class="codehilite"><pre><span></span><code>This directory contains classes and methods useful for drawing on the charts surface.
+All required GL dependencies are handled internally.
+</code></pre></div>
+
+<p>That is to shift the focus.  The directory is about drawing, using GL if desired.  There is no interest in GL if one is not planning to draw.</p>
+
+
+
+<a name="397969672"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332168-Master/topic/Common%20plugin%20library/near/397969672" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Alec Leamas <a href="https://leamas.github.io/zulip-archive/stream/332168-Master/topic/Common.20plugin.20library.html#397969672">(Oct 22 2023 at 20:17)</a>:</h4>
+<p>Please, you are the one who knows this stuff. Can you rephrase it in a better way?</p>
+
+
+
+<a name="397969858"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332168-Master/topic/Common%20plugin%20library/near/397969858" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Alec Leamas <a href="https://leamas.github.io/zulip-archive/stream/332168-Master/topic/Common.20plugin.20library.html#397969858">(Oct 22 2023 at 20:20)</a>:</h4>
+<p>Also note as of now,  ocpnUSE_GL is hardcoded as set. If user should be able to change this  we must export it as a cmake variable to keep things sane.  No big deal if required.</p>
+
+
+
+<a name="397969889"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332168-Master/topic/Common%20plugin%20library/near/397969889" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Dave Register <a href="https://leamas.github.io/zulip-archive/stream/332168-Master/topic/Common.20plugin.20library.html#397969889">(Oct 22 2023 at 20:20)</a>:</h4>
+<div class="codehilite"><pre><span></span><code>This directory contains classes and methods useful for drawing on the charts surface.
+It is usable on all platforms.  All required GL dependencies are handled internally.
+</code></pre></div>
+
+<p>Clear, or mush?</p>
+
+
+
+<a name="397969969"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332168-Master/topic/Common%20plugin%20library/near/397969969" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Alec Leamas <a href="https://leamas.github.io/zulip-archive/stream/332168-Master/topic/Common.20plugin.20library.html#397969969">(Oct 22 2023 at 20:22)</a>:</h4>
+<p>Much better. I just don't understand it well enough, and pidgin Englisch tends to be longer. I'll make a commit.<br>
+See above on ocpnUSE_GL</p>
+
+
+
+<a name="397970114"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332168-Master/topic/Common%20plugin%20library/near/397970114" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Alec Leamas <a href="https://leamas.github.io/zulip-archive/stream/332168-Master/topic/Common.20plugin.20library.html#397970114">(Oct 22 2023 at 20:24)</a>:</h4>
+<p>Pushed. Please feel free to change...</p>
+
+
+
+<a name="397970130"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332168-Master/topic/Common%20plugin%20library/near/397970130" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Dave Register <a href="https://leamas.github.io/zulip-archive/stream/332168-Master/topic/Common.20plugin.20library.html#397970130">(Oct 22 2023 at 20:25)</a>:</h4>
+<p>ocpnUSE_GL:<br>
+If should be possible to override default in CMake invocation, sure.<br>
+I note in passing that OCPN core has some build problems if ocpnUSE_GL is not set.  Long standing fiddly problem.</p>
+
+
+
+<a name="397970192"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332168-Master/topic/Common%20plugin%20library/near/397970192" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Alec Leamas <a href="https://leamas.github.io/zulip-archive/stream/332168-Master/topic/Common.20plugin.20library.html#397970192">(Oct 22 2023 at 20:26)</a>:</h4>
+<p>OK, stay tuned.</p>
+
+
+
+<a name="397970590"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332168-Master/topic/Common%20plugin%20library/near/397970590" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Alec Leamas <a href="https://leamas.github.io/zulip-archive/stream/332168-Master/topic/Common.20plugin.20library.html#397970590">(Oct 22 2023 at 20:34)</a>:</h4>
+<p>Pushed. Starting a full rebuild.</p>
+
+
+
+<a name="397971050"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332168-Master/topic/Common%20plugin%20library/near/397971050" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Alec Leamas <a href="https://leamas.github.io/zulip-archive/stream/332168-Master/topic/Common.20plugin.20library.html#397971050">(Oct 22 2023 at 20:43)</a>:</h4>
+<p><span class="user-mention" data-user-id="517002">@Dave Register</span>  </p>
+<p>All shipdriver builds OK. Shall we wait for input from <span class="user-mention" data-user-id="399559">@Mike Rossiter</span>  before we decide on renaming before we merge?</p>
+<p>Besides the name, are you happy with current state?</p>
+
+
+
+<a name="397978353"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332168-Master/topic/Common%20plugin%20library/near/397978353" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Dave Register <a href="https://leamas.github.io/zulip-archive/stream/332168-Master/topic/Common.20plugin.20library.html#397978353">(Oct 22 2023 at 23:11)</a>:</h4>
+<p><span class="user-mention" data-user-id="399510">@Alec Leamas</span> <br>
+Let's wait to hear from Mike.<br>
+Otherwise, I'm content.</p>
+
+
+
+<a name="398032030"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332168-Master/topic/Common%20plugin%20library/near/398032030" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Mike Rossiter <a href="https://leamas.github.io/zulip-archive/stream/332168-Master/topic/Common.20plugin.20library.html#398032030">(Oct 23 2023 at 08:00)</a>:</h4>
+<blockquote>
+<p>The question is if you are using add_submodule(opencpn-libs/glu)</p>
+</blockquote>
+<p>opencpn-libs/glu is not being used directly in any of my plugins. There may be an impact with plugins that use a private <em>libs/plugingl</em> that references <code>OpenGL/glu.h</code> from <em>opencpn-libs/plugingl</em> but I can deal with that. My understanding of all this stuff is zero. I just use it.</p>
+
+
+
+<a name="398037936"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332168-Master/topic/Common%20plugin%20library/near/398037936" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Alec Leamas <a href="https://leamas.github.io/zulip-archive/stream/332168-Master/topic/Common.20plugin.20library.html#398037936">(Oct 23 2023 at 08:41)</a>:</h4>
+<p>Dave and I have been working with sorting out the opencpn-libs mess which currently consists of glu/, libglu/ and plugingl/. The plan is to merge everything to plugingl.</p>
+<p>There is a common understanding between the two of us that it would be better to rename plugingl to plugindc. However, this obviously requires rebuilding all plugins. </p>
+<p>For technical reasons all plugins using glu/  must also be rebuilt. For TP, this means that renaming plugingl to plugindc doesn't really matter, they have to to rebuild anyway since they include <em>opencpn-libs/glu</em>.</p>
+<p>Now, for shipdriver plugins the situation is then different. If we don't change plugingl to plugindc there is no need to rebuild since you don't include  <em>opencpn-libs/glu</em>. </p>
+<p>Have I been able to explain the situation? If so, your thoughts on this?<br>
+EDIT: That is, your thoughts on changing the name plugingl to plugindc.</p>
+
+
+
+<a name="398038449"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332168-Master/topic/Common%20plugin%20library/near/398038449" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Alec Leamas <a href="https://leamas.github.io/zulip-archive/stream/332168-Master/topic/Common.20plugin.20library.html#398038449">(Oct 23 2023 at 08:44)</a>:</h4>
+<p>BTW: The new plugingl/plugindc automatically sorts out the glu.h dependencies once and for all.</p>
+
+
+
+<a name="398044176"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332168-Master/topic/Common%20plugin%20library/near/398044176" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Mike Rossiter <a href="https://leamas.github.io/zulip-archive/stream/332168-Master/topic/Common.20plugin.20library.html#398044176">(Oct 23 2023 at 09:18)</a>:</h4>
+<blockquote>
+<p>your thoughts on changing the name plugingl to plugindc.</p>
+</blockquote>
+<p>Using the name plugindc makes sense to me, in view of the changes.</p>
+
+
+
+<a name="398045578"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332168-Master/topic/Common%20plugin%20library/near/398045578" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Alec Leamas <a href="https://leamas.github.io/zulip-archive/stream/332168-Master/topic/Common.20plugin.20library.html#398045578">(Oct 23 2023 at 09:27)</a>:</h4>
+<p>That is, you are OK with that you have to rebuild?</p>
+
+
+
+<a name="398046104"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332168-Master/topic/Common%20plugin%20library/near/398046104" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Mike Rossiter <a href="https://leamas.github.io/zulip-archive/stream/332168-Master/topic/Common.20plugin.20library.html#398046104">(Oct 23 2023 at 09:30)</a>:</h4>
+<p>What stops a plugin already in the catalog running with OpenCPN 5.8.4?</p>
+
+
+
+<a name="398047899"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332168-Master/topic/Common%20plugin%20library/near/398047899" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Alec Leamas <a href="https://leamas.github.io/zulip-archive/stream/332168-Master/topic/Common.20plugin.20library.html#398047899">(Oct 23 2023 at 09:41)</a>:</h4>
+<p>Before we are heading into that: OK to make the rename which will force you to rebuild? Double-checking...</p>
+
+
+
+<a name="398048142"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332168-Master/topic/Common%20plugin%20library/near/398048142" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Mike Rossiter <a href="https://leamas.github.io/zulip-archive/stream/332168-Master/topic/Common.20plugin.20library.html#398048142">(Oct 23 2023 at 09:42)</a>:</h4>
+<blockquote>
+<p>OK to make the rename which will force you to rebuild?</p>
+</blockquote>
+<p>Yes it is OK.</p>
+
+
+
+<a name="398049693"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332168-Master/topic/Common%20plugin%20library/near/398049693" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Alec Leamas <a href="https://leamas.github.io/zulip-archive/stream/332168-Master/topic/Common.20plugin.20library.html#398049693">(Oct 23 2023 at 09:51)</a>:</h4>
+<p>OK, back to "What stops a plugin already in the catalog running with OpenCPN 5.8.4" . What is the problem?</p>
+
+
+
+<a name="398051127"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332168-Master/topic/Common%20plugin%20library/near/398051127" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Mike Rossiter <a href="https://leamas.github.io/zulip-archive/stream/332168-Master/topic/Common.20plugin.20library.html#398051127">(Oct 23 2023 at 09:59)</a>:</h4>
+<p>Example otcurrent v4.2.0. In the catalog. Uses piDC. Runs fine. Does not build for Android but I have not yet modified it for Android. If I don't want to build it for Android will it still run for the other OS?</p>
+
+
+
+<a name="398052004"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332168-Master/topic/Common%20plugin%20library/near/398052004" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Alec Leamas <a href="https://leamas.github.io/zulip-archive/stream/332168-Master/topic/Common.20plugin.20library.html#398052004">(Oct 23 2023 at 10:04)</a>:</h4>
+<p>Sure.  To avoid failing builds: edit build-conf-rc and set </p>
+<div class="codehilite"><pre><span></span><code>android_build_rate=0
+android_upload=&quot;false&quot;
+android_git_push=&quot;false&quot;
+</code></pre></div>
+<p>This will make git-push happy and make corresponding auto branch.</p>
+
+
+
+<a name="398052726"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332168-Master/topic/Common%20plugin%20library/near/398052726" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Mike Rossiter <a href="https://leamas.github.io/zulip-archive/stream/332168-Master/topic/Common.20plugin.20library.html#398052726">(Oct 23 2023 at 10:09)</a>:</h4>
+<p>Thanks.</p>
+
+
+
+<a name="398053588"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332168-Master/topic/Common%20plugin%20library/near/398053588" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Alec Leamas <a href="https://leamas.github.io/zulip-archive/stream/332168-Master/topic/Common.20plugin.20library.html#398053588">(Oct 23 2023 at 10:15)</a>:</h4>
+<p>You are not alone. For example, the famous radar_pi also excludes Android.</p>
+<p>The core issue: Most platforms support the full OpenGL stack  i. e <em>GL/gl.h</em>. However, Android only supports <em>GLES2/gl2.h</em> which is a subset of <em>GL/gl.h</em>. As long as the plugin only uses this subset all is fine, but if it uses some obscure method in <em>GL/gl.h</em> which is not part of <em>GLES2/gl2.h</em> this must be fixed somehow.</p>
+<p>However, the new <em>plugin_dc</em> module under way fixes most if not all of these problems.  Android is probably simpler once it arrives in opencpn-libs.</p>
+
+
+
+<a name="398058596"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332168-Master/topic/Common%20plugin%20library/near/398058596" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Alec Leamas <a href="https://leamas.github.io/zulip-archive/stream/332168-Master/topic/Common.20plugin.20library.html#398058596">(Oct 23 2023 at 10:50)</a>:</h4>
+<p><span class="user-mention" data-user-id="517002">@Dave Register</span>  I have pushed a plugingl squashed history to devel which now is identical to plugingl -- this branch is to be removed.</p>
+<p>The new name is plugin_dc (not pluginDC, we stick to google GL: no capitals in filenames)</p>
+<p>Unless you have any late concerns after a night's  sleep we can merge devel into main any time.</p>
+
+
+
+<a name="398059643"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332168-Master/topic/Common%20plugin%20library/near/398059643" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Alec Leamas <a href="https://leamas.github.io/zulip-archive/stream/332168-Master/topic/Common.20plugin.20library.html#398059643">(Oct 23 2023 at 10:57)</a>:</h4>
+<p>Added some stuff to README.md about configuring without OpenGL</p>
+
+
+
+<a name="398103690"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332168-Master/topic/Common%20plugin%20library/near/398103690" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Dave Register <a href="https://leamas.github.io/zulip-archive/stream/332168-Master/topic/Common.20plugin.20library.html#398103690">(Oct 23 2023 at 14:56)</a>:</h4>
+<p><span class="user-mention" data-user-id="399510">@Alec Leamas</span> <br>
+I reviewed the devel branch.  Looks clean to me, ready to merge.<br>
+After merge I will confirm by updating opencpn-libs and doing some Android test builds.</p>
+
+
+
+<a name="398106411"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332168-Master/topic/Common%20plugin%20library/near/398106411" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Alec Leamas <a href="https://leamas.github.io/zulip-archive/stream/332168-Master/topic/Common.20plugin.20library.html#398106411">(Oct 23 2023 at 15:09)</a>:</h4>
+<p>Merged and pushed</p>
+
+
+
+<a name="398182092"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332168-Master/topic/Common%20plugin%20library/near/398182092" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Dave Register <a href="https://leamas.github.io/zulip-archive/stream/332168-Master/topic/Common.20plugin.20library.html#398182092">(Oct 24 2023 at 01:39)</a>:</h4>
+<p><span class="user-mention" data-user-id="399510">@Alec Leamas</span> <br>
+Several build problems.<br>
+Windows, flatpak, Mac, Android.</p>
+<p>Here is my library setup in CMakeLists.txt</p>
+<div class="codehilite"><pre><span></span><code>add_subdirectory(opencpn-libs/api-17)
+target_link_libraries(${PACKAGE_NAME} ocpn::api)
+
+add_subdirectory(opencpn-libs/wxJSON)
+target_link_libraries(${PACKAGE_NAME} ocpn::wxjson)
+
+add_subdirectory(opencpn-libs/plugin_dc)
+target_link_libraries(${PACKAGE_NAME} ocpn::dc-utils)
+</code></pre></div>
+
+<p>Build logs:<br>
+<a href="https://app.circleci.com/pipelines/github/bdbcat/statusbar_pi?branch=master">https://app.circleci.com/pipelines/github/bdbcat/statusbar_pi?branch=master</a></p>
+
+
+
+<a name="398221830"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332168-Master/topic/Common%20plugin%20library/near/398221830" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Alec Leamas <a href="https://leamas.github.io/zulip-archive/stream/332168-Master/topic/Common.20plugin.20library.html#398221830">(Oct 24 2023 at 07:13)</a>:</h4>
+<p>Sigh. This must be the last time we merge things without fully testing them. I'm on it.</p>
+
+
+
+<a name="398225557"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332168-Master/topic/Common%20plugin%20library/near/398225557" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Alec Leamas <a href="https://leamas.github.io/zulip-archive/stream/332168-Master/topic/Common.20plugin.20library.html#398225557">(Oct 24 2023 at 07:36)</a>:</h4>
+<p>Perhaps not a problem in opencpn-libs. You have linked to the <code>ocpn::dc-utils</code> target. You need to use the overall  <code>ocpn::plugin-dc</code> instead. </p>
+<p>I have checked that this fixes it for Flatpak. Also checked README.md which uses the correct target.</p>
+<p>Macos seems to be the same issue as Flatpak, hopefully fixed the same way. Have not checked.</p>
+<p>For windows, you need to conditionally include WindowsHeaders using  <code>if (MSVC)</code>or so.</p>
+
+
+
+<a name="398226880"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332168-Master/topic/Common%20plugin%20library/near/398226880" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Alec Leamas <a href="https://leamas.github.io/zulip-archive/stream/332168-Master/topic/Common.20plugin.20library.html#398226880">(Oct 24 2023 at 07:45)</a>:</h4>
+<p>Android... I don't see what this is all about. But we need to get rid of the other errors before looking into that if problem persists.</p>
+
+
+
+<a name="398300760"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332168-Master/topic/Common%20plugin%20library/near/398300760" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Dave Register <a href="https://leamas.github.io/zulip-archive/stream/332168-Master/topic/Common.20plugin.20library.html#398300760">(Oct 24 2023 at 14:28)</a>:</h4>
+<p><span class="user-mention" data-user-id="399510">@Alec Leamas</span> <br>
+OK, changed to ocpn::plugin-dc, added WindowsHeaders as required.  Much improved.<br>
+Android, not so much.  Problems in plugin_dc CMakeLists, around line 25, OpenGL stuff.</p>
+<div class="codehilite"><pre><span></span><code>CMake Warning at opencpn-libs/plugin_dc/CMakeLists.txt:39 (message):
+  Cannot locate a OpenGL stack
+</code></pre></div>
+
+
+
+<a name="398302101"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332168-Master/topic/Common%20plugin%20library/near/398302101" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Alec Leamas <a href="https://leamas.github.io/zulip-archive/stream/332168-Master/topic/Common.20plugin.20library.html#398302101">(Oct 24 2023 at 14:35)</a>:</h4>
+<p>I'm away for some time,  will have a look late today if possible, else tomorrow (in this strange time zone)</p>
+
+
+
+<a name="398302629"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332168-Master/topic/Common%20plugin%20library/near/398302629" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Dave Register <a href="https://leamas.github.io/zulip-archive/stream/332168-Master/topic/Common.20plugin.20library.html#398302629">(Oct 24 2023 at 14:37)</a>:</h4>
+<p>OK, no problem.  All is stable in the Production side, so no panic.</p>
+
+
+
+<a name="398305342"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332168-Master/topic/Common%20plugin%20library/near/398305342" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Alec Leamas <a href="https://leamas.github.io/zulip-archive/stream/332168-Master/topic/Common.20plugin.20library.html#398305342">(Oct 24 2023 at 14:52)</a>:</h4>
+<p>I think I understand. The error message basically says that it does not find GLES2/gl2.h. </p>
+<p>In the shipdriver case we use a toolchain file. This sets up the environment so cmake searches in the  NDK sysroot.  This works.</p>
+<p>In TP, the setup is solely done by defining various constants to cmake  (circleci-build-android-*) . Nothing is done to mak  cmake look in the correct NDK locations. </p>
+<p>The fix would the be to use the shipdriver toolchain file instead. Or add the required stuff directly to circleci-build-android-*; the toolchain file should gives the the asnwer to what</p>
+
+
+
+<a name="398305867"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332168-Master/topic/Common%20plugin%20library/near/398305867" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Alec Leamas <a href="https://leamas.github.io/zulip-archive/stream/332168-Master/topic/Common.20plugin.20library.html#398305867">(Oct 24 2023 at 14:54)</a>:</h4>
+<p>Bye for now...</p>
+
+
+
+<a name="398351461"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332168-Master/topic/Common%20plugin%20library/near/398351461" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Alec Leamas <a href="https://leamas.github.io/zulip-archive/stream/332168-Master/topic/Common.20plugin.20library.html#398351461">(Oct 24 2023 at 19:52)</a>:</h4>
+<p>What's happening here is IMHO that opencpn-libs reveals a bug in current TP setup since it does not use the headers and libraries in the NDK sysroot although it should.</p>
+
+
+
+<a name="398360360"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332168-Master/topic/Common%20plugin%20library/near/398360360" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Dave Register <a href="https://leamas.github.io/zulip-archive/stream/332168-Master/topic/Common.20plugin.20library.html#398360360">(Oct 24 2023 at 21:03)</a>:</h4>
+<p><span class="user-mention" data-user-id="399510">@Alec Leamas</span> <br>
+Yes, that is true.  My local builds succeed since it finds the host system GLES2.<br>
+Frankly, GLES2 is GLES2, so it would not matter on local builds.<br>
+But on CCI, starting from bare metal, GLES2 must be findable somewhere.  And the NDK sysroot route is formally correct.</p>
+<p>In my feeble defense, I note that in NDK-19, where all this Android stuff started, the sysroot (including GLES2 and lots of other stuff) was plainly broken.  That is why we, for years, included a local copy (borrowed from standard system file) in the source tree.</p>
+<p>Time to fix that.  I'm on it.</p>
+
+
+
+<a name="398362694"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332168-Master/topic/Common%20plugin%20library/near/398362694" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Dave Register <a href="https://leamas.github.io/zulip-archive/stream/332168-Master/topic/Common.20plugin.20library.html#398362694">(Oct 24 2023 at 21:24)</a>:</h4>
+<p>Forgot to mention:<br>
+Older CMake did not handle toolchain files very well at all.  Finding stuff (like gl2.h) in a cross platform toolchain-specified sysroot simply did not work.<br>
+Hooray for progress....</p>
+
+
+
+<a name="398363788"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332168-Master/topic/Common%20plugin%20library/near/398363788" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Alec Leamas <a href="https://leamas.github.io/zulip-archive/stream/332168-Master/topic/Common.20plugin.20library.html#398363788">(Oct 24 2023 at 21:33)</a>:</h4>
+<p>It could have been a version problem. You need a very recent cmake to match a recent NDK. Shipdriver works around this by using the python wheel distributed by the cmake project.</p>
+
+
+
+<a name="398387632"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332168-Master/topic/Common%20plugin%20library/near/398387632" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Dave Register <a href="https://leamas.github.io/zulip-archive/stream/332168-Master/topic/Common.20plugin.20library.html#398387632">(Oct 25 2023 at 01:33)</a>:</h4>
+<p><span class="user-mention" data-user-id="399510">@Alec Leamas</span> <br>
+I am a little confused.  No surprise there.<br>
+I have shifted a TP plugin to use a CMake toolchain file, used python to load a recent cmake, and used the image NDK.  Pretty much just like shipdriver.<br>
+Good news is that it builds.<br>
+Confusion:  I know(?) that it is getting GLES2/gl2.h from the NDK.  But I look at the compiler invocation line in CCI, and I cannot see a "-I" parameter that points to anything like the NDK.  So how does it know where to get the proper (i.e. sysroot) headers?</p>
+
+
+
+<a name="398394519"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332168-Master/topic/Common%20plugin%20library/near/398394519" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Dave Register <a href="https://leamas.github.io/zulip-archive/stream/332168-Master/topic/Common.20plugin.20library.html#398394519">(Oct 25 2023 at 02:28)</a>:</h4>
+<p>So, I do a test build with "-H" option, and I see this in the output:</p>
+<div class="codehilite"><pre><span></span><code>/opt/android/ndk/toolchains/llvm/prebuilt/linux-x86_64/bin/../sysroot/usr/include/GLES2/gl2.h
+</code></pre></div>
+
+<p>This GLES2/gl2.h is indeed coming from the NDK sysroot.<br>
+So, how does he know to use the Android NDK sysroot?  I never commanded that, unless implicitly.<br>
+Who did that?</p>
+
+
+
+<a name="398420743"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332168-Master/topic/Common%20plugin%20library/near/398420743" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Alec Leamas <a href="https://leamas.github.io/zulip-archive/stream/332168-Master/topic/Common.20plugin.20library.html#398420743">(Oct 25 2023 at 06:41)</a>:</h4>
+<p>As I understand it is the CMAKE_ANDROID_NDK in the toolchain file which makes it work. </p>
+<p>There is very little documentation available how this works, the basic promise seems just to be that it does. I remember struggling quite a bit before I got this in place.</p>
+
+
+
+<a name="398437093"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332168-Master/topic/Common%20plugin%20library/near/398437093" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Alec Leamas <a href="https://leamas.github.io/zulip-archive/stream/332168-Master/topic/Common.20plugin.20library.html#398437093">(Oct 25 2023 at 08:33)</a>:</h4>
+<p>That is, have you looked into the toolchain file?</p>
+
+
+
+<a name="398498564"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332168-Master/topic/Common%20plugin%20library/near/398498564" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Dave Register <a href="https://leamas.github.io/zulip-archive/stream/332168-Master/topic/Common.20plugin.20library.html#398498564">(Oct 25 2023 at 14:31)</a>:</h4>
+<p><span class="user-mention" data-user-id="399510">@Alec Leamas</span> <br>
+I copied your toolchain files verbatim.  Not studied CMake documention yet.</p>
+<p>MacOS builds are failing.  The usual problem:</p>
+<div class="codehilite"><pre><span></span><code>fatal error: &#39;GL/gl.h&#39; file not found
+</code></pre></div>
+
+<p><a href="https://app.circleci.com/pipelines/github/bdbcat/statusbar_pi?branch=master">https://app.circleci.com/pipelines/github/bdbcat/statusbar_pi?branch=master</a></p>
+
+
+
+<a name="398499420"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332168-Master/topic/Common%20plugin%20library/near/398499420" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Alec Leamas <a href="https://leamas.github.io/zulip-archive/stream/332168-Master/topic/Common.20plugin.20library.html#398499420">(Oct 25 2023 at 14:35)</a>:</h4>
+<p>The usual Mac problem IIRC. On MacOS, there is no GL subdirectory but an OpenGL one.  Handled for example in main OpenCPN by code like </p>
+<div class="codehilite"><pre><span></span><code>...
+#elif defined(__WXOSX__)
+ #include &lt;OpenGL/gl.h&gt;
+ #include &lt;OpenGL/glu.h&gt;
+...
+</code></pre></div>
+
+
+
+<a name="398504723"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332168-Master/topic/Common%20plugin%20library/near/398504723" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Dave Register <a href="https://leamas.github.io/zulip-archive/stream/332168-Master/topic/Common.20plugin.20library.html#398504723">(Oct 25 2023 at 14:59)</a>:</h4>
+<p>Sorry, my bad.  Had an extra "Texfont.cpp" in root source and root cmake list.  Not needed, since all this is now in plugin-dc.  All fine now.</p>
+<p>I read some on Android toolchains.  There is a prebuilt toolchain in the NDK now.  Google and CMake are discussing which is better, and we can expect changes coming from Google on ndk structure.  Lots of moving parts.<br>
+I guess for now we accept the "basic promise".<br>
+It is a little disturbing (to me) that the compiler invocation line in the log is misleading.  But let it go...</p>
+
+
+
+<a name="398505086"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332168-Master/topic/Common%20plugin%20library/near/398505086" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Dave Register <a href="https://leamas.github.io/zulip-archive/stream/332168-Master/topic/Common.20plugin.20library.html#398505086">(Oct 25 2023 at 15:01)</a>:</h4>
+<p>tl;dr;<br>
+opencpn-libs "main" is fine now.  Thanks for the refactor.</p>
+
+
+
+<a name="398511942"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332168-Master/topic/Common%20plugin%20library/near/398511942" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Alec Leamas <a href="https://leamas.github.io/zulip-archive/stream/332168-Master/topic/Common.20plugin.20library.html#398511942">(Oct 25 2023 at 15:30)</a>:</h4>
+<p>What we now have is a littlle more picky than it used to be, insisting on using the correct headers rather than bundled copies in all cases besides the glu stuff. This will inevitabley cause some pain to plugins which just have been includiing <code>GL/gl.h</code>, but it should be for the better.</p>
+
+
+
+<a name="398513780"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332168-Master/topic/Common%20plugin%20library/near/398513780" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Alec Leamas <a href="https://leamas.github.io/zulip-archive/stream/332168-Master/topic/Common.20plugin.20library.html#398513780">(Oct 25 2023 at 15:39)</a>:</h4>
+<p>IIRC, I did some tries earlier with the ndk built-in toolchain file without success. Finally settled for what we have now which no doubt is much simpler. Too simple?</p>
+
+
+
+<a name="398545737"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332168-Master/topic/Common%20plugin%20library/near/398545737" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Dave Register <a href="https://leamas.github.io/zulip-archive/stream/332168-Master/topic/Common.20plugin.20library.html#398545737">(Oct 25 2023 at 19:05)</a>:</h4>
+<p>Who said that:<br>
+"Make things as simple as possible, and no simpler"<br>
+I think Einstein.</p>
+
+
+
+<a name="398657628"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332168-Master/topic/Common%20plugin%20library/near/398657628" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Alec Leamas <a href="https://leamas.github.io/zulip-archive/stream/332168-Master/topic/Common.20plugin.20library.html#398657628">(Oct 26 2023 at 10:15)</a>:</h4>
+<p>Note to /me if I look back: Using the cmake variant of toolchain file is what creates the need for an updated cmake. The ndk toolchain file seems to implement what cmake does internally from the ground, avoiding the need for a cmake version which is updated  to match the latest NDK.</p>
+
+
+
+<a name="398712886"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332168-Master/topic/Common%20plugin%20library/near/398712886" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Dave Register <a href="https://leamas.github.io/zulip-archive/stream/332168-Master/topic/Common.20plugin.20library.html#398712886">(Oct 26 2023 at 15:20)</a>:</h4>
+<p><span class="user-mention" data-user-id="399510">@Alec Leamas</span> <br>
+Makes sense.  We have all written some odd code to make some older version of CMake do some useful thing.</p>
+
+
+
+<a name="399282675"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332168-Master/topic/Common%20plugin%20library/near/399282675" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Alec Leamas <a href="https://leamas.github.io/zulip-archive/stream/332168-Master/topic/Common.20plugin.20library.html#399282675">(Oct 30 2023 at 11:31)</a>:</h4>
+<p><span class="user-mention" data-user-id="517002">@Dave Register</span> <br>
+plugin_dc/.../pidc.cpp has block below around line 140. It generates a compilation  message which is gibberish to me.</p>
+<p>Obviously, this block is misplaced, it belongs to the start of the file. But besides that, do you understand the purpose? Is it just a convoluted way to display the fact that wxUSE_GRAPHICS_CONTEXT is set, or what?</p>
+<div class="codehilite"><pre><span></span><code>#if wxUSE_GRAPHICS_CONTEXT
+#define VALUE_TO_STRING(x) #x
+#define VALUE(x) VALUE_TO_STRING(x)
+#define VAR_NAME_VALUE(var) #var &quot;=&quot; VALUE(var)
+#pragma message(VAR_NAME_VALUE(wxUSE_GRAPHICS_CONTEXT))
+#endif
+</code></pre></div>
+
+
+
+<a name="399309790"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332168-Master/topic/Common%20plugin%20library/near/399309790" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Dave Register <a href="https://leamas.github.io/zulip-archive/stream/332168-Master/topic/Common.20plugin.20library.html#399309790">(Oct 30 2023 at 14:10)</a>:</h4>
+<p><span class="user-mention" data-user-id="399510">@Alec Leamas</span> <br>
+Do you have a link to the compile message?  Or verbatim copy?</p>
+
+
+
+<a name="399310318"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332168-Master/topic/Common%20plugin%20library/near/399310318" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Dave Register <a href="https://leamas.github.io/zulip-archive/stream/332168-Master/topic/Common.20plugin.20library.html#399310318">(Oct 30 2023 at 14:12)</a>:</h4>
+<p><span class="user-mention" data-user-id="399510">@Alec Leamas</span> <br>
+"Is it just a convoluted way to display the fact that wxUSE_GRAPHICS_CONTEXT is set, or what?'<br>
+Yes.  Macros appear to be not used elsewhere.</p>
+
+
+
+<a name="399315658"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332168-Master/topic/Common%20plugin%20library/near/399315658" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Dave Register <a href="https://leamas.github.io/zulip-archive/stream/332168-Master/topic/Common.20plugin.20library.html#399315658">(Oct 30 2023 at 14:40)</a>:</h4>
+<p><span class="user-mention" data-user-id="399510">@Alec Leamas</span> <br>
+Never mind.  I see the recent patches to "devel".  Looks fine to me, now.<br>
+I will add the patch to pidc.h as requested.</p>
+
+
+
+<a name="400054265"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332168-Master/topic/Common%20plugin%20library/near/400054265" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Dave Register <a href="https://leamas.github.io/zulip-archive/stream/332168-Master/topic/Common.20plugin.20library.html#400054265">(Nov 03 2023 at 02:59)</a>:</h4>
+<p><span class="user-mention" data-user-id="399510">@Alec Leamas</span> <br>
+OK, I'm stumped.<br>
+Jon's plugin , OCPN_Draw_pi, Android.<br>
+The plugin builds OK.  I import to hardware Android, and get undefined symbol in the library.  Sort of a normal occurrence during debugging.</p>
+<p>What is missing is the CTOR for TexFont, which is part of new plugin_dc.  Probably others missing, as well, but the load stops after one error.<br>
+So, I do ssh access to CI build bot, and look at the library.</p>
+<div class="codehilite"><pre><span></span><code>circleci@42471cd028e6:~/project/build$ readelf -s libocpn_draw_pi.so  | grep TexFont
+  1066: 00000000     0 FUNC    GLOBAL DEFAULT  UND _ZN7TexFont12RenderString
+  1072: 00000000     0 FUNC    GLOBAL DEFAULT  UND _ZN7TexFontC1Ev
+  1075: 00000000     0 FUNC    GLOBAL DEFAULT  UND _ZN7TexFont13GetTextExten
+  1077: 00000000     0 FUNC    GLOBAL DEFAULT  UND _ZN7TexFontD1Ev
+  1082: 00000000     0 FUNC    GLOBAL DEFAULT  UND _ZN7TexFont5BuildER6wxFon
+ 12422: 00000000     0 FUNC    GLOBAL DEFAULT  UND _ZN7TexFont12RenderString
+ 12430: 00000000     0 FUNC    GLOBAL DEFAULT  UND _ZN7TexFontC1Ev
+ 12433: 00000000     0 FUNC    GLOBAL DEFAULT  UND _ZN7TexFont13GetTextExten
+ 12435: 00000000     0 FUNC    GLOBAL DEFAULT  UND _ZN7TexFontD1Ev
+ 12440: 00000000     0 FUNC    GLOBAL DEFAULT  UND _ZN7TexFont5BuildER6wxFon
+</code></pre></div>
+
+<p>Sure enough, TexFont is undefined in the built plugin library.<br>
+Looking at the build log, I see TexFont.cpp is compiled, and added to the static ocpn::dc-utils library.  And this library is linked to the plugin.<br>
+So, where has TexFont gone to?<br>
+I suspected some trouble with compiler "visibility" flag, so I fiddled with it.  No luck.  "default" or "hidden" makes no difference.</p>
+<p>Build log is here:<br>
+<a href="https://app.circleci.com/pipelines/github/bdbcat/ocpn_draw_pi/32/workflows/077acb7b-262a-4a43-a295-bb7aa9004e94/jobs/355">https://app.circleci.com/pipelines/github/bdbcat/ocpn_draw_pi/32/workflows/077acb7b-262a-4a43-a295-bb7aa9004e94/jobs/355</a></p>
+<p>A mystery...</p>
+
+
+
+<a name="400054980"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332168-Master/topic/Common%20plugin%20library/near/400054980" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Dave Register <a href="https://leamas.github.io/zulip-archive/stream/332168-Master/topic/Common.20plugin.20library.html#400054980">(Nov 03 2023 at 03:04)</a>:</h4>
+<p>More:<br>
+Looking at the static lib with readelf gives:</p>
+<div class="codehilite"><pre><span></span><code>circleci@42471cd028e6:~/project/build/opencpn-libs/plugin_dc/dc_utils$ readelf -s lib_DC_UTILS.a | grep TexFont
+</code></pre></div>
+
+<p>278: <a href="https://github.com/opencpn/OpenCPN/commit/00000000">00000000</a>     0 NOTYPE  GLOBAL DEFAULT  UND _ZN7TexFont12RenderString<br>
+   279: <a href="https://github.com/opencpn/OpenCPN/commit/00000000">00000000</a>     0 NOTYPE  GLOBAL DEFAULT  UND _ZN7TexFont13GetTextExten<br>
+   280: <a href="https://github.com/opencpn/OpenCPN/commit/00000000">00000000</a>     0 NOTYPE  GLOBAL DEFAULT  UND _ZN7TexFont5BuildER6wxFon<br>
+   281: <a href="https://github.com/opencpn/OpenCPN/commit/00000000">00000000</a>     0 NOTYPE  GLOBAL DEFAULT  UND _ZN7TexFontC1Ev<br>
+   282: <a href="https://github.com/opencpn/OpenCPN/commit/00000000">00000000</a>     0 NOTYPE  GLOBAL DEFAULT  UND _ZN7TexFontD1Ev<br>
+    File: lib_DC_UTILS.a(TexFont.cpp.o)<br>
+     1: <a href="https://github.com/opencpn/OpenCPN/commit/00000000">00000000</a>     0 FILE    LOCAL  DEFAULT  ABS TexFont.cpp<br>
+    82: <a href="https://github.com/opencpn/OpenCPN/commit/00001974">00001974</a>   876 FUNC    GLOBAL DEFAULT    2 _ZN7TexFont11RenderGlyphE<br>
+    83: <a href="https://github.com/opencpn/OpenCPN/commit/00001ce0">00001ce0</a>   184 FUNC    GLOBAL DEFAULT    2 _ZN7TexFont12RenderString<br>
+    84: <a href="https://github.com/opencpn/OpenCPN/commit/00001d98">00001d98</a>   392 FUNC    GLOBAL DEFAULT    2 _ZN7TexFont12RenderString<br>
+    85: <a href="https://github.com/opencpn/OpenCPN/commit/00001784">00001784</a>   192 FUNC    GLOBAL DEFAULT    2 _ZN7TexFont13GetTextExten<br>
+    86: <a href="https://github.com/opencpn/OpenCPN/commit/00001844">00001844</a>   304 FUNC    GLOBAL DEFAULT    2 _ZN7TexFont13GetTextExten<br>
+    87: <a href="https://github.com/opencpn/OpenCPN/commit/0000021c">0000021c</a>  5480 FUNC    GLOBAL DEFAULT    2 _ZN7TexFont5BuildER6wxFon<br>
+    88: <a href="https://github.com/opencpn/OpenCPN/commit/000001e0">000001e0</a>    60 FUNC    GLOBAL DEFAULT    2 _ZN7TexFont6DeleteEv<br>
+    89: <a href="https://github.com/opencpn/OpenCPN/commit/00000000">00000000</a>   348 FUNC    GLOBAL DEFAULT    2 _ZN7TexFontC1Ev<br>
+    90: <a href="https://github.com/opencpn/OpenCPN/commit/00000000">00000000</a>   348 FUNC    GLOBAL DEFAULT    2 _ZN7TexFontC2Ev<br>
+    91: <a href="https://github.com/opencpn/OpenCPN/commit/0000015c">0000015c</a>   132 FUNC    GLOBAL DEFAULT    2 _ZN7TexFontD1Ev<br>
+    92: <a href="https://github.com/opencpn/OpenCPN/commit/0000015c">0000015c</a>   132 FUNC    GLOBAL DEFAULT    2 _ZN7TexFontD2Ev</p>
+<p>Not sure how to interpret this.  TexFont is in the included file list, but then undefined in the linked static archive.<br>
+Hmmm.....</p>
+
+
+
+<a name="400055558"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332168-Master/topic/Common%20plugin%20library/near/400055558" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Dave Register <a href="https://leamas.github.io/zulip-archive/stream/332168-Master/topic/Common.20plugin.20library.html#400055558">(Nov 03 2023 at 03:10)</a>:</h4>
+<p>And more:<br>
+Other classes in the DC_UTILS library (e.g. piDC) are found correctly.</p>
+
+
+
+<a name="400067552"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332168-Master/topic/Common%20plugin%20library/near/400067552" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Alec Leamas <a href="https://leamas.github.io/zulip-archive/stream/332168-Master/topic/Common.20plugin.20library.html#400067552">(Nov 03 2023 at 05:30)</a>:</h4>
+<p>hm...</p>
+<p>My first thought is that it could be about linkage order. That is, that when the linker loaded dc_plugin nothing "needed" the symbols we are talking about and they were thus ignored.</p>
+<p>In normal use cases this leads to linkage errors due to to undefined symbols, but unfortunately we accept  these in Linux builds. OTOH, we don't accept them when building for Android and Windows since we link those to main OpenCPN one way or another. So the question is then: does this build on Windows and Android?</p>
+
+
+
+<a name="400074866"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332168-Master/topic/Common%20plugin%20library/near/400074866" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Alec Leamas <a href="https://leamas.github.io/zulip-archive/stream/332168-Master/topic/Common.20plugin.20library.html#400074866">(Nov 03 2023 at 06:51)</a>:</h4>
+<p>No. First of all, your link was a successful Android build. Sorry, just thinking aloud.</p>
+<p>Checked  the linkage order. It's perfectly sane, loading the dc_utils library at the very end. Back to the library internals.</p>
+<p>Repeating your readelf adding a -C (demangle) option on a local shipdriver android build. Here all looks defined and hidden besides the CTOR/DTOR. Same for a local Fedora build.</p>
+<div class="codehilite"><pre><span></span><code>     1: 0000000000000000     0 FILE    LOCAL  DEFAULT  ABS TexFont.cpp
+   486: 0000000000001090  1440 FUNC    GLOBAL HIDDEN     2 TexFont::RenderG[...]
+   487: 00000000000017a4   412 FUNC    GLOBAL HIDDEN     2 TexFont::RenderS[...]
+   488: 0000000000001940   148 FUNC    GLOBAL HIDDEN     2 TexFont::RenderS[...]
+   489: 0000000000000ddc   544 FUNC    GLOBAL HIDDEN     2 TexFont::GetText[...]
+   490: 0000000000000ffc   148 FUNC    GLOBAL HIDDEN     2 TexFont::GetText[...]
+   491: 00000000000001e0  3068 FUNC    GLOBAL HIDDEN     2 TexFont::Build(w[...]
+   492: 0000000000000180    96 FUNC    GLOBAL HIDDEN     2 TexFont::Delete()
+   493: 0000000000000000   264 FUNC    GLOBAL HIDDEN     2 TexFont::TexFont()
+   494: 0000000000000000   264 FUNC    GLOBAL HIDDEN     2 TexFont::TexFont()
+   495: 0000000000000108   120 FUNC    GLOBAL HIDDEN     2 TexFont::~TexFont()
+   496: 0000000000000108   120 FUNC    GLOBAL HIDDEN     2 TexFont::~TexFont()
+</code></pre></div>
+<p>Now, turning to my CCI shipdriver build. Here, the tooling to use obviously is NDK . Trying with readelf, objdump and nm. The latter gives below. It looks like everything is fine, besides the CTOR/DTOR.  </p>
+<p>The values are 0, presuming this is because it's relocatable using -fPIE.</p>
+<p>In the end, it seems to be about the CTOR/DTOR. Everything else is fine. </p>
+<div class="codehilite"><pre><span></span><code> /opt/android/ndk/toolchains/llvm/prebuilt/linux-x86_64/bin/llvm-nm  -C lib_DC_UTILS.a  | grep TexFont::
+         U TexFont::RenderString(wxString const&amp;, int, int)
+         U TexFont::GetTextExtent(wxString const&amp;, int*, int*)
+         U TexFont::Build(wxFont&amp;, bool)
+00000000 W TexFont::SetColor(wxColour&amp;)
+         U TexFont::TexFont()
+         U TexFont::~TexFont()
+00000000 T TexFont::RenderGlyph(int)
+00000000 T TexFont::RenderString(char const*, int, int)
+00000000 T TexFont::RenderString(wxString const&amp;, int, int)
+00000000 T TexFont::GetTextExtent(char const*, int*, int*)
+00000000 T TexFont::GetTextExtent(wxString const&amp;, int*, int*)
+00000000 T TexFont::Build(wxFont&amp;, bool)
+00000000 T TexFont::Delete()
+00000000 T TexFont::TexFont()
+00000000 T TexFont::TexFont()
+00000000 T TexFont::~TexFont()
+00000000 T TexFont::~TexFont()
+</code></pre></div>
+<p>Looking at pidc I can see that the DTOR/CTOR are well defined here (excerpt):</p>
+<div class="codehilite"><pre><span></span><code>$ /opt/android/ndk/toolchains/llvm/prebuilt/linux-x86_64/bin/llvm-nm -C lib_DC_UTILS.a  | grep piDC::
+...
+00000000 T piDC::piDC(wxGLCanvas&amp;)
+00000000 T piDC::piDC(wxDC&amp;)
+00000000 T piDC::piDC()
+00000000 T piDC::piDC(wxGLCanvas&amp;)
+00000000 T piDC::piDC(wxDC&amp;)
+00000000 T piDC::piDC()
+00000000 T piDC::~piDC()
+00000000 T piDC::~piDC()
+...
+</code></pre></div>
+<p>So this is about TexFont only, and specifically the CTOR/DTOR. Any ideas?</p>
+
+
+
+<a name="400075497"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332168-Master/topic/Common%20plugin%20library/near/400075497" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Alec Leamas <a href="https://leamas.github.io/zulip-archive/stream/332168-Master/topic/Common.20plugin.20library.html#400075497">(Nov 03 2023 at 06:57)</a>:</h4>
+<p>The plot thickens. There are two TexFont::TexFont symbols, one undefined and one defined (piDC not so, only defined). </p>
+<div class="codehilite"><pre><span></span><code>/opt/android/ndk/toolchains/llvm/prebuilt/linux-x86_64/bin/llvm-nm -C lib_DC_UTILS.a  | grep TexFont::TexFont
+         U TexFont::TexFont()
+00000000 T TexFont::TexFont()
+00000000 T TexFont::TexFont()
+</code></pre></div>
+
+
+
+<a name="400145449"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332168-Master/topic/Common%20plugin%20library/near/400145449" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Dave Register <a href="https://leamas.github.io/zulip-archive/stream/332168-Master/topic/Common.20plugin.20library.html#400145449">(Nov 03 2023 at 14:32)</a>:</h4>
+<p><span class="user-mention" data-user-id="399510">@Alec Leamas</span> <br>
+Idea:<br>
+There is a TexFont defined in "<a href="http://libgorp.so">libgorp.so</a>", the native OCPN base code.  Some strange collision?<br>
+I will experiment.</p>
+
+
+
+<a name="400148866"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332168-Master/topic/Common%20plugin%20library/near/400148866" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Alec Leamas <a href="https://leamas.github.io/zulip-archive/stream/332168-Master/topic/Common.20plugin.20library.html#400148866">(Nov 03 2023 at 14:51)</a>:</h4>
+<p>Seems like you are on the right track. I looked around for another TexFont.cpp, but obviously didn't look good enough.</p>
+
+
+
+<a name="400152238"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332168-Master/topic/Common%20plugin%20library/near/400152238" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Dave Register <a href="https://leamas.github.io/zulip-archive/stream/332168-Master/topic/Common.20plugin.20library.html#400152238">(Nov 03 2023 at 15:09)</a>:</h4>
+<p><span class="user-mention" data-user-id="399510">@Alec Leamas</span> <br>
+I renamed TexFont to TexFontPi (in devel branch).<br>
+Problem solved.<br>
+Import plugin on real Android device, loads and runs fine.<br>
+To confirm, investigated plugin on CCI:</p>
+<div class="codehilite"><pre><span></span><code>circleci@2715700db4b9:~/project/build$ readelf -s libocpn_draw_pi.so | grep TexFont
+  1133: 00203fc8  5480 FUNC    GLOBAL DEFAULT   13 _ZN9TexFontPI5BuildER6wxF
+  1263: 00205a8c   184 FUNC    GLOBAL DEFAULT   13 _ZN9TexFontPI12RenderStri
+  1326: 00205530   192 FUNC    GLOBAL DEFAULT   13 _ZN9TexFontPI13GetTextExt
+  1809: 00203f8c    60 FUNC    GLOBAL DEFAULT   13 _ZN9TexFontPI6DeleteEv
+  2187: 00203dac   348 FUNC    GLOBAL DEFAULT   13 _ZN9TexFontPIC2Ev
+  2411: 00203f08   132 FUNC    GLOBAL DEFAULT   13 _ZN9TexFontPID2Ev
+  2696: 00205720   876 FUNC    GLOBAL DEFAULT   13 _ZN9TexFontPI11RenderGlyp
+  2940: 00205b44   392 FUNC    GLOBAL DEFAULT   13 _ZN9TexFontPI12RenderStri
+  3336: 00203dac   348 FUNC    GLOBAL DEFAULT   13 _ZN9TexFontPIC1Ev
+  3564: 00203f08   132 FUNC    GLOBAL DEFAULT   13 _ZN9TexFontPID1Ev
+  3630: 002055f0   304 FUNC    GLOBAL DEFAULT   13 _ZN9TexFontPI13GetTextExt
+</code></pre></div>
+
+<p>I have no explanation.<br>
+Thanks for the support and sounding board.</p>
+
+
+
+<a name="400152793"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332168-Master/topic/Common%20plugin%20library/near/400152793" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Dave Register <a href="https://leamas.github.io/zulip-archive/stream/332168-Master/topic/Common.20plugin.20library.html#400152793">(Nov 03 2023 at 15:12)</a>:</h4>
+<p>I did change visibility to "default" in the Android build of dc-utils:</p>
+<div class="codehilite"><pre><span></span><code>if (CMAKE_CXX_COMPILER_ID MATCHES &quot;Clang|GNU&quot;)
+  set_property(TARGET _DC_UTILS PROPERTY COMPILE_FLAGS &quot;-fvisibility=default&quot;)
+endif ()
+</code></pre></div>
+
+<p>Should this actually be changed back to "hidden"?  I am a little foggy on this point.</p>
+
+
+
+<a name="400154013"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332168-Master/topic/Common%20plugin%20library/near/400154013" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Alec Leamas <a href="https://leamas.github.io/zulip-archive/stream/332168-Master/topic/Common.20plugin.20library.html#400154013">(Nov 03 2023 at 15:18)</a>:</h4>
+<p>So am I, for sure.  Need to read up on this. </p>
+<p>For plugins: should anything link to the plugin besides the dlload runtime linkage? No.  So nothing should really be visible  to others, we don't want plugins to link to each other.</p>
+
+
+
+<a name="400154798"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332168-Master/topic/Common%20plugin%20library/near/400154798" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Alec Leamas <a href="https://leamas.github.io/zulip-archive/stream/332168-Master/topic/Common.20plugin.20library.html#400154798">(Nov 03 2023 at 15:22)</a>:</h4>
+<blockquote>
+<p>I have no explanation.</p>
+</blockquote>
+<p>Well, having two instances of a given class i. e., two libraries exporting different definitions of the same symbols is certainly a bug.</p>
+
+
+
+<a name="400154852"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332168-Master/topic/Common%20plugin%20library/near/400154852" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Dave Register <a href="https://leamas.github.io/zulip-archive/stream/332168-Master/topic/Common.20plugin.20library.html#400154852">(Nov 03 2023 at 15:23)</a>:</h4>
+<p><span class="user-mention" data-user-id="399510">@Alec Leamas</span> <br>
+I'll change back to "hidden", and verify</p>
+
+
+
+<a name="400155540"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332168-Master/topic/Common%20plugin%20library/near/400155540" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Alec Leamas <a href="https://leamas.github.io/zulip-archive/stream/332168-Master/topic/Common.20plugin.20library.html#400155540">(Nov 03 2023 at 15:26)</a>:</h4>
+<p>If the linkage fails, the best path would be to add a <code> __attribute__ ((visibility ("default"))</code> to the symbols (methods) which actually should be visible rather exporting each and every symbol. </p>
+<p>But then again: what links to a plugin? And why?</p>
+
+
+
+<a name="400158340"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332168-Master/topic/Common%20plugin%20library/near/400158340" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Dave Register <a href="https://leamas.github.io/zulip-archive/stream/332168-Master/topic/Common.20plugin.20library.html#400158340">(Nov 03 2023 at 15:39)</a>:</h4>
+<p><span class="user-mention" data-user-id="399510">@Alec Leamas</span> <br>
+No change after revert to "hidden".  Works fine.<br>
+I'm content to move on, but will appreciate learning more.</p>
+
+
+
+<a name="400158960"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332168-Master/topic/Common%20plugin%20library/near/400158960" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Alec Leamas <a href="https://leamas.github.io/zulip-archive/stream/332168-Master/topic/Common.20plugin.20library.html#400158960">(Nov 03 2023 at 15:43)</a>:</h4>
+<p>Well, if you should learn it's certainly not from me... Anyway, I will check what's in devel with the goal to have them in master Real Soon (tm).</p>
+
+
+
+<a name="400159368"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332168-Master/topic/Common%20plugin%20library/near/400159368" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Dave Register <a href="https://leamas.github.io/zulip-archive/stream/332168-Master/topic/Common.20plugin.20library.html#400159368">(Nov 03 2023 at 15:45)</a>:</h4>
+<p><span class="user-mention" data-user-id="399510">@Alec Leamas</span> <br>
+Please hold off on merging devel-&gt;main.<br>
+Working another Android DC issue.<br>
+Hopefully tonight.</p>
+
+
+
+<a name="400159798"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332168-Master/topic/Common%20plugin%20library/near/400159798" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Alec Leamas <a href="https://leamas.github.io/zulip-archive/stream/332168-Master/topic/Common.20plugin.20library.html#400159798">(Nov 03 2023 at 15:46)</a>:</h4>
+<p>I'm not talking about merging the whole branch, just to cherry-pick these specific commits. After all it is a blocking error, plugin_dc is already in main.</p>
+
+
+
+<a name="400160396"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332168-Master/topic/Common%20plugin%20library/near/400160396" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Dave Register <a href="https://leamas.github.io/zulip-archive/stream/332168-Master/topic/Common.20plugin.20library.html#400160396">(Nov 03 2023 at 15:50)</a>:</h4>
+<p><span class="user-mention" data-user-id="399510">@Alec Leamas</span> <br>
+OK.  I guess it would block shipdriver, etc. on Android.<br>
+I am working closely with Jon to stabilize FE2, so not really blocking for production there.  There are other issues...<br>
+Just heads up.  There will be more changes coming, I expect.</p>
+
+
+
+<a name="400305910"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332168-Master/topic/Common%20plugin%20library/near/400305910" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Dave Register <a href="https://leamas.github.io/zulip-archive/stream/332168-Master/topic/Common.20plugin.20library.html#400305910">(Nov 04 2023 at 15:07)</a>:</h4>
+<p><span class="user-mention" data-user-id="399510">@Alec Leamas</span> <br>
+I have made more small changes to "devel", ready to cherry-pick to "main", if you please.<br>
+Sorry for the multiple small commits.  Debugging, you know...<br>
+Files changed:</p>
+<div class="codehilite"><pre><span></span><code>opencpn-libs/plugin_dc/dc_utils/src/pidc.cpp
+opencpn-libs/plugin_dc/dc_utils/src/pi_shaders.cpp
+</code></pre></div>
+
+<p>This should be the last (immediate) change we need for production switch-over of all FE2 plugins to opencpn-libs structure.<br>
+I will be glad to see that.</p>
+
+
+
+<a name="400306177"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332168-Master/topic/Common%20plugin%20library/near/400306177" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Alec Leamas <a href="https://leamas.github.io/zulip-archive/stream/332168-Master/topic/Common.20plugin.20library.html#400306177">(Nov 04 2023 at 15:11)</a>:</h4>
+<p>You can do that switch now, devel is stable. Just use that.</p>
+<p>Could you provide a reasonable commit description, maybe a few lines, for what this is all about?</p>
+
+
+
+<a name="400308727"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332168-Master/topic/Common%20plugin%20library/near/400308727" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Dave Register <a href="https://leamas.github.io/zulip-archive/stream/332168-Master/topic/Common.20plugin.20library.html#400308727">(Nov 04 2023 at 15:44)</a>:</h4>
+<p><span class="user-mention" data-user-id="399510">@Alec Leamas</span> </p>
+<p>"Improve Android GLES2 rendering of pattern filled areas, to support pattern color definition.<br>
+Standard GL rendering of textured patterns is straightforward.  GLES2 on Android requires a specific shader to preform this operation.<br>
+This commit corrects an error in that shader source code."</p>
+<p>I guess we could use HEAD of devel now.  But I'd feel better using "main", as a signal to new devs that this library is stable and fully functional on all platforms.  No particular hurry here. Rather get it right.</p>
+
+
+
+<a name="400312132"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332168-Master/topic/Common%20plugin%20library/near/400312132" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Alec Leamas <a href="https://leamas.github.io/zulip-archive/stream/332168-Master/topic/Common.20plugin.20library.html#400312132">(Nov 04 2023 at 16:31)</a>:</h4>
+<p>anyway, master is pushed and identical to current devel</p>
+
+
+
+<a name="400315518"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332168-Master/topic/Common%20plugin%20library/near/400315518" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Dave Register <a href="https://leamas.github.io/zulip-archive/stream/332168-Master/topic/Common.20plugin.20library.html#400315518">(Nov 04 2023 at 17:29)</a>:</h4>
+<p>Thanks</p>
+
+
+
+<a name="404434183"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332168-Master/topic/Common%20plugin%20library/near/404434183" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Mike Rossiter <a href="https://leamas.github.io/zulip-archive/stream/332168-Master/topic/Common.20plugin.20library.html#404434183">(Nov 27 2023 at 15:20)</a>:</h4>
+<p>In <em>opencpn-libs/plugin_dc</em> we have <em>CMakeLists.txt</em> with <code>project("plugin-dc")</code>.</p>
+<p>Using this in <em>Plugin.cmake</em> we write:</p>
+<div class="codehilite"><pre><span></span><code>add_subdirectory(&quot;${CMAKE_SOURCE_DIR}/opencpn-libs/plugin_dc&quot;)
+  target_link_libraries(${PACKAGE_NAME} ocpn::plugin-dc)
+</code></pre></div>
+<p>Could the <em>opencpn-libs</em> folder be renamed to <em>opencpn-libs/plugin-dc</em> or <em>CMakeLists.txt</em> be adjusted?</p>
+
+
+
+<a name="404566223"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332168-Master/topic/Common%20plugin%20library/near/404566223" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Alec Leamas <a href="https://leamas.github.io/zulip-archive/stream/332168-Master/topic/Common.20plugin.20library.html#404566223">(Nov 28 2023 at 07:56)</a>:</h4>
+<p>We could sure do that. However, besides you this also mean coordinating with Dave and Jon which also uses the library. Is it worth it?</p>
+<p>Personally, I dont find it strange. Using '_' is  preferred for filenames,  set in stone by the Google GL..<br>
+And using '-' in identifiers like these which is not C code is actually very common, I might even say 'preferred'. No sources for the latter. though.</p>
+
+
+
+<a name="404571736"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332168-Master/topic/Common%20plugin%20library/near/404571736" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Mike Rossiter <a href="https://leamas.github.io/zulip-archive/stream/332168-Master/topic/Common.20plugin.20library.html#404571736">(Nov 28 2023 at 08:35)</a>:</h4>
+<p><span class="user-mention" data-user-id="399510">@Alec Leamas</span> I can live with it. Just thinking about others having to adapt their code.</p>
+
+
+
+<a name="404572012"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332168-Master/topic/Common%20plugin%20library/near/404572012" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Alec Leamas <a href="https://leamas.github.io/zulip-archive/stream/332168-Master/topic/Common.20plugin.20library.html#404572012">(Nov 28 2023 at 08:37)</a>:</h4>
+<p>Let's go with it as it is then.  The cost of change is just too high compared to possible (questionable?) gains.</p>
+
+
+
+<hr><p>Last updated: Oct 08 2024 at 10:11 UTC</p>
+</html>

@@ -1,0 +1,110 @@
+[
+    {
+        "content": "<p><span class=\"user-mention\" data-user-id=\"399510\">@Alec Leamas</span> : Alec, we are looking at a bug which I think is a plugin manager issue.  When language is changed the options dialog gets destroyed.  As part of this process at least the chart downloader plugin (and possibly other plugins) get unloaded.  When they are reloaded again the plugin manager does not notify them that they can add their content to the options dialog panel.  Specifically, this snippet:</p>\n<blockquote>\n<p>void PluginLoader::NotifySetupOptionsPlugin(const PlugInData* pd) {<br>\n  auto pic = GetContainer(*pd, *GetPlugInArray());<br>\n  if (!pic) return;<br>\n  if (pic-&gt;m_has_setup_options) return;</p>\n</blockquote>\n<p>Will always return because when the plugin was unloaded the m_has_setup_options flag was not cleared. At least I think that is the problem (or maybe just one of multiple problems).</p>",
+        "id": 422610060,
+        "sender_full_name": "Dan Dickey",
+        "timestamp": 1708519876
+    },
+    {
+        "content": "<p>Info: This patch:</p>\n<div class=\"codehilite\"><pre><span></span><code>diff --git a/model/src/plugin_loader.cpp b/model/src/plugin_loader.cpp\nindex d36ea7af9..4c31be25b 100644\n--- a/model/src/plugin_loader.cpp\n+++ b/model/src/plugin_loader.cpp\n@@ -752,7 +752,7 @@ bool PluginLoader::UpdatePlugIns() {\n       wxString msg(&quot;PluginLoader: Initializing PlugIn: &quot;);\n       msg += pic-&gt;m_plugin_file;\n       wxLogMessage(msg);\n-\n+      pic-&gt;m_has_setup_options = false;\n       pic-&gt;m_cap_flag = pic-&gt;m_pplugin-&gt;Init();\n       pic-&gt;m_pplugin-&gt;SetDefaults();\n       pic-&gt;m_init_state = true;\n</code></pre></div>\n<p>Fixed the reported problem.  But I am pretty sure this is not the right place for this hack.</p>",
+        "id": 422613208,
+        "sender_full_name": "Dan Dickey",
+        "timestamp": 1708520814
+    },
+    {
+        "content": "<p>This code is extremely convoluted, for sure.  We could of course clear <code>pic-&gt;m_has_setup_options</code>, but  it might be dangerous since the overall assumption until now has been that this only is done once.</p>\n<p>Another path would be to make chartdldr listen to a new PluginMsg which PluginLoader sends after the plugin has been completely loaded.  It could then do what it needs.  This would not affect other plugins unless they listen to it. I don't know if this is for better or worse.</p>",
+        "id": 422613510,
+        "sender_full_name": "Alec Leamas",
+        "timestamp": 1708520890
+    },
+    {
+        "content": "<p>If done by implementing a new event, it will need to be done also in S63 and o-charts plugins. Not aware of any more that add own tabs to the toolbox.</p>",
+        "id": 422613961,
+        "sender_full_name": "Pavel Kalian",
+        "timestamp": 1708521041
+    },
+    {
+        "content": "<p>Well, we could do that, no major problem.  Sending a new event/PluginMsg is probably the \"safe route\", but somewhat more complex.  Thoughts?</p>",
+        "id": 422614429,
+        "sender_full_name": "Alec Leamas",
+        "timestamp": 1708521182
+    },
+    {
+        "content": "<p>It will also require API 1.19 with all ramifications related to that...</p>",
+        "id": 422614684,
+        "sender_full_name": "Alec Leamas",
+        "timestamp": 1708521259
+    },
+    {
+        "content": "<p>The plugin itself knows it is being destroyed because its DeInit() and the plugin destructor is called.  Why, if the plugin itself is unloaded and destroyed, cannot that process itself clear this flag?</p>",
+        "id": 422616009,
+        "sender_full_name": "Dan Dickey",
+        "timestamp": 1708521679
+    },
+    {
+        "content": "<p>The plugin does not see it. It's defined in <code>class PlugInData</code> which is not visible for the plugin.</p>",
+        "id": 422617491,
+        "sender_full_name": "Alec Leamas",
+        "timestamp": 1708522129
+    },
+    {
+        "content": "<p>We want to avoid the need for new API level here if simply reloading the plugins will do us the same service...</p>",
+        "id": 422617506,
+        "sender_full_name": "Pavel Kalian",
+        "timestamp": 1708522136
+    },
+    {
+        "content": "<blockquote>\n<p>We want to avoid the need for new API level here if simply reloading the plugins will do us the same service...</p>\n</blockquote>\n<p>Yes.</p>",
+        "id": 422617707,
+        "sender_full_name": "Alec Leamas",
+        "timestamp": 1708522189
+    },
+    {
+        "content": "<p>If we want to be really, really safe we could hardcode a list of plugins and only clear the flag  for those in the list. Certainly not kosher...</p>",
+        "id": 422618019,
+        "sender_full_name": "Alec Leamas",
+        "timestamp": 1708522283
+    },
+    {
+        "content": "<p>We don't need to, we can check for <code>INSTALLS_TOOLBOX_PAGE</code></p>",
+        "id": 422618461,
+        "sender_full_name": "Pavel Kalian",
+        "timestamp": 1708522421
+    },
+    {
+        "content": "<p>Almost kosher, I'd say. In practice, we could test these three plugins and make sure it works and rest assured that other plugins are not affected.</p>",
+        "id": 422618815,
+        "sender_full_name": "Alec Leamas",
+        "timestamp": 1708522528
+    },
+    {
+        "content": "<p>... and sending a message is perhaps  a good thing to do anyway for the future. It's cheap.</p>",
+        "id": 422619282,
+        "sender_full_name": "Alec Leamas",
+        "timestamp": 1708522636
+    },
+    {
+        "content": "<p>But surely plug-in manager knows the plug-in is being destroyed. How can it not? Whoever destroyed the plug-in should clear this flag.</p>",
+        "id": 422619459,
+        "sender_full_name": "Dan Dickey",
+        "timestamp": 1708522670
+    },
+    {
+        "content": "<p>Yes, it does, it's basically the UnloadPlugIn. So we could check  INSTALLS_TOOLBOX_PAGE in UnloadPlugin and clear it there instead. I don't see any major advantage doing so, do you?</p>",
+        "id": 422619987,
+        "sender_full_name": "Alec Leamas",
+        "timestamp": 1708522802
+    },
+    {
+        "content": "<p>...no, probably not at a glance.</p>",
+        "id": 422620835,
+        "sender_full_name": "Alec Leamas",
+        "timestamp": 1708523059
+    },
+    {
+        "content": "<p>So. trying top summarize </p>\n<ol>\n<li>The current patch is basically fine but it should check for  <code> INSTALLS_TOOLBOX_PAGE</code> before  it actually clears <code>m_has_setup_options</code></li>\n<li>It might make sense to send a <code>load_complete</code> PluginMsg after loading a plugin  for future needs.</li>\n</ol>",
+        "id": 422628924,
+        "sender_full_name": "Alec Leamas",
+        "timestamp": 1708525528
+    }
+]

@@ -1,0 +1,20 @@
+[
+    {
+        "content": "<p><span class=\"user-mention\" data-user-id=\"517002\">@Dave Register</span>  What I thought was a corner case with fast input + slow output turns out as two low-level bad bugs at this late point: <a href=\"https://github.com/opencpn/OpenCPN/issues/3815\">#3815</a> and <a href=\"https://github.com/opencpn/OpenCPN/issues/3819\">#3819</a>.  Thoughts?</p>",
+        "id": 433871841,
+        "sender_full_name": "Alec Leamas",
+        "timestamp": 1713386695
+    },
+    {
+        "content": "<p><span class=\"user-mention\" data-user-id=\"399510\">@Alec Leamas</span> <br>\nI have reviewed <a href=\"https://github.com/opencpn/OpenCPN/issues/3818\">#3818</a></p>\n<p>As I see it, and as others may agree, this is a lot of logic for what would generally be considered a pathological user config error.<br>\nNamely, RX at 9600 and TX at 4800 is fundamentally unsupportable without a stateful output queue, using detailed and accurate knowledge of the data stream contents.  Your solution uses that knowledge (i.e. NMEA0183 message structure) to work around this config error.  Another solution is aggressive filtering.  In real life, both may be needed.</p>\n<p>Also related:  today, upstream clients of TX methods are generally not prepared to buffer and re-transmit erroneous or incomplete TX calls.  So detecting and ensuring transmission of TX messages by NMEA type is practically the only way to manage this situation, short of re-writing the clients.  We really should not drop things like autopilot commands.</p>\n<p>I'll spend some cycles thinking about the serial N2K equivalent case.</p>\n<p>So this is all well and good if it works.  I guess we should merge and be ready for some wider tests.</p>",
+        "id": 433896814,
+        "sender_full_name": "Dave Register",
+        "timestamp": 1713400967
+    },
+    {
+        "content": "<p>OK, I'll do some final testing and merge. Seems like I'm the only  one which can reproduce the core problem.  </p>\n<p>As for N2k, we should definitely fix the partial writes and the static mentioned in <a href=\"https://github.com/opencpn/OpenCPN/issues/3819\">#3819</a>, the easy path would be to copy paste changes from <a href=\"https://github.com/opencpn/OpenCPN/issues/3819\">#3819</a> after more testing. This is a no brainer and the likely starting point.   </p>\n<p>What's left then is the synchronizing, or lack thereof, in SendMessage. Since there is no need to throttle  here this could be done much simpler, but still needs to be done.</p>",
+        "id": 433920854,
+        "sender_full_name": "Alec Leamas",
+        "timestamp": 1713418596
+    }
+]

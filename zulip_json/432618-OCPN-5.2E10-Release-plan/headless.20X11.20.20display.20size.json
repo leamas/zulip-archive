@@ -1,0 +1,146 @@
+[
+    {
+        "content": "<p>So, as I understand it, the issue is \"wayVNC\".  That is to say, with OCPN flatpack on rPI bookworm wayland, all is well unless your need VNC access.<br>\nAgreed?  Or am I misreading the posts?</p>",
+        "id": 462846700,
+        "sender_full_name": "Dave Register",
+        "timestamp": 1723837201
+    },
+    {
+        "content": "<p>It is not clear what \"wayVNC sucks\" actually is. It works just fine for me to connect to a Pi 5 that I made work yesterday.<br>\nWayfire sucks though, we know that, places windows to the center of screen, makes them not moveable. This issue is not present with Labwm (the other Wayland option now available on the Pi)<br>\nThe crash of flatpak on clicking OK in Toolbox when running on the Pi over VNC with X11 I can reproduce. Not happenign with any of the Wayland compositors.</p>",
+        "id": 462847977,
+        "sender_full_name": "Pavel Kalian",
+        "timestamp": 1723837868
+    },
+    {
+        "content": "<p>The backtrace is not very useful:</p>\n<div class=\"codehilite\"><pre><span></span><code>Thread 1 &quot;opencpn&quot; received signal SIGSEGV, Segmentation fault.\n0x0000555555aa15f8 in options::OnApplyClick(wxCommandEvent&amp;) ()\n(gdb) bt\n#0  0x0000555555aa15f8 in options::OnApplyClick(wxCommandEvent&amp;) ()\n#1  0x0000555555aa5200 in options::OnXidOkClick(wxCommandEvent&amp;) ()\n#2  0x00007ffff703ee80 in wxEvtHandler::ProcessEventIfMatchesId(wxEventTableEntryBase const&amp;, wxEvtHandler*, wxEvent&amp;) ()\n    at /app/lib/libwx_baseu-3.2.so.0\n#3  0x00007ffff703f074 in wxEventHashTable::HandleEvent(wxEvent&amp;, wxEvtHandler*) () at /app/lib/libwx_baseu-3.2.so.0\n#4  0x00007ffff703f790 in wxEvtHandler::TryHereOnly(wxEvent&amp;) () at /app/lib/libwx_baseu-3.2.so.0\n#5  0x00007ffff703f848 in wxEvtHandler::ProcessEventLocally(wxEvent&amp;) () at /app/lib/libwx_baseu-3.2.so.0\n#6  0x00007ffff703f978 in wxEvtHandler::ProcessEvent(wxEvent&amp;) () at /app/lib/libwx_baseu-3.2.so.0\n#7  0x00007ffff7660a10 in wxWindowBase::TryAfter(wxEvent&amp;) () at /app/lib/libwx_gtk3u_core-3.2.so.0\n#8  0x00007ffff7040d34 in wxEvtHandler::SafelyProcessEvent(wxEvent&amp;) () at /app/lib/libwx_baseu-3.2.so.0\n#9  0x00007ffff74b6d38 in  () at /app/lib/libwx_gtk3u_core-3.2.so.0\n#10 0x00007ffff66a3c40 in g_signal_emit_valist () at /usr/lib/aarch64-linux-gnu/libgobject-2.0.so.0\n#11 0x00007ffff66a3dcc in g_signal_emit () at /usr/lib/aarch64-linux-gnu/libgobject-2.0.so.0\n#12 0x00007ffff50b5e8c in gtk_real_button_released () at /usr/lib/aarch64-linux-gnu/libgtk-3.so.0\n#13 0x00007ffff6682cdc in g_type_class_meta_marshalv () at /usr/lib/aarch64-linux-gnu/libgobject-2.0.so.0\n#14 0x00007ffff66a3c40 in g_signal_emit_valist () at /usr/lib/aarch64-linux-gnu/libgobject-2.0.so.0\n#15 0x00007ffff66a3dcc in g_signal_emit () at /usr/lib/aarch64-linux-gnu/libgobject-2.0.so.0\n#16 0x00007ffff50b5bd0 in multipress_released_cb () at /usr/lib/aarch64-linux-gnu/libgtk-3.so.0\n#17 0x00007ffff506fa40 in _gtk_marshal_VOID__INT_DOUBLE_DOUBLEv () at /usr/lib/aarch64-linux-gnu/libgtk-3.so.0\n#18 0x00007ffff66a3c40 in g_signal_emit_valist () at /usr/lib/aarch64-linux-gnu/libgobject-2.0.so.0\n#19 0x00007ffff66a3dcc in g_signal_emit () at /usr/lib/aarch64-linux-gnu/libgobject-2.0.so.0\n#20 0x00007ffff519bc58 in gtk_gesture_multi_press_end () at /usr/lib/aarch64-linux-gnu/libgtk-3.so.0\n#21 0x00007ffff6689a44 in g_cclosure_marshal_VOID__BOXEDv () at /usr/lib/aarch64-linux-gnu/libgobject-2.0.so.0\n#22 0x00007ffff6682cdc in g_type_class_meta_marshalv () at /usr/lib/aarch64-linux-gnu/libgobject-2.0.so.0\n#23 0x00007ffff66a3c40 in g_signal_emit_valist () at /usr/lib/aarch64-linux-gnu/libgobject-2.0.so.0\n...\n</code></pre></div>",
+        "id": 462848434,
+        "sender_full_name": "Pavel Kalian",
+        "timestamp": 1723838087
+    },
+    {
+        "content": "<p>Native build crashes as well, so we have a better stack trace:</p>\n<div class=\"codehilite\"><pre><span></span><code>Thread 1 &quot;opencpn&quot; received signal SIGSEGV, Segmentation fault.\noptions::OnApplyClick (this=this@entry=0x5555594ded30, event=...) at /home/nohal/source/OpenCPN/gui/src/options.cpp:7030\n7030      m_Text_def_boat_speed-&gt;SetLabel(_(&quot;Default Boat Speed &quot;) + &quot;(&quot; +\n(gdb) bt\n#0  options::OnApplyClick(wxCommandEvent&amp;) (this=this@entry=0x5555594ded30, event=...)\n    at /home/nohal/source/OpenCPN/gui/src/options.cpp:7030\n#1  0x0000555555bce8e0 in options::OnXidOkClick(wxCommandEvent&amp;) (event=..., this=0x5555594ded30)\n    at /home/nohal/source/OpenCPN/gui/src/options.cpp:7418\n#2  options::OnXidOkClick(wxCommandEvent&amp;) (this=0x5555594ded30, event=...)\n    at /home/nohal/source/OpenCPN/gui/src/options.cpp:7413\n</code></pre></div>",
+        "id": 462854571,
+        "sender_full_name": "Pavel Kalian",
+        "timestamp": 1723841335
+    },
+    {
+        "content": "<p>I have seen that before, encountered when working on porting O5.10 to Android.  Related to \"compact\" dialog layout.<br>\nThe fix is on my Android punch list, not committed yet.<br>\nWhat display are you using that triggers a \"compact' layout?</p>",
+        "id": 462856011,
+        "sender_full_name": "Dave Register",
+        "timestamp": 1723842074
+    },
+    {
+        "content": "<p>Whatever, this fix will be in O5.10.2.  The list is building, and I want to get all Android stuff into 5.10.2 also.</p>",
+        "id": 462856223,
+        "sender_full_name": "Dave Register",
+        "timestamp": 1723842202
+    },
+    {
+        "content": "<p>Full HD, over VNC. Which works just fine when using Wayland with either of the compositors, but X11 over VNC leads to this</p>\n<div class=\"codehilite\"><pre><span></span><code>18:03:18.508 MESSAGE chcanv.cpp:2323 Metrics:  m_display_size_mm: 50     g_Platform-&gt;getDisplaySize():  0:0\n18:03:18.509 MESSAGE chcanv.cpp:2329 monitor size: 0 0\n</code></pre></div>",
+        "id": 462856631,
+        "sender_full_name": "Pavel Kalian",
+        "timestamp": 1723842455
+    },
+    {
+        "content": "<p>Yep, that would do it.  Very small display, so options tries to use an Android-suitable compact layout.  And the field <code>m_Text_def_boat_speed</code> never got added to the compact layout.</p>",
+        "id": 462856820,
+        "sender_full_name": "Dave Register",
+        "timestamp": 1723842562
+    },
+    {
+        "content": "<p>Can we fix  display class to understand VNC?  Or even know that we are compositing over a VNC?</p>",
+        "id": 462856961,
+        "sender_full_name": "Dave Register",
+        "timestamp": 1723842641
+    },
+    {
+        "content": "<p>Hmmm....<br>\nrPi5 native, bookworm, X11.  I get:</p>\n<div class=\"codehilite\"><pre><span></span><code>20:45:17.950 MESSAGE chcanv.cpp:2323 Metrics:  m_display_size_mm: 344     g_Platform-&gt;getDisplaySize():  1920:1080\n20:45:17.950 MESSAGE chcanv.cpp:2329 monitor size: 1920 1080\n</code></pre></div>\n<p>This look about right for my hardware.</p>",
+        "id": 462857475,
+        "sender_full_name": "Dave Register",
+        "timestamp": 1723842976
+    },
+    {
+        "content": "<p>Over VNC?</p>",
+        "id": 462857556,
+        "sender_full_name": "Pavel Kalian",
+        "timestamp": 1723843045
+    },
+    {
+        "content": "<p>yep.  RealVNC.</p>",
+        "id": 462857699,
+        "sender_full_name": "Dave Register",
+        "timestamp": 1723843107
+    },
+    {
+        "content": "<p>OCPN actually started <em>after</em> VNC connected.</p>",
+        "id": 462857817,
+        "sender_full_name": "Dave Register",
+        "timestamp": 1723843182
+    },
+    {
+        "content": "<p>Not here</p>",
+        "id": 462858016,
+        "sender_full_name": "Pavel Kalian",
+        "timestamp": 1723843286
+    },
+    {
+        "content": "<p>The only way I can make it report the monitor size is to also have a monitor connected to the HDMI port, fully headless it does not work.</p>",
+        "id": 462859440,
+        "sender_full_name": "Pavel Kalian",
+        "timestamp": 1723844108
+    },
+    {
+        "content": "<p><code>xrandr</code> is able to show the resolution, so we will be able to get it as well. We will have no chance to get the physical size of the display on the device actually showing the screen of course</p>",
+        "id": 462860253,
+        "sender_full_name": "Pavel Kalian",
+        "timestamp": 1723844598
+    },
+    {
+        "content": "<p>OK, so whenfully headless, the RPi reports this as it's monitors:</p>\n<div class=\"codehilite\"><pre><span></span><code>18:48:51.913   DEBUG displays.cpp:129 GDK Monitors: 1\n18:48:51.913   DEBUG displays.cpp:145 Monitor 1:\n18:48:51.913   DEBUG displays.cpp:146   Name: HDMI-1\n18:48:51.913   DEBUG displays.cpp:147   Physical Size (mm): 0 x 0\n18:48:51.913   DEBUG displays.cpp:149   Resolution: 0 x 0\n18:48:51.913   DEBUG displays.cpp:151   Scale: 100\n18:48:51.913   DEBUG displays.cpp:145 Monitor 2:\n18:48:51.913   DEBUG displays.cpp:146   Name: HDMI-2\n18:48:51.913   DEBUG displays.cpp:147   Physical Size (mm): 0 x 0\n18:48:51.913   DEBUG displays.cpp:149   Resolution: 0 x 0\n18:48:51.913   DEBUG displays.cpp:151   Scale: 100\n18:48:51.913   DEBUG displays.cpp:243 Number of monitors: 2\n18:48:51.913   DEBUG displays.cpp:244 Monitor info:\n18:48:51.913   DEBUG displays.cpp:246 Monitor: HDMI-1 0x0mm 0x0DIP 0x0px 100%\n18:48:51.913   DEBUG displays.cpp:246 Monitor: HDMI-2 0x0mm 0x0DIP 0x0px 100%\n</code></pre></div>\n<p>Easy to test for and fix</p>",
+        "id": 462865572,
+        "sender_full_name": "Pavel Kalian",
+        "timestamp": 1723847833
+    },
+    {
+        "content": "<p>I have pushed the fix.<br>\nWayland worked because it behaves much better:</p>\n<div class=\"codehilite\"><pre><span></span><code>20:07:52.302   DEBUG displays.cpp:133 GDK Monitors: 1\n20:07:52.302   DEBUG displays.cpp:154 Monitor 1:\n20:07:52.302   DEBUG displays.cpp:155   Name: XWAYLAND0\n20:07:52.302   DEBUG displays.cpp:156   Connection: 0\n20:07:52.302   DEBUG displays.cpp:157   Physical Size (mm): 508 x 285\n20:07:52.302   DEBUG displays.cpp:158   Resolution: 1920 x 1080\n20:07:52.302   DEBUG displays.cpp:160   Scale: 100\n20:07:52.302   DEBUG displays.cpp:261 Number of monitors: 1\n20:07:52.302   DEBUG displays.cpp:262 Monitor info:\n20:07:52.302   DEBUG displays.cpp:264 Monitor: XWAYLAND0 508x285mm 1920x1080DIP 1920x1080px 100%\n</code></pre></div>",
+        "id": 462868471,
+        "sender_full_name": "Pavel Kalian",
+        "timestamp": 1723849984
+    },
+    {
+        "content": "<p>The fix is pushed only to master, do you want to manage all the backports yourself or should I do it?</p>",
+        "id": 462868627,
+        "sender_full_name": "Pavel Kalian",
+        "timestamp": 1723850086
+    },
+    {
+        "content": "<p>I'll do the backports. Just keep pushing ahead on master, and I'll cherry-pick.</p>",
+        "id": 462874608,
+        "sender_full_name": "Dave Register",
+        "timestamp": 1723855789
+    },
+    {
+        "content": "<p>Good morning. </p>\n<p>Late to the party.</p>\n<p>I will update \"my\" bookworm backport and also the official package a k a debian/sid. with this patch. While on it, I will add it to the Ubuntu branches as well. Stay tuned.</p>",
+        "id": 462950159,
+        "sender_full_name": "Alec Leamas",
+        "timestamp": 1723880192
+    },
+    {
+        "content": "<p><span class=\"user-mention\" data-user-id=\"517002\">@Dave Register</span>  I have updated but not pushed the Ubuntu branches with this patch. Just let me know if you want to build in which case I will give the final love and push.</p>",
+        "id": 462967577,
+        "sender_full_name": "Alec Leamas",
+        "timestamp": 1723892704
+    },
+    {
+        "content": "<p>22 messages were moved here from <a class=\"stream-topic\" data-stream-id=\"432618\" href=\"/#narrow/stream/432618-OCPN-5.2E10-Release-plan/topic/Supported.20platforms\">#OCPN 5.10 Release plan &gt; Supported platforms</a> by <span class=\"user-mention silent\" data-user-id=\"399510\">Alec Leamas</span>.</p>",
+        "id": 462987072,
+        "sender_full_name": "Notification Bot",
+        "timestamp": 1723903762
+    },
+    {
+        "content": "<p><span class=\"user-mention\" data-user-id=\"399510\">@Alec Leamas</span> <br>\nIt will be a couple of days before I am ready for \".2\" release.  Nothing serious blocking.  Just more Android testing.</p>",
+        "id": 463101955,
+        "sender_full_name": "Dave Register",
+        "timestamp": 1723957199
+    }
+]

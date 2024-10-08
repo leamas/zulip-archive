@@ -1,0 +1,80 @@
+<html>
+<head><meta charset="utf-8"><title>Wrong version number showing in list · JavaScript_pi · Zulip Chat Archive</title></head>
+<h2>Stream: <a href="https://leamas.github.io/zulip-archive/stream/349785-JavaScript_pi/index.html">JavaScript_pi</a></h2>
+<h3>Topic: <a href="https://leamas.github.io/zulip-archive/stream/349785-JavaScript_pi/topic/Wrong.20version.20number.20showing.20in.20list.html">Wrong version number showing in list</a></h3>
+
+<hr>
+
+<base href="https://opencpn.zulipchat.com">
+
+<head><link href="https://leamas.github.io/zulip-archive/style.css" rel="stylesheet"></head>
+
+<a name="438375664"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/349785-JavaScript_pi/topic/Wrong%20version%20number%20showing%20in%20list/near/438375664" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Tony Voss <a href="https://leamas.github.io/zulip-archive/stream/349785-JavaScript_pi/topic/Wrong.20version.20number.20showing.20in.20list.html#438375664">(May 13 2024 at 14:24)</a>:</h4>
+<p>I have just updated the JavaScript plugin to version v3.0.4e (e indicting it was the fifth try to get it go through OK).</p>
+<ul>
+<li>In my plugins/cmake file I have <code>set(PKG_VERSION  3.0.4)</code></li>
+<li>I gave it a tag of <code>v3.0.4e</code></li>
+<li>The files in Cloudsmith start with <code>javascript-v3.0.4e</code></li>
+<li>When I install from the catalogue it invites me to install <code>javascript-v3.0.4e</code></li>
+</ul>
+<p>But in the list of installed plugins it is shown as <code>v3.0.0</code><br>
+I have tried uninstalling and downloading again but no change.</p>
+<p>What am I missing?</p>
+
+
+
+<a name="438380607"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/349785-JavaScript_pi/topic/Wrong%20version%20number%20showing%20in%20list/near/438380607" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Tony Voss <a href="https://leamas.github.io/zulip-archive/stream/349785-JavaScript_pi/topic/Wrong.20version.20number.20showing.20in.20list.html#438380607">(May 13 2024 at 14:44)</a>:</h4>
+<p>Maybe including the 'e' is preventing parsing the version number?</p>
+
+
+
+<a name="438418819"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/349785-JavaScript_pi/topic/Wrong%20version%20number%20showing%20in%20list/near/438418819" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Alec Leamas <a href="https://leamas.github.io/zulip-archive/stream/349785-JavaScript_pi/topic/Wrong.20version.20number.20showing.20in.20list.html#438418819">(May 13 2024 at 18:00)</a>:</h4>
+<p>The filenames are irrelevant, could be anything. </p>
+<p>The two things used are the value in the metadata and the value returned by  GetPlugInVersionMajor(), GetPlugInVersionMinor() + GetPlugInVersionPatch() and friends in the API.</p>
+<p>You  should check the metadata in the metadata file,  the only xml file created in the build directory.  Here you have a <code>&lt;version&gt;</code>  tag to check; this is what is used when th plugin is not installed. </p>
+<p>The core issue here is that the tag does not match PKG_VERSION.  The tag is used when not installed, PKG_VERSION once it is installed.</p>
+<p>[could be shorter reply, I know. Thinking as I type]</p>
+
+
+
+<a name="438419742"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/349785-JavaScript_pi/topic/Wrong%20version%20number%20showing%20in%20list/near/438419742" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Alec Leamas <a href="https://leamas.github.io/zulip-archive/stream/349785-JavaScript_pi/topic/Wrong.20version.20number.20showing.20in.20list.html#438419742">(May 13 2024 at 18:05)</a>:</h4>
+<p>The intended workflow:</p>
+<ol>
+<li>Release a version, say 1.2.1</li>
+<li>start working on 1.2.2. At this point update PKG_VERSION</li>
+<li>Make test builds using automated git versions, fix things.</li>
+<li>When done, tag the last working build with 1.2.2 or v1.2.2</li>
+<li>Rinse and repeat.</li>
+</ol>
+
+
+
+<a name="438526609"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/349785-JavaScript_pi/topic/Wrong%20version%20number%20showing%20in%20list/near/438526609" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Tony Voss <a href="https://leamas.github.io/zulip-archive/stream/349785-JavaScript_pi/topic/Wrong.20version.20number.20showing.20in.20list.html#438526609">(May 14 2024 at 08:31)</a>:</h4>
+<p><span class="user-mention" data-user-id="399510">@Alec Leamas</span>  This is very helpful - thank you.<br>
+Turns out I was missing the GetPlugInVersionPatch() method.  It is in a later part of the ocpn_plugins.h file. I am suprised it did not show up as a missing symbol.  I guess plugin manager was assuming zero and hence my issue.</p>
+<p>On my pull request, the checks failed again with a checksum error for<br>
+<code>metadata/javascript-3.0.5-msvc-wx32-10.xml: javascript-3.0.5_msvc-wx32-10-x86.tar.gz</code><br>
+This is the second time I have had this - in 2 out for 4 builds and always msvc.<br>
+Building again usually works.<br>
+Any thoughts?</p>
+<p>Also I note there are 14 binary &amp;  metadata pairs put into the cloudsmith repository but only 13 metadata files in my auto branch.<br>
+It seems one metadata file is not being inserted into auto</p>
+
+
+
+<a name="438527171"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/349785-JavaScript_pi/topic/Wrong%20version%20number%20showing%20in%20list/near/438527171" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Alec Leamas <a href="https://leamas.github.io/zulip-archive/stream/349785-JavaScript_pi/topic/Wrong.20version.20number.20showing.20in.20list.html#438527171">(May 14 2024 at 08:35)</a>:</h4>
+<blockquote>
+<p>It seems one metadata file is not being inserted into auto</p>
+</blockquote>
+<p>It's just to checkout that branch and see what's missing. Then, look into the build log for corresponding build. See also <a href="https://opencpn-manuals.github.io/main/AlternativeWorkflow/InstallConfigure/Catalog-Github-Integration.html#_troubleshooting">https://opencpn-manuals.github.io/main/AlternativeWorkflow/InstallConfigure/Catalog-Github-Integration.html#_troubleshooting</a></p>
+
+
+
+<hr><p>Last updated: Oct 08 2024 at 10:11 UTC</p>
+</html>

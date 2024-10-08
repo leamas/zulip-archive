@@ -1,0 +1,52 @@
+<html>
+<head><meta charset="utf-8"><title>API 1.18: android build · Master · Zulip Chat Archive</title></head>
+<h2>Stream: <a href="https://leamas.github.io/zulip-archive/stream/332168-Master/index.html">Master</a></h2>
+<h3>Topic: <a href="https://leamas.github.io/zulip-archive/stream/332168-Master/topic/API.201.2E18.3A.20android.20build.html">API 1.18: android build</a></h3>
+
+<hr>
+
+<base href="https://opencpn.zulipchat.com">
+
+<head><link href="https://leamas.github.io/zulip-archive/style.css" rel="stylesheet"></head>
+
+<a name="389804530"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332168-Master/topic/API%201.18%3A%20android%20build/near/389804530" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Dave Register <a href="https://leamas.github.io/zulip-archive/stream/332168-Master/topic/API.201.2E18.3A.20android.20build.html#389804530">(Sep 08 2023 at 04:01)</a>:</h4>
+<p><span class="user-mention" data-user-id="399510">@Alec Leamas</span> <br>
+Thinking some more, we actually already have a version of your concept operational in Android, if by accident.  The main "App" is a Java native app running on Android OS.  All of the OCPN core support comes in as a solib, (<a href="http://libgorp.so">libgorp.so</a>) which is brought into the image by a dlopen() call during initialization of the Android App..<br>
+And this is precisely why you saw the build time link errors when the OCPN library need an update to API118.  So, we caught link errors at build time, which is a good thing.<br>
+Incidentally, this is also why the plugins for Android need a SONAME definition for the OCPN core library.  The Android plugin is a .so library linking against, among other things, the OCPN core library, which is also an Android solib.</p>
+<p>So, the SONAME of "<a href="http://libgorp.so">libgorp.so</a>" requirement for plugins is exclusive to Android builds.  This really clears up my thinking on this difference between plugin linux and Android builds.</p>
+
+
+
+<a name="389819107"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332168-Master/topic/API%201.18%3A%20android%20build/near/389819107" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Alec Leamas <a href="https://leamas.github.io/zulip-archive/stream/332168-Master/topic/API.201.2E18.3A.20android.20build.html#389819107">(Sep 08 2023 at 06:33)</a>:</h4>
+<p>Well, thanks for sharing that, it certainly explains more about the Android situation. </p>
+<p>If I ever look into creating that library based on api_shim we certainly need to coordinate the SONAME, having different names for different platforms makes no sense.</p>
+<blockquote>
+<p>So, we caught link errors at build time, which is a good thing.</p>
+</blockquote>
+<p>Indeed</p>
+
+
+
+<a name="391725247"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332168-Master/topic/API%201.18%3A%20android%20build/near/391725247" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Alec Leamas <a href="https://leamas.github.io/zulip-archive/stream/332168-Master/topic/API.201.2E18.3A.20android.20build.html#391725247">(Sep 18 2023 at 15:28)</a>:</h4>
+<p>Next question is when we are ready to merge all of devel into main...</p>
+
+
+
+<a name="391725439"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332168-Master/topic/API%201.18%3A%20android%20build/near/391725439" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Notification Bot <a href="https://leamas.github.io/zulip-archive/stream/332168-Master/topic/API.201.2E18.3A.20android.20build.html#391725439">(Sep 18 2023 at 15:29)</a>:</h4>
+<p><a href="#narrow/stream/332168-Master---5.2E8.2E0--.28was.3A-comms.29/topic/API.201.2E18.3A.20android.20build/near/391725247">A message</a> was moved here from <a class="stream-topic" data-stream-id="361980" href="/#narrow/stream/361980-opencpn-commits/topic/OpenCPN.20.2F.20master">#opencpn-commits &gt; OpenCPN / master</a> by <span class="user-mention silent" data-user-id="399510">Alec Leamas</span>.</p>
+
+
+
+<a name="391929013"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332168-Master/topic/API%201.18%3A%20android%20build/near/391929013" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Mike Rossiter <a href="https://leamas.github.io/zulip-archive/stream/332168-Master/topic/API.201.2E18.3A.20android.20build.html#391929013">(Sep 19 2023 at 14:47)</a>:</h4>
+<p>ShipDriver v3.3.3 running on tablet with Android OS 13 works fine. This plugin uses API 118.</p>
+
+
+
+<hr><p>Last updated: Oct 08 2024 at 10:11 UTC</p>
+</html>

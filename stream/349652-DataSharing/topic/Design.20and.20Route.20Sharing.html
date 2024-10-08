@@ -889,5 +889,54 @@ I can't test much more during this weekend. I'm occupied by a OCPN class in Stoc
 
 
 
-<hr><p>Last updated: Oct 05 2023 at 10:30 UTC</p>
+<a name="426072971"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/349652-DataSharing/topic/Design%20and%20Route%20Sharing/near/426072971" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Håkan Svensson <a href="https://leamas.github.io/zulip-archive/stream/349652-DataSharing/topic/Design.20and.20Route.20Sharing.html#426072971">(Mar 12 2024 at 08:12)</a>:</h4>
+<p><span class="user-mention" data-user-id="399510">@Alec Leamas</span> <br>
+Send to peer from one specific Debian Rpi4<br>
+On one Rpi4 it's no problem when he's a server e.g. send to Rpi 4 from a Win.<br>
+But when that Rpi4 is client, that's send the route to another like a Win, we get the "Curl transfer error" "SSL connect error", see pict. Only seen on this particular device. Built locally using yesterday's master code in the same manner as other Pi's around. <br>
+The server host is well detected as of the gdb prints and in the picture below.<br>
+Any hints?</p>
+<div class="codehilite"><pre><span></span><code>reading mDNS query replies
+192.168.1.202:5353 : answer opencpn-object-control-service. PTR openplotter.opencpn-object-control-service. rclass 0x1 ttl 10 length 14
+192.168.1.203:5353 : answer opencpn-object-control-service. PTR openplotter.opencpn-object-control-service. rclass 0x1 ttl 10 length 14
+192.168.1.187:5353 : answer opencpn-object-control-service. PTR KONTORSDATOR.opencpn-object-control-service. rclass 0x1 ttl 10 length 15
+192.168.1.187:5353 : answer opencpn-object-control-service. PTR KONTORSDATOR.opencpn-object-control-service. rclass 0x1 ttl 10 length 15
+Read 8 records
+Closed sockets
+[Thread 0x7f99c23540 (LWP 3166) exited]
+[Thread 0x7fe445a540 (LWP 3137) exited]
+</code></pre></div>
+<p><a href="/user_uploads/33951/zVa11mXl0XHNRzr64m5-l8Zo/bild.png">bild.png</a><br>
+<a href="/user_uploads/33951/Ekjzte_oRWO0kiggupoMgo0T/bild.png">bild.png</a></p>
+<div class="message_inline_image"><a href="/user_uploads/33951/zVa11mXl0XHNRzr64m5-l8Zo/bild.png" title="bild.png"><img src="/user_uploads/33951/zVa11mXl0XHNRzr64m5-l8Zo/bild.png"></a></div><div class="message_inline_image"><a href="/user_uploads/33951/Ekjzte_oRWO0kiggupoMgo0T/bild.png" title="bild.png"><img src="/user_uploads/33951/Ekjzte_oRWO0kiggupoMgo0T/bild.png"></a></div>
+
+
+
+<a name="426081922"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/349652-DataSharing/topic/Design%20and%20Route%20Sharing/near/426081922" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Alec Leamas <a href="https://leamas.github.io/zulip-archive/stream/349652-DataSharing/topic/Design.20and.20Route.20Sharing.html#426081922">(Mar 12 2024 at 09:11)</a>:</h4>
+<p>The first test is to use curl on the command line to verify the server part. There is some docs at <a href="https://opencpn-manuals.github.io/main/opencpn-dev/rest-interface.html#_headless_pairing">https://opencpn-manuals.github.io/main/opencpn-dev/rest-interface.html#_headless_pairing</a> .  Using this it should be possible to sort out if this is a server or client side problem.</p>
+<p>You don't need to mess with the  key as the first step. The complete  API is available at <em>model/include/model/rest-server.h</em>. Here you find <code>/api/get-version</code> which should return the server version; it does not need any  source or key.</p>
+
+
+
+<a name="426082363"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/349652-DataSharing/topic/Design%20and%20Route%20Sharing/near/426082363" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Alec Leamas <a href="https://leamas.github.io/zulip-archive/stream/349652-DataSharing/topic/Design.20and.20Route.20Sharing.html#426082363">(Mar 12 2024 at 09:13)</a>:</h4>
+<p>That is, <code>curl --insecure https://raspbian:8443/api/get-version</code> should return a json reply which is sane;  you need to replace <code>raspbian:8443</code> with your actual <em>server address:port</em></p>
+
+
+
+<a name="426084548"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/349652-DataSharing/topic/Design%20and%20Route%20Sharing/near/426084548" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Alec Leamas <a href="https://leamas.github.io/zulip-archive/stream/349652-DataSharing/topic/Design.20and.20Route.20Sharing.html#426084548">(Mar 12 2024 at 09:27)</a>:</h4>
+<p>BTW: Before diving into this: a common reason for failing https connections is that the clocks are not  synchronized . Don't ask, just check if you have a correct date and time on both peers first. If not fix it, ntp is your friend.</p>
+
+
+
+<a name="426190907"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/349652-DataSharing/topic/Design%20and%20Route%20Sharing/near/426190907" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Håkan Svensson <a href="https://leamas.github.io/zulip-archive/stream/349652-DataSharing/topic/Design.20and.20Route.20Sharing.html#426190907">(Mar 12 2024 at 18:40)</a>:</h4>
+<p>Thanks for the tip. Will try to check more tomorrow.</p>
+
+
+
+<hr><p>Last updated: Oct 08 2024 at 10:11 UTC</p>
 </html>

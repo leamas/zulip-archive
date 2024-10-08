@@ -1,0 +1,90 @@
+<html>
+<head><meta charset="utf-8"><title>ci: silent failures · Master · Zulip Chat Archive</title></head>
+<h2>Stream: <a href="https://leamas.github.io/zulip-archive/stream/332168-Master/index.html">Master</a></h2>
+<h3>Topic: <a href="https://leamas.github.io/zulip-archive/stream/332168-Master/topic/ci.3A.20silent.20failures.html">ci: silent failures</a></h3>
+
+<hr>
+
+<base href="https://opencpn.zulipchat.com">
+
+<head><link href="https://leamas.github.io/zulip-archive/style.css" rel="stylesheet"></head>
+
+<a name="407811517"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332168-Master/topic/ci%3A%20silent%20failures/near/407811517" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Alec Leamas <a href="https://leamas.github.io/zulip-archive/stream/332168-Master/topic/ci.3A.20silent.20failures.html#407811517">(Dec 13 2023 at 21:15)</a>:</h4>
+<p>I have stumbled on that both the macos and windows github builds  looks to be successful although they  are not. Just a heads up-for now...<br>
+<span class="user-mention" data-user-id="517002">@Dave Register</span>  <span class="user-mention" data-user-id="573239">@Pavel Kalian</span></p>
+
+
+
+<a name="407826177"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332168-Master/topic/ci%3A%20silent%20failures/near/407826177" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Pavel Kalian <a href="https://leamas.github.io/zulip-archive/stream/332168-Master/topic/ci.3A.20silent.20failures.html#407826177">(Dec 13 2023 at 23:05)</a>:</h4>
+<p>Yes, I have noticed it in the past, at least on macOS, but there was always something better to do than to actually fix it... Simply adding <code>set -e</code> should probably do it.</p>
+
+
+
+<a name="407828677"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332168-Master/topic/ci%3A%20silent%20failures/near/407828677" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Alec Leamas <a href="https://leamas.github.io/zulip-archive/stream/332168-Master/topic/ci.3A.20silent.20failures.html#407828677">(Dec 13 2023 at 23:27)</a>:</h4>
+<p><span class="user-mention" data-user-id="573239">@Pavel Kalian</span> </p>
+<p>Anyway, I have problems getting the currently broken macos builds in place. So far two things:</p>
+<ol>
+<li>The build picks up /usr/local/include/geodesic.h instead of the intended  ./include/geodesic.h.</li>
+<li>I have problems with below  which just does not do what it should. </li>
+</ol>
+<p>Any ideas?</p>
+<div class="codehilite"><pre><span></span><code>#if defined(__GNUC__) &amp;&amp; (__GNUC__ &lt; 8)
+#include &lt;experimental/filesystem&gt;
+namespace fs = std::experimental::filesystem;
+
+#elif defined(__clang_major__) &amp;&amp; (__clang_major__ &lt; 15)
+#pragma message &quot;Using boost filesystem&quot;
+#include &lt;boost/filesystem.hpp&gt;
+namespace fs = boost::filesystem;
+
+#else
+#include &lt;filesystem&gt;
+#include &lt;utility&gt;
+namespace fs = std::filesystem;
+#endif
+</code></pre></div>
+
+
+
+<a name="407832806"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332168-Master/topic/ci%3A%20silent%20failures/near/407832806" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Alec Leamas <a href="https://leamas.github.io/zulip-archive/stream/332168-Master/topic/ci.3A.20silent.20failures.html#407832806">(Dec 14 2023 at 00:04)</a>:</h4>
+<p>Found it... clang also defines __GNU__. But  1. is still there</p>
+
+
+
+<a name="407833303"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332168-Master/topic/ci%3A%20silent%20failures/near/407833303" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Pavel Kalian <a href="https://leamas.github.io/zulip-archive/stream/332168-Master/topic/ci.3A.20silent.20failures.html#407833303">(Dec 14 2023 at 00:09)</a>:</h4>
+<p>Perhaps the order of the include directories? Did you try adding ours with <code>BEFORE</code> parameter to <a href="https://cmake.org/cmake/help/latest/command/target_include_directories.html#command:target_include_directories">https://cmake.org/cmake/help/latest/command/target_include_directories.html#command:target_include_directories</a> ?</p>
+
+
+
+<a name="407833356"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332168-Master/topic/ci%3A%20silent%20failures/near/407833356" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Alec Leamas <a href="https://leamas.github.io/zulip-archive/stream/332168-Master/topic/ci.3A.20silent.20failures.html#407833356">(Dec 14 2023 at 00:09)</a>:</h4>
+<p>Will do...</p>
+
+
+
+<a name="407845562"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332168-Master/topic/ci%3A%20silent%20failures/near/407845562" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Alec Leamas <a href="https://leamas.github.io/zulip-archive/stream/332168-Master/topic/ci.3A.20silent.20failures.html#407845562">(Dec 14 2023 at 01:55)</a>:</h4>
+<p>Pushed commits for MacOS std::filesystem which I felt guilty about.  However, builds are still failing on include paths i. e., using /usr/local/include/geodesic.h.</p>
+<p>Good night.</p>
+
+
+
+<a name="407929661"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332168-Master/topic/ci%3A%20silent%20failures/near/407929661" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Alec Leamas <a href="https://leamas.github.io/zulip-archive/stream/332168-Master/topic/ci.3A.20silent.20failures.html#407929661">(Dec 14 2023 at 10:30)</a>:</h4>
+<p><span class="user-mention" data-user-id="573239">@Pavel Kalian</span>  MacOS builds still failing. I'm not really motivated to work with this since once I complete <a href="https://github.com/opencpn/OpenCPN/issues/3513">#3513</a> this will be sorted out anyway (<em>geodesic.h</em> will become <em>model/geodesic.h</em>). So, signing off from this unless someone persuades me to come back to it.</p>
+
+
+
+<a name="408449382"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332168-Master/topic/ci%3A%20silent%20failures/near/408449382" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Alec Leamas <a href="https://leamas.github.io/zulip-archive/stream/332168-Master/topic/ci.3A.20silent.20failures.html#408449382">(Dec 17 2023 at 15:14)</a>:</h4>
+<p>Anyway, got windows in order -- build failures are now fully visible. No plans for to deal  with MacOS  for the moment.</p>
+
+
+
+<hr><p>Last updated: Oct 08 2024 at 10:11 UTC</p>
+</html>

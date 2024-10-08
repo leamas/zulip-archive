@@ -1,0 +1,112 @@
+<html>
+<head><meta charset="utf-8"><title>Windows build broken · Master · Zulip Chat Archive</title></head>
+<h2>Stream: <a href="https://leamas.github.io/zulip-archive/stream/332168-Master/index.html">Master</a></h2>
+<h3>Topic: <a href="https://leamas.github.io/zulip-archive/stream/332168-Master/topic/Windows.20build.20broken.html">Windows build broken</a></h3>
+
+<hr>
+
+<base href="https://opencpn.zulipchat.com">
+
+<head><link href="https://leamas.github.io/zulip-archive/style.css" rel="stylesheet"></head>
+
+<a name="434634214"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332168-Master/topic/Windows%20build%20broken/near/434634214" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Dan Dickey <a href="https://leamas.github.io/zulip-archive/stream/332168-Master/topic/Windows.20build.20broken.html#434634214">(Apr 22 2024 at 01:27)</a>:</h4>
+<p>Sorry, but I have been away on travel for some days.  When I got back late last week the Windows local build system will not build.  I vaguely remember seeing a message that may be related but don't know if it was Zulip or Github message.  Here is the message it get:</p>
+<div class="codehilite"><pre><span></span><code>C:\Users\dldic\source\repos\test\ocpn_wxWidgets\include\wx/vector.h(476,15): error C2061: syntax error: identifier &#39;place&#39;
+ [C:\Users\dldic\source\repos\test\OpenCPN\build\opencpn.vcxproj]
+  C:\Users\dldic\source\repos\test\ocpn_wxWidgets\include\wx/vector.h(470): note: while compiling class template member function &#39;void wxVector&lt;wxBitmap&gt;::push_back(const wxBitmap &amp;)&#39;
+  C:\Users\dldic\source\repos\test\ocpn_wxWidgets\include\wx/bmpbndl.h(200): note: see reference to function template instantiation &#39;void wxVector&lt;wxBitmap&gt;::push_back(const wxBitmap &amp;)&#39; being compiled
+  C:\Users\dldic\source\repos\test\ocpn_wxWidgets\include\wx/bmpbndl.h(198): note: see reference to class template instantiation &#39;wxVector&lt;wxBitmap&gt;&#39; being compiled
+</code></pre></div>
+<p>Does anyone recognize this from last couple weeks and what was the solution?</p>
+
+
+
+<a name="434635621"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332168-Master/topic/Windows%20build%20broken/near/434635621" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Pavel Kalian <a href="https://leamas.github.io/zulip-archive/stream/332168-Master/topic/Windows.20build.20broken.html#434635621">(Apr 22 2024 at 01:49)</a>:</h4>
+<p>I don't think I have ever seen this, but haven't built on Windows for a few weeks. As the CI builds pass normally I don't see much reason why it should fail for you...</p>
+
+
+
+<a name="434666047"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332168-Master/topic/Windows%20build%20broken/near/434666047" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Håkan Svensson <a href="https://leamas.github.io/zulip-archive/stream/332168-Master/topic/Windows.20build.20broken.html#434666047">(Apr 22 2024 at 06:53)</a>:</h4>
+<p>For a reference I build on Win every day and have not seen the same. Though sometimes when having tested (not finalized) PR I've to clean /build/ to get rid of build errors when returning to master.</p>
+
+
+
+<a name="434718357"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332168-Master/topic/Windows%20build%20broken/near/434718357" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Alec Leamas <a href="https://leamas.github.io/zulip-archive/stream/332168-Master/topic/Windows.20build.20broken.html#434718357">(Apr 22 2024 at 11:02)</a>:</h4>
+<p>Dan's message is obviously some problem when building wxWidgets. I cannot see how anything in the OpenCPN code could affect this. Furthermore, the wxWidgets source should certainly not FTBFS.</p>
+<p>Ergo: this is somehow about the build environment (?)</p>
+
+
+
+<a name="435379282"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332168-Master/topic/Windows%20build%20broken/near/435379282" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Dan Dickey <a href="https://leamas.github.io/zulip-archive/stream/332168-Master/topic/Windows.20build.20broken.html#435379282">(Apr 25 2024 at 12:35)</a>:</h4>
+<p>It's not a build problem with wxWidgets.  Further investigation reveals that only the "Debug" build fails.  Non-debug builds complete ok.  I'm pretty sure this commit: <a href="https://github.com/OpenCPN/OpenCPN/commit/87fcaa4d0d7ab6bac629d76fd473961eb2353175">Merge branch 'master' of github.com:OpenCPN/OpenCPN into shapebak · OpenCPN/OpenCPN@87fcaa4</a> is when the problem started.</p>
+<p>I suspect the reason DEBUG build fails is that when compiling in DEBUG mode almost no inlining happens.   In non-debug build all these function calls are inlined and exist separately so no confusion arises.</p>
+<p>I will admit this may be a compiler bug but don't think so.  I think this is some C++ voodoo that we should sort out. The Microsoft help for this error isn't very helpful. <a href="https://learn.microsoft.com/en-us/cpp/error-messages/compiler-errors-1/compiler-error-c2061?view=msvc-170&amp;f1url=%3FappId%3DDev17IDEF1%26l%3DEN-US%26k%3Dk(C2061)%26rd%3Dtrue">Compiler Error C2061 | Microsoft Learn</a></p>
+
+
+
+<a name="435434864"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332168-Master/topic/Windows%20build%20broken/near/435434864" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Alec Leamas <a href="https://leamas.github.io/zulip-archive/stream/332168-Master/topic/Windows.20build.20broken.html#435434864">(Apr 25 2024 at 17:22)</a>:</h4>
+<p>hm... is the error message excerpt correct? isn't there yet another line which at least indicates  the file which includes  these wxw headers?</p>
+<p>I have seen similar problems where windows headers defines something which upsets the standard C++ headers.</p>
+<p>The problematic lines in <em>vector.h</em></p>
+<div class="codehilite"><pre><span></span><code>       void* const place = m_values + m_size;
+        ::new(place) value_type(v);
+</code></pre></div>
+<p>Seems like ::new is broken, probably redefined someplace else...</p>
+
+
+
+<a name="435481335"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332168-Master/topic/Windows%20build%20broken/near/435481335" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Dan Dickey <a href="https://leamas.github.io/zulip-archive/stream/332168-Master/topic/Windows.20build.20broken.html#435481335">(Apr 25 2024 at 23:15)</a>:</h4>
+<p>The including file is <a href="https://github.com/gui/src/shapefile_basemap.cpp">https://github.com/gui/src/shapefile_basemap.cpp</a></p>
+
+
+
+<a name="435489245"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332168-Master/topic/Windows%20build%20broken/near/435489245" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Dan Dickey <a href="https://leamas.github.io/zulip-archive/stream/332168-Master/topic/Windows.20build.20broken.html#435489245">(Apr 26 2024 at 00:55)</a>:</h4>
+<p>Complete error message:</p>
+<div class="codehilite"><pre><span></span><code>&quot;C:\Users\dldic\source\repos\test\opencpn\build\INSTALL.vcxproj&quot; (Build target) (1) -&gt;
+&quot;C:\Users\dldic\source\repos\test\opencpn\build\ALL_BUILD.vcxproj&quot; (default target) (3) -&gt;
+&quot;C:\Users\dldic\source\repos\test\opencpn\build\opencpn.vcxproj&quot; (default target) (47) -&gt;
+(ClCompile target) -&gt;
+C:\Users\dldic\source\repos\test\opencpn\gui\include\gui\shapefile_basemap.h(135,27): wa
+rning C4927: illegal conversion; more than one user-defined conversion has been implicitly
+applied [C:\Users\dldic\source\repos\test\opencpn\build\opencpn.vcxproj]
+C:\Users\dldic\source\repos\test\opencpn\gui\include\gui\shapefile_basemap.h(135,27): wa
+rning C4927: illegal conversion; more than one user-defined conversion has been implicitly
+applied [C:\Users\dldic\source\repos\test\opencpn\build\opencpn.vcxproj]
+C:\Users\dldic\source\repos\test\opencpn\gui\include\gui\shapefile_basemap.h(135,27): wa
+rning C4927: illegal conversion; more than one user-defined conversion has been implicitly
+applied [C:\Users\dldic\source\repos\test\opencpn\build\opencpn.vcxproj]
+
+
+&quot;C:\Users\dldic\source\repos\test\opencpn\build\INSTALL.vcxproj&quot; (Build target) (1) -&gt;
+&quot;C:\Users\dldic\source\repos\test\opencpn\build\ALL_BUILD.vcxproj&quot; (default target) (3) -&gt;
+&quot;C:\Users\dldic\source\repos\test\opencpn\build\opencpn.vcxproj&quot; (default target) (47) -&gt;
+(ClCompile target) -&gt;
+C:\Users\dldic\source\repos\test\ocpn_wxWidgets\include\wx\vector.h(476,15): error C2061
+: syntax error: identifier &#39;place&#39; [C:\Users\dldic\source\repos\test\opencpn\build\opencpn
+.vcxproj]
+</code></pre></div>
+
+
+
+<a name="436381715"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332168-Master/topic/Windows%20build%20broken/near/436381715" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Dan Dickey <a href="https://leamas.github.io/zulip-archive/stream/332168-Master/topic/Windows.20build.20broken.html#436381715">(May 01 2024 at 02:13)</a>:</h4>
+<p><span class="user-mention" data-user-id="517002">@Dave Register</span> Have you built a debug version for Windows from current master?  I cannot make it work. And not for lack of trying.</p>
+
+
+
+<a name="440511051"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332168-Master/topic/Windows%20build%20broken/near/440511051" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Volodymyr Triapichko <a href="https://leamas.github.io/zulip-archive/stream/332168-Master/topic/Windows.20build.20broken.html#440511051">(May 24 2024 at 13:36)</a>:</h4>
+<p><span class="user-mention" data-user-id="517002">@Dave Register</span> Hi. Do you have any thoughts about how this compilation problem could be fixed?</p>
+
+
+
+<hr><p>Last updated: Oct 08 2024 at 10:11 UTC</p>
+</html>

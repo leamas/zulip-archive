@@ -1,0 +1,158 @@
+[
+    {
+        "content": "<p>After  handling the buffering I need to update the Debian packaging, given that there are no more structural changes. In particular, no more libraries.</p>",
+        "id": 432129282,
+        "sender_full_name": "Alec Leamas",
+        "timestamp": 1712641922
+    },
+    {
+        "content": "<p>We have talked about this before, and I would like to (gently) approach the concept again.<br>\nWe have made enough changes to our internal plumbing that we can consider moving upstream in our linux release build and distribution strategy.  Specifically, moving away from Ubuntu-centric PPA building and hosting.  And moving toward a \"pure\" debian-centric system.<br>\nI'm sure we could use CCI as we do today to do the building of OCPN .deb release packages.  And we could host them on Cloudsmith.<br>\nMy concern/question is this:  I worry that a bare .deb package will introduce the dreaded \"dependency-hell\" scenario for many of our users, especially users new to linux on rPI systems.  Installing from \"apt\" is relatively foolproof.  Installing from \"dpkg\" not so much.</p>\n<p>Let's talk about this...</p>",
+        "id": 432264056,
+        "sender_full_name": "Dave Register",
+        "timestamp": 1712674504
+    },
+    {
+        "content": "<p>I don't see the problem. The idea is that we should build and distribute our packages using the PPA, exactly as today. No visible user changes whatsoever.</p>\n<p>The difference is just <strong>how</strong> we build them in the PPA environment. It actually doesn't make much sense to have two different build chains for the PPA and the official packaging. It's a lot of work for no benefit. If we could use one common workflow it would save a lot of work in the long run.</p>\n<p>It would also mean the things would work as they are supposed to do: New packages are published in the PPA. Over time the exact same package moves into the official builds. Once there, we don't have to worry any more, we can trust Ubuntu (and Debian) to distribute the packages.</p>",
+        "id": 432273239,
+        "sender_full_name": "Alec Leamas",
+        "timestamp": 1712676719
+    },
+    {
+        "content": "<p>Not following.<br>\nHow is the current PPA build chain different from CCI?  And what do we need to do to fix that?</p>",
+        "id": 432317741,
+        "sender_full_name": "Dave Register",
+        "timestamp": 1712688881
+    },
+    {
+        "content": "<p>The current build chain in the PPA uses opencpn's  own packaging based on cmake to build the debs. This has many drawbacks, we could discuss this later.</p>\n<p>What I suggest is that we use the same flow as in the official packaging to create the debs. This is basically about moving the packaging to a separate repo. Here we import the master branch and creates packages from that using the battle-hardened Debian toolchain which creates packages directly without using cmake at all for this. This actually gives many advantages.</p>\n<p>Now, because of the official packaging I need to do this work anyway . Maybe it would be easier to discuss if I could actually show you how it works rather than trying to describe it?</p>",
+        "id": 432328776,
+        "sender_full_name": "Alec Leamas",
+        "timestamp": 1712692482
+    },
+    {
+        "content": "<p>Do you have any idea when we should release the first beta?</p>",
+        "id": 432328954,
+        "sender_full_name": "Alec Leamas",
+        "timestamp": 1712692545
+    },
+    {
+        "content": "<p>Yes, I think doing it while I watch is best, if we (you) have the energy.<br>\nFirst Beta might be in about two weeks.  With the startup wizard, we are essentially feature complete now.  Our Alpha testing is definitely identifying bugs, better now than at Beta.</p>",
+        "id": 432336311,
+        "sender_full_name": "Dave Register",
+        "timestamp": 1712695083
+    },
+    {
+        "content": "<p>I should be able to have things in place for that.</p>",
+        "id": 432339265,
+        "sender_full_name": "Alec Leamas",
+        "timestamp": 1712696334
+    },
+    {
+        "content": "<p>I have setup things which builds an alpha release from current master. Will be simple to apply when we have a beta tag. Let me know when it's time.</p>",
+        "id": 433876184,
+        "sender_full_name": "Alec Leamas",
+        "timestamp": 1713388541
+    },
+    {
+        "content": "<p><a href=\"#narrow/stream/432618-OCPN-5.2E10-Release-plan/topic/Merge.20official.20and.20PPA.20toolchains/near/432129282\">A message</a> was moved here from <a class=\"stream-topic\" data-stream-id=\"432618\" href=\"/#narrow/stream/432618-OCPN-5.2E10-Release-plan/topic/libusb.20dependency\">#OCPN 5.10 Release plan &gt; libusb dependency</a> by <span class=\"user-mention silent\" data-user-id=\"399510\">Alec Leamas</span>.</p>",
+        "id": 435152996,
+        "sender_full_name": "Notification Bot",
+        "timestamp": 1713952419
+    },
+    {
+        "content": "<p><a href=\"#narrow/stream/432618-OCPN-5.2E10-Release-plan/topic/Merge.20official.20and.20PPA.20toolchains/near/432273239\">A message</a> was moved here from <a class=\"stream-topic\" data-stream-id=\"432618\" href=\"/#narrow/stream/432618-OCPN-5.2E10-Release-plan/topic/libusb.20dependency\">#OCPN 5.10 Release plan &gt; libusb dependency</a> by <span class=\"user-mention silent\" data-user-id=\"399510\">Alec Leamas</span>.</p>",
+        "id": 435153138,
+        "sender_full_name": "Notification Bot",
+        "timestamp": 1713952458
+    },
+    {
+        "content": "<p><a href=\"#narrow/stream/432618-OCPN-5.2E10-Release-plan/topic/Merge.20official.20and.20PPA.20toolchains/near/432317741\">A message</a> was moved here from <a class=\"stream-topic\" data-stream-id=\"432618\" href=\"/#narrow/stream/432618-OCPN-5.2E10-Release-plan/topic/libusb.20dependency\">#OCPN 5.10 Release plan &gt; libusb dependency</a> by <span class=\"user-mention silent\" data-user-id=\"399510\">Alec Leamas</span>.</p>",
+        "id": 435153191,
+        "sender_full_name": "Notification Bot",
+        "timestamp": 1713952477
+    },
+    {
+        "content": "<p><a href=\"#narrow/stream/432618-OCPN-5.2E10-Release-plan/topic/Merge.20official.20and.20PPA.20toolchains/near/432328776\">A message</a> was moved here from <a class=\"stream-topic\" data-stream-id=\"432618\" href=\"/#narrow/stream/432618-OCPN-5.2E10-Release-plan/topic/libusb.20dependency\">#OCPN 5.10 Release plan &gt; libusb dependency</a> by <span class=\"user-mention silent\" data-user-id=\"399510\">Alec Leamas</span>.</p>",
+        "id": 435153233,
+        "sender_full_name": "Notification Bot",
+        "timestamp": 1713952499
+    },
+    {
+        "content": "<p><a href=\"#narrow/stream/432618-OCPN-5.2E10-Release-plan/topic/Merge.20official.20and.20PPA.20toolchains/near/432264056\">A message</a> was moved here from <a class=\"stream-topic\" data-stream-id=\"432618\" href=\"/#narrow/stream/432618-OCPN-5.2E10-Release-plan/topic/libusb.20dependency\">#OCPN 5.10 Release plan &gt; libusb dependency</a> by <span class=\"user-mention silent\" data-user-id=\"399510\">Alec Leamas</span>.</p>",
+        "id": 435153303,
+        "sender_full_name": "Notification Bot",
+        "timestamp": 1713952521
+    },
+    {
+        "content": "<p><a href=\"#narrow/stream/432618-OCPN-5.2E10-Release-plan/topic/Merge.20official.20and.20PPA.20toolchains/near/432328954\">A message</a> was moved here from <a class=\"stream-topic\" data-stream-id=\"432618\" href=\"/#narrow/stream/432618-OCPN-5.2E10-Release-plan/topic/libusb.20dependency\">#OCPN 5.10 Release plan &gt; libusb dependency</a> by <span class=\"user-mention silent\" data-user-id=\"399510\">Alec Leamas</span>.</p>",
+        "id": 435153360,
+        "sender_full_name": "Notification Bot",
+        "timestamp": 1713952541
+    },
+    {
+        "content": "<p><a href=\"#narrow/stream/432618-OCPN-5.2E10-Release-plan/topic/Merge.20official.20and.20PPA.20toolchains/near/432336311\">A message</a> was moved here from <a class=\"stream-topic\" data-stream-id=\"432618\" href=\"/#narrow/stream/432618-OCPN-5.2E10-Release-plan/topic/libusb.20dependency\">#OCPN 5.10 Release plan &gt; libusb dependency</a> by <span class=\"user-mention silent\" data-user-id=\"399510\">Alec Leamas</span>.</p>",
+        "id": 435153392,
+        "sender_full_name": "Notification Bot",
+        "timestamp": 1713952556
+    },
+    {
+        "content": "<p><a href=\"#narrow/stream/432618-OCPN-5.2E10-Release-plan/topic/Merge.20official.20and.20PPA.20toolchains/near/432339265\">A message</a> was moved here from <a class=\"stream-topic\" data-stream-id=\"432618\" href=\"/#narrow/stream/432618-OCPN-5.2E10-Release-plan/topic/libusb.20dependency\">#OCPN 5.10 Release plan &gt; libusb dependency</a> by <span class=\"user-mention silent\" data-user-id=\"399510\">Alec Leamas</span>.</p>",
+        "id": 435153472,
+        "sender_full_name": "Notification Bot",
+        "timestamp": 1713952570
+    },
+    {
+        "content": "<p><a href=\"#narrow/stream/432618-OCPN-5.2E10-Release-plan/topic/Merge.20official.20and.20PPA.20toolchains/near/433876184\">A message</a> was moved here from <a class=\"stream-topic\" data-stream-id=\"432618\" href=\"/#narrow/stream/432618-OCPN-5.2E10-Release-plan/topic/libusb.20dependency\">#OCPN 5.10 Release plan &gt; libusb dependency</a> by <span class=\"user-mention silent\" data-user-id=\"399510\">Alec Leamas</span>.</p>",
+        "id": 435153499,
+        "sender_full_name": "Notification Bot",
+        "timestamp": 1713952583
+    },
+    {
+        "content": "<p>I have reworked the official packaging so it can exist  in the same repo as the rest of the code.  Practically this means that we would add 6 branches to current repo without affecting anything in existing branches.</p>\n<p>The packaging  builds packages for debian/sid, ubuntu/numbat, ubuntu/jammy and ubuntu/focal. Currently these have an alpha2 level, roughly  master as of \"yesterday\". </p>\n<p>I intend to push these branches unless you have anything against it. It's non-destructive, if we remove them no traces will be left</p>",
+        "id": 435462560,
+        "sender_full_name": "Alec Leamas",
+        "timestamp": 1714076947
+    },
+    {
+        "content": "<p><span class=\"user-mention\" data-user-id=\"517002\">@Dave Register</span>  ^</p>",
+        "id": 435462575,
+        "sender_full_name": "Alec Leamas",
+        "timestamp": 1714076958
+    },
+    {
+        "content": "<p><span class=\"user-mention\" data-user-id=\"399510\">@Alec Leamas</span> <br>\nWill you talk me thru the build/release process, then?<br>\nDoes this eliminate the need for PPA build?<br>\nWhat is the end-game?</p>",
+        "id": 435483031,
+        "sender_full_name": "Dave Register",
+        "timestamp": 1714088145
+    },
+    {
+        "content": "<p>Of course  I will talk you through this. </p>\n<p>The end game is that you can do two things:</p>\n<ol>\n<li><code>gbp buildpackage &lt;...&gt;</code> This creates testable packages.</li>\n<li><code>debuild -S</code>. This creates a \"source.changes\" file. This is the thing eventually uploaded to the PPA.</li>\n</ol>\n<p>Each of these steps is done done in the actual branch; packages for numbat is created in the ubuntu/numbat branch, etc.</p>\n<p>Creating packages needs to be done in a vm,  the source.changes  could be created on any host. The  packages created in these two ways are basically identical.</p>",
+        "id": 435513521,
+        "sender_full_name": "Alec Leamas",
+        "timestamp": 1714106371
+    },
+    {
+        "content": "<p>Provisionary docs below. Parts of this is messy, in particular until things have stabilized. I just think I could point into this when needed.</p>\n<p>= Creating a Debian/Ubuntu package</p>\n<p>== General</p>\n<p>This page describes how to create .deb packages usable on Debian<br>\nbased distros like vanilla Debian, Ubuntu, Raspbian, Mint, etc.</p>\n<p>Work is done on a Debian or Ubuntu host. The big picture</p>\n<ol>\n<li>Install necessary tools.</li>\n<li>Reorganize directory structure</li>\n<li>Update at least debian/changelog to create a new version</li>\n<li>Import the current master branch in upstream/latest</li>\n<li>Create testable packages</li>\n<li>(Optional) Upload packages to an Ubuntu PPA.</li>\n</ol>\n<p>== Install tools</p>\n<div class=\"codehilite\"><pre><span></span><code>$ sudo apt install devscripts git-buildpackage equivs\n</code></pre></div>\n\n<p>== Reorganize directory structure</p>\n<p>The Debian tools creates things in the parent directory. To handle this, <br>\ncreate  new, empty directory and put the existing OpenCPN tree there. That <br>\nis, a typical path like <em>~/src/OpenCPN</em> should be modified to<br>\n<em>~/src/OpenCPN/OpenCPN</em> where <em>~/src/OpenCPN</em> should be empty besides<br>\n<em>~/src/OpenCPN/OpenCPN</em>.</p>\n<p>Likewise, when cloning OpenCPN do something like</p>\n<div class=\"codehilite\"><pre><span></span><code>$ mkdir OpenCPN\n$ cd OpenCPN\n$ git clone ...\n</code></pre></div>\n\n<p>== Update  debian/changelog with a new version</p>\n<p><em>debian/changelog</em> is picky about the format. Editing by hand is hard. Instead,<br>\nuse the <code>dch</code> tool. It has a multitude of options. The simplest is to create<br>\na new, minor release using <code>dch -i</code>. </p>\n<p>dch throws you in an editor loaded with debian/changelog. Complete the entry<br>\nas you consider best (there are many conventions here, but for a local build<br>\nit's not that important).</p>\n<p>== Import the current master branch in upstream/latest</p>\n<p>For now, the debian directory needs to be removed. After that, create a<br>\ntarball based on current HEAD:</p>\n<div class=\"codehilite\"><pre><span></span><code>$ git checkout master\n$ git switch -c tmp-build\n$ git rm -r debian\n$ git commit -m &quot;Remove unused debian/ dir&quot;\n$ git archive --prefix opencpn-1.2.3/ --output ../opencpn.tar.gz HEAD\n</code></pre></div>\n\n<p>The <code>--prefix</code> part should be modified to reflect current version, but is not<br>\ncritical. Note the trailing slash!</p>\n<p>Next step is to convert the tarball to a formal debian source tarball. This <br>\nis about renaming and stripping files not used  in the Debian build. Do</p>\n<div class=\"codehilite\"><pre><span></span><code>$ mk-origtargz ../opencpn.tar.gz\n</code></pre></div>\n\n<p>Where <em>../opencpn.tar.gz</em>  is the file created by <code>git archive</code> above. This<br>\ncreates something like  <em>../opencpn_.5.10.920.orig.tar.gz</em>. The version in<br>\nthe filename is read from debian/changelog</p>\n<p>The final step is to import this tarball into upstream/latest. Using the<br>\nabove do:</p>\n<p>$ gbp import-orig ../opencpn_.5.10.920.orig.tar.gz</p>\n<p>== Build packages</p>\n<p>The step above creates a tag named like <code>upstream/5.10.920</code> or so. Use <br>\n<code>git tag -l | grep upstream/</code> to find out the tag name. Then do</p>\n<div class=\"codehilite\"><pre><span></span><code>$ gbp buildpackage --git-upstream-tag=upstream/whatever\n</code></pre></div>\n\n<p>This builds testable .deb packages in <em>..</em>.</p>\n<p>== Upload to PPA</p>\n<p>The artifact uploaded to an Ubuntu ppa is a <em>.source.changes</em> file.  This <br>\nis created using </p>\n<div class=\"codehilite\"><pre><span></span><code>$ debuild -S\n</code></pre></div>\n\n<p>This requires that gpg signing keys is configured which is outside the scope<br>\nof this document. The command creates something like<br>\n<em>../opencpn.1.2.3.source.changes</em>.  Upload to a PPA using something like</p>\n<div class=\"codehilite\"><pre><span></span><code>$ dput ppa:leamas-alec/opencpn ../opencpn.1.2.3.source.changes\n</code></pre></div>",
+        "id": 435538401,
+        "sender_full_name": "Alec Leamas",
+        "timestamp": 1714119532
+    },
+    {
+        "content": "<p>... and of course I'll do the messy parts.</p>",
+        "id": 435539038,
+        "sender_full_name": "Alec Leamas",
+        "timestamp": 1714119767
+    },
+    {
+        "content": "<p>OK, thanks.  Much of this is familiar, but I am no expert on deb packaging.<br>\nOn PPA, the workflow used for previous releases is: <br>\nI have linked the PPA for OpenCPN to the github master repo.  Using the PPA  Web UI, I can trigger a fetch and build of a specific branch from github.  Corresponds to last two steps above.  Might be nicer to do as you have shown, to avoid futzing with PPA UI, which is a bit rough...</p>",
+        "id": 435595959,
+        "sender_full_name": "Dave Register",
+        "timestamp": 1714141127
+    },
+    {
+        "content": "<p>As long as you feel comfortable  all is fine.  Let's have first shot when you tag a beta. Of course, if you could give some kind of   notice in advance about when the beta will happen it would make my task easier.</p>",
+        "id": 435597064,
+        "sender_full_name": "Alec Leamas",
+        "timestamp": 1714141479
+    }
+]

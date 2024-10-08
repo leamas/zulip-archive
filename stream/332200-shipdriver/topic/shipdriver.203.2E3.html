@@ -1,0 +1,62 @@
+<html>
+<head><meta charset="utf-8"><title>shipdriver 3.3 · shipdriver · Zulip Chat Archive</title></head>
+<h2>Stream: <a href="https://leamas.github.io/zulip-archive/stream/332200-shipdriver/index.html">shipdriver</a></h2>
+<h3>Topic: <a href="https://leamas.github.io/zulip-archive/stream/332200-shipdriver/topic/shipdriver.203.2E3.html">shipdriver 3.3</a></h3>
+
+<hr>
+
+<base href="https://opencpn.zulipchat.com">
+
+<head><link href="https://leamas.github.io/zulip-archive/style.css" rel="stylesheet"></head>
+
+<a name="431917651"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332200-shipdriver/topic/shipdriver%203.3/near/431917651" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Mike Rossiter <a href="https://leamas.github.io/zulip-archive/stream/332200-shipdriver/topic/shipdriver.203.2E3.html#431917651">(Apr 08 2024 at 09:46)</a>:</h4>
+<p>The script for Appveyor, unlike CircleCI, results in two builds for a commit with a tag, one for the code commit and another for the tag.  CircleCI has no workflow for the tag. Is it possible to adapt the Appeyor work to ignore the workflow for the tag?</p>
+
+
+
+<a name="431930692"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332200-shipdriver/topic/shipdriver%203.3/near/431930692" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Alec Leamas <a href="https://leamas.github.io/zulip-archive/stream/332200-shipdriver/topic/shipdriver.203.2E3.html#431930692">(Apr 08 2024 at 10:31)</a>:</h4>
+<p>Anything is possible. However,  it's seems to be more broken than so. The correct behaviour is to build the tag but not the commit . This applies to both appveyor and CCI.</p>
+<p>I'll try to find some time later this week.</p>
+
+
+
+<a name="431931452"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332200-shipdriver/topic/shipdriver%203.3/near/431931452" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Mike Rossiter <a href="https://leamas.github.io/zulip-archive/stream/332200-shipdriver/topic/shipdriver.203.2E3.html#431931452">(Apr 08 2024 at 10:34)</a>:</h4>
+<p>This would prevent the checksum error when both Appveyor builds have not completed and the fork of the plugins repo is used to make a PR.</p>
+
+
+
+<a name="432025772"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332200-shipdriver/topic/shipdriver%203.3/near/432025772" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Alec Leamas <a href="https://leamas.github.io/zulip-archive/stream/332200-shipdriver/topic/shipdriver.203.2E3.html#432025772">(Apr 08 2024 at 16:58)</a>:</h4>
+<p>"This" as in only building the tag, or as only building the commit?</p>
+
+
+
+<a name="432026791"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332200-shipdriver/topic/shipdriver%203.3/near/432026791" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Mike Rossiter <a href="https://leamas.github.io/zulip-archive/stream/332200-shipdriver/topic/shipdriver.203.2E3.html#432026791">(Apr 08 2024 at 17:02)</a>:</h4>
+<p>Tag build is last so if this has not completed we get a checksum from the commit build metadata file, which will not match the tag build, if that makes any sense.</p>
+
+
+
+<a name="432046239"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332200-shipdriver/topic/shipdriver%203.3/near/432046239" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Alec Leamas <a href="https://leamas.github.io/zulip-archive/stream/332200-shipdriver/topic/shipdriver.203.2E3.html#432046239">(Apr 08 2024 at 18:53)</a>:</h4>
+<p>hm... do I understand you correctly  that it is the duplicated builds which is the problem? That is, does it matter for you if we build the tag or the commit as long as it's only one of them?</p>
+
+
+
+<a name="432046822"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332200-shipdriver/topic/shipdriver%203.3/near/432046822" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Pavel Kalian <a href="https://leamas.github.io/zulip-archive/stream/332200-shipdriver/topic/shipdriver.203.2E3.html#432046822">(Apr 08 2024 at 18:56)</a>:</h4>
+<p>You probably want to build the tag as it has a better looking version and name</p>
+
+
+
+<a name="432046975"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332200-shipdriver/topic/shipdriver%203.3/near/432046975" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Pavel Kalian <a href="https://leamas.github.io/zulip-archive/stream/332200-shipdriver/topic/shipdriver.203.2E3.html#432046975">(Apr 08 2024 at 18:56)</a>:</h4>
+<p>And they do not have to be born at the same time, so it is pretty much impossible to "build one or the other"</p>
+
+
+
+<hr><p>Last updated: Oct 08 2024 at 10:11 UTC</p>
+</html>

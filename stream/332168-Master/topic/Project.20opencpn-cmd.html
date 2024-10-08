@@ -1,0 +1,579 @@
+<html>
+<head><meta charset="utf-8"><title>Project opencpn-cmd · Master · Zulip Chat Archive</title></head>
+<h2>Stream: <a href="https://leamas.github.io/zulip-archive/stream/332168-Master/index.html">Master</a></h2>
+<h3>Topic: <a href="https://leamas.github.io/zulip-archive/stream/332168-Master/topic/Project.20opencpn-cmd.html">Project opencpn-cmd</a></h3>
+
+<hr>
+
+<base href="https://opencpn.zulipchat.com">
+
+<head><link href="https://leamas.github.io/zulip-archive/style.css" rel="stylesheet"></head>
+
+<a name="400756201"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332168-Master/topic/Project%20opencpn-cmd/near/400756201" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Håkan Svensson <a href="https://leamas.github.io/zulip-archive/stream/332168-Master/topic/Project.20opencpn-cmd.html#400756201">(Nov 07 2023 at 14:54)</a>:</h4>
+<p>The opencpn-cmd is creating errors hindering builds. My solution so far have been to exclude it from build in "Configuration manager".<br>
+But now the Package won't build because of the errors in that project.<br>
+What do I need to know to get rid of the errors. Do I need to actually update some files content? Is so; what and how? (And why)</p>
+
+
+
+<a name="400756998"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332168-Master/topic/Project%20opencpn-cmd/near/400756998" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Alec Leamas <a href="https://leamas.github.io/zulip-archive/stream/332168-Master/topic/Project.20opencpn-cmd.html#400756998">(Nov 07 2023 at 14:58)</a>:</h4>
+<p>Hard to say without seeing the errors...</p>
+
+
+
+<a name="400757670"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332168-Master/topic/Project%20opencpn-cmd/near/400757670" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Alec Leamas <a href="https://leamas.github.io/zulip-archive/stream/332168-Master/topic/Project.20opencpn-cmd.html#400757670">(Nov 07 2023 at 15:01)</a>:</h4>
+<p>Just rebuilt master  and opencpn-cmd, clean build.</p>
+
+
+
+<a name="400760978"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332168-Master/topic/Project%20opencpn-cmd/near/400760978" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Håkan Svensson <a href="https://leamas.github.io/zulip-archive/stream/332168-Master/topic/Project.20opencpn-cmd.html#400760978">(Nov 07 2023 at 15:16)</a>:</h4>
+<p>I'm not on master branch.  I've tried to clean and rebuild. No difference<br>
+This opencpn-cmd is "new" for me and I may need some knowledge what it's all about?<br>
+Errors Like this when opencpn-cmd is selected for build:</p>
+<div class="codehilite"><pre><span></span><code> 18&gt;   Creating library C:/Builds/OCPN/OpenCPN/build/RelWithDebInfo/opencpn-cmd.lib and object C:/Builds/OCPN/OpenCPN/build/RelWithDebInfo/opencpn-cmd.exp
+18&gt;ais_target_data.obj : error LNK2019: unresolved external symbol &quot;double __cdecl toUsrTemp(double,int)&quot; (?toUsrTemp@@YANNH@Z) referenced in function &quot;public: class wxString __thiscall AisTargetData::BuildQueryResult(void)&quot; (?BuildQueryResult@AisTargetData@@QAE?AVwxString@@XZ)
+18&gt;ais_target_data.obj : error LNK2019: unresolved external symbol &quot;class wxString __cdecl getUsrTempUnit(int)&quot; (?getUsrTempUnit@@YA?AVwxString@@H@Z) referenced in function &quot;public: class wxString __thiscall AisTargetData::BuildQueryResult(void)&quot; (?BuildQueryResult@AisTargetData@@QAE?AVwxString@@XZ)
+18&gt;navutil_base.obj : error LNK2001: unresolved external symbol &quot;int g_nDepthUnitDisplay&quot; (?g_nDepthUnitDisplay@@3HA)
+18&gt;C:\Builds\OCPN\OpenCPN\build\RelWithDebInfo\opencpn-cmd.exe : fatal error LNK1120: 3 unresolved externals
+18&gt;Done building project &quot;opencpn-cmd.vcxproj&quot; -- FAILED.
+</code></pre></div>
+
+
+
+<a name="400766911"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332168-Master/topic/Project%20opencpn-cmd/near/400766911" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Alec Leamas <a href="https://leamas.github.io/zulip-archive/stream/332168-Master/topic/Project.20opencpn-cmd.html#400766911">(Nov 07 2023 at 15:46)</a>:</h4>
+<p>On may way again and writing in haste. </p>
+<p>opencpn-cmd is really two things. The first is a cli utility currently able to do useful things like loading and listing plugins etc. Useful but no big deal.</p>
+<p>The other thing is that it "guards" the dependencies in the "model" part of the sources so they not depend on the GUI.  It <strong>might</strong> be this which is happening here. </p>
+<p>You can see what files which belongs to the model in the top level CMakeLists.txt.  If you have made a change to any of these files which makes it depending on file not in the model you need to refactor that change.  </p>
+<p>Why? This is all about getting rid of the "everything depends on everything" syndrome which is a major pain in the current Opencpn (lack of) design.</p>
+
+
+
+<a name="400769995"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332168-Master/topic/Project%20opencpn-cmd/near/400769995" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Alec Leamas <a href="https://leamas.github.io/zulip-archive/stream/332168-Master/topic/Project.20opencpn-cmd.html#400769995">(Nov 07 2023 at 16:01)</a>:</h4>
+<blockquote>
+<p>which makes it depending on file not in the model </p>
+</blockquote>
+<p>That is, a file in the model must not call code outside the model. As a consequence of this, it also must not include any  non-model headers.</p>
+<p>Away for now. Refactoring such stuff might need the use of callbacks and/or EventVar variables. Let me know if you can figure out what is the problem, solutions are in almost all cases straight-forward.</p>
+
+
+
+<a name="400817881"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332168-Master/topic/Project%20opencpn-cmd/near/400817881" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Håkan Svensson <a href="https://leamas.github.io/zulip-archive/stream/332168-Master/topic/Project.20opencpn-cmd.html#400817881">(Nov 07 2023 at 21:21)</a>:</h4>
+<p>Sorry. I do not understand<br>
+I've made changes to a lot files.  Added functions and variables.<br>
+All files in ./src/  and ./include/ are listed in CMakeLists.txt.<br>
+-"you need to refactor that change"-  Do I have to copy the same adding to another file?<br>
+If so: what file(s)?</p>
+
+
+
+<a name="400821674"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332168-Master/topic/Project%20opencpn-cmd/near/400821674" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Alec Leamas <a href="https://leamas.github.io/zulip-archive/stream/332168-Master/topic/Project.20opencpn-cmd.html#400821674">(Nov 07 2023 at 21:53)</a>:</h4>
+<p>There are two sets of files in main CMakeLIsts.txt.  The first set is the variable MODEL_SRC, the other SRCS.</p>
+<p>There is a basic division here. The files in MODEL_SRC a. k.  a.  "the model"  are independet of SRCS a. k. a.  "the GUI".<br>
+That is, files in GUI calls model but not the other way around.  If I understand this right you have modified some  file(s) in the model in a way where it calls code in the GUI. Long story short this is forbidden, you need to refactor this code so the gui calls the model instead. </p>
+<p>Basically, the GUI says "Don't call us, we call you ".</p>
+
+
+
+<a name="400827303"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332168-Master/topic/Project%20opencpn-cmd/near/400827303" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Alec Leamas <a href="https://leamas.github.io/zulip-archive/stream/332168-Master/topic/Project.20opencpn-cmd.html#400827303">(Nov 07 2023 at 22:38)</a>:</h4>
+<p>If I look into the  error messages it seems that you have some code in the model which calls  <code>toUsrTemp()</code>. This lives in <em>navutil.cpp</em> which is not part of the model. This probably needs to be handled using a callback.</p>
+<p>Likewise, it seems like some part of the model calls  <code>getUsrTempUnit()</code>. This also lives in <em>navutil.cpp</em>, so the model cannot call it. </p>
+<p>If I'm right (knock, knock...) you could perhaps find out where you invoke these. If you need help making these  callbacks instead just let me know (using callbacks is the way to handle these kind of deps where you need a reply).</p>
+
+
+
+<a name="400838425"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332168-Master/topic/Project%20opencpn-cmd/near/400838425" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Håkan Svensson <a href="https://leamas.github.io/zulip-archive/stream/332168-Master/topic/Project.20opencpn-cmd.html#400838425">(Nov 08 2023 at 00:19)</a>:</h4>
+<p>I don't really understand what you say.<br>
+I've done nothing "new". Just extended and copied like what's already there. Like using toUserTem() and likewise.<br>
+If it can help I attache a diff file of some changes. Can you point to some changes that need completions?<br>
+<a href="/user_uploads/33951/FeQWE08Wfl0DFuGMiYFzm0hw/meteo.txt">meteo.txt</a></p>
+
+
+
+<a name="400839858"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332168-Master/topic/Project%20opencpn-cmd/near/400839858" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Håkan Svensson <a href="https://leamas.github.io/zulip-archive/stream/332168-Master/topic/Project.20opencpn-cmd.html#400839858">(Nov 08 2023 at 00:32)</a>:</h4>
+<p>Here ARE some calls to toUserTem(). Some are mine. Should it be done in another way?</p>
+<div class="codehilite"><pre><span></span><code>Status  Code    File    Line    Column  Project Read/Write
+Confirmed reference extern double toUsrTemp(double cel_temp, int unit = -1);    C:\Builds\OCPN\OpenCPN\include\navutil.h    56  15  opencpn Unknown
+    double toUsrTemp(double cel_temp, int unit) C:\Builds\OCPN\OpenCPN\src\navutil.cpp  3376    1
+Confirmed reference double usertemp = toUsrTemp(met_air_temp);  C:\Builds\OCPN\OpenCPN\src\ais_target_data.cpp  881 25  opencpn Unknown
+Confirmed reference double usertempDew = toUsrTemp(met_dew_point);  C:\Builds\OCPN\OpenCPN\src\ais_target_data.cpp  900 28  opencpn Unknown
+Confirmed reference double usertemp = toUsrTemp(met_water_temp);    C:\Builds\OCPN\OpenCPN\src\ais_target_data.cpp  913 25  opencpn Unknown
+Confirmed reference double usertemp = toUsrTemp(met_air_temp);  C:\Builds\OCPN\OpenCPN\src\ais_target_data.cpp  1118    25  opencpn Unknown
+Confirmed reference double toUsrTemp(double cel_temp, int unit) {   C:\Builds\OCPN\OpenCPN\src\navutil.cpp  3376    8   opencpn Unknown
+Confirmed reference return toUsrTemp(cel_temp, unit);   C:\Builds\OCPN\OpenCPN\src\pluginmanager.cpp    3069    10  opencpn Unknown
+</code></pre></div>
+
+
+
+<a name="400881821"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332168-Master/topic/Project%20opencpn-cmd/near/400881821" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Alec Leamas <a href="https://leamas.github.io/zulip-archive/stream/332168-Master/topic/Project.20opencpn-cmd.html#400881821">(Nov 08 2023 at 06:51)</a>:</h4>
+<blockquote>
+<p>Just extended and copied like what's already there. Like using toUserTem() and likewise.</p>
+</blockquote>
+<p>tl;dr  That calling <code>toUsrTemp()</code> works in one file does not mean that it can be used in each and every file.</p>
+<p>More specifically: <code>toUsrTemp()</code> is lives in <em>navutil.cpp</em>. This file is listed in SRCS i. e., it is part of the GUI.  Since the model cannot call the gui  you cannot call <code>toUSrTemp()</code>  from any file listed in MODEL_SRC.</p>
+<p>So the question is not really <strong>how</strong> to call <code>toUserTmp()</code> from files listed in MODEL_SRC. It just cannot be done. The work around is using a callback, but in order to show how this is done I need much more context.</p>
+
+
+
+<a name="400882949"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332168-Master/topic/Project%20opencpn-cmd/near/400882949" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Alec Leamas <a href="https://leamas.github.io/zulip-archive/stream/332168-Master/topic/Project.20opencpn-cmd.html#400882949">(Nov 08 2023 at 07:01)</a>:</h4>
+<p>The first step would be that you look into the diff and sees where you call <code>toUserTmp()</code>. If you have done it in a file listed in MODEL_SRC you have probably included <em>navutil.h</em>. You should then remove this include, because you cannot call anything in navutil.h from files listed in MODEL_SRC. This will give a compilation error, but this is actually a good starting point.</p>
+<p>If you have added a declaration like <code>double toUsrTemp(double cel_temp, int unit)</code>directly  into a file listed in MODEL_SRC instead this works the same way. Renove the declaration and let the compiler catch the error.</p>
+
+
+
+<a name="400883281"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332168-Master/topic/Project%20opencpn-cmd/near/400883281" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Notification Bot <a href="https://leamas.github.io/zulip-archive/stream/332168-Master/topic/Project.20opencpn-cmd.html#400883281">(Nov 08 2023 at 07:02)</a>:</h4>
+<p>2 messages were moved here from <a class="stream-topic" data-stream-id="332168" href="/#narrow/stream/332168-Master---5.2E8.2E0--.28was.3A-comms.29/topic/Code.20formatting.20-.20percent.20sign">#Master - 5.8.0  (was: comms) &gt; Code formatting - percent sign</a> by <span class="user-mention silent" data-user-id="399510">Alec Leamas</span>.</p>
+
+
+
+<a name="400884158"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332168-Master/topic/Project%20opencpn-cmd/near/400884158" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Alec Leamas <a href="https://leamas.github.io/zulip-archive/stream/332168-Master/topic/Project.20opencpn-cmd.html#400884158">(Nov 08 2023 at 07:08)</a>:</h4>
+<p>Next step would be that you push what you have somewhere so I could have a look. Use a temporary branch. I assume the repo is <a href="https://github.com/hakansv/OpenCPN">https://github.com/hakansv/OpenCPN</a>, but I will need the branch</p>
+
+
+
+<a name="400886459"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332168-Master/topic/Project%20opencpn-cmd/near/400886459" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Alec Leamas <a href="https://leamas.github.io/zulip-archive/stream/332168-Master/topic/Project.20opencpn-cmd.html#400886459">(Nov 08 2023 at 07:27)</a>:</h4>
+<p>hm... you can actually make that file compile again by adding more steps after removing <code>#include navutil.h</code>.  Let's say you have changed a file like foo.cpp which did include calls to getUsrTemp() which now fails to compile. Adding a callback is done in some steps.</p>
+<ol>
+<li>Add <code>#include &lt;functional&gt;</code> to top of foo.cpp.</li>
+<li>In foo.h add a new class variable in a line like <code>std::function&lt;double(double, int)&gt; m_get_usr_temp_cb;</code></li>
+<li>Replace all occurrences like <code>getUserTmp(a, b)</code> with <code> m_get_usr_temp_cb(a, b)</code>. </li>
+<li>Anything like  <code>getUserTmp(a)</code> is replaced by <code> m_get_usr_temp_cb(a,  -1)</code></li>
+<li>Add a new function too foo.h which makes is possible to set the  callback: <code>void SetUsrTempCb(std::function&lt;double(double, int)&gt; f) { m_get_usr_temp_cb = f; }</code></li>
+</ol>
+<p>This should compile. To make it work we need to add a  <code>SetUserTmpCb()</code> call to the gui somewhere, but this is  a later step.</p>
+<p>Note Google GL naming conventions. functions uses <em>MIxedCase</em>, capital first letter. Variables uses <em>underscore_separated_words</em>, all lower case.</p>
+
+
+
+<a name="400888389"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332168-Master/topic/Project%20opencpn-cmd/near/400888389" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Alec Leamas <a href="https://leamas.github.io/zulip-archive/stream/332168-Master/topic/Project.20opencpn-cmd.html#400888389">(Nov 08 2023 at 07:41)</a>:</h4>
+<p>hm... <code>#include &lt;functional&gt;</code> is better placed in foo.h, sorry.</p>
+
+
+
+<a name="400892087"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332168-Master/topic/Project%20opencpn-cmd/near/400892087" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Håkan Svensson <a href="https://leamas.github.io/zulip-archive/stream/332168-Master/topic/Project.20opencpn-cmd.html#400892087">(Nov 08 2023 at 08:11)</a>:</h4>
+<p>Now I got it to build, both code and package, also with opencpn-cmd:<br>
+I moved the function toUserTemp() from navutil to navutil-base as well as related definitions.<br>
+The function is not new but what I may have introduced are external calls.<br>
+(There's a lot functions in navutil.cpp that may be candidates for a similar operation?)<br>
+Thanks for your time and sorry I not always understand your high level discussions.</p>
+
+
+
+<a name="400898799"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332168-Master/topic/Project%20opencpn-cmd/near/400898799" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Alec Leamas <a href="https://leamas.github.io/zulip-archive/stream/332168-Master/topic/Project.20opencpn-cmd.html#400898799">(Nov 08 2023 at 08:57)</a>:</h4>
+<p>No, don't do that. This means introducing a dependency on g_iTempFormat to the model. This is not kosher.</p>
+
+
+
+<a name="400899163"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332168-Master/topic/Project%20opencpn-cmd/near/400899163" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Alec Leamas <a href="https://leamas.github.io/zulip-archive/stream/332168-Master/topic/Project.20opencpn-cmd.html#400899163">(Nov 08 2023 at 08:59)</a>:</h4>
+<p>Believe me, I have waded through this already, trying to move as much as possible to navutil-base. The devil is in <em>as well as related definitions</em>. This is exactly the kind of stuff which does not belong to the model.</p>
+
+
+
+<a name="400899750"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332168-Master/topic/Project%20opencpn-cmd/near/400899750" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Alec Leamas <a href="https://leamas.github.io/zulip-archive/stream/332168-Master/topic/Project.20opencpn-cmd.html#400899750">(Nov 08 2023 at 09:01)</a>:</h4>
+<p>Instead, take the road described above. It also has the benefit that it is generally applicable. I understand that this might be an uphill battle for you with some new concepts. But stay assured that when doing GUI programming using callbacks is actually bread and butter stuff, it's just that OpenCPN has some strange habits.</p>
+
+
+
+<a name="400900105"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332168-Master/topic/Project%20opencpn-cmd/near/400900105" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Alec Leamas <a href="https://leamas.github.io/zulip-archive/stream/332168-Master/topic/Project.20opencpn-cmd.html#400900105">(Nov 08 2023 at 09:03)</a>:</h4>
+<p>Or, just push what you have so I can make an example for you.</p>
+
+
+
+<a name="400901552"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332168-Master/topic/Project%20opencpn-cmd/near/400901552" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Alec Leamas <a href="https://leamas.github.io/zulip-archive/stream/332168-Master/topic/Project.20opencpn-cmd.html#400901552">(Nov 08 2023 at 09:11)</a>:</h4>
+<p>... more exactly: Adding something like <code>extern int  g_iTempFormat</code>to navutil-base means that that navutil-base links to ocpn_app which holds the definition of <code>g_iTempFormat</code>. This is the same as the calling i. e., the model calls the gui. </p>
+<p>This is yet another example of the extremely bad habit of using extern declarations instead of including header files. I know it is common in OpenCPN, Dave loves it, but it is none the less a bad habit.</p>
+
+
+
+<a name="400955994"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332168-Master/topic/Project%20opencpn-cmd/near/400955994" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Håkan Svensson <a href="https://leamas.github.io/zulip-archive/stream/332168-Master/topic/Project.20opencpn-cmd.html#400955994">(Nov 08 2023 at 14:30)</a>:</h4>
+<p>Alec..<br>
+I moved toUserTemp() from navutil to navutil-base since most other similar functions lives there. Also a few new functions I made like toUserWindSpeed(). To create them in navutil-base was Dave's advice so I thought toUserTemp() would benefit to live there as well?</p>
+<p>Anyhow: my implementation of AIS-Meteo presentation is soon ready for first issue. Seems to work fine here on Win at least. I'll make some Linux test as well.  I'll let you know when it's pushed to my Github so you can see.</p>
+
+
+
+<a name="400958268"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332168-Master/topic/Project%20opencpn-cmd/near/400958268" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Alec Leamas <a href="https://leamas.github.io/zulip-archive/stream/332168-Master/topic/Project.20opencpn-cmd.html#400958268">(Nov 08 2023 at 14:41)</a>:</h4>
+<p>Not really. The problem is about things like  g_iTempFormat. First question is how you have handled this. Have you something like <code>extern int  g_iTempFormat</code> or solved it some other way?</p>
+
+
+
+<a name="400961605"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332168-Master/topic/Project%20opencpn-cmd/near/400961605" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Håkan Svensson <a href="https://leamas.github.io/zulip-archive/stream/332168-Master/topic/Project.20opencpn-cmd.html#400961605">(Nov 08 2023 at 14:58)</a>:</h4>
+<p>Yes I moved that and made a new for wind speed. What I did was copy from what's already there for SpeedFormat.<br>
+So I can't imaging any new problem is introduced. If we would change the solution it would be for all and not only one?<br>
+ g_iSDMMFormat = pSDMMFormat-&gt;GetSelection();<br>
+ g_iDistanceFormat = pDistanceFormat-&gt;GetSelection();<br>
+ g_iSpeedFormat = pSpeedFormat-&gt;GetSelection();<br>
+ g_iWindSpeedFormat = pWindSpeedFormat-&gt;GetSelection();<br>
+ g_iTempFormat = pTempFormat-&gt;GetSelection();</p>
+
+
+
+<a name="400979294"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332168-Master/topic/Project%20opencpn-cmd/near/400979294" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Alec Leamas <a href="https://leamas.github.io/zulip-archive/stream/332168-Master/topic/Project.20opencpn-cmd.html#400979294">(Nov 08 2023 at 16:24)</a>:</h4>
+<p>No. These belong to the GUI. Full stop.</p>
+<p>I have invested quite some work in getting these things if not right so at least in a better shape.  Changes like this basically makes the  system deteriorate, and I'm actually a bit frustrated.</p>
+<p><strong>Why</strong> can't we use the path which solves this without moving things around i. e., "my" path above?</p>
+<p>If you have not undersood my "high level" description, what makes you in a position to make these changes which are all about the overall description.</p>
+<p>Sorry for a bit edgy language, willl have some 8 guests here in upcoming dinner.</p>
+
+
+
+<a name="401021239"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332168-Master/topic/Project%20opencpn-cmd/near/401021239" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Alec Leamas <a href="https://leamas.github.io/zulip-archive/stream/332168-Master/topic/Project.20opencpn-cmd.html#401021239">(Nov 08 2023 at 20:54)</a>:</h4>
+<p>Late now. in better mode. Sorry for harsh language.</p>
+<p>Please push what you have  to some branch so I can have a look.</p>
+
+
+
+<a name="401224142"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332168-Master/topic/Project%20opencpn-cmd/near/401224142" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Håkan Svensson <a href="https://leamas.github.io/zulip-archive/stream/332168-Master/topic/Project.20opencpn-cmd.html#401224142">(Nov 09 2023 at 19:41)</a>:</h4>
+<p>Again I'm sorry if I don't understand your advises. All new functions was a copy of already present So any future cleaning have not been much heavier.<br>
+I agree my knowledge is low but several testers are happy.  A Win installer <a href="https://www.dropbox.com/scl/fi/2fi7aouuufq70tm5acfbq/opencpn_5.9.0.12_setup.exe?rlkey=4e6ru8ts3re8a4hnswc7l0voj&amp;dl=1">here</a></p>
+<p>Wndows is fine but I can't get it to build on Linux. I've probably missed some Linux fundamentals with the arrays.<br>
+My changes are here: <a href="https://github.com/Hakansv/OpenCPN/tree/ais8dac001fi31">https://github.com/Hakansv/OpenCPN/tree/ais8dac001fi31</a><br>
+I've asked Dave to have a look before a PR. Not less for the Linux error.<br>
+If you like to have look I'm of course grateful. Whatever you find I'll hopefully learn more.</p>
+
+
+
+<a name="401232923"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332168-Master/topic/Project%20opencpn-cmd/near/401232923" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Alec Leamas <a href="https://leamas.github.io/zulip-archive/stream/332168-Master/topic/Project.20opencpn-cmd.html#401232923">(Nov 09 2023 at 20:40)</a>:</h4>
+<p>OK. I will  have a look tomorrow. Whatever I find I hope I can express better than my last attempt. </p>
+<p>Again: I apologize  for that language. Probably some private issues which affected my doings here.</p>
+<p><span class="user-mention" data-user-id="517002">@Dave Register</span>  Can we continue the discussion here so we have everything in one place?</p>
+
+
+
+<a name="401272865"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332168-Master/topic/Project%20opencpn-cmd/near/401272865" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Dave Register <a href="https://leamas.github.io/zulip-archive/stream/332168-Master/topic/Project.20opencpn-cmd.html#401272865">(Nov 10 2023 at 02:24)</a>:</h4>
+<p><span class="user-mention" data-user-id="522486">@Håkan Svensson</span>  <span class="user-mention" data-user-id="399510">@Alec Leamas</span> <br>
+Regarding the model/GUI question:<br>
+We currently have some global variables that are generally useful in OCPN GUI, tests, and CLI implementation.  They look mostly like this:</p>
+<div class="codehilite"><pre><span></span><code>int g_iDistanceFormat = 0;
+int g_iSDMMFormat = 0;
+int g_iSpeedFormat = 0;
+</code></pre></div>
+
+<p>The declaration of these types of globals is today done in three (!) places:<br>
+tests.cpp<br>
+console.cpp<br>
+ocpn_app.cpp</p>
+<p>The correct (and single) declaration is compiled depending on the build target.<br>
+There may be better ways to do this sort of thing, and if so we should maybe move in that direction.<br>
+But for right or wrong, this is what we are doing today.</p>
+<p>On to Hakan's linux patch and linux build failure:</p>
+<p>Hakan's approach is to add a few more global variables, using the same technique as described.  This approach is no better or worse than what we do globally today.  A reasonable solution for a point feature upgrade.</p>
+<p>However, Hakan missed one of the three declarations sources required for the new variables</p>
+<div class="codehilite"><pre><span></span><code>int g_iWindSpeedFormat = 0;
+int g_iTempFormat = 0;
+int g_nDepthUnitDisplay = 0;
+</code></pre></div>
+
+<p>You have these three declarations in "ocpn_app.cpp", and "console.cpp".<br>
+They are missing in "tests.cpp".<br>
+Add those three lines at obvious place in tests.cpp, and the build succeeds.</p>
+<p>btw, I have other comments on the AIS Meteo patch.  Coming separately.</p>
+
+
+
+<a name="401309006"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332168-Master/topic/Project%20opencpn-cmd/near/401309006" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Alec Leamas <a href="https://leamas.github.io/zulip-archive/stream/332168-Master/topic/Project.20opencpn-cmd.html#401309006">(Nov 10 2023 at 08:34)</a>:</h4>
+<p>Digging a little more, now when I can see what this all about. </p>
+<p>First of all: these are part of the configuration. As such, the proper place to have the "real", non-extern declaration is in  <em>config_vars.cpp</em> with the corresponding update to <em>config_vars.h</em>.  Once declared there all other declarations should be removed. I'll make an update to Hakan's work in this direction after a dear visit to my dentist.</p>
+<p>Secondly: I see a massive overlap between <code> ConfigMgr::SaveTemplate()</code> and <code>MyConfig::UpdateSettings()</code>in <em>navutil.cpp</em>. About 350 lines of hard to maintain relations between the written "spelling" of the variable names in the config file and the actual values. Seems like a  pretty low hanging fruit. </p>
+<p>The goal should be that navutil and navutil_base handles read/write of config variables to /from the config file.</p>
+
+
+
+<a name="401350828"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332168-Master/topic/Project%20opencpn-cmd/near/401350828" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Håkan Svensson <a href="https://leamas.github.io/zulip-archive/stream/332168-Master/topic/Project.20opencpn-cmd.html#401350828">(Nov 10 2023 at 11:23)</a>:</h4>
+<p><span class="user-mention" data-user-id="517002">@Dave Register</span> <span class="user-mention" data-user-id="399510">@Alec Leamas</span> <br>
+Dave..<br>
+Thanks for test.cpp corrections. Now pushed.<br>
+Unfortunately this didn't changed the Linux Debian build errors.</p>
+<p>It builds and works fine on Win (wx 3.2.3) but fails on Debian (wx 3.0)<br>
+It's about the array "g_pMeteoArray" from class AISMeteoPoint  ais_decoder.h : 82 and used in ais_decoder.cpp : 4256<br>
+It builds on Debian if I make a pointer in declaration but then I get scrap values when searching data.  (Obviously my lack of knowledge?)</p>
+<p>One example of many Linux errors:</p>
+<div class="codehilite"><pre><span></span><code>In file included from /usr/include/wx-3.0/wx/wx.h:16,
+                 from /home/pi/Builds/OpenCPN/src/AISTargetAlertDialog.cpp:29:
+/home/pi/Builds/OpenCPN/include/ais_decoder.h: In member function ‘ArrayOfAISMeteoPoints::reverse_iterator ArrayOfAISMeteoPoints::rend()’:
+/home/pi/Builds/OpenCPN/include/ais_decoder.h:82:1: error: invalid use of incomplete type ‘class AISMeteoPoint’
+   82 | WX_DEFINE_ARRAY_PTR(AISMeteoPoint, ArrayOfAISMeteoPoints);
+</code></pre></div>
+
+
+
+<a name="401362059"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332168-Master/topic/Project%20opencpn-cmd/near/401362059" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Alec Leamas <a href="https://leamas.github.io/zulip-archive/stream/332168-Master/topic/Project.20opencpn-cmd.html#401362059">(Nov 10 2023 at 12:08)</a>:</h4>
+<p>Here is a patch which cleans up the handling of the three global variables<br>
+<a href="/user_uploads/33951/VJVmh-GCrFNKs9PbKTRLquV5/0001-config_vars-Define-model-variables-in-config_vars-.c.patch">0001-config_vars-Define-model-variables-in-config_vars-.c.patch</a></p>
+
+
+
+<a name="401366443"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332168-Master/topic/Project%20opencpn-cmd/near/401366443" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Alec Leamas <a href="https://leamas.github.io/zulip-archive/stream/332168-Master/topic/Project.20opencpn-cmd.html#401366443">(Nov 10 2023 at 12:28)</a>:</h4>
+<p>And here is another patch fixing the g_pMeteoArray.  Note that there is no reason whatsoever to use the antiquited wxWidgets vectors, std::vector offers much more stability, functionality and speed. <br>
+<a href="/user_uploads/33951/LSkll1lRpvGFaeEbA1PjmtDk/0002-Fix-global-g_pMeteoArray.patch">0002-Fix-global-g_pMeteoArray.patch</a></p>
+
+
+
+<a name="401367284"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332168-Master/topic/Project%20opencpn-cmd/near/401367284" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Alec Leamas <a href="https://leamas.github.io/zulip-archive/stream/332168-Master/topic/Project.20opencpn-cmd.html#401367284">(Nov 10 2023 at 12:32)</a>:</h4>
+<p>[I would probably have used <code>find_if</code> to search in that vector, but that involves lambda closures which is yet another step]</p>
+
+
+
+<a name="401370580"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332168-Master/topic/Project%20opencpn-cmd/near/401370580" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Håkan Svensson <a href="https://leamas.github.io/zulip-archive/stream/332168-Master/topic/Project.20opencpn-cmd.html#401370580">(Nov 10 2023 at 12:45)</a>:</h4>
+<p>Alec..<br>
+Both fixes tested on Win. Works fine! I'll test on Debian this afternoon. (Some grout to finalize although this is more fun :) )</p>
+<p>Many thanks for the std::vector lesson. Much better!</p>
+
+
+
+<a name="401377019"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332168-Master/topic/Project%20opencpn-cmd/near/401377019" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Alec Leamas <a href="https://leamas.github.io/zulip-archive/stream/332168-Master/topic/Project.20opencpn-cmd.html#401377019">(Nov 10 2023 at 13:10)</a>:</h4>
+<p>I have some more remarks here:</p>
+<p>- Adding yet another global variable is not the way to go. It's a wide-spread bad habit, not the the one which should be copied. Singletons are slightly  better, I'll show you how to create one instead.<br>
+  - Overall, our naming conventions are non-existing. However, we have a decisions to use the Google GL  convnetions for new code, and this does not adher to this.</p>
+
+
+
+<a name="401377603"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332168-Master/topic/Project%20opencpn-cmd/near/401377603" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Alec Leamas <a href="https://leamas.github.io/zulip-archive/stream/332168-Master/topic/Project.20opencpn-cmd.html#401377603">(Nov 10 2023 at 13:13)</a>:</h4>
+<p><a href="/user_uploads/33951/UbE1mX8imYa4zOllKLtAJ5nT/0003-Use-a-singleton-instead-of-a-gloabl.patch">0003-Use-a-singleton-instead-of-a-gloabl.patch</a></p>
+
+
+
+<a name="401378338"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332168-Master/topic/Project%20opencpn-cmd/near/401378338" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Alec Leamas <a href="https://leamas.github.io/zulip-archive/stream/332168-Master/topic/Project.20opencpn-cmd.html#401378338">(Nov 10 2023 at 13:16)</a>:</h4>
+<p>Using a singleton adds a lot of value. It one way it's just a glorified global. OTOH, it comes with strong compiler checks that is is always valid (no need to check for uninitialized stuff) and also ensures that the vector is never copied. The latter is otherwise a mistake which is easy to do.</p>
+<p>In short: singletons are bad, but much better than global variables.</p>
+
+
+
+<a name="401382700"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332168-Master/topic/Project%20opencpn-cmd/near/401382700" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Alec Leamas <a href="https://leamas.github.io/zulip-archive/stream/332168-Master/topic/Project.20opencpn-cmd.html#401382700">(Nov 10 2023 at 13:42)</a>:</h4>
+<p>You should probably, just for clarity, add this on top of singleton patch above:</p>
+<div class="codehilite"><pre><span></span><code>diff --git a/src/ais_decoder.cpp b/src/ais_decoder.cpp
+index 8c73161da..516a0ead8 100644
+--- a/src/ais_decoder.cpp
++++ b/src/ais_decoder.cpp
+@@ -4250,7 +4250,7 @@ int AisMeteoNewMmsi(int m_mmsi, int m_lat, int m_lon, double pt_Lat,
+     bool found = false;
+     int new_mmsi;
+
+-    auto points = AisMeteoPoints::GetInstance().GetPoints();
++    auto&amp; points = AisMeteoPoints::GetInstance().GetPoints();
+     if (points.size()) {
+       wxString t_lat, t_lon;
+       for (const auto&amp; point: points) {
+</code></pre></div>
+
+
+
+<a name="401385826"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332168-Master/topic/Project%20opencpn-cmd/near/401385826" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Alec Leamas <a href="https://leamas.github.io/zulip-archive/stream/332168-Master/topic/Project.20opencpn-cmd.html#401385826">(Nov 10 2023 at 14:02)</a>:</h4>
+<p>Taking a step back I can see two overall routes here.</p>
+<p>The first would be to let this vector become an attribute of some existing class which already is exported as  an evil global var.  In this case the singleton is not useful.</p>
+<p>The other would be to use it as a singleton. In this case the best would be to split it out as a separate header, with just the MeteoPoint and singleton definitions.  This would be a nice and well defined header-only component.</p>
+
+
+
+<a name="401385886"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332168-Master/topic/Project%20opencpn-cmd/near/401385886" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Alec Leamas <a href="https://leamas.github.io/zulip-archive/stream/332168-Master/topic/Project.20opencpn-cmd.html#401385886">(Nov 10 2023 at 14:02)</a>:</h4>
+<p><span class="user-mention" data-user-id="517002">@Dave Register</span>  ^</p>
+
+
+
+<a name="401400111"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332168-Master/topic/Project%20opencpn-cmd/near/401400111" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Dave Register <a href="https://leamas.github.io/zulip-archive/stream/332168-Master/topic/Project.20opencpn-cmd.html#401400111">(Nov 10 2023 at 15:30)</a>:</h4>
+<p><span class="user-mention" data-user-id="399510">@Alec Leamas</span>  <span class="user-mention" data-user-id="522486">@Håkan Svensson</span> </p>
+<p>I don't much like the global static array, agreed.<br>
+The singleton pattern for this array seems a good fit, given the structure of the  current AISMeteo  implementation.</p>
+<p>Also, the config_vars patch seems good, too.  Will you PR this one?</p>
+
+
+
+<a name="401410783"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332168-Master/topic/Project%20opencpn-cmd/near/401410783" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Alec Leamas <a href="https://leamas.github.io/zulip-archive/stream/332168-Master/topic/Project.20opencpn-cmd.html#401410783">(Nov 10 2023 at 16:44)</a>:</h4>
+<p>Håkan has already merged the config_vars stuff, and I presume he can handle the  singleton patch as well. Could  make yet another patch on top of it which makes it s separate header file later</p>
+
+
+
+<a name="401411031"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332168-Master/topic/Project%20opencpn-cmd/near/401411031" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Alec Leamas <a href="https://leamas.github.io/zulip-archive/stream/332168-Master/topic/Project.20opencpn-cmd.html#401411031">(Nov 10 2023 at 16:46)</a>:</h4>
+<p><span class="user-mention" data-user-id="522486">@Håkan Svensson</span>   "up arrow" (on phone...)</p>
+
+
+
+<a name="401421142"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332168-Master/topic/Project%20opencpn-cmd/near/401421142" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Håkan Svensson <a href="https://leamas.github.io/zulip-archive/stream/332168-Master/topic/Project.20opencpn-cmd.html#401421142">(Nov 10 2023 at 18:15)</a>:</h4>
+<p>Now finished today's grouting and got some halibut for dinner. Mmmm,<br>
+With the two first of Alec's patches and some degree symbol tweaks it builds and runs fine on Linux as well.  Thanks<br>
+I tried the "singelton" patch but it was rejected, see below. <br>
+Some friend just turned in so I may stop keying for now...</p>
+<div class="codehilite"><pre><span></span><code>C:\Builds\OCPN\OpenCPN&gt;git apply C:\Builds\OCPN\diff\0003-Use-a-singleton-instead-of-a-gloabl.patch
+C:/Builds/OCPN/diff/0003-Use-a-singleton-instead-of-a-gloabl.patch:49: trailing whitespace.
+
+warning: 1 line adds whitespace errors.  (Håkan: fixed in between)
+
+C:\Builds\OCPN\OpenCPN&gt;git apply C:\Builds\OCPN\diff\0003-Use-a-singleton-instead-of-a-gloabl.patch
+error: patch failed: include/ais_decoder.h:43
+error: include/ais_decoder.h: patch does not apply
+error: patch failed: src/ais_decoder.cpp:166
+error: src/ais_decoder.cpp: patch does not apply
+</code></pre></div>
+
+
+
+<a name="401431633"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332168-Master/topic/Project%20opencpn-cmd/near/401431633" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Alec Leamas <a href="https://leamas.github.io/zulip-archive/stream/332168-Master/topic/Project.20opencpn-cmd.html#401431633">(Nov 10 2023 at 20:02)</a>:</h4>
+<p>Ok .. you could either apply the patch "ny hand", apply it using the 'patch' command not generally available on windows. Or push what you have and let me rebase the patch.</p>
+
+
+
+<a name="401440260"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332168-Master/topic/Project%20opencpn-cmd/near/401440260" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Håkan Svensson <a href="https://leamas.github.io/zulip-archive/stream/332168-Master/topic/Project.20opencpn-cmd.html#401440260">(Nov 10 2023 at 21:38)</a>:</h4>
+<p>I tried to adapt your changes but several inconsistencies  and  &gt;100 errors.  How I tried to make it logical I didn't succeed. (The pure std::vector was more understandable :-) )<br>
+How can a vector of class  AISMeteoPoint be pushed to vector AISMeteoPoints  (Very similar names?) </p>
+<p>Changes are all time pushed upstream to my <a href="https://github.com/Hakansv/OpenCPN/tree/ais8dac001fi31">Git</a></p>
+
+
+
+<a name="401491245"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332168-Master/topic/Project%20opencpn-cmd/near/401491245" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Alec Leamas <a href="https://leamas.github.io/zulip-archive/stream/332168-Master/topic/Project.20opencpn-cmd.html#401491245">(Nov 11 2023 at 08:12)</a>:</h4>
+<p>Here is a new patch against <a href="https://github.com/opencpn/OpenCPN/commit/587c21159">587c21159</a>. Notes:</p>
+<p>- It's not ok to insert an <code>#include</code> anywhere. Please note that the list of includes is sorted. Fixed here.<br>
+  - Google GL says the AISMeteoPoints is bad while AisMetePoints is fine. Fixed here.<br>
+  - The new file meteo_points.h has several FIXME which needs to by handled by you.</p>
+<p><a href="/user_uploads/33951/TnMEyhspK18O5NsW97STGq_l/0001-AisMeteoPoints-Use-s-singleton-instead-of-global-arr.patch">0001-AisMeteoPoints-Use-s-singleton-instead-of-global-arr.patch</a></p>
+
+
+
+<a name="401500882"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332168-Master/topic/Project%20opencpn-cmd/near/401500882" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Håkan Svensson <a href="https://leamas.github.io/zulip-archive/stream/332168-Master/topic/Project.20opencpn-cmd.html#401500882">(Nov 11 2023 at 10:42)</a>:</h4>
+<p>Your new patch applied wo problem. Nice work!<br>
+It seems to run as before but I will test more here on Win and on Linux. I suppose this change of vector handling benefits program performance.<br>
+The TODO's I'll take care of before push.<br>
+Many thanks.</p>
+
+
+
+<a name="401504876"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332168-Master/topic/Project%20opencpn-cmd/near/401504876" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Alec Leamas <a href="https://leamas.github.io/zulip-archive/stream/332168-Master/topic/Project.20opencpn-cmd.html#401504876">(Nov 11 2023 at 11:44)</a>:</h4>
+<p>I have two new remarks, these should be the last.</p>
+<ul>
+<li>The usage pattern of the AisMeteoPoint is basically that it is created and then never changed. Such objects should be marked <code>const</code>.  Marking objects const makes it much easier to read the code since you know that the data will never change.  At also allows the compiler to make better optimizations. I'll make a patch for this </li>
+<li>You have added a large number of attributes to ais_target_data.h. This is also following some not so good existing patterns. A better solution would be to define a new struct containing this data,  and  then add a single struct of this kind to AisTargetData. This is more work, but I'll see what I can do.</li>
+</ul>
+
+
+
+<a name="401504969"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332168-Master/topic/Project%20opencpn-cmd/near/401504969" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Alec Leamas <a href="https://leamas.github.io/zulip-archive/stream/332168-Master/topic/Project.20opencpn-cmd.html#401504969">(Nov 11 2023 at 11:45)</a>:</h4>
+<p>Here is a patch for the const issue: <br>
+<a href="/user_uploads/33951/PFNOMo9f6e5LA7fIMyFs2TL0/0002-AisMeteoPoint-make-it-const.patch">0002-AisMeteoPoint-make-it-const.patch</a></p>
+
+
+
+<a name="401506937"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332168-Master/topic/Project%20opencpn-cmd/near/401506937" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Håkan Svensson <a href="https://leamas.github.io/zulip-archive/stream/332168-Master/topic/Project.20opencpn-cmd.html#401506937">(Nov 11 2023 at 12:16)</a>:</h4>
+<ul>
+<li>To make Meteopoint const is OK. I'll later take one out. The origin_ mmsi was never used here.</li>
+<li>Yes a lot new attributes to the already long AisTargetData list. If the use of these can be more efficient in another way it must be good.</li>
+</ul>
+<p>BTW. The new file meteo_points.h copywriter would rather be you than me.  Like this?<br>
+Copyright (C) 2023 Alec Leamas</p>
+
+
+
+<a name="401506951"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332168-Master/topic/Project%20opencpn-cmd/near/401506951" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Alec Leamas <a href="https://leamas.github.io/zulip-archive/stream/332168-Master/topic/Project.20opencpn-cmd.html#401506951">(Nov 11 2023 at 12:16)</a>:</h4>
+<p>... and here a patch which reorganizes the Ais meteo data,  avoiding littering existing objects with tons of attributes.</p>
+<p><a href="/user_uploads/33951/x44aS_TQAnDx17qm4ByBoiwQ/0003-AisMeteoData-New-POD-struct-for-AIS-target-meteo-dat.patch">0003-AisMeteoData-New-POD-struct-for-AIS-target-meteo-dat.patch</a></p>
+
+
+
+<a name="401507054"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332168-Master/topic/Project%20opencpn-cmd/near/401507054" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Alec Leamas <a href="https://leamas.github.io/zulip-archive/stream/332168-Master/topic/Project.20opencpn-cmd.html#401507054">(Nov 11 2023 at 12:18)</a>:</h4>
+<blockquote>
+<p>points.h copywriter would rather be you than me.</p>
+</blockquote>
+<p>No way. If you wan't to credit me, you can add a new line below the existing one for my copyright. Several  copyright lines is normal. That said, this is your work and you should be there.</p>
+
+
+
+<a name="401507163"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332168-Master/topic/Project%20opencpn-cmd/near/401507163" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Håkan Svensson <a href="https://leamas.github.io/zulip-archive/stream/332168-Master/topic/Project.20opencpn-cmd.html#401507163">(Nov 11 2023 at 12:20)</a>:</h4>
+<p>Very good. Will take care of that and the last patch later. Now calls for some more grouting...</p>
+
+
+
+<a name="401507276"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332168-Master/topic/Project%20opencpn-cmd/near/401507276" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Alec Leamas <a href="https://leamas.github.io/zulip-archive/stream/332168-Master/topic/Project.20opencpn-cmd.html#401507276">(Nov 11 2023 at 12:22)</a>:</h4>
+<p>No, don't do you grouting now, that will probably make the patch fail. Especially the last patch  affects  a lot of places, and chances are high for collisions if you make changes before applying the patch.</p>
+
+
+
+<a name="401514717"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332168-Master/topic/Project%20opencpn-cmd/near/401514717" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Dave Register <a href="https://leamas.github.io/zulip-archive/stream/332168-Master/topic/Project.20opencpn-cmd.html#401514717">(Nov 11 2023 at 14:17)</a>:</h4>
+<p><span class="user-mention" data-user-id="522486">@Håkan Svensson</span> <br>
+" A better solution would be to define a new struct containing this data, and then add a single struct of this kind to AisTargetData."</p>
+<p>This was exactly the same as my pending comment.  Much easier reading of code.<br>
+Thanks, Alec.</p>
+
+
+
+<a name="401520850"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332168-Master/topic/Project%20opencpn-cmd/near/401520850" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Håkan Svensson <a href="https://leamas.github.io/zulip-archive/stream/332168-Master/topic/Project.20opencpn-cmd.html#401520850">(Nov 11 2023 at 15:42)</a>:</h4>
+<p><span class="user-mention" data-user-id="517002">@Dave Register</span> <br>
+Yes, I do agree. That was also one of my concerns. To extend this targetlist even more. Just my lack of knowledge. This solution will be fine. Thanks a lot and my knowledge base will hopefully increase. <br>
+<span class="user-mention" data-user-id="399510">@Alec Leamas</span>  Grout I understand as the fill between tiles in the ongoing construction of my daughter's  utility room. I may be wrong or it's also a term of filling gaps in code? <span aria-label="+1" class="emoji emoji-1f44d" role="img" title="+1">:+1:</span> <br>
+Now for another handcraft. Adding your patch ... and some more.</p>
+
+
+
+<a name="401527548"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332168-Master/topic/Project%20opencpn-cmd/near/401527548" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Håkan Svensson <a href="https://leamas.github.io/zulip-archive/stream/332168-Master/topic/Project.20opencpn-cmd.html#401527548">(Nov 11 2023 at 16:32)</a>:</h4>
+<p>POD struct patch added. Builds and run wo obstacles. It must have been a result of macros to change all conditions? Nice to see professionals in work. Thanks.</p>
+
+
+
+<a name="401530426"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332168-Master/topic/Project%20opencpn-cmd/near/401530426" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Dave Register <a href="https://leamas.github.io/zulip-archive/stream/332168-Master/topic/Project.20opencpn-cmd.html#401530426">(Nov 11 2023 at 17:21)</a>:</h4>
+<p><span class="user-mention" data-user-id="522486">@Håkan Svensson</span> <br>
+Grout is as described.  Same term here.<br>
+But maybe grout is bad luck for code?  Anyway, an entirely different skill set.</p>
+
+
+
+<hr><p>Last updated: Oct 08 2024 at 10:11 UTC</p>
+</html>

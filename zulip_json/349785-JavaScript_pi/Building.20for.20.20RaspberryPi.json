@@ -1,0 +1,272 @@
+[
+    {
+        "content": "<p><span class=\"user-mention\" data-user-id=\"399559\">@Mike Rossiter</span>  I am working with <em>duichan</em> (Andrew Pinder) who has offered to test the JS plugin with N2K.<br>\nHe needs to install on his RaspberryPi (up to date 32 bit Bullseye OS, not the Bookworm version only released earlier this week).  He says he believes the tarball he requires is <code>javascript-2.2-debian-A32-11-tarball</code> which is the armhf version.</p>\n<p>The plugin will not install.  The OCPN log says</p>\n<div class=\"codehilite\"><pre><span></span><code>10:20:14.146 MESSAGE plugin_loader.cpp:1124     Plugin &quot;/home/hawk/.local/lib/opencpn/libJavaScript_pi.so&quot; depends on library &quot;libwx_baseu-3.2.so.0&quot;, but the main module was built for &quot;libwx_baseu-3.0.so.0&quot;.\n10:20:14.146 MESSAGE plugin_loader.cpp:1143 Plugin is compatible by elf library scan: false\n10:20:14.146 MESSAGE plugin_loader.cpp:344 Incompatible plugin detected: /home/hawk/.local/lib/opencpn/libJavaScript_pi.so\n</code></pre></div>\n<p>He is running OCPN v5.8.4 but something appears to have been built for wx3.0 instead of 3.2.  The message implies it is the 'main module' rather than the plugin.  If 'main module' means OCPN how can that be, since OCPN v5.8+ requires wx3.2 ?</p>\n<p>Can you advise, please?</p>\n<p><a href=\"https://app.circleci.com/pipelines/github/antipole2/JavaScript_pi/350/workflows/9df4b9c9-0d31-4e63-b58c-e1f78aac6727\">Build process here.</a></p>\n<p>Tony</p>",
+        "id": 396869845,
+        "sender_full_name": "Tony Voss",
+        "timestamp": 1697451569
+    },
+    {
+        "content": "<p>I will set up my RPi with the same OS and see what happens.</p>",
+        "id": 396872487,
+        "sender_full_name": "Mike Rossiter",
+        "timestamp": 1697452253
+    },
+    {
+        "content": "<p>Well, it's all in the log which says that main opencpn is built for wxWidgets 3.0 whereas the plugin is built for wxWidgets 3.2. Thus you need either a different plugin or a different main opencpn.</p>\n<p>My first bet would be to stick to wx3.0 on bullseye since this is the actual version of wxwidgets there. Walking this patch means using another version on the plugin. If you make a complete shipdriver build it should build two versions labeled bullseye-wx32-armhf and bullseye-armhf. From the log it looks like the plugin build you are using is bullseye-wx32-armhf; you should use the bulllseye-armhf build</p>",
+        "id": 396872561,
+        "sender_full_name": "Alec Leamas",
+        "timestamp": 1697452270
+    },
+    {
+        "content": "<p>Looking at JavaScript 2.2 I think you need to update-templates to get the correct plugin. Latest available template is sd3.3.0-beta1</p>",
+        "id": 396875134,
+        "sender_full_name": "Mike Rossiter",
+        "timestamp": 1697453082
+    },
+    {
+        "content": "<p><span class=\"user-mention silent\" data-user-id=\"399559\">Mike Rossiter</span> <a href=\"#narrow/stream/349785-JavaScript_pi/topic/Building.20for.20.20RaspberryPi/near/396875134\">said</a>:</p>\n<blockquote>\n<p>Looking at JavaScript 2.2 I think you need to update-templates to get the correct plugin. Latest available template is sd3.3.0-beta1</p>\n</blockquote>\n<p>Will do when not doing roofing work on this sunny day.</p>",
+        "id": 396875569,
+        "sender_full_name": "Tony Voss",
+        "timestamp": 1697453247
+    },
+    {
+        "content": "<p>Looking into you build logs multiple builds fails. In particular, the one you should use <em>build-bullseye-armhf</em>  fails with at least this error</p>\n<div class=\"codehilite\"><pre><span></span><code>In file included from /ci-source/src/toolsDialogImp.h:22,\n                 from /ci-source/src/JavaScript_pi.h:23,\n                 from /ci-source/src/fileOrganiser.cpp:14:\n/ci-source/src/toolsDialogImp.h: In member function &#39;void ToolsClass::fixForScreenRes()&#39;:\n/ci-source/src/scaling.h:29:32: error: &#39;class ToolsClass&#39; has no member named &#39;GetDPIScaleFactor&#39;; did you mean &#39;GetContentScaleFactor&#39;?\n   29 | #define SCALE(window) (window-&gt;GetDPIScaleFactor())\n      |                                ^~~~~~~~~~~~~~~~~\n</code></pre></div>\n<p>You need to get your builds in order...</p>",
+        "id": 396876680,
+        "sender_full_name": "Alec Leamas",
+        "timestamp": 1697453656
+    },
+    {
+        "content": "<p>The bulllseye-armhf build failed with various compile errors.   Comparisons in <code>for </code>loops where <code>int i &lt; xxx.GetCount()</code> fails because GetCount returns size_t.  I will try casting.  Also screen scale stuff is missing.  I can add dummy FromDIP and ToDIP stuff.  But I need to know what the preprocessor macro is for these compiles.</p>",
+        "id": 396876714,
+        "sender_full_name": "Tony Voss",
+        "timestamp": 1697453669
+    },
+    {
+        "content": "<blockquote>\n<p>I  will try casting.</p>\n</blockquote>\n<p>Wrong  way, use <code>(size_t i = 0, i &lt; ...; ...)</code>instead. Still, this is just warnings and will not block the build. It's good to handle them while you are on it, though</p>",
+        "id": 396877137,
+        "sender_full_name": "Alec Leamas",
+        "timestamp": 1697453842
+    },
+    {
+        "content": "<blockquote>\n<p>But I need to know what the preprocessor macro is for these compiles.</p>\n</blockquote>\n<p>The log says:</p>\n<div class=\"codehilite\"><pre><span></span><code>-- The C compiler identification is GNU 10.2.1\n-- The CXX compiler identification is GNU 10.2.1\n</code></pre></div>\n<p>If you google for GNU version macros things should fall in place.</p>",
+        "id": 396877477,
+        "sender_full_name": "Alec Leamas",
+        "timestamp": 1697453970
+    },
+    {
+        "content": "<p>However, since the corresponding bullseye-wx32-armhf builds works it can of course be about the wxWidgets version rather than the compiler</p>",
+        "id": 396878039,
+        "sender_full_name": "Alec Leamas",
+        "timestamp": 1697454161
+    },
+    {
+        "content": "<p>Cirtcleci has  great feature which allows you to log in to a build box with a failed build. Here yo can try possible fixes without the long complete build time turn around. </p>\n<p>However, the armhf build is done in a docker container, so you not only need to ssh into the build box (actually simple) but also access the docker container. This is some obstacles in any case, more if you are not not used to docker.</p>",
+        "id": 396878653,
+        "sender_full_name": "Alec Leamas",
+        "timestamp": 1697454389
+    },
+    {
+        "content": "<blockquote>\n<p>But I need to know what the preprocessor macro is for these compiles.</p>\n</blockquote>\n<p>Ah... Perhaps <a href=\"https://docs.wxwidgets.org/3.0/group__group__funcmacro__version.html\">https://docs.wxwidgets.org/3.0/group__group__funcmacro__version.html</a> is what you are looking for</p>",
+        "id": 396881801,
+        "sender_full_name": "Alec Leamas",
+        "timestamp": 1697455651
+    },
+    {
+        "content": "<p><span class=\"user-mention silent\" data-user-id=\"399559\">Mike Rossiter</span> <a href=\"#narrow/stream/349785-JavaScript_pi/topic/Building.20for.20.20RaspberryPi/near/396875134\">said</a>:</p>\n<blockquote>\n<p>Looking at JavaScript 2.2 I think you need to update-templates to get the correct plugin. Latest available template is sd3.3.0-beta1</p>\n</blockquote>\n<p>Does sd3.3.0 beta have the fix so you can target MacOS x86 when compiling on an M2 Arm Mac?  I know someone has the fix  for this.  [I am not talking about targeting M Macs.  I know that is a bigger issue being worked on.]<br>\nWhen I can compile on my M2 Mac, I can let Ynskje have her x86 Mac back <span aria-label=\"rolling eyes\" class=\"emoji emoji-1f644\" role=\"img\" title=\"rolling eyes\">:rolling_eyes:</span></p>",
+        "id": 396932505,
+        "sender_full_name": "Tony Voss",
+        "timestamp": 1697471487
+    },
+    {
+        "content": "<p><span class=\"user-mention\" data-user-id=\"399510\">@Alec Leamas</span> ^^</p>",
+        "id": 396936657,
+        "sender_full_name": "Mike Rossiter",
+        "timestamp": 1697472868
+    },
+    {
+        "content": "<p>Updated to sd3.3.0-beta1 OK.<br>\nThe first <code>make tarball</code> after <code>circleci-build-macos.sh</code> still fails but works after that.  I have saved the terminal output in case anyone wants to look at it.</p>\n<p>The bullseye builds still failing.  The high res display functions (FromDIP etc.) are missing.<br>\nLooking at the output, it appears to build for wx3.2<br>\n<code>sed -i s/@BUILD_WX32@// /home/circleci/project/build.sh</code><br>\n but all the output thereafter refers to wx3.0.<br>\nSo I think it is actually building with wx3.0 despite the above sed line.<br>\nThis would explain my compiler errors as the high res support was not in wx3.0.<br>\n<a href=\"https://app.circleci.com/pipelines/github/antipole2/JavaScript_pi/353/workflows/11b9ba80-f263-4cb4-a1d1-bda57b672dc8/jobs/4219\">Build log here</a>.</p>",
+        "id": 396955099,
+        "sender_full_name": "Tony Voss",
+        "timestamp": 1697480586
+    },
+    {
+        "content": "<p>No, that sed command  replaces @BUILD_WX32@ with nothing. So it does indeed use wx3.0</p>",
+        "id": 396966934,
+        "sender_full_name": "Alec Leamas",
+        "timestamp": 1697485219
+    },
+    {
+        "content": "<p>.... and this is as intended. The real problem here seems to be that the plugin code requires wx3.2, thus making making it impossible to bulid bullseye wx3.0 plugins.</p>\n<p>Whar are your thoughts? Patch plugin to build  on wx3.0?  Or try a ubuntu wx3.2 opencpn build on Debian? The latter is not kosher and carries risks, but \"should\"  work.</p>\n<p>Is there other failing builds after updating the template?</p>",
+        "id": 396967414,
+        "sender_full_name": "Alec Leamas",
+        "timestamp": 1697485489
+    },
+    {
+        "content": "<p>One of the risks  with going  for wx3.2, is that users which installs OpenCPN on bullseye using the regular backports will not be able to use your plugin. As I see it, this might be a perfectly sane choice, the message to users would be that to use the updated plugin they need to update to Bookworm first.  </p>\n<p>But. it's a choice.</p>",
+        "id": 396968211,
+        "sender_full_name": "Alec Leamas",
+        "timestamp": 1697485897
+    },
+    {
+        "content": "<p>Both flatpak builds fail because of a certificate signature issue.<br>\nbullseye, bullseye-arm64 &amp; bullseye-armf all failed with the same missing DIP stuff.<br>\nThe 3 bullseyes -wx32 were all OK.<br>\nSo, as I understand it, the three failing ones are for  OCPN using wx3.0.  (I had thought all OCPN builds for v 5.8 were wx3.2 but clearly not.).<br>\nI can fix the code to have dummy functions for those builds.  That is straight forward.<br>\nYou pointed me to the wxMAJOR_VERSION and wxMINOR_VERSION constants.  I guess I can use these to conditionally compile dummy routines for earlier than wx3.2</p>",
+        "id": 396969849,
+        "sender_full_name": "Tony Voss",
+        "timestamp": 1697486643
+    },
+    {
+        "content": "<p>HAve you got a  build link for the builds  so we can fix the Flatpak signatures?</p>",
+        "id": 396971877,
+        "sender_full_name": "Alec Leamas",
+        "timestamp": 1697487625
+    },
+    {
+        "content": "<p>Look at my link above, The easiest way is probably  to use <code>wxCHECK_VERSION(...)</code></p>",
+        "id": 396972062,
+        "sender_full_name": "Alec Leamas",
+        "timestamp": 1697487723
+    },
+    {
+        "content": "<blockquote>\n<p>Does sd3.3.0 beta have the fix so you can target MacOS x86 when compiling on an M2 Arm</p>\n</blockquote>\n<p>Should do, the patch which produces universal builds in the CI  scripts is in place. You might need to  struggle somewhat to replicate this in  a local build.</p>",
+        "id": 396974112,
+        "sender_full_name": "Alec Leamas",
+        "timestamp": 1697488777
+    },
+    {
+        "content": "<p>You can look at the failed flatpak build here: <a href=\"https://app.circleci.com/pipelines/github/antipole2/JavaScript_pi/353/workflows/11b9ba80-f263-4cb4-a1d1-bda57b672dc8\">https://app.circleci.com/pipelines/github/antipole2/JavaScript_pi/353/workflows/11b9ba80-f263-4cb4-a1d1-bda57b672dc8</a></p>",
+        "id": 396974696,
+        "sender_full_name": "Tony Voss",
+        "timestamp": 1697489122
+    },
+    {
+        "content": "<p>OK, thanks. Late  here, I'll check tomorrow</p>",
+        "id": 396975957,
+        "sender_full_name": "Alec Leamas",
+        "timestamp": 1697489767
+    },
+    {
+        "content": "<p>Was <em>update-templates sd3.3.0-beta1</em> completed successfully? I just synched your master branch and ran the update. Many changes.  Just about to test a local Win build.</p>",
+        "id": 397064517,
+        "sender_full_name": "Mike Rossiter",
+        "timestamp": 1697534299
+    },
+    {
+        "content": "<p>The shipdriver builds are OK for all targets including Flatpak when I rebuild from the beta1 tag. Hence, something differs between the flatpak build scripts in your  javascript plugin and the template.</p>\n<p>There should be no such difference. How did you perform the update? </p>\n<p>Could you please check status by  tryiung <code>git diff sd3.3.0-beta1 ci/circleci-build-flatpak.sh</code>. If this fails because <em>sd3.3.0-beta1</em> is not available do:</p>\n<div class=\"codehilite\"><pre><span></span><code>$ git remote add tmp https://github.com/Rasbats/shipdriver_pi\n$ git remote update tmp\n$ git fetch tmp refs/tags/sd3.3.0-beta1:refs/tags/sd3.3.0-beta1\n$ git diff sd3.3.0-beta1 ci/circleci-build-flatpak.sh\n</code></pre></div>\n\n<p>and report back the result of the diff command</p>",
+        "id": 397064699,
+        "sender_full_name": "Alec Leamas",
+        "timestamp": 1697534371
+    },
+    {
+        "content": "<blockquote>\n<p>Was update-templates sd3.3.0-beta1 completed successfully?</p>\n</blockquote>\n<p>This is indeed the question.</p>",
+        "id": 397065023,
+        "sender_full_name": "Alec Leamas",
+        "timestamp": 1697534488
+    },
+    {
+        "content": "<p>oops...  <code> git remote update tmp</code>  should be <code>git remote update --no-tags tmp</code> above. Sorry</p>",
+        "id": 397066538,
+        "sender_full_name": "Alec Leamas",
+        "timestamp": 1697535044
+    },
+    {
+        "content": "<p>I was able to checkout your commit 4d9ae90, the one built in your build logs above. The comment for that is <em>Updating template to sd3.3.0-beta1</em></p>\n<p>However, that commit is <strong>not</strong> updated to sd3.3.0-beta1, there are all sorts of differences  where there should not be any.  So, this update has failed for some reason. We need to understand why, which brings us back to Mike's question:</p>\n<p>Was <code>update-templates sd3.3.0-beta1</code> completed successfully?</p>",
+        "id": 397067436,
+        "sender_full_name": "Alec Leamas",
+        "timestamp": 1697535369
+    },
+    {
+        "content": "<p>[this means that there is no no need to run the <code>git diff</code> stuff described above; I have already done that.]</p>",
+        "id": 397067611,
+        "sender_full_name": "Alec Leamas",
+        "timestamp": 1697535437
+    },
+    {
+        "content": "<p>After running update-templates a local build works fine for Win. Out of credit with circleci due to storage space for this month so unable to test other builds.</p>",
+        "id": 397077738,
+        "sender_full_name": "Mike Rossiter",
+        "timestamp": 1697538533
+    },
+    {
+        "content": "<p>Things were in a bit of a mess partly because I accidentally updated sd when on my own computer instead of Ynskje's,<br>\nI have now done everything from scratch.<br>\nThe installation of sd3.3.0-beta1 went OK apart from some minor grumbles.  I have the log if wanted.<br>\n<code>circleci-build-macos.sh</code> failed to remove and recreate the <code>buid-osx</code> folder because of a permissions problem but was otherwise OK.  It later asks for an admin password so I immediately repeated it while the admin permissions were fresh and it ran OK that time.  And it runs OK without the password now.</p>\n<p>The problems I was having with various builds were down to them still on wx3.0.  In JS v2. 1 I put a lot of work into handling high res displays for Windows now supported in wx3.2.  (MacOS had always worked because it is build in to MacOS.). The wx3.0 builds were failing because of the missing methods.  I have now conditionally added dummy methods for wx3.0.  I had to derive custom classes in some cases.<br>\nThe good news is that I have a <a href=\"https://app.circleci.com/pipelines/github/antipole2/JavaScript_pi/360/workflows/0270f86e-0da0-4987-9ad1-6aa55019764c\">clean workflow</a>.  It looks like the Buster ones don't actually do anything but I understand that does not matter.<br>\nAlso under sd3.3.0-beta1 the Mac build is taking less than 4 minutesrather than the  35 minutes it took when it recompiled everything. <span aria-label=\"smile\" class=\"emoji emoji-1f642\" role=\"img\" title=\"smile\">:smile:</span> </p>\n<p>Thanks to all who have put work into this.</p>",
+        "id": 397329636,
+        "sender_full_name": "Tony Voss",
+        "timestamp": 1697640417
+    },
+    {
+        "content": "<p>JS2.2 installs and runs on RPi bullseye.</p>",
+        "id": 397343520,
+        "sender_full_name": "Mike Rossiter",
+        "timestamp": 1697644847
+    },
+    {
+        "content": "<p>And with sd3.3.0-beta1, I can build locally on my M2 Mac!  <span aria-label=\"smile\" class=\"emoji emoji-1f642\" role=\"img\" title=\"smile\">:smile:</span> <span aria-label=\"smile\" class=\"emoji emoji-1f642\" role=\"img\" title=\"smile\">:smile:</span><span aria-label=\"smile\" class=\"emoji emoji-1f642\" role=\"img\" title=\"smile\">:smile:</span></p>",
+        "id": 397350718,
+        "sender_full_name": "Tony Voss",
+        "timestamp": 1697647528
+    },
+    {
+        "content": "<p>Great to hear!</p>\n<p>The buster builds are basically disabled, the overall idea is that they are frozen. That is, the already existing buster builds are still available in the catalog, but in general we don't update  them. Buster users have to live with the plugins as they are. </p>\n<p>There is a small loophole in  <em>build-conf.rc</em> to force buster builds. Since you probably don't want to build buster at all you might want to look into that file and make sure buster is never built.</p>",
+        "id": 397367054,
+        "sender_full_name": "Alec Leamas",
+        "timestamp": 1697654641
+    },
+    {
+        "content": "<blockquote>\n<p>I have the log if wanted.</p>\n</blockquote>\n<p>Yes please, could you attach it here?</p>",
+        "id": 397367513,
+        "sender_full_name": "Alec Leamas",
+        "timestamp": 1697654884
+    },
+    {
+        "content": "<p><span class=\"user-mention\" data-user-id=\"554731\">@Tony Voss</span>  ^</p>",
+        "id": 397557600,
+        "sender_full_name": "Alec Leamas",
+        "timestamp": 1697740735
+    },
+    {
+        "content": "<p>Sorry about the delay Alec.  Since being back on my computer I have been steaming away and the logs were on Ynskje's.<br>\nLooking again at them, it seems the second runs went much better.  Perhaps the first straightened out something that let it run better thereafter?  Permissions on my files? <br>\nAttached is the log for sd3.3.0-beta1 second run.  Only thing I can see is about 16 lines from the end<br>\n<code>sed: 1: \".git/modules/opencpn-li ...\": invalid command code .</code><br>\n<a href=\"/user_uploads/33951/nldK3veFLEWCchu2eyTAhnE2/Update-to-sd3.3.0-beta1-log.zip\">Update-to-sd3.3.0-beta1-log.zip</a></p>",
+        "id": 397572130,
+        "sender_full_name": "Tony Voss",
+        "timestamp": 1697746969
+    },
+    {
+        "content": "<p>For information only:<br>\n<code>std::vector remove_if() </code> seems not available on RaspberryPi and other wx3.0 platforms.<br>\nNot directly related to wxWidgets but they must have a more limited std::vector<br>\nHad to work around.</p>",
+        "id": 397651994,
+        "sender_full_name": "Tony Voss",
+        "timestamp": 1697788618
+    },
+    {
+        "content": "<blockquote>\n<p>std::vector remove_if()  seems not available on RaspberryPi and other wx3.0</p>\n</blockquote>\n<p>No way. This is standard C++. It could possibly be a compiler issue, but  not about the platform.</p>",
+        "id": 397660299,
+        "sender_full_name": "Alec Leamas",
+        "timestamp": 1697791253
+    },
+    {
+        "content": "<p>Have you got a build log with this error? I have a vague reminiscence about something like this...</p>",
+        "id": 397660612,
+        "sender_full_name": "Alec Leamas",
+        "timestamp": 1697791353
+    },
+    {
+        "content": "<p>Ah... indeed: std::remove_if is C++17 and we normally  don't build for that. We probably should, though. Have started a discussion for main opencpn, let's see how it turns out.</p>",
+        "id": 397661522,
+        "sender_full_name": "Alec Leamas",
+        "timestamp": 1697791657
+    },
+    {
+        "content": "<p>remove_if() error <a href=\"https://app.circleci.com/pipelines/github/antipole2/JavaScript_pi/361/workflows/b40ced5c-849b-4013-ade6-3bbb19a45c63\">example builds here</a>.<br>\nIf you look at the <code>build-bullseye-armhf</code> build you will see the error at line 5151.<br>\nBy the way, there are signature  errors too lines 61-64.</p>",
+        "id": 397666253,
+        "sender_full_name": "Tony Voss",
+        "timestamp": 1697793379
+    },
+    {
+        "content": "<p>Yes. As  I said, <code>std::remove_if</code>  is C++17. The failing builds all uses gcc 10.2.2 which by default does not use C++17. However, it seems  fully supported so the only fix needed should be to add a <code>-std=c++17</code>  compilation flag.</p>\n<p>Other builds uses C++17 or higher by default, so they are fine.</p>",
+        "id": 397667743,
+        "sender_full_name": "Alec Leamas",
+        "timestamp": 1697793897
+    },
+    {
+        "content": "<p>std::remove_if is sort of elegant. Of course it's possible to work around, but such fixes are not always pretty ;)</p>",
+        "id": 397668000,
+        "sender_full_name": "Alec Leamas",
+        "timestamp": 1697793987
+    }
+]

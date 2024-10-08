@@ -1,0 +1,134 @@
+[
+    {
+        "content": "<p>From <a href=\"https://github.com/opencpn/OpenCPN/issues/3609\">#3609</a></p>\n<p><span class=\"user-mention\" data-user-id=\"522486\">@Håkan Svensson</span> </p>\n<blockquote>\n<p>So If a plugin developer exchange the use of WANTS_NMEA_SENTENCES by Observer it also means old the plugin version need to be left when updating Github plugins and Pluginmanager need to fetch correct version?</p>\n</blockquote>",
+        "id": 421745846,
+        "sender_full_name": "Alec Leamas",
+        "timestamp": 1708033335
+    },
+    {
+        "content": "<p>The core issue is which API level the plugin uses. For shipdriver-based ones this is about the <code>set(PKG_API_LIB api-18)  </code> in _Plugin.cmake_.  If you use api-18 it means that you need  an OpenCPN recent enough to support this . We should have a table...</p>\n<p>If a plugin uses upcoming api-19 it will only be loaded by 5.10 or later.  The usual approach taken by most plugin devs is basically to wait until next release 5.12 and from that point use the new API, leaving anything older behind.</p>\n<p>It should certainly be possible in a case like this to make a conditional build which uses api-19 when building for bookworm and api-18 otherwise. Never seen it , but I see no major problems.</p>",
+        "id": 421746813,
+        "sender_full_name": "Alec Leamas",
+        "timestamp": 1708033770
+    },
+    {
+        "content": "<p>And in other cases plugins just leaves their existing, working builds  for older version as they are in the catalog while updating plugins heading for the latest OpenCPN version</p>",
+        "id": 421747709,
+        "sender_full_name": "Alec Leamas",
+        "timestamp": 1708034174
+    },
+    {
+        "content": "<p>\"If a plugin uses upcoming api-19 it will only be loaded by 5.10 or later.\"<br>\nwhere in the code does this happen, please?<br>\nMaybe I missed an important patch.</p>",
+        "id": 421747809,
+        "sender_full_name": "Dave Register",
+        "timestamp": 1708034224
+    },
+    {
+        "content": "<p>You didn't, it was me cutting some corners.   Sorry.</p>\n<p>The net result is the same, though: Using API level 1.19 requires OpenCPN 5.10.</p>",
+        "id": 421748849,
+        "sender_full_name": "Alec Leamas",
+        "timestamp": 1708034649
+    },
+    {
+        "content": "<p>What we know from experience is that users are very, VERY slow to update OCPN core version.  \"I want to let someone else discover the bugs.  I'll wait until it is stable, thank you.\"</p>\n<p>So, if a user tries to load an API-19 plugin (which uses some new API-19 function), it will fail to load on O584, and produce the \"Plugin not compatible, please get a new plugin\" message dialog.<br>\nThis is hard-fixed production code, and we can do nothing about this situation in real life.</p>\n<p>I have always recommended to plugin devs to use only the latest plugin API that satisfies their functional requirements.<br>\nOr, said another way,  If you do not require the new functionality of API-19, do not use it.  Stay with API-18 or earlier.</p>",
+        "id": 421750233,
+        "sender_full_name": "Dave Register",
+        "timestamp": 1708035305
+    },
+    {
+        "content": "<p>Yes, this  is more or less my message above as well.</p>",
+        "id": 421750496,
+        "sender_full_name": "Alec Leamas",
+        "timestamp": 1708035464
+    },
+    {
+        "content": "<p>FWIW I have bumped all my plugins to API-18 when O5.8 was released and never heard anybody complaining. There won't be that many plugins that need to switch to API-19 at the beginning, so the complaints should be somewhat limited.</p>",
+        "id": 421755044,
+        "sender_full_name": "Pavel Kalian",
+        "timestamp": 1708037864
+    },
+    {
+        "content": "<p>And yes, learning from own mistakes, we should actually implement handling of the <code>api-version</code> tag from the catalog to prevent this in the future...</p>",
+        "id": 421755351,
+        "sender_full_name": "Pavel Kalian",
+        "timestamp": 1708038018
+    },
+    {
+        "content": "<p>\"we should actually implement handling of the api-version tag from the catalog to prevent this in the future...\"<br>\nYes, we'll do it now in O59. <br>\n16 &lt;= API &lt;=19 will work for O5.10.0, and allow API-20+ sometime later.</p>",
+        "id": 421774493,
+        "sender_full_name": "Dave Register",
+        "timestamp": 1708049584
+    },
+    {
+        "content": "<p>Plans for 5.10 sounds good.<br>\nI though think we still have the situation that if a plugin is updated to API 19 it will be in the catalog for a O v5.8 and fails to run. (Is that correct?)<br>\nOne workaround would be to left the previous plugin version in Github plugins and the 5.8 user may try that instead. In 5.10 we can possible show the latest version only.<br>\nOn the other hand it may be those refusing update to O 5.10 not either search for plugin updates? Pavel's experiences may support that.<br>\nBut a general conclusion would be to not update plugins to higher API than necessary.</p>\n<p>And for 5.10 implement in e.g. Pluginmanager a function to detect old O versions and suggest the user to update OCPN when applicable. For example a subroutine in \"Update catalog...\" when the Internet would be available. It's not only that some user hesitate updates for reasons Dave mentioned but I think most are not aware. They neither visit the CF nor OCPN web site.</p>",
+        "id": 421802931,
+        "sender_full_name": "Håkan Svensson",
+        "timestamp": 1708067819
+    },
+    {
+        "content": "<blockquote>\n<p>though think we still have the situation that if a plugin is updated to API 19 it will be in the catalog for a O v5.8</p>\n</blockquote>\n<p>What we do is actually to create for example a bookworm plugin, something like <code>debian-x86_64</code> version <code>12</code>. Main OpenCPN determines plugin compatibility  from this tuple called the ABI. </p>\n<p>And for bookworm this becomes a problem. Bookworm plugins are already used by OpenCPN 5.8 on Debian (notably Raspbian). So if we create new 1.19 plugins they will indeed be loaded by existing Debian OpenCPN 5.8 builds, and this will fail.</p>\n<p>For that reason Dave and Pavel is right: we should check not only the ABI but also the metadata API level.  But this will not fix the current situation, the fix will not  be available in already existing  OpenCPN 5.8.</p>\n<p>Which means we have a problem.  The only thing actually checked by 5.8 builds is <code>&lt;target&gt;</code> and <code>&lt;target-version&gt;</code>.  And hence we need to modify these for 1.19 plugins so they are not loaded by 5.8. </p>\n<p>The only thing checked everywhere is <code>&lt;target&gt;</code>. It might thus  be necessary to create a complete set of new targets, for example  with a _-19_ suffix like <code>msvc-wx32-19</code>.   This means that the list of ABIs will explode,. Are there better options?</p>",
+        "id": 421822754,
+        "sender_full_name": "Alec Leamas",
+        "timestamp": 1708076535
+    },
+    {
+        "content": "<blockquote>\n<p>And for 5.10 implement in e.g. Pluginmanager a function to detect old O versions and suggest the user to update OCPN when applicable. </p>\n</blockquote>\n<p>Indeed. IIRC, this has been discussed earlier.</p>",
+        "id": 421824094,
+        "sender_full_name": "Alec Leamas",
+        "timestamp": 1708076984
+    },
+    {
+        "content": "<p>No new ABI targets please, that will do by orders of magnitude more bad than good. We will simply survive this as it is, case closed.</p>",
+        "id": 421836006,
+        "sender_full_name": "Pavel Kalian",
+        "timestamp": 1708081117
+    },
+    {
+        "content": "<p>I don't like it either. But it's a bad situation</p>",
+        "id": 421836149,
+        "sender_full_name": "Alec Leamas",
+        "timestamp": 1708081179
+    },
+    {
+        "content": "<p>It is not, it is the exactly same situation as there always was and it never was a real problem</p>",
+        "id": 421836579,
+        "sender_full_name": "Pavel Kalian",
+        "timestamp": 1708081302
+    },
+    {
+        "content": "<p>There simply won't be many plugins that will be using API-19 at the time of release and the important majority of the users will be at O5.10 by the moment there will. It was like this with all the 18 API releases until now and will be the same with the 19th.</p>",
+        "id": 421836883,
+        "sender_full_name": "Pavel Kalian",
+        "timestamp": 1708081409
+    },
+    {
+        "content": "<p>Ideal? Not. Good enough? Yes.</p>",
+        "id": 421837027,
+        "sender_full_name": "Pavel Kalian",
+        "timestamp": 1708081456
+    },
+    {
+        "content": "<p>BTW a less painful solution than new set of ABI targets would be to have a new default branch for the catalog in O5.10 instead of <code>master</code>. If we really wanted to do something, but IMHO we really don't need to.</p>",
+        "id": 421837679,
+        "sender_full_name": "Pavel Kalian",
+        "timestamp": 1708081696
+    },
+    {
+        "content": "<blockquote>\n<p>BTW a less painful solution than new set of ABI targets would be to have a new default branch for the catalog in O5.10 instead of master. I</p>\n</blockquote>\n<p>Yes, would be  a better solution. Or we could simply let the 1.19 plugins stay in Beta for the time being.</p>",
+        "id": 421839230,
+        "sender_full_name": "Alec Leamas",
+        "timestamp": 1708082319
+    },
+    {
+        "content": "<p>Exactly, what we have is good enough, let's close this subject and do the important stuff ;)</p>",
+        "id": 421839520,
+        "sender_full_name": "Pavel Kalian",
+        "timestamp": 1708082433
+    },
+    {
+        "content": "<p>The only thing we really want to do here is implement the <code>api-target</code> filter in the plugin manager, which will solve it for the future</p>",
+        "id": 421839696,
+        "sender_full_name": "Pavel Kalian",
+        "timestamp": 1708082521
+    }
+]

@@ -1,0 +1,80 @@
+[
+    {
+        "content": "<p>Hello team.<br>\nI have pushed a patch which implements a new OCPN basemap using ESRI shapefiles.  This patch comes from experimental work that Pavel has been building for some time.  Pavel also hand-crafted the actual shapefiles used for the basemap rendering.<br>\nCouple of things to note:</p>\n<ol>\n<li>The OCPN package must be build and installed to properly place the basemap data files in the proper system location.</li>\n<li>The base install comes with \"crude\" and \"low\" resolution data files.  We plan to follow the same strategy as GSHHS, namely, users may download higher resolution basemaps using the chart downloader.  Not implemented yet.</li>\n<li>On the distribution basemaps, there are today two colors used.  This will help us to monitor and understand the algorithm for switching basemap scales, in the same way as GSHHS.  In production, the basemap colors will likely be the same, or similar to, the existing GSHHS colors.</li>\n</ol>\n<p>There is more work to do here, but I think we are structurally complete.<br>\nComments appreciated.  Pavel, please fill as appropriate.</p>",
+        "id": 434275910,
+        "sender_full_name": "Dave Register",
+        "timestamp": 1713498030
+    },
+    {
+        "content": "<p>And there is a Windows build problem.<br>\nI will investigate tomorrow.</p>",
+        "id": 434279572,
+        "sender_full_name": "Dave Register",
+        "timestamp": 1713500434
+    },
+    {
+        "content": "<p>The higher res datasets can be downloaded from <a href=\"https://github.com/chartcatalogs/shapefiles/releases/tag/v0.0.1\">https://github.com/chartcatalogs/shapefiles/releases/tag/v0.0.1</a> - just unpack and place the files next to the existing ones.<br>\nNote that the high and full resolutions contain an extreme level of detail, which especially in areas with complicated geography still leads to IMHO unacceptable performance that needs more optimization.</p>",
+        "id": 434339653,
+        "sender_full_name": "Pavel Kalian",
+        "timestamp": 1713525058
+    },
+    {
+        "content": "<p>Thanks Pavel. I was looking in Chartdownloader for that but there's only the \"old\" GSHHG.<br>\nQ: Before testing, do you think WeatherRouting will detect this new land contour or do we still need GSHHG for that?</p>",
+        "id": 434345130,
+        "sender_full_name": "Håkan Svensson",
+        "timestamp": 1713527212
+    },
+    {
+        "content": "<p>On a RPi400<br>\nI loaded basemap-medium and that's very good so far. Well, on my Pi the green color is very bright. Nearly stings in the eyes. Could we make it more soft?</p>\n<p>Anyhow -  I'd suggest we also include basemap-medium in the install packages. Today's system would manage that I suppose.</p>",
+        "id": 434362538,
+        "sender_full_name": "Håkan Svensson",
+        "timestamp": 1713533117
+    },
+    {
+        "content": "<p><span class=\"user-mention\" data-user-id=\"573239\">@Pavel Kalian</span> <br>\nWindows build fail corrected, by removing</p>\n<div class=\"codehilite\"><pre><span></span><code>libs/ShapefileCpp/lib/src/ShapefileWriter.cpp.\n</code></pre></div>\n\n<p>I guess we do not need that, at least right now.</p>\n<p>MSVC compiler does not like zero-length array initialization.<br>\ne.g. </p>\n<div class=\"codehilite\"><pre><span></span><code>   SHPObject* ShapefileWriter::createPointObject(Point *pt) {\n    double x[1] = {pt-&gt;getX()};\n    double y[1] = {pt-&gt;getY()};\n    double z[1] = {pt-&gt;getZ()};\n    double m[1] = {pt-&gt;getM()};\n    int starts[0];                                        &lt;---------------- Error C2466\n    int types[0];\n</code></pre></div>",
+        "id": 434370399,
+        "sender_full_name": "Dave Register",
+        "timestamp": 1713535630
+    },
+    {
+        "content": "<p><span class=\"user-mention\" data-user-id=\"522486\">@Håkan Svensson</span> </p>\n<ol>\n<li>The new basemap code includes land detection code, but is untested in real life.</li>\n<li>You can change the colors locally if you like, to save your eyes.   The colors are set at:<p><code>void ShapeBaseChartSet::LoadBasemaps(const std::string &amp;dir)</code></p>\n</li>\n</ol>",
+        "id": 434371209,
+        "sender_full_name": "Dave Register",
+        "timestamp": 1713535882
+    },
+    {
+        "content": "<p>WeatherRouting does not care what basemap is being used, it just calls the API and asks whether land is crossed or not, so the change of basemap is transparent for it. The shapefiles of course will be available from the chart downloader, but first I need to implement the full production workflow. The colors are there just for the current testing phase so that it is apparent which basemap resolution is being used, we will simply use some similar to GSHHG color in the release for all of them. The performance intensive resolutions really are only high and full, the amount of detail grows pretty much exponentionally there as both smaller features are present (= many more polygons to render) and the simplification is less aggressive (= all the polygons have more edges)</p>",
+        "id": 434372277,
+        "sender_full_name": "Pavel Kalian",
+        "timestamp": 1713536200
+    },
+    {
+        "content": "<p>Very good info, thanks. This will be nice.</p>",
+        "id": 434374650,
+        "sender_full_name": "Håkan Svensson",
+        "timestamp": 1713536936
+    },
+    {
+        "content": "<p><span class=\"user-mention\" data-user-id=\"573239\">@Pavel Kalian</span> <br>\nIf you have time, will you please take a look at macOS CCI build fail?</p>\n<div class=\"codehilite\"><pre><span></span><code> /Users/runner/work/OpenCPN/OpenCPN/gui/include/gui/shapefile_basemap.h:102:35: error: &#39;exists&#39; is unavailable: introduced in macOS 10.15\n\n _is_usable = std::filesystem::exists(filename);\n</code></pre></div>",
+        "id": 434376664,
+        "sender_full_name": "Dave Register",
+        "timestamp": 1713537574
+    },
+    {
+        "content": "<p>Just pushed the fix (There is no <code>std::filesystem</code> on old macOS so we need the same logic as everywhere else we use it)</p>",
+        "id": 434376885,
+        "sender_full_name": "Pavel Kalian",
+        "timestamp": 1713537634
+    },
+    {
+        "content": "<p>current master: Yes, WeatherRouting now detects also \"Basemaps\" as land. <span aria-label=\"+1\" class=\"emoji emoji-1f44d\" role=\"img\" title=\"+1\">:+1:</span> <br>\nAnd also VS does build and Linux wo warnings.</p>",
+        "id": 434405998,
+        "sender_full_name": "Håkan Svensson",
+        "timestamp": 1713547687
+    },
+    {
+        "content": "<p><span class=\"user-mention\" data-user-id=\"573239\">@Pavel Kalian</span> <br>\nThanks.</p>",
+        "id": 434411357,
+        "sender_full_name": "Dave Register",
+        "timestamp": 1713550089
+    }
+]

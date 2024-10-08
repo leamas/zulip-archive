@@ -1,0 +1,193 @@
+<html>
+<head><meta charset="utf-8"><title>Problems with Dokuwikistick on Win C: drive (apache server) · User Manual - Editors · Zulip Chat Archive</title></head>
+<h2>Stream: <a href="https://leamas.github.io/zulip-archive/stream/437623-User-Manual---Editors/index.html">User Manual - Editors</a></h2>
+<h3>Topic: <a href="https://leamas.github.io/zulip-archive/stream/437623-User-Manual---Editors/topic/Problems.20with.20Dokuwikistick.20on.20Win.20C.3A.20drive.20.28apache.20server.29.html">Problems with Dokuwikistick on Win C: drive (apache server)</a></h3>
+
+<hr>
+
+<base href="https://opencpn.zulipchat.com">
+
+<head><link href="https://leamas.github.io/zulip-archive/style.css" rel="stylesheet"></head>
+
+<a name="443432957"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/437623-User%20Manual%20-%20Editors/topic/Problems%20with%20Dokuwikistick%20on%20Win%20C%3A%20drive%20%28apache%20server%29/near/443432957" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Rick Gleason <a href="https://leamas.github.io/zulip-archive/stream/437623-User-Manual---Editors/topic/Problems.20with.20Dokuwikistick.20on.20Win.20C.3A.20drive.20.28apache.20server.29.html#443432957">(Jun 08 2024 at 06:53)</a>:</h4>
+<p>I have a local version of the OpenCPN wiki running. I need this because a plugin the creates the portable versions of html and pdf for the User Manual, times out on the OpenCPN Server.  I have set up ACL and can edit and do all the normal things we can do on the OpenCPN server, but the two plugins Epub and SiteExplorer cannot seem to save files and I have not been able to figure out what is causing this.  I have tried turning off Norton AV and Firewall (no difference),  moving the DokuwikiStick entire directory to a user directory such as   C:/user/username/Documents. I have tried to change the permissions on the entire Dokuwiiki directory from "read only" and all subdir and files, but it just changes back to read-only.  I am out of ideas... can anyone with apache server experience (runnning on the C:drive) please advise?</p>
+
+
+
+<a name="443463166"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/437623-User%20Manual%20-%20Editors/topic/Problems%20with%20Dokuwikistick%20on%20Win%20C%3A%20drive%20%28apache%20server%29/near/443463166" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Fabio Paoli <a href="https://leamas.github.io/zulip-archive/stream/437623-User-Manual---Editors/topic/Problems.20with.20Dokuwikistick.20on.20Win.20C.3A.20drive.20.28apache.20server.29.html#443463166">(Jun 08 2024 at 12:27)</a>:</h4>
+<p><span class="user-mention" data-user-id="399865">@Rick Gleason</span> , what's the error you're getting?  Are you absolutely sure it is unable to save files and not something else that results in no file created?</p>
+
+
+
+<a name="443464160"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/437623-User%20Manual%20-%20Editors/topic/Problems%20with%20Dokuwikistick%20on%20Win%20C%3A%20drive%20%28apache%20server%29/near/443464160" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Rick Gleason <a href="https://leamas.github.io/zulip-archive/stream/437623-User-Manual---Editors/topic/Problems.20with.20Dokuwikistick.20on.20Win.20C.3A.20drive.20.28apache.20server.29.html#443464160">(Jun 08 2024 at 12:40)</a>:</h4>
+<p>The siteexport plugin simply reports  "Finished but download failed."    and ebup  just sits there and never completes. I have two log files I can post, but I am not sure they will help.  The apache server is a special miniapache that is bundled and intended for running with windows.  Will post the log files.</p>
+
+
+
+<a name="443464219"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/437623-User%20Manual%20-%20Editors/topic/Problems%20with%20Dokuwikistick%20on%20Win%20C%3A%20drive%20%28apache%20server%29/near/443464219" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Rick Gleason <a href="https://leamas.github.io/zulip-archive/stream/437623-User-Manual---Editors/topic/Problems.20with.20Dokuwikistick.20on.20Win.20C.3A.20drive.20.28apache.20server.29.html#443464219">(Jun 08 2024 at 12:41)</a>:</h4>
+<p>**Dokuwiki Error Log<br>
+**</p>
+<p>024-06-08 00:04:08    C:\Users\fcgle\DokuWikiStick\dokuwiki\lib\plugins\epub\action.php(104)    E_WARNING: Trying to access array offset on value of type null<br>
+<a href="https://github.com/opencpn/OpenCPN/issues/0">#0</a> C:\Users\fcgle\DokuWikiStick\dokuwiki\lib\plugins\epub\action.php(104): dokuwiki\ErrorHandler::errorHandler()<br>
+<a href="https://github.com/opencpn/OpenCPN/issues/1">#1</a> C:\Users\fcgle\DokuWikiStick\dokuwiki\inc\Extension\EventHandler.php(80): action_plugin_epub-&gt;prevent_cache()<br>
+<a href="https://github.com/opencpn/OpenCPN/issues/2">#2</a> C:\Users\fcgle\DokuWikiStick\dokuwiki\inc\Extension\Event.php(75): dokuwiki\Extension\EventHandler-&gt;process_event()<br>
+<a href="https://github.com/opencpn/OpenCPN/issues/3">#3</a> C:\Users\fcgle\DokuWikiStick\dokuwiki\inc\Extension\Event.php(133): dokuwiki\Extension\Event-&gt;advise_before()<br>
+<a href="https://github.com/opencpn/OpenCPN/issues/4">#4</a> C:\Users\fcgle\DokuWikiStick\dokuwiki\inc\Extension\Event.php(200): dokuwiki\Extension\Event-&gt;trigger()<br>
+<a href="https://github.com/opencpn/OpenCPN/issues/5">#5</a> C:\Users\fcgle\DokuWikiStick\dokuwiki\inc\Cache\Cache.php(83): dokuwiki\Extension\Event::createAndTrigger()<br>
+<a href="https://github.com/opencpn/OpenCPN/issues/6">#6</a> C:\Users\fcgle\DokuWikiStick\dokuwiki\inc\parserutils.php(289): dokuwiki\Cache\Cache-&gt;useCache()<br>
+<a href="https://github.com/opencpn/OpenCPN/issues/7">#7</a> C:\Users\fcgle\DokuWikiStick\dokuwiki\inc\common.php(262): p_get_metadata()<br>
+<a href="https://github.com/opencpn/OpenCPN/issues/8">#8</a> C:\Users\fcgle\DokuWikiStick\dokuwiki\doku.php(101): pageinfo()<br>
+<a href="https://github.com/opencpn/OpenCPN/issues/9">#9</a> {main}<br>
+2024-06-08 00:04:15    C:\Users\fcgle\DokuWikiStick\dokuwiki\lib\plugins\epub\action.php(104)    E_WARNING: Trying to access array offset on value of type null<br>
+<a href="https://github.com/opencpn/OpenCPN/issues/0">#0</a> C:\Users\fcgle\DokuWikiStick\dokuwiki\lib\plugins\epub\action.php(104): dokuwiki\ErrorHandler::errorHandler()<br>
+<a href="https://github.com/opencpn/OpenCPN/issues/1">#1</a> C:\Users\fcgle\DokuWikiStick\dokuwiki\inc\Extension\EventHandler.php(80): action_plugin_epub-&gt;prevent_cache()<br>
+<a href="https://github.com/opencpn/OpenCPN/issues/2">#2</a> C:\Users\fcgle\DokuWikiStick\dokuwiki\inc\Extension\Event.php(75): dokuwiki\Extension\EventHandler-&gt;process_event()<br>
+<a href="https://github.com/opencpn/OpenCPN/issues/3">#3</a> C:\Users\fcgle\DokuWikiStick\dokuwiki\inc\Extension\Event.php(133): dokuwiki\Extension\Event-&gt;advise_before()<br>
+<a href="https://github.com/opencpn/OpenCPN/issues/4">#4</a> C:\Users\fcgle\DokuWikiStick\dokuwiki\inc\Extension\Event.php(200): dokuwiki\Extension\Event-&gt;trigger()<br>
+<a href="https://github.com/opencpn/OpenCPN/issues/5">#5</a> C:\Users\fcgle\DokuWikiStick\dokuwiki\inc\Cache\Cache.php(83): dokuwiki\Extension\Event::createAndTrigger()<br>
+<a href="https://github.com/opencpn/OpenCPN/issues/6">#6</a> C:\Users\fcgle\DokuWikiStick\dokuwiki\inc\parserutils.php(289): dokuwiki\Cache\Cache-&gt;useCache()<br>
+<a href="https://github.com/opencpn/OpenCPN/issues/7">#7</a> C:\Users\fcgle\DokuWikiStick\dokuwiki\inc\common.php(262): p_get_metadata()<br>
+<a href="https://github.com/opencpn/OpenCPN/issues/8">#8</a> C:\Users\fcgle\DokuWikiStick\dokuwiki\doku.php(101): pageinfo()<br>
+<a href="https://github.com/opencpn/OpenCPN/issues/9">#9</a> {main}<br>
+2024-06-08 00:04:15    C:\Users\fcgle\DokuWikiStick\dokuwiki\lib\plugins\siteexport\helper.php(183)    E_WARNING: Undefined array key "depthType"<br>
+<a href="https://github.com/opencpn/OpenCPN/issues/0">#0</a> C:\Users\fcgle\DokuWikiStick\dokuwiki\lib\plugins\siteexport\helper.php(183): dokuwiki\ErrorHandler::errorHandler()<br>
+<a href="https://github.com/opencpn/OpenCPN/issues/1">#1</a> C:\Users\fcgle\DokuWikiStick\dokuwiki\lib\plugins\siteexport\admin.php(50): helper_plugin_siteexport-&gt;__siteexport_addpage()<br>
+<a href="https://github.com/opencpn/OpenCPN/issues/2">#2</a> C:\Users\fcgle\DokuWikiStick\dokuwiki\inc\template.php(205): admin_plugin_siteexport-&gt;html()<br>
+<a href="https://github.com/opencpn/OpenCPN/issues/3">#3</a> C:\Users\fcgle\DokuWikiStick\dokuwiki\inc\Action\Admin.php(43): tpl_admin()<br>
+<a href="https://github.com/opencpn/OpenCPN/issues/4">#4</a> C:\Users\fcgle\DokuWikiStick\dokuwiki\inc\template.php(120): dokuwiki\Action\Admin-&gt;tplContent()<br>
+<a href="https://github.com/opencpn/OpenCPN/issues/5">#5</a> [internal function]: tpl_content_core()<br>
+<a href="https://github.com/opencpn/OpenCPN/issues/6">#6</a> C:\Users\fcgle\DokuWikiStick\dokuwiki\inc\Extension\Event.php(134): call_user_func_array()<br>
+<a href="https://github.com/opencpn/OpenCPN/issues/7">#7</a> C:\Users\fcgle\DokuWikiStick\dokuwiki\inc\Extension\Event.php(200): dokuwiki\Extension\Event-&gt;trigger()<br>
+<a href="https://github.com/opencpn/OpenCPN/issues/8">#8</a> C:\Users\fcgle\DokuWikiStick\dokuwiki\inc\template.php(102): dokuwiki\Extension\Event::createAndTrigger()<br>
+<a href="https://github.com/opencpn/OpenCPN/issues/9">#9</a> C:\Users\fcgle\DokuWikiStick\dokuwiki\lib\tpl\dokuwiki\main.php(60): tpl_content()<br>
+<a href="https://github.com/opencpn/OpenCPN/issues/10">#10</a> C:\Users\fcgle\DokuWikiStick\dokuwiki\inc\actions.php(30): include('...')<br>
+<a href="https://github.com/opencpn/OpenCPN/issues/11">#11</a> C:\Users\fcgle\DokuWikiStick\dokuwiki\doku.php(131): act_dispatch()<br>
+<a href="https://github.com/opencpn/OpenCPN/issues/12">#12</a> {main}</p>
+
+
+
+<a name="443464252"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/437623-User%20Manual%20-%20Editors/topic/Problems%20with%20Dokuwikistick%20on%20Win%20C%3A%20drive%20%28apache%20server%29/near/443464252" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Rick Gleason <a href="https://leamas.github.io/zulip-archive/stream/437623-User-Manual---Editors/topic/Problems.20with.20Dokuwikistick.20on.20Win.20C.3A.20drive.20.28apache.20server.29.html#443464252">(Jun 08 2024 at 12:41)</a>:</h4>
+<p><strong>Apache  Server  Recent Server Logs</strong></p>
+<p>[Thu Jun 06 19:23:10.362700 2024] [core:warn] [pid 21672:tid 360] AH00098: pid file C:/Users/fcgle/DokuWikiStick/server/logs/httpd.pid overwritten -- Unclean shutdown of previous Apache run?<br>
+[Thu Jun 06 19:23:10.708920 2024] [mpm_winnt:notice] [pid 21672:tid 360] AH00455: Apache/2.4.58 (Win64) PHP/8.2.13 configured -- resuming normal operations<br>
+[Thu Jun 06 19:23:10.708920 2024] [mpm_winnt:notice] [pid 21672:tid 360] AH00456: Apache Lounge VS17 Server built: Oct 18 2023 13:03:18<br>
+[Thu Jun 06 19:23:10.708920 2024] [core:notice] [pid 21672:tid 360] AH00094: Command line: 'mapache.exe -d C:/Users/fcgle/DokuWikiStick/server'<br>
+[Thu Jun 06 19:23:10.818148 2024] [mpm_winnt:notice] [pid 21672:tid 360] AH00418: Parent: Created child process 22360<br>
+[Thu Jun 06 19:23:11.476602 2024] [mpm_winnt:notice] [pid 22360:tid 356] AH00354: Child: Starting 24 worker threads.<br>
+[Thu Jun 06 21:14:19.776802 2024] [authz_core:error] [pid 22360:tid 828] [client 127.0.0.1:61699] AH01630: client denied by server configuration: C:/Users/fcgle/DokuWikiStick/dokuwiki/data/dont-panic-if-you-see-this-in-your-logs-it-means-your-directory-permissions-are-correct.png, referer: <a href="http://localhost:8800/doku.php?id=opencpn:editor_manual:epub-user-manual-advanced&amp;do=admin">http://localhost:8800/doku.php?id=opencpn:editor_manual:epub-user-manual-advanced&amp;do=admin</a><br>
+[Fri Jun 07 19:37:24.273086 2024] [core:warn] [pid 16748:tid 188] AH00098: pid file C:/Users/fcgle/DokuWikiStick/server/logs/httpd.pid overwritten -- Unclean shutdown of previous Apache run?<br>
+[Fri Jun 07 19:37:27.724582 2024] [mpm_winnt:notice] [pid 16748:tid 188] AH00455: Apache/2.4.58 (Win64) PHP/8.2.13 configured -- resuming normal operations<br>
+[Fri Jun 07 19:37:27.724582 2024] [mpm_winnt:notice] [pid 16748:tid 188] AH00456: Apache Lounge VS17 Server built: Oct 18 2023 13:03:18<br>
+[Fri Jun 07 19:37:27.724582 2024] [core:notice] [pid 16748:tid 188] AH00094: Command line: 'mapache.exe -d C:/Users/fcgle/DokuWikiStick/server'<br>
+[Fri Jun 07 19:37:27.908595 2024] [mpm_winnt:notice] [pid 16748:tid 188] AH00418: Parent: Created child process 21196<br>
+[Fri Jun 07 19:37:28.968576 2024] [mpm_winnt:notice] [pid 21196:tid 352] AH00354: Child: Starting 24 worker threads.<br>
+[Fri Jun 07 19:38:11.011546 2024] [authz_core:error] [pid 21196:tid 832] [client 127.0.0.1:51286] AH01630: client denied by server configuration: C:/Users/fcgle/DokuWikiStick/dokuwiki/data/dont-panic-if-you-see-this-in-your-logs-it-means-your-directory-permissions-are-correct.png, referer: <a href="http://localhost:8800/doku.php?id=opencpn&amp;do=admin">http://localhost:8800/doku.php?id=opencpn&amp;do=admin</a></p>
+
+
+
+<a name="443467587"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/437623-User%20Manual%20-%20Editors/topic/Problems%20with%20Dokuwikistick%20on%20Win%20C%3A%20drive%20%28apache%20server%29/near/443467587" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Fabio Paoli <a href="https://leamas.github.io/zulip-archive/stream/437623-User-Manual---Editors/topic/Problems.20with.20Dokuwikistick.20on.20Win.20C.3A.20drive.20.28apache.20server.29.html#443467587">(Jun 08 2024 at 13:19)</a>:</h4>
+<p>The depthType error is what I'd look into, if it makes sense in docuwiki lingo.  Doesn't seem like a folder permission error.</p>
+
+
+
+<a name="443467615"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/437623-User%20Manual%20-%20Editors/topic/Problems%20with%20Dokuwikistick%20on%20Win%20C%3A%20drive%20%28apache%20server%29/near/443467615" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Fabio Paoli <a href="https://leamas.github.io/zulip-archive/stream/437623-User-Manual---Editors/topic/Problems.20with.20Dokuwikistick.20on.20Win.20C.3A.20drive.20.28apache.20server.29.html#443467615">(Jun 08 2024 at 13:19)</a>:</h4>
+<p>I don't have an Apache to help, it's been a while since I worked on one.</p>
+
+
+
+<a name="443505534"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/437623-User%20Manual%20-%20Editors/topic/Problems%20with%20Dokuwikistick%20on%20Win%20C%3A%20drive%20%28apache%20server%29/near/443505534" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Alec Leamas <a href="https://leamas.github.io/zulip-archive/stream/437623-User-Manual---Editors/topic/Problems.20with.20Dokuwikistick.20on.20Win.20C.3A.20drive.20.28apache.20server.29.html#443505534">(Jun 08 2024 at 18:05)</a>:</h4>
+<p>client denied by server configuration: C:/Users/fcgle/DokuWikiStick/dokuwiki/data/dont-panic-if-you-see-this-in-your-logs-it-means-your-directory-permissions-are-correct.png, referer: <a href="http://localhost:8800/doku.php?id=opencpn:editor_manual:epub-user-manual-advanced&amp;do=admin">http://localhost:8800/doku.php?id=opencpn:editor_manual:epub-user-manual-advanced&amp;do=admin</a></p>
+
+
+
+<a name="443510022"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/437623-User%20Manual%20-%20Editors/topic/Problems%20with%20Dokuwikistick%20on%20Win%20C%3A%20drive%20%28apache%20server%29/near/443510022" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Rick Gleason <a href="https://leamas.github.io/zulip-archive/stream/437623-User-Manual---Editors/topic/Problems.20with.20Dokuwikistick.20on.20Win.20C.3A.20drive.20.28apache.20server.29.html#443510022">(Jun 08 2024 at 18:47)</a>:</h4>
+<p>Yes Alec. I am not sure what this really means can you explain?</p>
+
+
+
+<a name="443514582"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/437623-User%20Manual%20-%20Editors/topic/Problems%20with%20Dokuwikistick%20on%20Win%20C%3A%20drive%20%28apache%20server%29/near/443514582" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Rick Gleason <a href="https://leamas.github.io/zulip-archive/stream/437623-User-Manual---Editors/topic/Problems.20with.20Dokuwikistick.20on.20Win.20C.3A.20drive.20.28apache.20server.29.html#443514582">(Jun 08 2024 at 19:35)</a>:</h4>
+<p>[Sat Jun 08 15:05:33.712883 2024] [mpm_winnt:notice] [pid 19380:tid 356] AH00455: Apache/2.4.58 (Win64) PHP/8.2.13 configured -- resuming normal operations<br>
+[Sat Jun 08 15:05:33.712883 2024] [mpm_winnt:notice] [pid 19380:tid 356] AH00456: Apache Lounge VS17 Server built: Oct 18 2023 13:03:18<br>
+[Sat Jun 08 15:05:33.712883 2024] [core:notice] [pid 19380:tid 356] AH00094: Command line: 'mapache.exe -d C:/Users/fcgle/Documents/DokuWikiStick/server'<br>
+[Sat Jun 08 15:05:33.712883 2024] [mpm_winnt:notice] [pid 19380:tid 356] AH00418: Parent: Created child process 14072<br>
+[Sat Jun 08 15:05:34.332794 2024] [mpm_winnt:notice] [pid 14072:tid 356] AH00354: Child: Starting 24 worker threads.<br>
+[Sat Jun 08 15:10:47.971825 2024] [authz_core:error] [pid 14072:tid 820] [client 127.0.0.1:50200] AH01630: client denied by server configuration: C:/Users/fcgle/Documents/DokuWikiStick/dokuwiki/data/dont-panic-if-you-see-this-in-your-logs-it-means-your-directory-permissions-are-correct.png, referer: <a href="http://localhost:8800/doku.php?id=opencpn:toc_manual_basic&amp;do=admin">http://localhost:8800/doku.php?id=opencpn:toc_manual_basic&amp;do=admin</a></p>
+<p>Here it is again, Client denied by server configuration.  So how do I avoid this?   I don't know what the problem is, but we are denied writing files to the disk, and when I try to change properties of the dokuwiki directory from readonly, it just goes back to readonly automatically.</p>
+
+
+
+<a name="443515083"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/437623-User%20Manual%20-%20Editors/topic/Problems%20with%20Dokuwikistick%20on%20Win%20C%3A%20drive%20%28apache%20server%29/near/443515083" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Rick Gleason <a href="https://leamas.github.io/zulip-archive/stream/437623-User-Manual---Editors/topic/Problems.20with.20Dokuwikistick.20on.20Win.20C.3A.20drive.20.28apache.20server.29.html#443515083">(Jun 08 2024 at 19:43)</a>:</h4>
+<p>I haven't changed the .htacess files and they all seem to have <br>
+&lt;IfModule mod_authz_core.c&gt;<br>
+    Require all denied<br>
+&lt;/IfModule&gt;<br>
+&lt;IfModule !mod_authz_core.c&gt;<br>
+    Order allow,deny<br>
+    Deny from all<br>
+&lt;/IfModule&gt;</p>
+
+
+
+<a name="443516493"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/437623-User%20Manual%20-%20Editors/topic/Problems%20with%20Dokuwikistick%20on%20Win%20C%3A%20drive%20%28apache%20server%29/near/443516493" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Rick Gleason <a href="https://leamas.github.io/zulip-archive/stream/437623-User-Manual---Editors/topic/Problems.20with.20Dokuwikistick.20on.20Win.20C.3A.20drive.20.28apache.20server.29.html#443516493">(Jun 08 2024 at 20:02)</a>:</h4>
+<p>So it just denies me and any files.  I wonder where I allow stuff. I've been through ACL in dokuwiki.</p>
+
+
+
+<a name="443520242"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/437623-User%20Manual%20-%20Editors/topic/Problems%20with%20Dokuwikistick%20on%20Win%20C%3A%20drive%20%28apache%20server%29/near/443520242" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Rick Gleason <a href="https://leamas.github.io/zulip-archive/stream/437623-User-Manual---Editors/topic/Problems.20with.20Dokuwikistick.20on.20Win.20C.3A.20drive.20.28apache.20server.29.html#443520242">(Jun 08 2024 at 20:38)</a>:</h4>
+<p>I've checked the ACL each file and each directory and I am basically a superuser, with delete rights etc, so that should not be the problem.</p>
+
+
+
+<a name="443523157"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/437623-User%20Manual%20-%20Editors/topic/Problems%20with%20Dokuwikistick%20on%20Win%20C%3A%20drive%20%28apache%20server%29/near/443523157" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Rick Gleason <a href="https://leamas.github.io/zulip-archive/stream/437623-User-Manual---Editors/topic/Problems.20with.20Dokuwikistick.20on.20Win.20C.3A.20drive.20.28apache.20server.29.html#443523157">(Jun 08 2024 at 21:10)</a>:</h4>
+<p>Found one problem, in siteexport  plugin»siteexport»defaultAuthenticationUser   was not admin</p>
+
+
+
+<a name="443530084"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/437623-User%20Manual%20-%20Editors/topic/Problems%20with%20Dokuwikistick%20on%20Win%20C%3A%20drive%20%28apache%20server%29/near/443530084" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Rick Gleason <a href="https://leamas.github.io/zulip-archive/stream/437623-User-Manual---Editors/topic/Problems.20with.20Dokuwikistick.20on.20Win.20C.3A.20drive.20.28apache.20server.29.html#443530084">(Jun 08 2024 at 22:40)</a>:</h4>
+<p>@Dave Register   FYI</p>
+<p>Its taken a day and half so far to get to this point, siteexport  is almost working, but not working.<br>
+<a href="https://github.com/samuelet/indexmenu/issues/314#issuecomment-2156210366">https://github.com/samuelet/indexmenu/issues/314#issuecomment-2156210366</a></p>
+
+
+
+<a name="443531395"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/437623-User%20Manual%20-%20Editors/topic/Problems%20with%20Dokuwikistick%20on%20Win%20C%3A%20drive%20%28apache%20server%29/near/443531395" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Rick Gleason <a href="https://leamas.github.io/zulip-archive/stream/437623-User-Manual---Editors/topic/Problems.20with.20Dokuwikistick.20on.20Win.20C.3A.20drive.20.28apache.20server.29.html#443531395">(Jun 08 2024 at 22:54)</a>:</h4>
+<p>Siteexport-45.zip downloaded to my drive. I expanded it and found that there was a bright message from Captcha saying that login to captcha failed and none of the pages are accessible.</p>
+
+
+
+<a name="443540981"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/437623-User%20Manual%20-%20Editors/topic/Problems%20with%20Dokuwikistick%20on%20Win%20C%3A%20drive%20%28apache%20server%29/near/443540981" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Rick Gleason <a href="https://leamas.github.io/zulip-archive/stream/437623-User-Manual---Editors/topic/Problems.20with.20Dokuwikistick.20on.20Win.20C.3A.20drive.20.28apache.20server.29.html#443540981">(Jun 09 2024 at 01:34)</a>:</h4>
+<p>I've got to get dokuwikistick or dokuwiki  working locally before I will be able to produce the siteexport package.</p>
+
+
+
+<a name="443541021"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/437623-User%20Manual%20-%20Editors/topic/Problems%20with%20Dokuwikistick%20on%20Win%20C%3A%20drive%20%28apache%20server%29/near/443541021" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Rick Gleason <a href="https://leamas.github.io/zulip-archive/stream/437623-User-Manual---Editors/topic/Problems.20with.20Dokuwikistick.20on.20Win.20C.3A.20drive.20.28apache.20server.29.html#443541021">(Jun 09 2024 at 01:35)</a>:</h4>
+<p>I think i have basic details worked out, but the server times out at 97 pages and it is showing as 147 pages total.</p>
+
+
+
+<a name="443653392"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/437623-User%20Manual%20-%20Editors/topic/Problems%20with%20Dokuwikistick%20on%20Win%20C%3A%20drive%20%28apache%20server%29/near/443653392" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Rick Gleason <a href="https://leamas.github.io/zulip-archive/stream/437623-User-Manual---Editors/topic/Problems.20with.20Dokuwikistick.20on.20Win.20C.3A.20drive.20.28apache.20server.29.html#443653392">(Jun 09 2024 at 22:58)</a>:</h4>
+<p>Please see <a href="#narrow/stream/432618-OCPN-5.2E10-Release-plan/topic/Documentation">https://opencpn.zulipchat.com/#narrow/stream/432618-OCPN-5.2E10-Release-plan/topic/Documentation</a></p>
+
+
+
+<hr><p>Last updated: Oct 08 2024 at 10:11 UTC</p>
+</html>

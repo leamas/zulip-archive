@@ -1,0 +1,254 @@
+[
+    {
+        "content": "<p><span class=\"user-mention\" data-user-id=\"573239\">@Pavel Kalian</span>  Thanks for the typo \"Label\" fix. Now OK.<br>\n@ All<br>\nWizard on a Rpi400 Bookworm -X11<br>\nO crashes while searching for connections.<br>\nToday's Git master.</p>\n<p>The system from O's perspective:<br>\n11:15:46.106 MESSAGE ocpn_app.cpp:1150 wxWidgets version: wxWidgets 3.2.2 Linux 64 bit wxGTK<br>\n11:15:46.108 MESSAGE ocpn_app.cpp:1155 OS Version reports as:  6.6<br>\n11:15:46.108 MESSAGE ocpn_app.cpp:1157 MemoryStatus:  mem_total: 4041 mb,  mem_initial: 101 mb<br>\n11:15:46.108 MESSAGE ocpn_app.cpp:1169 OCPN_OSDetail:  arm64 ; Debian GNU/Linux ; 12 ; debian ; </p>\n<div class=\"codehilite\"><pre><span></span><code>Reading symbols from opencpn...\n(gdb) run -W\nStarting program: /home/pi/builds/OpenCPN/build/opencpn -W\n................\nNew Thread 0x7fdd059a80 (LWP 62112)]\nOpened 2 sockets for mDNS query\nSending mDNS query : _signalk-ws._tcp.local. PTR\nReading mDNS query replies\n[Thread 0x7fdda4ca80 (LWP 62101) exited]\nRead 9 records\nClosed sockets\n[Thread 0x7fdd059a80 (LWP 62112) exited]\nUnhandled unknown exception; terminating the application.\n\nThread 1 &quot;opencpn&quot; received signal SIGSEGV, Segmentation fault.\n0x0000007ff743e3b8 in ?? () from /lib/aarch64-linux-gnu/libwx_gtk3u_core-3.2.so.0\n(gdb) bt\n#0  0x0000007ff743e3b8 in  () at /lib/aarch64-linux-gnu/libwx_gtk3u_core-3.2.so.0\n#1  0x0000007ff6fa4430 in wxMBConv::FromWChar(char*, unsigned long, wchar_t const*, unsigned long) const ()\n    at /lib/aarch64-linux-gnu/libwx_baseu-3.2.so.0\n#2  0x0000007ff6faf6e4 in wxString::AsChar(wxMBConv const&amp;) const () at /lib/aarch64-linux-gnu/libwx_baseu-3.2.so.0\n#3  0x0000007ff7021e40 in  () at /lib/aarch64-linux-gnu/libwx_baseu-3.2.so.0\n#4  0x0000007ff7022f7c in wxSingleInstanceChecker::~wxSingleInstanceChecker() () at /lib/aarch64-linux-gnu/libwx_baseu-3.2.so.0\n#5  0x0000005555d3be4c in WxInstanceCheck::~WxInstanceCheck() (this=&lt;optimized out&gt;, __in_chrg=&lt;optimized out&gt;)\n    at /home/pi/builds/OpenCPN/model/include/model/wx_instance_chk.h:32\n#6  0x0000007ff589cecc in __run_exit_handlers\n    (status=-1, listp=0x7ff5a00750 &lt;__exit_funcs&gt;, run_list_atexit=run_list_atexit@entry=true, run_dtors=run_dtors@entry=true)\n    at ./stdlib/exit.c:116\n#7  0x0000007ff589cfa0 in __GI_exit (status=&lt;optimized out&gt;) at ./stdlib/exit.c:146\n#8  0x0000007ff5887784 in __libc_start_call_main (main=main@entry=0x55557e9620 &lt;main(int, char**)&gt;, argc=argc@entry=2, argv=argv@entry=0x7ffffff088)\n    at ../sysdeps/nptl/libc_start_call_main.h:74\n#9  0x0000007ff5887858 in __libc_start_main_impl\n    (main=0x55557e9620 &lt;main(int, char**)&gt;, argc=2, argv=0x7ffffff088, init=&lt;optimized out&gt;, fini=&lt;optimized out&gt;, rtld_fini=&lt;optimized out&gt;, stack_end=&lt;optimized out&gt;) at ../csu/libc-start.c:360\n#10 0x00000055558019b0 in _start ()\n</code></pre></div>",
+        "id": 446408650,
+        "sender_full_name": "Håkan Svensson",
+        "timestamp": 1719141771
+    },
+    {
+        "content": "<p><span class=\"user-mention\" data-user-id=\"517002\">@Dave Register</span> <br>\nSome tracing on the Rpi4.<br>\nIf I don't run \"EnumerateTCP() \" (i.e. return: at wiz_ui.cpp row 429) then the Wizard connection runs wo crash and detect others. (3 of Signalk, GPSd (but not a Canable USB))</p>\n<p>If I run original code with debug I get this:</p>\n<div class=\"codehilite\"><pre><span></span><code>pi@openplotter:~/builds/OpenCPN/build $ ./opencpn -W --loglevel debug\nOpened 3 sockets for mDNS query\nSending mDNS query : _signalk-ws._tcp.local. PTR\nReading mDNS query replies\nRead 64 records\nClosed sockets\nUnhandled unknown exception; terminating the application.\n22:53:49: Debug: Stopping REST service\n22:53:27: Debug: Local IPv4 address: 192.168.1.154\n22:53:27: Debug: Local IPv6 address: 2001:2042:7535:bd00:6520:70a1:fc87:6307\n22:53:27: Debug: Local IPv6 address: 2001:2042:7535:bd00:cfad:ca5b:c6b0:8e44\nSegmentation fault\n</code></pre></div>",
+        "id": 446474314,
+        "sender_full_name": "Håkan Svensson",
+        "timestamp": 1719176891
+    },
+    {
+        "content": "<p>Btw: I get the same crash on a RPi5 running:  ./opencpn -W</p>",
+        "id": 446474576,
+        "sender_full_name": "Håkan Svensson",
+        "timestamp": 1719177152
+    },
+    {
+        "content": "<p>Does the SocketCAN device (eg. <code>can0</code>) for CANable exist?</p>",
+        "id": 446474866,
+        "sender_full_name": "Pavel Kalian",
+        "timestamp": 1719177418
+    },
+    {
+        "content": "<p>The CANable exist yes. <br>\nBus 001 Device 006: ID 16d0:117e MCS CANable2 b158aa7 <a href=\"http://github.com/normaldotcom/canable2.git\">github.com/normaldotcom/canable2.git</a><br>\nIt's  by Openplotter \"Serial\"  connected to SignalK.<br>\nBefore the TCP test I also checked it's not disturbing and causing the crash by unplugging the USB.</p>",
+        "id": 446521825,
+        "sender_full_name": "Håkan Svensson",
+        "timestamp": 1719207767
+    },
+    {
+        "content": "<p>I think I've found the bug for this <a href=\"https://www.cruisersforum.com/forums/f134/android-radar-plugin-and-missing-data-on-signalk-287183.html#post3911601\">CF post</a><br>\nPR to come soon.</p>",
+        "id": 446594950,
+        "sender_full_name": "Håkan Svensson",
+        "timestamp": 1719230124
+    },
+    {
+        "content": "<p>Blocking task?<br>\nIf the first start wizard crash on my RPi's is not a show stopper? Or is just my system?</p>",
+        "id": 446595414,
+        "sender_full_name": "Håkan Svensson",
+        "timestamp": 1719230270
+    },
+    {
+        "content": "<p>OK, so you are using it in serial mode, not SocketCAN? We do not check that, I will have to reconfigure mine and add it to the USB serial device codeblock if it is so.</p>",
+        "id": 446596201,
+        "sender_full_name": "Pavel Kalian",
+        "timestamp": 1719230517
+    },
+    {
+        "content": "<p>The stacktrace you posted does not seem to have anything to do with the wizard (looks to be in the check for multiple OpenCPN instances running at the same time) and I can't reproduce it. If you try to pinpoint what exactly makes it crash, we may fix it.</p>",
+        "id": 446596352,
+        "sender_full_name": "Pavel Kalian",
+        "timestamp": 1719230568
+    },
+    {
+        "content": "<p>This CANable device is a little special I think and I did not expect OCPN to identify it. I just mentioned it since the device is there. In Signalk it uses CANBOATjs. I so far suppose users of this kind of device will use openplotter-serial and SK to use it?</p>",
+        "id": 446603480,
+        "sender_full_name": "Håkan Svensson",
+        "timestamp": 1719232910
+    },
+    {
+        "content": "<p>I really don't know. When you configure it manually, what do you configure? SocketCAN or serial connection? If serial, we need to add it as a well known device in <a href=\"https://github.com/OpenCPN/OpenCPN/blob/master/gui/include/gui/wiz_ui.h#L60\">https://github.com/OpenCPN/OpenCPN/blob/master/gui/include/gui/wiz_ui.h#L60</a> (Or alternatively test for the payload it produces later in <code>FirstUseWizImpl::EnumerateUSB()</code>)<br>\nIf socketCAN, then we need to see why it is not found in <code>FirstUseWizImpl::EnumerateCAN()</code></p>",
+        "id": 446605946,
+        "sender_full_name": "Pavel Kalian",
+        "timestamp": 1719233645
+    },
+    {
+        "content": "<p>I used Openplotter-serial to give it a \"nick name\"<br>\nThen I used Openplotter-CAN_Bus to connect it to SignalK<br>\nThe result in SignalK as of the picture:</p>\n<p><a href=\"/user_uploads/33951/GwwVpe4oNk8N-rx-KrRpr_gG/bild.png\">bild.png</a></p>\n<div class=\"message_inline_image\"><a href=\"/user_uploads/33951/GwwVpe4oNk8N-rx-KrRpr_gG/bild.png\" title=\"bild.png\"><img src=\"/user_uploads/33951/GwwVpe4oNk8N-rx-KrRpr_gG/bild.png\"></a></div>",
+        "id": 446615448,
+        "sender_full_name": "Håkan Svensson",
+        "timestamp": 1719235763
+    },
+    {
+        "content": "<p>It's a MKS CANable V2.0 module See this <a href=\"https://github.com/makerbase-mks/CANable-MKS\">link</a></p>",
+        "id": 446616481,
+        "sender_full_name": "Håkan Svensson",
+        "timestamp": 1719236044
+    },
+    {
+        "content": "<p>I know next to nothing about OpenPlotter, how do you configure it in OpenCPN?</p>",
+        "id": 446625162,
+        "sender_full_name": "Pavel Kalian",
+        "timestamp": 1719238302
+    },
+    {
+        "content": "<p>I haven't tried to convince O to speak to this type of device. I thought it was not supported since it's not like \"Actisense\". But btw I'd really like this to be supported, not less in Windows. The prize is really good.<br>\nNow I only connect O to SignalK</p>",
+        "id": 446642111,
+        "sender_full_name": "Håkan Svensson",
+        "timestamp": 1719242184
+    },
+    {
+        "content": "<p>My Linux knowledge is low. I can only state that wizard crashes on both RPi4 and RPi5. If I comment out EnumerateTCP() it doesn't crash.<br>\nI tried to use gdb to find the cause but that was obviously not good enough? Any advice?</p>",
+        "id": 446649624,
+        "sender_full_name": "Håkan Svensson",
+        "timestamp": 1719244014
+    },
+    {
+        "content": "<p>Add some debug printouts in the code to narrow down where the crash actually happens, <code>EnumerateTCP()</code> is too big of a target to guess why it crashes for you.</p>",
+        "id": 446650531,
+        "sender_full_name": "Pavel Kalian",
+        "timestamp": 1719244168
+    },
+    {
+        "content": "<p>Can the existing four debug prints I copied above narrow it down to further printouts?</p>",
+        "id": 446692328,
+        "sender_full_name": "Håkan Svensson",
+        "timestamp": 1719255648
+    },
+    {
+        "content": "<p>Just an observation. My previous wizard test on the RPi5 was working as can be seen on the \"User comment\" on the shot below.<br>\nSo I guess the present crash is from any recently changed code or other circumstance? I though don't remember when that wizard run was performed.<br>\n<a href=\"/user_uploads/33951/0FrO_WE7sfENvXdFQilJSREx/bild.png\">bild.png</a></p>\n<div class=\"message_inline_image\"><a href=\"/user_uploads/33951/0FrO_WE7sfENvXdFQilJSREx/bild.png\" title=\"bild.png\"><img src=\"/user_uploads/33951/0FrO_WE7sfENvXdFQilJSREx/bild.png\"></a></div>",
+        "id": 446706015,
+        "sender_full_name": "Håkan Svensson",
+        "timestamp": 1719259558
+    },
+    {
+        "content": "<p>No, the so far provided info does not shed any light on it for me.</p>",
+        "id": 446715249,
+        "sender_full_name": "Pavel Kalian",
+        "timestamp": 1719262104
+    },
+    {
+        "content": "<p>Pavel...<br>\nDid some remote debugging of Hakan's machine.</p>\n<ol>\n<li>The problem happens in EnumerateTCP.</li>\n<li>The client connects to a valid server.  Local network port.</li>\n<li>The client-&gt;Read() returns without filling in any data in the buffer. Still 256 bytes of 0x00, from memset().</li>\n<li>The right-hand-side null trim is over-zealous, reduces \"len\" to (-1).</li>\n<li>The line std::string data(buff, len) faults, since len is (-1).  Reasonable.</li>\n</ol>\n<p>Root cause?  Dunno.</p>\n<ol>\n<li>I tried increasing the timeout to 4 secs..  No help.  </li>\n<li>Running OCPN without wizard, and with this offending TCP feed active, seems fine.  N0183 data looks fine.</li>\n</ol>\n<p>Stumped at the moment.</p>",
+        "id": 446770913,
+        "sender_full_name": "Dave Register",
+        "timestamp": 1719287944
+    },
+    {
+        "content": "<p>BTW, I am debugging over VNC link, using ddd/gdb.  Slow but reliable.</p>",
+        "id": 446771091,
+        "sender_full_name": "Dave Register",
+        "timestamp": 1719288042
+    },
+    {
+        "content": "<p>Can I do anything to help here?</p>",
+        "id": 446908499,
+        "sender_full_name": "Dave Register",
+        "timestamp": 1719327613
+    },
+    {
+        "content": "<p>Do we know what is that server? Something I can get? Protecting against the crash is simple, skip the rest if <code>len</code> returned from <code>Read</code> is zero, but of course we will still not detect that particular source.</p>",
+        "id": 446945601,
+        "sender_full_name": "Pavel Kalian",
+        "timestamp": 1719335822
+    },
+    {
+        "content": "<p>Or a pcap capture with <code>tcpdump</code> or Wireshark during the scan and during opening a manually configured connection could show something.</p>",
+        "id": 446950175,
+        "sender_full_name": "Pavel Kalian",
+        "timestamp": 1719336723
+    },
+    {
+        "content": "<p>Current master should not crash in this situation anymore.</p>",
+        "id": 446955938,
+        "sender_full_name": "Pavel Kalian",
+        "timestamp": 1719337960
+    },
+    {
+        "content": "<p>I'll test current master and come back.<br>\nBefore that, running wizard on a Win10 on the same network yields no crash. But no connections at all was found.<br>\nThese are the connections used used when O is running.<br>\n<a href=\"/user_uploads/33951/vBfKIr7z-nKJdgebZaeOmWxr/bild.png\">bild.png</a></p>\n<div class=\"message_inline_image\"><a href=\"/user_uploads/33951/vBfKIr7z-nKJdgebZaeOmWxr/bild.png\" title=\"bild.png\"><img src=\"/user_uploads/33951/vBfKIr7z-nKJdgebZaeOmWxr/bild.png\"></a></div>",
+        "id": 446957151,
+        "sender_full_name": "Håkan Svensson",
+        "timestamp": 1719338300
+    },
+    {
+        "content": "<p>Your network must be cursed :)</p>",
+        "id": 446957341,
+        "sender_full_name": "Pavel Kalian",
+        "timestamp": 1719338365
+    },
+    {
+        "content": "<p>Well, It is a router provided by the network provider and thus quite common. We use it daily without other problem.</p>",
+        "id": 446958242,
+        "sender_full_name": "Håkan Svensson",
+        "timestamp": 1719338575
+    },
+    {
+        "content": "<p>Run wireshark and look at what is happening, I really don't have any better advice</p>",
+        "id": 446958884,
+        "sender_full_name": "Pavel Kalian",
+        "timestamp": 1719338754
+    },
+    {
+        "content": "<p>And the serial COM3 is not on the network. It's a USB-YD</p>\n<p>I've seen using \"Send to peer\" the mDNS query and response  is not always reliable passed by the router. Could be a reason?</p>",
+        "id": 446959647,
+        "sender_full_name": "Håkan Svensson",
+        "timestamp": 1719338956
+    },
+    {
+        "content": "<p>I don't know, run Wireshark and have a look at what is happening. Serial datasources, all I have available, are 100% detected on Windows for me.</p>",
+        "id": 446960114,
+        "sender_full_name": "Pavel Kalian",
+        "timestamp": 1719339103
+    },
+    {
+        "content": "<p>Using present master code on the RPi5:<br>\nNo crash!  No TCP found but maybe not surprising?<br>\n<a href=\"/user_uploads/33951/BH22sIqXWgNHYiLA9aU5RMe-/bild.png\">bild.png</a></p>\n<div class=\"message_inline_image\"><a href=\"/user_uploads/33951/BH22sIqXWgNHYiLA9aU5RMe-/bild.png\" title=\"bild.png\"><img src=\"/user_uploads/33951/BH22sIqXWgNHYiLA9aU5RMe-/bild.png\"></a></div>",
+        "id": 446962119,
+        "sender_full_name": "Håkan Svensson",
+        "timestamp": 1719339688
+    },
+    {
+        "content": "<p>If you have a TCP server that has data and has been tried, it is surprising it was not found.</p>",
+        "id": 446962368,
+        "sender_full_name": "Pavel Kalian",
+        "timestamp": 1719339755
+    },
+    {
+        "content": "<p>Some tests on W10 in both Debug and runtime.<br>\nMore sources are found in debug than runtime. I assume we at runtime don't get required answers in due time.</p>\n<p>For TCP these address are found:<br>\n-       ips { size=17 } std::vector&lt;std::string,std::allocator&lt;std::string&gt;&gt;<br>\n        [capacity]  19  unsigned int<br>\n+       [allocator] allocator   std::_Compressed_pair&lt;std::allocator&lt;std::string&gt;,std::_Vector_val&lt;std::_Simple_types&lt;std::string&gt;&gt;,1&gt;<br>\n+       [0] \"127.0.0.1\" std::string<br>\n+       [1] \"192.168.1.1\"   std::string<br>\n+       [2] \"192.168.1.67\"  std::string<br>\n+       [3] \"192.168.1.72\"  std::string<br>\n+       [4] \"192.168.1.79\"  std::string<br>\n+       [5] \"192.168.1.87\"  std::string<br>\n+       [6] \"192.168.1.178\" std::string<br>\n+       [7] \"192.168.1.204\" std::string<br>\n+       [8] \"192.168.1.233\" std::string<br>\n+       [9] \"192.168.1.255\" std::string</p>\n<p>6]  \"192.168.1.178\" has data on port 10110 (Some of the other have data but not on 10110 or the other ports searched for.)</p>\n<p>In \"slowly\" debug mode these was found:<br>\n<a href=\"/user_uploads/33951/NAF6qdezfH3n_wUz7DlrMM9H/bild.png\">bild.png</a></p>\n<div class=\"message_inline_image\"><a href=\"/user_uploads/33951/NAF6qdezfH3n_wUz7DlrMM9H/bild.png\" title=\"bild.png\"><img src=\"/user_uploads/33951/NAF6qdezfH3n_wUz7DlrMM9H/bild.png\"></a></div><p>In runtime this was (once) found:<br>\n<a href=\"/user_uploads/33951/9ljj85fptx5pWPsiPjEpPLVZ/bild.png\">bild.png</a></p>\n<div class=\"message_inline_image\"><a href=\"/user_uploads/33951/9ljj85fptx5pWPsiPjEpPLVZ/bild.png\" title=\"bild.png\"><img src=\"/user_uploads/33951/9ljj85fptx5pWPsiPjEpPLVZ/bild.png\"></a></div><p>This all is as I've seen and discussed before.<br>\nOn my W10 in the boat four out of five serials are normally found. Seldom all.</p>\n<p>Maybe we can't get any further with this? <br>\nI will later see if Wireshark can provide more data. I'll get back here in that case.</p>",
+        "id": 446973412,
+        "sender_full_name": "Håkan Svensson",
+        "timestamp": 1719342906
+    },
+    {
+        "content": "<p>And so I did more debugging on Hakan's system, Windows this time.<br>\nLooking at enumerateSignalk().<br>\nI find that on Windows, no MDNS query is sent, so of course no sK datastream is found.<br>\nTesting same on my local Win10 box.  Same trouble.  No  usable network interfaces found, so no mDNS query sent.<br>\nboils down finally to :</p>\n<div class=\"codehilite\"><pre><span></span><code>static inline int\nmdns_socket_open_ipv4(const struct sockaddr_in* saddr) {\nint sock = (int)socket(AF_INET, SOCK_DGRAM, IPPROTO_UDP);\nif (sock &lt; 0)\n    return -1;\nif (mdns_socket_setup_ipv4(sock, saddr)) {\n    mdns_socket_close(sock);\n    return -1;\n}\nreturn sock;\n}\n</code></pre></div>\n\n<p>The socket cannot be created.  \"socke()\" call returns \"-1\". Now that line looks pretty benign.  the saddr parm is the ip for the box itself, not LOCALHOST.<br>\nStumped again.</p>",
+        "id": 447039395,
+        "sender_full_name": "Dave Register",
+        "timestamp": 1719365950
+    },
+    {
+        "content": "<p>Got the error code on socket call.</p>\n<p><strong>WSANOTINITIALISED</strong></p>\n<p>10093</p>\n<p>Successful WSAStartup not yet performed.</p>\n<p>Either the application has not called <a href=\"https://learn.microsoft.com/en-us/windows/desktop/api/winsock/nf-winsock-wsastartup\">**WSAStartup**</a> or <strong>WSAStartup</strong> failed. The application may be accessing a socket that the current active task does not own (that is, trying to share a socket between tasks), or <a href=\"https://learn.microsoft.com/en-us/windows/desktop/api/winsock/nf-winsock-wsacleanup\">**WSACleanup**</a> has been called too many times.</p>",
+        "id": 447040944,
+        "sender_full_name": "Dave Register",
+        "timestamp": 1719366679
+    },
+    {
+        "content": "<p>I switched around the detection order.  Did UDP detection before trying mDNS query for signalK.<br>\nThis fixed the socket() call, and mDNS proceeds as required.<br>\nThis must mean that WSAStartup() is performed somewhere in the UDP network setup.<br>\nSo, to solve, should we call WSAStartup() explicitely early in the wiz, or just switch sK detection to last in the list?<br>\nYour call?</p>",
+        "id": 447041847,
+        "sender_full_name": "Dave Register",
+        "timestamp": 1719367074
+    },
+    {
+        "content": "<p>I would just switch the order, it really does not matter.</p>",
+        "id": 447176080,
+        "sender_full_name": "Pavel Kalian",
+        "timestamp": 1719396841
+    },
+    {
+        "content": "<p>Done.</p>",
+        "id": 447187186,
+        "sender_full_name": "Pavel Kalian",
+        "timestamp": 1719399980
+    },
+    {
+        "content": "<p>Now it's better.<br>\nAfter three scans all available sources are sometime detected although not all together any time. <br>\nSome SK are now detected all times. That's good. (And SK mdns is of course seen by WS)<br>\nIn below picture all SK are there. This time the available TCP is not present but it was the two previous scans. <br>\n<a href=\"/user_uploads/33951/z1mn_r2rWSAdKaPlnWp_Lno9/bild.png\">bild.png</a></p>\n<div class=\"message_inline_image\"><a href=\"/user_uploads/33951/z1mn_r2rWSAdKaPlnWp_Lno9/bild.png\" title=\"bild.png\"><img src=\"/user_uploads/33951/z1mn_r2rWSAdKaPlnWp_Lno9/bild.png\"></a></div>",
+        "id": 447282350,
+        "sender_full_name": "Håkan Svensson",
+        "timestamp": 1719423064
+    },
+    {
+        "content": "<p>If I make this change both TCP and all SK are found three out of four scans<br>\nOne or two minutes longer processing.</p>\n<div class=\"codehilite\"><pre><span></span><code>@@ -477,15 +477,15 @@ void FirstUseWizImpl::EnumerateTCP() {\n       wxIPV4address conn_addr;\n       conn_addr.Service(port);\n       conn_addr.Hostname(ip);\n       auto client = new wxSocketClient();\n-      client-&gt;SetTimeout(1);\n+      client-&gt;SetTimeout(2);\n       if (client-&gt;Connect(conn_addr, true)) {\n         DEBUG_LOG &lt;&lt; &quot;Connected to &quot; &lt;&lt; ip &lt;&lt; &quot;:&quot; &lt;&lt; port;\n         size_t len = RECEIVE_BUFFER_LENGTH;\n         char buffer[RECEIVE_BUFFER_LENGTH];\n         memset(buffer, 0, len);\n-        client-&gt;WaitForRead(1, 0);\n+        client-&gt;WaitForRead(2, 0);\n         client-&gt;Read(&amp;buffer, len);\n         // Binary protocols may contain 0x00 bytes, so we have to treat the buffer as such and avoid string conversion\n         while (len &gt; 0 &amp;&amp; buffer[len-1] == 0x00) {\n           len--;\n@@ -536,9 +536,9 @@ void FirstUseWizImpl::EnumerateTCP() {\n   m_rtConnectionInfo-&gt;Newline();\n #endif\n }\n\n-void FirstUseWizImpl::EnumerateSignalK() { FindAllSignalKServers(1); }\n+void FirstUseWizImpl::EnumerateSignalK() { FindAllSignalKServers(2); }\n\n void FirstUseWizImpl::EnumerateCAN() {\n</code></pre></div>",
+        "id": 447330516,
+        "sender_full_name": "Håkan Svensson",
+        "timestamp": 1719434194
+    }
+]

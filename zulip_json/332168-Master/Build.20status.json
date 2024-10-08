@@ -1,0 +1,182 @@
+[
+    {
+        "content": "<p><span class=\"user-mention\" data-user-id=\"517002\">@Dave Register</span> <span class=\"user-mention\" data-user-id=\"573239\">@Pavel Kalian</span> <span class=\"user-mention\" data-user-id=\"399510\">@Alec Leamas</span> <br>\nBuild on VS2022:<br>\nThe new bin\\opencpn-glutil.exe is not copied to build environment like opencpn-cmd.exe<br>\nIt would likewise have been copied to ..\\Release\\bin\\ , ..\\RelWithDebInfo\\bin\\ and ..\\Debug\\bin\\<br>\nSee log.<br>\nThat's also leading to config file \"corruption\" during debug:<br>\nOpenGL=0<br>\nDisableOpenGL=0</p>\n<p>The temporary work around is obviously to copy the  opencpn-glutil.exe to where it's needed during debug but I think it would be handled like opencpn-cmd.exe for possible future change?</p>\n<p>btw is the Win installer handling this new opencpn-glutil.exe in a proper way so run-time is ok. :)</p>\n<div class=\"codehilite\"><pre><span></span><code>07:05:41.651 MESSAGE OCPNPlatform.cpp:901 Starting OpenGL test...\n07:05:41.651 MESSAGE OCPNPlatform.cpp:714 OpenGL test utility not found at C:\\Builds\\OCPN\\OpenCPN\\build\\RelWithDebInfo\\bin\\opencpn-glutil.exe.\n07:05:41.651 MESSAGE OCPNPlatform.cpp:908 OpenGL test complete.\n07:05:41.651 MESSAGE OCPNPlatform.cpp:910 BuildGLCaps fails.\n</code></pre></div>",
+        "id": 427629182,
+        "sender_full_name": "Håkan Svensson",
+        "timestamp": 1710830624
+    },
+    {
+        "content": "<p>Just used <code>winConfig.bat</code> and everything is directly usable with <code>opencpn-glutil.exe</code> in <code>RelWithDebInfo\\bin</code>, being found fine by the main process and OpenGL working. It is exactly the same as with <code>opencpn-cmd.exe</code>, which is in the same folder</p>",
+        "id": 427686748,
+        "sender_full_name": "Pavel Kalian",
+        "timestamp": 1710852642
+    },
+    {
+        "content": "<p>Ok, thanks. Point taken.</p>",
+        "id": 427799819,
+        "sender_full_name": "Håkan Svensson",
+        "timestamp": 1710877589
+    },
+    {
+        "content": "<p><span class=\"user-mention\" data-user-id=\"573239\">@Pavel Kalian</span>  Would you mind testing newest winConfig.bat located in <a href=\"https://github.com/transmitterdan/OpenCPN/tree/winConfigTest\">https://github.com/transmitterdan/OpenCPN/tree/winConfigTest</a> ?</p>\n<p>This update fixes few minor bugs but also adds the ability to get wxWidgets sources from github if git is installed. Due to conflicts with git I put the wxWidgets build folder in same location as root OpenCPN folder.  I hope this is ok because git gets confused if you try to clone another repository into the OpenCPN tree. This makes it easier to keep up with the correct git branch even if there are no source zip files.  Best way to test is to clone and build it like this from a VS2022 command prompt:</p>\n<div class=\"codehilite\"><pre><span></span><code>mkdir test\ncd test\ngit clone https://github.com/transmitterdan/OpenCPN --depth 1 --branch winConfigTest\ncd OpenCPN\nbuildwin\\winconfig.bat\n</code></pre></div>\n<p>I would like to know if this works for somebody else besides me.</p>",
+        "id": 427839156,
+        "sender_full_name": "Dan Dickey",
+        "timestamp": 1710899455
+    },
+    {
+        "content": "<p><span class=\"user-mention silent\" data-user-id=\"522729\">Dan Dickey</span> <a href=\"#narrow/stream/332168-Master---5.2E8.2E0--.28was.3A-comms.29/topic/Build.20status/near/427839156\">said</a>:</p>\n<blockquote>\n<p><span class=\"user-mention silent\" data-user-id=\"573239\">Pavel Kalian</span>  Would you mind testing newest winConfig.bat located in <a href=\"https://github.com/transmitterdan/OpenCPN/tree/winConfigTest\">https://github.com/transmitterdan/OpenCPN/tree/winConfigTest</a> ?</p>\n<p>This update fixes few minor bugs but also adds the ability to get wxWidgets sources from github if git is installed. Due to conflicts with git I put the wxWidgets build folder in same location as root OpenCPN folder.  I hope this is ok because git gets confused if you try to clone another repository into the OpenCPN tree. This makes it easier to keep up with the correct git branch even if there are no source zip files.  Best way to test is to clone and build it like this from a VS2022 command prompt:</p>\n<div class=\"codehilite\"><pre><span></span><code>mkdir test\ncd test\ngit clone https://github.com/transmitterdan/OpenCPN --depth 1 --branch winConfigTest\ncd OpenCPN\nbuildwin\\winconfig.bat\n</code></pre></div>\n<p>I would like to know if this works for somebody else besides me.</p>\n</blockquote>\n<p>So far got here:</p>\n<ul>\n<li>Cloning wxWidgets failed on some submodule (\"normal\" with the quality of my connection)</li>\n<li>The script did not fail and tried to build the incomplete wx, which failed</li>\n<li>The script hapily continued to OpenCPN</li>\n<li>OpenCPN cmake configure step failed because there is no wxWidgets</li>\n<li>re-runinng the script does not fix it, assumes WX is OK and continues directly to the failing O build</li>\n</ul>\n<p>I can eventually finish to clone wx manually repeatedly running <code>git submodule update</code>, but the script should actually check for some signs of wx being built, not just the directory present.</p>",
+        "id": 427906449,
+        "sender_full_name": "Pavel Kalian",
+        "timestamp": 1710934173
+    },
+    {
+        "content": "<p>Ok, thank you. Will fix that.</p>",
+        "id": 427908172,
+        "sender_full_name": "Dan Dickey",
+        "timestamp": 1710934846
+    },
+    {
+        "content": "<p>I pushed a fix so now it should abort the script if wxWidgets build fails.</p>",
+        "id": 428042865,
+        "sender_full_name": "Dan Dickey",
+        "timestamp": 1710984656
+    },
+    {
+        "content": "<p>Still no joy. I now have buildable wxWidgets in ocpn_wxWidgets (confirmed by doing a manual buid with cmake there)<br>\nBut winConfig.bat does not even try to build WX, proceeds to OpenCPN and fails like this:</p>\n<div class=\"codehilite\"><pre><span></span><code>**********************************************************************\n** Visual Studio 2022 Developer Command Prompt v17.9.2\n** Copyright (c) 2022 Microsoft Corporation\n**********************************************************************\n[vcvarsall.bat] Environment initialized for: &#39;x86&#39;\n\nC:\\Users\\pavel&gt;cd Source\n\nC:\\Users\\pavel\\Source&gt;cd Repos\n\nC:\\Users\\pavel\\Source\\Repos&gt;cd OpenCPN\n\nC:\\Users\\pavel\\Source\\Repos\\OpenCPN&gt;buildwin\\winConfig.bat\nOD=C:\\Users\\pavel\\Source\\Repos\\OpenCPN\\buildwin\\..\nC:\\Program Files\\Microsoft Visual Studio\\2022\\Community\\MSBuild\\Current\\Bin\\amd64\\MSBuild.exe\nC:\\Windows\\Microsoft.NET\\Framework\\v4.0.30319\\MSBuild.exe\nGit found @ \\Program Files\\Git\\cmd\\git.exe\nPatch found @ \\Program Files\\Git\\cmd\\..\\usr\\bin\\patch.exe\n4 File(s) copied\nwxWidgets Debug build OK\n48 File(s) copied\nwxWidgets Debug build OK\nocpn_relwithdebinfo=1\nocpn_release=1\nocpn_debug=1\nocpn_minsizerel=1\nxcopy /d /y &quot;C:\\Program Files (x86)\\Windows Kits\\10\\\\lib\\10.0.22621.0\\\\um\\x86\\iphlpapi.lib&quot; &quot;C:\\Users\\pavel\\Source\\Repos\\OpenCPN\\cache\\buildwin&quot;\n0 File(s) copied\nxcopy /d /y &quot;C:\\Program Files (x86)\\Windows Kits\\10\\\\include\\10.0.22621.0\\\\um\\iphlpapi.h&quot; &quot;C:\\Users\\pavel\\Source\\Repos\\OpenCPN\\cache\\buildwin\\include&quot;\n0 File(s) copied\nFeeds used:\n  https://api.nuget.org/v3/index.json\n\nInstalling package &#39;Gettext.Tools&#39; to &#39;C:\\Users\\pavel\\Source\\Repos\\OpenCPN\\build&#39;.\n  CACHE https://api.nuget.org/v3/registration5-gz-semver2/gettext.tools/index.json\nPackage &quot;Gettext.Tools.0.22.5&quot; is already installed.\nFound Gettext.Tools\nFeeds used:\n  https://api.nuget.org/v3/index.json\n\nInstalling package &#39;NSIS-Package&#39; to &#39;C:\\Users\\pavel\\Source\\Repos\\OpenCPN\\build&#39;.\n  CACHE https://api.nuget.org/v3/registration5-gz-semver2/nsis-package/index.json\nPackage &quot;NSIS-Package.3.0.9.1&quot; is already installed.\nFound NSIS-Package\ngettext=C:\\Users\\pavel\\Source\\Repos\\OpenCPN\\build\\Gettext.Tools.0.22.5\nnsis=C:\\Users\\pavel\\Source\\Repos\\OpenCPN\\build\\NSIS-Package.3.0.9.1\nFinishing C:\\Users\\pavel\\Source\\Repos\\OpenCPN\\buildwin\\configdev.bat\nIn folder C:\\Users\\pavel\\Source\\Repos\\OpenCPN\nIn folder C:\\Users\\pavel\\Source\\Repos\\OpenCPN\\build\nBuilding Debug\n-- cmake version: 3.28.0-msvc1\n-- Could NOT find PkgConfig (missing: PKG_CONFIG_EXECUTABLE)\n-- tests using vcan0 are NOT available: &quot;&quot;\n-- *** Host Build Architecture is x86_64\n-- Setting C++17 standard via cmake standard mechanism\n-- Final compiler options:\n-- CMAKE_CXX_FLAGS: /MP /EHsc /DWIN32\n-- CMAKE_CXX_FLAGS_DEBUG: /MP /MDd /Ob0 /Od  /D_DEBUG  /Zi /RTC1 /EHa\n-- CMAKE_CXX_FLAGS_MINSIZEREL: /MP /MD  /O1  /Ob1 /D NDEBUG /EHa\n-- CMAKE_CXX_FLAGS_RELEASE: /MP /MD  /O2  /Ob2 /D NDEBUG /Zi /EHa /wd4068\n-- CMAKE_CXX_FLAGS_RELWITHDEBINFO: /MP /MD  /O2  /Ob1 /D NDEBUG /Zi /EHa /wd4068\n-- Building version 5.9.0\n-- *** Staging to build opencpn 5.9.0 ***\n-- *** Package will include documentation ***\n-- Found OpenGL....\n--     GL Lib: opengl32glu32\n--     GL Include:\n--     Revised GL Lib: opengl32\n-- Could NOT find wxWidgets (missing: gl net xml html adv aui core base webview) (found version &quot;3.2.5&quot;)\n-- Could not find wxWidgets webview add-on\n-- Could NOT find wxWidgets (missing: gl net xml html adv aui core base) (found version &quot;3.2.5&quot;)\nCMake Error at CMakeLists.txt:654 (message):\n  Cannot find wxWidgets, giving up.  On linux you might want to try using\n  -DOCPN_FORCE_GTK3.\n\n\n-- Configuring incomplete, errors occurred!\nRunning with debug output on for the `find` commands.\n-- cmake version: 3.28.0-msvc1\nCMake Debug Log at C:/Program Files/Microsoft Visual Studio/2022/Community/Common7/IDE/CommonExtensions/Microsoft/CMake/CMake/share/cmake-3.28/Modules/FindPkgConfig.cmake:62 (find_program):\n  find_program called with the following settings:\n\n    VAR: PKG_CONFIG_EXECUTABLE\n    NAMES: &quot;pkg-config.bat&quot;\n.....\n</code></pre></div>",
+        "id": 428048109,
+        "sender_full_name": "Pavel Kalian",
+        "timestamp": 1710988682
+    },
+    {
+        "content": "<p>I tried to make it more robust. Pull and run it again. Send the output.</p>",
+        "id": 428104944,
+        "sender_full_name": "Dan Dickey",
+        "timestamp": 1711019911
+    },
+    {
+        "content": "<p>wx started building with this last update. <span aria-label=\"+1\" class=\"emoji emoji-1f44d\" role=\"img\" title=\"+1\">:+1:</span>  will let you know in a while</p>",
+        "id": 428105418,
+        "sender_full_name": "Pavel Kalian",
+        "timestamp": 1711020102
+    },
+    {
+        "content": "<p>Everything built now and works. The only issue was I had to delete the build folder and run second time (Some leftover from yesterday made Release and RelWithDebInfo executables link the UD wx DLLs instead of U). I don't think the script should do this (or at least not as brutally as completely removing the folder) as there may be stuff the dev wants there.</p>",
+        "id": 428137482,
+        "sender_full_name": "Pavel Kalian",
+        "timestamp": 1711030066
+    },
+    {
+        "content": "<p>The --rebuild and --clean options are not totally brutal.  They save the config stuff  like OpenCPN.ini, logs, navobj, anything in the '.build\\%buildtype%\\plugins' folders and '.build\\%buildtype%\\Charts' folder.</p>",
+        "id": 428238089,
+        "sender_full_name": "Dan Dickey",
+        "timestamp": 1711066015
+    },
+    {
+        "content": "<p><span class=\"user-mention\" data-user-id=\"573239\">@Pavel Kalian</span>  if you have time can you please test again?</p>\n<div class=\"codehilite\"><pre><span></span><code>mkdir test\ncd test\ngit clone https://github.com/transmitterdan/OpenCPN --depth 1 --branch winConfigTest\ncd OpenCPN\nbuildwin\\winconfig.bat --relwithdebinfo --debug\n</code></pre></div>\n<p>I tried to reduce the amount of wxWidgets files downloaded to the bare minimum. It should be faster on slow connections.</p>",
+        "id": 429184367,
+        "sender_full_name": "Dan Dickey",
+        "timestamp": 1711277344
+    },
+    {
+        "content": "<p>BTW, the wrong linking can happen if the initial config does not create all 4 configurations.  Later, if you build one of the missing configurations with the VS IDE it will wrongly link.</p>",
+        "id": 429184486,
+        "sender_full_name": "Dan Dickey",
+        "timestamp": 1711277463
+    },
+    {
+        "content": "<p>Seems to be working fine.</p>",
+        "id": 429204520,
+        "sender_full_name": "Pavel Kalian",
+        "timestamp": 1711287652
+    },
+    {
+        "content": "<p>I made some \"improvements\" and optimizations.  Close to good enough to make a PR to master.  Would appreciate any and all testing/feedback.</p>\n<div class=\"codehilite\"><pre><span></span><code>mkdir test\ncd test\ngit clone https://github.com/transmitterdan/OpenCPN --depth 1 --branch winConfigTest\ncd OpenCPN\nbuildwin\\winconfig.bat --relwithdebinfo --debug\n</code></pre></div>\n<p>After initial build, run O in VS debugger and add some charts/connections,/etc. Then try the winconfig.bat script again with various options such as --rebuild and --clean.</p>",
+        "id": 430392723,
+        "sender_full_name": "Dan Dickey",
+        "timestamp": 1711807487
+    },
+    {
+        "content": "<p>Seems to be working fine, I'm not able to break it so far :). The only thing I noticed until now is that running with <code>--clean</code> did not remove the binary build products, which is what I would expect it to do (being a windows counterpart of <code>make clean</code>), but did a build.</p>",
+        "id": 430401009,
+        "sender_full_name": "Pavel Kalian",
+        "timestamp": 1711814588
+    },
+    {
+        "content": "<p>Hmmm..--clean should have deleted the entire build folder and recreated it from scratch.  Are there binary build products created somewhere besides build?</p>\n<p>Or did you mean --rebuild? I think that might have some issue as you described.</p>",
+        "id": 430419508,
+        "sender_full_name": "Dan Dickey",
+        "timestamp": 1711832149
+    },
+    {
+        "content": "<p><code>--rebuild</code> deletes the build products and starts the build, exactly what I expect. <code>--clean</code> does not delete anything and starts the build. And it takes the same time as running without any paramters, so I start to suspect it is ignored.</p>",
+        "id": 430419893,
+        "sender_full_name": "Pavel Kalian",
+        "timestamp": 1711832551
+    },
+    {
+        "content": "<p>Ok, I'm seeing same.  Standby...</p>",
+        "id": 430420354,
+        "sender_full_name": "Dan Dickey",
+        "timestamp": 1711833091
+    },
+    {
+        "content": "<p>Line 285? Isn't it skipping everything if internet connection is active?</p>",
+        "id": 430420355,
+        "sender_full_name": "Pavel Kalian",
+        "timestamp": 1711833093
+    },
+    {
+        "content": "<p>Yeah, misplacced paren.  Testing now...</p>",
+        "id": 430421554,
+        "sender_full_name": "Dan Dickey",
+        "timestamp": 1711834566
+    },
+    {
+        "content": "<p>Ok, pushed a fix. Please test more, thanks.</p>",
+        "id": 430434342,
+        "sender_full_name": "Dan Dickey",
+        "timestamp": 1711848348
+    },
+    {
+        "content": "<p>with <code>--clean</code> I still end up with the build folder full after 15 minutes</p>",
+        "id": 430473822,
+        "sender_full_name": "Pavel Kalian",
+        "timestamp": 1711888497
+    },
+    {
+        "content": "<p>I think that is what I intended. The clean option deletes ‘ocpn_wxWidgets’ and ‘build’ folders. Then recreates them the same as if an initial run. This fixes up any errant files in wxWidgets or the build tree. Also, allows you to “up/down size” the build tree to just the configurations you want. The ‘rebuild’ option only cleans and rebuilds the build folder without changing the types of configurations. It also saves the O configuration for deleted configs so if you later decide you want one back it can restore the configuration files.</p>\n<p>So ‘clean’ is pretty much a do-over from scratch without losing the confs. If you don’t give it any additions options it will build all 4 configurations same as initial run without options. If you want less than that, specify the configurations desired along with the ‘clean’ option.</p>\n<p>There is no option that will just “clean” like ‘make clean’. I was going to do that but it didn’t make sense because the initial install is necessary to set up the runtime environment. You cannot do anything useful with a “clean” build folder.</p>\n<p>If you don’t see the build tree disappear early in the ‘clean’ process something is wrong.</p>",
+        "id": 430477733,
+        "sender_full_name": "Dan Dickey",
+        "timestamp": 1711892525
+    },
+    {
+        "content": "<p>Ah, OK, then it all works as far as I could test</p>",
+        "id": 430477796,
+        "sender_full_name": "Pavel Kalian",
+        "timestamp": 1711892606
+    },
+    {
+        "content": "<p>I found a few issues and made some \"improvements\".<br>\nImprovements include:</p>\n<ul>\n<li>Can run from any Windows shell (CMD, PowerShell, git bash, git cmd).</li>\n<li>Does not need to be run from a VS command prompt.</li>\n<li>Builds debug version last since it currently fails</li>\n</ul>\n<p>The new winConfig.bat can be tested on Windows:</p>\n<p>git clone <a href=\"https://github.com/transmitterdan/OpenCPN\">https://github.com/transmitterdan/OpenCPN</a> --branch winconfig4<br>\ncd OpenCPN<br>\n.\\buildwin\\winconfig.bat --relwithdebinfo</p>",
+        "id": 440558500,
+        "sender_full_name": "Dan Dickey",
+        "timestamp": 1716575341
+    },
+    {
+        "content": "<p>I have broken the Flatpak builds despite all sorts of testing. Will fix over the weekend</p>",
+        "id": 462778904,
+        "sender_full_name": "Alec Leamas",
+        "timestamp": 1723812110
+    },
+    {
+        "content": "<p>CircleCI MacOS builders also has some issue for the monent</p>",
+        "id": 462779056,
+        "sender_full_name": "Alec Leamas",
+        "timestamp": 1723812167
+    },
+    {
+        "content": "<p>Flatpak fixed</p>",
+        "id": 462793224,
+        "sender_full_name": "Alec Leamas",
+        "timestamp": 1723816635
+    }
+]

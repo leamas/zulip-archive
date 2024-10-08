@@ -1,0 +1,52 @@
+<html>
+<head><meta charset="utf-8"><title>Code formatting · Master · Zulip Chat Archive</title></head>
+<h2>Stream: <a href="https://leamas.github.io/zulip-archive/stream/332168-Master/index.html">Master</a></h2>
+<h3>Topic: <a href="https://leamas.github.io/zulip-archive/stream/332168-Master/topic/Code.20formatting.html">Code formatting</a></h3>
+
+<hr>
+
+<base href="https://opencpn.zulipchat.com">
+
+<head><link href="https://leamas.github.io/zulip-archive/style.css" rel="stylesheet"></head>
+
+<a name="395577098"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332168-Master/topic/Code%20formatting/near/395577098" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Jon <a href="https://leamas.github.io/zulip-archive/stream/332168-Master/topic/Code.20formatting.html#395577098">(Oct 08 2023 at 21:23)</a>:</h4>
+<p>For clarity in clang formatting can we have the following set:<br>
+AlignConsecutiveDeclarations: true</p>
+<p>This will change code so that definitions in a block align the variable names which, to me, makes it easier to read . I have created a pull request for this change on opencpn-libs, but would like this to be propagated through to opencpn itself.</p>
+
+
+
+<a name="395578226"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332168-Master/topic/Code%20formatting/near/395578226" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Alec Leamas <a href="https://leamas.github.io/zulip-archive/stream/332168-Master/topic/Code.20formatting.html#395578226">(Oct 08 2023 at 21:42)</a>:</h4>
+<p><span class="user-mention" data-user-id="400132">@Jon</span>   </p>
+<blockquote>
+<p>For clarity in clang formatting can we have the following set:</p>
+</blockquote>
+<p>Believe me, this is a can of worms. Personally, I found the current style really awkward from the beginning, it took some time to get used to it. But despite this, I have  not changed .clang-format. The basic idea is to not open up for discussions how to format. Such debates tends to take too much energy.</p>
+<p>There are some options here. One is to wait for a week or two to see if you could be used to the current settings. Obviosly, most of us have settled for  this conclusion.</p>
+<p>Another way is that you add your own copy of .clang-format into libraries you actively maintain. I think we all realize that the different projects in opencpn-libs have different culture, and if a project has it's own formatting I don't see any major problems as long as it  is consistent.</p>
+<p>All this said I think we should avoid starting debates how to format the code, besides that formatting should be consistent. This is true for core opencpn, and I think the clang-format in opencpn-libs should be a copy.</p>
+
+
+
+<a name="395590157"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332168-Master/topic/Code%20formatting/near/395590157" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Jon <a href="https://leamas.github.io/zulip-archive/stream/332168-Master/topic/Code.20formatting.html#395590157">(Oct 09 2023 at 00:45)</a>:</h4>
+<p>Not trying to change the general format, just wanted to make definitions easier to read and less messy.</p>
+<p>I will get used to the other changes even if it is cramped, to me, but reducing readability does not help. Clang got applied to pidc and seemed to be a retrograde step. Why not have a quick think about it before applying this style over OCPN and the new libs.</p>
+
+
+
+<a name="395639474"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332168-Master/topic/Code%20formatting/near/395639474" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Alec Leamas <a href="https://leamas.github.io/zulip-archive/stream/332168-Master/topic/Code.20formatting.html#395639474">(Oct 09 2023 at 07:52)</a>:</h4>
+<p>Well, for core opencpn the train has left the station, the  formatting was applied  in #ca24ca21 (Sep 2, 2021).  The discussion took place in <a href="https://github.com/opencpn/OpenCPN/issues/1118">#1118</a>.  After that this has basically been resolved.  </p>
+<p>The formatting here is actually just an example o fthe general rule we (actually Dave) has   decided: for new code we should use the Google C++ Style Guide at <a href="https://google.github.io/styleguide/cppguide.html">https://google.github.io/styleguide/cppguide.html</a> (Google GL)</p>
+<p>What's "easy to read and less messy" is in the end a personal thing. I can assure you I have many things I strongly prefer instead of the current style.,<code>char* foo</code>instead of <code>char *foo</code> comes to mind. But I have just adjusted to the fact that there is a large organization and a thorough process behind  Google GL,  so it's usable as is. I have also seen how much energy which can be drained in endless formatting discussions which really cannot be conclusive since it's about personal preferences.</p>
+<p>However, I think we can agree on that a consistent formatting in a project makes maintenance easier.</p>
+<p>What we are doing now is basically to apply the same formatting to these libraries. As I see it this is a default formatting. If some library applies their own .lang-format this is not a problem. In particular, if the upstream sources uses a consistent  formatting it is an advantage to use this since it makes the delta for possible local patches smaller. </p>
+<p>But OTOH I really, really don't want to open the can of worms which is labeled "what is the best formatting"?</p>
+
+
+
+<hr><p>Last updated: Oct 08 2024 at 10:11 UTC</p>
+</html>

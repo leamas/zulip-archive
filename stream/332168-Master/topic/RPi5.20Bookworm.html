@@ -1,0 +1,254 @@
+<html>
+<head><meta charset="utf-8"><title>RPi5 Bookworm · Master · Zulip Chat Archive</title></head>
+<h2>Stream: <a href="https://leamas.github.io/zulip-archive/stream/332168-Master/index.html">Master</a></h2>
+<h3>Topic: <a href="https://leamas.github.io/zulip-archive/stream/332168-Master/topic/RPi5.20Bookworm.html">RPi5 Bookworm</a></h3>
+
+<hr>
+
+<base href="https://opencpn.zulipchat.com">
+
+<head><link href="https://leamas.github.io/zulip-archive/style.css" rel="stylesheet"></head>
+
+<a name="402886770"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332168-Master/topic/RPi5%20Bookworm/near/402886770" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Håkan Svensson <a href="https://leamas.github.io/zulip-archive/stream/332168-Master/topic/RPi5.20Bookworm.html#402886770">(Nov 18 2023 at 15:32)</a>:</h4>
+<p>Hi..<br>
+I started up a clean RPi5 by an image and cloned O. Installed dependencies as of file INSTALL. No luck, a lot missing.<br>
+Is this know or should we dig?  (Not even cmake was installed default.)</p>
+
+
+
+<a name="402920310"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332168-Master/topic/RPi5%20Bookworm/near/402920310" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Alec Leamas <a href="https://leamas.github.io/zulip-archive/stream/332168-Master/topic/RPi5.20Bookworm.html#402920310">(Nov 18 2023 at 22:29)</a>:</h4>
+<p>The manual says:</p>
+<div class="codehilite"><pre><span></span><code>    $ sudo apt install devscripts equivs
+    $ sudo mk-build-deps -i -r ci/control
+    $ sudo apt-get --allow-unauthenticated install -f
+</code></pre></div>
+<p>Is this what you did?  Then something went really bad, because cmake and all other deps <strong>are</strong> actually listed in <em>ci/control</em></p>
+
+
+
+<a name="402987286"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332168-Master/topic/RPi5%20Bookworm/near/402987286" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Håkan Svensson <a href="https://leamas.github.io/zulip-archive/stream/332168-Master/topic/RPi5.20Bookworm.html#402987286">(Nov 19 2023 at 09:07)</a>:</h4>
+<p>Yes, I've did all that.  He says: "the package has been created in current directory not in ".." as indicated....." so there's i file /OpenCPN/opencpn-build-deps_1.0_all.deb instead of a folder opencpn-build-deps??<br>
+also further down:<br>
+"Unable to install opencpn-build-deps at /urs/bin/mk-builds-deps line 450"<br>
+...and more</p>
+<p>I'm trying to convince Anydesk to accept the arm64 system to pass the errors. Not straight forward though.</p>
+
+
+
+<a name="402994273"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332168-Master/topic/RPi5%20Bookworm/near/402994273" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Alec Leamas <a href="https://leamas.github.io/zulip-archive/stream/332168-Master/topic/RPi5.20Bookworm.html#402994273">(Nov 19 2023 at 10:12)</a>:</h4>
+<p>As I said, something is very, very broken here.  Have you done <code>sudo apt update</code>?</p>
+
+
+
+<a name="402994293"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332168-Master/topic/RPi5%20Bookworm/near/402994293" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Alec Leamas <a href="https://leamas.github.io/zulip-archive/stream/332168-Master/topic/RPi5.20Bookworm.html#402994293">(Nov 19 2023 at 10:12)</a>:</h4>
+<p>... and after that, retried the complete procedure</p>
+
+
+
+<a name="403007771"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332168-Master/topic/RPi5%20Bookworm/near/403007771" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Alec Leamas <a href="https://leamas.github.io/zulip-archive/stream/332168-Master/topic/RPi5.20Bookworm.html#403007771">(Nov 19 2023 at 12:52)</a>:</h4>
+<p>and, after that, please submit the complete terminal output.</p>
+
+
+
+<a name="403012326"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332168-Master/topic/RPi5%20Bookworm/near/403012326" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Alec Leamas <a href="https://leamas.github.io/zulip-archive/stream/332168-Master/topic/RPi5.20Bookworm.html#403012326">(Nov 19 2023 at 13:58)</a>:</h4>
+<p>BTW: I can help you if  from remote without using  Anydesk, plain ssh is perfectly fine. THree steps needed:</p>
+<ol>
+<li>Create a tunnel from some TCP port on your router to port 22 on the RPi-5</li>
+<li>In the RPi-5, copy my public key below to a file named <em>~/.ssh/authorized_keys</em>. If the file alrady exists, just append the new  key below the existing ones. If the <em>~/.ssh</em> directory does not exist, create it.</li>
+<li>I need  user + password on your box. We should not share them here, but in a DM.  I will then also need the address to you router and the port which I should use i. e., the one you have configured to access the RPi-5 port 22.</li>
+</ol>
+<p>My public key:</p>
+<div class="codehilite"><pre><span></span><code>ecdsa-sha2-nistp521 AAAAE2VjZHNhLXNoYTItbmlzdHA1MjEAAAAIbmlzdHA1MjEAAACFBACGqm5SCoPQW2DBHvgC2d7LTSFOwUFV0MOoAr9ScGH390WxLfAX7EvLYkiNViUwvqVoGg/uM1LUj8IHuGX6dL9SlgGMOmjwPpt975RcQxgMPMSGOTTCwEJTp1RNypk9PhrdL8WiESmCAiNbTDPgCSQp49DILq0Jxc0ZxFLsICLGDaBrVg== mk@hemulen
+</code></pre></div>
+
+
+
+<a name="403038504"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332168-Master/topic/RPi5%20Bookworm/near/403038504" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Håkan Svensson <a href="https://leamas.github.io/zulip-archive/stream/332168-Master/topic/RPi5.20Bookworm.html#403038504">(Nov 19 2023 at 18:15)</a>:</h4>
+<p>I did every possible system update on the fresh image.<br>
+I'll look more into Anydesk or SSH later. (Just home from boat and winter covering. ) I'll be back. Thanks</p>
+
+
+
+<a name="403050937"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332168-Master/topic/RPi5%20Bookworm/near/403050937" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Håkan Svensson <a href="https://leamas.github.io/zulip-archive/stream/332168-Master/topic/RPi5.20Bookworm.html#403050937">(Nov 19 2023 at 20:42)</a>:</h4>
+<p>Nothing new but I read sailoog's discussion <a href="https://forum.openmarine.net/showthread.php?tid=4942&amp;pid=27513#pid27513">here</a> Could "Wayland" be involved also here? (Now I'm not 100% sure that's active but suppose so.)</p>
+
+
+
+<a name="403059527"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332168-Master/topic/RPi5%20Bookworm/near/403059527" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Alec Leamas <a href="https://leamas.github.io/zulip-archive/stream/332168-Master/topic/RPi5.20Bookworm.html#403059527">(Nov 19 2023 at 22:56)</a>:</h4>
+<p>That  went into <a href="https://github.com/OpenCPN/OpenCPN/discussions/3469">https://github.com/OpenCPN/OpenCPN/discussions/3469</a>. Not great marketing for Raspbian, for sure.</p>
+
+
+
+<a name="403059807"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332168-Master/topic/RPi5%20Bookworm/near/403059807" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Alec Leamas <a href="https://leamas.github.io/zulip-archive/stream/332168-Master/topic/RPi5.20Bookworm.html#403059807">(Nov 19 2023 at 23:00)</a>:</h4>
+<p>That said, <a href="https://github.com/opencpn/OpenCPN/issues/3469">#3469</a> is not related to build problems in any way, it's about runtime behaviour.</p>
+
+
+
+<a name="403125540"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332168-Master/topic/RPi5%20Bookworm/near/403125540" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Håkan Svensson <a href="https://leamas.github.io/zulip-archive/stream/332168-Master/topic/RPi5.20Bookworm.html#403125540">(Nov 20 2023 at 09:13)</a>:</h4>
+<p>To much other stuff around but so far at least the result from ci/control, see attached file.<br>
+<a href="/user_uploads/33951/9xJk2PNm8ALXhWSg2QeMARnI/rpi5.txt">rpi5.txt</a></p>
+
+
+
+<a name="403127458"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332168-Master/topic/RPi5%20Bookworm/near/403127458" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Alec Leamas <a href="https://leamas.github.io/zulip-archive/stream/332168-Master/topic/RPi5.20Bookworm.html#403127458">(Nov 20 2023 at 09:24)</a>:</h4>
+<p>The problem is here: </p>
+<div class="codehilite"><pre><span></span><code> opencpn-build-deps:arm64 Depends on libwxgtk3.0-gtk3-dev:arm64
+</code></pre></div>
+<p>Bookworm is 3.2, so this does not fly. Investigating.</p>
+
+
+
+<a name="403128452"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332168-Master/topic/RPi5%20Bookworm/near/403128452" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Alec Leamas <a href="https://leamas.github.io/zulip-archive/stream/332168-Master/topic/RPi5.20Bookworm.html#403128452">(Nov 20 2023 at 09:30)</a>:</h4>
+<p>This is a bug which should be filed.</p>
+<p>In the meantime, here is a bookworm control file you could use instead.</p>
+<p><a href="/user_uploads/33951/0RoKFbnlL1BHNMQ1u9273T4s/control">control</a></p>
+
+
+
+<a name="403186874"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332168-Master/topic/RPi5%20Bookworm/near/403186874" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Håkan Svensson <a href="https://leamas.github.io/zulip-archive/stream/332168-Master/topic/RPi5.20Bookworm.html#403186874">(Nov 20 2023 at 14:54)</a>:</h4>
+<p>Thanks for addressing the problem.<br>
+I like Anydesk but can't get it running on arm64. So now I'm loading a armhf image to test instead. <br>
+It may be the present control will face the same problem since it's still Bookworm. if so I'll test your new "control" and report back.<br>
+If needed I can later also again test with a arm64 image.</p>
+
+
+
+<a name="403202946"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332168-Master/topic/RPi5%20Bookworm/near/403202946" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Alec Leamas <a href="https://leamas.github.io/zulip-archive/stream/332168-Master/topic/RPi5.20Bookworm.html#403202946">(Nov 20 2023 at 16:17)</a>:</h4>
+<p>I can help if you just can configure a  tunnel to port 22 + username and password.</p>
+
+
+
+<a name="403203440"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332168-Master/topic/RPi5%20Bookworm/near/403203440" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Håkan Svensson <a href="https://leamas.github.io/zulip-archive/stream/332168-Master/topic/RPi5.20Bookworm.html#403203440">(Nov 20 2023 at 16:20)</a>:</h4>
+<p>On 32 b the present control found gtk3.0 so no build problem. I'll test and run there but revert to 64 b image again.<br>
+Anydesk wasn't happier on 32 b so ... Then a mixed armhf and arm64 on a 64 b machine can do as well?<br>
+Tunnel ..Thanks appreciated. But I'll first go back to 64 b. It's worth testing your new control.</p>
+
+
+
+<a name="403203594"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332168-Master/topic/RPi5%20Bookworm/near/403203594" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Alec Leamas <a href="https://leamas.github.io/zulip-archive/stream/332168-Master/topic/RPi5.20Bookworm.html#403203594">(Nov 20 2023 at 16:21)</a>:</h4>
+<p>Doubt that trying armhf will be a difference for the basic problem. As you say, bookworm is bookworm. And the problem is fully understandable.  </p>
+<p>The core of it is that we don't have continous bookworm CI builds which makes this fly under the radar.  We should definitely have it, bookworm is the current stable release. </p>
+<p>I'm pretty sure the new control file is fine. It's  the same as used to build the official Debian bookworm  5.8 backport...</p>
+
+
+
+<a name="403204515"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332168-Master/topic/RPi5%20Bookworm/near/403204515" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Håkan Svensson <a href="https://leamas.github.io/zulip-archive/stream/332168-Master/topic/RPi5.20Bookworm.html#403204515">(Nov 20 2023 at 16:26)</a>:</h4>
+<p>So, I'll later test on arm64 again.  May be good to test on a "future" machine?</p>
+
+
+
+<a name="403222628"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332168-Master/topic/RPi5%20Bookworm/near/403222628" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Alec Leamas <a href="https://leamas.github.io/zulip-archive/stream/332168-Master/topic/RPi5.20Bookworm.html#403222628">(Nov 20 2023 at 18:20)</a>:</h4>
+<p>I wouldn't call it "future". On the contrary, there is more stuff available for arm64 then armhf out there. The distributions are starting to drop armhf, Fedora is already there and it probably won't be long until Debian does the same (?)</p>
+<p>Also : the theoretical memory limit for a 32-bit bus i 4GB, in reality about 2 GB (?). Running armhf on a board with more than 2G is thus wasting resources.</p>
+
+
+
+<a name="403249879"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332168-Master/topic/RPi5%20Bookworm/near/403249879" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Håkan Svensson <a href="https://leamas.github.io/zulip-archive/stream/332168-Master/topic/RPi5.20Bookworm.html#403249879">(Nov 20 2023 at 21:39)</a>:</h4>
+<p>With the new control O builds fine. Also running wo further tests.<br>
+<span class="user-mention" data-user-id="517002">@Dave Register</span> One quick issue: The canvas menus are centered on screen also here. (Ref; a CF post) With two canvas both are centered.</p>
+
+
+
+<a name="403269488"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332168-Master/topic/RPi5%20Bookworm/near/403269488" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Dave Register <a href="https://leamas.github.io/zulip-archive/stream/332168-Master/topic/RPi5.20Bookworm.html#403269488">(Nov 21 2023 at 00:28)</a>:</h4>
+<p><span class="user-mention" data-user-id="522486">@Håkan Svensson</span> <br>
+Picture?</p>
+
+
+
+<a name="403326666"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332168-Master/topic/RPi5%20Bookworm/near/403326666" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Håkan Svensson <a href="https://leamas.github.io/zulip-archive/stream/332168-Master/topic/RPi5.20Bookworm.html#403326666">(Nov 21 2023 at 08:23)</a>:</h4>
+<p><span class="user-mention" data-user-id="517002">@Dave Register</span> <br>
+The canvas menu is centered on screen not O window. Pict 1<br>
+The user menu is often on top of "everything" on screen. See pict 2</p>
+<p><a href="/user_uploads/33951/O_VVFG2ih_LfsKuhotFQNGct/20231121_09h14m48s_grim.png">20231121_09h14m48s_grim.png</a></p>
+<div class="message_inline_image"><a href="/user_uploads/33951/O_VVFG2ih_LfsKuhotFQNGct/20231121_09h14m48s_grim.png" title="20231121_09h14m48s_grim.png"><img src="/user_uploads/33951/O_VVFG2ih_LfsKuhotFQNGct/20231121_09h14m48s_grim.png"></a></div><p><a href="/user_uploads/33951/pYzWdPT0OIy8Xy8LLKEUFbQj/20231121_09h19m12s_grim.png">20231121_09h19m12s_grim.png</a></p>
+<div class="message_inline_image"><a href="/user_uploads/33951/pYzWdPT0OIy8Xy8LLKEUFbQj/20231121_09h19m12s_grim.png" title="20231121_09h19m12s_grim.png"><img src="/user_uploads/33951/pYzWdPT0OIy8Xy8LLKEUFbQj/20231121_09h19m12s_grim.png"></a></div>
+
+
+
+<a name="403327378"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332168-Master/topic/RPi5%20Bookworm/near/403327378" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Håkan Svensson <a href="https://leamas.github.io/zulip-archive/stream/332168-Master/topic/RPi5.20Bookworm.html#403327378">(Nov 21 2023 at 08:28)</a>:</h4>
+<p>Alec,  Dave..<br>
+In case of curiosity my rpi5 is up and running for ssh.</p>
+
+
+
+<a name="403345715"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332168-Master/topic/RPi5%20Bookworm/near/403345715" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Alec Leamas <a href="https://leamas.github.io/zulip-archive/stream/332168-Master/topic/RPi5.20Bookworm.html#403345715">(Nov 21 2023 at 10:04)</a>:</h4>
+<p>This is <a href="https://github.com/opencpn/OpenCPN/issues/3469">#3469</a>, and there is also the fix needed in Raspbian but seemingly nowhere else.</p>
+
+
+
+<a name="403393003"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332168-Master/topic/RPi5%20Bookworm/near/403393003" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Håkan Svensson <a href="https://leamas.github.io/zulip-archive/stream/332168-Master/topic/RPi5.20Bookworm.html#403393003">(Nov 21 2023 at 14:32)</a>:</h4>
+<p>Ok there's an issue already. I've missed that. Thanks for the link.</p>
+
+
+
+<a name="403548359"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332168-Master/topic/RPi5%20Bookworm/near/403548359" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Alec Leamas <a href="https://leamas.github.io/zulip-archive/stream/332168-Master/topic/RPi5.20Bookworm.html#403548359">(Nov 22 2023 at 09:04)</a>:</h4>
+<p>My current brain dump on this.</p>
+<p>We set the GDK_BACKEND environment variable in Wayland environments. This means that we use the XWayland compatibility layer which emulates X11 on top of the wayland protocol.  </p>
+<p>On gnome, this seems to work quite well., we don't really see any glitches. The wayland compositor used on gnome is mutter.</p>
+<p>Raspbian uses wayfire as the wayland compositor. This seems to be a key part of their strategy. However, Xwayland does not work well enough for us here. </p>
+<p>Installing gnome on top of Raspbian would of course   be an interesting thing to do. I might even have done that, but my memory fails me. Anyway, this is not about wayland which is just a protocol. Nor is it about Debian where OpenCPN works just fine. </p>
+<p>Instead, this is about Raspbian and in particular mutter and the related Xwayland implementation.</p>
+
+
+
+<a name="403548488"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332168-Master/topic/RPi5%20Bookworm/near/403548488" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Alec Leamas <a href="https://leamas.github.io/zulip-archive/stream/332168-Master/topic/RPi5.20Bookworm.html#403548488">(Nov 22 2023 at 09:04)</a>:</h4>
+<p><span class="user-mention" data-user-id="522486">@Håkan Svensson</span> ^</p>
+
+
+
+<a name="403597421"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332168-Master/topic/RPi5%20Bookworm/near/403597421" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Alec Leamas <a href="https://leamas.github.io/zulip-archive/stream/332168-Master/topic/RPi5.20Bookworm.html#403597421">(Nov 22 2023 at 13:57)</a>:</h4>
+<p>Last sentence should be <em>Instead,  this is about Raspbian and in particular wayfire [...}</em></p>
+
+
+
+<a name="403598426"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332168-Master/topic/RPi5%20Bookworm/near/403598426" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Håkan Svensson <a href="https://leamas.github.io/zulip-archive/stream/332168-Master/topic/RPi5.20Bookworm.html#403598426">(Nov 22 2023 at 14:02)</a>:</h4>
+<p>I'm not quit following but if you like to test whatever my RPi5 is up and running. Feel free to use it as you like. It's now set to x11 in raspi-config but it's easy to change. Just note if you like me to test on screen.</p>
+
+
+
+<a name="403599915"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332168-Master/topic/RPi5%20Bookworm/near/403599915" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Alec Leamas <a href="https://leamas.github.io/zulip-archive/stream/332168-Master/topic/RPi5.20Bookworm.html#403599915">(Nov 22 2023 at 14:10)</a>:</h4>
+<p>I'm not in the mood for now,  thanks anyway.. Think I  understand the situation.</p>
+<p>The basic message is that the problem is about Raspbian whcih contrary to other available OSes does not have a wayland stack which is usable for us. </p>
+<p>This flies for the time being, but at one point (Debian 13?) the X11 stack will be removed and hence the corresponding Raspbian setting. Let's hope Raspbian they have fixed their stuff until  then...</p>
+
+
+
+<a name="403605328"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332168-Master/topic/RPi5%20Bookworm/near/403605328" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Håkan Svensson <a href="https://leamas.github.io/zulip-archive/stream/332168-Master/topic/RPi5.20Bookworm.html#403605328">(Nov 22 2023 at 14:35)</a>:</h4>
+<p>I agree. Finger crossed?</p>
+
+
+
+<hr><p>Last updated: Oct 08 2024 at 10:11 UTC</p>
+</html>

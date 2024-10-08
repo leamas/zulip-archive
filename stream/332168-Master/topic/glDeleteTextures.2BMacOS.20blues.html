@@ -1,0 +1,321 @@
+<html>
+<head><meta charset="utf-8"><title>glDeleteTextures+MacOS blues · Master · Zulip Chat Archive</title></head>
+<h2>Stream: <a href="https://leamas.github.io/zulip-archive/stream/332168-Master/index.html">Master</a></h2>
+<h3>Topic: <a href="https://leamas.github.io/zulip-archive/stream/332168-Master/topic/glDeleteTextures.2BMacOS.20blues.html">glDeleteTextures+MacOS blues</a></h3>
+
+<hr>
+
+<base href="https://opencpn.zulipchat.com">
+
+<head><link href="https://leamas.github.io/zulip-archive/style.css" rel="stylesheet"></head>
+
+<a name="430610206"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332168-Master/topic/glDeleteTextures%2BMacOS%20blues/near/430610206" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Dave Register <a href="https://leamas.github.io/zulip-archive/stream/332168-Master/topic/glDeleteTextures.2BMacOS.20blues.html#430610206">(Apr 01 2024 at 15:18)</a>:</h4>
+<p><span class="user-mention" data-user-id="399510">@Alec Leamas</span> <br>
+The lambda function RoutePoint::delete_gl_textures causes some strange trouble on MacOS.  I think it relates to differences in how MacOS (apple silicon) frees memory during object deletion.  Maybe.</p>
+<p>I have added "if (g_bopengl)" guard, as a quick fix.<br>
+But I wonder why this thing is necessary in the first place.</p>
+<p>Is there no other way to do this "horrible hack"?</p>
+
+
+
+<a name="430615136"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332168-Master/topic/glDeleteTextures%2BMacOS%20blues/near/430615136" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Alec Leamas <a href="https://leamas.github.io/zulip-archive/stream/332168-Master/topic/glDeleteTextures.2BMacOS.20blues.html#430615136">(Apr 01 2024 at 15:49)</a>:</h4>
+<blockquote>
+<p>Is there no other way to do this "horrible hack"?</p>
+</blockquote>
+<p>There is always other ways.  But the core issue is IMHO what kind of "strange trouble" we are talking about.</p>
+<p>The background  for the hack is that  RoutePoint is a model object which is unaware of the <code> glDeleteTextures</code> method, but still need to free the  memory occupied by  for example m_dragIconTexture and m_iTextTexture.  These lives in the RoutePoint because they are accessed there, but here they are just plaint ints.</p>
+<p>A cleaner solution would be to move the m_dragIconTexture and m_iTextTexture to RoutePointGui.   While above my paygrade it would allow to get rid of the evil static destructor callback.  The problem is just the the gui object is transient -- all state is kept in the RoutePoint.</p>
+<p>However,  I don't really think this would solve this particular issue.  If using <code>if (g_bopengl)</code> actually solves the problem it probably means that some variable like  <code>m_dragIconTexture</code>  or <code>m_iTextTexture</code>  have inconsistent values if <code>g_bopengl</code>is false. And we then need to look on how these are initialized and modified to make sure they are handled correctly in this case. </p>
+<p>It would of course be helpful to understand more about what the cause this. If plain debugging does not work (I can see some problems here)  one could remove the guard and just remove one or two of the actual  invocations of <code>RoutePoint::delete_gl_textures</code> in <em>route_point.cpp</em>  to see which is failing.  After all, everything should run fine without them besides the obvious leak.</p>
+
+
+
+<a name="430615966"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332168-Master/topic/glDeleteTextures%2BMacOS%20blues/near/430615966" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Alec Leamas <a href="https://leamas.github.io/zulip-archive/stream/332168-Master/topic/glDeleteTextures.2BMacOS.20blues.html#430615966">(Apr 01 2024 at 15:53)</a>:</h4>
+<div class="codehilite"><pre><span></span><code>= [](unsigned, const unsigned*) { assert(true); };
+</code></pre></div>
+<p>This does not make much sense; should be <code>= [](unsigned, const unsigned*) { };</code></p>
+
+
+
+<a name="430618124"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332168-Master/topic/glDeleteTextures%2BMacOS%20blues/near/430618124" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Alec Leamas <a href="https://leamas.github.io/zulip-archive/stream/332168-Master/topic/glDeleteTextures.2BMacOS.20blues.html#430618124">(Apr 01 2024 at 16:04)</a>:</h4>
+<p>Looking at  <em>gui/src/RolloverWin.cpp</em> things looks messy.  </p>
+<p>The call to  to <code>glDeleteTextures</code></p>
+<div class="codehilite"><pre><span></span><code># ifdef ocpnUSE_GL
+  glDeleteTextures(1, &amp;m_texture);
+#endif
+</code></pre></div>
+<p>Modifed: </p>
+<div class="codehilite"><pre><span></span><code>#ifdef ocpnUSE_GL
+  if (usegl) {
+    if (!m_texture) {
+      glGenTextures(1, &amp;m_texture);
+
+      glBindTexture(g_texture_rectangle_format, m_texture);
+     [...]
+#endif
+</code></pre></div>
+<p>That is, <code>m_texture</code> might very well be modified even if <code>g_bopengl</code> is false.  Bad karma.</p>
+
+
+
+<a name="430618710"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332168-Master/topic/glDeleteTextures%2BMacOS%20blues/near/430618710" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Notification Bot <a href="https://leamas.github.io/zulip-archive/stream/332168-Master/topic/glDeleteTextures.2BMacOS.20blues.html#430618710">(Apr 01 2024 at 16:07)</a>:</h4>
+<p>4 messages were moved here from <a class="stream-topic" data-stream-id="332168" href="/#narrow/stream/332168-Master---5.2E8.2E0--.28was.3A-comms.29/topic/PR.20.233765">#Master - 5.8.0  (was: comms) &gt; PR #3765</a> by <span class="user-mention silent" data-user-id="399510">Alec Leamas</span>.</p>
+
+
+
+<a name="430618814"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332168-Master/topic/glDeleteTextures%2BMacOS%20blues/near/430618814" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Notification Bot <a href="https://leamas.github.io/zulip-archive/stream/332168-Master/topic/glDeleteTextures.2BMacOS.20blues.html#430618814">(Apr 01 2024 at 16:07)</a>:</h4>
+<p>2 messages were moved here from <a class="stream-topic" data-stream-id="361980" href="/#narrow/stream/361980-opencpn-commits/topic/OpenCPN.20.2F.20master">#opencpn-commits &gt; OpenCPN / master</a> by <span class="user-mention silent" data-user-id="399510">Alec Leamas</span>.</p>
+
+
+
+<a name="430620307"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332168-Master/topic/glDeleteTextures%2BMacOS%20blues/near/430620307" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Alec Leamas <a href="https://leamas.github.io/zulip-archive/stream/332168-Master/topic/glDeleteTextures.2BMacOS.20blues.html#430620307">(Apr 01 2024 at 16:15)</a>:</h4>
+<p>... or perhaps not, <code>usegl</code> is only true if  <code>g_bopengl</code> is.</p>
+
+
+
+<a name="430657297"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332168-Master/topic/glDeleteTextures%2BMacOS%20blues/near/430657297" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Dave Register <a href="https://leamas.github.io/zulip-archive/stream/332168-Master/topic/glDeleteTextures.2BMacOS.20blues.html#430657297">(Apr 01 2024 at 20:18)</a>:</h4>
+<p><span class="user-mention" data-user-id="399510">@Alec Leamas</span> <br>
+Very strange behavior.  It happens due to the line in RoutePoint DTOR.<br>
+Somehow, the code ends up at the definition of the lambda found in ocpn_app.cpp.<br>
+Why is that there?  I'm definitely confused.  I see a similar (sort of) definition in RoutePoint.cpp, but that only calls an Assert, for unknown reasons.<br>
+??</p>
+
+
+
+<a name="430658253"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332168-Master/topic/glDeleteTextures%2BMacOS%20blues/near/430658253" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Alec Leamas <a href="https://leamas.github.io/zulip-archive/stream/332168-Master/topic/glDeleteTextures.2BMacOS.20blues.html#430658253">(Apr 01 2024 at 20:25)</a>:</h4>
+<p>It is as designed.</p>
+<p>RoutePoint need to call the OpenGL destructor routine, but RoutePoint is a model object which knows nothing about OpenGL. Hence,  the destructor helper is defined as a function object.</p>
+<p>By default this function does nothing, Actually, as I wrote it, it asserts(false). This is because the default implementation is not  intended to actually be used.</p>
+<p>At a later point ocpn_app i. e., MyApp sets the destructor helper to a lambda using the openGL routine. After this, RoutePoint can call the OpenGL  destructor  helper without being aware of (linked to) the gui.</p>
+
+
+
+<a name="430658407"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332168-Master/topic/glDeleteTextures%2BMacOS%20blues/near/430658407" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Alec Leamas <a href="https://leamas.github.io/zulip-archive/stream/332168-Master/topic/glDeleteTextures.2BMacOS.20blues.html#430658407">(Apr 01 2024 at 20:26)</a>:</h4>
+<p>To summarize , RoutePoint basically defines a callback which is set by OcpnApp. So far I don't see any problem here.</p>
+
+
+
+<a name="430659005"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332168-Master/topic/glDeleteTextures%2BMacOS%20blues/near/430659005" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Dave Register <a href="https://leamas.github.io/zulip-archive/stream/332168-Master/topic/glDeleteTextures.2BMacOS.20blues.html#430659005">(Apr 01 2024 at 20:31)</a>:</h4>
+<p><span class="user-mention" data-user-id="399510">@Alec Leamas</span> <br>
+I resort to a screenshot of the crash, stack trace on lower left panel.<br>
+<a href="/user_uploads/33951/nMAK23ATIyiDplbRvLRnRpBS/Screenshot_20240401_162948.png">Screenshot_20240401_162948.png</a></p>
+<div class="message_inline_image"><a href="/user_uploads/33951/nMAK23ATIyiDplbRvLRnRpBS/Screenshot_20240401_162948.png" title="Screenshot_20240401_162948.png"><img src="/user_uploads/33951/nMAK23ATIyiDplbRvLRnRpBS/Screenshot_20240401_162948.png"></a></div>
+
+
+
+<a name="430659324"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332168-Master/topic/glDeleteTextures%2BMacOS%20blues/near/430659324" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Alec Leamas <a href="https://leamas.github.io/zulip-archive/stream/332168-Master/topic/glDeleteTextures.2BMacOS.20blues.html#430659324">(Apr 01 2024 at 20:33)</a>:</h4>
+<p>Yes, RoutePoint calls a lambda defined in MyApp::OnInit().  The lambda does not catch anything in the closure, so I don't see any problem here (?)</p>
+
+
+
+<a name="430659508"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332168-Master/topic/glDeleteTextures%2BMacOS%20blues/near/430659508" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Alec Leamas <a href="https://leamas.github.io/zulip-archive/stream/332168-Master/topic/glDeleteTextures.2BMacOS.20blues.html#430659508">(Apr 01 2024 at 20:34)</a>:</h4>
+<p>It calls the lambda because of ocpn_app.cpp around  1790</p>
+
+
+
+<a name="430659828"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332168-Master/topic/glDeleteTextures%2BMacOS%20blues/near/430659828" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Dave Register <a href="https://leamas.github.io/zulip-archive/stream/332168-Master/topic/glDeleteTextures.2BMacOS.20blues.html#430659828">(Apr 01 2024 at 20:36)</a>:</h4>
+<p>Except that is has crashed due to EXC_BAD_ACCESS.  Unless I guard with if (g_bopengl).</p>
+<p>Now it is maybe theoretically possible that glDeleteTextures() is unknown if the gl context has not been setup, which is the case if running in no-GL mode.  But we only see this no-GL crash on Mac.  So...</p>
+
+
+
+<a name="430660000"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332168-Master/topic/glDeleteTextures%2BMacOS%20blues/near/430660000" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Alec Leamas <a href="https://leamas.github.io/zulip-archive/stream/332168-Master/topic/glDeleteTextures.2BMacOS.20blues.html#430660000">(Apr 01 2024 at 20:37)</a>:</h4>
+<p>hm... Perhaps clang has other ideas about a local lambda. hang on...</p>
+
+
+
+<a name="430660537"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332168-Master/topic/glDeleteTextures%2BMacOS%20blues/near/430660537" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Alec Leamas <a href="https://leamas.github.io/zulip-archive/stream/332168-Master/topic/glDeleteTextures.2BMacOS.20blues.html#430660537">(Apr 01 2024 at 20:41)</a>:</h4>
+<p>Does this chnage anything?</p>
+<div class="codehilite"><pre><span></span><code>diff --git a/gui/src/ocpn_app.cpp b/gui/src/ocpn_app.cpp
+index 37ec10ff9..a564417ec 100644
+--- a/gui/src/ocpn_app.cpp
++++ b/gui/src/ocpn_app.cpp
+@@ -960,6 +960,16 @@ void MyApp::OnActivateApp(wxActivateEvent &amp;event) {
+
+ static wxStopWatch init_sw;
+
++  // Horrible Hack (tm): Make sure the RoutePoint destructor can invoke
++  // glDeleteTextures. Truly awful.
++#ifdef ocpnUSE_GL
++   static auto delete_textures =
++      [](unsigned n, const unsigned* texts) { glDeleteTextures(n, texts); };
++#else
++   static auto delete_textures = [](unsigned n, const unsigned* texts) { };
++#endif
++
++
+ int MyApp::OnRun() {
+   if (m_exitcode != -2) return m_exitcode;
+   return wxAppConsole::OnRun();
+@@ -1785,13 +1795,7 @@ bool MyApp::OnInit() {
+
+   // Horrible Hack (tm): Make sure the RoutePoint destructor can invoke
+   // glDeleteTextures. Truly awful.
+-#ifdef ocpnUSE_GL
+-  RoutePoint::delete_gl_textures =
+-      [](unsigned n, const unsigned* texts) { glDeleteTextures(n, texts); };
+-#else
+-  RoutePoint::delete_gl_textures = [](unsigned n, const unsigned* texts) { };
+-#endif
+-
++  RoutePoint::delete_gl_textures = delete_textures;
+
+   if (g_start_fullscreen) gFrame-&gt;ToggleFullScreen();
+</code></pre></div>
+<p>Makes sure the  callback isn't referencing an automatic variable which is gone...</p>
+
+
+
+<a name="430662414"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332168-Master/topic/glDeleteTextures%2BMacOS%20blues/near/430662414" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Dave Register <a href="https://leamas.github.io/zulip-archive/stream/332168-Master/topic/glDeleteTextures.2BMacOS.20blues.html#430662414">(Apr 01 2024 at 20:55)</a>:</h4>
+<p><span class="user-mention" data-user-id="399510">@Alec Leamas</span> <br>
+No change. Same crash signature.</p>
+
+
+
+<a name="430662424"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332168-Master/topic/glDeleteTextures%2BMacOS%20blues/near/430662424" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Alec Leamas <a href="https://leamas.github.io/zulip-archive/stream/332168-Master/topic/glDeleteTextures.2BMacOS.20blues.html#430662424">(Apr 01 2024 at 20:55)</a>:</h4>
+<p>Hm... <a href="https://github.com/opencpn/OpenCPN/issues/2">#2</a>. Thinking while writing...</p>
+<p>The callback will use glDeleteTextures as long as <code>ocpnUSE_GL</code> is defined, g_bopengl  is no part of this decision. The crash is when g_bopengl is false. The idea is that the arguments <code>n</code>and <code>texts</code>both are 0 in this case, but if not?</p>
+<p>Logging (printing) <code>n</code> and <code>texts</code> in the lambda should reveal the truth here. Probably a good idea anyway until this is resolved.</p>
+
+
+
+<a name="430662528"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332168-Master/topic/glDeleteTextures%2BMacOS%20blues/near/430662528" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Dave Register <a href="https://leamas.github.io/zulip-archive/stream/332168-Master/topic/glDeleteTextures.2BMacOS.20blues.html#430662528">(Apr 01 2024 at 20:56)</a>:</h4>
+<p>I'll try that.</p>
+
+
+
+<a name="430663914"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332168-Master/topic/glDeleteTextures%2BMacOS%20blues/near/430663914" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Dave Register <a href="https://leamas.github.io/zulip-archive/stream/332168-Master/topic/glDeleteTextures.2BMacOS.20blues.html#430663914">(Apr 01 2024 at 21:08)</a>:</h4>
+<p>Added the line:<br>
+    printf("n: %d texts %p *texts:  %d\n", n, (void *) texts, *texts);<br>
+Results:<br>
+    n: 1 texts 0x11ef177fc *texts:  0</p>
+<p>No crash on that line, so the args are accessible.</p>
+
+
+
+<a name="430664240"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332168-Master/topic/glDeleteTextures%2BMacOS%20blues/near/430664240" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Alec Leamas <a href="https://leamas.github.io/zulip-archive/stream/332168-Master/topic/glDeleteTextures.2BMacOS.20blues.html#430664240">(Apr 01 2024 at 21:10)</a>:</h4>
+<p>So, we are sending a perfectly sound  empty vector + a zero count to  glDeleteTextures(), and it crashes?</p>
+
+
+
+<a name="430664359"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332168-Master/topic/glDeleteTextures%2BMacOS%20blues/near/430664359" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Alec Leamas <a href="https://leamas.github.io/zulip-archive/stream/332168-Master/topic/glDeleteTextures.2BMacOS.20blues.html#430664359">(Apr 01 2024 at 21:11)</a>:</h4>
+<p>linkage problem?</p>
+
+
+
+<a name="430664828"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332168-Master/topic/glDeleteTextures%2BMacOS%20blues/near/430664828" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Alec Leamas <a href="https://leamas.github.io/zulip-archive/stream/332168-Master/topic/glDeleteTextures.2BMacOS.20blues.html#430664828">(Apr 01 2024 at 21:15)</a>:</h4>
+<p><span class="user-mention" data-user-id="573239">@Pavel Kalian</span>   Any ideas?</p>
+
+
+
+<a name="430665677"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332168-Master/topic/glDeleteTextures%2BMacOS%20blues/near/430665677" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Pavel Kalian <a href="https://leamas.github.io/zulip-archive/stream/332168-Master/topic/glDeleteTextures.2BMacOS.20blues.html#430665677">(Apr 01 2024 at 21:21)</a>:</h4>
+<p>It looks like on macOS any call to the GL functions when OpenGL is not initialized crashes. Either we have been erroneously initializing the GL subsystem when it should have been disabled until now or it changed with some macOS update.</p>
+
+
+
+<a name="430665862"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332168-Master/topic/glDeleteTextures%2BMacOS%20blues/near/430665862" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Dave Register <a href="https://leamas.github.io/zulip-archive/stream/332168-Master/topic/glDeleteTextures.2BMacOS.20blues.html#430665862">(Apr 01 2024 at 21:22)</a>:</h4>
+<p>I agree with pavel.<br>
+Dinner now, back later.</p>
+
+
+
+<a name="430666019"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332168-Master/topic/glDeleteTextures%2BMacOS%20blues/near/430666019" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Alec Leamas <a href="https://leamas.github.io/zulip-archive/stream/332168-Master/topic/glDeleteTextures.2BMacOS.20blues.html#430666019">(Apr 01 2024 at 21:23)</a>:</h4>
+<p>I. e,  we only initialize OpenGL  when  <code>g_bopengl</code> is true whereas we use it if  <code>ocpnUSE_GL</code> is defined. That would make sense.</p>
+
+
+
+<a name="430666239"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332168-Master/topic/glDeleteTextures%2BMacOS%20blues/near/430666239" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Alec Leamas <a href="https://leamas.github.io/zulip-archive/stream/332168-Master/topic/glDeleteTextures.2BMacOS.20blues.html#430666239">(Apr 01 2024 at 21:25)</a>:</h4>
+<p>Perhaps not sense, but it would explain things.</p>
+
+
+
+<a name="430666342"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332168-Master/topic/glDeleteTextures%2BMacOS%20blues/near/430666342" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Pavel Kalian <a href="https://leamas.github.io/zulip-archive/stream/332168-Master/topic/glDeleteTextures.2BMacOS.20blues.html#430666342">(Apr 01 2024 at 21:26)</a>:</h4>
+<p><code>ocpnUSE_GL</code> decides whether we build OpenGL support, if we do, we still are able to start with it disabled (In that case <code>g_bopengl == false</code>), so we should not make any such calls in that situation.</p>
+
+
+
+<a name="430666368"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332168-Master/topic/glDeleteTextures%2BMacOS%20blues/near/430666368" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Alec Leamas <a href="https://leamas.github.io/zulip-archive/stream/332168-Master/topic/glDeleteTextures.2BMacOS.20blues.html#430666368">(Apr 01 2024 at 21:26)</a>:</h4>
+<p>Yup, same thing.</p>
+
+
+
+<a name="430666386"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332168-Master/topic/glDeleteTextures%2BMacOS%20blues/near/430666386" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Alec Leamas <a href="https://leamas.github.io/zulip-archive/stream/332168-Master/topic/glDeleteTextures.2BMacOS.20blues.html#430666386">(Apr 01 2024 at 21:26)</a>:</h4>
+<p>All agree. I need som sleep...</p>
+
+
+
+<a name="430686816"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332168-Master/topic/glDeleteTextures%2BMacOS%20blues/near/430686816" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Dave Register <a href="https://leamas.github.io/zulip-archive/stream/332168-Master/topic/glDeleteTextures.2BMacOS.20blues.html#430686816">(Apr 02 2024 at 00:44)</a>:</h4>
+<p>Back...<br>
+So, current code (with if (g_bopengl) does the job.<br>
+And we do not understand why glDeleteTextures() fails on MacOS if OpenGL is not initialized, but passes on all other platforms.  Fine.</p>
+
+
+
+<a name="430687318"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332168-Master/topic/glDeleteTextures%2BMacOS%20blues/near/430687318" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Pavel Kalian <a href="https://leamas.github.io/zulip-archive/stream/332168-Master/topic/glDeleteTextures.2BMacOS.20blues.html#430687318">(Apr 02 2024 at 00:50)</a>:</h4>
+<p>I would say there still is some stuff that needs attention when switching from non-GL to GL mode with plugins. At first sight seems like the GL overlay renderting is invoked before actually being possible.</p>
+
+
+
+<a name="430691587"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332168-Master/topic/glDeleteTextures%2BMacOS%20blues/near/430691587" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Dave Register <a href="https://leamas.github.io/zulip-archive/stream/332168-Master/topic/glDeleteTextures.2BMacOS.20blues.html#430691587">(Apr 02 2024 at 01:33)</a>:</h4>
+<p><span class="user-mention" data-user-id="573239">@Pavel Kalian</span> <br>
+Yes.  I agree.  MacOS refreshes the canvas halfway through the switch.  Introduces a vulnerability where g_bopengl is TRUE, but the GL canvas has not been built yet.  It affects the core, as well as plugins.  Working on it.</p>
+
+
+
+<a name="430709036"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332168-Master/topic/glDeleteTextures%2BMacOS%20blues/near/430709036" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Dave Register <a href="https://leamas.github.io/zulip-archive/stream/332168-Master/topic/glDeleteTextures.2BMacOS.20blues.html#430709036">(Apr 02 2024 at 04:30)</a>:</h4>
+<p><span class="user-mention" data-user-id="573239">@Pavel Kalian</span> <br>
+Fixed the basic core problem by <a href="https://github.com/opencpn/OpenCPN/commit/fc836417cc8feba2f146d1eecb1465e2e4d683d0">fc836417cc8feba2f146d1eecb1465e2e4d683d0</a><br>
+What plugins have similar problem?</p>
+<p>Also fixed Retina ownship size.</p>
+
+
+
+<a name="430778159"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332168-Master/topic/glDeleteTextures%2BMacOS%20blues/near/430778159" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Pavel Kalian <a href="https://leamas.github.io/zulip-archive/stream/332168-Master/topic/glDeleteTextures.2BMacOS.20blues.html#430778159">(Apr 02 2024 at 12:21)</a>:</h4>
+<p>I have already fixed WMM and Grib which were calling GL functions in <code>Init</code><br>
+All the plugins I have installed at the moment seem to work (But I didn't instal every single one from the catalog), with exception of  Draw, which crashes on macOS in <code>LateInit</code> if started in non-GL mode.</p>
+
+
+
+<a name="430798765"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332168-Master/topic/glDeleteTextures%2BMacOS%20blues/near/430798765" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Pavel Kalian <a href="https://leamas.github.io/zulip-archive/stream/332168-Master/topic/glDeleteTextures.2BMacOS.20blues.html#430798765">(Apr 02 2024 at 14:07)</a>:</h4>
+<p>Fix pushed also to the <code>DC</code> code <code>opencpn-libs</code></p>
+
+
+
+<hr><p>Last updated: Oct 08 2024 at 10:11 UTC</p>
+</html>
