@@ -1,0 +1,62 @@
+<html>
+<head><meta charset="utf-8"><title>NoOpenGl Windows · Master · Zulip Chat Archive</title></head>
+<h2>Stream: <a href="https://leamas.github.io/zulip-archive/stream/332168-Master/index.html">Master</a></h2>
+<h3>Topic: <a href="https://leamas.github.io/zulip-archive/stream/332168-Master/topic/NoOpenGl.20Windows.html">NoOpenGl Windows</a></h3>
+
+<hr>
+
+<base href="https://opencpn.zulipchat.com">
+
+<head><link href="https://leamas.github.io/zulip-archive/style.css" rel="stylesheet"></head>
+
+<a name="479066073"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332168-Master/topic/NoOpenGl%20Windows/near/479066073" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Håkan Svensson <a href="https://leamas.github.io/zulip-archive/stream/332168-Master/topic/NoOpenGl.20Windows.html#479066073">(Oct 26 2024 at 17:33)</a>:</h4>
+<p><span class="user-mention" data-user-id="517002">@Dave Register</span> <span class="user-mention" data-user-id="573239">@Pavel Kalian</span> <br>
+Master code now. Latest commit: <a href="https://github.com/opencpn/OpenCPN/commit/ed25be551f9">ed25be551f9</a> (I'm not saying this commit is the source)<br>
+On Win: <br>
+When switching OpenGl off at runtime: See pict 1<br>
+If starting O when OpenGL=0 in config:<br>
+See pict 2</p>
+<div class="codehilite"><pre><span></span><code>Call stack
+&gt;   wxmsw32u_core_vc14x.dll!wxGraphicsContext::CreatePath() Line 863    C++
+    opencpn.exe!ocpnDC::StrokePolygon(int n, wxPoint * points, int xoffset, int yoffset, float scale) Line 1541 C++
+    opencpn.exe!ChartCanvas::ShipDraw(ocpnDC &amp; dc) Line 5980    C++
+    opencpn.exe!ChartCanvas::DrawOverlayObjects(ocpnDC &amp; dc, const wxRegion &amp; ru) Line 11913    C++
+    opencpn.exe!ChartCanvas::OnPaint(wxPaintEvent &amp; event) Line 11394   C++
+    wxbase32u_vc14x.dll!wxAppConsoleBase::HandleEvent(wxEvtHandler * handler, void(wxEvtHandler::*)(wxEvent &amp;) func, wxEvent &amp; event) Line 662  C++
+    wxbase32u_vc14x.dll!wxAppConsoleBase::CallEventHandler(wxEvtHandler * handler, wxEventFunctor &amp; functor, wxEvent &amp; event) Line 673  C++
+    wxbase32u_vc14x.dll!wxEvtHandler::ProcessEventIfMatchesId(const wxEventTableEntryBase &amp; entry, wxEvtHandler * handler, wxEvent &amp; event) Line 1484   C++
+    wxbase32u_vc14x.dll!wxEventHashTable::HandleEvent(wxEvent &amp; event, wxEvtHandler * self) Line 1087   C++
+    wxbase32u_vc14x.dll!wxEvtHandler::TryHereOnly(wxEvent &amp; event) Line 1679    C++
+    [Inline Frame] wxbase32u_vc14x.dll!wxEvtHandler::TryBeforeAndHere(wxEvent &amp;) Line 4007  C++
+    [Inline Frame] wxbase32u_vc14x.dll!wxEvtHandler::ProcessEventLocally(wxEvent &amp;) Line 1612   C++
+    wxbase32u_vc14x.dll!wxEvtHandler::ProcessEvent(wxEvent &amp; event) Line 1585   C++
+    wxbase32u_vc14x.dll!wxEvtHandler::SafelyProcessEvent(wxEvent &amp; event) Line 1711 C++
+    wxmsw32u_core_vc14x.dll!wxWindow::HandlePaint() Line 5375   C++
+    wxmsw32u_core_vc14x.dll!wxWindow::MSWHandleMessage(long * result, unsigned int message, unsigned int wParam, long lParam) Line 3120 C++
+    wxmsw32u_core_vc14x.dll!wxWindow::MSWWindowProc(unsigned int message, unsigned int wParam, long lParam) Line 3906   C++
+    wxmsw32u_core_vc14x.dll!wxWndProc(HWND__ * hWnd, unsigned int message, unsigned int wParam, long lParam) Line 2949  C++
+    [External Code]
+    [Frames below may be incorrect and/or missing, no symbols loaded for user32.dll]
+    wxmsw32u_core_vc14x.dll!wxGUIEventLoop::ProcessMessage(tagMSG * msg) Line 164   C++
+    wxmsw32u_core_vc14x.dll!wxGUIEventLoop::Dispatch() Line 226 C++
+    wxbase32u_vc14x.dll!wxEventLoopManual::ProcessEvents() Line 239 C++
+    wxbase32u_vc14x.dll!wxEventLoopManual::DoRun() Line 288 C++
+    wxbase32u_vc14x.dll!wxEventLoopBase::Run() Line 87  C++
+    wxbase32u_vc14x.dll!wxAppConsoleBase::MainLoop() Line 381   C++
+    wxbase32u_vc14x.dll!wxEntryReal(int &amp; argc, wchar_t * * argv) Line 497  C++
+    wxbase32u_vc14x.dll!wxEntry(int &amp; argc, wchar_t * * argv) Line 175  C++
+    wxmsw32u_core_vc14x.dll!wxEntry(HINSTANCE__ * hInstance, HINSTANCE__ * __formal, char * __formal, int nCmdShow) Line 344    C++
+    opencpn.exe!WinMain(HINSTANCE__ * hInstance, HINSTANCE__ * hPrevInstance, char * lpCmdLine, int nCmdShow) Line 738  C++
+    [External Code]
+</code></pre></div>
+<p>Pict 1<br>
+<a href="/user_uploads/33951/v2CBvCyOVhPTOi8MLi8RXZC5/bild.png">bild.png</a></p>
+<div class="message_inline_image"><a href="/user_uploads/33951/v2CBvCyOVhPTOi8MLi8RXZC5/bild.png" title="bild.png"><img data-original-dimensions="1561x430" src="/user_uploads/thumbnail/33951/v2CBvCyOVhPTOi8MLi8RXZC5/bild.png/840x560.webp"></a></div><p>Pict 2<br>
+<a href="/user_uploads/33951/5rL_G0DFBTqfR5La8ZkfautZ/bild.png">bild.png</a></p>
+<div class="message_inline_image"><a href="/user_uploads/33951/5rL_G0DFBTqfR5La8ZkfautZ/bild.png" title="bild.png"><img data-original-dimensions="1508x486" src="/user_uploads/thumbnail/33951/5rL_G0DFBTqfR5La8ZkfautZ/bild.png/840x560.webp"></a></div>
+
+
+
+<hr><p>Last updated: Oct 26 2024 at 17:42 UTC</p>
+</html>
