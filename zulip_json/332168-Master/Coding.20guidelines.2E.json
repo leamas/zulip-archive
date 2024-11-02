@@ -28,5 +28,17 @@
         "id": 480048822,
         "sender_full_name": "Alec Leamas",
         "timestamp": 1730466525
+    },
+    {
+        "content": "<p>I would have fixed it with the following general Windows advice:<br>\nIf acceptabel I could PR a change to the manual? </p>\n<div class=\"codehilite\"><pre><span></span><code>To do this, just install the pre-commit program from https://pre-commit.com/:\n\n    $ pip install pre-commit\n\n    On Windows:\n\n      $ py -m pip install pre-commit\n\nand then, in the project top directory\n\n    $ pre-commit install\n\n    Windows advices:\n     You need a path to find &quot;pre-commit.exe&quot;. e.g PATH=........;C:\\Python39\\Scripts\n       This path can be a one time or permanent.\n     Then: (Note the -f switch!)\n\n    $ pre-commit install -f\n\nThe above would result in e.g.: &quot;pre-commit installed at .git\\hooks\\pre-commit&quot;\n\nwhich will pick up the configuration from _.pre-commit-config.yaml_ which is\n</code></pre></div>",
+        "id": 480198552,
+        "sender_full_name": "Håkan Svensson",
+        "timestamp": 1730537161
+    },
+    {
+        "content": "<p>hm...  A PR is of course the way to go. I think the windows mess is large enough to warrant a separate subheading.</p>\n<p>More bits and pieces on this:</p>\n<hr>\n<p>The location to pre-commit .exe depends on if running with administrative privileges or not. When running as administrator the path can be found  by <code>python -c \"from distutils.sysconfig import get_python_lib; print(get_python_lib())\"</code></p>\n<p>When running as regular user the path is someting like  <em>C:\\Users\\alec\\AppData\\Roaming\\Python\\Python310\\Scripts</em>. The actual python version (here Python310) will differ (and of course also the username)</p>\n<p>Another solution on WIndows is to use WSL which offers a simple user experience</p>\n<hr>\n<p>Please  take whateveryou find useful in this and make a PR.</p>",
+        "id": 480199778,
+        "sender_full_name": "Alec Leamas",
+        "timestamp": 1730538193
     }
 ]

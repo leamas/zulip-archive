@@ -42,5 +42,48 @@
 
 
 
-<hr><p>Last updated: Nov 02 2024 at 08:45 UTC</p>
+<a name="480198552"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332168-Master/topic/Coding%20guidelines./near/480198552" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Håkan Svensson <a href="https://leamas.github.io/zulip-archive/stream/332168-Master/topic/Coding.20guidelines.2E.html#480198552">(Nov 02 2024 at 08:46)</a>:</h4>
+<p>I would have fixed it with the following general Windows advice:<br>
+If acceptabel I could PR a change to the manual? </p>
+<div class="codehilite"><pre><span></span><code>To do this, just install the pre-commit program from https://pre-commit.com/:
+
+    $ pip install pre-commit
+
+    On Windows:
+
+      $ py -m pip install pre-commit
+
+and then, in the project top directory
+
+    $ pre-commit install
+
+    Windows advices:
+     You need a path to find &quot;pre-commit.exe&quot;. e.g PATH=........;C:\Python39\Scripts
+       This path can be a one time or permanent.
+     Then: (Note the -f switch!)
+
+    $ pre-commit install -f
+
+The above would result in e.g.: &quot;pre-commit installed at .git\hooks\pre-commit&quot;
+
+which will pick up the configuration from _.pre-commit-config.yaml_ which is
+</code></pre></div>
+
+
+
+<a name="480199778"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332168-Master/topic/Coding%20guidelines./near/480199778" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Alec Leamas <a href="https://leamas.github.io/zulip-archive/stream/332168-Master/topic/Coding.20guidelines.2E.html#480199778">(Nov 02 2024 at 09:03)</a>:</h4>
+<p>hm...  A PR is of course the way to go. I think the windows mess is large enough to warrant a separate subheading.</p>
+<p>More bits and pieces on this:</p>
+<hr>
+<p>The location to pre-commit .exe depends on if running with administrative privileges or not. When running as administrator the path can be found  by <code>python -c "from distutils.sysconfig import get_python_lib; print(get_python_lib())"</code></p>
+<p>When running as regular user the path is someting like  <em>C:\Users\alec\AppData\Roaming\Python\Python310\Scripts</em>. The actual python version (here Python310) will differ (and of course also the username)</p>
+<p>Another solution on WIndows is to use WSL which offers a simple user experience</p>
+<hr>
+<p>Please  take whateveryou find useful in this and make a PR.</p>
+
+
+
+<hr><p>Last updated: Nov 02 2024 at 09:10 UTC</p>
 </html>
