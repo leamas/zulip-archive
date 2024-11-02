@@ -91,5 +91,28 @@ which will pick up the configuration from _.pre-commit-config.yaml_ which is
 
 
 
-<hr><p>Last updated: Nov 02 2024 at 09:42 UTC</p>
+<a name="480203052"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332168-Master/topic/Coding%20guidelines./near/480203052" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Dan Dickey <a href="https://leamas.github.io/zulip-archive/stream/332168-Master/topic/Coding.20guidelines.2E.html#480203052">(Nov 02 2024 at 09:50)</a>:</h4>
+<p>I found an easier way I think.  If you use the winconfig.bat tool it installs nuget.  These 3 lines will install the pre-commit hook:</p>
+<div class="codehilite"><pre><span></span><code>.\cache\buildwintemp\nuget.exe install python
+python.3.13.0\tools\python.exe -m pip install --no-warn-script-location -q pre-commit
+rmdir /s /q python.3.13.0
+</code></pre></div>
+<p>This installs a minimal python environment locally then installs the pre-commit hook.  Then it gets rid of python as it is no longer needed.</p>
+
+
+
+<a name="480203776"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332168-Master/topic/Coding%20guidelines./near/480203776" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Dan Dickey <a href="https://leamas.github.io/zulip-archive/stream/332168-Master/topic/Coding.20guidelines.2E.html#480203776">(Nov 02 2024 at 10:00)</a>:</h4>
+<p>Sorry, forgot one line. It should be 4 lines:</p>
+<div class="codehilite"><pre><span></span><code>.\cache\buildwintemp\nuget.exe install python
+python.3.13.0\tools\python.exe -m pip install --no-warn-script-location -q pre-commit
+python.3.13.0\tools\Scripts\pre-commit.exe install -f
+rmdir /s /q python.3.13.0
+</code></pre></div>
+<p>This works for anyone and doesn't depend on an existing Python installation.</p>
+
+
+
+<hr><p>Last updated: Nov 02 2024 at 10:10 UTC</p>
 </html>

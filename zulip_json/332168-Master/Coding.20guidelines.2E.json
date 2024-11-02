@@ -46,5 +46,17 @@
         "id": 480201805,
         "sender_full_name": "Alec Leamas",
         "timestamp": 1730539960
+    },
+    {
+        "content": "<p>I found an easier way I think.  If you use the winconfig.bat tool it installs nuget.  These 3 lines will install the pre-commit hook:</p>\n<div class=\"codehilite\"><pre><span></span><code>.\\cache\\buildwintemp\\nuget.exe install python\npython.3.13.0\\tools\\python.exe -m pip install --no-warn-script-location -q pre-commit\nrmdir /s /q python.3.13.0\n</code></pre></div>\n<p>This installs a minimal python environment locally then installs the pre-commit hook.  Then it gets rid of python as it is no longer needed.</p>",
+        "id": 480203052,
+        "sender_full_name": "Dan Dickey",
+        "timestamp": 1730541046
+    },
+    {
+        "content": "<p>Sorry, forgot one line. It should be 4 lines:</p>\n<div class=\"codehilite\"><pre><span></span><code>.\\cache\\buildwintemp\\nuget.exe install python\npython.3.13.0\\tools\\python.exe -m pip install --no-warn-script-location -q pre-commit\npython.3.13.0\\tools\\Scripts\\pre-commit.exe install -f\nrmdir /s /q python.3.13.0\n</code></pre></div>\n<p>This works for anyone and doesn't depend on an existing Python installation.</p>",
+        "id": 480203776,
+        "sender_full_name": "Dan Dickey",
+        "timestamp": 1730541648
     }
 ]
