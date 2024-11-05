@@ -75,5 +75,14 @@ Dave</p>
 
 
 
-<hr><p>Last updated: Nov 05 2024 at 10:35 UTC</p>
+<a name="480689768"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/432618-OCPN%205.10%20Release%20plan/topic/OpenGL%20Issues/near/480689768" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Dan Dickey <a href="https://leamas.github.io/zulip-archive/stream/432618-OCPN-5.2E10-Release-plan/topic/OpenGL.20Issues.html#480689768">(Nov 05 2024 at 10:38)</a>:</h4>
+<p>After a lot of testing all I can say is that the simplest way to describe this problem is as follows:<br>
+As O starts up it begins to paint the chart canvas area.  At some point, the main chart region stops painting.  The Windows window manager does its part to repaint the physical screen when hiding/unhiding the O window. But the underlying chart canvas region is not being written.  The app is running normally, the navigation connection is running and consuming data, but nothing is drawn in the main canvas area.  None of the hamburger menus are drawn.  The status bar seems to be working. The piano key popups show in the main canvas area but they are not erased because the main canvas is not getting updated. So, they just stay there forever.</p>
+<p>A few times I started O in single canvas window mode and it ran normally.  Then, when I switched to dual canvas mode the "freeze" happened as it was creating the dual view. The right view was not updated.</p>
+<p>I will keep testing to see if I can find something that affects it.</p>
+
+
+
+<hr><p>Last updated: Nov 05 2024 at 10:45 UTC</p>
 </html>
