@@ -64,5 +64,11 @@
         "id": 486174330,
         "sender_full_name": "Dan Dickey",
         "timestamp": 1733344423
+    },
+    {
+        "content": "<p>tldr; this is a wx bug in my opinion.  Details:</p>\n<p>In case anyone is interested, and for posterity I guess, here is the cause of the place syntax error in DEBUG builds.  The wxVector class uses \"placement new\" in the push_back function.  For debug builds OpenCPN creates a macro called 'new' as recommended by MSVC documentation to tag 'new' heap objects in debug builds.  However, \"placement new\" is incompatible with a 'new' macro.  The wxVector class knows about this and attempts to undo the 'new' macro but it doesn't do it in a foolproof way. The OpenCPN 'new' macro escapes their detection mechanism.  A simple change to wx/vector.h will catch the macro and undef it.  I will consider reporting this to wxWidgets but I am not optimistic they will accept a PR about it.  In wx/vector.h at about line 66 this change will correct the problem:</p>\n<div class=\"codehilite\"><pre><span></span><code>// Fix using placement new in case it was redefined by wx/msw/msvcrt.h.\n#if defined(WXDEBUG_NEW) || defined(new)  // we must use the compiler &#39;new&#39; not a &#39;new&#39; macro\n    #undef new\n#endif\n</code></pre></div>\n<p>I do not recommend making any changes to OpenCPN code as this is a WX bug in my opinion.</p>",
+        "id": 486217805,
+        "sender_full_name": "Dan Dickey",
+        "timestamp": 1733368484
     }
 ]
