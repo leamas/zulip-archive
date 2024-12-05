@@ -116,5 +116,15 @@ I hope that some small changes will be made (winConfig and precompiled inclusion
 
 
 
-<hr><p>Last updated: Dec 05 2024 at 13:06 UTC</p>
+<a name="486305515"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/282854-general/topic/VS2022%20build%20issue%20in%20wx/near/486305515" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Dan Dickey <a href="https://leamas.github.io/zulip-archive/stream/282854-general/topic/VS2022.20build.20issue.20in.20wx.html#486305515">(Dec 05 2024 at 13:30)</a>:</h4>
+<p>I have asked the wxWidgets team about what to do.  In the mean time, the simplest solution is to edit wx\vector.h and change line 67 from this: <br>
+<code>#ifdef WXDEBUG_NEW </code><br>
+ to this:<br>
+<code>#ifdef new</code></p>
+<p>Note that this issue only affects local building on Windows VS2022 in DEBUG builds which the CI builds never do.  That's why they don't see this issue.  When  OpenCPN rolls up past wxWidgets 3.2 the issue will go away since wxVector is replaced by std::vector.</p>
+
+
+
+<hr><p>Last updated: Dec 05 2024 at 13:39 UTC</p>
 </html>
