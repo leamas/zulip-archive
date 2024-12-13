@@ -10,5 +10,11 @@
         "id": 488798683,
         "sender_full_name": "Alec Leamas",
         "timestamp": 1734081900
+    },
+    {
+        "content": "<p>Thank <span class=\"user-mention\" data-user-id=\"399510\">@Alec Leamas</span> </p>\n<p>I spend an hour thinking about how to get code in, and it feels a bit messy to piggyback on the rest_server.h / cpp. Instead I will create a parallel mongoose based unsecure wms \"thing\" and see if that will bring me in the right direction, at least my WMS mess will not mess up too much existing code.</p>\n<p>However, a few things was confusing to me being a noob :-)<br>\nThe rest_server.h and cpp uses a call to get the physical ips like </p>\n<div class=\"codehilite\"><pre><span></span><code>std::vector&lt;std::string&gt; ipv4_addrs = get_local_ipv4_addresses();\n</code></pre></div>\n<p>screenshot:<br>\n<a href=\"/user_uploads/33951/CaqVuA3V7RVqe_19UwAG7HIE/image.png\">image.png</a></p>\n<div class=\"message_inline_image\"><a href=\"/user_uploads/33951/CaqVuA3V7RVqe_19UwAG7HIE/image.png\" title=\"image.png\"><img data-original-dimensions=\"988x326\" src=\"/user_uploads/thumbnail/33951/CaqVuA3V7RVqe_19UwAG7HIE/image.png/840x560.webp\"></a></div><p>where the first IP is used for certificate generation. So hitting the rest interface has to happen on the correct ip from a browser.  The cert is most likely not signed for modern browsers - I can only trick Firefox into eating it, Chromium based refuses it, most likely the more recent annoying requirements for self signing certificates. If the cert can be signed with [alt_names] from a cfg file then all the ips and localhost could be added - all interfaces (0.0.0.0) seems to be opened.</p>\n<p>Besides, all the traffic would then be send through a physical nic instance (not hitting the cable unless unlucky) but it is most likely more expensive than 127.0.0.1 that is usually optimized.  I don't know how much traffic comes through the rest interface, it might not be worth fixing.</p>\n<p>The RestServer constructor also seems (two breakpoints in VS2022) to be called before the portable flag is parsed, so the :8443 port is always used.</p>\n<p>Regards Laro88</p>",
+        "id": 488924200,
+        "sender_full_name": "Laro88",
+        "timestamp": 1734125423
     }
 ]
