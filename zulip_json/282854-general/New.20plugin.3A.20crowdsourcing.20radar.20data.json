@@ -16,5 +16,11 @@
         "id": 492839193,
         "sender_full_name": "Pavel Kalian",
         "timestamp": 1736465181
+    },
+    {
+        "content": "<p>What will be a problem is you don't modify the RPATH correctly and leave <code>/usr/local/lib</code> there (as in <code>/usr/local/lib/libwx_baseu-3.2.dylib</code>), while it has to be changed to <code>@executable_path/../Frameworks/</code> (as in eg. <code>@executable_path/../Frameworks//libwx_baseu-3.2.dylib</code>) using <code>install_name_tool</code> during the packaging of the tarball.<br>\nI myself do it using this script: <a href=\"https://github.com/nohal/dashboardsk_pi/blob/main/cmake/fix-macos-libs.sh\">https://github.com/nohal/dashboardsk_pi/blob/main/cmake/fix-macos-libs.sh</a> (Invoked from <a href=\"https://github.com/nohal/dashboardsk_pi/blob/main/cmake/PluginInstall.cmake#L64\">https://github.com/nohal/dashboardsk_pi/blob/main/cmake/PluginInstall.cmake#L64</a>)</p>",
+        "id": 492840563,
+        "sender_full_name": "Pavel Kalian",
+        "timestamp": 1736465793
     }
 ]
