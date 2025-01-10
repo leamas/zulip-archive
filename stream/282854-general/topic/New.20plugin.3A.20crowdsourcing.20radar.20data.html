@@ -38,5 +38,76 @@ I myself do it using this script: <a href="https://github.com/nohal/dashboardsk_
 
 
 
-<hr><p>Last updated: Jan 09 2025 at 23:42 UTC</p>
+<a name="492842650"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/282854-general/topic/New%20plugin%3A%20crowdsourcing%20radar%20data/near/492842650" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Egil Möller <a href="https://leamas.github.io/zulip-archive/stream/282854-general/topic/New.20plugin.3A.20crowdsourcing.20radar.20data.html#492842650">(Jan 09 2025 at 23:52)</a>:</h4>
+<p>Thanks!</p>
+<p>Re. RPATH: Is this a bug / limitation in TestPlugin? I based my plugin on that... I kinda assumed that all platforms would build correctly with the existing testplugin code, and that all my build problems / broken output was due to the things I added (a dependency on some external libraries statically linked in, like apache avro)</p>
+<p>Will try otool -L and check the log. I used the universal binary plugin build, on an apple silicon mac.</p>
+<p>It's supposed to let you specify a server name/port/apikey, and then it uploads any $RATTM radar ARPA targets it sees to that server. It caches stuff locally in an sqlite database in case it doesn't have an internet connection for the moment.</p>
+<p>There's a link next to the API key field to a functional, but so far very very limited website where you can upload this data and then view it, and there's a super minimal server in the git repo for the plugin.</p>
+
+
+
+<a name="492842749"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/282854-general/topic/New%20plugin%3A%20crowdsourcing%20radar%20data/near/492842749" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Egil Möller <a href="https://leamas.github.io/zulip-archive/stream/282854-general/topic/New.20plugin.3A.20crowdsourcing.20radar.20data.html#492842749">(Jan 09 2025 at 23:53)</a>:</h4>
+<p>It's all pretty early stuff - beta level stuff strung together with ducttape kinda :P</p>
+
+
+
+<a name="492842997"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/282854-general/topic/New%20plugin%3A%20crowdsourcing%20radar%20data/near/492842997" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Pavel Kalian <a href="https://leamas.github.io/zulip-archive/stream/282854-general/topic/New.20plugin.3A.20crowdsourcing.20radar.20data.html#492842997">(Jan 09 2025 at 23:55)</a>:</h4>
+<p>I have no idea how TestPlugin works and don't use it myself, but am pretty sure it is broken in this respect as Dave was recently having the same problem while fixing weatherfax (which I think is based on it).</p>
+
+
+
+<a name="492843425"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/282854-general/topic/New%20plugin%3A%20crowdsourcing%20radar%20data/near/492843425" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Pavel Kalian <a href="https://leamas.github.io/zulip-archive/stream/282854-general/topic/New.20plugin.3A.20crowdsourcing.20radar.20data.html#492843425">(Jan 09 2025 at 23:58)</a>:</h4>
+<p>I suppose the plugin should have a preferences dialog, but at least on macOS it is not working (the preferences button is not enabled)</p>
+
+
+
+<a name="492843518"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/282854-general/topic/New%20plugin%3A%20crowdsourcing%20radar%20data/near/492843518" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Pavel Kalian <a href="https://leamas.github.io/zulip-archive/stream/282854-general/topic/New.20plugin.3A.20crowdsourcing.20radar.20data.html#492843518">(Jan 09 2025 at 23:59)</a>:</h4>
+<p>Would have to dig deeper into it as the obvious <code>WANTS_PREFEENCES</code> seems to be there</p>
+
+
+
+<a name="492843572"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/282854-general/topic/New%20plugin%3A%20crowdsourcing%20radar%20data/near/492843572" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Egil Möller <a href="https://leamas.github.io/zulip-archive/stream/282854-general/topic/New.20plugin.3A.20crowdsourcing.20radar.20data.html#492843572">(Jan 09 2025 at 23:59)</a>:</h4>
+<p>Oh :S Then I'll try your solution and see if that works on my code! Do you have a mac locally you test on / dev on? I'm on linux, and got to borrow a mac for 5mins for the test... How do people generally test stuff (in the full gui, not unit tests) on all these platforms?</p>
+
+
+
+<a name="492843819"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/282854-general/topic/New%20plugin%3A%20crowdsourcing%20radar%20data/near/492843819" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Egil Möller <a href="https://leamas.github.io/zulip-archive/stream/282854-general/topic/New.20plugin.3A.20crowdsourcing.20radar.20data.html#492843819">(Jan 10 2025 at 00:01)</a>:</h4>
+<p>Oh, the preferences button doesn't show up on my plugin? On linux, it seems to (sometimes) only not be grayed out after you close the settings dialog and reopen it again after enabling the plugin....</p>
+
+
+
+<a name="492844072"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/282854-general/topic/New%20plugin%3A%20crowdsourcing%20radar%20data/near/492844072" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Egil Möller <a href="https://leamas.github.io/zulip-archive/stream/282854-general/topic/New.20plugin.3A.20crowdsourcing.20radar.20data.html#492844072">(Jan 10 2025 at 00:02)</a>:</h4>
+<p>Could you try that and see if it works that way?</p>
+<p>My plugin doesn't have any GUI apart from the settings dialog as it's not meant to be interacted with during normal operation - it's just supposed to send stuff to shore and not bother you.</p>
+
+
+
+<a name="492844243"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/282854-general/topic/New%20plugin%3A%20crowdsourcing%20radar%20data/near/492844243" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Pavel Kalian <a href="https://leamas.github.io/zulip-archive/stream/282854-general/topic/New.20plugin.3A.20crowdsourcing.20radar.20data.html#492844243">(Jan 10 2025 at 00:03)</a>:</h4>
+<p>Yes, I have an M1 Air here for testing this stuff. And a KVM VM running some old x86_64 macOS provisioned using <a href="https://github.com/kholia/OSX-KVM.git">https://github.com/kholia/OSX-KVM.git</a></p>
+
+
+
+<a name="492844586"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/282854-general/topic/New%20plugin%3A%20crowdsourcing%20radar%20data/near/492844586" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Egil Möller <a href="https://leamas.github.io/zulip-archive/stream/282854-general/topic/New.20plugin.3A.20crowdsourcing.20radar.20data.html#492844586">(Jan 10 2025 at 00:06)</a>:</h4>
+<p>Wow, had no idea you could run a virtual hackintosh. That's super useful, will definitely have a go at that for testing!</p>
+
+
+
+<a name="492844702"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/282854-general/topic/New%20plugin%3A%20crowdsourcing%20radar%20data/near/492844702" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Pavel Kalian <a href="https://leamas.github.io/zulip-archive/stream/282854-general/topic/New.20plugin.3A.20crowdsourcing.20radar.20data.html#492844702">(Jan 10 2025 at 00:07)</a>:</h4>
+<p>There is also more bizarre stuff that supposedly also works: <a href="https://github.com/sickcodes/Docker-OSX">https://github.com/sickcodes/Docker-OSX</a></p>
+
+
+
+<hr><p>Last updated: Jan 10 2025 at 00:53 UTC</p>
 </html>
