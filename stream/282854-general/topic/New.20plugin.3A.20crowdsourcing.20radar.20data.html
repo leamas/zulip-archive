@@ -115,5 +115,23 @@ I myself do it using this script: <a href="https://github.com/nohal/dashboardsk_
 
 
 
-<hr><p>Last updated: Jan 11 2025 at 19:22 UTC</p>
+<a name="493121622"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/282854-general/topic/New%20plugin%3A%20crowdsourcing%20radar%20data/near/493121622" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Egil Möller <a href="https://leamas.github.io/zulip-archive/stream/282854-general/topic/New.20plugin.3A.20crowdsourcing.20radar.20data.html#493121622">(Jan 11 2025 at 19:26)</a>:</h4>
+<p>Regarding the paths: The TestPlugin template has very similar code to yours, and as a result, so does my plugin, see here: <a href="https://github.com/KAHU-radar/crowdsource_pi/blob/master/cmake/PluginInstall.cmake#L203">https://github.com/KAHU-radar/crowdsource_pi/blob/master/cmake/PluginInstall.cmake#L203</a></p>
+<p>When it runs, it prints </p>
+<p><a href="https://app.circleci.com/pipelines/circleci/QEYFi64j9Wo1JYPmrYjzX/CGGJxKWd99V7NeeMLWBRi8/58/workflows/e23289e0-fd69-4b5c-bef7-0e316365633f/jobs/974/parallel-runs/0/steps/0-108">https://app.circleci.com/pipelines/circleci/QEYFi64j9Wo1JYPmrYjzX/CGGJxKWd99V7NeeMLWBRi8/58/workflows/e23289e0-fd69-4b5c-bef7-0e316365633f/jobs/974/parallel-runs/0/steps/0-108</a></p>
+<p>which seems to be correct.</p>
+<p>But it doesn't seem to be working. </p>
+<p>When I extract the .tgz (<a href="https://cloudsmith.io/~kahu/repos/crowdsource_pi-beta/packages/detail/raw/crowdsource_pi-0.1.162.0-darwin-wx32-arm64-x86_64-12.6.3-macos-tarball/0.1.162.0+974.a1bd264/">https://cloudsmith.io/~kahu/repos/crowdsource_pi-beta/packages/detail/raw/crowdsource_pi-0.1.162.0-darwin-wx32-arm64-x86_64-12.6.3-macos-tarball/0.1.162.0+974.a1bd264/</a>) and then the .app and run otool -L on it, it lists paths in /usr/local for wxlib stuff.</p>
+<p>Any idea what's going on?</p>
+
+
+
+<a name="493122527"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/282854-general/topic/New%20plugin%3A%20crowdsourcing%20radar%20data/near/493122527" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Pavel Kalian <a href="https://leamas.github.io/zulip-archive/stream/282854-general/topic/New.20plugin.3A.20crowdsourcing.20radar.20data.html#493122527">(Jan 11 2025 at 19:42)</a>:</h4>
+<p>You are probably packaging a different dylib than you think, there is no mogic way for the paths to change back by creating the tarball and extracting it on a different system. No idea without actually studying how exactly your stuff works.</p>
+
+
+
+<hr><p>Last updated: Jan 11 2025 at 19:42 UTC</p>
 </html>

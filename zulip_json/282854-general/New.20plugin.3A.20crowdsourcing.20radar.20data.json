@@ -94,5 +94,17 @@
         "id": 493034299,
         "sender_full_name": "Egil Möller",
         "timestamp": 1736547747
+    },
+    {
+        "content": "<p>Regarding the paths: The TestPlugin template has very similar code to yours, and as a result, so does my plugin, see here: <a href=\"https://github.com/KAHU-radar/crowdsource_pi/blob/master/cmake/PluginInstall.cmake#L203\">https://github.com/KAHU-radar/crowdsource_pi/blob/master/cmake/PluginInstall.cmake#L203</a></p>\n<p>When it runs, it prints </p>\n<p><a href=\"https://app.circleci.com/pipelines/circleci/QEYFi64j9Wo1JYPmrYjzX/CGGJxKWd99V7NeeMLWBRi8/58/workflows/e23289e0-fd69-4b5c-bef7-0e316365633f/jobs/974/parallel-runs/0/steps/0-108\">https://app.circleci.com/pipelines/circleci/QEYFi64j9Wo1JYPmrYjzX/CGGJxKWd99V7NeeMLWBRi8/58/workflows/e23289e0-fd69-4b5c-bef7-0e316365633f/jobs/974/parallel-runs/0/steps/0-108</a></p>\n<p>which seems to be correct.</p>\n<p>But it doesn't seem to be working. </p>\n<p>When I extract the .tgz (<a href=\"https://cloudsmith.io/~kahu/repos/crowdsource_pi-beta/packages/detail/raw/crowdsource_pi-0.1.162.0-darwin-wx32-arm64-x86_64-12.6.3-macos-tarball/0.1.162.0+974.a1bd264/\">https://cloudsmith.io/~kahu/repos/crowdsource_pi-beta/packages/detail/raw/crowdsource_pi-0.1.162.0-darwin-wx32-arm64-x86_64-12.6.3-macos-tarball/0.1.162.0+974.a1bd264/</a>) and then the .app and run otool -L on it, it lists paths in /usr/local for wxlib stuff.</p>\n<p>Any idea what's going on?</p>",
+        "id": 493121622,
+        "sender_full_name": "Egil Möller",
+        "timestamp": 1736623593
+    },
+    {
+        "content": "<p>You are probably packaging a different dylib than you think, there is no mogic way for the paths to change back by creating the tarball and extracting it on a different system. No idea without actually studying how exactly your stuff works.</p>",
+        "id": 493122527,
+        "sender_full_name": "Pavel Kalian",
+        "timestamp": 1736624523
     }
 ]
