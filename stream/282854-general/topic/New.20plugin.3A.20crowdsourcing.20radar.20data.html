@@ -164,5 +164,53 @@ Btw, what exactly is "flatpack" / how do the flatpack builds differ from other l
 
 
 
-<hr><p>Last updated: Jan 11 2025 at 20:11 UTC</p>
+<a name="493124663"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/282854-general/topic/New%20plugin%3A%20crowdsourcing%20radar%20data/near/493124663" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Egil Möller <a href="https://leamas.github.io/zulip-archive/stream/282854-general/topic/New.20plugin.3A.20crowdsourcing.20radar.20data.html#493124663">(Jan 11 2025 at 20:18)</a>:</h4>
+<p>Ah. So no need for statically linked libs? But static libs should stil work right?</p>
+
+
+
+<a name="493124687"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/282854-general/topic/New%20plugin%3A%20crowdsourcing%20radar%20data/near/493124687" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Pavel Kalian <a href="https://leamas.github.io/zulip-archive/stream/282854-general/topic/New.20plugin.3A.20crowdsourcing.20radar.20data.html#493124687">(Jan 11 2025 at 20:18)</a>:</h4>
+<p>No, they would not, plugins would not be possible at all</p>
+
+
+
+<a name="493124829"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/282854-general/topic/New%20plugin%3A%20crowdsourcing%20radar%20data/near/493124829" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Egil Möller <a href="https://leamas.github.io/zulip-archive/stream/282854-general/topic/New.20plugin.3A.20crowdsourcing.20radar.20data.html#493124829">(Jan 11 2025 at 20:20)</a>:</h4>
+<p>So ssh:ing in, it turns out, that build/libcrowdsource_pi.dylib has the right paths. But crowdsource_pi-0.1.162.0-darwin-wx32-arm64-x86_64-12.6.3-macos.tar.gz:/OpenCPN.app/Contents/PlugIns/libcrowdsource_pi.dylib does NOT. So I guess the fix-macos thingy is run after the tgz is built? Why/how?</p>
+
+
+
+<a name="493124848"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/282854-general/topic/New%20plugin%3A%20crowdsourcing%20radar%20data/near/493124848" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Egil Möller <a href="https://leamas.github.io/zulip-archive/stream/282854-general/topic/New.20plugin.3A.20crowdsourcing.20radar.20data.html#493124848">(Jan 11 2025 at 20:21)</a>:</h4>
+<p>This seems like a bug in testplugin to me?</p>
+
+
+
+<a name="493124860"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/282854-general/topic/New%20plugin%3A%20crowdsourcing%20radar%20data/near/493124860" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Egil Möller <a href="https://leamas.github.io/zulip-archive/stream/282854-general/topic/New.20plugin.3A.20crowdsourcing.20radar.20data.html#493124860">(Jan 11 2025 at 20:21)</a>:</h4>
+<p>Should I just report it in a ticket there, or contact (who) here in zulip?</p>
+
+
+
+<a name="493124869"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/282854-general/topic/New%20plugin%3A%20crowdsourcing%20radar%20data/near/493124869" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Pavel Kalian <a href="https://leamas.github.io/zulip-archive/stream/282854-general/topic/New.20plugin.3A.20crowdsourcing.20radar.20data.html#493124869">(Jan 11 2025 at 20:21)</a>:</h4>
+<p>Yes, it does look like a bug in testplugin</p>
+
+
+
+<a name="493124940"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/282854-general/topic/New%20plugin%3A%20crowdsourcing%20radar%20data/near/493124940" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Pavel Kalian <a href="https://leamas.github.io/zulip-archive/stream/282854-general/topic/New.20plugin.3A.20crowdsourcing.20radar.20data.html#493124940">(Jan 11 2025 at 20:22)</a>:</h4>
+<p>Maybe, I really don't know anything about it except it is doing some for me weird stuff to create the tarball</p>
+
+
+
+<a name="493125068"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/282854-general/topic/New%20plugin%3A%20crowdsourcing%20radar%20data/near/493125068" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Pavel Kalian <a href="https://leamas.github.io/zulip-archive/stream/282854-general/topic/New.20plugin.3A.20crowdsourcing.20radar.20data.html#493125068">(Jan 11 2025 at 20:24)</a>:</h4>
+<p>I don't think Jon has a macOS machine and know how, so don't expect him to fix this for you.</p>
+
+
+
+<hr><p>Last updated: Jan 11 2025 at 20:28 UTC</p>
 </html>
