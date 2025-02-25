@@ -21,5 +21,48 @@
 
 
 
-<hr><p>Last updated: Feb 25 2025 at 02:15 UTC</p>
+<a name="501695782"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/282854-general/topic/Non-OpenGL%20code%20path/near/501695782" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Pavel Kalian <a href="https://leamas.github.io/zulip-archive/stream/282854-general/topic/Non-OpenGL.20code.20path.html#501695782">(Feb 25 2025 at 02:15)</a>:</h4>
+<p>The non-GL mode on Retina displays on macOS is broken in 5.10, works just fine on all the other platforms. But honestly, is there any reason not to use graphic acceleration on macOS? I do not remember it causing any problems on any Mac I have ever had.<br>
+If you manage to implement the GL capability test without actually crashing the executable doing it with all the absolutely bizarre broken drivers that are present on Windows, I will give you a hug and immediately merge it. But the opencpn-glutil tool (which may crash while OpenCPN still can disable GL and run) is the result of trying to do it for about a decade, so good luck. If all you are after is the "dev path" and copying ocpn-glutil to the right place is for some reason not working for you, replace it with a shell script doing nothing and you are done.</p>
+
+
+
+<a name="501697771"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/282854-general/topic/Non-OpenGL%20code%20path/near/501697771" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> ErikB. <a href="https://leamas.github.io/zulip-archive/stream/282854-general/topic/Non-OpenGL.20code.20path.html#501697771">(Feb 25 2025 at 02:31)</a>:</h4>
+<p>GL wasn’t working out-of-the-box when generating from Xcode, so a broken software path is relevant there/for newcomers.  We could add an assert or similar if it’s not supported or is a known issue.</p>
+
+
+
+<a name="501698075"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/282854-general/topic/Non-OpenGL%20code%20path/near/501698075" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Pavel Kalian <a href="https://leamas.github.io/zulip-archive/stream/282854-general/topic/Non-OpenGL.20code.20path.html#501698075">(Feb 25 2025 at 02:33)</a>:</h4>
+<p>"Wasn't working" means ocpn-glutil is not automatically copied to the place where it is expected to be at runtime  as part of the build or something else?</p>
+
+
+
+<a name="501698237"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/282854-general/topic/Non-OpenGL%20code%20path/near/501698237" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> ErikB. <a href="https://leamas.github.io/zulip-archive/stream/282854-general/topic/Non-OpenGL.20code.20path.html#501698237">(Feb 25 2025 at 02:34)</a>:</h4>
+<p>I’ll double check but I don’t remember seeing those 2 extra programs in the app container</p>
+
+
+
+<a name="501698325"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/282854-general/topic/Non-OpenGL%20code%20path/near/501698325" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Pavel Kalian <a href="https://leamas.github.io/zulip-archive/stream/282854-general/topic/Non-OpenGL.20code.20path.html#501698325">(Feb 25 2025 at 02:35)</a>:</h4>
+<p>Yes, the complete app bundle is assembeld at install time, not build time</p>
+
+
+
+<a name="501698538"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/282854-general/topic/Non-OpenGL%20code%20path/near/501698538" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> ErikB. <a href="https://leamas.github.io/zulip-archive/stream/282854-general/topic/Non-OpenGL.20code.20path.html#501698538">(Feb 25 2025 at 02:37)</a>:</h4>
+<p>I guess it’s known not to work in this situation then</p>
+
+
+
+<a name="501699003"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/282854-general/topic/Non-OpenGL%20code%20path/near/501699003" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Pavel Kalian <a href="https://leamas.github.io/zulip-archive/stream/282854-general/topic/Non-OpenGL.20code.20path.html#501699003">(Feb 25 2025 at 02:41)</a>:</h4>
+<p>Yes, it is known. PR copying it into the bundle already during build is welcome. Otherwise simply copy it there after the first build and all your subsequent debugging from Xcode will simply run with GL enabled - if I remember correctly Xcode does not purge the bundle on each build.</p>
+
+
+
+<hr><p>Last updated: Feb 25 2025 at 03:00 UTC</p>
 </html>

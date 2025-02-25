@@ -10,5 +10,47 @@
         "id": 501301532,
         "sender_full_name": "ErikB.",
         "timestamp": 1740258413
+    },
+    {
+        "content": "<p>The non-GL mode on Retina displays on macOS is broken in 5.10, works just fine on all the other platforms. But honestly, is there any reason not to use graphic acceleration on macOS? I do not remember it causing any problems on any Mac I have ever had.<br>\nIf you manage to implement the GL capability test without actually crashing the executable doing it with all the absolutely bizarre broken drivers that are present on Windows, I will give you a hug and immediately merge it. But the opencpn-glutil tool (which may crash while OpenCPN still can disable GL and run) is the result of trying to do it for about a decade, so good luck. If all you are after is the \"dev path\" and copying ocpn-glutil to the right place is for some reason not working for you, replace it with a shell script doing nothing and you are done.</p>",
+        "id": 501695782,
+        "sender_full_name": "Pavel Kalian",
+        "timestamp": 1740449750
+    },
+    {
+        "content": "<p>GL wasn’t working out-of-the-box when generating from Xcode, so a broken software path is relevant there/for newcomers.  We could add an assert or similar if it’s not supported or is a known issue.</p>",
+        "id": 501697771,
+        "sender_full_name": "ErikB.",
+        "timestamp": 1740450682
+    },
+    {
+        "content": "<p>\"Wasn't working\" means ocpn-glutil is not automatically copied to the place where it is expected to be at runtime  as part of the build or something else?</p>",
+        "id": 501698075,
+        "sender_full_name": "Pavel Kalian",
+        "timestamp": 1740450817
+    },
+    {
+        "content": "<p>I’ll double check but I don’t remember seeing those 2 extra programs in the app container</p>",
+        "id": 501698237,
+        "sender_full_name": "ErikB.",
+        "timestamp": 1740450891
+    },
+    {
+        "content": "<p>Yes, the complete app bundle is assembeld at install time, not build time</p>",
+        "id": 501698325,
+        "sender_full_name": "Pavel Kalian",
+        "timestamp": 1740450937
+    },
+    {
+        "content": "<p>I guess it’s known not to work in this situation then</p>",
+        "id": 501698538,
+        "sender_full_name": "ErikB.",
+        "timestamp": 1740451041
+    },
+    {
+        "content": "<p>Yes, it is known. PR copying it into the bundle already during build is welcome. Otherwise simply copy it there after the first build and all your subsequent debugging from Xcode will simply run with GL enabled - if I remember correctly Xcode does not purge the bundle on each build.</p>",
+        "id": 501699003,
+        "sender_full_name": "Pavel Kalian",
+        "timestamp": 1740451266
     }
 ]
