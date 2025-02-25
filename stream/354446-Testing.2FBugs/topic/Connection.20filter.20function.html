@@ -1,0 +1,37 @@
+<html>
+<head><meta charset="utf-8"><title>Connection filter function · Testing/Bugs · Zulip Chat Archive</title></head>
+<h2>Stream: <a href="https://leamas.github.io/zulip-archive/stream/354446-Testing.2FBugs/index.html">Testing/Bugs</a></h2>
+<h3>Topic: <a href="https://leamas.github.io/zulip-archive/stream/354446-Testing.2FBugs/topic/Connection.20filter.20function.html">Connection filter function</a></h3>
+
+<hr>
+
+<base href="https://opencpn.zulipchat.com">
+
+<head><link href="https://leamas.github.io/zulip-archive/style.css" rel="stylesheet"></head>
+
+<a name="501784139"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/354446-Testing/Bugs/topic/Connection%20filter%20function/near/501784139" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Håkan Svensson <a href="https://leamas.github.io/zulip-archive/stream/354446-Testing.2FBugs/topic/Connection.20filter.20function.html#501784139">(Feb 25 2025 at 11:50)</a>:</h4>
+<p><span class="user-mention" data-user-id="517002">@Dave Register</span>  <span class="user-mention" data-user-id="399510">@Alec Leamas</span> <br>
+Today's master code base.<br>
+A tricky? connections filter bug: <br>
+If "NMEA Debug window" is open a connection filter does work. If the Debug window in closed the filter is not used for output connection(s).</p>
+<p>Set up:<br>
+On PC1 I use a TCP <a href="http://signalk.stupan.se">signalk.stupan.se</a> : 10114 Input connection. I've set a filter to receive only "AIVDM"<br>
+I use UDP:255.255.255.255:10115 output connection. No filter.<br>
+The UDP:10115 is used as input on another OCPN at PC2.</p>
+<p>The filter is working all time on PC1, only AIVDM is used by OCPN.</p>
+<p>When the "NMEA Debug Window" is open on PC1:<br>
+Only "AIVDM" is output on port 10115. Thus on PC2 only "AIVDM" is received.</p>
+<p>When I close "NMEA Debug Window" on PC1:<br>
+The TCP filter is not working and all what's received on PC1 TCP:10114 is also output to UDP:10115 and thus received on PC2. Easily detected by a PC2 Debug window.</p>
+<p>If I, without doing anything else, again open "NMEA Debug Window" on PC1 the filter is again working and only AIVDM is received on PC2.</p>
+<p>The bug can easily be repeated:<br>
+Open "NMEA Debug Window" on PC1; the TCP filter is working as expected everywhere.<br>
+Close "NMEA Debug Window" on PC1; the TCP input filter is bypassed to the UDP:10115 output connection. (Again, PC1 reception and messages used is not affected)</p>
+<p>If needed I can debug but need some hints where to look.<br>
+Håkan</p>
+
+
+
+<hr><p>Last updated: Feb 25 2025 at 12:21 UTC</p>
+</html>

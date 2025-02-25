@@ -1,0 +1,8 @@
+[
+    {
+        "content": "<p><span class=\"user-mention\" data-user-id=\"517002\">@Dave Register</span>  <span class=\"user-mention\" data-user-id=\"399510\">@Alec Leamas</span> <br>\nToday's master code base.<br>\nA tricky? connections filter bug: <br>\nIf \"NMEA Debug window\" is open a connection filter does work. If the Debug window in closed the filter is not used for output connection(s).</p>\n<p>Set up:<br>\nOn PC1 I use a TCP <a href=\"http://signalk.stupan.se\">signalk.stupan.se</a> : 10114 Input connection. I've set a filter to receive only \"AIVDM\"<br>\nI use UDP:255.255.255.255:10115 output connection. No filter.<br>\nThe UDP:10115 is used as input on another OCPN at PC2.</p>\n<p>The filter is working all time on PC1, only AIVDM is used by OCPN.</p>\n<p>When the \"NMEA Debug Window\" is open on PC1:<br>\nOnly \"AIVDM\" is output on port 10115. Thus on PC2 only \"AIVDM\" is received.</p>\n<p>When I close \"NMEA Debug Window\" on PC1:<br>\nThe TCP filter is not working and all what's received on PC1 TCP:10114 is also output to UDP:10115 and thus received on PC2. Easily detected by a PC2 Debug window.</p>\n<p>If I, without doing anything else, again open \"NMEA Debug Window\" on PC1 the filter is again working and only AIVDM is received on PC2.</p>\n<p>The bug can easily be repeated:<br>\nOpen \"NMEA Debug Window\" on PC1; the TCP filter is working as expected everywhere.<br>\nClose \"NMEA Debug Window\" on PC1; the TCP input filter is bypassed to the UDP:10115 output connection. (Again, PC1 reception and messages used is not affected)</p>\n<p>If needed I can debug but need some hints where to look.<br>\nHåkan</p>",
+        "id": 501784139,
+        "sender_full_name": "Håkan Svensson",
+        "timestamp": 1740484220
+    }
+]
