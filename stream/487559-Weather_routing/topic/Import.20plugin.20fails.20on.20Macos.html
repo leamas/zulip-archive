@@ -1,0 +1,57 @@
+<html>
+<head><meta charset="utf-8"><title>Import plugin fails on Macos · Weather_routing · Zulip Chat Archive</title></head>
+<h2>Stream: <a href="https://leamas.github.io/zulip-archive/stream/487559-Weather_routing/index.html">Weather_routing</a></h2>
+<h3>Topic: <a href="https://leamas.github.io/zulip-archive/stream/487559-Weather_routing/topic/Import.20plugin.20fails.20on.20Macos.html">Import plugin fails on Macos</a></h3>
+
+<hr>
+
+<base href="https://opencpn.zulipchat.com">
+
+<head><link href="https://leamas.github.io/zulip-archive/style.css" rel="stylesheet"></head>
+
+<a name="502201305"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/487559-Weather_routing/topic/Import%20plugin%20fails%20on%20Macos/near/502201305" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Quinton Hoole <a href="https://leamas.github.io/zulip-archive/stream/487559-Weather_routing/topic/Import.20plugin.20fails.20on.20Macos.html#502201305">(Feb 27 2025 at 05:44)</a>:</h4>
+<p>The error message is "Incompatible import plugin detected".</p>
+<p>I'm new to OpenCPN development. I built both OpenCPN and weather routing_pi for the latest source in github, more specifically from:</p>
+<p><a href="https://github.com/rgleason/weather_routing_pi.git">https://github.com/rgleason/weather_routing_pi.git</a></p>
+<p>% git log | head -5<br>
+commit <a href="https://github.com/opencpn/OpenCPN/commit/04b82ab03d18c67a29c1d2f9b15307f18933dbb6">04b82ab03d18c67a29c1d2f9b15307f18933dbb6</a><br>
+Author: Rick Gleason &lt;<a href="mailto:fcgleason@tgp-architects.com">fcgleason@tgp-architects.com</a>&gt;<br>
+Date:   Tue Feb 25 20:38:31 2025 -0500<br>
+    1.15.21.20 + SR spd interprete for low winds</p>
+<p>And:</p>
+<p><a href="https://github.com/OpenCPN/OpenCPN.git">https://github.com/OpenCPN/OpenCPN.git</a><br>
+git log | head -5<br>
+commit <a href="https://github.com/opencpn/OpenCPN/commit/060633f15922f520a81d872fd2b4a74a9216d65b">060633f15922f520a81d872fd2b4a74a9216d65b</a><br>
+Merge: <a href="https://github.com/opencpn/OpenCPN/commit/92875bce4">92875bce4</a> <a href="https://github.com/opencpn/OpenCPN/commit/516784d53">516784d53</a><br>
+Author: bdbcat &lt;<a href="mailto:bdbcat@yahoo.com">bdbcat@yahoo.com</a>&gt;<br>
+Date:   Tue Feb 25 22:53:45 2025 -0500</p>
+<p>I'm on MacOS Sequoia 15.3.1, on an M2 chip.</p>
+<p>I used pretty much the standard build commands documented for both:</p>
+<p>For OpenCPN:</p>
+<ul>
+<li>mkdir build</li>
+<li>cd build</li>
+<li>cmake ..</li>
+<li>make</li>
+<li>make create-dmg</li>
+</ul>
+<p>For weather_routing_pi:</p>
+<ul>
+<li>mkdir build</li>
+<li>cd build</li>
+<li>cmake ..</li>
+<li>make</li>
+<li>make package</li>
+<li>bash <a href="http://cloudsmith-upload.sh">cloudsmith-upload.sh</a> # to embed the correct metdata.xml in .tar.gz.package.</li>
+</ul>
+<p>OpenCPN builds, installs and runs correctly. I am able to install the Weather Routing plugin from the package Manager catalog. </p>
+<p>But if I try to import the plugin package I built above, I get the error "Incompatible import plugin detected".</p>
+<p>The error apparently gets generated here:</p>
+<p><a href="https://github.com/OpenCPN/OpenCPN/blob/master/model/src/plugin_handler.cpp#L413-L414">https://github.com/OpenCPN/OpenCPN/blob/master/model/src/plugin_handler.cpp#L413-L414</a></p>
+<p>Any help much appreciated.</p>
+
+
+
+<hr><p>Last updated: Feb 27 2025 at 06:16 UTC</p>
+</html>
