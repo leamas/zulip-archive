@@ -249,5 +249,17 @@ rm<span class="w"> </span>-rf<span class="w"> </span><span class="s2">&quot;</sp
 
 
 
-<hr><p>Last updated: Feb 28 2025 at 21:10 UTC</p>
+<a name="502669492"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/487559-Weather_routing/topic/Import%20plugin%20fails%20on%20Macos/near/502669492" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Quinton Hoole <a href="https://leamas.github.io/zulip-archive/stream/487559-Weather_routing/topic/Import.20plugin.20fails.20on.20Macos.html#502669492">(Feb 28 2025 at 21:26)</a>:</h4>
+<p>Quick update here:</p>
+<ol>
+<li>I've managed to get the both OpenCPN and the weather routing plugin building and running locally on MacOS (15.3.1) on M2 Apple Silicon with minimal build instructions. Interestingly my steps were necessarily different from Sebastian's, as the intermediate files generated were different.  Perhaps we're on slightly different source versions (mine are as per the beginning of this thread). The only difference compared to the original commands I mentioned at the head of this thread are that I used Sebastian's bash script above to inject the metadata.xml file into the tgz file, instead of the <a href="http://cloudsmith-upload.sh">cloudsmith-upload.sh</a> script (which seems to generate an invalid metadata.xml in the tgz file).  Interestingly enough I did not run into any of the other problems that Sebastien mentioned (a metadata.xml file was automatically generated, rather than having to rename some other file, and the target was correctly "darwin-w32".  I did not need to sign the package - it imported cleanly, and ran, initially.  I have not yet tracked down exactly what changed recently in the makefiles to make all this work correctly.</li>
+<li>When I try to compute a route, I now get a fatal runtime error wxWidgets Debug Alert: "Invalid bitmap" as per the attachment.  </li>
+</ol>
+<p><a href="/user_uploads/33951/v8opih9MwfDHVJ9bnAc8vdyZ/Screenshot-2025-02-28-at-11.22.43.png">Screenshot 2025-02-28 at 11.22.43.png</a></p>
+<div class="message_inline_image"><a href="/user_uploads/33951/v8opih9MwfDHVJ9bnAc8vdyZ/Screenshot-2025-02-28-at-11.22.43.png" title="Screenshot 2025-02-28 at 11.22.43.png"><img data-original-content-type="image/png" data-original-dimensions="1264x1012" src="/user_uploads/thumbnail/33951/v8opih9MwfDHVJ9bnAc8vdyZ/Screenshot-2025-02-28-at-11.22.43.png/840x560.webp"></a></div><p>I will continue trying to understand and improve the build scripts so that we can repeatedly build and run the plugin locally on MacOS.</p>
+
+
+
+<hr><p>Last updated: Feb 28 2025 at 21:27 UTC</p>
 </html>
