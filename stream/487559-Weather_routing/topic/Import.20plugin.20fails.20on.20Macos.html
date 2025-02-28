@@ -78,5 +78,159 @@ If you run OpenCPN with "-l debug" option from the CLI, the logfile will give mo
 
 
 
-<hr><p>Last updated: Feb 28 2025 at 02:16 UTC</p>
+<a name="502479545"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/487559-Weather_routing/topic/Import%20plugin%20fails%20on%20Macos/near/502479545" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Sebastien Rosset <a href="https://leamas.github.io/zulip-archive/stream/487559-Weather_routing/topic/Import.20plugin.20fails.20on.20Macos.html#502479545">(Feb 28 2025 at 02:19)</a>:</h4>
+<p>I had the same issue and did the following:</p>
+<ol>
+<li>The <strong>metadata.xml</strong> file is not present in the generated file. I'm unclear why the build does not include the metadata.xml file by default.</li>
+<li>When trying to import the tar.gz file, OpenCPN complains it's the wrong architecture, e.g. expected architecture is darwin-wx32 but actual plugin architecture is darwin.</li>
+</ol>
+<p>Here are the workarounds:</p>
+<p>./ci/circleci-build-macos-universal.sh (but you need to hack it a bit to avoid running the sudo commands, it was not necessary in my case)</p>
+<p>cd build</p>
+<p>make</p>
+<p>make package</p>
+<p>This produces two files:<br>
+<strong>weather_routing_pi-1.15.21.0-darwin-arm64</strong> (which is an xml file without the XML extension)<br>
+<strong>weather_routing_pi-1.15.21.0-darwin-arm64;x86_64-15.3.1.tar.gz</strong><br>
+<strong>Manually edit the XML file to change "darwin" to "darwin-wx32":</strong></p>
+<p>&lt;target&gt;darwin&lt;/target&gt;<br>
+  &lt;build-target&gt;darwin&lt;/build-target&gt;</p>
+<p>&lt;target&gt;darwin-wx32&lt;/target&gt;<br>
+  &lt;build-target&gt;darwin-wx32&lt;/build-target&gt;</p>
+<p>Then after that step, rename the <strong>weather_routing_pi-1.15.21.0-darwin-arm64</strong>  file to metadata.xml and include it in the tar.gz. Then finally it's possible to import the plugin in OpenCPN.</p>
+
+
+
+<a name="502479605"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/487559-Weather_routing/topic/Import%20plugin%20fails%20on%20Macos/near/502479605" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Sebastien Rosset <a href="https://leamas.github.io/zulip-archive/stream/487559-Weather_routing/topic/Import.20plugin.20fails.20on.20Macos.html#502479605">(Feb 28 2025 at 02:20)</a>:</h4>
+<p>And the script:</p>
+<div class="codehilite"><pre><span></span><code><span class="ch">#!/bin/bash</span>
+
+
+
+<span class="c1"># Check if correct number of arguments is provided</span>
+
+<span class="k">if</span><span class="w"> </span><span class="o">[</span><span class="w"> </span><span class="nv">$#</span><span class="w"> </span>-lt<span class="w"> </span><span class="m">2</span><span class="w"> </span><span class="o">]</span><span class="p">;</span><span class="w"> </span><span class="k">then</span>
+
+<span class="w">    </span><span class="nb">echo</span><span class="w"> </span><span class="s2">&quot;Usage: </span><span class="nv">$0</span><span class="s2"> &lt;tar.gz_file&gt; &lt;xml_file&gt;&quot;</span>
+
+<span class="w">    </span><span class="nb">exit</span><span class="w"> </span><span class="m">1</span>
+
+<span class="k">fi</span>
+
+
+
+<span class="nv">TAR_FILE</span><span class="o">=</span><span class="s2">&quot;</span><span class="nv">$1</span><span class="s2">&quot;</span>
+
+<span class="nv">XML_FILE</span><span class="o">=</span><span class="s2">&quot;</span><span class="nv">$2</span><span class="s2">&quot;</span>
+
+
+
+<span class="c1"># Check if files exist</span>
+
+<span class="k">if</span><span class="w"> </span><span class="o">[</span><span class="w"> </span>!<span class="w"> </span>-f<span class="w"> </span><span class="s2">&quot;</span><span class="nv">$TAR_FILE</span><span class="s2">&quot;</span><span class="w"> </span><span class="o">]</span><span class="p">;</span><span class="w"> </span><span class="k">then</span>
+
+<span class="w">    </span><span class="nb">echo</span><span class="w"> </span><span class="s2">&quot;Error: Archive file </span><span class="nv">$TAR_FILE</span><span class="s2"> does not exist.&quot;</span>
+
+<span class="w">    </span><span class="nb">exit</span><span class="w"> </span><span class="m">1</span>
+
+<span class="k">fi</span>
+
+
+
+<span class="k">if</span><span class="w"> </span><span class="o">[</span><span class="w"> </span>!<span class="w"> </span>-f<span class="w"> </span><span class="s2">&quot;</span><span class="nv">$XML_FILE</span><span class="s2">&quot;</span><span class="w"> </span><span class="o">]</span><span class="p">;</span><span class="w"> </span><span class="k">then</span>
+
+<span class="w">    </span><span class="nb">echo</span><span class="w"> </span><span class="s2">&quot;Error: XML file </span><span class="nv">$XML_FILE</span><span class="s2"> does not exist.&quot;</span>
+
+<span class="w">    </span><span class="nb">exit</span><span class="w"> </span><span class="m">1</span>
+
+<span class="k">fi</span>
+
+
+
+<span class="c1"># Create a temporary directory</span>
+
+<span class="nv">TMP_DIR</span><span class="o">=</span><span class="k">$(</span>mktemp<span class="w"> </span>-d<span class="k">)</span>
+
+<span class="k">if</span><span class="w"> </span><span class="o">[</span><span class="w"> </span><span class="nv">$?</span><span class="w"> </span>-ne<span class="w"> </span><span class="m">0</span><span class="w"> </span><span class="o">]</span><span class="p">;</span><span class="w"> </span><span class="k">then</span>
+
+<span class="w">    </span><span class="nb">echo</span><span class="w"> </span><span class="s2">&quot;Error: Failed to create temporary directory.&quot;</span>
+
+<span class="w">    </span><span class="nb">exit</span><span class="w"> </span><span class="m">1</span>
+
+<span class="k">fi</span>
+
+
+
+<span class="c1"># Extract the base directory name from the tar file</span>
+
+<span class="nv">BASE_DIR</span><span class="o">=</span><span class="k">$(</span>tar<span class="w"> </span>-tzf<span class="w"> </span><span class="s2">&quot;</span><span class="nv">$TAR_FILE</span><span class="s2">&quot;</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>head<span class="w"> </span>-1<span class="w"> </span><span class="p">|</span><span class="w"> </span>cut<span class="w"> </span>-d/<span class="w"> </span>-f1<span class="k">)</span>
+
+
+
+<span class="k">if</span><span class="w"> </span><span class="o">[</span><span class="w"> </span>-z<span class="w"> </span><span class="s2">&quot;</span><span class="nv">$BASE_DIR</span><span class="s2">&quot;</span><span class="w"> </span><span class="o">]</span><span class="p">;</span><span class="w"> </span><span class="k">then</span>
+
+<span class="w">    </span><span class="nb">echo</span><span class="w"> </span><span class="s2">&quot;Error: Could not determine base directory in archive.&quot;</span>
+
+<span class="w">    </span>rm<span class="w"> </span>-rf<span class="w"> </span><span class="s2">&quot;</span><span class="nv">$TMP_DIR</span><span class="s2">&quot;</span>
+
+<span class="w">    </span><span class="nb">exit</span><span class="w"> </span><span class="m">1</span>
+
+<span class="k">fi</span>
+
+
+
+<span class="nb">echo</span><span class="w"> </span><span class="s2">&quot;Detected base directory: </span><span class="nv">$BASE_DIR</span><span class="s2">&quot;</span>
+
+
+
+<span class="c1"># Extract the archive to the temporary directory</span>
+
+<span class="nb">echo</span><span class="w"> </span><span class="s2">&quot;Extracting archive...&quot;</span>
+
+tar<span class="w"> </span>-xzf<span class="w"> </span><span class="s2">&quot;</span><span class="nv">$TAR_FILE</span><span class="s2">&quot;</span><span class="w"> </span>-C<span class="w"> </span><span class="s2">&quot;</span><span class="nv">$TMP_DIR</span><span class="s2">&quot;</span>
+
+
+
+<span class="c1"># Copy the XML file as metadata.xml to the base directory</span>
+
+<span class="nb">echo</span><span class="w"> </span><span class="s2">&quot;Adding metadata.xml...&quot;</span>
+
+cp<span class="w"> </span><span class="s2">&quot;</span><span class="nv">$XML_FILE</span><span class="s2">&quot;</span><span class="w"> </span><span class="s2">&quot;</span><span class="nv">$TMP_DIR</span><span class="s2">/</span><span class="nv">$BASE_DIR</span><span class="s2">/metadata.xml&quot;</span>
+
+
+
+<span class="c1"># Create a new archive with the added metadata file</span>
+
+<span class="nb">echo</span><span class="w"> </span><span class="s2">&quot;Creating new archive...&quot;</span>
+
+<span class="nv">ORIG_DIR</span><span class="o">=</span><span class="k">$(</span><span class="nb">pwd</span><span class="k">)</span>
+
+<span class="nb">cd</span><span class="w"> </span><span class="s2">&quot;</span><span class="nv">$TMP_DIR</span><span class="s2">&quot;</span>
+
+tar<span class="w"> </span>-czf<span class="w"> </span><span class="s2">&quot;</span><span class="nv">$ORIG_DIR</span><span class="s2">/</span><span class="si">${</span><span class="nv">TAR_FILE</span><span class="p">%.tar.gz</span><span class="si">}</span><span class="s2">_with_metadata.tar.gz&quot;</span><span class="w"> </span><span class="s2">&quot;</span><span class="nv">$BASE_DIR</span><span class="s2">&quot;</span>
+
+<span class="nb">cd</span><span class="w"> </span><span class="s2">&quot;</span><span class="nv">$ORIG_DIR</span><span class="s2">&quot;</span>
+
+
+
+<span class="nb">echo</span><span class="w"> </span><span class="s2">&quot;Cleaning up...&quot;</span>
+
+rm<span class="w"> </span>-rf<span class="w"> </span><span class="s2">&quot;</span><span class="nv">$TMP_DIR</span><span class="s2">&quot;</span>
+
+
+
+<span class="nb">echo</span><span class="w"> </span><span class="s2">&quot;Done! New archive created: </span><span class="si">${</span><span class="nv">TAR_FILE</span><span class="p">%.tar.gz</span><span class="si">}</span><span class="s2">_with_metadata.tar.gz&quot;</span>
+</code></pre></div>
+
+
+
+<a name="502479745"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/487559-Weather_routing/topic/Import%20plugin%20fails%20on%20Macos/near/502479745" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Sebastien Rosset <a href="https://leamas.github.io/zulip-archive/stream/487559-Weather_routing/topic/Import.20plugin.20fails.20on.20Macos.html#502479745">(Feb 28 2025 at 02:21)</a>:</h4>
+<p>The crucial step is to ensure the targets are set to "darwin-wx32".</p>
+
+
+
+<hr><p>Last updated: Feb 28 2025 at 03:01 UTC</p>
 </html>
