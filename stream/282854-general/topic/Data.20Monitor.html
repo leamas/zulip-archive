@@ -1,0 +1,51 @@
+<html>
+<head><meta charset="utf-8"><title>Data Monitor · general · Zulip Chat Archive</title></head>
+<h2>Stream: <a href="https://leamas.github.io/zulip-archive/stream/282854-general/index.html">general</a></h2>
+<h3>Topic: <a href="https://leamas.github.io/zulip-archive/stream/282854-general/topic/Data.20Monitor.html">Data Monitor</a></h3>
+
+<hr>
+
+<base href="https://opencpn.zulipchat.com">
+
+<head><link href="https://leamas.github.io/zulip-archive/style.css" rel="stylesheet"></head>
+
+<a name="508169213"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/282854-general/topic/Data%20Monitor/near/508169213" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> TwoCan <a href="https://leamas.github.io/zulip-archive/stream/282854-general/topic/Data.20Monitor.html#508169213">(Mar 26 2025 at 03:02)</a>:</h4>
+<p>Several issues.</p>
+<ol>
+<li>
+<p>Rather confusing information on screen.<br>
+What does the following mean (ie. the ERALL in the following)<br>
+n0183-RPM ERRPM $ERRPM,E,0,2000,,A*42&lt;0D&gt;&lt;0A&gt;<br>
+n0183-ALL ERALL $ERRPM,E,0,2000,,A*42&lt;0D&gt;&lt;0A&gt;<br>
+n0183-ALL ERALL $ERRPM,E,0,2000,,A*42&lt;0D&gt;&lt;0A&gt;</p>
+</li>
+<li>
+<p>Output formats (at least in copy to clipboard)<br>
+NMEA 0183, currently <br>
+Suggest reverting to the format previously implemented in the NMEA Debug Window, where leading and trailing metadata was stripped, leaving just simple NMEA 0183 text that could be copied into a parser/decoder.<br>
+Eg. $ERRPM,E,0,2000,,A*42<br>
+Similarly for NMEA 2000, suggest dumping in candump format rather than some obfuscated Actisense format (with the leading Acisense RX command identifier). Even I might struggle to understand what this is and that is saying something!<br>
+1 <a href="https://github.com/opencpn/OpenCPN/commit/93120411f201ff04000000000700d430ffffffff49">93120411f201ff04000000000700d430ffffffff49</a><br>
+1 <a href="https://github.com/opencpn/OpenCPN/commit/93130412f101ff050000000008e06d22c504680301a2">93130412f101ff050000000008e06d22c504680301a2</a><br>
+1 <a href="https://github.com/opencpn/OpenCPN/commit/93120419f101ff050000000007e011005d010b02e5">93120419f101ff050000000007e011005d010b02e5</a><br>
+129025 <a href="https://github.com/opencpn/OpenCPN/commit/93130401f801ff090000000008dbf637e95cf636567d">93130401f801ff090000000008dbf637e95cf636567d</a><br>
+129026 <a href="https://github.com/opencpn/OpenCPN/commit/93110402f801ff090000000006df001622020234">93110402f801ff090000000006df001622020234</a><br>
+127488 <a href="https://github.com/opencpn/OpenCPN/commit/93120400f201ff02000000000700481fffffff7f79">93120400f201ff02000000000700481fffffff7f79</a></p>
+</li>
+</ol>
+<p>Also suggest that for both internal OpenCPN messages and SignalK that copy to clipboard uses "pretty JSON" so that it is more readable.</p>
+<p>Log to file, header doesn't seem to make sense especially msg_type and source.<br>
+For example:<br>
+received_at,protocol,msg_type,source,raw_data<br>
+7760625,NMEA0183,UDP:0.0.0.0:10110,GPALL,"$GPGGA,131855,3831.57,S,14422.13,E,1,10,0.98,1113.0,M,-21.3,M,25,10*75&lt;0D&gt;&lt;0A&gt;"</p>
+<p>Is the header meant to indicate: msg type = UDP:0.0.0.0:10110 and  Src = GPALL</p>
+<p>Dialog &amp; usability. I guess enough time before the next release to cleanup the layout.<br>
+Separate Stop/Start and Resume/Stop button ? Kind of confusing, I don't know what the start stop button does, couldn't tell if it stopped/started writing to log file. The Resume/Stop pauses the display on screen, but should be labelled Pause/Resume.<br>
+The view option raises a context menu "Standard Colours,No Colours, Copy to Clipboard"<br>
+Basic usability. First of all raisinga context menu from a button is just plain wrong. Copy to Clipboard should either be its own button or a context menu item raised from a right click on the display. Standard Colours, No colours, When you have a choice of an option, it should be a single checkbox or checked context menu item (Use Colours). There is no need to have a an option No Colours, it is inferred if Use Colours is not selected..</p>
+
+
+
+<hr><p>Last updated: Mar 26 2025 at 03:18 UTC</p>
+</html>
