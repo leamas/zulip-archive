@@ -620,5 +620,40 @@ See the green check, hover and left click to see the list of builds (16 + all bu
 
 
 
-<hr><p>Last updated: Mar 31 2025 at 16:53 UTC</p>
+<a name="509257424"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/487559-Weather_routing/topic/Using%20marks%20from%20OpenCPN%20in%20weather%20routing/near/509257424" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Quinton Hoole <a href="https://leamas.github.io/zulip-archive/stream/487559-Weather_routing/topic/Using.20marks.20from.20OpenCPN.20in.20weather.20routing.html#509257424">(Mar 31 2025 at 16:58)</a>:</h4>
+<p><span class="user-mention silent" data-user-id="399865">Rick Gleason</span> <a href="#narrow/channel/487559-Weather_routing/topic/Using.20marks.20from.20OpenCPN.20in.20weather.20routing/near/509235281">said</a>:</p>
+<blockquote>
+<p>Now you will see the one I made this morning.<br>
+<a href="https://github.com/rgleason/weather_routing_pi/pull/255">Quinton wr/improve --&gt; rgleason/test2 Trial Merge</a><br>
+which has been merged. There is a red X, hoover over the top and left click to reveal the list of builds, you will find 3 successful builds. This is showing CircleCI success just before merging your commits.<br>
+Now go back to after I merged your commits in the "test2" branch<br>
+<a href="https://github.com/rgleason/weather_routing_pi/tree/test2">https://github.com/rgleason/weather_routing_pi/tree/test2</a><br>
+See the green check, hover and left click to see the list of builds (16 + all build).</p>
+</blockquote>
+<p>OK, thanks Rick.  Here's where the confusion lay. You say 3 successful builds, but perhaps more importantly there were 10 failed builds, which is what I've been referring to all along. After you merged the PR, seemingly all 13 of the builds succeeded in some post-merge checks. That's crazy. We need to be very clear to contributors (including me :-) ) that the pre-merge checks are expected to fail, and are meaningless. Otherwise I spent hours pouring though the logs trying to figure out what was wrong.  Note that it's not only the "CLOUDSMITH_API_KEY must be set in the build environment" error that's occurring pre-merge.  It's also others, like "error: object <a href="https://github.com/opencpn/OpenCPN/commit/23c07cc5d2be7ce68349f4b3719b6fa6fe90e0bf">23c07cc5d2be7ce68349f4b3719b6fa6fe90e0bf</a>: badTimezone: invalid author/committer line - bad time zone" and something about out of date modules (I can't find an example right now). Is it the case that the pre-merge checks are simply unreliable and should be disabled?  Do they ever give a useful signal, before a PR is merged, that it will not break the builds on any architectures?</p>
+
+
+
+<a name="509258163"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/487559-Weather_routing/topic/Using%20marks%20from%20OpenCPN%20in%20weather%20routing/near/509258163" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Quinton Hoole <a href="https://leamas.github.io/zulip-archive/stream/487559-Weather_routing/topic/Using.20marks.20from.20OpenCPN.20in.20weather.20routing.html#509258163">(Mar 31 2025 at 17:02)</a>:</h4>
+<p>Also, what exactly is the difference between the process that runs before the merge, and after a merge?  Presumably the CI system does a test merge before the actual merge, but I would assume that other than that the checks are identical, pre-merge and post-merge?  Is that the case. Are there perhaps differences in the scripts or images used pre-merge and post-merge?  I think we should try to get to the bottom of why the pre-merge checks are so flaky.  And also why they never fail on macos and windows, but always on everything else.</p>
+
+
+
+<a name="509259147"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/487559-Weather_routing/topic/Using%20marks%20from%20OpenCPN%20in%20weather%20routing/near/509259147" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Rick Gleason <a href="https://leamas.github.io/zulip-archive/stream/487559-Weather_routing/topic/Using.20marks.20from.20OpenCPN.20in.20weather.20routing.html#509259147">(Mar 31 2025 at 17:07)</a>:</h4>
+<blockquote>
+<p>And yes, if all the changes I made in my “improve” branch are passing all the checks, I think they can be merged into your “improve” branch.</p>
+</blockquote>
+<p>Quinton, when I download the tarball version for Windows 11 and try to install it<br>
+I get "this plugin is not compatible"  which is a problem that needs to be addressed somehow.<br>
+<a href="https://cloudsmith.io/~opencpn/repos/weather-routing-alpha/packages/?q=1.15.21.22+tarball">https://cloudsmith.io/~opencpn/repos/weather-routing-alpha/packages/?q=1.15.21.22+tarball</a></p>
+<p>Have you actually tried one of these builds? <br>
+I can't merge this now.</p>
+<p>I was in australia, perhaps that is the reason for the time zone issue.</p>
+
+
+
+<hr><p>Last updated: Mar 31 2025 at 17:10 UTC</p>
 </html>
