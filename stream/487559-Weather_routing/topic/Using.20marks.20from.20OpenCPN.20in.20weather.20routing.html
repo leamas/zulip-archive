@@ -912,5 +912,31 @@ ocpn_plugin.h ?</p>
 
 
 
-<hr><p>Last updated: Apr 01 2025 at 21:42 UTC</p>
+<a name="509552910"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/487559-Weather_routing/topic/Using%20marks%20from%20OpenCPN%20in%20weather%20routing/near/509552910" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Sebastien Rosset <a href="https://leamas.github.io/zulip-archive/stream/487559-Weather_routing/topic/Using.20marks.20from.20OpenCPN.20in.20weather.20routing.html#509552910">(Apr 01 2025 at 21:43)</a>:</h4>
+<p>I'm catching up on this thread, as I am helping with other issues as well. I'm not sure which specific issues you have at linker time. I had lots of similar issues in the VDR plugin. </p>
+<p>In the test, I wanted to link against mock implementation, not the complete OpenCPN library. That's the approach that most tests use AFAIK.</p>
+<ol>
+<li>The tests are smaller.</li>
+<li>Using mock implementation means it's possible to test all kinds of scenarios that would otherwise be really hard to simulate with the normal library.</li>
+<li>I don't think linking against the real library would work anyway, because it might invoke UI code, want to pop up a dialog, etc.</li>
+</ol>
+<p>I haven't read the whole thread, so it's also possible I'm completely off topic.</p>
+
+
+
+<a name="509554287"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/487559-Weather_routing/topic/Using%20marks%20from%20OpenCPN%20in%20weather%20routing/near/509554287" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Rick Gleason <a href="https://leamas.github.io/zulip-archive/stream/487559-Weather_routing/topic/Using.20marks.20from.20OpenCPN.20in.20weather.20routing.html#509554287">(Apr 01 2025 at 21:53)</a>:</h4>
+<p>Do you have all of these files?  as listed in this file.<br>
+<a href="https://github.com/rgleason/testplugin_pi/blob/master/BATCH/tp-copy.sh">https://github.com/rgleason/testplugin_pi/blob/master/BATCH/tp-copy.sh</a></p>
+
+
+
+<a name="509555788"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/487559-Weather_routing/topic/Using%20marks%20from%20OpenCPN%20in%20weather%20routing/near/509555788" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Quinton Hoole <a href="https://leamas.github.io/zulip-archive/stream/487559-Weather_routing/topic/Using.20marks.20from.20OpenCPN.20in.20weather.20routing.html#509555788">(Apr 01 2025 at 22:05)</a>:</h4>
+<p><span class="user-mention" data-user-id="813668">@Sebastien Rosset</span> you are right. I will need some mocks. I was hoping to get a very basic test which instantiates a Boat to run first.  Then add the mocks etc, and refactor boat code accordingly. But maybe I should give up on that goal.</p>
+
+
+
+<hr><p>Last updated: Apr 01 2025 at 22:11 UTC</p>
 </html>
