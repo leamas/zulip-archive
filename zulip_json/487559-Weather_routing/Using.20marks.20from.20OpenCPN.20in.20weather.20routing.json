@@ -400,5 +400,53 @@
         "id": 509307318,
         "sender_full_name": "Quinton Hoole",
         "timestamp": 1743457567
+    },
+    {
+        "content": "<p>Ok, it merged and is working. Thanks for your patience. I did't want to screw up improve. I will increment version and push to publish.</p>",
+        "id": 509336655,
+        "sender_full_name": "Rick Gleason",
+        "timestamp": 1743471278
+    },
+    {
+        "content": "<p>No problem Rick.  Thanks for shepherding all this through.</p>",
+        "id": 509336736,
+        "sender_full_name": "Quinton Hoole",
+        "timestamp": 1743471329
+    },
+    {
+        "content": "<p>While you're distracted, how do l link against opencpn core?  I'm getting linker errors like this, and I'm not sure what to link against to get them to go away. </p>\n<div class=\"codehilite\"><pre><span></span><code>Undefined symbols for architecture arm64:\n  &quot;_AddCanvasContextMenuItem&quot;, referenced from:\n      weather_routing_pi::Init() in weather_routing_pi.cpp.o\n</code></pre></div>",
+        "id": 509336910,
+        "sender_full_name": "Quinton Hoole",
+        "timestamp": 1743471429
+    },
+    {
+        "content": "<p>Oh I think I might know the problem. Is this a problem related to sub-modules such as opencpn-lib?</p>\n<p>I suggest you run  this script</p>\n<p><a href=\"https://github.com/rgleason/testplugin_pi/blob/master/BATCH/mod-rm%2Badd.bat\">https://github.com/rgleason/testplugin_pi/blob/master/BATCH/mod-rm%2Badd.bat</a></p>\n<p>and see if the problem has gone away.</p>",
+        "id": 509337363,
+        "sender_full_name": "Rick Gleason",
+        "timestamp": 1743471729
+    },
+    {
+        "content": "<p>I see you have some funky stuff to link against msvc-wx32/opencpn.lib for windows, but nothing similar for other OS's.</p>\n<p>The following doesn't seem to fix the problem:</p>\n<div class=\"codehilite\"><pre><span></span><code>target_link_libraries(weather_routing_pi_tests\n      PRIVATE\n          ocpn::api_wx32\n          ocpn::api\n)\n</code></pre></div>",
+        "id": 509337436,
+        "sender_full_name": "Quinton Hoole",
+        "timestamp": 1743471777
+    },
+    {
+        "content": "<p><span class=\"user-mention silent\" data-user-id=\"399865\">Rick Gleason</span> <a href=\"#narrow/channel/487559-Weather_routing/topic/Using.20marks.20from.20OpenCPN.20in.20weather.20routing/near/509337363\">said</a>:</p>\n<blockquote>\n<p>Oh I think I might know the problem. Is this a problem related to sub-modules such as opencpn-lib?</p>\n<p>I suggest you run  this script</p>\n<p><a href=\"https://github.com/rgleason/testplugin_pi/blob/master/BATCH/mod-rm%2Badd.bat\">https://github.com/rgleason/testplugin_pi/blob/master/BATCH/mod-rm%2Badd.bat</a></p>\n<p>and see if the problem has gone away.</p>\n</blockquote>\n<p>Thanks, but I doubt it's that.  I'll try it anyway though.</p>",
+        "id": 509337477,
+        "sender_full_name": "Quinton Hoole",
+        "timestamp": 1743471803
+    },
+    {
+        "content": "<p>It seems like functions like <code>AddCanvasContextMenuItem</code> are in the actual core OpenCPN.  The API headers just declare 'EXTERN' implementations of them.  I assume the definitions are elsewhere.</p>",
+        "id": 509337668,
+        "sender_full_name": "Quinton Hoole",
+        "timestamp": 1743471904
+    },
+    {
+        "content": "<p><span class=\"user-mention silent\" data-user-id=\"881165\">Quinton Hoole</span> <a href=\"#narrow/channel/487559-Weather_routing/topic/Using.20marks.20from.20OpenCPN.20in.20weather.20routing/near/509337477\">said</a>:</p>\n<blockquote>\n<p>Thanks, but I doubt it's that.  I'll try it anyway though.</p>\n</blockquote>\n<p>Thanks, I tried removing and re-adding the opencpn-libs module, as in your batch file, but it didn't make any difference, as expected.</p>",
+        "id": 509338878,
+        "sender_full_name": "Quinton Hoole",
+        "timestamp": 1743472542
     }
 ]

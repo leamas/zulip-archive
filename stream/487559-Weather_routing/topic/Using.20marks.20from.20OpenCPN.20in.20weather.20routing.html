@@ -821,5 +821,78 @@ There will be more commits (and PR's) in future, to add more tests.</p>
 
 
 
-<hr><p>Last updated: Apr 01 2025 at 01:03 UTC</p>
+<a name="509336655"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/487559-Weather_routing/topic/Using%20marks%20from%20OpenCPN%20in%20weather%20routing/near/509336655" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Rick Gleason <a href="https://leamas.github.io/zulip-archive/stream/487559-Weather_routing/topic/Using.20marks.20from.20OpenCPN.20in.20weather.20routing.html#509336655">(Apr 01 2025 at 01:34)</a>:</h4>
+<p>Ok, it merged and is working. Thanks for your patience. I did't want to screw up improve. I will increment version and push to publish.</p>
+
+
+
+<a name="509336736"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/487559-Weather_routing/topic/Using%20marks%20from%20OpenCPN%20in%20weather%20routing/near/509336736" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Quinton Hoole <a href="https://leamas.github.io/zulip-archive/stream/487559-Weather_routing/topic/Using.20marks.20from.20OpenCPN.20in.20weather.20routing.html#509336736">(Apr 01 2025 at 01:35)</a>:</h4>
+<p>No problem Rick.  Thanks for shepherding all this through.</p>
+
+
+
+<a name="509336910"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/487559-Weather_routing/topic/Using%20marks%20from%20OpenCPN%20in%20weather%20routing/near/509336910" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Quinton Hoole <a href="https://leamas.github.io/zulip-archive/stream/487559-Weather_routing/topic/Using.20marks.20from.20OpenCPN.20in.20weather.20routing.html#509336910">(Apr 01 2025 at 01:37)</a>:</h4>
+<p>While you're distracted, how do l link against opencpn core?  I'm getting linker errors like this, and I'm not sure what to link against to get them to go away. </p>
+<div class="codehilite"><pre><span></span><code>Undefined symbols for architecture arm64:
+  &quot;_AddCanvasContextMenuItem&quot;, referenced from:
+      weather_routing_pi::Init() in weather_routing_pi.cpp.o
+</code></pre></div>
+
+
+
+<a name="509337363"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/487559-Weather_routing/topic/Using%20marks%20from%20OpenCPN%20in%20weather%20routing/near/509337363" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Rick Gleason <a href="https://leamas.github.io/zulip-archive/stream/487559-Weather_routing/topic/Using.20marks.20from.20OpenCPN.20in.20weather.20routing.html#509337363">(Apr 01 2025 at 01:42)</a>:</h4>
+<p>Oh I think I might know the problem. Is this a problem related to sub-modules such as opencpn-lib?</p>
+<p>I suggest you run  this script</p>
+<p><a href="https://github.com/rgleason/testplugin_pi/blob/master/BATCH/mod-rm%2Badd.bat">https://github.com/rgleason/testplugin_pi/blob/master/BATCH/mod-rm%2Badd.bat</a></p>
+<p>and see if the problem has gone away.</p>
+
+
+
+<a name="509337436"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/487559-Weather_routing/topic/Using%20marks%20from%20OpenCPN%20in%20weather%20routing/near/509337436" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Quinton Hoole <a href="https://leamas.github.io/zulip-archive/stream/487559-Weather_routing/topic/Using.20marks.20from.20OpenCPN.20in.20weather.20routing.html#509337436">(Apr 01 2025 at 01:42)</a>:</h4>
+<p>I see you have some funky stuff to link against msvc-wx32/opencpn.lib for windows, but nothing similar for other OS's.</p>
+<p>The following doesn't seem to fix the problem:</p>
+<div class="codehilite"><pre><span></span><code>target_link_libraries(weather_routing_pi_tests
+      PRIVATE
+          ocpn::api_wx32
+          ocpn::api
+)
+</code></pre></div>
+
+
+
+<a name="509337477"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/487559-Weather_routing/topic/Using%20marks%20from%20OpenCPN%20in%20weather%20routing/near/509337477" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Quinton Hoole <a href="https://leamas.github.io/zulip-archive/stream/487559-Weather_routing/topic/Using.20marks.20from.20OpenCPN.20in.20weather.20routing.html#509337477">(Apr 01 2025 at 01:43)</a>:</h4>
+<p><span class="user-mention silent" data-user-id="399865">Rick Gleason</span> <a href="#narrow/channel/487559-Weather_routing/topic/Using.20marks.20from.20OpenCPN.20in.20weather.20routing/near/509337363">said</a>:</p>
+<blockquote>
+<p>Oh I think I might know the problem. Is this a problem related to sub-modules such as opencpn-lib?</p>
+<p>I suggest you run  this script</p>
+<p><a href="https://github.com/rgleason/testplugin_pi/blob/master/BATCH/mod-rm%2Badd.bat">https://github.com/rgleason/testplugin_pi/blob/master/BATCH/mod-rm%2Badd.bat</a></p>
+<p>and see if the problem has gone away.</p>
+</blockquote>
+<p>Thanks, but I doubt it's that.  I'll try it anyway though.</p>
+
+
+
+<a name="509337668"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/487559-Weather_routing/topic/Using%20marks%20from%20OpenCPN%20in%20weather%20routing/near/509337668" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Quinton Hoole <a href="https://leamas.github.io/zulip-archive/stream/487559-Weather_routing/topic/Using.20marks.20from.20OpenCPN.20in.20weather.20routing.html#509337668">(Apr 01 2025 at 01:45)</a>:</h4>
+<p>It seems like functions like <code>AddCanvasContextMenuItem</code> are in the actual core OpenCPN.  The API headers just declare 'EXTERN' implementations of them.  I assume the definitions are elsewhere.</p>
+
+
+
+<a name="509338878"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/487559-Weather_routing/topic/Using%20marks%20from%20OpenCPN%20in%20weather%20routing/near/509338878" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Quinton Hoole <a href="https://leamas.github.io/zulip-archive/stream/487559-Weather_routing/topic/Using.20marks.20from.20OpenCPN.20in.20weather.20routing.html#509338878">(Apr 01 2025 at 01:55)</a>:</h4>
+<p><span class="user-mention silent" data-user-id="881165">Quinton Hoole</span> <a href="#narrow/channel/487559-Weather_routing/topic/Using.20marks.20from.20OpenCPN.20in.20weather.20routing/near/509337477">said</a>:</p>
+<blockquote>
+<p>Thanks, but I doubt it's that.  I'll try it anyway though.</p>
+</blockquote>
+<p>Thanks, I tried removing and re-adding the opencpn-libs module, as in your batch file, but it didn't make any difference, as expected.</p>
+
+
+
+<hr><p>Last updated: Apr 01 2025 at 02:52 UTC</p>
 </html>
