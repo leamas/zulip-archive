@@ -124,5 +124,33 @@ and also some of the bullseye builds fail inconsistently <a href="https://app.ci
 
 
 
-<hr><p>Last updated: Apr 17 2025 at 09:32 UTC</p>
+<a name="512781945"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332200-shipdriver/topic/shipdriver%203.3/near/512781945" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Alec Leamas <a href="https://leamas.github.io/zulip-archive/stream/332200-shipdriver/topic/shipdriver.203.2E3.html#512781945">(Apr 17 2025 at 09:39)</a>:</h4>
+<p>There has been an interesting discussion about plugin compatibiltiy at <a href="https://github.com/OpenCPN/OpenCPN/discussions/4485">https://github.com/OpenCPN/OpenCPN/discussions/4485</a>. The interesting part for us is how to manage the different API levels.</p>
+<p>I'm thinking about  a new branch structure. Let's call them api-16, api-18 and api-19 (out ot the top of my head...). I'm thinking as I write, please bear with me.</p>
+<ul>
+<li>api-16 represents the  buster frozen builds.</li>
+<li>api-18 represents the builds  we do today, supported from 5.10</li>
+<li>api-19 represents the  bleeding edge supported from 5.12.</li>
+</ul>
+<p>Now, as Dave said, for Shipdriver as such the api-19 branch is perhaps not that useful, we only need api-18. But shipdriver is also a template, and from that perspective we need to care about plugins  using api-19.</p>
+<p>Next step would be to determine  a builds per branch matrix, something like:</p>
+<p>*api-18:  windows, MacOS, android...<br>
+*api-19: debian 13 , all incarnations. Notably tracks the new api-19 branch in opencpn-libs.<br>
+*api-16; The frozen windows and buster builds.</p>
+<p>When we build the api-18 branch we basically build everything we  build today, with the exception that the frozen builds are not updated which makes for a simpler PR workflow.</p>
+<p>When we build the api-19 branch this is the development branch where we can test things, notably Trixie.</p>
+<p>api-16 is basically never built, but could theoretically be patched  to solve something and rebuilt.</p>
+<p>Practically, after the 5.12 release we wouild work on the api-19 branch,  buit cherrypicking more or less everything to api-18. </p>
+<p>Vague ideas so far.  Thoughts?</p>
+
+
+
+<a name="512782554"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332200-shipdriver/topic/shipdriver%203.3/near/512782554" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Alec Leamas <a href="https://leamas.github.io/zulip-archive/stream/332200-shipdriver/topic/shipdriver.203.2E3.html#512782554">(Apr 17 2025 at 09:42)</a>:</h4>
+<p><span class="user-mention" data-user-id="399559">@Mike Rossiter</span> ^</p>
+
+
+
+<hr><p>Last updated: Apr 17 2025 at 09:44 UTC</p>
 </html>
