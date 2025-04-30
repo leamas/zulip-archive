@@ -1,0 +1,42 @@
+<html>
+<head><meta charset="utf-8"><title>Windows VS2022 build obstacles · Testing/Bugs · Zulip Chat Archive</title></head>
+<h2>Stream: <a href="https://leamas.github.io/zulip-archive/stream/354446-Testing.2FBugs/index.html">Testing/Bugs</a></h2>
+<h3>Topic: <a href="https://leamas.github.io/zulip-archive/stream/354446-Testing.2FBugs/topic/Windows.20VS2022.20build.20obstacles.html">Windows VS2022 build obstacles</a></h3>
+
+<hr>
+
+<base href="https://opencpn.zulipchat.com">
+
+<head><link href="https://leamas.github.io/zulip-archive/style.css" rel="stylesheet"></head>
+
+<a name="515324942"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/354446-Testing/Bugs/topic/Windows%20VS2022%20build%20obstacles/near/515324942" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Håkan Svensson <a href="https://leamas.github.io/zulip-archive/stream/354446-Testing.2FBugs/topic/Windows.20VS2022.20build.20obstacles.html#515324942">(Apr 30 2025 at 14:49)</a>:</h4>
+<p>For info:<br>
+Today's master won't build on VS2022 due to "#include &lt;sqlite3.h&gt; could not be found"<br>
+I changed in CMakeLists.txt as of below, i.e. back <a href="https://github.com/opencpn/OpenCPN/commit/9522e004">9522e004</a>, and it builds again.<br>
+But don't ask me why?</p>
+<div class="codehilite"><pre><span></span><code>@@ -1264,8 +1264,11 @@ if (OCPN_USE_CRASHREPORT)
+     message(STATUS &quot;Using Linux crash reporting&quot;)
+   endif ()
+ endif ()
+
++add_subdirectory(&quot;libs/sqlite&quot;)
++target_link_libraries(${PACKAGE_NAME} PRIVATE ocpn::sqlite)
++
+ add_subdirectory(&quot;libs/SQLiteCpp&quot;)
+ target_link_libraries(${PACKAGE_NAME} PRIVATE ocpn::sqlite_cpp)
+
+ add_subdirectory(&quot;libs/shapelib&quot;)
+@@ -1953,9 +1956,9 @@ add_subdirectory(libs/observable)
+ add_subdirectory(libs/picosha2)
+ add_subdirectory(libs/pugixml)
+ add_subdirectory(libs/rapidjson)
+ add_subdirectory(libs/s52plib)
+-add_subdirectory(libs/sqlite)
++#add_subdirectory(libs/sqlite)
+</code></pre></div>
+
+
+
+<hr><p>Last updated: Apr 30 2025 at 15:13 UTC</p>
+</html>

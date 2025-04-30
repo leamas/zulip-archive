@@ -1,0 +1,8 @@
+[
+    {
+        "content": "<p>For info:<br>\nToday's master won't build on VS2022 due to \"#include &lt;sqlite3.h&gt; could not be found\"<br>\nI changed in CMakeLists.txt as of below, i.e. back <a href=\"https://github.com/opencpn/OpenCPN/commit/9522e004\">9522e004</a>, and it builds again.<br>\nBut don't ask me why?</p>\n<div class=\"codehilite\"><pre><span></span><code>@@ -1264,8 +1264,11 @@ if (OCPN_USE_CRASHREPORT)\n     message(STATUS &quot;Using Linux crash reporting&quot;)\n   endif ()\n endif ()\n\n+add_subdirectory(&quot;libs/sqlite&quot;)\n+target_link_libraries(${PACKAGE_NAME} PRIVATE ocpn::sqlite)\n+\n add_subdirectory(&quot;libs/SQLiteCpp&quot;)\n target_link_libraries(${PACKAGE_NAME} PRIVATE ocpn::sqlite_cpp)\n\n add_subdirectory(&quot;libs/shapelib&quot;)\n@@ -1953,9 +1956,9 @@ add_subdirectory(libs/observable)\n add_subdirectory(libs/picosha2)\n add_subdirectory(libs/pugixml)\n add_subdirectory(libs/rapidjson)\n add_subdirectory(libs/s52plib)\n-add_subdirectory(libs/sqlite)\n+#add_subdirectory(libs/sqlite)\n</code></pre></div>",
+        "id": 515324942,
+        "sender_full_name": "Håkan Svensson",
+        "timestamp": 1746024548
+    }
+]
