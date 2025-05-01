@@ -15,5 +15,56 @@
 
 
 
-<hr><p>Last updated: May 01 2025 at 03:42 UTC</p>
+<a name="515440981"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/487559-Weather_routing/topic/Wrong%20timezone%20in%20commit%2023c07cc5d2be7ce68349f4b3719b6fa6fe9/near/515440981" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Sebastien Rosset <a href="https://leamas.github.io/zulip-archive/stream/487559-Weather_routing/topic/Wrong.20timezone.20in.20commit.2023c07cc5d2be7ce68349f4b3719b6fa6fe9.html#515440981">(May 01 2025 at 03:45)</a>:</h4>
+<p>The problematic commit has a seriously incorrect timezone: <code>2106 -40643156</code>. The year is shown as 2106 (future date), and the timezone offset is an impossible value (-40643156).</p>
+<p>Here is one possible approach to fix the problem:</p>
+<h1>Clone the git repo</h1>
+<p>git clone git@github.com:sebastien-rosset/weather_routing_pi.git</p>
+<h1>Run "git fsck"</h1>
+<p>This command checks the health of the git repo:</p>
+<p>$ git fsck --full<br>
+Checking object directories: 100% (256/256), done.<br>
+error in commit <a href="https://github.com/opencpn/OpenCPN/commit/23c07cc5d2be7ce68349f4b3719b6fa6fe90e0bf">23c07cc5d2be7ce68349f4b3719b6fa6fe90e0bf</a>: badTimezone: invalid author/committer line - bad time zone<br>
+Checking objects: 100% (11248/11248), done.</p>
+<h1>Get details about the bad commit</h1>
+<p>$ git show <a href="https://github.com/opencpn/OpenCPN/commit/23c07cc5d2be7ce68349f4b3719b6fa6fe90e0bf">23c07cc5d2be7ce68349f4b3719b6fa6fe90e0bf</a><br>
+commit <a href="https://github.com/opencpn/OpenCPN/commit/23c07cc5d2be7ce68349f4b3719b6fa6fe90e0bf">23c07cc5d2be7ce68349f4b3719b6fa6fe90e0bf</a> Author: Sean D'Epagnier &lt;<a href="mailto:seandepagnier@gmail.com">seandepagnier@gmail.com</a>&gt; Date:   Sun Feb 7 06:28:56 2106 -40643156</p>
+<p>ui updates and other changes</p>
+<h1>Run filter-branch to rewrite the git history</h1>
+<p>This command will rewrite the git history and fix the bad timestamp and timezone.</p>
+<p>git filter-branch --force --env-filter '<br>
+    if [ "$GIT_COMMIT" = "<a href="https://github.com/opencpn/OpenCPN/commit/23c07cc5d2be7ce68349f4b3719b6fa6fe90e0bf">23c07cc5d2be7ce68349f4b3719b6fa6fe90e0bf</a>" ]; then<br>
+        echo "Fixing timezone for commit <a href="https://github.com/opencpn/OpenCPN/commit/23c07cc5d2be7ce68349f4b3719b6fa6fe90e0bf">23c07cc5d2be7ce68349f4b3719b6fa6fe90e0bf</a>"<br>
+        export GIT_AUTHOR_DATE="2016-02-07 06:28:56 +0000"<br>
+        export GIT_COMMITTER_DATE="2016-02-07 06:28:56 +0000"<br>
+    fi<br>
+' --tag-name-filter cat -- --all</p>
+<h1>Run fsck again</h1>
+<p>Verify the fix has been applied:</p>
+<p>$ git fsck --full<br>
+Checking object directories: 100% (256/256), done.<br>
+Checking objects: 100% (11248/11248), done.<br>
+Verifying commits in commit graph: 100% (1534/1534), done.</p>
+<h1>Force push</h1>
+<p>After fixing, you'll need to force push to GitHub:</p>
+<p>git push origin --force --all<br>
+git push origin --force --tags</p>
+
+
+
+<a name="515441754"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/487559-Weather_routing/topic/Wrong%20timezone%20in%20commit%2023c07cc5d2be7ce68349f4b3719b6fa6fe9/near/515441754" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Sebastien Rosset <a href="https://leamas.github.io/zulip-archive/stream/487559-Weather_routing/topic/Wrong.20timezone.20in.20commit.2023c07cc5d2be7ce68349f4b3719b6fa6fe9.html#515441754">(May 01 2025 at 03:54)</a>:</h4>
+<p>However, there is a downside that we would need to think about before making any change.</p>
+<p>Using <code>git filter-branch</code> to fix this commit will affect all references to this commit and its descendants throughout GitHub:</p>
+<ol>
+<li><strong>Pull Requests</strong>: Any PRs that were based on or include the modified commits will be affected. The commit hashes will change, which can break the association between PR discussions and specific lines of code they reference.</li>
+<li><strong>Issues</strong>: If issues reference specific commit hashes that get rewritten, those references will become invalid.</li>
+<li><strong>Commit Links</strong>: Any links to specific commits in documentation, issues, or external references will no longer work.</li>
+<li><strong>Code Reviews</strong>: Previous code review comments may become orphaned or misaligned since they reference commit hashes that will change.</li>
+</ol>
+
+
+
+<hr><p>Last updated: May 01 2025 at 04:18 UTC</p>
 </html>
