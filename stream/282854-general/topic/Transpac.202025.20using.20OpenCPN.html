@@ -90,5 +90,49 @@
 
 
 
-<hr><p>Last updated: Jul 22 2025 at 23:13 UTC</p>
+<a name="530238145"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/282854-general/topic/Transpac%202025%20using%20OpenCPN/near/530238145" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Sebastien Rosset <a href="https://leamas.github.io/zulip-archive/stream/282854-general/topic/Transpac.202025.20using.20OpenCPN.html#530238145">(Jul 22 2025 at 23:15)</a>:</h4>
+<p>The ECMWF and GFS forecasts were fairly accurate. In general, I noticed the wind speed was typically a few knots higher than the GFS forecast.<br>
+The wind direction of the forecast versus real conditions was confusing. Our B&amp;G instruments are all configured to provide magnetic angles, whether it's COG, HEADING or TWD. It's a configuration setting that we intentionally selected. I think it's possible to configure the B&amp;G to use geographic north, but that's not what we wanted to.</p>
+<p>On the other hand, in OpenCPN it's not always clear whether information is provided with geographic north or magnetic north, especially for the wind direction (TWD) in the GRIB plugin and the weather routing plugin. IMHO, there should be a clear visual indication to show whether it's geo or magnetic. The user should be able to configure such that OpenCPN data matches on-board instruments. I had to manually apply a correction.</p>
+<p>In addition to geo versus magnetic north, the real wind is typically not exactly the same as the forecast. It would be useful to configure the weather routing plugin to indicate the wind has shifted X degrees compared to the forecast, and the routing should take that shift into consideration.</p>
+<p>Another point is that some segments had +/-20 degree wind shifts. I.e. we could reliably and consistently observe that  wind was at a constant TWD for 45 minutes, then suddenly shifting 20 degrees. Then that pattern would repeat itself multiple times. This sort of observation could potentially be used in the weather routing configuration.</p>
+
+
+
+<a name="530239260"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/282854-general/topic/Transpac%202025%20using%20OpenCPN/near/530239260" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Sebastien Rosset <a href="https://leamas.github.io/zulip-archive/stream/282854-general/topic/Transpac.202025.20using.20OpenCPN.html#530239260">(Jul 22 2025 at 23:29)</a>:</h4>
+<h2>Improvement Ideas</h2>
+<h3>OpenCPN core</h3>
+<ul>
+<li>Integrate timeline widget into core OpenCPN - essential for user-friendly weather analysis, route analysis and what-if scenarios. Proved invaluable for weather analysis - crew found it intuitive vs. traditional GRIB time controls</li>
+<li>Implement timeline-integrated route position projection in Route &amp; Mark Manager. Multiple saved weather routes enabled strategic analysis but lack timeline integration for position projection.</li>
+<li>Implement MOB device test procedure for MMSI/name verification</li>
+<li>In Options -&gt; Connections, add NMEA sentence descriptions and preset configurations for easier setup. Navigation calculations immediately reflected on Triton deck displays - route calculation to bearing display was instant and reliable</li>
+<li>Improve CPA alert filtering to reduce false positives</li>
+<li>Implement automated backup system (e.g. to Google Drive), and one-click restore on a different system. Ability to save configuration and logs, including plugin data.</li>
+</ul>
+<h3>Tactics</h3>
+<ul>
+<li>Implement configurable duration averaging for plugin laylines</li>
+<li>Implement configurable duration averaging for polar performance</li>
+<li>Selectable timeframes: 1 second, 10 seconds, 1 minute, 10 minutes</li>
+<li>Calculate average heading over selected duration</li>
+<li>Generate stable laylines based on averaged heading and TWD</li>
+<li>Reduce layline fluctuation caused by wave-induced heading changes</li>
+</ul>
+<h3>Weather Routing plugin</h3>
+<ul>
+<li>Cross-platform weather plugin stability - routing did not work on Windows</li>
+<li>Enhance integration between OCPN Draw and Weather Routing plugins</li>
+<li>Improved current display (show opposing currents as negative values)</li>
+<li>Weather-based sail selection (cloud cover/rain thresholds)</li>
+<li>Night sailing restrictions (no sail changes/gybes)</li>
+<li>Sail plan constraints (max TWS/swell per sail configuration)</li>
+<li>Real-time polar performance vs. routing predictions</li>
+</ul>
+
+
+
+<hr><p>Last updated: Jul 22 2025 at 23:33 UTC</p>
 </html>
