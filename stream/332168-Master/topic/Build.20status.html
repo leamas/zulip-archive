@@ -382,5 +382,22 @@ Thanks</p>
 
 
 
-<hr><p>Last updated: Jul 26 2025 at 11:29 UTC</p>
+<a name="530934471"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332168-Master/topic/Build%20status/near/530934471" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Alec Leamas <a href="https://leamas.github.io/zulip-archive/stream/332168-Master/topic/Build.20status.html#530934471">(Jul 26 2025 at 11:38)</a>:</h4>
+<p><span class="user-mention" data-user-id="517002">@Dave Register</span>  <span class="user-mention" data-user-id="573239">@Pavel Kalian</span> </p>
+<p>New Macos OS build errors like</p>
+<div class="codehilite"><pre><span></span><code>/Users/runner/work/OpenCPN/OpenCPN/libs/nmea0183/src/nmea0183.cpp:354:5: error: unknown type name &#39;wxMRLNode&#39;; did you mean &#39;wxNode&#39;?
+    wxMRLNode *node = response_table.GetFirst();
+    ^~~~~~~~~
+    wxNode
+/opt/homebrew/include/wx-3.3/wx/list.h:49:26: note: &#39;wxNode&#39; declared here
+</code></pre></div>
+<p>IIUC wxMRLNode is implicitly declared  using <code>WX_DECLARE_LIST(RESPONSE, MRL);</code> in <em>nmea0183.hpp</em> which  is included by  <em>nmea0183.cpp</em>. Which works everywhere besides MacOS.</p>
+<p>MacOS uses wxWidgets 3.3, other builds are using not as recent versions.</p>
+<p>EDIT: Example log: <a href="https://github.com/leamas/OpenCPN/actions/runs/16539335945/job/46778334869">https://github.com/leamas/OpenCPN/actions/runs/16539335945/job/46778334869</a></p>
+<p>Any ideas  out there?</p>
+
+
+
+<hr><p>Last updated: Jul 26 2025 at 11:44 UTC</p>
 </html>
