@@ -1,0 +1,36 @@
+<html>
+<head><meta charset="utf-8"><title>#4703 -  bad handling of n0184 input garbage · Master · Zulip Chat Archive</title></head>
+<h2>Stream: <a href="https://leamas.github.io/zulip-archive/stream/332168-Master/index.html">Master</a></h2>
+<h3>Topic: <a href="https://leamas.github.io/zulip-archive/stream/332168-Master/topic/.234703.20-.20.20bad.20handling.20of.20n0184.20input.20garbage.html">#4703 -  bad handling of n0184 input garbage</a></h3>
+
+<hr>
+
+<base href="https://opencpn.zulipchat.com">
+
+<head><link href="https://leamas.github.io/zulip-archive/style.css" rel="stylesheet"></head>
+
+<a name="533999262"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332168-Master/topic/%234703%20-%20%20bad%20handling%20of%20n0184%20input%20garbage/near/533999262" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Alec Leamas <a href="https://leamas.github.io/zulip-archive/stream/332168-Master/topic/.234703.20-.20.20bad.20handling.20of.20n0184.20input.20garbage.html#533999262">(Aug 12 2025 at 14:55)</a>:</h4>
+<p>hm... Håkan filed an issue about garbage data making opencpn to crash. A github bug makes it impossible to load the issues, let's tale it here.</p>
+<p>Looking at the data this is probably about more basic parsing rules. There are no known problems  when there is a valid checksum, this is about that we should accept messages without a checksum.</p>
+<p>I'm not that fond of looking for a second '$' or '!' in the message string. These are actually, as far as I understand,  valid message characters; they are both in the allowed range 20 - 7e.</p>
+<p>One open issue is what to to with messages without checksum which are too long. An  N0183 message should at least be less than 100 characters. My instinct is that messages without checksum which are too long should be considered garbage and thrown away</p>
+<p>Thoughts?<br>
+<span class="user-mention" data-user-id="522486">@Håkan Svensson</span></p>
+
+
+
+<a name="533999423"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332168-Master/topic/%234703%20-%20%20bad%20handling%20of%20n0184%20input%20garbage/near/533999423" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Alec Leamas <a href="https://leamas.github.io/zulip-archive/stream/332168-Master/topic/.234703.20-.20.20bad.20handling.20of.20n0184.20input.20garbage.html#533999423">(Aug 12 2025 at 14:56)</a>:</h4>
+<p>github issues resurrected. This is about <a href="https://github.com/opencpn/OpenCPN/issues/4703">#4703</a></p>
+
+
+
+<a name="534000574"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332168-Master/topic/%234703%20-%20%20bad%20handling%20of%20n0184%20input%20garbage/near/534000574" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Alec Leamas <a href="https://leamas.github.io/zulip-archive/stream/332168-Master/topic/.234703.20-.20.20bad.20handling.20of.20n0184.20input.20garbage.html#534000574">(Aug 12 2025 at 15:02)</a>:</h4>
+<p><span class="user-mention" data-user-id="517002">@Dave Register</span> ^</p>
+
+
+
+<hr><p>Last updated: Aug 12 2025 at 15:13 UTC</p>
+</html>
