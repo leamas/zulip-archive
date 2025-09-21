@@ -51,5 +51,26 @@ Call stack</p>
 
 
 
-<hr><p>Last updated: Sep 21 2025 at 15:10 UTC</p>
+<a name="540664662"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/354446-Testing/Bugs/topic/New%20code%20trouble/near/540664662" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Håkan Svensson <a href="https://leamas.github.io/zulip-archive/stream/354446-Testing.2FBugs/topic/New.20code.20trouble.html#540664662">(Sep 21 2025 at 15:27)</a>:</h4>
+<p><span class="user-mention" data-user-id="399510">@Alec Leamas</span> <span class="user-mention" data-user-id="517002">@Dave Register</span> <br>
+It seems that the canvas menu background color for Win, see code snippet, is broken. The "DILG1" would be grey but it's black instead. On "Mouse over" it's instead blue. See pictures.</p>
+<p>Other dialogs like "Objects query" are as usual, background light grey and foreground black. These dialogs color scheme is not cursor dependent.</p>
+<div class="codehilite"><pre><span></span><code>void CanvasMenuHandler::PrepareMenuItem(wxMenuItem *item) {
+#if defined(__WXMSW__)
+  wxColour ctrl_back_color = GetGlobalColor("DILG1");  // Control Background
+  item-&gt;SetBackgroundColour(ctrl_back_color);
+  wxColour menu_text_color = GetGlobalColor("UITX1");
+  item-&gt;SetTextColour(menu_text_color);
+#endif
+</code></pre></div>
+<p>Normal DAY table:<br>
+<a href="/user_uploads/33951/fKU8ak4MmZplvLPDfx5yHymg/bild.png">bild.png</a><br>
+When cursor is over the menu description. (Still DAY)<br>
+<a href="/user_uploads/33951/-jVzNkdthN2Ynp659lnfxMRU/bild.png">bild.png</a></p>
+<div class="message_inline_image"><a href="/user_uploads/33951/fKU8ak4MmZplvLPDfx5yHymg/bild.png" title="bild.png"><img data-original-content-type="image/png" data-original-dimensions="432x201" src="/user_uploads/thumbnail/33951/fKU8ak4MmZplvLPDfx5yHymg/bild.png/840x560.webp"></a></div><div class="message_inline_image"><a href="/user_uploads/33951/-jVzNkdthN2Ynp659lnfxMRU/bild.png" title="bild.png"><img data-original-content-type="image/png" data-original-dimensions="416x129" src="/user_uploads/thumbnail/33951/-jVzNkdthN2Ynp659lnfxMRU/bild.png/840x560.webp"></a></div>
+
+
+
+<hr><p>Last updated: Sep 21 2025 at 15:27 UTC</p>
 </html>
