@@ -1,0 +1,38 @@
+[
+    {
+        "content": "<p>Public thread on demo plugin</p>",
+        "id": 564884540,
+        "sender_full_name": "Alec Leamas",
+        "timestamp": 1766311116
+    },
+    {
+        "content": "<p><span class=\"user-mention silent\" data-user-id=\"725680\">TwoCan</span> <a href=\"#narrow/dm/399510,725680,881165-group/near/564861093\">said</a>:</p>\n<blockquote>\n<p>For a demo plugin, perhaps deconstruct Race Start into specific examples of plugin API's ( and corresponding  separate branches)?</p>\n<p>Would just need to add examples of Chart related API's.</p>\n<p>Then additional branches to demonstrate shipdriver or test plugin templates.</p>\n<p>Publication into the catalog is another Pandora's box?</p>\n</blockquote>",
+        "id": 564884579,
+        "sender_full_name": "Alec Leamas",
+        "timestamp": 1766311164
+    },
+    {
+        "content": "<p><span class=\"user-mention silent\" data-user-id=\"725680\">TwoCan</span> <a href=\"#narrow/dm/399510,725680,881165-group/near/564862927\">said</a>:</p>\n<blockquote>\n<p>Happy to help and deconstruct my plugin. But after the new year.  Little interest in writing a new plugin or adding stuff I've already written, into the built in \"demo\" plugin even if there are plans to convert ithe demo plugin into a third party plugin.</p>\n<p>However I do need to question why the need to do this? Aside from you &amp; Sebastien how many new developers have expressed an interest in developing or maintaining plugins?</p>\n<p>Many of us contributed to writing the user manual but disappointingly few seemed to read it.</p>\n</blockquote>",
+        "id": 564884668,
+        "sender_full_name": "Alec Leamas",
+        "timestamp": 1766311275
+    },
+    {
+        "content": "<p><span class=\"user-mention silent\" data-user-id=\"881165\">Quinton Hoole</span> <a href=\"#narrow/dm/399510,725680,881165-group/near/564863525\">said</a>:</p>\n<blockquote>\n<p>Understood. Good questions. Dave and Alec seem to think it would be a good idea to demonstrate what kinds of things a plugin can do via the plugin api, and how to do them. And to make it easy for someone wanting to develop a plugin to get productive. </p>\n<p>My personal motivations go beyond that. Roughly speaking… </p>\n<ol>\n<li>I have a few plugins I’d like to develop. But first gaining familiarity with the plugin API, plugin build and test process etc will make it easier to design and build those plugins appropriately. </li>\n<li>I also would like to tidy up the plugin api. There seems to be a lot of old cruft in there that makes plugin development and maintenance more difficult than necessary. To do that properly I need to understand the whole api as it stands today, warts and all, and with hands-on experience using all of it. </li>\n<li>I’ve seen quite a few cases where changes to the API are made without proper testing against real plugins that use the api, leading to downstream breakages in plugins. So I’d like there to be a “test plugin” that can automatically exercise the whole API, to help pick up regressions in the API, and perhaps even in OpenCPN itself. I could potentially eventually use the plugin API to “drive” OpenCPN core, to perform system tests. It’s not really designed for that, but it might be a good start. </li>\n</ol>\n<p>Hope that makes sense.</p>\n</blockquote>",
+        "id": 564884740,
+        "sender_full_name": "Alec Leamas",
+        "timestamp": 1766311362
+    },
+    {
+        "content": "<p><span class=\"user-mention silent\" data-user-id=\"399510\">Alec Leamas</span> <a href=\"#narrow/dm/399510,725680,881165-group/near/564882274\">said</a>:</p>\n<blockquote>\n<blockquote>\n<p>However I do need to question why the need to do this? Aside from you &amp; Sebastien how many new developers have expressed an interest in developing or maintaining plugins?</p>\n</blockquote>\n<p>This is IMHO the big question.</p>\n<p>We actually have a <strong>lot</strong> of users and an open code base. Normally, this should attract some devs now and then.  Obviously, this fails for us.</p>\n<p>When I try to take a step back and look at this project with the eyes of a prospective plugin dev I see a mess of documentation, testplugin and shipdriver, cloudsmith, circleci and what not. I think it would scare me away. </p>\n<p>Compare this to a usual instructions for many projects out there like  <code>git clone,;cd whatever; ./configure; make; sudo make install</code>. That is, an easy-straight-forward path to create something you can test. When you dip your toes in the water of a new project, this is exactly what you you want to do. Or?</p>\n<p>Now, if we focus on shipdriver (we should) this is actually likewise simple, ending up in a instruction how to import a plugin. This part should IMHO be the \"front page\" of the plugin project, directly visible in the README. It should be short enough to not scare anyone away. </p>\n<p>If the prospective dev starts asking question abdout CI builds and publishing in the catalog she is already on the hook and these docs could be much less prominent, available as links</p>\n</blockquote>",
+        "id": 564884790,
+        "sender_full_name": "Alec Leamas",
+        "timestamp": 1766311428
+    },
+    {
+        "content": "<p><span class=\"user-mention silent\" data-user-id=\"399510\">Alec Leamas</span> <a href=\"#narrow/dm/399510,725680,881165-group/near/564882882\">said</a>:</p>\n<blockquote>\n<p>To put some flesh on the bones: a sketch</p>\n<hr>\n<p>- Install build deps -- Must be a link, otherwise it becomes too much<br>\n  - Build the plugin</p>\n<div class=\"codehilite\"><pre><span></span><code>$ git clone ...\n$ cd demo-plugin\n$ mkdir build\n$ cd build\n$ cmake ..\n$ cmake --build . --target tarball\n</code></pre></div>\n<p>- Import and test plugin (screenshots)</p>\n<hr>\n<p>This should be  simple enough to not scare anyone away. In the end we could add a link to more comprehensive instructions including Windows VS setup,  making  CI builds  and catalog updates.</p>\n<p>The scary part is actually to install build deps. Debian/Ubuntu  is reasonably simple, Windows and MacOS not. Some scripts could perhaps be helpful here (?)</p>\n</blockquote>",
+        "id": 564884814,
+        "sender_full_name": "Alec Leamas",
+        "timestamp": 1766311459
+    }
+]
