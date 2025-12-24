@@ -36,5 +36,27 @@
 
 
 
-<hr><p>Last updated: Dec 24 2025 at 14:49 UTC</p>
+<a name="565292297"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332168-Master/topic/general%20chat/near/565292297" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Dan Dickey <a href="https://leamas.github.io/zulip-archive/stream/332168-Master/topic/general.20chat.html#565292297">(Dec 24 2025 at 15:02)</a>:</h4>
+<p><span class="user-mention silent" data-user-id="399510">Alec Leamas</span> <a href="#narrow/channel/332168-Master/topic//near/565260678">said</a>:</p>
+<blockquote>
+<blockquote>
+<p>However, it's for building the core OpenCPN. The subject here is to build a basic "hello world" plugin, a different use case.</p>
+</blockquote>
+</blockquote>
+<p>Yes, and it demonstrates that having an isolated build environment in Windows is possible, desirable even. It would not be complicated for plugin developers to set up plugin repositories alongside OpenCPN. A local Windows folder structure could look like this:</p>
+<p>\user\xxxyyy\source\repos\OpenCPN\ocpn_wxWidgets<br>
+\user\xxxyyy\source\repos\OpenCPN\OpenCPN<br>
+\user\xxxyyy\source\repos\OpenCPN\HelloWorld_pi<br>
+:<br>
+:<br>
+\user\xxxyyy\source\repos\OpenCPN\MyAwesomePlugin_pi</p>
+<p>The plugin dependencies from OpenCPN and wxWidgets are ready at hand and always compatible. Other plugin dependencies could be kept within the plugin folder itself.</p>
+<p>The reason for building wxWidgets from sources is to get binaries that wxWidgets does not provide such as full debug info and RelWithDebInfo binaries.  We would never want to "ship" a plugin built anywhere except in a controlled CI build environment for obvious reasons. However, local building with debuggable binaries can be a huge help to developers familiar with the VS IDE. The ability to step from O into a plugin into wxWidgets and back seamlessly with full source code debug info can be a huge benefit. Plus, VS offers a lot of tools for multi-threaded analysis and debugging. This all works so much better if you have the full wxWidgets sources and dependencies located locally because VS gets info from the sources to improve code completion and AI help.</p>
+<p>I think all plugin dependencies can be automatically installed locally via script(s) just as we do now with things like NSIS, GetText, et. al.</p>
+<p>Debugging is seamless. The plugin developer starts O from VS debugger. Breakpoints can be set in plugin source code. As soon as the plugin dll is loaded by OpenCPN the breakpoints will automatically activate. Today, OpenCPN will happily load any config type of plugin dll (release, debug, etc.) and you have the full suite of tools within VS available for both O and plugin source code.</p>
+
+
+
+<hr><p>Last updated: Dec 24 2025 at 15:13 UTC</p>
 </html>
