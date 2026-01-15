@@ -352,5 +352,72 @@ finish-args  --device=canbus is omitted, IIRC it was used in the first flatpak v
 
 
 
-<hr><p>Last updated: Jan 15 2026 at 16:25 UTC</p>
+<a name="568262544"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332168-Master/topic/Demo%20plugin/near/568262544" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Alec Leamas <a href="https://leamas.github.io/zulip-archive/stream/332168-Master/topic/Demo.20plugin.html#568262544">(Jan 15 2026 at 16:43)</a>:</h4>
+<blockquote>
+<p>COPYING - this is the GPL v3 license, however cmake\gpl.txt is v2. Should the latter be removed ?</p>
+</blockquote>
+<p>The licenses used is about the actual plugin, not Shipdriver. That said, IIRC shipdriver contains both GPLv3, GPLv2 and other licenses all of which GPL3+ compatible. In short, this is a can of vorms. </p>
+<blockquote>
+<p>FIX_PLUGIN_INFO.md - Simply describes <a href="http://config.h.in">config.h.in</a> and relationship to mandatory plugin API's</p>
+</blockquote>
+<p>No, it describes  actions beyond  what update_templates does when updating to API 1.18+</p>
+<blockquote>
+<p>UPDATE_PLUGIN_API.md - This seems to just describe OpenCPN API version to use</p>
+</blockquote>
+<p>Likewise , actions required when updating to an API  version (actual version not available top of my head)</p>
+<blockquote>
+<p>UPDATE_TEMPLATES.md, and the companion script update_templates. I had a few errors, so to some developers it would look like a "black box". Rather than rely on Shipdriver, could we not create a git patch, possibly located in opencpnlibs to update the templates ? </p>
+</blockquote>
+<p>Be my guest :)</p>
+<p>Seriously, if you look into what update_templates does you can see that this not about a simple patch.  </p>
+<p>EDIT: The important part here is to report problems as bugs so we can fix the script. I see no better way ti handle this.</p>
+<blockquote>
+<p>It's not as if a plugin developer is going to use an old template rather than the latest.</p>
+</blockquote>
+<p>Oh, they all do -- no one seems to update until they are forced to.</p>
+<blockquote>
+<p>appveyor - testplugin template uses circleci for windows builds instead of using appveyor. Could Shipdriver dispense with appveyor and like testplugin, also use circleci for WIndows builds ?</p>
+</blockquote>
+<p>It could, but last time I checked license conditions (number of builds, etc) for the circleci windows builder was worse than appveyor.</p>
+<blockquote>
+<p>build-deps/control. Is this necessary, looks like the dependencies to build OpenCPN rather than just building a plugin</p>
+</blockquote>
+<p>Yes, it is necessary.</p>
+<blockquote>
+<p>buildwin<br>
+shipdriverclone.bat - assumes a specific path to wxWidgets. It also uses an outdated wxWidgets version 3.1..2 instead of 3.2.4. It also calls vcvars, but if the developer opens a Visual Studio command prompt this is performed automagically<br>
+I've found cmake .. -A Win32 and cmake --build . --config Release|RelWithDebInfo|MinSieRel|Debug --target tarball works fine, no need to specify the cmake generator etc.<br>
+win-deps. What happens if user has already installed OpenCPN build envronment? The opencpn build environment using Dan's script installs and sets up everything<br>
+Is the wxWidgets wxWidgets-3.2.4 patch still required ?</p>
+</blockquote>
+<p>It is used in different ways in the ci builds and Dan's script. I'm not the Windows guru, just noting that it seems to work as is in all scenarios (please file bugs otherwise)</p>
+<blockquote>
+<p>check_key_password - Is this really required ?? It seems related to the git push bash script<br>
+git push script - Does this push from circleci to github and if so, how many plugin developers would actually perform this?<br>
+Similarly with the maybe push sctipt</p>
+</blockquote>
+<p>These two are used when hunting errors in the git-push procedure. The latter is a bit convoluted to set up, but saves tons of work when trying to make a catalog PR. Have you looked into <a href="https://opencpn-manuals.github.io/main/AlternativeWorkflow/InstallConfigure/Catalog-Github-Integration.html">https://opencpn-manuals.github.io/main/AlternativeWorkflow/InstallConfigure/Catalog-Github-Integration.html</a> ?</p>
+<blockquote>
+<p>template-version - created by update templates ??</p>
+</blockquote>
+<p>Yes ( as stated in the first line of it)</p>
+<blockquote>
+<p>flatpak<br>
+What should the naming convention be ? Eg. org.opencpn.OpenCPN.Plugin.demo.yaml</p>
+</blockquote>
+<p>This is not  just a naming convention. The plugins are extensions in the Flatpak parlance, and the naming of these are fixed.</p>
+<blockquote>
+<p>finish-args --device=canbus is omitted, IIRC it was used in the first flatpak version of OpenCPN that used SocketCan, so is probably not required for Plugins. I may have also used it for TwoCan before OpenCPN had to use it.</p>
+</blockquote>
+<p>Is there a reason to remove it?</p>
+<blockquote>
+<p>manual - remind me how or where to update.</p>
+</blockquote>
+<p>Smaller fixes: Go to a manual page like the one above. In the  top-right corner there is an  <em>Edit this page</em> link. Push it, edit the source, preview and save.  Saving automatically generates a PR. </p>
+<p>Bigger edits, structural changes,  etc: best done by cloning the manual repo. The address differs, the complete manual is actually harvested from many places. The manual URL can be deduced from the URL used by "Edit this page". Let me know if you need more info</p>
+
+
+
+<hr><p>Last updated: Jan 15 2026 at 17:05 UTC</p>
 </html>
