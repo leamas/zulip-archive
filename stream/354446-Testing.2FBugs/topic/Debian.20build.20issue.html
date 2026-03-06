@@ -1,0 +1,66 @@
+<html>
+<head><meta charset="utf-8"><title>Debian build issue · Testing/Bugs · Zulip Chat Archive</title></head>
+<h2>Stream: <a href="https://leamas.github.io/zulip-archive/stream/354446-Testing.2FBugs/index.html">Testing/Bugs</a></h2>
+<h3>Topic: <a href="https://leamas.github.io/zulip-archive/stream/354446-Testing.2FBugs/topic/Debian.20build.20issue.html">Debian build issue</a></h3>
+
+<hr>
+
+<base href="https://opencpn.zulipchat.com">
+
+<head><link href="https://leamas.github.io/zulip-archive/style.css" rel="stylesheet"></head>
+
+<a name="577758027"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/354446-Testing/Bugs/topic/Debian%20build%20issue/near/577758027" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Håkan Svensson <a href="https://leamas.github.io/zulip-archive/stream/354446-Testing.2FBugs/topic/Debian.20build.20issue.html#577758027">(Mar 06 2026 at 14:09)</a>:</h4>
+<p><span class="user-mention" data-user-id="399510">@Alec Leamas</span> <span class="user-mention" data-user-id="517002">@Dave Register</span> <br>
+On some rpi bookworm and trixe I get the below error when build from master. Since CL builds works it might be a difference what deps to use in file INSTALL compared to what the cl builds use?</p>
+<div class="codehilite" data-code-language="Text only"><pre><span></span><code>LU.so libs/pugixml/libOCPN_PUGIXML.a libs/o_sound/lib_SOUND.a -L/usr/lib/arm-linux-gnueabihf -pthread /usr/lib/arm-linux-gnueabihf/libportaudio.so -lwx_gtk3u_gl-3.2 -lwx_baseu_net-3.2 -lwx_baseu_xml-3.2 -lwx_gtk3u_html-3.2 -lwx_gtk3u_aui-3.2 -lwx_gtk3u_core-3.2 -lwx_baseu-3.2 -lwx_gtk3u_richtext-3.2 -lwx_gtk3u_webview-3.2 libs/wxservdisc/libWXSERVDISC.a libs/gdal/libGDAL.a /usr/lib/arm-linux-gnueabihf/libGLEW.so
+/usr/bin/ld: CMakeFiles/opencpn.dir/gui/src/connections_dlg.cpp.o: in function `options::ShowOKButtons(bool)':
+/home/rpi500/Builds/OCPN/OpenCPN/gui/include/gui/options.h:297: undefined reference to `g_options'
+/usr/bin/ld: /home/rpi500/Builds/OCPN/OpenCPN/gui/include/gui/options.h:297: undefined reference to `g_options'
+/usr/bin/ld: /home/rpi500/Builds/OCPN/OpenCPN/gui/include/gui/options.h:297: undefined reference to `g_options'
+/usr/bin/ld: /home/rpi500/Builds/OCPN/OpenCPN/gui/include/gui/options.h:297: undefined reference to `g_options'
+/usr/bin/ld: /home/rpi500/Builds/OCPN/OpenCPN/gui/include/gui/options.h:297: undefined reference to `g_options'
+/usr/bin/ld: CMakeFiles/opencpn.dir/gui/src/connections_dlg.cpp.o:/home/rpi500/Builds/OCPN/OpenCPN/gui/include/gui/options.h:297: more undefined references to `g_options' follow
+/usr/bin/ld: CMakeFiles/opencpn.dir/gui/src/connections_dlg.cpp.o: in function `GeneralPanel::PrioritiesBtn::PrioritiesBtn(wxWindow*)::{lambda(wxCommandEvent&amp;)#1}::operator()(wxCommandEvent&amp;) const':
+/home/rpi500/Builds/OCPN/OpenCPN/gui/src/connections_dlg.cpp:803: undefined reference to `PriorityDlg::PriorityDlg(wxWindow*)'
+/usr/bin/ld: /home/rpi500/Builds/OCPN/OpenCPN/gui/src/connections_dlg.cpp:805: undefined reference to `PriorityDlg::~PriorityDlg()'
+/usr/bin/ld: /home/rpi500/Builds/OCPN/OpenCPN/gui/src/connections_dlg.cpp:805: undefined reference to `PriorityDlg::~PriorityDlg()'
+/usr/bin/ld: CMakeFiles/opencpn.dir/gui/src/ocpn_app.cpp.o: in function `MyApp::BuildMainFrame()':
+/home/rpi500/Builds/OCPN/OpenCPN/gui/src/ocpn_app.cpp:1465: undefined reference to `PlugInManager::PlugInManager(AbstractTopFrame*)'
+/usr/bin/ld: /home/rpi500/Builds/OCPN/OpenCPN/gui/src/ocpn_app.cpp:1465: undefined reference to `g_pi_manager'
+/usr/bin/ld: /home/rpi500/Builds/OCPN/OpenCPN/gui/src/ocpn_app.cpp:1465: undefined reference to `g_pi_manager'
+/usr/bin/ld: /home/rpi500/Builds/OCPN/OpenCPN/gui/src/ocpn_app.cpp:1622: undefined reference to `PlugInManager::NotifyAuiPlugIns()'
+.... many of the same
+....
+gIns(wxGLContext*, ViewPort const&amp;, int, int)'
+/usr/bin/ld: /home/rpi500/Builds/OCPN/OpenCPN/gui/src/gl_chart_canvas.cpp:4463: undefined reference to `PlugInManager::SendViewPortToRequestingPlugIns(ViewPort&amp;)'
+/usr/bin/ld: /home/rpi500/Builds/OCPN/OpenCPN/gui/src/gl_chart_canvas.cpp:4464: undefined reference to `PlugInManager::RenderAllGLCanvasOverlayPlugIns(wxGLContext*, ViewPort const&amp;, int, int)'
+/usr/bin/ld: /home/rpi500/Builds/OCPN/OpenCPN/gui/src/gl_chart_canvas.cpp:4469: undefined reference to `RolloverWin::Draw(ocpnDC&amp;)'
+/usr/bin/ld: /home/rpi500/Builds/OCPN/OpenCPN/gui/src/gl_chart_canvas.cpp:4472: undefined reference to `RolloverWin::Draw(ocpnDC&amp;)'
+/usr/bin/ld: /home/rpi500/Builds/OCPN/OpenCPN/gui/src/gl_chart_canvas.cpp:4475: undefined reference to `RolloverWin::Draw(ocpnDC&amp;)'
+/usr/bin/ld: /home/rpi500/Builds/OCPN/OpenCPN/gui/src/gl_chart_canvas.cpp:4548: undefined reference to `PlugInManager::SendViewPortToRequestingPlugIns(ViewPort&amp;)'
+/usr/bin/ld: /home/rpi500/Builds/OCPN/OpenCPN/gui/src/gl_chart_canvas.cpp:4549: undefined reference to `PlugInManager::RenderAllGLCanvasOverlayPlugIns(wxGLContext*, ViewPort const&amp;, int, int)'
+/usr/bin/ld: CMakeFiles/opencpn.dir/gui/src/gl_texture_mgr.cpp.o: in function `glTextureManager::TextureCrunch(double)':
+/home/rpi500/Builds/OCPN/OpenCPN/gui/src/gl_texture_mgr.cpp:1205: undefined reference to `Quilt::IsChartInQuilt(wxString&amp;)'
+/usr/bin/ld: CMakeFiles/opencpn.dir/gui/src/gl_texture_mgr.cpp.o: in function `glTextureManager::FactoryCrunch(double)':
+/home/rpi500/Builds/OCPN/OpenCPN/gui/src/gl_texture_mgr.cpp:1264: undefined reference to `Quilt::IsChartInQuilt(wxString&amp;)'
+collect2: error: ld returned 1 exit status
+make[2]: *** [CMakeFiles/opencpn.dir/build.make:2373: opencpn] Error 1
+make[1]: *** [CMakeFiles/Makefile2:1005: CMakeFiles/opencpn.dir/all] Error 2
+make[1]: *** Waiting for unfinished jobs....
+[ 75%] Built target tests
+make: *** [Makefile:159: all] Error 2
+rpi500@raspberrypi:~/Builds/OCPN/OpenCPN/build $
+</code></pre></div>
+
+
+
+<a name="577759376"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/354446-Testing/Bugs/topic/Debian%20build%20issue/near/577759376" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Alec Leamas <a href="https://leamas.github.io/zulip-archive/stream/354446-Testing.2FBugs/topic/Debian.20build.20issue.html#577759376">(Mar 06 2026 at 14:15)</a>:</h4>
+<p>This is not about dependencies, all missing symbols are from the main program.</p>
+<p>And these do certainly exist. Have you tried removing the build directory and rebuild from scratch?</p>
+
+
+
+<hr><p>Last updated: Mar 06 2026 at 14:57 UTC</p>
+</html>
