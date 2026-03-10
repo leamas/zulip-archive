@@ -37,5 +37,27 @@ Once you want the new <code>.po</code> files with translations, just download th
 
 
 
-<hr><p>Last updated: Mar 10 2026 at 15:52 UTC</p>
+<a name="578439739"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/282854-general/topic/.po%20translations%20%26%20crowdin/near/578439739" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Kupofty <a href="https://leamas.github.io/zulip-archive/stream/282854-general/topic/.2Epo.20translations.20.26.20crowdin.html#578439739">(Mar 10 2026 at 16:13)</a>:</h4>
+<p>The only script in the <code>po</code> folder of SAR plugin has some commented parts and is only updating the <a href="http://POTFILEs.in">POTFILEs.in</a> : </p>
+<div class="codehilite"><pre><span></span><code>#bin/bash
+cd ..
+#//ls src/*.cpp src/*.h &gt; po/POTFILES.in
+#//cd po
+#//xgettext -a -C ../src/route_pi.cpp -o route_pi.pot
+
+#cd plugins/{$plugin}/
+find src/ -name \*.cpp -or -name \*.h -or -name \*.hpp &gt;po/POTFILES.in
+</code></pre></div>
+<p>I was thinking of using the one from meteovache_pi :</p>
+<div class="codehilite"><pre><span></span><code><span class="ch">#!/bin/sh</span>
+<span class="nb">cd</span><span class="w"> </span>..<span class="p">;</span>xgettext<span class="w"> </span>--add-comments<span class="o">=</span>TRANSLATORS<span class="w"> </span>--force-po<span class="w"> </span>--from-code<span class="o">=</span>iso-8859-1<span class="w"> </span>--output<span class="o">=</span>po/xxxxx_pi.pot<span class="w"> </span>--keyword<span class="o">=</span>_<span class="w"> </span>--width<span class="o">=</span><span class="m">80</span><span class="w"> </span>--files-from<span class="o">=</span>po/POTFILES.in
+</code></pre></div>
+<p>Is this one correct or is there a better/approved model for this script ?</p>
+<p>I have an Crowdin account and already contributed to OCPN translation but I doubt I have any privilege.<br>
+<a href="https://crowdin.com/project/opencpn/translations">https://crowdin.com/project/opencpn/translations</a> : Don't have access to this either.</p>
+
+
+
+<hr><p>Last updated: Mar 10 2026 at 16:48 UTC</p>
 </html>
