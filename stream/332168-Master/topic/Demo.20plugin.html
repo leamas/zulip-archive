@@ -467,5 +467,29 @@ Once again thanks for the feedback and for actually using the project.</p>
 
 
 
-<hr><p>Last updated: Mar 31 2026 at 06:52 UTC</p>
+<a name="582722871"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332168-Master/topic/Demo%20plugin/near/582722871" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> TwoCan <a href="https://leamas.github.io/zulip-archive/stream/332168-Master/topic/Demo.20plugin.html#582722871">(Mar 31 2026 at 07:34)</a>:</h4>
+<p>Dumb question.<br>
+What is preferred, old style C++ semantics. Eg.</p>
+<div class="codehilite" data-code-language="C++"><pre><span></span><code><span class="n">PlugIn_Route</span><span class="o">*</span><span class="w"> </span><span class="n">pRoute</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">new</span><span class="w"> </span><span class="n">Plugin_Route</span><span class="p">();</span>
+<span class="p">......</span>
+<span class="n">AddPlugInRoute</span><span class="p">(</span><span class="n">route</span><span class="p">,</span><span class="w"> </span><span class="nb">true</span><span class="p">);</span>
+</code></pre></div>
+<p>or newer semantics, Eg.</p>
+<div class="codehilite" data-code-language="C++"><pre><span></span><code><span class="k">auto</span><span class="w"> </span><span class="n">route</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">std</span><span class="o">::</span><span class="n">make_unique</span><span class="o">&lt;</span><span class="n">PlugIn_Route</span><span class="o">&gt;</span><span class="p">();</span>
+<span class="p">.....</span>
+<span class="n">AddPlugInRoute</span><span class="p">(</span><span class="n">route</span><span class="p">.</span><span class="n">get</span><span class="p">(),</span><span class="w"> </span><span class="nb">true</span><span class="p">);</span>
+</code></pre></div>
+<p>With several things declared as WX_DECLARE_LIST a number of API's preclude the use of smart pointers.</p>
+
+
+
+<a name="582723717"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332168-Master/topic/Demo%20plugin/near/582723717" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Alec Leamas <a href="https://leamas.github.io/zulip-archive/stream/332168-Master/topic/Demo.20plugin.html#582723717">(Mar 31 2026 at 07:38)</a>:</h4>
+<p>The basic answer is that we prefer the "new style"  whenever there is a choice. But we have a legacy which ties us down to the old stuff in a lot of situations, we live with it while moving in the right direction.</p>
+<p>One notable exception is  direct wxWidgets interfacing which is based on raw pointers  (since wxWidgets does not require C++11)</p>
+
+
+
+<hr><p>Last updated: Mar 31 2026 at 08:02 UTC</p>
 </html>

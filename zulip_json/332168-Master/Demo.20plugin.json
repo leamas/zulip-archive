@@ -232,5 +232,17 @@
         "id": 582658776,
         "sender_full_name": "TwoCan",
         "timestamp": 1774906568
+    },
+    {
+        "content": "<p>Dumb question.<br>\nWhat is preferred, old style C++ semantics. Eg.</p>\n<div class=\"codehilite\" data-code-language=\"C++\"><pre><span></span><code><span class=\"n\">PlugIn_Route</span><span class=\"o\">*</span><span class=\"w\"> </span><span class=\"n\">pRoute</span><span class=\"w\"> </span><span class=\"o\">=</span><span class=\"w\"> </span><span class=\"k\">new</span><span class=\"w\"> </span><span class=\"n\">Plugin_Route</span><span class=\"p\">();</span>\n<span class=\"p\">......</span>\n<span class=\"n\">AddPlugInRoute</span><span class=\"p\">(</span><span class=\"n\">route</span><span class=\"p\">,</span><span class=\"w\"> </span><span class=\"nb\">true</span><span class=\"p\">);</span>\n</code></pre></div>\n<p>or newer semantics, Eg.</p>\n<div class=\"codehilite\" data-code-language=\"C++\"><pre><span></span><code><span class=\"k\">auto</span><span class=\"w\"> </span><span class=\"n\">route</span><span class=\"w\"> </span><span class=\"o\">=</span><span class=\"w\"> </span><span class=\"n\">std</span><span class=\"o\">::</span><span class=\"n\">make_unique</span><span class=\"o\">&lt;</span><span class=\"n\">PlugIn_Route</span><span class=\"o\">&gt;</span><span class=\"p\">();</span>\n<span class=\"p\">.....</span>\n<span class=\"n\">AddPlugInRoute</span><span class=\"p\">(</span><span class=\"n\">route</span><span class=\"p\">.</span><span class=\"n\">get</span><span class=\"p\">(),</span><span class=\"w\"> </span><span class=\"nb\">true</span><span class=\"p\">);</span>\n</code></pre></div>\n<p>With several things declared as WX_DECLARE_LIST a number of API's preclude the use of smart pointers.</p>",
+        "id": 582722871,
+        "sender_full_name": "TwoCan",
+        "timestamp": 1774942446
+    },
+    {
+        "content": "<p>The basic answer is that we prefer the \"new style\"  whenever there is a choice. But we have a legacy which ties us down to the old stuff in a lot of situations, we live with it while moving in the right direction.</p>\n<p>One notable exception is  direct wxWidgets interfacing which is based on raw pointers  (since wxWidgets does not require C++11)</p>",
+        "id": 582723717,
+        "sender_full_name": "Alec Leamas",
+        "timestamp": 1774942698
     }
 ]
