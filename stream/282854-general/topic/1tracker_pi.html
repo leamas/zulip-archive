@@ -1,0 +1,48 @@
+<html>
+<head><meta charset="utf-8"><title>1tracker_pi · general · Zulip Chat Archive</title></head>
+<h2>Stream: <a href="https://leamas.github.io/zulip-archive/stream/282854-general/index.html">general</a></h2>
+<h3>Topic: <a href="https://leamas.github.io/zulip-archive/stream/282854-general/topic/1tracker_pi.html">1tracker_pi</a></h3>
+
+<hr>
+
+<base href="https://opencpn.zulipchat.com">
+
+<head><link href="https://leamas.github.io/zulip-archive/style.css" rel="stylesheet"></head>
+
+<a name="590519344"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/282854-general/topic/1tracker_pi/near/590519344" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> pa2wlt <a href="https://leamas.github.io/zulip-archive/stream/282854-general/topic/1tracker_pi.html#590519344">(Apr 23 2026 at 16:41)</a>:</h4>
+<p>Hi.</p>
+<p>After 9 years, I finally succeeded and changed my experiment into a working plugin. I named it 1tracker. This plugin allows users to send positions periodically to tracking websites. For example every 10 minutes to <a href="http://noforeignland.com">noforeignland.com</a>, every minute to a personal website, and so on. Upon request other default trackers can be added to the codebase as well.</p>
+<p>The plugin is mainly meant for cruisers that run OpenCPN and have permanent connectivity (ie via Starlink). To also support the group that only occasionally has internet, I strive to add some extra functionality over the next couple of days.</p>
+<p>Currently beta versions are ready for testing. Some other OCN users (in the Dutch sailing community) said they will do so. I tested myself for Mac and Windows. One thing I'd like to share here, since I ran into an issue for the Windows version. </p>
+<p>That had to do with std::mutex.  I managed to solve it, but that took quite some time and debugging.  Other plugin developers might run into that as well, when developing new stuff or upgrading the codebases of the existing plugins.</p>
+<p>Now, please feel free to comment on the chosen solution. Perhaps things could have solved easier or better? More than willing to learn.</p>
+<p>The plugin itself is only on my personal github (pa2wlt). Rick had some issues with adding me to the community, be he will succeed with that, and I will do a pull request and do what is necessary to get the plugin in the catalog.</p>
+<p>Regarding the std::mutex please see here: <a href="https://github.com/pa2wlt/1tracker_pi/blob/master/docs/vs2022-17.10-mutex-writeup.md">https://github.com/pa2wlt/1tracker_pi/blob/master/docs/vs2022-17.10-mutex-writeup.md</a></p>
+<p>Best, from Biskaje.</p>
+
+
+
+<a name="590522100"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/282854-general/topic/1tracker_pi/near/590522100" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Alec Leamas <a href="https://leamas.github.io/zulip-archive/stream/282854-general/topic/1tracker_pi.html#590522100">(Apr 23 2026 at 16:56)</a>:</h4>
+<p>Welcome on board!</p>
+<p>The link is 404. However, the base url is fine.</p>
+<p>Looking at it more formally there is a lot of stuff in Plugin.cmake which does not belong there. The basic design pattern is to add libraries, either local in libs/ or from opencpn-libs. Plugin.cmake  is just <code>add subdirectory()</code> and <code>target_link_libraries()</code>.</p>
+<p>LIkewise, I dont understand the role of all the ONETRACKER_PLUGIN* definitions.</p>
+
+
+
+<a name="590525739"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/282854-general/topic/1tracker_pi/near/590525739" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> pa2wlt <a href="https://leamas.github.io/zulip-archive/stream/282854-general/topic/1tracker_pi.html#590525739">(Apr 23 2026 at 17:16)</a>:</h4>
+<p>Alec: sorry, I simply forgot to push. This url works now.</p>
+
+
+
+<a name="590529803"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/282854-general/topic/1tracker_pi/near/590529803" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> pa2wlt <a href="https://leamas.github.io/zulip-archive/stream/282854-general/topic/1tracker_pi.html#590529803">(Apr 23 2026 at 17:35)</a>:</h4>
+<p>Thx for the feedback <span class="user-mention" data-user-id="399510">@Alec Leamas</span>. All fair points. I'll update the codebase, in line with the design pattern, test again and push an  update. Also, I'll write down the design pattern as the start of a list. If there are more, please let me know.</p>
+
+
+
+<hr><p>Last updated: Apr 23 2026 at 17:47 UTC</p>
+</html>
