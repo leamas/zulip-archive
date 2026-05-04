@@ -1,0 +1,58 @@
+<html>
+<head><meta charset="utf-8"><title>How to test plugins? · general · Zulip Chat Archive</title></head>
+<h2>Stream: <a href="https://leamas.github.io/zulip-archive/stream/282854-general/index.html">general</a></h2>
+<h3>Topic: <a href="https://leamas.github.io/zulip-archive/stream/282854-general/topic/How.20to.20test.20plugins.3F.html">How to test plugins?</a></h3>
+
+<hr>
+
+<base href="https://opencpn.zulipchat.com">
+
+<head><link href="https://leamas.github.io/zulip-archive/style.css" rel="stylesheet"></head>
+
+<a name="592788207"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/282854-general/topic/How%20to%20test%20plugins%3F/near/592788207" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Alec Leamas <a href="https://leamas.github.io/zulip-archive/stream/282854-general/topic/How.20to.20test.20plugins.3F.html#592788207">(May 04 2026 at 16:39)</a>:</h4>
+<p>The basic idea is to create a tarball  and import it. For shipdriver plugins this is simple, just <code>make tarball</code> and then use  Options | Plugins | Import Plugin.</p>
+<p>It works also with testplugin, but the steps are more convoluted involving a "fake" upload to create the tarball</p>
+
+
+
+<a name="592788437"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/282854-general/topic/How%20to%20test%20plugins%3F/near/592788437" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Kupofty <a href="https://leamas.github.io/zulip-archive/stream/282854-general/topic/How.20to.20test.20plugins.3F.html#592788437">(May 04 2026 at 16:40)</a>:</h4>
+<p>I do a simple "mkdir build ; cd build; cmake .. ; make"<br>
+and then "Import plugin" in OCPN.</p>
+
+
+
+<a name="592788826"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/282854-general/topic/How%20to%20test%20plugins%3F/near/592788826" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Alec Leamas <a href="https://leamas.github.io/zulip-archive/stream/282854-general/topic/How.20to.20test.20plugins.3F.html#592788826">(May 04 2026 at 16:42)</a>:</h4>
+<p>This is for shipdriver.  <code>tarball</code> is the default target, so <code>make</code> and <code>make tarball</code> is indeed the same thing.</p>
+
+
+
+<a name="592790227"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/282854-general/topic/How%20to%20test%20plugins%3F/near/592790227" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Notification Bot <a href="https://leamas.github.io/zulip-archive/stream/282854-general/topic/How.20to.20test.20plugins.3F.html#592790227">(May 04 2026 at 16:50)</a>:</h4>
+<p>4 messages were moved here from <a class="stream-topic" data-stream-id="282854" href="/#narrow/channel/282854-general/topic/1tracker_pi/with/591688827">#general &gt; 1tracker_pi</a> by <span class="user-mention silent" data-user-id="399510">Alec Leamas</span>.</p>
+
+
+
+<a name="592790526"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/282854-general/topic/How%20to%20test%20plugins%3F/near/592790526" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> seandepagnier <a href="https://leamas.github.io/zulip-archive/stream/282854-general/topic/How.20to.20test.20plugins.3F.html#592790526">(May 04 2026 at 16:51)</a>:</h4>
+<p>seems a bit inconvenient for development.  Sorry if im being obtuse.  But before I could use one command "make install" then restart opencpn and the plugin would be loaded, without gui interaction etc</p>
+
+
+
+<a name="592791303"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/282854-general/topic/How%20to%20test%20plugins%3F/near/592791303" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Alec Leamas <a href="https://leamas.github.io/zulip-archive/stream/282854-general/topic/How.20to.20test.20plugins.3F.html#592791303">(May 04 2026 at 16:56)</a>:</h4>
+<p>Well... making an omelette wihtout breaking some eggs might be hard.</p>
+<p>That said,  in the development cycle you con usually update the plugin by justr copying the so/dll file to the proper location (as long as you dont add external data). Making a full import first is the safe route, but after that you can just copy the dll file in your case.</p>
+
+
+
+<a name="592794728"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/282854-general/topic/How%20to%20test%20plugins%3F/near/592794728" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> seandepagnier <a href="https://leamas.github.io/zulip-archive/stream/282854-general/topic/How.20to.20test.20plugins.3F.html#592794728">(May 04 2026 at 17:13)</a>:</h4>
+<p>ok I will figure out how to copy it.  I was thinknig opencpn could just look in /usr/local/lib/opencpn for plugins first to pick up development ones</p>
+
+
+
+<hr><p>Last updated: May 04 2026 at 17:14 UTC</p>
+</html>
