@@ -136,5 +136,81 @@ Not sure if this is faster than just importing the new tarball</p>
 
 
 
-<hr><p>Last updated: May 05 2026 at 10:21 UTC</p>
+<a name="592967537"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/282854-general/topic/How%20to%20test%20plugins%3F/near/592967537" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> TwoCan <a href="https://leamas.github.io/zulip-archive/stream/282854-general/topic/How.20to.20test.20plugins.3F.html#592967537">(May 05 2026 at 10:49)</a>:</h4>
+<blockquote>
+<p>There is a way to make a testplugin-based plugin to create a proper tarball, but I dont find the details</p>
+</blockquote>
+<p>Will happily stand corrected but Jon Gough's TestPlugin template assumed a localCircleCI environment and this the cloudsmith-upload script generated a viable tarball.</p>
+<p>My workaround for local Windows builds was to compile &amp; build the plugin, <br>
+eg. cmake --build . --config Release|Debug|RelWithDebInfo|MinSizeRel --target package<br>
+then manually edit the metadata and change the tarball url to a valid url or even something like:<br>
+file://d:/code/demo_plugin/build/Demo-Chapter12c_msvc-wx32-10.0.19045-x86.tar.gz</p>
+<p>As everyone else agrees, once the plugin is installed, building/installing/testing further iterations just requires copying the plugin library (.dll or .so) into the plugin directory.</p>
+
+
+
+<a name="592974264"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/282854-general/topic/How%20to%20test%20plugins%3F/near/592974264" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Rick Gleason <a href="https://leamas.github.io/zulip-archive/stream/282854-general/topic/How.20to.20test.20plugins.3F.html#592974264">(May 05 2026 at 11:21)</a>:</h4>
+<p>This is correct<br>
+"Jon Gough's TestPlugin template assumed a localCircleCI environment and this the cloudsmith-upload script generated a viable tarball."   </p>
+<p>But locally we also use it to import the metadata into the tarball first generated, "C:\Program Files\Git\bin\bash.exe" ./cloudsmith-upload.sh</p>
+<p>set "wxWidgets_ROOT_DIR=C:\Users\fcgle\source\wxWidgets"<br>
+set "OCPN_DEV=C:\Users\fcgle\source\opencpn\build\Debug\plugins"<br>
+set "PLUGIN_BUILD=build"<br>
+rmdir /s /q "weather_routing_pi\build"<br>
+mkdir "%PLUGIN_BUILD%"<br>
+cd "%PLUGIN_BUILD%"<br>
+cmake -T v143 -A Win32 -DOCPN_TARGET=MSVC ^<br>
+-DwxWidgets_ROOT_DIR="%wxWidgets_ROOT_DIR%" ^<br>
+.. &gt; cmake_configure_log.txt 2&gt;&amp;1<br>
+if errorlevel 1 (<br>
+echo CMake configuration failed.<br>
+exit /b 1<br>
+)<br>
+REM Build Debug<br>
+cmake --build . --target package --config Debug &gt; buildlog-debug.txt 2&gt;&amp;1<br>
+if errorlevel 1 (<br>
+echo Debug build failed.<br>
+exit /b 1<br>
+)<br>
+REM Build RelWithDeb<br>
+cmake --build . --target package --config RelWithDebInfo &gt; buildlog-rdeb.txt 2&gt;&amp;1<br>
+if errorlevel 1 (<br>
+echo RelWithDebInfo build failed.<br>
+exit /b 1<br>
+)<br>
+REM  AUTO‑COPY DLL + PDB INTO OPENCPN DEV TREE<br>
+for %%C in (Debug RelWithDebInfo) do (<br>
+if exist "%%C\<em>.dll" copy /Y "%%C\</em>.dll" "%OCPN_DEV%"<br>
+if exist "%%C\<em>.pdb" copy /Y "%%C\</em>.pdb" "%OCPN_DEV%"<br>
+)<br>
+echo Copy complete.<br>
+REM  RUN CLOUDSMITH METADATA INJECTION<br>
+"C:\Program Files\Git\bin\bash.exe" ./cloudsmith-upload.sh<br>
+echo === BUILD COMPLETE ===<br>
+echo Debug + RelWithDebInfo builds are ready.<br>
+echo Plugin deployed to: %OCPN_DEV%<br>
+echo wxWidgets used from: %wxWidgets_ROOT_DIR%</p>
+<p>REM NOTES<br>
+REM The tarball is always the RelWithDebInfo package.<br>
+REM OpenCPN plugin packaging rules:<br>
+REM Debug build → used only for local debugging<br>
+REM RelWithDebInfo build → used for packaging<br>
+REM CPack → always packages the RelWithDebInfo artifacts<br>
+REM So this file:<br>
+REM weather_routing_pi-1.15.45.7-msvc-x86-wx32-10.0.26200-MSVC.tar.gz<br>
+REM contains:<br>
+REM The RelWithDebInfo DLL<br>
+REM The metadata (after ./cloudsmith-upload.sh is run)<br>
+REM The XML manifest<br>
+REM The plugin resources<br>
+REM This is the file you would upload to Cloudsmith</p>
+<p>This script is <a href="http://bldwin-all.sh">bldwin-all.sh</a><br>
+There are other useful scripts for windows and TestPlugin Template. <br>
+Look in <a href="https://github.com/rgleason/climatology_pi">https://github.com/rgleason/climatology_pi</a></p>
+
+
+
+<hr><p>Last updated: May 05 2026 at 11:49 UTC</p>
 </html>
