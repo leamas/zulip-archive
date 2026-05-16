@@ -621,5 +621,16 @@ As I already said it looks like your plugin is considered to be an "included plu
 
 
 
-<hr><p>Last updated: May 16 2026 at 14:18 UTC</p>
+<a name="595491996"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332168-Master/topic/Demo%20plugin/near/595491996" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Alec Leamas <a href="https://leamas.github.io/zulip-archive/stream/332168-Master/topic/Demo.20plugin.html#595491996">(May 16 2026 at 14:21)</a>:</h4>
+<p>Indeed, this is the culprit. The test for if a plugin is a bundled one is in plugin_loader.cpp. It basically tests if plugin is one of</p>
+<div class="codehilite"><pre><span></span><code>static const std::vector&lt;std::string&gt; SYSTEM_PLUGINS = {
+    &quot;chartdownloader&quot;, &quot;wmm&quot;, &quot;dashboard&quot;, &quot;grib&quot;, &quot;demo&quot;};
+</code></pre></div>
+<p>This can (i.e., should) of course be  fixed in master. But this will only affect opencpn 5.16+. I think the only reasonable fix for now is to rename the new plugin to something else than 'Demo'.</p>
+<p>I wish I had a good proposal...</p>
+
+
+
+<hr><p>Last updated: May 16 2026 at 15:29 UTC</p>
 </html>
