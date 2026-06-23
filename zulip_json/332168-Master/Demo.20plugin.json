@@ -322,5 +322,11 @@
         "id": 595533109,
         "sender_full_name": "TwoCan",
         "timestamp": 1778968511
+    },
+    {
+        "content": "<p>Having an attempt at the Chart Plugin API's.</p>\n<p>A very simple non OpenGL version in the chart branch of the demo plugin. It kind of works, but lot's of bugs, due to my lack of knowledge. Would appreciate it if someone more knowledgeable would be able to investigate (and also correct any documentation errors).</p>\n<p>It uses a simple GeoJSON formatted file as the chart source, originlly derived from Natural Earth 1:50M and clipped to a rectangle enclosing Australia &amp; New Zealand. The chart source representing land, coastline, river and lakes is parsed by a simple decoder that generates the simple geometry objects (polygons and lines).</p>\n<p>These are rendered but really a few major problems. I clearly don't understand the relationship between scaling, viewport and regions, so  the scaling &amp; presence of the chart seems to be random. <br>\nSecondly, the chart projection is Equirectangular, so does that mean it can't be quilted alongside other charts, or is my expectation incorrect.</p>\n<p>Finally if the chart is on screen, when OpenCPN shuts down, although the log indicates a clean shutdown, it crashes.  There is an AV on line 5512 of chcanv.cpp: Wondering if O is still trying to access the chart plugin even though it no longer exists.<br>\nOffending snippet of code....</p>\n<p>AV here---&gt; if ((!m_cache_vp.IsValid()) ||<br>\n    (m_cache_vp.view_scale_ppm != VPoint.view_scale_ppm)) {<br>\n  Refresh(false);<br>\n  b_ret = true;<br>\n} else {</p>",
+        "id": 606076567,
+        "sender_full_name": "TwoCan",
+        "timestamp": 1782240733
     }
 ]

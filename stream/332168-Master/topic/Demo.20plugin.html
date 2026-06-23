@@ -650,5 +650,22 @@ What's in a name they said! Renaming the plugin it is. Lucky we've got git rebas
 
 
 
-<hr><p>Last updated: Jun 23 2026 at 18:15 UTC</p>
+<a name="606076567"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332168-Master/topic/Demo%20plugin/near/606076567" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> TwoCan <a href="https://leamas.github.io/zulip-archive/stream/332168-Master/topic/Demo.20plugin.html#606076567">(Jun 23 2026 at 18:52)</a>:</h4>
+<p>Having an attempt at the Chart Plugin API's.</p>
+<p>A very simple non OpenGL version in the chart branch of the demo plugin. It kind of works, but lot's of bugs, due to my lack of knowledge. Would appreciate it if someone more knowledgeable would be able to investigate (and also correct any documentation errors).</p>
+<p>It uses a simple GeoJSON formatted file as the chart source, originlly derived from Natural Earth 1:50M and clipped to a rectangle enclosing Australia &amp; New Zealand. The chart source representing land, coastline, river and lakes is parsed by a simple decoder that generates the simple geometry objects (polygons and lines).</p>
+<p>These are rendered but really a few major problems. I clearly don't understand the relationship between scaling, viewport and regions, so  the scaling &amp; presence of the chart seems to be random. <br>
+Secondly, the chart projection is Equirectangular, so does that mean it can't be quilted alongside other charts, or is my expectation incorrect.</p>
+<p>Finally if the chart is on screen, when OpenCPN shuts down, although the log indicates a clean shutdown, it crashes.  There is an AV on line 5512 of chcanv.cpp: Wondering if O is still trying to access the chart plugin even though it no longer exists.<br>
+Offending snippet of code....</p>
+<p>AV here---&gt; if ((!m_cache_vp.IsValid()) ||<br>
+    (m_cache_vp.view_scale_ppm != VPoint.view_scale_ppm)) {<br>
+  Refresh(false);<br>
+  b_ret = true;<br>
+} else {</p>
+
+
+
+<hr><p>Last updated: Jun 23 2026 at 20:23 UTC</p>
 </html>
