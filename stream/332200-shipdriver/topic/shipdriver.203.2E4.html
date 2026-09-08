@@ -81,5 +81,89 @@ Can the scripts referenced by <em>config.yml</em> be adjusted for this?</p>
 
 
 
-<hr><p>Last updated: Sep 08 2026 at 10:48 UTC</p>
+<a name="622553981"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332200-shipdriver/topic/shipdriver%203.4/near/622553981" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Tony Voss <a href="https://leamas.github.io/zulip-archive/stream/332200-shipdriver/topic/shipdriver.203.2E4.html#622553981">(Sep 08 2026 at 14:11)</a>:</h4>
+<p>My JavaScript remote building is broken again.  Only MacOS Universal is succeeding.<br>
+I have updated to sd3.4.6 but still no better.<br>
+Logs: <a href="https://app.circleci.com/pipelines/gh/antipole2/JavaScript_pi/655/details?useNewPipelines=true&amp;job=ca2a155e-f0d5-4a8a-bfac-62a1bc8dc8a5&amp;workflowId=4806b32f-26c1-41f5-b6a1-0c94504e26ef&amp;buildNumber=7683&amp;jobType=build">CircleCI</a>  <a href="https://ci.appveyor.com/project/antipole2/javascript-pi/builds/54682142">Appveyor</a></p>
+<p>Can someone advise, please?</p>
+
+
+
+<a name="622555413"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332200-shipdriver/topic/shipdriver%203.4/near/622555413" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Alec Leamas <a href="https://leamas.github.io/zulip-archive/stream/332200-shipdriver/topic/shipdriver.203.2E4.html#622555413">(Sep 08 2026 at 14:15)</a>:</h4>
+<p>Just a simple error ?</p>
+<div class="codehilite"><pre><span></span><code>In file included from /ci-source/src/fileOrganiser.cpp:15:
+/ci-source/src/JavaScriptgui_impl.h: In constructor &#39;Console::Console(wxWindow*, wxString)&#39;:
+/ci-source/src/JavaScriptgui_impl.h:300:25: error: expected &#39;;&#39; before &#39;wxAcceleratorTable&#39;
+  300 |                         wxAcceleratorTable accel(2, entries);
+      |                         ^~~~~~~~~~~~~~~~~~
+/ci-source/src/JavaScriptgui_impl.h:301:45: error: &#39;accel&#39; was not declared in this scope
+  301 |                         SetAcceleratorTable(accel);
+</code></pre></div>
+
+
+
+<a name="622555803"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332200-shipdriver/topic/shipdriver%203.4/near/622555803" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Kupofty <a href="https://leamas.github.io/zulip-archive/stream/332200-shipdriver/topic/shipdriver.203.2E4.html#622555803">(Sep 08 2026 at 14:16)</a>:</h4>
+<p>In <code>JavaScriptgui_impl.h</code> : </p>
+<div class="codehilite"><pre><span></span><code>#ifdef __WXMAC__
+            entries[0].Set(wxACCEL_CMD, &#39;F&#39;, ID_CONSOLE_FORMAT);
+            entries[1].Set(wxACCEL_CMD, &#39;P&#39;, ID_TIDY_PARKING);
+#else
+            entries[0].Set(wxACCEL_CTRL, &#39;F&#39;, ID_CONSOLE_FORMAT);
+            entries[1].Set(wxACCEL_CTRL, &#39;P&#39;, ID_TIDY_PARKING)
+#endif
+            wxAcceleratorTable accel(2, entries);
+            SetAcceleratorTable(accel);
+            Bind(wxEVT_MENU, &amp;Console::OnConsoleFormat, this, ID_CONSOLE_FORMAT);
+            Bind(wxEVT_MENU, &amp;Console::OnParkingTidy, this, ID_TIDY_PARKING);
+            // end of stuff for short cuts
+            }
+</code></pre></div>
+
+
+
+<a name="622555890"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332200-shipdriver/topic/shipdriver%203.4/near/622555890" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Kupofty <a href="https://leamas.github.io/zulip-archive/stream/332200-shipdriver/topic/shipdriver.203.2E4.html#622555890">(Sep 08 2026 at 14:17)</a>:</h4>
+<p>you forgot a ; after <code>entries[1].Set(wxACCEL_CTRL, 'P', ID_TIDY_PARKING)</code></p>
+
+
+
+<a name="622556676"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332200-shipdriver/topic/shipdriver%203.4/near/622556676" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Kupofty <a href="https://leamas.github.io/zulip-archive/stream/332200-shipdriver/topic/shipdriver.203.2E4.html#622556676">(Sep 08 2026 at 14:19)</a>:</h4>
+<p>About bullseye builds, mine have been failing for a while :</p>
+<div class="codehilite"><pre><span></span><code>WARNING: apt does not have a stable CLI interface. Use with caution in scripts.
+
+121 packages can be upgraded. Run &#39;apt list --upgradable&#39; to see them.
++ sudo apt-get -qq install devscripts equivs software-properties-common
+E: Failed to fetch http://security.debian.org/debian-security/pool/updates/main/libf/libfile-find-rule-perl/libfile-find-rule-perl_0.34-1%2bdeb11u1_all.deb  404  Not Found [IP: 146.75.30.132 80]
+E: Unable to fetch some archives, maybe run apt-get update or try with --fix-missing?
+
+Exited with code exit status 100
+</code></pre></div>
+<p>Pavel told me to drop this build architecture...</p>
+
+
+
+<a name="622558112"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332200-shipdriver/topic/shipdriver%203.4/near/622558112" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Alec Leamas <a href="https://leamas.github.io/zulip-archive/stream/332200-shipdriver/topic/shipdriver.203.2E4.html#622558112">(Sep 08 2026 at 14:24)</a>:</h4>
+<p>We have dropped bullseye from shipdriver, same for linux-armhf (android-armhf is still there).</p>
+
+
+
+<a name="622559111"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332200-shipdriver/topic/shipdriver%203.4/near/622559111" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Kupofty <a href="https://leamas.github.io/zulip-archive/stream/332200-shipdriver/topic/shipdriver.203.2E4.html#622559111">(Sep 08 2026 at 14:28)</a>:</h4>
+<p>Ok so dropping bookworm-armhf and build-trixie-armhf.</p>
+<p>Unrelated question : I believe the android builds are only for api 18 ?</p>
+
+
+
+<a name="622559930"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332200-shipdriver/topic/shipdriver%203.4/near/622559930" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Alec Leamas <a href="https://leamas.github.io/zulip-archive/stream/332200-shipdriver/topic/shipdriver.203.2E4.html#622559930">(Sep 08 2026 at 14:30)</a>:</h4>
+<p>Android: no idea, I don't follow those builds.  But I see no reason why not use later APIs besides the usual features vs compatibility trade off.</p>
+
+
+
+<hr><p>Last updated: Sep 08 2026 at 14:49 UTC</p>
 </html>
