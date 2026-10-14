@@ -22,5 +22,101 @@
         "id": 630967809,
         "sender_full_name": "Alec Leamas",
         "timestamp": 1791805429
+    },
+    {
+        "content": "<p>I agree on all above.  3.3.4 (bundled) for all Windows builds, 3.2 for linux/Mac/flatpak.<br>\nLet's go in that direction from here.</p>",
+        "id": 631733065,
+        "sender_full_name": "Dave Register",
+        "timestamp": 1792001775
+    },
+    {
+        "content": "<p>Are we going to ship 32bit Windows package at all for 5.16? There are no wxWidgets binaries for it for 3.3 anymore, so we would have to build them ourselves.</p>",
+        "id": 631735802,
+        "sender_full_name": "Pavel Kalian",
+        "timestamp": 1792002365
+    },
+    {
+        "content": "<p>I have no qualms about declaring O5.16+ is available only as x64 on Windows.<br>\nThe harder question will eventually become:  How long should we continue to update and support plugins for Windows x86?  But we do not need to approach that, yet.<br>\nWe can definitely say that new plugins for Windows will be published for x64 alone.  Provides motivation for users to upgrade if they want the new plugin.  We might consider pob's rewrite of weather routing to be in this category.</p>",
+        "id": 631736670,
+        "sender_full_name": "Dave Register",
+        "timestamp": 1792002587
+    },
+    {
+        "content": "<p>The win32 support for 5.14 exists, so we can probably keep building for it for quite some time, if we want to. And given we now fake win64 support for ABIs 1.18  and newer in <code>opencpn-libs</code>, it should be very simple</p>",
+        "id": 631737967,
+        "sender_full_name": "Pavel Kalian",
+        "timestamp": 1792002890
+    },
+    {
+        "content": "<p>Until you need some newer API, which won't be available for win32</p>",
+        "id": 631738192,
+        "sender_full_name": "Pavel Kalian",
+        "timestamp": 1792002944
+    },
+    {
+        "content": "<p>And even after that, the \"last good\" version of the plugin still can be available for old win32 versions</p>",
+        "id": 631738399,
+        "sender_full_name": "Pavel Kalian",
+        "timestamp": 1792002995
+    },
+    {
+        "content": "<p>Yes, the \"last good\" on O5.14 will not be lost.<br>\nAnd we should say that this policy is the \"official\" word, but does not preclude individual devs from updating x86 plugins for critical issues observed.   IOW, if for example I need to fix a bug on o-charts_pi, I may update the x86 build in the catalog if the need is strong enough.  I'd rather not, though.</p>",
+        "id": 631739581,
+        "sender_full_name": "Dave Register",
+        "timestamp": 1792003268
+    },
+    {
+        "content": "<p>I will of course drop win32 support as soon as it cuses any problem in the CI builds or I need any new API. Until then I will keep it as it \"costs nothing\"</p>",
+        "id": 631741336,
+        "sender_full_name": "Pavel Kalian",
+        "timestamp": 1792003667
+    },
+    {
+        "content": "<p>I have not actually tried an Appveyor x64 build on any plugin.  Have you?  Just wondering how hard/tedious that might be.</p>",
+        "id": 631741794,
+        "sender_full_name": "Dave Register",
+        "timestamp": 1792003768
+    },
+    {
+        "content": "<p>I have win64 builds for dashboardsk now, it was simple. But I build for Windows using Github Actions, abandoned AppVeyor to have to care about one less platform.</p>",
+        "id": 631742421,
+        "sender_full_name": "Pavel Kalian",
+        "timestamp": 1792003934
+    },
+    {
+        "content": "<p>Alec's SD template uses Appveyor.  SD umbrellas a good number of popular plugins, so simple adaptation of x86 Appveyor script would be the first approach.  On my list...</p>",
+        "id": 631742995,
+        "sender_full_name": "Dave Register",
+        "timestamp": 1792004086
+    },
+    {
+        "content": "<p>I will do that after the core and opencpn-libs</p>",
+        "id": 631744253,
+        "sender_full_name": "Pavel Kalian",
+        "timestamp": 1792004371
+    },
+    {
+        "content": "<p>SD already builds both win32 and win64 using appveyor, thanks to PR from Pavel :)</p>",
+        "id": 631745271,
+        "sender_full_name": "Alec Leamas",
+        "timestamp": 1792004587
+    },
+    {
+        "content": "<p>Yes, but not against wx3.3</p>",
+        "id": 631745352,
+        "sender_full_name": "Pavel Kalian",
+        "timestamp": 1792004609
+    },
+    {
+        "content": "<p>OK, that should not be that complicated.</p>",
+        "id": 631745407,
+        "sender_full_name": "Alec Leamas",
+        "timestamp": 1792004625
+    },
+    {
+        "content": "<p>But we first need the core building against it... <a href=\"https://github.com/OpenCPN/OpenCPN/actions/runs/38618547231/job/116039794810?pr=5492\">https://github.com/OpenCPN/OpenCPN/actions/runs/38618547231/job/116039794810?pr=5492</a></p>",
+        "id": 631745477,
+        "sender_full_name": "Pavel Kalian",
+        "timestamp": 1792004642
     }
 ]
