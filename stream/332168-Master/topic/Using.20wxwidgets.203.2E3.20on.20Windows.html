@@ -214,5 +214,64 @@ And we should say that this policy is the "official" word, but does not preclude
 
 
 
-<hr><p>Last updated: Oct 15 2026 at 09:58 UTC</p>
+<a name="631934130"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332168-Master/topic/Using%20wxwidgets%203.3%20on%20Windows/near/631934130" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Pavel Kalian <a href="https://leamas.github.io/zulip-archive/stream/332168-Master/topic/Using.20wxwidgets.203.2E3.20on.20Windows.html#631934130">(Oct 15 2026 at 12:15)</a>:</h4>
+<p>I have squashed all the wx3.3 FTBFS code changes together in the PR branch, <a href="https://github.com/OpenCPN/OpenCPN/pull/5492">https://github.com/OpenCPN/OpenCPN/pull/5492</a> is probably as ready as I can get it for now</p>
+
+
+
+<a name="631947258"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332168-Master/topic/Using%20wxwidgets%203.3%20on%20Windows/near/631947258" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Alec Leamas <a href="https://leamas.github.io/zulip-archive/stream/332168-Master/topic/Using.20wxwidgets.203.2E3.20on.20Windows.html#631947258">(Oct 15 2026 at 13:03)</a>:</h4>
+<p>As long as it builds something usable I see no reason to wait -- better to merge and iron out details while in master. This is it the right point in the 5.16 cycle for such changes</p>
+<p>We also need some communication, basically a github discussion about the platforms to be supported by 5.16. Win64 is of course the big thing, but here is also at least Flatpak and Debian updates.  </p>
+<p>BTW: Are there any plans for changes in the macOS support for 5.16?</p>
+<p>No more time today. If no platform announcement is done tomorrow I will try to do it then.</p>
+
+
+
+<a name="631949090"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332168-Master/topic/Using%20wxwidgets%203.3%20on%20Windows/near/631949090" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Pavel Kalian <a href="https://leamas.github.io/zulip-archive/stream/332168-Master/topic/Using.20wxwidgets.203.2E3.20on.20Windows.html#631949090">(Oct 15 2026 at 13:09)</a>:</h4>
+<p>For macOS so far nothing major, just bumping the dependencies to the latest available versions. I haven't had a close look, but so far we probably don't need to bump to wx3.3 there, means no ABI changes.</p>
+
+
+
+<a name="631949431"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332168-Master/topic/Using%20wxwidgets%203.3%20on%20Windows/near/631949431" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Pavel Kalian <a href="https://leamas.github.io/zulip-archive/stream/332168-Master/topic/Using.20wxwidgets.203.2E3.20on.20Windows.html#631949431">(Oct 15 2026 at 13:10)</a>:</h4>
+<p>But as we need to change ABI for flatpak anyway, do we want it there? Or wx3.4, which might become available in time for 5.16...</p>
+
+
+
+<a name="631950462"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332168-Master/topic/Using%20wxwidgets%203.3%20on%20Windows/near/631950462" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Alec Leamas <a href="https://leamas.github.io/zulip-archive/stream/332168-Master/topic/Using.20wxwidgets.203.2E3.20on.20Windows.html#631950462">(Oct 15 2026 at 13:14)</a>:</h4>
+<p>Debian is locked to 3.2. There are good reasons for using 3.3 on Windows, but for other platforms I don't really see the benefits.  Do you?</p>
+<p>There are of course reasons to minimize the number of wxw versions we use.</p>
+
+
+
+<a name="631951011"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332168-Master/topic/Using%20wxwidgets%203.3%20on%20Windows/near/631951011" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Pavel Kalian <a href="https://leamas.github.io/zulip-archive/stream/332168-Master/topic/Using.20wxwidgets.203.2E3.20on.20Windows.html#631951011">(Oct 15 2026 at 13:16)</a>:</h4>
+<p>As I have written, on macOS I so far don't see the need, but honestly did no testing on macOS 27 yet.</p>
+
+
+
+<a name="631951751"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332168-Master/topic/Using%20wxwidgets%203.3%20on%20Windows/near/631951751" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Alec Leamas <a href="https://leamas.github.io/zulip-archive/stream/332168-Master/topic/Using.20wxwidgets.203.2E3.20on.20Windows.html#631951751">(Oct 15 2026 at 13:19)</a>:</h4>
+<p>Perhaps we should plan the overall shift to wxw 3.4 to 5.18. At that  point we will have 3.4 available on all platforms.</p>
+<p>The really painful is the update from 3.3 to 3.4 for windows for probably very little gains. Depending on when 3.4 becomes available we might reconsider  the win64 wxw version, I guess.</p>
+
+
+
+<a name="631953029"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332168-Master/topic/Using%20wxwidgets%203.3%20on%20Windows/near/631953029" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Pavel Kalian <a href="https://leamas.github.io/zulip-archive/stream/332168-Master/topic/Using.20wxwidgets.203.2E3.20on.20Windows.html#631953029">(Oct 15 2026 at 13:23)</a>:</h4>
+<p>If 3.4 is available, we definitely will have switch to it before 5.16 release</p>
+
+
+
+<a name="631974359"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332168-Master/topic/Using%20wxwidgets%203.3%20on%20Windows/near/631974359" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Pavel Kalian <a href="https://leamas.github.io/zulip-archive/stream/332168-Master/topic/Using.20wxwidgets.203.2E3.20on.20Windows.html#631974359">(Oct 15 2026 at 14:28)</a>:</h4>
+<p>OK, so I will merge and go on to <code>opencpn-libs</code> and then <code>ShipDriver_pi</code> if there are no objections...</p>
+
+
+
+<hr><p>Last updated: Oct 15 2026 at 14:40 UTC</p>
 </html>
