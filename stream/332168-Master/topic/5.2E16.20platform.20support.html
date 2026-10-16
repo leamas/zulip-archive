@@ -1,0 +1,70 @@
+<html>
+<head><meta charset="utf-8"><title>5.16 platform support · Master · Zulip Chat Archive</title></head>
+<h2>Stream: <a href="https://leamas.github.io/zulip-archive/stream/332168-Master/index.html">Master</a></h2>
+<h3>Topic: <a href="https://leamas.github.io/zulip-archive/stream/332168-Master/topic/5.2E16.20platform.20support.html">5.16 platform support</a></h3>
+
+<hr>
+
+<base href="https://opencpn.zulipchat.com">
+
+<head><link href="https://leamas.github.io/zulip-archive/style.css" rel="stylesheet"></head>
+
+<a name="632200675"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332168-Master/topic/5.16%20platform%20support/near/632200675" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Alec Leamas <a href="https://leamas.github.io/zulip-archive/stream/332168-Master/topic/5.2E16.20platform.20support.html#632200675">(Oct 16 2026 at 08:59)</a>:</h4>
+<p><span class="user-mention" data-user-id="573239">@Pavel Kalian</span>    Thanks for doing the win64 heavy lifting!</p>
+<p>My understanding of 5.16 platform support below.  Did I get it right?<br>
+<span class="user-mention" data-user-id="517002">@Dave Register</span> : Will 5.16 for Android still use wxw 3.0?</p>
+<hr>
+<p>5.16 is planned to be released end of March/beginning of April -27. Currently envisioned platform support:</p>
+<ol>
+<li>Windows: win64  for  x86_64. That is, no 32bits  builds</li>
+<li>Debian: 13/Trixie and 12/Bookworm . Version 14/Forky will land in summer/autumn -27 at which point we should release 5.16 for it. All released for arm64 and amd64</li>
+<li>Ubuntu: 22.04 Jammy, 24.04 noble and 26.04 resolute. There will no more LTS releases before 5.18.</li>
+<li>Flatpak: Runtime 26.08 for arm64 and x86_64</li>
+<li>MacOS. Universal builds targeting 10.10</li>
+<li>Android: 32-bit and 64 bit builds , 32-bits still mandated by Google (?).</li>
+</ol>
+<p>All platform uses wxWidgets 3.2 except:</p>
+<p>- Windows (win64) uses 3.3 or, if available when released, 3.4.<br>
+  - Android uses 3.0.</p>
+<p>Overall update to wxWidgets 3.4 is planned for 5.18.</p>
+
+
+
+<a name="632201993"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332168-Master/topic/5.16%20platform%20support/near/632201993" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Notification Bot <a href="https://leamas.github.io/zulip-archive/stream/332168-Master/topic/5.2E16.20platform.20support.html#632201993">(Oct 16 2026 at 09:03)</a>:</h4>
+<p><a href="#narrow/channel/332168-Master/topic/5.2E16.20platform.20support/near/632200675">A message</a> was moved here from <a class="stream-topic" data-stream-id="332168" href="/#narrow/channel/332168-Master/topic/Using.20wxwidgets.203.2E3.20on.20Windows/with/631974359">#Master &gt; Using wxwidgets 3.3 on Windows</a> by <span class="user-mention silent" data-user-id="399510">Alec Leamas</span>.</p>
+
+
+
+<a name="632236552"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332168-Master/topic/5.16%20platform%20support/near/632236552" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Håkan Svensson <a href="https://leamas.github.io/zulip-archive/stream/332168-Master/topic/5.2E16.20platform.20support.html#632236552">(Oct 16 2026 at 11:38)</a>:</h4>
+<p>From now on the only Win package on CL is for W-64. <br>
+This means that users who want to test changes and fixes cannot use any external plugins. (Except xGrib) What is the plan for all external plugins for Windows 64? I assume someone has to rebuild them? (I may have missed some info, so please..)</p>
+
+
+
+<a name="632237721"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332168-Master/topic/5.16%20platform%20support/near/632237721" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Alec Leamas <a href="https://leamas.github.io/zulip-archive/stream/332168-Master/topic/5.2E16.20platform.20support.html#632237721">(Oct 16 2026 at 11:44)</a>:</h4>
+<p>Plugins needs to be rebuilt for 5.16 for multiple reasons, win64  one of them.  First thing is updating opencpn-libs and shipdriver, in place for master but not released yet.</p>
+
+
+
+<a name="632238110"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332168-Master/topic/5.16%20platform%20support/near/632238110" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Pavel Kalian <a href="https://leamas.github.io/zulip-archive/stream/332168-Master/topic/5.2E16.20platform.20support.html#632238110">(Oct 16 2026 at 11:45)</a>:</h4>
+<p>I have already updated opencpn-libs and ShipDriver_pi template for that, so nothing blocks the other pugins. Except 26.08 flatpak which I think is still not implemented in ShipDriver</p>
+
+
+
+<a name="632252738"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332168-Master/topic/5.16%20platform%20support/near/632252738" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Dave Register <a href="https://leamas.github.io/zulip-archive/stream/332168-Master/topic/5.2E16.20platform.20support.html#632252738">(Oct 16 2026 at 12:49)</a>:</h4>
+<p>Android:</p>
+<ol>
+<li>I have dropped new builds for ARMHF (32 bits) as of July, 2026.  Demand has fallen to near zero.  Last good 32 bit build is still available on the Playstore for those few legacy users.</li>
+<li>Expecting to use wx3.3/3.4 for Android on 5.16.</li>
+</ol>
+
+
+
+<hr><p>Last updated: Oct 16 2026 at 13:29 UTC</p>
+</html>
