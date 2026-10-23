@@ -1,0 +1,67 @@
+<html>
+<head><meta charset="utf-8"><title>shipdriver 3.5 · shipdriver · Zulip Chat Archive</title></head>
+<h2>Stream: <a href="https://leamas.github.io/zulip-archive/stream/332200-shipdriver/index.html">shipdriver</a></h2>
+<h3>Topic: <a href="https://leamas.github.io/zulip-archive/stream/332200-shipdriver/topic/shipdriver.203.2E5.html">shipdriver 3.5</a></h3>
+
+<hr>
+
+<base href="https://opencpn.zulipchat.com">
+
+<head><link href="https://leamas.github.io/zulip-archive/style.css" rel="stylesheet"></head>
+
+<a name="634362962"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332200-shipdriver/topic/shipdriver%203.5/near/634362962" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Tony Voss <a href="https://leamas.github.io/zulip-archive/stream/332200-shipdriver/topic/shipdriver.203.2E5.html#634362962">(Oct 23 2026 at 12:50)</a>:</h4>
+<p>Local builds on MacOS 27.0.1 not working for me.  The dylib builds OK but it fails to build the tarball.<br>
+I have updated to sd3.5.1 but still no better.<br>
+There are warnings like this</p>
+<div class="codehilite"><pre><span></span><code>**/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX27.0.sdk/usr/include/c++/v1/__configuration/availability.h:204:4:** **warning:**
+      **"The selected platform is no longer supported by libc++." [-W#warnings]**
+  204 | #  warning "The selected platform is no longer supported by libc++."
+      |    **^**
+</code></pre></div>
+<p>then after the dylib has been built, I see   </p>
+<div class="codehilite"><pre><span></span><code>Built target tarball-install
+CMake Error: Unable to read from file 'arm64.tar.gz': Can't lstat arm64.tar.gz
+CMake Error: Problem creating tar: ../javascript-4.1.0-beta+2610231233.c27d889e_darwin-wx32-10-x86_64
+-- Creating tarball javascript-4.1.0-beta+2610231233.c27d889e_darwin-wx32-10-x86_64;arm64.tar.gz
+/Users/Tony/OpenCPN_project/JavaScript-project/JavaScript_pi/build-osx/javascript-4.1.0-beta+2610231233.c27d889e_darwin-wx32-10-x86_64arm64.tar.gz: No such file or directory
+CMake Error at checksum.cmake:7 (string):
+  string sub-command REGEX, mode MATCH needs at least 5 arguments total to command.
+-- Computing checksum in javascript-4.1-darwin-wx32-A64-10.xml
+Built target tarball-finish
+Built target tarball
+</code></pre></div>
+<p>but there is no tarball created.<br>
+Any ideas, please?</p>
+
+
+
+<a name="634376175"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332200-shipdriver/topic/shipdriver%203.5/near/634376175" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Mike Rossiter <a href="https://leamas.github.io/zulip-archive/stream/332200-shipdriver/topic/shipdriver.203.2E5.html#634376175">(Oct 23 2026 at 13:24)</a>:</h4>
+<p>Tony ...  Are you working with the master branch or ?.</p>
+
+
+
+<a name="634396332"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332200-shipdriver/topic/shipdriver%203.5/near/634396332" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Tony Voss <a href="https://leamas.github.io/zulip-archive/stream/332200-shipdriver/topic/shipdriver.203.2E5.html#634396332">(Oct 23 2026 at 14:15)</a>:</h4>
+<p>Correction... it is building the tarball but there are worrysome errors.<br>
+I have pushed to my Master.  Cicleci fails to run </p>
+<blockquote>
+<p>Config version 2 has reached end of life. Please upgrade to version 2.1. <a href="https://discuss.circleci.com/t/breaking-changes-config-compilation-updates-july-17-2026/54719">https://discuss.circleci.com/t/breaking-changes-config-compilation-updates-july-17-2026/54719</a></p>
+</blockquote>
+
+
+
+<a name="634399295"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332200-shipdriver/topic/shipdriver%203.5/near/634399295" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Mike Rossiter <a href="https://leamas.github.io/zulip-archive/stream/332200-shipdriver/topic/shipdriver.203.2E5.html#634399295">(Oct 23 2026 at 14:24)</a>:</h4>
+<p>Suspect update-templates sd3.5.1 is not being used.<br>
+In the cmake folder TemplateVersion reads: tags: sd3.4.6. Might be worth updating again. </p>
+<blockquote>
+<p>Config version 2 has reached end of life.</p>
+</blockquote>
+<p>Was fixed in sd3.5.1.</p>
+
+
+
+<hr><p>Last updated: Oct 23 2026 at 16:10 UTC</p>
+</html>

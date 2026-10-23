@@ -1,0 +1,26 @@
+[
+    {
+        "content": "<p>Local builds on MacOS 27.0.1 not working for me.  The dylib builds OK but it fails to build the tarball.<br>\nI have updated to sd3.5.1 but still no better.<br>\nThere are warnings like this</p>\n<div class=\"codehilite\"><pre><span></span><code>**/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX27.0.sdk/usr/include/c++/v1/__configuration/availability.h:204:4:** **warning:**\n      **\"The selected platform is no longer supported by libc++.\" [-W#warnings]**\n  204 | #  warning \"The selected platform is no longer supported by libc++.\"\n      |    **^**\n</code></pre></div>\n<p>then after the dylib has been built, I see   </p>\n<div class=\"codehilite\"><pre><span></span><code>Built target tarball-install\nCMake Error: Unable to read from file 'arm64.tar.gz': Can't lstat arm64.tar.gz\nCMake Error: Problem creating tar: ../javascript-4.1.0-beta+2610231233.c27d889e_darwin-wx32-10-x86_64\n-- Creating tarball javascript-4.1.0-beta+2610231233.c27d889e_darwin-wx32-10-x86_64;arm64.tar.gz\n/Users/Tony/OpenCPN_project/JavaScript-project/JavaScript_pi/build-osx/javascript-4.1.0-beta+2610231233.c27d889e_darwin-wx32-10-x86_64arm64.tar.gz: No such file or directory\nCMake Error at checksum.cmake:7 (string):\n  string sub-command REGEX, mode MATCH needs at least 5 arguments total to command.\n-- Computing checksum in javascript-4.1-darwin-wx32-A64-10.xml\nBuilt target tarball-finish\nBuilt target tarball\n</code></pre></div>\n<p>but there is no tarball created.<br>\nAny ideas, please?</p>",
+        "id": 634362962,
+        "sender_full_name": "Tony Voss",
+        "timestamp": 1792759852
+    },
+    {
+        "content": "<p>Tony ...  Are you working with the master branch or ?.</p>",
+        "id": 634376175,
+        "sender_full_name": "Mike Rossiter",
+        "timestamp": 1792761892
+    },
+    {
+        "content": "<p>Correction... it is building the tarball but there are worrysome errors.<br>\nI have pushed to my Master.  Cicleci fails to run </p>\n<blockquote>\n<p>Config version 2 has reached end of life. Please upgrade to version 2.1. <a href=\"https://discuss.circleci.com/t/breaking-changes-config-compilation-updates-july-17-2026/54719\">https://discuss.circleci.com/t/breaking-changes-config-compilation-updates-july-17-2026/54719</a></p>\n</blockquote>",
+        "id": 634396332,
+        "sender_full_name": "Tony Voss",
+        "timestamp": 1792764958
+    },
+    {
+        "content": "<p>Suspect update-templates sd3.5.1 is not being used.<br>\nIn the cmake folder TemplateVersion reads: tags: sd3.4.6. Might be worth updating again. </p>\n<blockquote>\n<p>Config version 2 has reached end of life.</p>\n</blockquote>\n<p>Was fixed in sd3.5.1.</p>",
+        "id": 634399295,
+        "sender_full_name": "Mike Rossiter",
+        "timestamp": 1792765441
+    }
+]
