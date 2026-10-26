@@ -52,5 +52,41 @@
         "id": 632496921,
         "sender_full_name": "Alec Leamas",
         "timestamp": 1792224873
+    },
+    {
+        "content": "<p>Well, I tried to adapt ais-vd and got this error:</p>\n<div class=\"codehilite\" data-code-language=\"Text only\"><pre><span></span><code>fatal: remote error: upload-pack: not our ref 8544820e9ea678877437f800ff9b5607752af276\nfatal: Fetched in submodule path 'opencpn-libs', but it did not contain 8544820e9ea678877437f800ff9b5607752af276. Direct fetching of that commit failed.\n</code></pre></div>\n<p>Alec wrote:</p>\n<blockquote>\n<p>... using sd3.5.1 I cannot reproduce this. Your problem seems to be that opencpn-libs is out of sync so to speak, could happen if any files in it are changed. To verify , run<br>\n$ git submodule status opencpn-libs/<br>\nwhich should return<br>\n<a href=\"https://github.com/opencpn/OpenCPN/commit/d48f9d265a2477b35e4077f371585c0b6a765be5\">d48f9d265a2477b35e4077f371585c0b6a765be5</a> opencpn-libs (heads/main)</p>\n</blockquote>\n<p>I tested locally:</p>\n<div class=\"codehilite\" data-code-language=\"Text only\"><pre><span></span><code>C:\\Builds\\OCPN\\ais-vd_pi&gt;git submodule update --remote --merge opencpn-libs\nC:\\Builds\\OCPN\\ais-vd_pi&gt;git status\nOn branch master\nYour branch is up to date with 'origin/master'.\nnothing to commit, working tree clean\nC:\\Builds\\OCPN\\ais-vd_pi&gt;git submodule status opencpn-libs/\n 8544820e9ea678877437f800ff9b5607752af276 opencpn-libs (remotes/origin/HEAD)\n</code></pre></div>\n<p>I'm not sure how to proceed?</p>",
+        "id": 634909501,
+        "sender_full_name": "Håkan Svensson",
+        "timestamp": 1793007554
+    },
+    {
+        "content": "<p>FIrst thing is the <code>git submodule status opencpn-libs</code> command. What does it report?</p>",
+        "id": 634910773,
+        "sender_full_name": "Alec Leamas",
+        "timestamp": 1793007764
+    },
+    {
+        "content": "<p>As of above message:<br>\ngit submodule status opencpn-libs<br>\n<a href=\"https://github.com/opencpn/OpenCPN/commit/8544820e9ea678877437f800ff9b5607752af276\">8544820e9ea678877437f800ff9b5607752af276</a> opencpn-libs (remotes/origin/HEAD)</p>",
+        "id": 634920508,
+        "sender_full_name": "Håkan Svensson",
+        "timestamp": 1793009163
+    },
+    {
+        "content": "<p>This basically means that  opencpn-libs is modified somehow. The correct  commit in sd3.5.1 is <a href=\"https://github.com/opencpn/OpenCPN/commit/d48f9d265a2477\">d48f9d265a2477</a>. </p>\n<p>Lets try the simple fix first:</p>\n<div class=\"codehilite\"><pre><span></span><code>     &gt;  cd opencpn-libs\n     &gt;  git checkout  d48f9d265a24\n</code></pre></div>\n<p>Does this succeed?</p>",
+        "id": 634922317,
+        "sender_full_name": "Alec Leamas",
+        "timestamp": 1793009409
+    },
+    {
+        "content": "<p>I've to continue later. Grandchild support today.. :)</p>",
+        "id": 634944421,
+        "sender_full_name": "Håkan Svensson",
+        "timestamp": 1793012570
+    },
+    {
+        "content": "<p>Always a priority!</p>",
+        "id": 634944557,
+        "sender_full_name": "Alec Leamas",
+        "timestamp": 1793012588
     }
 ]
