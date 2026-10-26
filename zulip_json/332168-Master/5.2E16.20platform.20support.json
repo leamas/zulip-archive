@@ -88,5 +88,59 @@
         "id": 634944557,
         "sender_full_name": "Alec Leamas",
         "timestamp": 1793012588
+    },
+    {
+        "content": "<p>Commit <code>d48f9d265a24</code> is present, Yes.<br>\nBut you say \"changed files...\" After update to sd3.5.1 I've changed in .circleci/config.yml to not build for Android. Does that disturb the status key?</p>",
+        "id": 635048354,
+        "sender_full_name": "Håkan Svensson",
+        "timestamp": 1793028361
+    },
+    {
+        "content": "<p>This is about changed files in opencpn-libs, something is broken there for whatever reason. (using merge is a bad habit...)</p>\n<p>Anyway: </p>\n<div class=\"codehilite\"><pre><span></span><code>    $ cd opencpn libs\n    $ git checkout  d48f9d265a24\n    $ cd ..\n    $ git add opencpn-libs\n    $ git commit -m \"Restore sd3.5.1 opencpn-libs status\"\n</code></pre></div>",
+        "id": 635049647,
+        "sender_full_name": "Alec Leamas",
+        "timestamp": 1793028560
+    },
+    {
+        "content": "<p>And after that, if all is well, do <code>git submodule status opencpn-libs</code> and report back</p>",
+        "id": 635050196,
+        "sender_full_name": "Alec Leamas",
+        "timestamp": 1793028633
+    },
+    {
+        "content": "<p>Ok, that's a different key</p>\n<p>C:\\Builds\\OCPN\\ais-vd_pi&gt;git submodule status opencpn-libs<br>\n<a href=\"https://github.com/opencpn/OpenCPN/commit/d48f9d265a2477b35e4077f371585c0b6a765be5\">d48f9d265a2477b35e4077f371585c0b6a765be5</a> opencpn-libs (heads/devel-111-gd48f9d2)</p>\n<p>That \"-merge\" I've learned somewhere. So, how to instead update -libs in the future?</p>",
+        "id": 635059257,
+        "sender_full_name": "Håkan Svensson",
+        "timestamp": 1793029958
+    },
+    {
+        "content": "<p>With that commit it should build.</p>\n<p>There should be no need to update opencpn-libs besides running update-templates.  As soon  as anything chnages there it's scary.</p>",
+        "id": 635060231,
+        "sender_full_name": "Alec Leamas",
+        "timestamp": 1793030106
+    },
+    {
+        "content": "<p>Hmm. Still error in <a href=\"https://app.circleci.com/pipelines/github/Hakansv/ais-vd_pi/89/workflows/e4e30a57-ec0e-446a-85c8-d3baa517b7fe/jobs/1134\">CI builds</a>: <br>\nfatal: Fetched in submodule path 'opencpn-libs', but it did not contain <a href=\"https://github.com/opencpn/OpenCPN/commit/d48f9d265a2477b35e4077f371585c0b6a765be5\">d48f9d265a2477b35e4077f371585c0b6a765be5</a>.</p>",
+        "id": 635062895,
+        "sender_full_name": "Håkan Svensson",
+        "timestamp": 1793030479
+    },
+    {
+        "content": "<p>oops... but I just don't understand. My builds at <a href=\"https://app.circleci.com/pipelines/gh/leamas/shipdriver_pi/2120/details?useNewPipelines=true&amp;workflowId=95c77d2b-5631-400b-9d7a-2f86f59ad2cf&amp;job=86844b6e-e1ef-4710-a03e-3845f3bfb593&amp;buildNumber=23826&amp;jobType=build\">https://app.circleci.com/pipelines/gh/leamas/shipdriver_pi/2120/details?useNewPipelines=true&amp;workflowId=95c77d2b-5631-400b-9d7a-2f86f59ad2cf&amp;job=86844b6e-e1ef-4710-a03e-3845f3bfb593&amp;buildNumber=23826&amp;jobType=build</a>  seems to work...</p>",
+        "id": 635065483,
+        "sender_full_name": "Alec Leamas",
+        "timestamp": 1793030819
+    },
+    {
+        "content": "<p>IN particular, I have in the logs</p>\n<div class=\"codehilite\"><pre><span></span><code>+ git submodule update --init opencpn-libs\nSubmodule 'opencpn-libs' (https://github.com/opencpn/opencpn-libs.git) registered for path 'opencpn-libs'\nCloning into '/home/circleci/project/opencpn-libs'...\nSubmodule path 'opencpn-libs': checked out 'd48f9d265a2477b35e4077f371585c0b6a765be5'\n</code></pre></div>",
+        "id": 635066294,
+        "sender_full_name": "Alec Leamas",
+        "timestamp": 1793030948
+    },
+    {
+        "content": "<p>hm... this might be about cci caching submodules. I have a vage feeling about something similar long ago. I was then not able to resolve the issue, but I could use another plugin to verify shipdriver.</p>\n<p>Just did a rebuild, works fine. As I see it you are facing either a temporary error (not likely) or the circleci builder does not actually do what pretends to. At least I can fetch that commit without problems, but cci seemingly not. I have just no idea what's going on.</p>",
+        "id": 635069704,
+        "sender_full_name": "Alec Leamas",
+        "timestamp": 1793031485
     }
 ]

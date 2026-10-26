@@ -153,5 +153,78 @@ git submodule status opencpn-libs<br>
 
 
 
-<hr><p>Last updated: Oct 26 2026 at 11:09 UTC</p>
+<a name="635048354"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332168-Master/topic/5.16%20platform%20support/near/635048354" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Håkan Svensson <a href="https://leamas.github.io/zulip-archive/stream/332168-Master/topic/5.2E16.20platform.20support.html#635048354">(Oct 26 2026 at 15:26)</a>:</h4>
+<p>Commit <code>d48f9d265a24</code> is present, Yes.<br>
+But you say "changed files..." After update to sd3.5.1 I've changed in .circleci/config.yml to not build for Android. Does that disturb the status key?</p>
+
+
+
+<a name="635049647"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332168-Master/topic/5.16%20platform%20support/near/635049647" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Alec Leamas <a href="https://leamas.github.io/zulip-archive/stream/332168-Master/topic/5.2E16.20platform.20support.html#635049647">(Oct 26 2026 at 15:29)</a>:</h4>
+<p>This is about changed files in opencpn-libs, something is broken there for whatever reason. (using merge is a bad habit...)</p>
+<p>Anyway: </p>
+<div class="codehilite"><pre><span></span><code>    $ cd opencpn libs
+    $ git checkout  d48f9d265a24
+    $ cd ..
+    $ git add opencpn-libs
+    $ git commit -m "Restore sd3.5.1 opencpn-libs status"
+</code></pre></div>
+
+
+
+<a name="635050196"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332168-Master/topic/5.16%20platform%20support/near/635050196" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Alec Leamas <a href="https://leamas.github.io/zulip-archive/stream/332168-Master/topic/5.2E16.20platform.20support.html#635050196">(Oct 26 2026 at 15:30)</a>:</h4>
+<p>And after that, if all is well, do <code>git submodule status opencpn-libs</code> and report back</p>
+
+
+
+<a name="635059257"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332168-Master/topic/5.16%20platform%20support/near/635059257" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Håkan Svensson <a href="https://leamas.github.io/zulip-archive/stream/332168-Master/topic/5.2E16.20platform.20support.html#635059257">(Oct 26 2026 at 15:52)</a>:</h4>
+<p>Ok, that's a different key</p>
+<p>C:\Builds\OCPN\ais-vd_pi&gt;git submodule status opencpn-libs<br>
+<a href="https://github.com/opencpn/OpenCPN/commit/d48f9d265a2477b35e4077f371585c0b6a765be5">d48f9d265a2477b35e4077f371585c0b6a765be5</a> opencpn-libs (heads/devel-111-gd48f9d2)</p>
+<p>That "-merge" I've learned somewhere. So, how to instead update -libs in the future?</p>
+
+
+
+<a name="635060231"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332168-Master/topic/5.16%20platform%20support/near/635060231" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Alec Leamas <a href="https://leamas.github.io/zulip-archive/stream/332168-Master/topic/5.2E16.20platform.20support.html#635060231">(Oct 26 2026 at 15:55)</a>:</h4>
+<p>With that commit it should build.</p>
+<p>There should be no need to update opencpn-libs besides running update-templates.  As soon  as anything chnages there it's scary.</p>
+
+
+
+<a name="635062895"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332168-Master/topic/5.16%20platform%20support/near/635062895" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Håkan Svensson <a href="https://leamas.github.io/zulip-archive/stream/332168-Master/topic/5.2E16.20platform.20support.html#635062895">(Oct 26 2026 at 16:01)</a>:</h4>
+<p>Hmm. Still error in <a href="https://app.circleci.com/pipelines/github/Hakansv/ais-vd_pi/89/workflows/e4e30a57-ec0e-446a-85c8-d3baa517b7fe/jobs/1134">CI builds</a>: <br>
+fatal: Fetched in submodule path 'opencpn-libs', but it did not contain <a href="https://github.com/opencpn/OpenCPN/commit/d48f9d265a2477b35e4077f371585c0b6a765be5">d48f9d265a2477b35e4077f371585c0b6a765be5</a>.</p>
+
+
+
+<a name="635065483"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332168-Master/topic/5.16%20platform%20support/near/635065483" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Alec Leamas <a href="https://leamas.github.io/zulip-archive/stream/332168-Master/topic/5.2E16.20platform.20support.html#635065483">(Oct 26 2026 at 16:06)</a>:</h4>
+<p>oops... but I just don't understand. My builds at <a href="https://app.circleci.com/pipelines/gh/leamas/shipdriver_pi/2120/details?useNewPipelines=true&amp;workflowId=95c77d2b-5631-400b-9d7a-2f86f59ad2cf&amp;job=86844b6e-e1ef-4710-a03e-3845f3bfb593&amp;buildNumber=23826&amp;jobType=build">https://app.circleci.com/pipelines/gh/leamas/shipdriver_pi/2120/details?useNewPipelines=true&amp;workflowId=95c77d2b-5631-400b-9d7a-2f86f59ad2cf&amp;job=86844b6e-e1ef-4710-a03e-3845f3bfb593&amp;buildNumber=23826&amp;jobType=build</a>  seems to work...</p>
+
+
+
+<a name="635066294"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332168-Master/topic/5.16%20platform%20support/near/635066294" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Alec Leamas <a href="https://leamas.github.io/zulip-archive/stream/332168-Master/topic/5.2E16.20platform.20support.html#635066294">(Oct 26 2026 at 16:09)</a>:</h4>
+<p>IN particular, I have in the logs</p>
+<div class="codehilite"><pre><span></span><code>+ git submodule update --init opencpn-libs
+Submodule 'opencpn-libs' (https://github.com/opencpn/opencpn-libs.git) registered for path 'opencpn-libs'
+Cloning into '/home/circleci/project/opencpn-libs'...
+Submodule path 'opencpn-libs': checked out 'd48f9d265a2477b35e4077f371585c0b6a765be5'
+</code></pre></div>
+
+
+
+<a name="635069704"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332168-Master/topic/5.16%20platform%20support/near/635069704" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Alec Leamas <a href="https://leamas.github.io/zulip-archive/stream/332168-Master/topic/5.2E16.20platform.20support.html#635069704">(Oct 26 2026 at 16:18)</a>:</h4>
+<p>hm... this might be about cci caching submodules. I have a vage feeling about something similar long ago. I was then not able to resolve the issue, but I could use another plugin to verify shipdriver.</p>
+<p>Just did a rebuild, works fine. As I see it you are facing either a temporary error (not likely) or the circleci builder does not actually do what pretends to. At least I can fetch that commit without problems, but cci seemingly not. I have just no idea what's going on.</p>
+
+
+
+<hr><p>Last updated: Oct 26 2026 at 17:24 UTC</p>
 </html>
