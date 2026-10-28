@@ -226,5 +226,95 @@ Submodule path 'opencpn-libs': checked out 'd48f9d265a2477b35e4077f371585c0b6a76
 
 
 
-<hr><p>Last updated: Oct 28 2026 at 14:06 UTC</p>
+<a name="635711121"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332168-Master/topic/5.16%20platform%20support/near/635711121" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Håkan Svensson <a href="https://leamas.github.io/zulip-archive/stream/332168-Master/topic/5.2E16.20platform.20support.html#635711121">(Oct 28 2026 at 14:25)</a>:</h4>
+<p>I made a new try today after having, again, updated to sd3.5.1. Nothing touched after that update and commit.<br>
+ci says:<br>
+fatal: remote error: upload-pack: not our ref <a href="https://github.com/opencpn/OpenCPN/commit/8544820e9ea678877437f800ff9b5607752af276">8544820e9ea678877437f800ff9b5607752af276</a><br>
+fatal: Fetched in submodule path 'opencpn-libs', but it did not contain <a href="https://github.com/opencpn/OpenCPN/commit/8544820e9ea678877437f800ff9b5607752af276">8544820e9ea678877437f800ff9b5607752af276</a>. Direct fetching of that commit failed.</p>
+<p>My local repo:<br>
+C:\Builds\OCPN\ais-vd_pi&gt;git submodule status opencpn-libs<br>
+<a href="https://github.com/opencpn/OpenCPN/commit/8544820e9ea678877437f800ff9b5607752af276">8544820e9ea678877437f800ff9b5607752af276</a> opencpn-libs (remotes/origin/HEAD)</p>
+<p>???</p>
+
+
+
+<a name="635711810"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332168-Master/topic/5.16%20platform%20support/near/635711810" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Alec Leamas <a href="https://leamas.github.io/zulip-archive/stream/332168-Master/topic/5.2E16.20platform.20support.html#635711810">(Oct 28 2026 at 14:27)</a>:</h4>
+<p>Is update-templates broken?. Will make a new check,  might take some time. Stay tuned...</p>
+
+
+
+<a name="635715412"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332168-Master/topic/5.16%20platform%20support/near/635715412" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Alec Leamas <a href="https://leamas.github.io/zulip-archive/stream/332168-Master/topic/5.2E16.20platform.20support.html#635715412">(Oct 28 2026 at 14:38)</a>:</h4>
+<p>Indeed. After running the update  opencpn-libs is not at  <code>d48f9d265a24</code> The culprit is the script which indeed does a merge in some situations.</p>
+<p>I will file a bug, but might not need be able to fix it until after the weekend. Until then we need to work around the bug using steps as described <a href="#narrow/channel/332168-Master/topic/5.2E16.20platform.20support/near/635049647">above</a>.  Have you tried?</p>
+
+
+
+<a name="635717720"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332168-Master/topic/5.16%20platform%20support/near/635717720" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Alec Leamas <a href="https://leamas.github.io/zulip-archive/stream/332168-Master/topic/5.2E16.20platform.20support.html#635717720">(Oct 28 2026 at 14:45)</a>:</h4>
+<p><a href="https://github.com/Rasbats/shipdriver_pi/issues/672">https://github.com/Rasbats/shipdriver_pi/issues/672</a></p>
+
+
+
+<a name="635720366"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332168-Master/topic/5.16%20platform%20support/near/635720366" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Alec Leamas <a href="https://leamas.github.io/zulip-archive/stream/332168-Master/topic/5.2E16.20platform.20support.html#635720366">(Oct 28 2026 at 14:53)</a>:</h4>
+<p>I tested. It works</p>
+
+
+
+<a name="635731595"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332168-Master/topic/5.16%20platform%20support/near/635731595" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Håkan Svensson <a href="https://leamas.github.io/zulip-archive/stream/332168-Master/topic/5.2E16.20platform.20support.html#635731595">(Oct 28 2026 at 15:25)</a>:</h4>
+<blockquote>
+<p>but might not need be able to fix it until after the weekend</p>
+</blockquote>
+<p>No problem. I can wait. I'm just preparing for Wx64 next spring.</p>
+
+
+
+<a name="635731786"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332168-Master/topic/5.16%20platform%20support/near/635731786" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Alec Leamas <a href="https://leamas.github.io/zulip-archive/stream/332168-Master/topic/5.2E16.20platform.20support.html#635731786">(Oct 28 2026 at 15:25)</a>:</h4>
+<p>Anyway, the work around is simple.</p>
+
+
+
+<a name="635737758"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332168-Master/topic/5.16%20platform%20support/near/635737758" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Håkan Svensson <a href="https://leamas.github.io/zulip-archive/stream/332168-Master/topic/5.2E16.20platform.20support.html#635737758">(Oct 28 2026 at 15:43)</a>:</h4>
+<p>If you mean: cd opencpn libs<br>
+    $ git checkout  <a href="https://github.com/opencpn/OpenCPN/commit/d48f9d265a24">d48f9d265a24</a><br>
+I tested that yesterday. Didn't worked as mentioned.  Is there a change for that now?</p>
+
+
+
+<a name="635737992"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332168-Master/topic/5.16%20platform%20support/near/635737992" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Alec Leamas <a href="https://leamas.github.io/zulip-archive/stream/332168-Master/topic/5.2E16.20platform.20support.html#635737992">(Oct 28 2026 at 15:44)</a>:</h4>
+<p>You said that the commit was present?</p>
+
+
+
+<a name="635740473"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332168-Master/topic/5.16%20platform%20support/near/635740473" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Alec Leamas <a href="https://leamas.github.io/zulip-archive/stream/332168-Master/topic/5.2E16.20platform.20support.html#635740473">(Oct 28 2026 at 15:52)</a>:</h4>
+<p>The more brutal approach:</p>
+<div class="codehilite"><pre><span></span><code>    $ cd opencpn-libs
+    $ git switch -c tmp
+    $ git remote update origin
+    $ git fetch -f origin main:main
+    $ git switch main
+    $ git checkout  d48f9d2
+    $ cd ..
+    $ git add opencpn-libs
+    $ git commit -m "opencpn-libs: restore sr3.5.1 status - Rasbats/shipdriver#672"
+</code></pre></div>
+<p>Should always work...</p>
+
+
+
+<a name="635802153"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332168-Master/topic/5.16%20platform%20support/near/635802153" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Håkan Svensson <a href="https://leamas.github.io/zulip-archive/stream/332168-Master/topic/5.2E16.20platform.20support.html#635802153">(Oct 28 2026 at 19:20)</a>:</h4>
+<p>If possible, I don't think there is a need for any work around but choose to wait until normal handling works to update plugins for Win-64?</p>
+
+
+
+<hr><p>Last updated: Oct 28 2026 at 19:35 UTC</p>
 </html>

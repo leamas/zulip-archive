@@ -142,5 +142,71 @@
         "id": 635069704,
         "sender_full_name": "Alec Leamas",
         "timestamp": 1793031485
+    },
+    {
+        "content": "<p>I made a new try today after having, again, updated to sd3.5.1. Nothing touched after that update and commit.<br>\nci says:<br>\nfatal: remote error: upload-pack: not our ref <a href=\"https://github.com/opencpn/OpenCPN/commit/8544820e9ea678877437f800ff9b5607752af276\">8544820e9ea678877437f800ff9b5607752af276</a><br>\nfatal: Fetched in submodule path 'opencpn-libs', but it did not contain <a href=\"https://github.com/opencpn/OpenCPN/commit/8544820e9ea678877437f800ff9b5607752af276\">8544820e9ea678877437f800ff9b5607752af276</a>. Direct fetching of that commit failed.</p>\n<p>My local repo:<br>\nC:\\Builds\\OCPN\\ais-vd_pi&gt;git submodule status opencpn-libs<br>\n<a href=\"https://github.com/opencpn/OpenCPN/commit/8544820e9ea678877437f800ff9b5607752af276\">8544820e9ea678877437f800ff9b5607752af276</a> opencpn-libs (remotes/origin/HEAD)</p>\n<p>???</p>",
+        "id": 635711121,
+        "sender_full_name": "Håkan Svensson",
+        "timestamp": 1793197550
+    },
+    {
+        "content": "<p>Is update-templates broken?. Will make a new check,  might take some time. Stay tuned...</p>",
+        "id": 635711810,
+        "sender_full_name": "Alec Leamas",
+        "timestamp": 1793197679
+    },
+    {
+        "content": "<p>Indeed. After running the update  opencpn-libs is not at  <code>d48f9d265a24</code> The culprit is the script which indeed does a merge in some situations.</p>\n<p>I will file a bug, but might not need be able to fix it until after the weekend. Until then we need to work around the bug using steps as described <a href=\"#narrow/channel/332168-Master/topic/5.2E16.20platform.20support/near/635049647\">above</a>.  Have you tried?</p>",
+        "id": 635715412,
+        "sender_full_name": "Alec Leamas",
+        "timestamp": 1793198314
+    },
+    {
+        "content": "<p><a href=\"https://github.com/Rasbats/shipdriver_pi/issues/672\">https://github.com/Rasbats/shipdriver_pi/issues/672</a></p>",
+        "id": 635717720,
+        "sender_full_name": "Alec Leamas",
+        "timestamp": 1793198721
+    },
+    {
+        "content": "<p>I tested. It works</p>",
+        "id": 635720366,
+        "sender_full_name": "Alec Leamas",
+        "timestamp": 1793199186
+    },
+    {
+        "content": "<blockquote>\n<p>but might not need be able to fix it until after the weekend</p>\n</blockquote>\n<p>No problem. I can wait. I'm just preparing for Wx64 next spring.</p>",
+        "id": 635731595,
+        "sender_full_name": "Håkan Svensson",
+        "timestamp": 1793201124
+    },
+    {
+        "content": "<p>Anyway, the work around is simple.</p>",
+        "id": 635731786,
+        "sender_full_name": "Alec Leamas",
+        "timestamp": 1793201159
+    },
+    {
+        "content": "<p>If you mean: cd opencpn libs<br>\n    $ git checkout  <a href=\"https://github.com/opencpn/OpenCPN/commit/d48f9d265a24\">d48f9d265a24</a><br>\nI tested that yesterday. Didn't worked as mentioned.  Is there a change for that now?</p>",
+        "id": 635737758,
+        "sender_full_name": "Håkan Svensson",
+        "timestamp": 1793202235
+    },
+    {
+        "content": "<p>You said that the commit was present?</p>",
+        "id": 635737992,
+        "sender_full_name": "Alec Leamas",
+        "timestamp": 1793202280
+    },
+    {
+        "content": "<p>The more brutal approach:</p>\n<div class=\"codehilite\"><pre><span></span><code>    $ cd opencpn-libs\n    $ git switch -c tmp\n    $ git remote update origin\n    $ git fetch -f origin main:main\n    $ git switch main\n    $ git checkout  d48f9d2\n    $ cd ..\n    $ git add opencpn-libs\n    $ git commit -m \"opencpn-libs: restore sr3.5.1 status - Rasbats/shipdriver#672\"\n</code></pre></div>\n<p>Should always work...</p>",
+        "id": 635740473,
+        "sender_full_name": "Alec Leamas",
+        "timestamp": 1793202747
+    },
+    {
+        "content": "<p>If possible, I don't think there is a need for any work around but choose to wait until normal handling works to update plugins for Win-64?</p>",
+        "id": 635802153,
+        "sender_full_name": "Håkan Svensson",
+        "timestamp": 1793215230
     }
 ]
