@@ -1,0 +1,140 @@
+[
+    {
+        "content": "<p><span class=\"user-mention\" data-user-id=\"522486\">@Håkan Svensson</span>  <span class=\"user-mention\" data-user-id=\"1239769\">@Douwe  Fokkema</span>  <span class=\"user-mention\" data-user-id=\"725680\">@TwoCan</span>  <span class=\"user-mention\" data-user-id=\"517002\">@Dave Register</span>  <span class=\"user-mention\" data-user-id=\"573239\">@Pavel Kalian</span> </p>\n<p>We have some inconsistencies when configuring n2k interfaces</p>\n<ul>\n<li>N2k over TCP/UDP  and regular serial connections does have checkboxes enabling input and/or output; N2k over socketcan and slcan does not have such checkboxes</li>\n<li>The \"is driver output capable\" is used to govern whether the autopilot pgns should be sent. socketcan/slcan are hardcoded as in/out and have no possibility to disable this.</li>\n<li>For N0183, all connections have the enable input/output checkboxes, the output checkbox overloaded with sending autopilot info</li>\n<li>Plugins scans the available drivers  for those  are marked as being capable of output and uses this/these sending data.</li>\n</ul>\n<p>Together, a considerable mess. <span class=\"user-mention\" data-user-id=\"725680\">@TwoCan</span>  and I have discussed this, and for n2k we think that:</p>\n<ol>\n<li>All n2k connections are bidirectional, being capable of both input and output. There is thus no need for \"enable input/output \" checkboxes for n2k connections.</li>\n<li>OTOH,  a checkbox for \"send autopilot info\" is required.</li>\n</ol>\n<p>For n0183, things are perhaps more complicated. First question becomes if we actually have n0183 connections which are physically output or input only.  Such wiring is certainly possible, but is it actually used?</p>\n<p>That is, would it be OK to simplify 0183 connections like for n2k above? Hardcoded input + output, a separate \"Send autopilot info\" checkbox?</p>\n<p>Thoughts?</p>",
+        "id": 643650859,
+        "sender_full_name": "Alec Leamas",
+        "timestamp": 1795628390
+    },
+    {
+        "content": "<p>A N0183 connection is not like a N2k bus, i.e. a single data wire. We have one RX and one TX and they can be used to connect one or more devices. It's for example rather common to get RX from a GNSS receiver and the TX for the same RS232/USB-connection wired to a AP.  Not less it's a way to save serial-USB converters. So the answer to \"Such wiring is certainly possible, but is it actually used?\" is \"Yes\".</p>",
+        "id": 643660823,
+        "sender_full_name": "Håkan Svensson",
+        "timestamp": 1795630765
+    },
+    {
+        "content": "<p>OK, new iteration. First n2k connections</p>\n<ul>\n<li>No input/output checkboxes, n2k is always bidirectional. </li>\n<li>New checkbox \"Send autopilot /NMEA repeater info\" which governs if  PGN 129283, 129284, 12928 are sent on the wire</li>\n</ul>\n<p>For 0183 connections:</p>\n<ul>\n<li>Two checkboxes for enabling input/output. Mostly like today but:</li>\n<li>New checkbox  \"Send autopilot /NMEA repeater info\" which governs sending of APB, RMB, RMC,  XTE. Invalid if \"Enable output\" is not checked.</li>\n</ul>\n<p>All this will need a new flag in ConnectionParams, and  updates to code sending the autopilot info.</p>\n<p>Thoughts on this?</p>",
+        "id": 643693633,
+        "sender_full_name": "Alec Leamas",
+        "timestamp": 1795639250
+    },
+    {
+        "content": "<p>Even in Hakan's scenario, It is still a bi-directional connection, no need to have checkboxes to enable input or output. OpenCPN, neither knows nor cares that the Tx &amp; Rx pins are connected to different devices.</p>\n<p>The question is what happens if either the serial Rx or Tx wires are not connected ? From a software perspective, nothing.</p>",
+        "id": 643698274,
+        "sender_full_name": "TwoCan",
+        "timestamp": 1795640736
+    },
+    {
+        "content": "<p>Well. if we have n0183 connection not capable of output plugins will find and use this driver unless it is marked input-only. Or?</p>",
+        "id": 643698568,
+        "sender_full_name": "Alec Leamas",
+        "timestamp": 1795640835
+    },
+    {
+        "content": "<p>OpenCPN and Plugins still have no way of knowing whether something is physically connected to the end of the Tx pin.<br>\nFor example, just because OpenCPN sends NMEA 0183 APB, RMB &amp; XTE sentences, or WMM Plugin sends a magnetic variation sentence, there is no acknowledgement it was sent, as far as the UART is concerned, the signal was sent, the electricity just dissipates into the ether.</p>",
+        "id": 643700840,
+        "sender_full_name": "TwoCan",
+        "timestamp": 1795641499
+    },
+    {
+        "content": "<p>Indeed. But assuming there are two connections, just one of which usable and a clever user it is possible to manually configure the drivers so plugins can do the right choice.</p>",
+        "id": 643701286,
+        "sender_full_name": "Alec Leamas",
+        "timestamp": 1795641619
+    },
+    {
+        "content": "<p>... that is, if the input/output checkboxes exist.</p>",
+        "id": 643701390,
+        "sender_full_name": "Alec Leamas",
+        "timestamp": 1795641655
+    },
+    {
+        "content": "<blockquote>\n<p>New checkbox \"Send autopilot /NMEA repeater info\"</p>\n</blockquote>\n<p>So you mean that can be used as today's output but a filter is already prepared?<br>\nIn the case I don't want all ECxxx it can be tricky.<br>\nI think it can be confusing with two different outputs for N0183. Keep it to the one we have today. But to serve the user the ECxxx idea can be adapted by a checkbox for the serial output to add the AP (ECxxx) filter while the connection is created. But that filter must, as usual, be able to edit afterwards.<br>\nSteven I think we still need both for the serial connection. What we could need is a logic to hinder echoing all data to the output. Or.. simply: No checkbox for AP-sentences as I wrote above but instead the AP filter for a new serial output all time. If the user want another filter he can edit the default. Then we have minimized the risk for feedback.</p>",
+        "id": 643701697,
+        "sender_full_name": "Håkan Svensson",
+        "timestamp": 1795641759
+    },
+    {
+        "content": "<p>Also bear in mind the \"Send to GPS\" function who to some extent evade the rules in connections.</p>",
+        "id": 643702529,
+        "sender_full_name": "Håkan Svensson",
+        "timestamp": 1795642032
+    },
+    {
+        "content": "<blockquote>\n<p>So you mean that can be used as today's output but a filter is already prepared?</p>\n</blockquote>\n<p>No. Today, the multiplexer checks the connection direction setting. If it is input + output or just output it sends the autopilot messages for n2k or 0183 depending on connection.</p>\n<p>The problem with this scheme is that  there is no way to configure  a connection to handle output without also getting the autopilot info. This is an obvious mistake, being able to send output is one thing, to want the autopilot info another.  This is clearly visible for n2k, but 0183 is actually the same. Nothing of this is related to filters</p>",
+        "id": 643702924,
+        "sender_full_name": "Alec Leamas",
+        "timestamp": 1795642172
+    },
+    {
+        "content": "<p>BTW: this path includes migration stuff :(</p>",
+        "id": 643703267,
+        "sender_full_name": "Alec Leamas",
+        "timestamp": 1795642277
+    },
+    {
+        "content": "<p>I don't understand... If I have a serial output wired to a AP I of course use a filter today. Basically only send ECxxx or list the one I want.</p>",
+        "id": 643703495,
+        "sender_full_name": "Håkan Svensson",
+        "timestamp": 1795642358
+    },
+    {
+        "content": "<p>Perhaps your use case is not the universal one applying to everyone. :)</p>\n<p>Perhaps it's not wired to an AP at all, but still wants output sent by a plugin?</p>",
+        "id": 643703834,
+        "sender_full_name": "Alec Leamas",
+        "timestamp": 1795642471
+    },
+    {
+        "content": "<p>The filters don't change.</p>\n<p>The question for plugins is how do they detect which connection to use? Today if there are multiple bi-directional connections, either the plugin prompts the user to select one, it uses an arbitrary connection (eg. the first) or it uses all.</p>\n<p>The next question is how many plugins actually use WriteCommDriver ? A quick search of Rick's repo, only one, the VDR plugin. From what a quick search revealed, none of Mike's.</p>\n<p>The WMM plugin still uses PushNMEABuffer which if I understand correctly has no notion of In/Out ?</p>\n<p>Douwe's (and I think Bernd's) plugins are all N2K. Sean's PyPilot ? Doesn't it talk TCP/IP to the PyPilot controller?</p>",
+        "id": 643703984,
+        "sender_full_name": "TwoCan",
+        "timestamp": 1795642517
+    },
+    {
+        "content": "<p>The exampled user case to send to an AP is clearly described in the manual and frequently used.</p>",
+        "id": 643704059,
+        "sender_full_name": "Håkan Svensson",
+        "timestamp": 1795642541
+    },
+    {
+        "content": "<blockquote>\n<p>The exampled user case to send to an AP is clearly described in the manual and frequently used.</p>\n</blockquote>\n<p>This use case doesn't change.</p>",
+        "id": 643704961,
+        "sender_full_name": "TwoCan",
+        "timestamp": 1795642836
+    },
+    {
+        "content": "<p>I see no need for to change the serial in/out function apart from the security feature to add the \"Send only the ECxxx\"<br>\nFor N2k you have the best experiences.  <br>\nNow late and I've to quit for today. See you...</p>",
+        "id": 643705273,
+        "sender_full_name": "Håkan Svensson",
+        "timestamp": 1795642945
+    },
+    {
+        "content": "<blockquote>\n<p>The question for plugins is how do they detect which connection to use? Today if there are multiple bi-directional connections, either the plugin prompts the user to select one, it uses an arbitrary connection (eg. the first) or it uses all.</p>\n</blockquote>\n<p>yes. But if only one is configured as bidirectional  (or output only) this selection is done. This is a reason for keeping the enable input/output checkboxes for n0183. It doesn't solve all problems, but some.</p>",
+        "id": 643705890,
+        "sender_full_name": "Alec Leamas",
+        "timestamp": 1795643175
+    },
+    {
+        "content": "<blockquote>\n<p>The WMM plugin still uses PushNMEABuffer</p>\n</blockquote>\n<p>PushNMEABuffer is about distributing messages on the internal bus and plugin callbacks.  It is not about sending on the wire.</p>",
+        "id": 643707194,
+        "sender_full_name": "Alec Leamas",
+        "timestamp": 1795643627
+    },
+    {
+        "content": "<p>Huh?  PushNMEABuffer does go onto the wire if there are outbound NMEA 0183 connections.</p>\n<p>OK, if you want to avoid potentially breaking stuff, then probably safer to leave NMEA 0183 the way it is.<br>\nThere are times when telemetry would be useful, so you could actually find out how OpenCPN is being used &amp; configured.</p>",
+        "id": 643707921,
+        "sender_full_name": "TwoCan",
+        "timestamp": 1795643894
+    },
+    {
+        "content": "<blockquote>\n<p>uh? PushNMEABuffer does go onto the wire if there are outbound NMEA 0183 connections</p>\n</blockquote>\n<p>This is about something listening to the internal bus and forwarding it to drivers (no, the details are lost in my  limited memory). The point is that anything sending on the wire will have to use either the plugin interface or the drivers directly, and there is direction checking in both cases</p>",
+        "id": 643708461,
+        "sender_full_name": "Alec Leamas",
+        "timestamp": 1795644076
+    },
+    {
+        "content": "<p>Don't ruin the amazing multiplexer we have in OCPN. PushNMEABuffer sends to the multiplexer and what appears there can be forwarded to every N0183 output connection. A fantastic feature, but filters must be used almost all the time. The multiplexer's data is also often used via UDP and wifi to share all Nav data with other OCPNs onboard. PC and Android.</p>",
+        "id": 643718756,
+        "sender_full_name": "Håkan Svensson",
+        "timestamp": 1795647909
+    }
+]
