@@ -288,5 +288,86 @@ The "EC" talker for this filter is internal OCPN. It is most likely created by a
 
 
 
-<hr><p>Last updated: Nov 27 2026 at 08:39 UTC</p>
+<a name="644140340"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332168-Master/topic/connections%20configuration%20mess/near/644140340" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Alec Leamas <a href="https://leamas.github.io/zulip-archive/stream/332168-Master/topic/connections.20configuration.20mess.html#644140340">(Nov 27 2026 at 12:55)</a>:</h4>
+<p>We need to sort this out. Let's try to start with n2k: Questions:</p>
+<ol>
+<li>Should all n2k connections be similar w r t  enable/input output and sending AP data? Tentative answer: yes</li>
+<li>Should n2k connections have  enable input/output checkboxes? Tentative answer: no</li>
+<li>Should n2k connections have a "Send AP/Repeater info" checkbox? Tentative answer: yes.</li>
+</ol>
+<p>What can we agree on here?</p>
+
+
+
+<a name="644146863"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332168-Master/topic/connections%20configuration%20mess/near/644146863" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Håkan Svensson <a href="https://leamas.github.io/zulip-archive/stream/332168-Master/topic/connections.20configuration.20mess.html#644146863">(Nov 27 2026 at 13:22)</a>:</h4>
+<p>With my limited N2k knowledge, I have no objections. <br>
+One question: How does OCPN respond to a request about what kind of system this is? I suppose we must send some form of identity PGN, which means forced function for output?</p>
+
+
+
+<a name="644154921"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332168-Master/topic/connections%20configuration%20mess/near/644154921" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Alec Leamas <a href="https://leamas.github.io/zulip-archive/stream/332168-Master/topic/connections.20configuration.20mess.html#644154921">(Nov 27 2026 at 13:53)</a>:</h4>
+<p>Since we are about to hardcode n2k connection as bidirectional this is not an issue, right?</p>
+
+
+
+<a name="644160639"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332168-Master/topic/connections%20configuration%20mess/near/644160639" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Håkan Svensson <a href="https://leamas.github.io/zulip-archive/stream/332168-Master/topic/connections.20configuration.20mess.html#644160639">(Nov 27 2026 at 14:13)</a>:</h4>
+<p>No issue, agree.</p>
+
+
+
+<a name="644162308"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332168-Master/topic/connections%20configuration%20mess/near/644162308" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Alec Leamas <a href="https://leamas.github.io/zulip-archive/stream/332168-Master/topic/connections.20configuration.20mess.html#644162308">(Nov 27 2026 at 14:19)</a>:</h4>
+<p>So now we need <span class="user-mention" data-user-id="725680">@TwoCan</span> 's input before we proceed</p>
+
+
+
+<a name="644167662"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332168-Master/topic/connections%20configuration%20mess/near/644167662" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> TwoCan <a href="https://leamas.github.io/zulip-archive/stream/332168-Master/topic/connections.20configuration.20mess.html#644167662">(Nov 27 2026 at 14:38)</a>:</h4>
+<p>Overall yes, but a couple of nuanced points.</p>
+<blockquote>
+<p>Should all n2k connections be similar w r t enable/input output and sending AP data?</p>
+</blockquote>
+<p>Without delving into the code, it may be possible for OpenCPN and auto-detect to inadvertently use an Actisense protocol that may not be supported for both Receive and Transmit with a specific gateway. </p>
+<p>For example on the Actisense W2K-2, WGX-1 and W2K-1, both ASCII Raw and Actisense Raw are not supported for Receive or Transmit on either TCP or UDP.  However on the NGX-1 (USB), both N2K ASCII and ASCII Raw are Receive only. </p>
+<p>What this really means is that depending on the gateway, some protocols cannot be considered to be bi-directional. We don't have the ability for the user to configure a protocol, we currently rely on auto-detect.</p>
+<blockquote>
+<ol>
+<li>Should n2k connections have a "Send AP/Repeater info" checkbox? Tentative answer: yes.</li>
+</ol>
+</blockquote>
+<p>Assuming core OpenCPN always generates PGN's 129283, 129284 and 129285 when a waypoint or route is active and that this checkbox merely filters these PGN's from the connection, then in the absence of a NMEA 2000 filter, this is the only solution. </p>
+<p>Later if an output filter capability was added, then this checkbox could be omitted and the guidance to the user to would be to configure a filter to accept or refuse the navigation PGN's,  in a similar way that setting a filter for APB, RMB and XTE sentences for NMEA 0183 connections is done today.</p>
+<p>TLDR: Yes, in agreement.</p>
+
+
+
+<a name="644215918"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332168-Master/topic/connections%20configuration%20mess/near/644215918" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Alec Leamas <a href="https://leamas.github.io/zulip-archive/stream/332168-Master/topic/connections.20configuration.20mess.html#644215918">(Nov 27 2026 at 17:55)</a>:</h4>
+<p>OK, all agree so far. </p>
+<p>Now to 0183. First question is if there should be "Enable input" and "Enable output" checkboxes. Note that this is <strong>not</strong> about sending  AP/repeater info or not,  lets postpone that discussion.  So:</p>
+<ol>
+<li>Should 0183 connections have "Enable input" and "Enable output" checkboxes? Tentative answer: yes.</li>
+</ol>
+<p>Can we agree on this?</p>
+
+
+
+<a name="644221595"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/332168-Master/topic/connections%20configuration%20mess/near/644221595" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> TwoCan <a href="https://leamas.github.io/zulip-archive/stream/332168-Master/topic/connections.20configuration.20mess.html#644221595">(Nov 27 2026 at 18:22)</a>:</h4>
+<p>No, I don't agree.<br>
+Why do we need them ? <br>
+For a serial port, If the Rx or Tx pins are not connected (ie. open circuit), nothing bad will happen.</p>
+<p>And for the case that Hakan mentioned, where Rx might be connected to a GPS and Tx to an autopilot,  this fits perfectly well.</p>
+<p>For network ports, keep in mind that it also depends on whether the user has configured their gateway to be uni-directional (Rx or Tx) or bi-directional.  But I can't see any problem if a connection "receives nothing" or transmits something but no-one else is listening.</p>
+<p>My only concern is that I don't know what these settings have on the internal plumbing. Does the enable output checkbox toggle the behaviour for generating APB, RMB and XTE sentences, or will they always be generated ?</p>
+<p>From a plugin perspective like WMM, if NMEA 0183 by default is bi-directional, but the user does not want magnetic variation transmitted, they just need to configure an outbound filter. </p>
+<p>I can't see any harm in NMEA 0183 being bi-directional.</p>
+
+
+
+<hr><p>Last updated: Nov 27 2026 at 18:26 UTC</p>
 </html>
