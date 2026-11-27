@@ -28,5 +28,17 @@
         "id": 642889117,
         "sender_full_name": "TwoCan",
         "timestamp": 1795438440
+    },
+    {
+        "content": "<p>Newbie here, so please correct my transgressions.  I'm trying to build demo_pi_sample on Windows without success.  I get the following from cmake:</p>\n<p>Could NOT find Gettext (missing: GETTEXT_MSGMERGE_EXECUTABLE<br>\n  GETTEXT_MSGFMT_EXECUTABLE)<br>\nCall Stack (most recent call first):<br>\n  C:/Program Files/CMake/share/cmake-4.4/Modules/FindPackageHandleStandardArgs.cmake:654 (_FPHSA_FAILURE_MESSAGE)<br>\n  C:/Program Files/CMake/share/cmake-4.4/Modules/FindGettext.cmake:430 (find_package_handle_standard_args)<br>\n  cmake/PluginConfigure.cmake:165 (FIND_PACKAGE)<br>\n  CMakeLists.txt:50 (include)</p>\n<p>I do have Gettext installed, but apparently don't have msgmerge (and don't know now to get it).  I have no trouble building opencpn however, so most of the dependencies are all there.</p>\n<p>And assuming I am eventually successful building a plugin with Visual Studio, how do I debug it?</p>\n<p>Thanks.</p>",
+        "id": 643926550,
+        "sender_full_name": "Jim Starkey",
+        "timestamp": 1795710614
+    },
+    {
+        "content": "<p>Most likely you haven't added whatever the gettext bin folder to your path. <br>\nOn my machine:</p>\n<div class=\"codehilite\"><pre><span></span><code>dir msgmerge.exe /s\nDirectory of C:\\Program Files\\Poedit\\GettextTools\\bin\n14/09/2024  10:47 PM            75,976 msgmerge.exe\n</code></pre></div>\n<p>So just add C:\\Program Files\\Poedit\\GettextTools\\bin to your path environment variable.</p>\n<p>For debugging from Visual Studio.<br>\nThree things.</p>\n<ol>\n<li>Set the plugin as the \"Startup Project\"</li>\n<li>Set the debug properties, for the startup command to be OpenCPN</li>\n<li>Then just start the debugger and it should load OpenCPN.<br>\n<img alt=\"debugging-plugin-01.png\" class=\"inline-image\" data-original-content-type=\"image/png\" data-original-dimensions=\"1920x1080\" data-original-src=\"/user_uploads/33951/kwvn9xKsG0rf3gdf6IRQuw1a/debugging-plugin-01.png\" src=\"/user_uploads/thumbnail/33951/kwvn9xKsG0rf3gdf6IRQuw1a/debugging-plugin-01.png/840x560.webp\"></li>\n</ol>",
+        "id": 643944556,
+        "sender_full_name": "TwoCan",
+        "timestamp": 1795715755
     }
 ]

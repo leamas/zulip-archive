@@ -63,5 +63,41 @@ I'll add this tidbit about updating the online manual  to the demo plugin.</p>
 
 
 
-<hr><p>Last updated: Nov 26 2026 at 15:42 UTC</p>
+<a name="643926550"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/282854-general/topic/Plugin%20Manuals/near/643926550" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> Jim Starkey <a href="https://leamas.github.io/zulip-archive/stream/282854-general/topic/Plugin.20Manuals.html#643926550">(Nov 26 2026 at 16:30)</a>:</h4>
+<p>Newbie here, so please correct my transgressions.  I'm trying to build demo_pi_sample on Windows without success.  I get the following from cmake:</p>
+<p>Could NOT find Gettext (missing: GETTEXT_MSGMERGE_EXECUTABLE<br>
+  GETTEXT_MSGFMT_EXECUTABLE)<br>
+Call Stack (most recent call first):<br>
+  C:/Program Files/CMake/share/cmake-4.4/Modules/FindPackageHandleStandardArgs.cmake:654 (_FPHSA_FAILURE_MESSAGE)<br>
+  C:/Program Files/CMake/share/cmake-4.4/Modules/FindGettext.cmake:430 (find_package_handle_standard_args)<br>
+  cmake/PluginConfigure.cmake:165 (FIND_PACKAGE)<br>
+  CMakeLists.txt:50 (include)</p>
+<p>I do have Gettext installed, but apparently don't have msgmerge (and don't know now to get it).  I have no trouble building opencpn however, so most of the dependencies are all there.</p>
+<p>And assuming I am eventually successful building a plugin with Visual Studio, how do I debug it?</p>
+<p>Thanks.</p>
+
+
+
+<a name="643944556"></a>
+<h4><a href="https://opencpn.zulipchat.com#narrow/stream/282854-general/topic/Plugin%20Manuals/near/643944556" class="zl"><img src="https://leamas.github.io/zulip-archive/assets/img/zulip.svg" alt="view this post on Zulip" style="width:20px;height:20px;"></a> TwoCan <a href="https://leamas.github.io/zulip-archive/stream/282854-general/topic/Plugin.20Manuals.html#643944556">(Nov 26 2026 at 17:55)</a>:</h4>
+<p>Most likely you haven't added whatever the gettext bin folder to your path. <br>
+On my machine:</p>
+<div class="codehilite"><pre><span></span><code>dir msgmerge.exe /s
+Directory of C:\Program Files\Poedit\GettextTools\bin
+14/09/2024  10:47 PM            75,976 msgmerge.exe
+</code></pre></div>
+<p>So just add C:\Program Files\Poedit\GettextTools\bin to your path environment variable.</p>
+<p>For debugging from Visual Studio.<br>
+Three things.</p>
+<ol>
+<li>Set the plugin as the "Startup Project"</li>
+<li>Set the debug properties, for the startup command to be OpenCPN</li>
+<li>Then just start the debugger and it should load OpenCPN.<br>
+<img alt="debugging-plugin-01.png" class="inline-image" data-original-content-type="image/png" data-original-dimensions="1920x1080" data-original-src="/user_uploads/33951/kwvn9xKsG0rf3gdf6IRQuw1a/debugging-plugin-01.png" src="/user_uploads/thumbnail/33951/kwvn9xKsG0rf3gdf6IRQuw1a/debugging-plugin-01.png/840x560.webp"></li>
+</ol>
+
+
+
+<hr><p>Last updated: Nov 27 2026 at 00:11 UTC</p>
 </html>
